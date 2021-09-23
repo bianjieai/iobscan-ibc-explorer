@@ -64,7 +64,10 @@ export default {
   },
   setup() {
     const ibcTxs = reactive({ value: [] });
-    getIbcTxs().then((res) => {
+    getIbcTxs({
+      page_num: 1,
+      page_size: 100,
+    }).then((res) => {
       ibcTxs.value = res.data;
     });
     const ibcChains = reactive({ value: [] });

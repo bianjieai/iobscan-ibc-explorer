@@ -20,9 +20,12 @@ function get(url, params) {
   });
 }
 
-function getIbcTxs() {
+function getIbcTxs(params) {
   const url = '/ibc/txs';
-  return get(url);
+  const config = {
+    params,
+  };
+  return get(url, config);
 }
 
 function getIbcChains() {

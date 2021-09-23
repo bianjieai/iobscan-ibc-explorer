@@ -13,7 +13,7 @@
 
       <div class="list__subItem__adress__container">
         <img
-          class="list__subItem__adress__scIcon"
+          class="list__subItem__adress__icon"
           :src="require(`../assets/chains_all.png`)"
           alt="icon"
         />
@@ -21,18 +21,24 @@
         <div class="hash__container">
           <span class="hash__value">
             <img class="hash__icon" :src="require(`../assets/tx.png`)" alt="icon" />
-            {{ getRestString(item.sc_tx_info.hash, 6, 6) }}
+            {{ getRestString(item.sc_tx_info.hash, 6, 5) }}
           </span>
           <span class="hash__value" style="margin-top: 14px;">
             <img class="hash__icon" :src="require(`../assets/adress.png`)" alt="icon" />
-            {{ getRestString(item.sc_addr, 6, 6) }}
+            {{ getRestString(item.sc_addr, 6, 5) }}
           </span>
         </div>
 
         <img
           class="status__icon"
-          :src="require(`../assets/status${item.status || 2}.png`)"
+          :src="require(`../assets/status${item.status}.png`)"
           alt="status"
+        />
+
+        <img
+          class="list__subItem__adress__icon"
+          :src="require(`../assets/chains_all.png`)"
+          alt="icon"
         />
 
         <div class="hash__container">
@@ -124,7 +130,7 @@ export default {
       width: 100%;
       @include flex(row, nowrap, flex-start, center);
     }
-    &__adress__scIcon {
+    &__adress__icon {
       width: 24px;
       margin-right: 10px;
       border-radius: 50%;
