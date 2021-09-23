@@ -43,8 +43,8 @@ export default {
   setup() {
     const headerMenus = reactive(menus);
 
+    // eslint-disable-next-line no-unused-vars
     const onPressEnter = (val) => {
-      console.log(val);
     };
     return {
       headerMenus,
