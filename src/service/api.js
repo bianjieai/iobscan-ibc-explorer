@@ -21,7 +21,7 @@ function get(url, params) {
 }
 
 function getIbcTxs(params) {
-  const url = '/ibc/txs';
+  const url = '/api/ibc/txs';
   const config = {
     params,
   };
@@ -29,17 +29,17 @@ function getIbcTxs(params) {
 }
 
 function getIbcChains() {
-  const url = '/ibc/chains';
+  const url = '/api/ibc/chains';
   return get(url);
 }
 
 function getIbcBaseDenoms() {
-  const url = '/ibc/baseDenoms';
+  const url = '/api/ibc/baseDenoms';
   return get(url);
 }
 
 function getIbcStatistics() {
-  const url = '/ibc/statistics';
+  const url = '/api/ibc/statistics';
   return get(url);
 }
 
