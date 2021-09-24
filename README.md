@@ -8,6 +8,7 @@ step1 安装依赖
  	yarn install
 ```
 step2 设置代理  详细参考 “## proxy”
+
 step3 build
 ```
 	yarn build
