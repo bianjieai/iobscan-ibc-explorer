@@ -71,10 +71,9 @@ export default {
       ibcTxs.value = res.data;
     });
     const ibcChains = reactive({ value: [] });
-    const ibcChainsFilter = reactive({ value: [] });
     getIbcChains().then((res) => {
-      ibcChains.value = res.data;
-      ibcChainsFilter.value = res.data;
+      console.log(res);
+      ibcChains.value = res;
     });
     const ibcBaseDenoms = reactive({ value: [] });
     getIbcBaseDenoms().then((res) => {
@@ -94,6 +93,8 @@ export default {
       ibcStatisticsChains.chain_all = findStatistics(res, 'chain_all');
       ibcStatisticsChannels.channels_24hr = findStatistics(res, 'channels_24hr');
       ibcStatisticsChannels.channel_all = findStatistics(res, 'channel_all');
+      ibcStatisticsChannels.channel_opened = findStatistics(res, 'channel_opened');
+      ibcStatisticsChannels.channel_closed = findStatistics(res, 'channel_closed');
       ibcStatisticsDenoms.denom_all = findStatistics(res, 'denom_all');
       ibcStatisticsDenoms.base_denom_all = findStatistics(res, 'base_denom_all');
       ibcStatisticsTxs.tx_24hr_all = findStatistics(res, 'tx_24hr_all');

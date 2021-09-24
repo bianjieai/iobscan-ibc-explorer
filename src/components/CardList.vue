@@ -11,7 +11,11 @@
       </a-menu-item>
     </a-menu>
     <div class="chainlist__bottom">
-      <a-list class="card__list" :grid="{ gutter: 16, column: 4 }" :data-source="chainList">
+      <a-list
+        class="card__list"
+        :grid="{ gutter: 16, column: 4 }"
+        :data-source="chainList[currentMenu]"
+      >
         <template #renderItem="{ item }">
           <a-list-item :id="item.chain_id">
             <a-card class="menu__card">
@@ -24,11 +28,11 @@
       </a-list>
 
       <a-anchor :affix="false" class="list__anchor">
-        <a-anchor-link href="#cosmos" title="A-E" />
+        <a-anchor-link href="#iris_1" title="A-E" />
         <a-anchor-link href="#componens-anchor-demo-static" title="F-J" />
         <a-anchor-link href="#components-ancho-demo-static" title="K-O" />
         <a-anchor-link href="#components-anchor-d" title="P-T" />
-        <a-anchor-link href="#bitcom3" title="U-Z" />
+        <a-anchor-link href="#cosmos_1" title="U-Z" />
         <a-anchor-link href="#comonents-anchor-demo-static" title="#" />
       </a-anchor>
     </div>
