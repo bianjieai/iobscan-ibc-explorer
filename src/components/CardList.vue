@@ -28,15 +28,19 @@
         </template>
       </a-list>
 
-      <a-anchor :affix="false" class="list__anchor">
+      <a-anchor
+        :affix="false"
+        v-show="chainList[currentMenu] && chainList[currentMenu].length"
+        class="list__anchor"
+      >
         <a-anchor-link
-          class="anchor__item"
-          v-for="item of anchors"
-          :key="item.title"
-          :title="item.title"
-          :href="`#${item.title}`"
-          @click.stop.prevent="onClickAnchor(item)"
-        />
+            class="anchor__item"
+            v-for="item of anchors"
+            :key="item.title"
+            :title="item.title"
+            :href="`#${item.title}`"
+            @click.stop.prevent="onClickAnchor(item)"
+          />
       </a-anchor>
     </div>
   </div>

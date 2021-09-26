@@ -49,11 +49,9 @@ import {
   ibcStatisticsChannelsDefault,
   ibcStatisticsDenomsDefault,
   ibcStatisticsTxsDefault,
-  testChains,
 } from '../constant';
-// getIbcChains
 import {
-  getIbcTxs, getIbcBaseDenoms, getIbcStatistics,
+  getIbcChains, getIbcTxs, getIbcBaseDenoms, getIbcStatistics,
 } from '../service/api';
 
 export default {
@@ -78,11 +76,10 @@ export default {
       }));
     });
     const ibcChains = reactive({ value: [] });
-    // getIbcChains().then((res) => {
-    //   console.log(res);
-    //   ibcChains.value = res;
-    // });
-    ibcChains.value = testChains;
+    getIbcChains().then((res) => {
+      console.log(res);
+      ibcChains.value = res;
+    });
     const ibcBaseDenoms = reactive({ value: [] });
     getIbcBaseDenoms().then((res) => {
       ibcBaseDenoms.value = res;
