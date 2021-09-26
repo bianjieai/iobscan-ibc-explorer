@@ -13,11 +13,12 @@
     <div class="chainlist__bottom">
       <a-list
         class="card__list"
-        :grid="{ gutter: 16, column: 4 }"
+        :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }"
         :data-source="chainList[currentMenu]"
+        ref="listRef"
       >
         <template #renderItem="{ item }">
-          <a-list-item :id="item.chain_id">
+          <a-list-item :class="findClassName(item.chain_id)" >
             <a-card class="menu__card">
               <img class="card__img" :src="item.icon" alt="icon" />
               <p class="card__title">{{ item.chain_name }}</p>
@@ -28,12 +29,14 @@
       </a-list>
 
       <a-anchor :affix="false" class="list__anchor">
-        <a-anchor-link href="#iris_1" title="A-E" />
-        <a-anchor-link href="#componens-anchor-demo-static" title="F-J" />
-        <a-anchor-link href="#components-ancho-demo-static" title="K-O" />
-        <a-anchor-link href="#components-anchor-d" title="P-T" />
-        <a-anchor-link href="#cosmos_1" title="U-Z" />
-        <a-anchor-link href="#comonents-anchor-demo-static" title="#" />
+        <a-anchor-link
+          class="anchor__item"
+          v-for="item of anchors"
+          :key="item.title"
+          :title="item.title"
+          :href="`#${item.title}`"
+          @click.stop.prevent="onClickAnchor(item)"
+        />
       </a-anchor>
     </div>
   </div>
@@ -41,36 +44,55 @@
 
 <script>
 import { reactive, ref } from 'vue';
+import { chainMenus, anchorsDatas } from '../constant';
 
 export default {
   props: {
     chainList: Array,
   },
   setup(props, context) {
-    const menus = reactive([
-      {
-        label: 'Active',
-        value: 'active',
-      },
-      {
-        label: 'Inactive',
-        value: 'inactive',
-      },
-      {
-        label: 'All',
-        value: 'all',
-      },
-    ]);
+    const menus = reactive(chainMenus);
     const currentMenu = ref([menus[0].value]);
 
+    const anchors = reactive(anchorsDatas);
+    const listRef = ref(null);
     const onSelectedMenu = ({ key }) => {
       context.emit('onMenuSelected', key);
+    };
+
+    const findClassName = (chainId) => {
+      const chainQuery = chainId.substr(0, 1).toUpperCase();
+      let className = '';
+
+      try {
+        anchors.forEach((anchor) => {
+          className = anchor.collection.indexOf(chainQuery) !== -1 ? anchor.title : '#';
+          if (anchor.collection.indexOf(chainQuery) !== -1) {
+            throw new Error('find className');
+          }
+        });
+      } catch (e) {
+        console.log(e.message);
+      }
+
+      return className;
+    };
+
+    const onClickAnchor = (anchorItem) => {
+      const findItem = document.getElementsByClassName(anchorItem.title)[0];
+      if (findItem) {
+        listRef.value.$el.scrollTop = findItem.parentElement.offsetTop;
+      }
     };
 
     return {
       menus,
       currentMenu,
+      anchors,
+      listRef,
+      findClassName,
       onSelectedMenu,
+      onClickAnchor,
     };
   },
 };

@@ -43,14 +43,17 @@ import CardList from '../components/CardList.vue';
 import StatisticList from '../components/StatisticList.vue';
 import TransferList from '../components/TransferList.vue';
 import { findStatistics } from '../helper/findStatistics';
+import Tools from '../util/Tools';
 import {
   ibcStatisticsChainsDefault,
   ibcStatisticsChannelsDefault,
   ibcStatisticsDenomsDefault,
   ibcStatisticsTxsDefault,
+  testChains,
 } from '../constant';
+// getIbcChains
 import {
-  getIbcTxs, getIbcChains, getIbcBaseDenoms, getIbcStatistics,
+  getIbcTxs, getIbcBaseDenoms, getIbcStatistics,
 } from '../service/api';
 
 export default {
@@ -68,13 +71,18 @@ export default {
       page_num: 1,
       page_size: 100,
     }).then((res) => {
-      ibcTxs.value = res.data;
+      const result = res.data;
+      ibcTxs.value = result.map((item) => ({
+        ...item,
+        update_at: Tools.formatAge(Tools.getTimestamp(), item.update_at * 1000, '', ''),
+      }));
     });
     const ibcChains = reactive({ value: [] });
-    getIbcChains().then((res) => {
-      console.log(res);
-      ibcChains.value = res;
-    });
+    // getIbcChains().then((res) => {
+    //   console.log(res);
+    //   ibcChains.value = res;
+    // });
+    ibcChains.value = testChains;
     const ibcBaseDenoms = reactive({ value: [] });
     getIbcBaseDenoms().then((res) => {
       ibcBaseDenoms.value = res;
