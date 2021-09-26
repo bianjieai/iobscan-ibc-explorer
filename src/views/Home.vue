@@ -75,11 +75,12 @@ export default {
         update_at: Tools.formatAge(Tools.getTimestamp(), item.update_at * 1000, '', ''),
       }));
     });
+
     const ibcChains = reactive({ value: [] });
     getIbcChains().then((res) => {
-      console.log(res);
       ibcChains.value = res;
     });
+
     const ibcBaseDenoms = reactive({ value: [] });
     getIbcBaseDenoms().then((res) => {
       ibcBaseDenoms.value = res;
