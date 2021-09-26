@@ -1,0 +1,78 @@
+html {
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body,
+div,
+object,
+iframe,
+applet,
+object,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+address,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+embed,
+figure,
+figcaption,
+footer,
+header,
+menu,
+nav,
+output,
+ruby,
+section,
+summary,
+time,
+mark,
+audio,
+video,
+progress {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  vertical-align: baseline;
+}
+
+@font-face {
+  font-family: "DroidSansMono";
+  src: url("../font/DroidSansMono-enMp.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Verdana";
+  src: url("../font/Verdana.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.ant-anchor-ink::before {
+  width: 0px !important;
+}
