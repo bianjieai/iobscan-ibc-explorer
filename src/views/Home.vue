@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { reactive, provide, onBeforeUnmount } from 'vue';
 import LayerBlock from '../components/LayerBlock.vue';
 import Card from '../components/Card.vue';
 import CardList from '../components/CardList.vue';
@@ -45,6 +45,7 @@ import TransferList from '../components/TransferList.vue';
 import { findStatistics } from '../helper/findStatistics';
 import Tools from '../util/Tools';
 import {
+  ageTimerInterval,
   ibcStatisticsChainsDefault,
   ibcStatisticsChannelsDefault,
   ibcStatisticsDenomsDefault,
@@ -65,18 +66,28 @@ export default {
   },
   setup() {
     const ibcTxs = reactive({ value: [] });
+    let txTimer = reactive(null);
     getIbcTxs({
       page_num: 1,
       page_size: 100,
     }).then((res) => {
       const result = res.data;
-      ibcTxs.value = result.map((item) => ({
-        ...item,
-        update_at: Tools.formatAge(Tools.getTimestamp(), item.update_at * 1000, '', ''),
-      }));
+      clearInterval(txTimer);
+      txTimer = setInterval(() => {
+        ibcTxs.value = result.map((item) => ({
+          ...item,
+          update_at: Tools.formatAge(Tools.getTimestamp(), item.update_at * 1000, '', ''),
+        }));
+      }, ageTimerInterval);
+    });
+
+    onBeforeUnmount(() => {
+      clearInterval(txTimer);
     });
 
     const ibcChains = reactive({ value: [] });
+    provide('ibcChains', ibcChains);
+
     getIbcChains().then((res) => {
       ibcChains.value = res;
     });
@@ -136,6 +147,7 @@ export default {
   max-width: 1200px;
   &__top {
     width: 100%;
+    padding-top: 50px;
     &__slot {
       @include flex(row, nowrap, flex-start, center);
     }
@@ -147,7 +159,6 @@ export default {
       margin: 24px 24px 24px 0;
       display: inline-block;
       width: 100%;
-      height: 234px;
       background-color: #fff;
     }
   }

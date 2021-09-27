@@ -213,12 +213,15 @@ const ibcStatisticsTxsDefault = {
   },
 };
 
+const ageTimerInterval = 1000;
+
 export {
   testChains,
   menus,
   chainMenus,
   anchorsDatas,
   statisticsName,
+  ageTimerInterval,
   ibcStatisticsChainsDefault,
   ibcStatisticsChannelsDefault,
   ibcStatisticsDenomsDefault,

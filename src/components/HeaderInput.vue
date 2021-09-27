@@ -1,7 +1,8 @@
 <template>
   <a-input
     class="header__input"
-    placeholder="Basic usage"
+    placeholder="Search by TxHash"
+    allowClear
     v-model:value="inputValue"
     @pressEnter="onPressEnter"
   >
@@ -17,8 +18,8 @@ import { ref } from 'vue';
 export default {
   setup(props, context) {
     const inputValue = ref('');
-    const onPressEnter = () => {
-      context.emit('pressEnter', inputValue.value);
+    const onPressEnter = (evt) => {
+      context.emit('pressedEnter', evt.target.value);
     };
     return {
       inputValue,
