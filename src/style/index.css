@@ -73,6 +73,13 @@ progress {
   font-style: normal;
 }
 
+@font-face {
+  font-family: "Montserrat";
+  src: url("../font/Montserrat-Regular.otf");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .ant-anchor-ink::before {
   width: 0px !important;
 }

@@ -2,8 +2,8 @@
   <a-layout class="layout">
     <a-layout-header class="header">
       <a-row class="header__content" type="flex">
-        <a-col flex="160px">
-          <div class="logo">
+        <a-col flex="160px" class="col__layout">
+          <div class="logo" @click="onClickLogo">
             <img class="logo__icon" src="./assets/HeaderIcon.png" alt="logo" />
             <img class="logo__text" src="./assets/iobscan.png" alt="title" />
           </div>
@@ -11,8 +11,14 @@
         <a-col flex="auto">
           <navigation :menus="headerMenus" />
         </a-col>
-        <a-col flex="auto">
-          <header-input @pressEnter="onPressEnter" />
+        <a-col flex="auto" class="col__layout">
+          <header-input @pressedEnter="onPressEnter" />
+          <img
+            class="header__input__icon"
+            :src="require('./assets/ioblink.png')"
+            alt="icon"
+            @click="onClickLogo"
+          />
         </a-col>
       </a-row>
     </a-layout-header>
@@ -43,11 +49,15 @@ export default {
   setup() {
     const headerMenus = reactive(menus);
 
-    // eslint-disable-next-line no-unused-vars
+    const onClickLogo = () => {
+      window.open('https://www.iobscan.io');
+    };
     const onPressEnter = (val) => {
+      console.log(val);
     };
     return {
       headerMenus,
+      onClickLogo,
       onPressEnter,
     };
   },
@@ -84,7 +94,8 @@ export default {
       height: 100%;
     }
     .logo {
-      height: 30px;
+      // height: 30px;
+      cursor: pointer;
       .logo__icon {
         width: 34px;
         margin-right: 10px;
@@ -92,6 +103,14 @@ export default {
       .logo__text {
         width: 100px;
       }
+    }
+    &__input__icon {
+      display: inline-block;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      margin-left: 24px;
+      cursor: pointer;
     }
   }
   & .content {
@@ -103,6 +122,9 @@ export default {
     padding: 0;
     background-color: #eef0f6;
   }
+}
+.col__layout {
+  @include flex(row, nowrap, flex-start, center);
 }
 @media screen and (max-width: 1920px) {
 }

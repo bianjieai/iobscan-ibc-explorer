@@ -52,7 +52,7 @@ import { chainMenus, anchorsDatas } from '../constant';
 
 export default {
   props: {
-    chainList: Array,
+    chainList: Object,
   },
   setup(props, context) {
     const menus = reactive(chainMenus);
@@ -135,13 +135,16 @@ export default {
   }
   .card__list {
     width: calc(100% - 50px);
-    height: 180px;
+    height: 198px;
     padding-right: 20px;
     overflow-y: auto;
     overflow-x: hidden;
   }
   .menu__card {
     border-radius: $card-radio;
+    ::v-deep .ant-card-body {
+      padding: 12px;
+    }
   }
   .card__img {
     width: 50px;

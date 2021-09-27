@@ -1,13 +1,13 @@
 <template>
   <div class="block">
     <div class="block__header">
-      <span
+      <p
         class="block__header__title"
         :style="{ color: type === 'dark' ? '#ffffff' : '#000000' }"
       >
         {{ title }}
-      </span>
-      <div class="block__header__line"></div>
+      </p>
+      <div :class="type === 'dark' ? 'block__header__line__dark' : 'block__header__line'"></div>
     </div>
     <div class="block__content">
       <slot></slot>
@@ -42,8 +42,17 @@ export default {
       font-weight: $nav-font-weight;
       margin-right: 10px;
     }
+    &__line__dark {
+      top: -16px;
+      left: 5px;
+      display: inline-block;
+      width: 100%;
+      height: 12px;
+      background: linear-gradient(90deg, rgba(112, 136, 255, 0) 0%, #3d50ff 100%);
+      border-radius: 5px;
+      position: relative;
+    }
     &__line {
-      position: absolute;
       top: -16px;
       left: 5px;
       display: inline-block;
