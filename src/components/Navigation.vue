@@ -1,5 +1,10 @@
 <template>
-  <a-menu class="header__menu" v-model:selectedKeys="currentMenu" mode="horizontal">
+  <a-menu
+    class="header__menu"
+    v-model:selectedKeys="currentMenu"
+    mode="horizontal"
+    @click="clickMenuItem"
+  >
     <a-menu-item class="header__menu__item" v-for="item of menus" :key="item.value">
       {{ item.label }}
     </a-menu-item>
@@ -13,10 +18,15 @@ export default {
   props: {
     menus: Array,
   },
-  setup(props) {
+  setup(props, context) {
     const currentMenu = ref([props.menus[0].value]);
+
+    const clickMenuItem = ({ key }) => {
+      context.emit('clickMenu', key);
+    };
     return {
       currentMenu,
+      clickMenuItem,
     };
   },
 };
@@ -41,6 +51,7 @@ export default {
     font-size: $font-size4;
     color: rgba(#ffffff, 0.65);
     font-weight: $nav-font-weight;
+    font-family: Montserrat-Regular, Montserrat;
   }
   .ant-menu-item-selected {
     background-image: url("../assets/NavSelected.png");

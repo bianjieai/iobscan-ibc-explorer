@@ -5,8 +5,8 @@
       <span class="list__top__name">Latest 100 IBC Token</span>
       <a-button class="list__top__button">View All</a-button>
     </div>
-    <div class="list__middle">
-      <div class="transfer__list">
+    <div class="list__middle" >
+      <div class="transfer__list" v-if="transferList && transferList.length">
         <transfer-list-item
           v-for="(item, index) of transferList"
           :key="item.record_id"
@@ -15,9 +15,11 @@
           :isFinal="index >= transferList.length - 1"
         />
       </div>
+
+      <no-datas class="transfer__list" v-if="!transferList || !transferList.length" />
     </div>
-    <div class="list__bottom">
-      <span class="status__tips">
+    <div class="list__bottom" >
+      <span class="status__tips" v-if="transferList && transferList.length">
         Status:
         <span class="status__tip status__tip__success"></span> Success
         <span class="status__tip status__tip__warning"></span> Processing
@@ -29,10 +31,12 @@
 
 <script>
 import TransferListItem from './TransferListItem.vue';
+import NoDatas from './NoDatas.vue';
 
 export default {
   components: {
     TransferListItem,
+    NoDatas,
   },
   props: {
     transferList: Array,
