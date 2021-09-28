@@ -44,7 +44,7 @@
           </span>
         </div>
 
-        <p class="list__item__ago">{{ item.update_at }} ago</p>
+        <p class="list__item__ago">{{ item.tx_time }} ago</p>
       </div>
     </div>
   </div>
