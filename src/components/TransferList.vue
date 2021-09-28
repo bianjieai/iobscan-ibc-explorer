@@ -3,7 +3,7 @@
     <a-divider style="margin: 0px; margin-bottom: 0;" />
     <div class="list__top">
       <span class="list__top__name">Latest 100 IBC Token</span>
-      <a-button class="list__top__button">View All</a-button>
+      <a-button class="list__top__button" @click="onClickViewAll">View All</a-button>
     </div>
     <div class="list__middle" >
       <div class="transfer__list" v-if="transferList && transferList.length">
@@ -41,7 +41,14 @@ export default {
   props: {
     transferList: Array,
   },
-  setup() {},
+  setup(props, context) {
+    const onClickViewAll = () => {
+      context.emit('clickViewAll');
+    };
+    return {
+      onClickViewAll,
+    };
+  },
 };
 </script>
 

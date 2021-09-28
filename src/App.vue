@@ -58,7 +58,7 @@ export default {
     };
     const clickMenu = (val) => {
       if (val !== 'Home') {
-        message.info('noData');
+        message.info('Comming Soon…');
       }
     };
     return {
