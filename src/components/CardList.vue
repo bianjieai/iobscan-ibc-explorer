@@ -13,12 +13,13 @@
     <div class="chainlist__bottom">
       <a-list
         class="card__list"
+        v-show="chainList[currentMenu] && chainList[currentMenu].length"
         :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }"
         :data-source="chainList[currentMenu]"
         ref="listRef"
       >
         <template #renderItem="{ item }">
-          <a-list-item :class="findClassName(item.chain_id)" >
+          <a-list-item :class="findClassName(item.chain_id)">
             <a-card class="menu__card">
               <img class="card__img" :src="item.icon" alt="icon" />
               <p class="card__title">{{ item.chain_name }}</p>
@@ -34,14 +35,19 @@
         class="list__anchor"
       >
         <a-anchor-link
-            class="anchor__item"
-            v-for="item of anchors"
-            :key="item.title"
-            :title="item.title"
-            :href="`#${item.title}`"
-            @click.stop.prevent="onClickAnchor(item)"
-          />
+          class="anchor__item"
+          v-for="item of anchors"
+          :key="item.title"
+          :title="item.title"
+          :href="`#${item.title}`"
+          @click.stop.prevent="onClickAnchor(item)"
+        />
       </a-anchor>
+
+      <no-datas
+        class="card__list"
+        v-if="!chainList[currentMenu] || !chainList[currentMenu].length"
+      />
     </div>
   </div>
 </template>
@@ -49,8 +55,12 @@
 <script>
 import { reactive, ref } from 'vue';
 import { chainMenus, anchorsDatas } from '../constant';
+import NoDatas from './NoDatas.vue';
 
 export default {
+  components: {
+    NoDatas,
+  },
   props: {
     chainList: Object,
   },
@@ -111,6 +121,11 @@ export default {
   &__menu {
     width: 100%;
     border: 0;
+    ::v-deep .ant-menu-title-content {
+      font-size: 14px;
+      font-family: Montserrat-Regular, Montserrat;
+      font-weight: 400;
+    }
     .ant-menu-item-active {
       .ant-menu-title-content {
         color: $font-color3;
@@ -135,7 +150,7 @@ export default {
   }
   .card__list {
     width: calc(100% - 50px);
-    height: 198px;
+    height: 182px;
     padding-right: 20px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -155,19 +170,32 @@ export default {
   .card__title {
     margin-top: 12px;
     font-size: $font-size4;
+    line-height: $font-size4;
     font-family: Montserrat-SemiBold, Montserrat;
     font-weight: 600;
     color: rgba(0, 0, 0, 0.75);
   }
   .card__value {
-    margin-top: 6px;
+    margin: 6px 0;
     font-size: $font-size5;
+    line-height: $font-size5;
     font-family: Montserrat-Regular, Montserrat;
     font-weight: 400;
     color: $font-color1;
   }
   .list__anchor {
     width: 50px;
+  }
+  .nodatas__icon {
+    width: 120px;
+    margin-top: 24px;
+  }
+  .nodatas__title {
+    margin-top: 16px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: $font-color2;
   }
 }
 </style>

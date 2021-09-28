@@ -9,7 +9,7 @@
           </div>
         </a-col>
         <a-col flex="auto">
-          <navigation :menus="headerMenus" />
+          <navigation :menus="headerMenus" @clickMenu="clickMenu" />
         </a-col>
         <a-col flex="auto" class="col__layout">
           <header-input @pressedEnter="onPressEnter" />
@@ -35,6 +35,7 @@
 
 <script>
 import { reactive } from 'vue';
+import { message } from 'ant-design-vue';
 import { menus } from './constant';
 import Navigation from './components/Navigation.vue';
 import HeaderInput from './components/HeaderInput.vue';
@@ -55,10 +56,16 @@ export default {
     const onPressEnter = (val) => {
       console.log(val);
     };
+    const clickMenu = (val) => {
+      if (val !== 'Home') {
+        message.info('Comming Soon…');
+      }
+    };
     return {
       headerMenus,
       onClickLogo,
       onPressEnter,
+      clickMenu,
     };
   },
 };

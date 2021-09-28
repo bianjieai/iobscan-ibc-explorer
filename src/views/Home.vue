@@ -29,7 +29,7 @@
 
       <layer-block class="home__bottom__right" title="IBC Token Transfer">
         <statistic-list type="horizontal" :msg="ibcStatisticsTxs" />
-        <transfer-list :transferList="ibcTxs.value" />
+        <transfer-list :transferList="ibcTxs.value" @clickViewAll="onClickViewAll" />
       </layer-block>
     </div>
   </div>
@@ -37,6 +37,7 @@
 
 <script>
 import { reactive, provide, onBeforeUnmount } from 'vue';
+import { message } from 'ant-design-vue';
 import LayerBlock from '../components/LayerBlock.vue';
 import Card from '../components/Card.vue';
 import CardList from '../components/CardList.vue';
@@ -126,6 +127,10 @@ export default {
       // ibcChainsFilter
     };
 
+    const onClickViewAll = () => {
+      message.info('Comming Soon…');
+    };
+
     return {
       ibcTxs,
       ibcChains,
@@ -135,6 +140,7 @@ export default {
       ibcStatisticsDenoms,
       ibcStatisticsTxs,
       onMenuSelected,
+      onClickViewAll,
     };
   },
 };
