@@ -35,7 +35,7 @@
         class="list__anchor"
       >
         <a-anchor-link
-          class="anchor__item"
+          class="list__anchor__item"
           v-for="item of anchors"
           :key="item.title"
           :title="item.title"

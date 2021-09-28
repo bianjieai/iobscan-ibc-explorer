@@ -41,7 +41,8 @@ export default {
   background-color: transparent;
   border: 0;
   &__item {
-    width: 120px;
+    width: 110px;
+    padding: 0 !important;
     text-align: center;
   }
   .ant-menu-item {

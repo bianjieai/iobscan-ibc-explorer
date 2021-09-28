@@ -215,6 +215,14 @@ const ibcStatisticsTxsDefault = {
 
 const ageTimerInterval = 1000;
 
+const ibcTxStatus = {
+  SUCCESS: 1,
+  FAILED: 2,
+  PROCESSING: 3,
+  REFUNDED: 4,
+  SETTING: 5,
+};
+
 export {
   testChains,
   menus,
@@ -226,4 +234,5 @@ export {
   ibcStatisticsChannelsDefault,
   ibcStatisticsDenomsDefault,
   ibcStatisticsTxsDefault,
+  ibcTxStatus,
 };

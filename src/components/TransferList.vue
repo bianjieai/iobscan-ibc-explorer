@@ -2,7 +2,7 @@
   <div class="list">
     <a-divider style="margin: 0px; margin-bottom: 0;" />
     <div class="list__top">
-      <span class="list__top__name">Latest 100 IBC Token</span>
+      <span class="list__top__name">Latest 100 IBC Token Transfer List</span>
       <a-button class="list__top__button" @click="onClickViewAll">View All</a-button>
     </div>
     <div class="list__middle" >
