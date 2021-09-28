@@ -17,7 +17,7 @@
             class="header__input__icon"
             :src="require('./assets/ioblink.png')"
             alt="icon"
-            @click="onClickLogo"
+            @click="onClickIcon"
           />
         </a-col>
       </a-row>
@@ -34,12 +34,14 @@
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { reactive, h } from 'vue';
+import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { menus } from './constant';
 import Navigation from './components/Navigation.vue';
 import HeaderInput from './components/HeaderInput.vue';
 import IbcFooter from './components/IbcFooter.vue';
+import Message from './components/Message.vue';
 
 export default {
   components: {
@@ -49,8 +51,13 @@ export default {
   },
   setup() {
     const headerMenus = reactive(menus);
-
+    const router = useRouter();
     const onClickLogo = () => {
+      router.push({
+        name: 'Home',
+      });
+    };
+    const onClickIcon = () => {
       window.open('https://www.iobscan.io');
     };
     const onPressEnter = (val) => {
@@ -58,12 +65,21 @@ export default {
     };
     const clickMenu = (val) => {
       if (val !== 'Home') {
-        message.info('Comming Soon…');
+        message.config({
+          maxCount: 2,
+          top: '100px',
+          duration: 3,
+        });
+        message.info({
+          content: h(Message),
+          icon: h('div'),
+        });
       }
     };
     return {
       headerMenus,
       onClickLogo,
+      onClickIcon,
       onPressEnter,
       clickMenu,
     };
@@ -99,6 +115,7 @@ export default {
       width: 100%;
       max-width: 1200px;
       height: 100%;
+      @include flex(row, nowrap, center, center);
     }
     .logo {
       // height: 30px;

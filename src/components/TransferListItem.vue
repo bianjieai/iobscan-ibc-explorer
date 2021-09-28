@@ -31,10 +31,7 @@
           alt="status"
         />
 
-        <img
-          class="list__subItem__adress__icon"
-          :src="findIbcChainIcon(item.dc_chain_id)"
-        />
+        <img class="list__subItem__adress__icon" :src="findIbcChainIcon(item.dc_chain_id)" />
 
         <div class="hash__container">
           <span class="hash__value">
@@ -47,7 +44,7 @@
           </span>
         </div>
 
-        <p class="list__item__ago">{{ item.update_at }}</p>
+        <p class="list__item__ago">{{ item.tx_time }} ago</p>
       </div>
     </div>
   </div>

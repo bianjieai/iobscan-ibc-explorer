@@ -38,6 +38,7 @@ export default {
   input {
     background-color: transparent;
     color: #ffffff;
+    font-family: Montserrat-Regular, Montserrat;
   }
   .input__prefix {
     width: 24px;

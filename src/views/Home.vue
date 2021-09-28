@@ -36,13 +36,16 @@
 </template>
 
 <script>
-import { reactive, provide, onBeforeUnmount } from 'vue';
+import {
+  reactive, provide, onBeforeUnmount, h,
+} from 'vue';
 import { message } from 'ant-design-vue';
 import LayerBlock from '../components/LayerBlock.vue';
 import Card from '../components/Card.vue';
 import CardList from '../components/CardList.vue';
 import StatisticList from '../components/StatisticList.vue';
 import TransferList from '../components/TransferList.vue';
+import Message from '../components/Message.vue';
 import { findStatistics } from '../helper/findStatistics';
 import Tools from '../util/Tools';
 import {
@@ -55,6 +58,7 @@ import {
 import {
   getIbcChains, getIbcTxs, getIbcBaseDenoms, getIbcStatistics,
 } from '../service/api';
+// import commingsoonImg from '../assets/commingsoon.png';
 
 export default {
   name: 'Home',
@@ -77,7 +81,7 @@ export default {
       txTimer = setInterval(() => {
         ibcTxs.value = result.map((item) => ({
           ...item,
-          update_at: Tools.formatAge(Tools.getTimestamp(), item.update_at * 1000, '', ''),
+          tx_time: Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', ''),
         }));
       }, ageTimerInterval);
     });
@@ -128,7 +132,15 @@ export default {
     };
 
     const onClickViewAll = () => {
-      message.info('Comming Soon…');
+      message.config({
+        maxCount: 2,
+        top: '100px',
+        duration: 3,
+      });
+      message.info({
+        content: h(Message),
+        icon: h('div'),
+      });
     };
 
     return {
