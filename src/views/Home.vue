@@ -81,7 +81,7 @@ export default {
       txTimer = setInterval(() => {
         ibcTxs.value = result.map((item) => ({
           ...item,
-          update_at: Tools.formatAge(Tools.getTimestamp(), item.update_at * 1000, '', ''),
+          tx_time: Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', ''),
         }));
       }, ageTimerInterval);
     });
