@@ -2,7 +2,13 @@
   <div class="statistic__list">
     <!-- vertical -->
     <div v-if="type === 'vertical'" class="vertical__container">
-      <div class="list__item" v-for="(item, name, index) of msg" :key="item.statistics_name">
+      <div
+        class="list__item ibc__selected__title"
+        style="width: 100%"
+        v-for="(item, name, index) of msg"
+        :key="item.statistics_name"
+        @click="clickListItem(item.statistics_name)"
+      >
         <span class="list__item__name"
           >{{ statisticsName[item.statistics_name]
           }}<span v-if="item.statistics_name.indexOf('24') !== -1" class="list__item__tip"
@@ -17,9 +23,10 @@
     <!-- horizontal -->
     <div v-if="type === 'horizontal'" class="horizontal__container">
       <div
-        class="list__item__horizontal"
+        class="list__item__horizontal ibc__selected__title"
         v-for="(item, name, index) of msg"
         :key="item.statistics_name"
+        @click="clickListItem(item.statistics_name)"
       >
         <div class="list__item">
           <span class="list__item__name"
@@ -48,9 +55,13 @@ export default {
     type: String,
     msg: Object,
   },
-  setup() {
+  setup(props, context) {
+    const clickListItem = (value) => {
+      context.emit('clickItem', value);
+    };
     return {
       statisticsName,
+      clickListItem,
     };
   },
 };
@@ -84,6 +95,8 @@ export default {
     margin-bottom: 16px;
   }
   &__value {
+    transition:color 0.3s;
+    transition-timing-function: ease;
     font-size: $font-size2;
     font-family: Montserrat-Regular, Montserrat;
     color: $font-color1;

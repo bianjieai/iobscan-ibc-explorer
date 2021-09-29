@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, reactive, onBeforeUnmount } from 'vue';
 
 export default {
   props: {
@@ -20,10 +20,18 @@ export default {
   },
   setup(props, context) {
     const currentMenu = ref([props.menus[0].value]);
-
+    let timeOuter = reactive(null);
     const clickMenuItem = ({ key }) => {
       context.emit('clickMenu', key);
+      clearTimeout(timeOuter);
+      timeOuter = setTimeout(() => {
+        currentMenu.value = ['Home'];
+      }, 0);
     };
+    onBeforeUnmount(() => {
+      clearTimeout(timeOuter);
+    });
+
     return {
       currentMenu,
       clickMenuItem,

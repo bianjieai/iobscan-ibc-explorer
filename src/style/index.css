@@ -85,7 +85,7 @@ progress {
 }
 
 .ant-message-notice-content {
-  background-color: transparent;
+  background-color: rgba(0, 0, 0, 0.35);
   border-width: 1px 4px 1px 1px;
   border-style: solid;
   border-color: #3D50FF;
@@ -94,4 +94,17 @@ progress {
 
 .ant-anchor-link-title {
   font-family: Montserrat-Regular, Montserrat;
+}
+
+.ibc__selected__border:hover .ant-card-bordered {
+  border: 1px solid #3D50FF;
+  cursor: pointer;
+}
+
+.ibc__selected__title:hover {
+  cursor: pointer;
+}
+
+.ibc__selected__title:hover .list__item__value {
+  color: #3D50FF;
 }

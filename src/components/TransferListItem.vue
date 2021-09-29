@@ -1,7 +1,7 @@
 <template>
-  <div class="list__item">
+  <div class="list__item" @click="clickListItem">
     <span class="list__item__number">{{ prefixInteger(index + 1, 3) }}</span>
-    <img class="list__item__icon" :src="require(`../assets/chains_all.png`)" alt="icon" />
+    <img class="list__item__icon" :src="placeHoderImg" alt="icon" />
     <div
       class="list__subItem"
       :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }"
@@ -53,6 +53,7 @@
 <script>
 import { inject } from 'vue';
 import { getRestString, prefixInteger } from '../helper/parseString';
+import placeHoderImg from '../assets/placeHoder.png';
 
 export default {
   props: {
@@ -60,7 +61,7 @@ export default {
     index: Number,
     item: Object,
   },
-  setup() {
+  setup(props, context) {
     const ibcChains = inject('ibcChains');
 
     const findIbcChainIcon = (chainId) => {
@@ -70,14 +71,20 @@ export default {
           return result.icon;
         }
       }
-      return '';
+      return placeHoderImg;
+    };
+
+    const clickListItem = () => {
+      context.emit('clickItem', props.item);
     };
 
     return {
       getRestString,
       prefixInteger,
       findIbcChainIcon,
+      placeHoderImg,
       ibcChains,
+      clickListItem,
     };
   },
 };
@@ -90,6 +97,7 @@ export default {
 .list__item {
   @include flex(row, nowrap, flex-start, center);
   padding: 0 16px;
+  cursor: pointer;
   &__number {
     font-size: $font-size5;
     font-family: Montserrat-Regular, Montserrat;
@@ -110,7 +118,7 @@ export default {
     @include flex(row, nowrap, flex-start, center);
     &__title__container {
       width: 100%;
-      max-width: 160px;
+      max-width: 150px;
       margin: 8px;
       @include flex(column, nowrap, flex-start, center);
     }
@@ -139,13 +147,15 @@ export default {
     }
     &__adress__icon {
       width: 24px;
+      height: 24px;
       margin-right: 10px;
       border-radius: 50%;
       border: 1px solid rgba(0, 0, 0, 0.2);
     }
   }
   &__ago {
-    width: 100%;
+    // width: 100%;
+    width: 150px;
     text-align: right;
     font-size: $font-size5;
     font-family: Montserrat-Regular, Montserrat;
@@ -156,12 +166,12 @@ export default {
 }
 .hash {
   &__container {
-    width: 100%;
-    max-width: 130px;
+    // width: 100%;
     @include flex(column, nowrap, flex-start, flex-start);
   }
   &__value {
     width: 100%;
+    min-width: 150px;
     font-size: $font-size5;
     font-family: Montserrat-Regular, Montserrat;
     font-weight: 400;
