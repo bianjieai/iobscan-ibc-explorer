@@ -19,7 +19,11 @@
         ref="listRef"
       >
         <template #renderItem="{ item }">
-          <a-list-item :class="findClassName(item.chain_id)">
+          <a-list-item
+            :class="findClassName(item.chain_id)"
+            class="ibc__selected__border"
+            @click="clickListItem({ type: 'chainList', value: item.chain_id })"
+          >
             <a-card class="menu__card">
               <img class="card__img" :src="item.icon" alt="icon" />
               <p class="card__title">{{ item.chain_name }}</p>
@@ -99,6 +103,10 @@ export default {
       }
     };
 
+    const clickListItem = ({ type, value }) => {
+      context.emit('clickItem', { type, value });
+    };
+
     return {
       menus,
       currentMenu,
@@ -107,6 +115,7 @@ export default {
       findClassName,
       onSelectedMenu,
       onClickAnchor,
+      clickListItem,
     };
   },
 };

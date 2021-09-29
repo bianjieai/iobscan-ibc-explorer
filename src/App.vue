@@ -65,14 +65,13 @@ export default {
     };
     const clickMenu = (val) => {
       if (val !== 'Home') {
-        message.config({
-          maxCount: 2,
-          top: '100px',
-          duration: 3,
-        });
         message.info({
           content: h(Message),
           icon: h('div'),
+        });
+      } else {
+        router.push({
+          name: 'Home',
         });
       }
     };

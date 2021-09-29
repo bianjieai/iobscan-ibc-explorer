@@ -4,11 +4,19 @@
     <layer-block class="home__top" title="Networks" type="dark">
       <div class="home__top__slot">
         <div class="home__top__left">
-          <card :msg="ibcStatisticsChains.chains_24hr" />
-          <card :msg="ibcStatisticsChains.chain_all" style="margin-top: 18px;" />
+          <card :msg="ibcStatisticsChains.chains_24hr" @click="onClickViewAll" />
+          <card
+            :msg="ibcStatisticsChains.chain_all"
+            style="margin-top: 18px;"
+            @click="onClickViewAll"
+          />
         </div>
         <div class="home__top__right">
-          <card-list :chainList="ibcChains.value" @onMenuSelected="onMenuSelected" />
+          <card-list
+            :chainList="ibcChains.value"
+            @onMenuSelected="onMenuSelected"
+            @clickItem="onClickViewAll"
+          />
         </div>
       </div>
     </layer-block>
@@ -18,18 +26,26 @@
       <div class="home__bottom__left">
         <!-- Channels -->
         <layer-block title="Channels">
-          <statistic-list type="vertical" :msg="ibcStatisticsChannels" />
+          <statistic-list
+            type="vertical"
+            :msg="ibcStatisticsChannels"
+            @clickItem="onClickViewAll"
+          />
         </layer-block>
 
         <!-- Tokens -->
-        <layer-block title="IBC Tokens" style="margin-top: 24px">
-          <statistic-list type="vertical" :msg="ibcStatisticsDenoms" />
+        <layer-block title="IBC Tokens" style="margin-top: 47px">
+          <statistic-list type="vertical" :msg="ibcStatisticsDenoms" @clickItem="onClickViewAll" />
         </layer-block>
       </div>
 
       <layer-block class="home__bottom__right" title="IBC Token Transfer">
         <statistic-list type="horizontal" :msg="ibcStatisticsTxs" />
-        <transfer-list :transferList="ibcTxs.value" @clickViewAll="onClickViewAll" />
+        <transfer-list
+          :transferList="ibcTxs.value"
+          @clickViewAll="onClickViewAll"
+          @clickItem="onClickViewAll"
+        />
       </layer-block>
     </div>
   </div>
@@ -132,11 +148,6 @@ export default {
     };
 
     const onClickViewAll = () => {
-      message.config({
-        maxCount: 2,
-        top: '100px',
-        duration: 3,
-      });
       message.info({
         content: h(Message),
         icon: h('div'),

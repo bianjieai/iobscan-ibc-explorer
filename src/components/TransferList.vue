@@ -13,6 +13,7 @@
           :item="item"
           :index="index"
           :isFinal="index >= transferList.length - 1"
+          @clickItem="clickListItem"
         />
       </div>
 
@@ -45,8 +46,14 @@ export default {
     const onClickViewAll = () => {
       context.emit('clickViewAll');
     };
+
+    const clickListItem = (item) => {
+      context.emit('clickItem', item);
+    };
+
     return {
       onClickViewAll,
+      clickListItem,
     };
   },
 };
