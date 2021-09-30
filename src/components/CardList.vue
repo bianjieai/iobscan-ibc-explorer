@@ -25,7 +25,10 @@
             @click="clickListItem({ type: 'chainList', value: item.chain_id })"
           >
             <a-card class="menu__card">
-              <img class="card__img" :src="item.icon" alt="icon" />
+              <img
+                class="card__img"
+                :src="item.icon ? item.icon : require('../assets/placeHoder.png')"
+              />
               <p class="card__title">{{ item.chain_name }}</p>
               <p class="card__value">{{ item.chain_id }}</p>
             </a-card>

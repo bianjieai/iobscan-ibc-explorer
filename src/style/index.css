@@ -108,3 +108,7 @@ progress {
 .ibc__selected__title:hover .list__item__value {
   color: #3D50FF;
 }
+
+.ibc__selected__title:hover .card__content__value {
+  color: #3D50FF;
+}

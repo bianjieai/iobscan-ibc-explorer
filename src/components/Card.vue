@@ -1,5 +1,5 @@
 <template>
-  <div class="card">
+  <div class="card ibc__selected__title">
     <img class="card__img" src="../assets/chains_all.png" alt="chains_all" />
     <div class="card__content">
       <span class="card__content__name"
@@ -59,6 +59,8 @@ export default {
       font-family: Montserrat-Regular, Montserrat;
       color: $font-color1;
       line-height: $font-size2;
+      transition:color 0.3s;
+      transition-timing-function: ease;
     }
     &__tip {
       margin-left: 8px;

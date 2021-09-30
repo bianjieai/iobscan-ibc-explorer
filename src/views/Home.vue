@@ -40,7 +40,7 @@
       </div>
 
       <layer-block class="home__bottom__right" title="IBC Token Transfer">
-        <statistic-list type="horizontal" :msg="ibcStatisticsTxs" />
+        <statistic-list type="horizontal" :msg="ibcStatisticsTxs" @clickItem="onClickViewAll" />
         <transfer-list
           :transferList="ibcTxs.value"
           @clickViewAll="onClickViewAll"

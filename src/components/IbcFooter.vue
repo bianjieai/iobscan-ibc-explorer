@@ -21,7 +21,7 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    const copyright = ref('Copyright © 2021 IRIS Foundation Ltd. All Rights Reserved');
+    const copyright = ref('Copyright © 2021 IRIS Foundation Ltd. All Rights Reserved.');
     return {
       copyright,
     };
