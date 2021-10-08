@@ -38,11 +38,16 @@ function getIbcBaseDenoms() {
   return get(url);
 }
 
+function getIbcDenoms() {
+  const url = '/api/ibc/denoms';
+  return get(url);
+}
+
 function getIbcStatistics() {
   const url = '/api/ibc/statistics';
   return get(url);
 }
 
 export {
-  getIbcTxs, getIbcChains, getIbcBaseDenoms, getIbcStatistics,
+  getIbcTxs, getIbcChains, getIbcBaseDenoms, getIbcDenoms, getIbcStatistics,
 };

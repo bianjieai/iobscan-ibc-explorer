@@ -1,14 +1,14 @@
 <template>
   <div class="list__item" @click="clickListItem">
     <span class="list__item__number">{{ prefixInteger(index + 1, 3) }}</span>
-    <img class="list__item__icon" :src="placeHoderImg" alt="icon" />
+    <img class="list__item__icon" :src="item.symbolIcon || placeHoderImg" alt="icon" />
     <div
       class="list__subItem"
       :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }"
     >
       <div class="list__subItem__title__container">
-        <span class="list__subItem__value">{{ item.sc_tx_info?.msg_amount?.amount || 0 }}</span>
-        <span class="list__subItem__title">{{ item.base_denom || "" }}</span>
+        <span class="list__subItem__value">{{ item.symbolNum || 0 }}</span>
+        <span class="list__subItem__title">{{ item.symbolDenom || "" }}</span>
       </div>
 
       <div class="list__subItem__adress__container">

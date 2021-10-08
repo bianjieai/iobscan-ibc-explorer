@@ -72,9 +72,12 @@ import {
   ibcStatisticsTxsDefault,
 } from '../constant';
 import {
-  getIbcChains, getIbcTxs, getIbcBaseDenoms, getIbcStatistics,
+  getIbcChains,
+  getIbcTxs,
+  getIbcBaseDenoms,
+  getIbcDenoms,
+  getIbcStatistics,
 } from '../service/api';
-// import commingsoonImg from '../assets/commingsoon.png';
 
 export default {
   name: 'Home',
@@ -86,26 +89,6 @@ export default {
     TransferList,
   },
   setup() {
-    const ibcTxs = reactive({ value: [] });
-    let txTimer = reactive(null);
-    getIbcTxs({
-      page_num: 1,
-      page_size: 100,
-    }).then((res) => {
-      const result = res.data;
-      clearInterval(txTimer);
-      txTimer = setInterval(() => {
-        ibcTxs.value = result.map((item) => ({
-          ...item,
-          tx_time: Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', ''),
-        }));
-      }, ageTimerInterval);
-    });
-
-    onBeforeUnmount(() => {
-      clearInterval(txTimer);
-    });
-
     const ibcChains = reactive({ value: [] });
     provide('ibcChains', ibcChains);
 
@@ -116,6 +99,58 @@ export default {
     const ibcBaseDenoms = reactive({ value: [] });
     getIbcBaseDenoms().then((res) => {
       ibcBaseDenoms.value = res;
+    });
+
+    const ibcDenoms = reactive({ value: [] });
+    getIbcDenoms().then((res) => {
+      ibcDenoms.value = res;
+    });
+
+    const ibcTxs = reactive({ value: [] });
+    let txTimer = reactive(null);
+    getIbcTxs({
+      page_num: 1,
+      page_size: 100,
+    }).then((res) => {
+      const result = res.data;
+      clearInterval(txTimer);
+      txTimer = setInterval(() => {
+        ibcTxs.value = result.map((item) => {
+          const auth = Tools.findDenomAuth(ibcDenoms.value, item.denoms.sc_denom, item.sc_chain_id);
+          let symbolNum = 0;
+          let symbolDenom = '';
+          let symbolIcon = '';
+          if (auth) {
+            const findSymbol = Tools.findSymbol(
+              ibcBaseDenoms.value,
+              item.base_denom,
+              item.sc_chain_id,
+            );
+            if (findSymbol) {
+              symbolNum = Tools.parseSymbolNum(
+                (item.sc_tx_info?.msg_amount?.amount || 0) * 10 ** -findSymbol.scale,
+              );
+              symbolDenom = findSymbol.symbol;
+              symbolIcon = findSymbol.icon;
+            }
+          } else {
+            symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
+            symbolDenom = item.base_denom || '';
+            symbolIcon = '';
+          }
+          return {
+            ...item,
+            symbolNum,
+            symbolDenom,
+            symbolIcon,
+            tx_time: Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', ''),
+          };
+        });
+      }, ageTimerInterval);
+    });
+
+    onBeforeUnmount(() => {
+      clearInterval(txTimer);
     });
 
     const ibcStatisticsChains = reactive(ibcStatisticsChainsDefault);
@@ -158,6 +193,7 @@ export default {
       ibcTxs,
       ibcChains,
       ibcBaseDenoms,
+      ibcDenoms,
       ibcStatisticsChains,
       ibcStatisticsChannels,
       ibcStatisticsDenoms,
