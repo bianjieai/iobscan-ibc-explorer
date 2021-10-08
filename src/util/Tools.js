@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 export default class Tools {
   /**
    * 根据展示的需求拼接字符串展示成 > xxdxxhxxmxxs ago 或者 xxdxxhxxmxxs ago 或者 xxdxxhxxmxxs
@@ -16,11 +17,16 @@ export default class Tools {
     const seconds = dateDiff % 60;
 
     // eslint-disable-next-line no-nested-ternary
-    const str = `${dayDiff ? (dayDiff < 2 ? `${dayDiff} day` : `${dayDiff} days`) : ''} ${hours ? (hours < 2 ? `${hours} hr` : `${hours} hrs`) : ''} ${dayDiff ? '' : minutes ? (minutes < 2 ? `${minutes} min` : `${minutes} mins`) : ''} ${dayDiff || hours ? '' : seconds ? (seconds < 2 ? `${seconds} sec` : `${seconds} secs`) : ''}`;
+    const str = `${dayDiff ? (dayDiff < 2 ? `${dayDiff} day` : `${dayDiff} days`) : ''} ${
+      hours ? (hours < 2 ? `${hours} hr` : `${hours} hrs`) : ''
+    } ${dayDiff ? '' : minutes ? (minutes < 2 ? `${minutes} min` : `${minutes} mins`) : ''} ${
+      dayDiff || hours ? '' : seconds ? (seconds < 2 ? `${seconds} sec` : `${seconds} secs`) : ''
+    }`;
 
     if (prefix && suffix) {
       return `${prefix} ${str} ${suffix}`;
-    } if (suffix) {
+    }
+    if (suffix) {
       return `${str} ${suffix}`;
     }
     return `${str}`;
@@ -28,5 +34,36 @@ export default class Tools {
 
   static getTimestamp() {
     return Math.floor(new Date().getTime() / 1000);
+  }
+
+  static findDenomAuth(ibcDenoms, denomStr, chainId) {
+    if (ibcDenoms) {
+      const findDenom = ibcDenoms.find(
+        (denom) => denom.denom === denomStr && denom.chain_id === chainId,
+      );
+      if (findDenom) {
+        return findDenom.auth;
+      }
+    }
+    return false;
+  }
+
+  static findSymbol(ibcBaseDenoms, baseDenomStr, chainId) {
+    if (ibcBaseDenoms) {
+      const findBaseDenom = ibcBaseDenoms.find(
+        (baseDenom) => baseDenom.denom === baseDenomStr && baseDenom.chain_id === chainId,
+      );
+      if (findBaseDenom) {
+        return findBaseDenom;
+      }
+    }
+    return null;
+  }
+
+  static parseSymbolNum(num) {
+    if (num > 999) {
+      return Math.round(num);
+    }
+    return num.toFixed(4);
   }
 }
