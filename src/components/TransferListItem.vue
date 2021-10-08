@@ -148,7 +148,7 @@ export default {
     &__adress__icon {
       width: 24px;
       height: 24px;
-      margin-right: 10px;
+      margin: 0 10px;
       border-radius: 50%;
       border: 1px solid rgba(0, 0, 0, 0.2);
     }

@@ -88,7 +88,7 @@ progress {
   background-color: rgba(0, 0, 0, 0.35);
   border-width: 1px 4px 1px 1px;
   border-style: solid;
-  border-color: #3D50FF;
+  border-color: #3d50ff;
   color: white;
 }
 
@@ -97,7 +97,7 @@ progress {
 }
 
 .ibc__selected__border:hover .ant-card-bordered {
-  border: 1px solid #3D50FF;
+  border: 1px solid #3d50ff;
   cursor: pointer;
 }
 
@@ -106,9 +106,17 @@ progress {
 }
 
 .ibc__selected__title:hover .list__item__value {
-  color: #3D50FF;
+  color: #3d50ff;
 }
 
 .ibc__selected__title:hover .card__content__value {
-  color: #3D50FF;
+  color: #3d50ff;
+}
+.ibc__scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.ibc__scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  background: #3d50ff;
 }

@@ -6,7 +6,7 @@
       <a-button class="list__top__button" @click="onClickViewAll">View All</a-button>
     </div>
     <div class="list__middle" >
-      <div class="transfer__list" v-if="transferList && transferList.length">
+      <div class="transfer__list ibc__scrollbar" v-if="transferList && transferList.length">
         <transfer-list-item
           v-for="(item, index) of transferList"
           :key="item.record_id"
