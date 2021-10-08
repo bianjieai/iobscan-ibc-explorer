@@ -12,7 +12,7 @@
     </a-menu>
     <div class="chainlist__bottom">
       <a-list
-        class="card__list"
+        class="card__list ibc__scrollbar"
         v-show="chainList[currentMenu] && chainList[currentMenu].length"
         :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }"
         :data-source="chainList[currentMenu]"
@@ -166,6 +166,14 @@ export default {
     padding-right: 20px;
     overflow-y: auto;
     overflow-x: hidden;
+    // &::-webkit-scrollbar {
+    //   width: 4px;
+    // }
+    // &::-webkit-scrollbar-thumb {
+    //     border-radius: 4px;
+    //     -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
+    //     background: #3D50FF;
+    // }
   }
   .menu__card {
     border-radius: $card-radio;
