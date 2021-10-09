@@ -34,7 +34,7 @@
         </layer-block>
 
         <!-- Tokens -->
-        <layer-block title="IBC Tokens" style="margin-top: 47px">
+        <layer-block title="IBC Tokens" style="margin-top: 47px" showTip :tipMsg="tipMsg">
           <statistic-list type="vertical" :msg="ibcStatisticsDenoms" @clickItem="onClickViewAll" />
         </layer-block>
       </div>
@@ -189,6 +189,8 @@ export default {
       });
     };
 
+    const tipMsg = 'Denom is the token denomination to be transferred, base denomination of the relayed fungible token.';
+
     return {
       ibcTxs,
       ibcChains,
@@ -200,6 +202,7 @@ export default {
       ibcStatisticsTxs,
       onMenuSelected,
       onClickViewAll,
+      tipMsg,
     };
   },
 };
