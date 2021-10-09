@@ -62,7 +62,7 @@ export default class Tools {
 
   static parseSymbolNum(num) {
     if (num > 999) {
-      return Math.round(num);
+      return Math.floor(num);
     }
     return num.toFixed(4);
   }
