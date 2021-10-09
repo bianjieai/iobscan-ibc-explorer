@@ -37,9 +37,9 @@
       </a-list>
 
       <a-anchor
+        class="list__anchor test"
         :affix="false"
         v-show="chainList[currentMenu] && chainList[currentMenu].length"
-        class="list__anchor"
       >
         <a-anchor-link
           class="list__anchor__item"
@@ -166,14 +166,6 @@ export default {
     padding-right: 20px;
     overflow-y: auto;
     overflow-x: hidden;
-    // &::-webkit-scrollbar {
-    //   width: 4px;
-    // }
-    // &::-webkit-scrollbar-thumb {
-    //     border-radius: 4px;
-    //     -webkit-box-shadow: inset 0 0 5px rgba(0,0,0,0.2);
-    //     background: #3D50FF;
-    // }
   }
   .menu__card {
     border-radius: $card-radio;

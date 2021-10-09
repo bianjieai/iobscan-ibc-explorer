@@ -11,6 +11,7 @@ import {
   Anchor,
   Divider,
   message,
+  Tooltip,
 } from 'ant-design-vue';
 import router from './router';
 import store from './store';
@@ -36,4 +37,5 @@ createApp(App)
   .use(Button)
   .use(message)
   .use(Input)
+  .use(Tooltip)
   .mount('#app');

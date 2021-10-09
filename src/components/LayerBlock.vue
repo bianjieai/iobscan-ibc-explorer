@@ -2,13 +2,14 @@
   <div class="block">
     <div class="block__header">
       <div :class="type === 'dark' ? 'block__header__line__dark' : 'block__header__line'">
-        <p
-        class="block__header__title"
-        :style="{ color: type === 'dark' ? '#ffffff' : '#000000' }"
-      >
-        {{ title }}
-      </p>
+        <p class="block__header__title" :style="{ color: type === 'dark' ? '#ffffff' : '#000000' }">
+          {{ title }}
+        </p>
       </div>
+      <a-tooltip>
+        <template #title>{{ tipMsg }}</template>
+        <img class="tip__icon" v-if="showTip" src="../assets/tip.png" />
+      </a-tooltip>
     </div>
     <div class="block__content">
       <slot></slot>
@@ -21,6 +22,8 @@ export default {
   props: {
     type: String,
     title: String,
+    showTip: Boolean,
+    tipMsg: String,
   },
   setup() {
     return {};
@@ -71,6 +74,12 @@ export default {
     width: 100%;
     background-color: #ffffff;
     border-radius: $card-radio;
+  }
+  .tip__icon {
+    width: 24px;
+    position: absolute;
+    margin-left: 16px;
+    margin-top: -10px;
   }
 }
 </style>
