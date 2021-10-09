@@ -126,3 +126,11 @@ progress {
   font-weight: 400;
   color: rgba(0, 0, 0, 0.35);
 }
+
+.ant-anchor-link-active .ant-anchor-link-title {
+  color: #ffffff;
+  width: 32px;
+  background-color: #3d50ff;
+  border-radius: 4px;
+  padding: 2px;
+}
