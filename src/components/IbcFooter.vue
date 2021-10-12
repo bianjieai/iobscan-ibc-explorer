@@ -4,6 +4,7 @@
       <img
         class="footer__content__left__icon"
         v-for="item of 4"
+        @click="onClickIcon(item)"
         :key="item"
         :src="require(`../assets/f${item}.png`)"
         alt="icon"
@@ -22,8 +23,14 @@ import { ref } from 'vue';
 export default {
   setup() {
     const copyright = ref('Copyright © 2021 IRIS Foundation Ltd. All Rights Reserved.');
+    const onClickIcon = (item) => {
+      const links = ['https://github.com/irisnet', 'https://t.me/irisnetwork', 'https://medium.com/irisnet-blog', 'https://twitter.com/irisnetwork'];
+      window.open(links[item - 1]);
+    };
+
     return {
       copyright,
+      onClickIcon,
     };
   },
 };
@@ -50,6 +57,7 @@ export default {
       padding: 6px;
       background-color: rgba(61, 80, 255, 0.1);
       border-radius: $card-radio;
+      cursor: pointer;
     }
   }
   &__right {
