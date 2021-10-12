@@ -117,8 +117,8 @@ export default {
       txTimer = setInterval(() => {
         ibcTxs.value = result.map((item) => {
           const auth = Tools.findDenomAuth(ibcDenoms.value, item.denoms.sc_denom, item.sc_chain_id);
-          let symbolNum = 0;
-          let symbolDenom = '';
+          let symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
+          let symbolDenom = item.base_denom || '';
           let symbolIcon = '';
           if (auth) {
             const findSymbol = Tools.findSymbol(
@@ -133,10 +133,6 @@ export default {
               symbolDenom = findSymbol.symbol;
               symbolIcon = findSymbol.icon;
             }
-          } else {
-            symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
-            symbolDenom = item.base_denom || '';
-            symbolIcon = '';
           }
           return {
             ...item,
