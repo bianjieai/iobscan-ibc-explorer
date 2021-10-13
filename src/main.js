@@ -12,6 +12,7 @@ import {
   Divider,
   message,
   Tooltip,
+  Table,
 } from 'ant-design-vue';
 import router from './router';
 import store from './store';
@@ -38,4 +39,5 @@ createApp(App)
   .use(message)
   .use(Input)
   .use(Tooltip)
+  .use(Table)
   .mount('#app');
