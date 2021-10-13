@@ -13,6 +13,7 @@
     <div class="chainlist__bottom">
       <a-list
         class="card__list ibc__scrollbar"
+        id="card__list"
         v-show="chainList[currentMenu] && chainList[currentMenu].length"
         :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }"
         :data-source="chainList[currentMenu]"
@@ -21,7 +22,8 @@
         <template #renderItem="{ item }">
           <a-list-item
             :class="findClassName(item.chain_id)"
-            class="ibc__selected__border"
+            :id="`list${findClassName(item.chain_id)}`"
+            class="ibc__selected__border card__list__item"
             @click="clickListItem({ type: 'chainList', value: item.chain_id })"
           >
             <a-card class="menu__card">
@@ -37,17 +39,19 @@
       </a-list>
 
       <a-anchor
-        class="list__anchor test"
+        class="list__anchor"
         :affix="false"
+        :getContainer="getBindElement"
+        @change="onChangeAnchor"
         v-show="chainList[currentMenu] && chainList[currentMenu].length"
       >
         <a-anchor-link
+          @click.prevent.stop="() => {}"
           class="list__anchor__item"
           v-for="item of anchors"
           :key="item.title"
           :title="item.title"
-          :href="`#${item.title}`"
-          @click.stop.prevent="onClickAnchor(item)"
+          :href="`#list${item.title}`"
         />
       </a-anchor>
 
@@ -60,7 +64,7 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import { chainMenus, anchorsDatas } from '../constant';
 import NoDatas from './NoDatas.vue';
 
@@ -72,6 +76,12 @@ export default {
     chainList: Object,
   },
   setup(props, context) {
+    const getBindElement = ref(null);
+    onMounted(() => {
+      getBindElement.value = () => document.querySelector(
+        '#card__list',
+      );
+    });
     const menus = reactive(chainMenus);
     const currentMenu = ref([menus[0].value]);
 
@@ -99,8 +109,8 @@ export default {
       return className;
     };
 
-    const onClickAnchor = (anchorItem) => {
-      const findItem = document.getElementsByClassName(anchorItem.title)[0];
+    const onChangeAnchor = (title) => {
+      const findItem = document.getElementsByClassName(title.replace('#', ''))[0];
       if (findItem) {
         listRef.value.$el.scrollTop = findItem.parentElement.offsetTop;
       }
@@ -111,13 +121,14 @@ export default {
     };
 
     return {
+      getBindElement,
       menus,
       currentMenu,
       anchors,
       listRef,
       findClassName,
       onSelectedMenu,
-      onClickAnchor,
+      onChangeAnchor,
       clickListItem,
     };
   },

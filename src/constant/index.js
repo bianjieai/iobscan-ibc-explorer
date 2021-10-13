@@ -12,6 +12,11 @@ const testChains = {
       icon: 'https://img0.baidu.com/it/u=3122136587,3938996930&fm=26&fmt=auto',
     },
     {
+      chain_id: 'b2',
+      chain_name: 'b2',
+      icon: 'https://img0.baidu.com/it/u=3122136587,3938996930&fm=26&fmt=auto',
+    },
+    {
       chain_id: 'c1',
       chain_name: 'c1',
       icon: 'https://img0.baidu.com/it/u=3122136587,3938996930&fm=26&fmt=auto',
@@ -19,6 +24,11 @@ const testChains = {
     {
       chain_id: 'f1',
       chain_name: 'f1',
+      icon: 'https://img0.baidu.com/it/u=3122136587,3938996930&fm=26&fmt=auto',
+    },
+    {
+      chain_id: 'f2',
+      chain_name: 'f2',
       icon: 'https://img0.baidu.com/it/u=3122136587,3938996930&fm=26&fmt=auto',
     },
     {
@@ -47,8 +57,18 @@ const testChains = {
       icon: 'https://img0.baidu.com/it/u=3122136587,3938996930&fm=26&fmt=auto',
     },
     {
+      chain_id: 'p2',
+      chain_name: 'p2',
+      icon: 'https://img0.baidu.com/it/u=3122136587,3938996930&fm=26&fmt=auto',
+    },
+    {
       chain_id: 'r1',
       chain_name: 'r1',
+      icon: 'https://img0.baidu.com/it/u=3122136587,3938996930&fm=26&fmt=auto',
+    },
+    {
+      chain_id: 's1',
+      chain_name: 's1',
       icon: 'https://img0.baidu.com/it/u=3122136587,3938996930&fm=26&fmt=auto',
     },
     {
