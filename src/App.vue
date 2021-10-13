@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { ref, reactive, h } from 'vue';
+import { reactive, h, computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
@@ -48,8 +48,8 @@ import {
   GET_IBCDENOMS,
   GET_IBCBASEDENOMS,
   GET_IBCCHAINS,
+  GET_IBCCONFIGS,
 } from './store/action-types';
-import { getIbcConfig } from './service/api';
 
 export default {
   components: {
@@ -63,6 +63,7 @@ export default {
     store.dispatch(GET_IBCDENOMS);
     store.dispatch(GET_IBCBASEDENOMS);
     store.dispatch(GET_IBCCHAINS);
+    store.dispatch(GET_IBCCONFIGS);
 
     const router = useRouter();
 
@@ -73,12 +74,9 @@ export default {
       });
     };
 
-    const iobscanUrl = ref('');
-    getIbcConfig().then((res) => {
-      iobscanUrl.value = res.iobscan;
-    });
+    const iobscanUrl = computed(() => store.state.configs).value?.iobscan;
     const onClickIcon = () => {
-      window.open(iobscanUrl.value);
+      window.open(iobscanUrl);
     };
     const onPressEnter = (val) => {
       console.log(val);

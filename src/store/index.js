@@ -14,12 +14,13 @@ import {
   SET_IBCDENOMS,
   SET_IBCBASEDENOMS,
   SET_IBCCHAINS,
+  SET_IBCCONFIGS,
 } from './mutation-types';
 import {
-  GET_IBCSTATISTICS, GET_IBCDENOMS, GET_IBCBASEDENOMS, GET_IBCCHAINS,
+  GET_IBCSTATISTICS, GET_IBCDENOMS, GET_IBCBASEDENOMS, GET_IBCCHAINS, GET_IBCCONFIGS,
 } from './action-types';
 import {
-  getIbcStatistics, getIbcDenoms, getIbcBaseDenoms, getIbcChains,
+  getIbcStatistics, getIbcDenoms, getIbcBaseDenoms, getIbcChains, getIbcConfig,
 } from '../service/api';
 
 export default createStore({
@@ -31,6 +32,7 @@ export default createStore({
     ibcDenoms: { value: [] },
     ibcBaseDenoms: { value: [] },
     ibcChains: { value: [] },
+    configs: {},
   },
   mutations: {
     [SET_IBCSTATISTICS_CHAINS](state, { chains_24hr, chain_all }) {
@@ -69,6 +71,9 @@ export default createStore({
     },
     [SET_IBCCHAINS](state, chains) {
       state.ibcChains.value = chains;
+    },
+    [SET_IBCCONFIGS](state, configs) {
+      state.configs = configs;
     },
   },
   actions: {
@@ -110,6 +115,11 @@ export default createStore({
     [GET_IBCCHAINS](context) {
       getIbcChains().then((res) => {
         context.commit(SET_IBCCHAINS, res);
+      });
+    },
+    [GET_IBCCONFIGS](context) {
+      getIbcConfig().then((res) => {
+        context.commit(SET_IBCCONFIGS, res);
       });
     },
   },
