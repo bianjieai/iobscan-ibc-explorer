@@ -273,8 +273,6 @@ const transferTableColumn = [
   },
 ];
 
-const iobscanUrl = 'https://www.iobscan.io';
-
 export {
   testChains,
   menus,
@@ -288,5 +286,4 @@ export {
   ibcStatisticsTxsDefault,
   ibcTxStatus,
   transferTableColumn,
-  iobscanUrl,
 };

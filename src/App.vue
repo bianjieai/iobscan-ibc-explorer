@@ -34,11 +34,11 @@
 </template>
 
 <script>
-import { reactive, h } from 'vue';
+import { ref, reactive, h } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
-import { menus, iobscanUrl } from './constant';
+import { menus } from './constant';
 import Navigation from './components/Navigation.vue';
 import HeaderInput from './components/HeaderInput.vue';
 import IbcFooter from './components/IbcFooter.vue';
@@ -49,6 +49,7 @@ import {
   GET_IBCBASEDENOMS,
   GET_IBCCHAINS,
 } from './store/action-types';
+import { getIbcConfig } from './service/api';
 
 export default {
   components: {
@@ -71,8 +72,13 @@ export default {
         name: 'Home',
       });
     };
+
+    const iobscanUrl = ref('');
+    getIbcConfig().then((res) => {
+      iobscanUrl.value = res.iobscan;
+    });
     const onClickIcon = () => {
-      window.open(iobscanUrl);
+      window.open(iobscanUrl.value);
     };
     const onPressEnter = (val) => {
       console.log(val);
