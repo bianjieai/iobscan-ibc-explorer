@@ -34,7 +34,8 @@
 </template>
 
 <script>
-import { reactive, h } from 'vue';
+import { reactive, h, computed } from 'vue';
+import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { menus } from './constant';
@@ -42,6 +43,13 @@ import Navigation from './components/Navigation.vue';
 import HeaderInput from './components/HeaderInput.vue';
 import IbcFooter from './components/IbcFooter.vue';
 import Message from './components/Message.vue';
+import {
+  GET_IBCSTATISTICS,
+  GET_IBCDENOMS,
+  GET_IBCBASEDENOMS,
+  GET_IBCCHAINS,
+  GET_IBCCONFIGS,
+} from './store/action-types';
 
 export default {
   components: {
@@ -50,29 +58,53 @@ export default {
     IbcFooter,
   },
   setup() {
-    const headerMenus = reactive(menus);
+    const store = useStore();
+    store.dispatch(GET_IBCSTATISTICS);
+    store.dispatch(GET_IBCDENOMS);
+    store.dispatch(GET_IBCBASEDENOMS);
+    store.dispatch(GET_IBCCHAINS);
+
     const router = useRouter();
+
+    const headerMenus = reactive(menus);
     const onClickLogo = () => {
       router.push({
         name: 'Home',
       });
     };
+
+    const iobscanUrl = computed(() => store.state.configs?.iobscan);
     const onClickIcon = () => {
-      window.open('https://www.iobscan.io');
+      if (iobscanUrl.value) {
+        window.open(iobscanUrl.value);
+      } else {
+        store.dispatch(GET_IBCCONFIGS).then(() => {
+          window.open(iobscanUrl.value);
+        });
+      }
     };
+
     const onPressEnter = (val) => {
       console.log(val);
     };
     const clickMenu = (val) => {
-      if (val !== 'Home') {
-        message.info({
-          content: h(Message),
-          icon: h('div'),
-        });
-      } else {
-        router.push({
-          name: 'Home',
-        });
+      switch (val) {
+        case 'Home':
+          router.push({
+            name: 'Home',
+          });
+          break;
+        // case 'Transfers':
+        //   router.push({
+        //     name: 'Transfers',
+        //   });
+        //   break;
+        default:
+          message.info({
+            content: h(Message),
+            icon: h('div'),
+          });
+          break;
       }
     };
     return {

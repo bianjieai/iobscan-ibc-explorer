@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable import/prefer-default-export */
 const testChains = {
   active: [
@@ -170,6 +171,7 @@ const statisticsName = {
   tx_24hr_all: 'Recent',
   tx_all: 'All',
   tx_success: 'Success',
+  tx_process: 'Processing',
   tx_failed: 'Failed',
 };
 
@@ -243,6 +245,34 @@ const ibcTxStatus = {
   SETTING: 5,
 };
 
+const transferTableColumn = [
+  {
+    title: 'Token',
+    dataIndex: 'token',
+    slots: { title: 'token' },
+  },
+  {
+    title: 'Sequence',
+    dataIndex: 'sequence',
+  },
+  {
+    title: 'Source Chain',
+    dataIndex: 'sourceChain',
+  },
+  {
+    title: 'Status',
+    dataIndex: 'status',
+  },
+  {
+    title: 'Destination Chain',
+    dataIndex: 'destinationChain',
+  },
+  {
+    title: 'Time',
+    dataIndex: 'time',
+  },
+];
+
 export {
   testChains,
   menus,
@@ -255,4 +285,5 @@ export {
   ibcStatisticsDenomsDefault,
   ibcStatisticsTxsDefault,
   ibcTxStatus,
+  transferTableColumn,
 };

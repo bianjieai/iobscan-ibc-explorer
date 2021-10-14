@@ -48,6 +48,11 @@ function getIbcStatistics() {
   return get(url);
 }
 
+function getIbcConfig() {
+  const url = '/api/ibc/config';
+  return get(url);
+}
+
 export {
-  getIbcTxs, getIbcChains, getIbcBaseDenoms, getIbcDenoms, getIbcStatistics,
+  getIbcTxs, getIbcChains, getIbcBaseDenoms, getIbcDenoms, getIbcStatistics, getIbcConfig,
 };

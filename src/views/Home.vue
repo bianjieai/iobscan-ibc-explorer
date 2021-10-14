@@ -53,8 +53,9 @@
 
 <script>
 import {
-  reactive, provide, onBeforeUnmount, h,
+  reactive, provide, onBeforeUnmount, h, computed,
 } from 'vue';
+import { useStore } from 'vuex';
 import { message } from 'ant-design-vue';
 import LayerBlock from '../components/LayerBlock.vue';
 import Card from '../components/Card.vue';
@@ -62,22 +63,9 @@ import CardList from '../components/CardList.vue';
 import StatisticList from '../components/StatisticList.vue';
 import TransferList from '../components/TransferList.vue';
 import Message from '../components/Message.vue';
-import { findStatistics } from '../helper/findStatistics';
 import Tools from '../util/Tools';
-import {
-  ageTimerInterval,
-  ibcStatisticsChainsDefault,
-  ibcStatisticsChannelsDefault,
-  ibcStatisticsDenomsDefault,
-  ibcStatisticsTxsDefault,
-} from '../constant';
-import {
-  getIbcChains,
-  getIbcTxs,
-  getIbcBaseDenoms,
-  getIbcDenoms,
-  getIbcStatistics,
-} from '../service/api';
+import { ageTimerInterval } from '../constant';
+import { getIbcTxs } from '../service/api';
 
 export default {
   name: 'Home',
@@ -89,22 +77,14 @@ export default {
     TransferList,
   },
   setup() {
-    const ibcChains = reactive({ value: [] });
+    const store = useStore();
+
+    const ibcChains = computed(() => store.state.ibcChains)?.value;
     provide('ibcChains', ibcChains);
 
-    getIbcChains().then((res) => {
-      ibcChains.value = res;
-    });
+    const ibcBaseDenoms = computed(() => store.state.ibcBaseDenoms)?.value;
 
-    const ibcBaseDenoms = reactive({ value: [] });
-    getIbcBaseDenoms().then((res) => {
-      ibcBaseDenoms.value = res;
-    });
-
-    const ibcDenoms = reactive({ value: [] });
-    getIbcDenoms().then((res) => {
-      ibcDenoms.value = res;
-    });
+    const ibcDenoms = computed(() => store.state.ibcDenoms)?.value;
 
     const ibcTxs = reactive({ value: [] });
     let txTimer = reactive(null);
@@ -149,29 +129,6 @@ export default {
       clearInterval(txTimer);
     });
 
-    const ibcStatisticsChains = reactive(ibcStatisticsChainsDefault);
-
-    const ibcStatisticsChannels = reactive(ibcStatisticsChannelsDefault);
-
-    const ibcStatisticsDenoms = reactive(ibcStatisticsDenomsDefault);
-
-    const ibcStatisticsTxs = reactive(ibcStatisticsTxsDefault);
-
-    getIbcStatistics().then((res) => {
-      ibcStatisticsChains.chains_24hr = findStatistics(res, 'chains_24hr');
-      ibcStatisticsChains.chain_all = findStatistics(res, 'chain_all');
-      ibcStatisticsChannels.channels_24hr = findStatistics(res, 'channels_24hr');
-      ibcStatisticsChannels.channel_all = findStatistics(res, 'channel_all');
-      ibcStatisticsChannels.channel_opened = findStatistics(res, 'channel_opened');
-      ibcStatisticsChannels.channel_closed = findStatistics(res, 'channel_closed');
-      ibcStatisticsDenoms.denom_all = findStatistics(res, 'denom_all');
-      ibcStatisticsDenoms.base_denom_all = findStatistics(res, 'base_denom_all');
-      ibcStatisticsTxs.tx_24hr_all = findStatistics(res, 'tx_24hr_all');
-      ibcStatisticsTxs.tx_all = findStatistics(res, 'tx_all');
-      ibcStatisticsTxs.tx_success = findStatistics(res, 'tx_success');
-      ibcStatisticsTxs.tx_failed = findStatistics(res, 'tx_failed');
-    });
-
     // eslint-disable-next-line no-unused-vars
     const onMenuSelected = (menuKey) => {
       // console.log(menuKey);
@@ -192,10 +149,10 @@ export default {
       ibcChains,
       ibcBaseDenoms,
       ibcDenoms,
-      ibcStatisticsChains,
-      ibcStatisticsChannels,
-      ibcStatisticsDenoms,
-      ibcStatisticsTxs,
+      ibcStatisticsChains: computed(() => store.state.ibcStatisticsChains),
+      ibcStatisticsChannels: computed(() => store.state.ibcStatisticsChannels),
+      ibcStatisticsDenoms: computed(() => store.state.ibcStatisticsDenoms),
+      ibcStatisticsTxs: computed(() => store.state.ibcStatisticsTxs),
       onMenuSelected,
       onClickViewAll,
       tipMsg,
