@@ -74,8 +74,7 @@ export default {
       });
     };
 
-    const configs = computed(() => store.state.configs);
-    const iobscanUrl = computed(() => configs.value.iobscan);
+    const iobscanUrl = computed(() => store.state.configs.iobscan);
     const onClickIcon = () => {
       if (iobscanUrl.value) {
         window.open(iobscanUrl.value);
