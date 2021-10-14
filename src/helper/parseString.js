@@ -8,3 +8,13 @@ function prefixInteger(num, n) {
 }
 
 export { getRestString, prefixInteger };
+
+export function JSONparse(val) {
+  let result = null;
+  try {
+    result = JSON.parse(val);
+  } catch (d) {
+    result = {};
+  }
+  return result;
+}

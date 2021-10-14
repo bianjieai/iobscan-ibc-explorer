@@ -17,11 +17,20 @@ import {
   SET_IBCCONFIGS,
 } from './mutation-types';
 import {
-  GET_IBCSTATISTICS, GET_IBCDENOMS, GET_IBCBASEDENOMS, GET_IBCCHAINS, GET_IBCCONFIGS,
+  GET_IBCSTATISTICS,
+  GET_IBCDENOMS,
+  GET_IBCBASEDENOMS,
+  GET_IBCCHAINS,
+  GET_IBCCONFIGS,
 } from './action-types';
 import {
-  getIbcStatistics, getIbcDenoms, getIbcBaseDenoms, getIbcChains, getIbcConfig,
+  getIbcStatistics,
+  getIbcDenoms,
+  getIbcBaseDenoms,
+  getIbcChains,
+  getIbcConfig,
 } from '../service/api';
+import { JSONparse } from '../helper/parseString';
 
 export default createStore({
   state: {
@@ -118,15 +127,20 @@ export default createStore({
       });
     },
     [GET_IBCCONFIGS](context) {
-      const configs = sessionStorage.getItem('configs');
+      const configs = JSONparse(sessionStorage.getItem('configs'));
+      let result = null;
       if (configs) {
-        context.commit(SET_IBCCONFIGS, configs);
+        result = Promise.resolve(context.commit(SET_IBCCONFIGS, configs));
       } else {
-        getIbcConfig().then((res) => {
-          context.commit(SET_IBCCONFIGS, res);
-          sessionStorage.setItem('configs', res);
+        result = new Promise((resolve) => {
+          getIbcConfig().then((res) => {
+            context.commit(SET_IBCCONFIGS, res);
+            sessionStorage.setItem('configs', JSON.stringify(res));
+            resolve();
+          });
         });
       }
+      return result;
     },
   },
   modules: {},

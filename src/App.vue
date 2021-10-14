@@ -63,7 +63,7 @@ export default {
     store.dispatch(GET_IBCDENOMS);
     store.dispatch(GET_IBCBASEDENOMS);
     store.dispatch(GET_IBCCHAINS);
-    store.dispatch(GET_IBCCONFIGS);
+    // store.dispatch(GET_IBCCONFIGS);
 
     const router = useRouter();
 
@@ -74,16 +74,15 @@ export default {
       });
     };
 
-    const iobscanUrl = computed(() => store.state.configs).value?.iobscan;
+    const configs = computed(() => store.state.configs);
+    const iobscanUrl = computed(() => configs.value.iobscan);
     const onClickIcon = () => {
-      if (iobscanUrl) {
-        window.open(iobscanUrl);
+      if (iobscanUrl.value) {
+        window.open(iobscanUrl.value);
       } else {
-        (
-          store.dispatch(GET_IBCCONFIGS).then(() => {
-            window.open(iobscanUrl);
-          })
-        );
+        store.dispatch(GET_IBCCONFIGS).then(() => {
+          window.open(iobscanUrl.value);
+        });
       }
     };
 
