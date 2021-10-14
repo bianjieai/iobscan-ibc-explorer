@@ -63,7 +63,6 @@ export default {
     store.dispatch(GET_IBCDENOMS);
     store.dispatch(GET_IBCBASEDENOMS);
     store.dispatch(GET_IBCCHAINS);
-    // store.dispatch(GET_IBCCONFIGS);
 
     const router = useRouter();
 
