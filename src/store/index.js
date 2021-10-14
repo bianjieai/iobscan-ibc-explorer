@@ -118,7 +118,7 @@ export default createStore({
       });
     },
     [GET_IBCCONFIGS](context) {
-      const configs = sessionStorage.getItem('configs')
+      const configs = sessionStorage.getItem('configs');
       if (configs) {
         context.commit(SET_IBCCONFIGS, configs);
       } else {
