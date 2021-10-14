@@ -118,9 +118,15 @@ export default createStore({
       });
     },
     [GET_IBCCONFIGS](context) {
-      getIbcConfig().then((res) => {
-        context.commit(SET_IBCCONFIGS, res);
-      });
+      const configs = sessionStorage.getItem('configs')
+      if (configs) {
+        context.commit(SET_IBCCONFIGS, configs);
+      } else {
+        getIbcConfig().then((res) => {
+          context.commit(SET_IBCCONFIGS, res);
+          sessionStorage.setItem('configs', res);
+        });
+      }
     },
   },
   modules: {},

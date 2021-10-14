@@ -76,8 +76,17 @@ export default {
 
     const iobscanUrl = computed(() => store.state.configs).value?.iobscan;
     const onClickIcon = () => {
-      window.open(iobscanUrl);
+      if (iobscanUrl) {
+        window.open(iobscanUrl);
+      } else {
+        (
+          store.dispatch(GET_IBCCONFIGS).then(() => {
+            window.open(iobscanUrl);
+          })
+        );
+      }
     };
+
     const onPressEnter = (val) => {
       console.log(val);
     };
