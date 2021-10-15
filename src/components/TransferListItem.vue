@@ -51,7 +51,8 @@
 </template>
 
 <script>
-import { inject } from 'vue';
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 import { getRestString, prefixInteger } from '../helper/parseString';
 import placeHoderImg from '../assets/placeHoder.png';
 
@@ -62,7 +63,8 @@ export default {
     item: Object,
   },
   setup(props, context) {
-    const ibcChains = inject('ibcChains');
+    const store = useStore();
+    const ibcChains = computed(() => store.state.ibcChains)?.value;
 
     const findIbcChainIcon = (chainId) => {
       if (ibcChains.value && ibcChains.value.all) {

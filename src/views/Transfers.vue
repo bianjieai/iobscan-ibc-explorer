@@ -1,38 +1,68 @@
 <template>
   <div class="transfer">
     <statistic-list type="horizontal" :msg="ibcStatisticsTxs" />
-    <a-table rowKey="record_id" :columns="tableColumns" :data-source="tableDatas">
+
+    <div class="transfer__middle">
+      <h2>IBC Token Transfer List {{ tableCount.value }}</h2>
+    </div>
+
+    <a-table rowKey="record_id" :columns="tableColumns" :data-source="tableDatas.value">
       <template #token="{ record }">
-        <a>{{ record.record_id }}</a>
+        <a>{{ record.symbolNum }}</a>
+        <a>{{ record.symbolDenom }}</a>
+        <a>{{ record.symbolIcon }}</a>
+      </template>
+      <template #sequence="{ record }">
+        <a>{{ record.sequence }}</a>
+      </template>
+      <template #sourceChain="{ record }">
+        <a>{{ record.sc_chain_id }}</a>
+        <a>{{ record.sc_channel }}</a>
+        <a>{{ record.sc_port }}</a>
+      </template>
+      <template #status="{ record }">
+        <a>{{ record.status }}</a>
+      </template>
+      <template #destinationChain="{ record }">
+        <a>{{ record.dc_chain_id }}</a>
+      </template>
+      <template #time="{ record }">
+        <a>{{ record.tx_time }}</a>
       </template>
     </a-table>
   </div>
 </template>
 
 <script>
-import { reactive } from 'vue';
+import { reactive, computed } from 'vue';
+import { useStore } from 'vuex';
+import { GET_IBCTXS } from '../store/action-types';
 import StatisticList from '../components/StatisticList.vue';
-import { transferTableColumn } from '../constant';
+import { transferTableColumn, ibcStatisticsTxsTest } from '../constant';
 
 export default {
   components: {
     StatisticList,
   },
   setup() {
-    const ibcStatisticsTxs = reactive({
-      tx_all: { statistics_name: 'tx_all', count: 114 },
-      tx_success: { statistics_name: 'tx_success', count: 74 },
-      tx_process: { statistics_name: 'tx_process', count: 74 },
-      tx_failed: { statistics_name: 'tx_failed', count: 12 },
+    const store = useStore();
+    store.dispatch(GET_IBCTXS, {
+      page_num: 1,
+      page_size: 10,
+      use_count: false,
     });
+    store.dispatch(GET_IBCTXS, {
+      use_count: true,
+    });
+    const ibcStatisticsTxs = reactive(ibcStatisticsTxsTest);
 
     const tableColumns = reactive(transferTableColumn);
 
-    const tableDatas = reactive([]);
     return {
       ibcStatisticsTxs,
       tableColumns,
-      tableDatas,
+      tableDatas: computed(() => store.state.ibcTxs)?.value,
+      tableCount: computed(() => store.state.ibcTxsCount)?.value,
     };
   },
 };
@@ -43,5 +73,9 @@ export default {
   width: 100%;
   max-width: 1200px;
   background-color: #ffffff;
+  &__middle {
+    width: 100%;
+    height: 200px;
+  }
 }
 </style>

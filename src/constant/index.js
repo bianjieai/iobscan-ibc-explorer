@@ -90,6 +90,13 @@ const testChains = {
   ],
 };
 
+const ibcStatisticsTxsTest = {
+  tx_all: { statistics_name: 'tx_all', count: 114 },
+  tx_success: { statistics_name: 'tx_success', count: 74 },
+  tx_process: { statistics_name: 'tx_process', count: 74 },
+  tx_failed: { statistics_name: 'tx_failed', count: 12 },
+};
+
 const menus = [
   {
     label: 'Home',
@@ -171,7 +178,6 @@ const statisticsName = {
   tx_24hr_all: 'Recent',
   tx_all: 'All',
   tx_success: 'Success',
-  tx_process: 'Processing',
   tx_failed: 'Failed',
 };
 
@@ -249,32 +255,38 @@ const transferTableColumn = [
   {
     title: 'Token',
     dataIndex: 'token',
-    slots: { title: 'token' },
+    slots: { customRender: 'token' },
   },
   {
     title: 'Sequence',
     dataIndex: 'sequence',
+    slots: { customRender: 'sequence' },
   },
   {
     title: 'Source Chain',
     dataIndex: 'sourceChain',
+    slots: { customRender: 'sourceChain' },
   },
   {
     title: 'Status',
     dataIndex: 'status',
+    slots: { customRender: 'status' },
   },
   {
     title: 'Destination Chain',
     dataIndex: 'destinationChain',
+    slots: { customRender: 'destinationChain' },
   },
   {
     title: 'Time',
     dataIndex: 'time',
+    slots: { customRender: 'time' },
   },
 ];
 
 export {
   testChains,
+  ibcStatisticsTxsTest,
   menus,
   chainMenus,
   anchorsDatas,
