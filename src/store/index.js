@@ -208,7 +208,7 @@ export default createStore({
                 );
               }, ageTimerInterval),
             );
-            resolve();
+            resolve('ok');
           }
         });
       });
