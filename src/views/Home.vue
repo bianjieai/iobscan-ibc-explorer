@@ -52,9 +52,7 @@
 </template>
 
 <script>
-import {
-  reactive, provide, onBeforeUnmount, h, computed,
-} from 'vue';
+import { onBeforeUnmount, h, computed } from 'vue';
 import { useStore } from 'vuex';
 import { message } from 'ant-design-vue';
 import LayerBlock from '../components/LayerBlock.vue';
@@ -63,9 +61,7 @@ import CardList from '../components/CardList.vue';
 import StatisticList from '../components/StatisticList.vue';
 import TransferList from '../components/TransferList.vue';
 import Message from '../components/Message.vue';
-import Tools from '../util/Tools';
-import { ageTimerInterval } from '../constant';
-import { getIbcTxs } from '../service/api';
+import { GET_IBCTXS } from '../store/action-types';
 
 export default {
   name: 'Home',
@@ -78,55 +74,25 @@ export default {
   },
   setup() {
     const store = useStore();
+    let ibcTxs = [];
+    store
+      .dispatch(GET_IBCTXS, {
+        page_num: 1,
+        page_size: 100,
+        use_count: false,
+      })
+      .then(() => {
+        ibcTxs = computed(() => store.state.ibcTxs)?.value;
+      });
 
     const ibcChains = computed(() => store.state.ibcChains)?.value;
-    provide('ibcChains', ibcChains);
 
     const ibcBaseDenoms = computed(() => store.state.ibcBaseDenoms)?.value;
 
     const ibcDenoms = computed(() => store.state.ibcDenoms)?.value;
 
-    const ibcTxs = reactive({ value: [] });
-    let txTimer = reactive(null);
-    getIbcTxs({
-      page_num: 1,
-      page_size: 100,
-    }).then((res) => {
-      const result = res.data;
-      clearInterval(txTimer);
-      txTimer = setInterval(() => {
-        ibcTxs.value = result.map((item) => {
-          const auth = Tools.findDenomAuth(ibcDenoms.value, item.denoms.sc_denom, item.sc_chain_id);
-          let symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
-          let symbolDenom = item.base_denom || '';
-          let symbolIcon = '';
-          if (auth) {
-            const findSymbol = Tools.findSymbol(
-              ibcBaseDenoms.value,
-              item.base_denom,
-              item.sc_chain_id,
-            );
-            if (findSymbol) {
-              symbolNum = Tools.parseSymbolNum(
-                (item.sc_tx_info?.msg_amount?.amount || 0) * 10 ** -findSymbol.scale,
-              );
-              symbolDenom = findSymbol.symbol;
-              symbolIcon = findSymbol.icon;
-            }
-          }
-          return {
-            ...item,
-            symbolNum,
-            symbolDenom,
-            symbolIcon,
-            tx_time: Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', ''),
-          };
-        });
-      }, ageTimerInterval);
-    });
-
     onBeforeUnmount(() => {
-      clearInterval(txTimer);
+      clearInterval(computed(() => store.state.ibcTxTimer)?.value);
     });
 
     // eslint-disable-next-line no-unused-vars
