@@ -13,6 +13,9 @@ import {
   message,
   Tooltip,
   Table,
+  Pagination,
+  Dropdown,
+  Select,
 } from 'ant-design-vue';
 import router from './router';
 import store from './store';
@@ -40,4 +43,7 @@ createApp(App)
   .use(Input)
   .use(Tooltip)
   .use(Table)
+  .use(Pagination)
+  .use(Dropdown)
+  .use(Select)
   .mount('#app');

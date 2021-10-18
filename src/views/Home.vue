@@ -74,16 +74,11 @@ export default {
   },
   setup() {
     const store = useStore();
-    let ibcTxs = [];
-    store
-      .dispatch(GET_IBCTXS, {
-        page_num: 1,
-        page_size: 100,
-        use_count: false,
-      })
-      .then(() => {
-        ibcTxs = computed(() => store.state.ibcTxs)?.value;
-      });
+    store.dispatch(GET_IBCTXS, {
+      page_num: 1,
+      page_size: 100,
+      use_count: false,
+    });
 
     const ibcChains = computed(() => store.state.ibcChains)?.value;
 
@@ -111,7 +106,7 @@ export default {
     const tipMsg = 'Denom is the token denomination to be transferred, base denomination of the relayed fungible token.';
 
     return {
-      ibcTxs,
+      ibcTxs: computed(() => store.state.ibcTxs)?.value,
       ibcChains,
       ibcBaseDenoms,
       ibcDenoms,
