@@ -251,38 +251,65 @@ const ibcTxStatus = {
   SETTING: 5,
 };
 
+const ibcTxStatusSelectOptions = [
+  {
+    title: 'All Status',
+    value: JSON.stringify([1, 2, 3, 4]),
+  },
+  {
+    title: 'Success',
+    value: JSON.stringify([1]),
+  },
+  {
+    title: 'Processing',
+    value: JSON.stringify([3]),
+  },
+  {
+    title: 'Failed',
+    value: JSON.stringify([2, 4]),
+  },
+];
+
 const transferTableColumn = [
   {
     title: 'Token',
     dataIndex: 'token',
     slots: { customRender: 'token' },
+    ellipsis: true,
   },
   {
     title: 'Sequence',
     dataIndex: 'sequence',
     slots: { customRender: 'sequence' },
+    ellipsis: true,
   },
   {
     title: 'Source Chain',
     dataIndex: 'sourceChain',
     slots: { customRender: 'sourceChain' },
+    ellipsis: true,
   },
   {
     title: 'Status',
     dataIndex: 'status',
     slots: { customRender: 'status' },
+    ellipsis: true,
   },
   {
     title: 'Destination Chain',
     dataIndex: 'destinationChain',
     slots: { customRender: 'destinationChain' },
+    ellipsis: true,
   },
   {
     title: 'Time',
     dataIndex: 'time',
     slots: { customRender: 'time' },
+    ellipsis: true,
   },
 ];
+
+const unAuthed = '!unAuthed';
 
 export {
   testChains,
@@ -297,5 +324,7 @@ export {
   ibcStatisticsDenomsDefault,
   ibcStatisticsTxsDefault,
   ibcTxStatus,
+  ibcTxStatusSelectOptions,
   transferTableColumn,
+  unAuthed,
 };

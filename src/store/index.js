@@ -97,7 +97,11 @@ export default createStore({
       state.ibcTxs.value = ibcTxs;
     },
     [SET_IBCTXSCOUNT](state, ibcTxsCount) {
-      state.ibcTxsCount.value = ibcTxsCount;
+      if (typeof ibcTxsCount !== 'number') {
+        state.ibcTxsCount.value = ibcTxsCount.data;
+      } else {
+        state.ibcTxsCount.value = ibcTxsCount;
+      }
     },
     [SET_IBCTXTIMER](state, ibcTxTimer) {
       state.ibcTxTimer.value = ibcTxTimer;

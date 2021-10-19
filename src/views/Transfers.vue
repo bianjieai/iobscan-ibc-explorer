@@ -13,29 +13,45 @@
       <dropdown
         :type="'token'"
         buttonTitle="REGEN"
+        :options="tokens"
+        @clickItem="item => onClickDropdownItem('token', item)"
+      />
+
+      <dropdown
+        :type="'chain'"
+        buttonTitle="All Chains"
         :options="ibcChains.value?.all"
+        :itemKey="'chain_id'"
         :iconKey="'icon'"
         :titleKey="'chain_name'"
+        @clickItem="item => onClickDropdownItem('chain', item)"
       />
-      <dropdown :type="'chain'" buttonTitle="All Chains" />
+
+      <a-select
+        class="status__select"
+        style="width: 124px"
+        defaultActiveFirstOption
+        :value="JSON.stringify(queryParam.status)"
+        @change="handleSelectChange"
+      >
+        <a-select-option
+          v-for="item of ibcTxStatusSelectOptions"
+          :key="item.title"
+          :value="item.value"
+          >{{ item.title }}</a-select-option
+        >
+      </a-select>
+        <!-- :show-time="{
+          defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]
+        }" -->
+      <a-range-picker
+        :allowClear="false"
+        @change="onChangeRangePicker"
+      />
     </div>
 
-    <!-- <a-select
-      ref="select"
-      class="chain__select"
-      v-model:value="currentChain"
-      style="width: 120px"
-      @change="handleSelectChange"
-    >
-      <a-select-option
-        v-for="item of ibcChains.value.all"
-        :key="item.chain_id"
-        :value="item.chain_id"
-        >{{ item.chain_name }}</a-select-option
-      >
-    </a-select> -->
-
     <a-table
+      class="transfer__table"
       style="width: 100%"
       bordered
       :rowKey="record => record.record_id"
@@ -81,18 +97,23 @@
         class="table__pagination"
         v-model:current="pagination.current"
         :total="pagination.total"
-        @change="handleTableChange"
+        @change="onPaginationChange"
       />
     </div>
   </div>
 </template>
 
 <script>
-import { ref, reactive, computed } from 'vue';
+import {
+  ref, reactive, computed, onBeforeUnmount,
+} from 'vue';
 import { useStore } from 'vuex';
+import { groupBy } from 'lodash';
+import moment from 'moment';
 import { GET_IBCTXS } from '../store/action-types';
-import { transferTableColumn } from '../constant';
+import { transferTableColumn, unAuthed, ibcTxStatusSelectOptions } from '../constant';
 import Dropdown from '../components/Dropdown.vue';
+import { JSONparse } from '../helper/parseString';
 
 export default {
   components: {
@@ -105,74 +126,108 @@ export default {
       current: 1,
       pageSize: 10,
     });
+    const tokens = reactive(
+      groupBy(
+        computed(() => store.state.ibcDenoms).value.value.filter((item) => item.auth),
+        'base_denom',
+      ),
+    );
 
-    store
-      .dispatch(GET_IBCTXS, {
-        use_count: true,
-      })
-      .then(() => {
-        pagination.total = computed(() => store.state.ibcTxsCount).value?.value;
-      });
+    const queryParam = reactive({
+      date_range: [0, Math.floor(new Date().getTime() / 1000)],
+      status: [1, 2, 3, 4],
+      chain_id: undefined,
+      token: undefined,
+    });
 
     const loading = ref(false);
 
-    store.dispatch(GET_IBCTXS, {
-      page_num: 1,
-      page_size: 10,
-      use_count: false,
-    });
-
-    const handleTableChange = (page) => {
-      pagination.current = page;
+    const queryDatas = () => {
       loading.value = true;
       store
         .dispatch(GET_IBCTXS, {
+          use_count: true,
+          ...queryParam,
+        })
+        .then(() => {
+          pagination.total = computed(() => store.state.ibcTxsCount).value?.value;
+        });
+      store
+        .dispatch(GET_IBCTXS, {
           page_num: pagination.current,
-          page_size: 10,
+          page_size: pagination.pageSize,
           use_count: false,
+          ...queryParam,
         })
         .then(() => {
           setTimeout(() => {
             loading.value = false;
           }, 1000);
         });
+    };
+
+    queryDatas();
+
+    const onPaginationChange = (page) => {
+      pagination.current = page;
+      queryDatas();
     };
 
     const tableColumns = reactive(transferTableColumn);
 
-    const currentChain = ref('');
+    const onClickDropdownItem = (type, item) => {
+      pagination.current = 1;
+      switch (type) {
+        case 'chain':
+          queryParam.chain_id = item.chain_id;
+          queryDatas();
+          break;
+        case 'token':
+          queryParam.token = item === unAuthed
+            ? computed(() => store.state.ibcDenoms)
+              .value.value.filter((subItem) => !subItem.auth)
+              .map((subItem) => subItem.denom)
+            : tokens[item].map((subItem) => subItem.denom);
 
-    const handleSelectChange = (currentSelected) => {
-      console.log(currentSelected);
-      console.log(currentChain);
-      loading.value = true;
-      store
-        .dispatch(GET_IBCTXS, {
-          page_num: pagination.current,
-          page_size: 10,
-          use_count: false,
-          chain_id: currentChain.value,
-          // token: '',
-        })
-        .then(() => {
-          setTimeout(() => {
-            loading.value = false;
-          }, 1000);
-        });
+          queryDatas();
+          break;
+        default:
+          break;
+      }
     };
+
+    const handleSelectChange = (item) => {
+      queryParam.status = JSONparse(item);
+      queryDatas();
+    };
+
+    const onChangeRangePicker = (dates) => {
+      queryParam.date_range[0] = Math.floor(moment(dates[0]).valueOf() / 1000);
+      queryParam.date_range[1] = Math.floor(moment(dates[1]).valueOf() / 1000);
+      queryDatas();
+    };
+
+    onBeforeUnmount(() => {
+      clearInterval(computed(() => store.state.ibcTxTimer)?.value);
+    });
 
     return {
       tableColumns,
       loading,
       pagination,
-      handleTableChange,
-      currentChain,
+      onPaginationChange,
+      onClickDropdownItem,
+      ibcTxStatusSelectOptions,
       handleSelectChange,
+      onChangeRangePicker,
+      queryParam,
       ibcChains: computed(() => store.state.ibcChains)?.value,
+      tokens,
       ibcDenoms: computed(() => store.state.ibcDenoms)?.value,
       ibcBaseDenoms: computed(() => store.state.ibcBaseDenoms)?.value,
       tableDatas: computed(() => store.state.ibcTxs)?.value,
       tableCount: computed(() => store.state.ibcTxsCount)?.value,
+      moment,
     };
   },
 };
@@ -197,6 +252,18 @@ export default {
   &__middle {
     width: 100%;
     // height: 200px;
+  }
+  &__table {
+    ::v-deep .ant-table-placeholder {
+      min-height: 500px;
+      @include flex(column, nowrap, center, center);
+    }
+    // ::v-deep .ant-table-tbody {
+    //   height: 500px;
+    //   .ant-table-row {
+    //     height: 55px !important;
+    //   }
+    // }
   }
   &__bottom {
     width: 100%;
@@ -268,5 +335,8 @@ export default {
       position: relative;
     }
   }
+}
+.status__select {
+  font-family: Montserrat-Regular, Montserrat;
 }
 </style>
