@@ -16,6 +16,7 @@ import {
   Pagination,
   Dropdown,
   Select,
+  DatePicker,
 } from 'ant-design-vue';
 import router from './router';
 import store from './store';
@@ -46,4 +47,5 @@ createApp(App)
   .use(Pagination)
   .use(Dropdown)
   .use(Select)
+  .use(DatePicker)
   .mount('#app');
