@@ -7,7 +7,7 @@
   >
     <a-button class="button">
       {{ buttonTitle }}
-      <!-- <span class="button__icon" /> -->
+      <span class="button__icon" />
     </a-button>
     <template #overlay>
       <div class="overlay">
@@ -137,9 +137,11 @@ export default {
         margin: 0 16px 16px 0;
         padding: 6px 12px;
         cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         &:hover {
           border: 1px solid $font-color4;
           color: $font-color4;
+          transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
           background-color: #ffffff;
         }
         &__selected {

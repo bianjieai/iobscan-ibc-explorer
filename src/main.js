@@ -17,6 +17,8 @@ import {
   Dropdown,
   Select,
   DatePicker,
+  ConfigProvider,
+  Statistic,
 } from 'ant-design-vue';
 import router from './router';
 import store from './store';
@@ -48,4 +50,6 @@ createApp(App)
   .use(Dropdown)
   .use(Select)
   .use(DatePicker)
+  .use(ConfigProvider)
+  .use(Statistic)
   .mount('#app');

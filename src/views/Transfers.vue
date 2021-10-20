@@ -4,13 +4,17 @@
     <div class="transfer__header__container">
       <div class="transfer__header">
         <div class="transfer__header__line">
-          <p class="transfer__header__title">IBC Token Transfer List {{ tableCount.value }}</p>
+          <p class="transfer__header__title">
+            IBC Token Transfer List
+            <span class="transfer__header__num"> ( {{ tableCount.value }} transfers found )</span>
+          </p>
         </div>
       </div>
     </div>
 
     <div class="transfer__middle__container">
       <dropdown
+        class="dropdown__token"
         :type="'token'"
         buttonTitle="REGEN"
         :options="tokens"
@@ -18,6 +22,7 @@
       />
 
       <dropdown
+        class="dropdown__token"
         :type="'chain'"
         buttonTitle="All Chains"
         :options="ibcChains.value?.all"
@@ -41,48 +46,53 @@
           >{{ item.title }}</a-select-option
         >
       </a-select>
-        <!-- :show-time="{
-          defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')]
-        }" -->
-      <a-range-picker
-        :allowClear="false"
-        @change="onChangeRangePicker"
-      />
+
+      <a-range-picker :allowClear="false" @change="onChangeRangePicker" />
+
+      <a-button type="primary" @click="onClickReset">
+        reset
+        <template #icon> </template>
+      </a-button>
     </div>
 
     <a-table
       class="transfer__table"
       style="width: 100%"
-      bordered
       :rowKey="record => record.record_id"
       :columns="tableColumns"
       :loading="loading"
       :data-source="tableDatas.value"
       :pagination="false"
     >
-      <template #token="{ record }">
-        <a>{{ record.symbolNum }}</a>
-        <a>{{ record.symbolDenom }}</a>
-        <a>{{ record.symbolIcon }}</a>
+      <template class="token" #token="{ record }">
+        <img class="token__icon" :src="record.symbolIcon || placeHoderImg" />
+        <span class="token__num">{{ formatNum(record.symbolNum) }}</span>
+        <span class="token__denom">{{ record.symbolDenom }}</span>
       </template>
-      <template #sequence="{ record }">
-        <a>{{ record.sequence }}</a>
+      <template #hashOut="{ record }">
+        <span>{{ getRestString(record.sc_tx_info.hash, 4, 4) }}</span>
       </template>
-      <template #sourceChain="{ record }">
-        <a>{{ record.sc_chain_id }}</a>
-        <a>{{ record.sc_channel }}</a>
-        <a>{{ record.sc_port }}</a>
+      <template #out="{ record }">
+        <span>{{ getRestString(record.sc_addr, 3, 8) }}</span>
       </template>
       <template #status="{ record }">
-        <a>{{ record.status }}</a>
+        <!-- <span>{{ record.status }}</span> -->
+        <img class="status__icon" :src="findIbcChainIcon(record.sc_chain_id)" />
+        <img
+          class="status__icon"
+          style="margin: 0 24px;"
+          :src="require(`../assets/status${record.status}.png`)"
+        />
+        <img class="status__icon" :src="findIbcChainIcon(record.dc_chain_id)" />
       </template>
-      <template #destinationChain="{ record }">
-        <a>{{ record.dc_chain_id }}</a>
-        <a>{{ record.dc_channel }}</a>
-        <a>{{ record.dc_port }}</a>
+      <template #hashIn="{ record }">
+        <span>{{ getRestString(record.dc_tx_info.hash, 4, 4) }}</span>
+      </template>
+      <template #in="{ record }">
+        <span>{{ getRestString(record.dc_addr, 3, 8) }}</span>
       </template>
       <template #time="{ record }">
-        <a>{{ record.tx_time }}</a>
+        <span>{{ record.tx_time }}</span>
       </template>
     </a-table>
 
@@ -113,7 +123,8 @@ import moment from 'moment';
 import { GET_IBCTXS } from '../store/action-types';
 import { transferTableColumn, unAuthed, ibcTxStatusSelectOptions } from '../constant';
 import Dropdown from '../components/Dropdown.vue';
-import { JSONparse } from '../helper/parseString';
+import { JSONparse, getRestString, formatNum } from '../helper/parseString';
+import placeHoderImg from '../assets/placeHoder.png';
 
 export default {
   components: {
@@ -169,6 +180,7 @@ export default {
     queryDatas();
 
     const onPaginationChange = (page) => {
+      if (loading.value) return;
       pagination.current = page;
       queryDatas();
     };
@@ -207,6 +219,27 @@ export default {
       queryDatas();
     };
 
+    const onClickReset = () => {
+      queryParam.date_range = [0, Math.floor(new Date().getTime() / 1000)];
+      queryParam.status = [1, 2, 3, 4];
+      queryParam.chain_id = undefined;
+      queryParam.token = undefined;
+      pagination.current = 1;
+      queryDatas();
+    };
+
+    const ibcChains = computed(() => store.state.ibcChains)?.value;
+
+    const findIbcChainIcon = (chainId) => {
+      if (ibcChains.value && ibcChains.value.all) {
+        const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
+        if (result) {
+          return result.icon;
+        }
+      }
+      return placeHoderImg;
+    };
+
     onBeforeUnmount(() => {
       clearInterval(computed(() => store.state.ibcTxTimer)?.value);
     });
@@ -220,14 +253,19 @@ export default {
       ibcTxStatusSelectOptions,
       handleSelectChange,
       onChangeRangePicker,
+      onClickReset,
       queryParam,
-      ibcChains: computed(() => store.state.ibcChains)?.value,
+      ibcChains,
       tokens,
       ibcDenoms: computed(() => store.state.ibcDenoms)?.value,
       ibcBaseDenoms: computed(() => store.state.ibcBaseDenoms)?.value,
       tableDatas: computed(() => store.state.ibcTxs)?.value,
       tableCount: computed(() => store.state.ibcTxsCount)?.value,
       moment,
+      findIbcChainIcon,
+      placeHoderImg,
+      getRestString,
+      formatNum,
     };
   },
 };
@@ -240,7 +278,7 @@ export default {
 .transfer {
   width: 100%;
   max-width: 1200px;
-  background-color: #ffffff;
+  background-color: rgb(240, 242, 245);
   &__header__container {
     width: 100%;
     @include flex(row, nowrap, flex-start, center);
@@ -248,16 +286,47 @@ export default {
   &__middle__container {
     width: 100%;
     @include flex(row, nowrap, flex-start, center);
+    margin-bottom: 16px;
+    .dropdown {
+      &__token {
+        margin-right: 16px;
+      }
+    }
   }
   &__middle {
     width: 100%;
     // height: 200px;
   }
   &__table {
+    font-size: 14px;
+    font-family: Montserrat-Regular, Montserrat;
+    font-weight: 400;
     ::v-deep .ant-table-placeholder {
       min-height: 500px;
       @include flex(column, nowrap, center, center);
     }
+    .token {
+      &__icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0.2);
+        margin-right: 8px;
+      }
+      &__num {
+        font-size: $font-size5;
+        color: $font-color5;
+        margin-right: 4px;
+      }
+      &__denom {
+        font-size: $font-size5;
+        color: $font-color3;
+      }
+    }
+    .status__icon {
+      width: 24px;
+    }
+
     // ::v-deep .ant-table-tbody {
     //   height: 500px;
     //   .ant-table-row {
@@ -268,6 +337,7 @@ export default {
   &__bottom {
     width: 100%;
     height: 55px;
+    background-color: #FFFFFF;
     @include flex(row, nowrap, space-between, center);
     .status__tips {
       margin: 15px 24px;
@@ -313,6 +383,11 @@ export default {
       position: relative;
       top: -16px;
       z-index: 5;
+    }
+    &__num {
+      margin-left: 12px;
+      font-size: $font-size5;
+      color: $font-color2;
     }
     &__line__dark {
       top: -16px;
