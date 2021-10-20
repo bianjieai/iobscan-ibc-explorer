@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { createStore } from 'vuex';
 import { findStatistics } from '../helper/findStatistics';
 import {
@@ -194,9 +195,7 @@ export default createStore({
                         item.sc_chain_id,
                       );
                       if (findSymbol) {
-                        symbolNum = Tools.parseSymbolNum(
-                          (item.sc_tx_info?.msg_amount?.amount || 0) * 10 ** -findSymbol.scale,
-                        );
+                        symbolNum = (item.sc_tx_info?.msg_amount?.amount || 0) * 10 ** -findSymbol.scale;
                         symbolDenom = findSymbol.symbol;
                         symbolIcon = findSymbol.icon;
                       }

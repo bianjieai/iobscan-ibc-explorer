@@ -7,7 +7,7 @@
       :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }"
     >
       <div class="list__subItem__title__container">
-        <span class="list__subItem__value">{{ item.symbolNum || 0 }}</span>
+        <span class="list__subItem__value">{{ formatNum(item.symbolNum) || 0 }}</span>
         <span class="list__subItem__title">{{ item.symbolDenom || "" }}</span>
       </div>
 
@@ -53,7 +53,7 @@
 <script>
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { getRestString, prefixInteger } from '../helper/parseString';
+import { getRestString, prefixInteger, formatNum } from '../helper/parseString';
 import placeHoderImg from '../assets/placeHoder.png';
 
 export default {
@@ -87,6 +87,7 @@ export default {
       placeHoderImg,
       ibcChains,
       clickListItem,
+      formatNum,
     };
   },
 };

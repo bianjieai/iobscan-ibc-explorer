@@ -1,36 +1,41 @@
 <template>
-  <a-layout class="layout">
-    <a-layout-header class="header">
-      <a-row class="header__content" type="flex">
-        <a-col flex="160px" class="col__layout">
-          <div class="logo" @click="onClickLogo">
-            <img class="logo__icon" src="./assets/HeaderIcon.png" alt="logo" />
-            <img class="logo__text" src="./assets/iobscan.png" alt="title" />
-          </div>
-        </a-col>
-        <a-col flex="auto">
-          <navigation :menus="headerMenus" @clickMenu="clickMenu" />
-        </a-col>
-        <a-col flex="auto" class="col__layout">
-          <header-input @pressedEnter="onPressEnter" />
-          <img
-            class="header__input__icon"
-            :src="require('./assets/ioblink.png')"
-            alt="icon"
-            @click="onClickIcon"
-          />
-        </a-col>
-      </a-row>
-    </a-layout-header>
+  <a-config-provider>
+    <template #renderEmpty>
+      <no-datas />
+    </template>
+    <a-layout class="layout">
+      <a-layout-header class="header">
+        <a-row class="header__content" type="flex">
+          <a-col flex="160px" class="col__layout">
+            <div class="logo" @click="onClickLogo">
+              <img class="logo__icon" src="./assets/HeaderIcon.png" alt="logo" />
+              <img class="logo__text" src="./assets/iobscan.png" alt="title" />
+            </div>
+          </a-col>
+          <a-col flex="auto">
+            <navigation :menus="headerMenus" @clickMenu="clickMenu" />
+          </a-col>
+          <a-col flex="auto" class="col__layout">
+            <header-input @pressedEnter="onPressEnter" />
+            <img
+              class="header__input__icon"
+              :src="require('./assets/ioblink.png')"
+              alt="icon"
+              @click="onClickIcon"
+            />
+          </a-col>
+        </a-row>
+      </a-layout-header>
 
-    <a-layout-content class="content">
-      <router-view />
-    </a-layout-content>
+      <a-layout-content class="content">
+        <router-view />
+      </a-layout-content>
 
-    <a-layout-footer class="footer">
-      <ibc-footer />
-    </a-layout-footer>
-  </a-layout>
+      <a-layout-footer class="footer">
+        <ibc-footer />
+      </a-layout-footer>
+    </a-layout>
+  </a-config-provider>
 </template>
 
 <script>
@@ -43,6 +48,8 @@ import Navigation from './components/Navigation.vue';
 import HeaderInput from './components/HeaderInput.vue';
 import IbcFooter from './components/IbcFooter.vue';
 import Message from './components/Message.vue';
+import NoDatas from './components/NoDatas.vue';
+
 import {
   GET_IBCSTATISTICS,
   GET_IBCDENOMS,
@@ -56,6 +63,7 @@ export default {
     Navigation,
     HeaderInput,
     IbcFooter,
+    NoDatas,
   },
   setup() {
     const store = useStore();
