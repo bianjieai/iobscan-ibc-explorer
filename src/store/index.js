@@ -192,7 +192,6 @@ export default createStore({
                       const findSymbol = Tools.findSymbol(
                         state.ibcBaseDenoms.value,
                         item.base_denom,
-                        item.sc_chain_id,
                       );
                       if (findSymbol) {
                         symbolNum = (item.sc_tx_info?.msg_amount?.amount || 0) * 10 ** -findSymbol.scale;

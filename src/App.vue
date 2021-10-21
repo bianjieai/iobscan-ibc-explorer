@@ -27,7 +27,7 @@
         </a-row>
       </a-layout-header>
 
-      <a-layout-content class="content">
+      <a-layout-content class="content" :class="isShowBackground.value ? 'show__background' : ''">
         <router-view />
       </a-layout-content>
 
@@ -39,9 +39,11 @@
 </template>
 
 <script>
-import { reactive, h, computed } from 'vue';
+import {
+  reactive, h, computed, watch,
+} from 'vue';
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { menus } from './constant';
 import Navigation from './components/Navigation.vue';
@@ -92,6 +94,15 @@ export default {
       }
     };
 
+    const isShowBackground = reactive({ value: false });
+    const route = useRoute();
+    watch(
+      () => route.path,
+      (to) => {
+        isShowBackground.value = to !== '/home';
+      },
+    );
+
     const onPressEnter = (val) => {
       console.log(val);
     };
@@ -102,11 +113,11 @@ export default {
             name: 'Home',
           });
           break;
-        // case 'Transfers':
-        //   router.push({
-        //     name: 'Transfers',
-        //   });
-        //   break;
+        case 'Transfers':
+          router.push({
+            name: 'Transfers',
+          });
+          break;
         default:
           message.info({
             content: h(Message),
@@ -121,6 +132,7 @@ export default {
       onClickIcon,
       onPressEnter,
       clickMenu,
+      isShowBackground,
     };
   },
 };
@@ -188,6 +200,10 @@ export default {
 }
 .col__layout {
   @include flex(row, nowrap, flex-start, center);
+}
+.show__background {
+  background-color: #f0f2f5 !important;
+  // background-color: transparent;
 }
 @media screen and (max-width: 1920px) {
 }

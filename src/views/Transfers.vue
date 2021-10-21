@@ -16,6 +16,7 @@
       <dropdown
         class="dropdown__token"
         :type="'token'"
+        :ibcBaseDenoms="ibcBaseDenoms"
         buttonTitle="REGEN"
         :options="tokens"
         @clickItem="item => onClickDropdownItem('token', item)"
@@ -34,7 +35,6 @@
 
       <a-select
         class="status__select"
-        style="width: 124px"
         defaultActiveFirstOption
         :value="JSON.stringify(queryParam.status)"
         @change="handleSelectChange"
@@ -47,11 +47,20 @@
         >
       </a-select>
 
-      <a-range-picker :allowClear="false" @change="onChangeRangePicker" />
+      <a-range-picker class="date__range hover" :allowClear="false" @change="onChangeRangePicker" />
 
+      <a-popover destroyTooltipOnHide>
+        <template #content>
+          <div>
+            <p>Date selection range from the first IBC Transfer to the latest IBC Transfer</p>
+          </div>
+        </template>
+        <img class="tip hover" style="margin-right: 16px;" src="../assets/tip.png" />
+      </a-popover>
       <a-button type="primary" @click="onClickReset">
-        reset
-        <template #icon> </template>
+        <template #icon>
+          <img style="width: 20px;" src="../assets/reset.png" />
+        </template>
       </a-button>
     </div>
 
@@ -64,32 +73,99 @@
       :data-source="tableDatas.value"
       :pagination="false"
     >
+      <template #customTitle>
+        <p>
+          Token
+          <a-popover destroyTooltipOnHide>
+            <template #content>
+              <div>
+                <p>Sended Token</p>
+              </div>
+            </template>
+            <img class="tip hover" style="margin-left: 8px;" src="../assets/tip.png" />
+          </a-popover>
+        </p>
+      </template>
       <template class="token" #token="{ record }">
-        <img class="token__icon" :src="record.symbolIcon || placeHoderImg" />
-        <span class="token__num">{{ formatNum(record.symbolNum) }}</span>
-        <span class="token__denom">{{ record.symbolDenom }}</span>
+        <a-popover placement="right" destroyTooltipOnHide>
+          <template #content>
+            <div>
+              <p>Sended Token: {{ record.symbolDenom || "--" }}</p>
+              <p>Recived Token: {{ record.denoms.dc_denom || "--" }}</p>
+            </div>
+          </template>
+          <img class="token__icon hover" :src="record.symbolIcon || placeHoderImg" />
+          <span class="token__num hover">{{ formatNum(record.symbolNum) }}</span>
+          <span class="token__denom hover">{{ record.symbolDenom }}</span>
+        </a-popover>
       </template>
       <template #hashOut="{ record }">
-        <span>{{ getRestString(record.sc_tx_info.hash, 4, 4) }}</span>
+        <a-popover destroyTooltipOnHide>
+          <template #content>
+            <div>
+              <p>{{ record.sc_tx_info.hash }}</p>
+            </div>
+          </template>
+          <span class="hover">{{ getRestString(record.sc_tx_info.hash, 4, 4) }}</span>
+        </a-popover>
       </template>
       <template #out="{ record }">
-        <span>{{ getRestString(record.sc_addr, 3, 8) }}</span>
+        <a-popover destroyTooltipOnHide>
+          <template #content>
+            <div>
+              <p>{{ record.sc_addr }}</p>
+            </div>
+          </template>
+          <span class="hover">{{ getRestString(record.sc_addr, 3, 8) }}</span>
+        </a-popover>
       </template>
       <template #status="{ record }">
         <!-- <span>{{ record.status }}</span> -->
-        <img class="status__icon" :src="findIbcChainIcon(record.sc_chain_id)" />
+        <a-popover placement="right" destroyTooltipOnHide>
+          <template #content>
+            <div>
+              <p>Chain ID：{{ record.sc_chain_id || "--" }}</p>
+              <p>Channel ID: {{ record.sc_channel || "--" }}</p>
+              <p>Sequence: {{ record.sequence || "--" }}</p>
+            </div>
+          </template>
+          <img class="status__icon hover" :src="findIbcChainIcon(record.sc_chain_id)" />
+        </a-popover>
         <img
           class="status__icon"
           style="margin: 0 24px;"
           :src="require(`../assets/status${record.status}.png`)"
         />
-        <img class="status__icon" :src="findIbcChainIcon(record.dc_chain_id)" />
+        <a-popover placement="right" destroyTooltipOnHide>
+          <template #content>
+            <div>
+              <p>Chain ID：{{ record.dc_chain_id || "--" }}</p>
+              <p>Channel ID: {{ record.dc_channel || "--" }}</p>
+              <p>Sequence: {{ record.sequence || "--" }}</p>
+            </div>
+          </template>
+          <img class="status__icon hover" :src="findIbcChainIcon(record.dc_chain_id)" />
+        </a-popover>
       </template>
       <template #hashIn="{ record }">
-        <span>{{ getRestString(record.dc_tx_info.hash, 4, 4) }}</span>
+        <a-popover destroyTooltipOnHide>
+          <template #content>
+            <div>
+              <p>{{ record.dc_tx_info.hash || "--" }}</p>
+            </div>
+          </template>
+          <span class="hover">{{ getRestString(record.dc_tx_info.hash, 4, 4) || "--" }}</span>
+        </a-popover>
       </template>
       <template #in="{ record }">
-        <span>{{ getRestString(record.dc_addr, 3, 8) }}</span>
+        <a-popover destroyTooltipOnHide>
+          <template #content>
+            <div>
+              <p>{{ record.dc_addr || "--" }}</p>
+            </div>
+          </template>
+          <span class="hover">{{ getRestString(record.dc_addr, 3, 8) || "--" }}</span>
+        </a-popover>
       </template>
       <template #time="{ record }">
         <span>{{ record.tx_time }}</span>
@@ -279,6 +355,7 @@ export default {
   width: 100%;
   max-width: 1200px;
   background-color: rgb(240, 242, 245);
+  padding-top: 40px;
   &__header__container {
     width: 100%;
     @include flex(row, nowrap, flex-start, center);
@@ -312,19 +389,22 @@ export default {
         border-radius: 50%;
         border: 1px solid rgba(0, 0, 0, 0.2);
         margin-right: 8px;
+        cursor: pointer;
       }
       &__num {
+        cursor: pointer;
         font-size: $font-size5;
         color: $font-color5;
         margin-right: 4px;
       }
       &__denom {
+        cursor: pointer;
         font-size: $font-size5;
         color: $font-color3;
       }
     }
     .status__icon {
-      width: 24px;
+      width: 22px;
     }
 
     // ::v-deep .ant-table-tbody {
@@ -337,7 +417,7 @@ export default {
   &__bottom {
     width: 100%;
     height: 55px;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     @include flex(row, nowrap, space-between, center);
     .status__tips {
       margin: 15px 24px;
@@ -412,6 +492,21 @@ export default {
   }
 }
 .status__select {
+  font-family: Montserrat-Regular, Montserrat;
+  width: 124px;
+  margin-right: 8px;
+}
+.date__range {
+  font-family: Montserrat-Regular, Montserrat;
+  margin-right: 8px;
+}
+.tip {
+  width: 20px;
+}
+.hover {
+  cursor: pointer;
+}
+p {
   font-family: Montserrat-Regular, Montserrat;
 }
 </style>
