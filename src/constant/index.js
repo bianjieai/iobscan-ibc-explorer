@@ -272,9 +272,8 @@ const ibcTxStatusSelectOptions = [
 
 const transferTableColumn = [
   {
-    title: 'Token',
     dataIndex: 'token',
-    slots: { customRender: 'token' },
+    slots: { customRender: 'token', title: 'customTitle' },
     width: 200,
     // ellipsis: true,
   },

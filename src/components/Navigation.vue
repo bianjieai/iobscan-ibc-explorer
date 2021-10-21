@@ -20,16 +20,16 @@ export default {
   },
   setup(props, context) {
     const currentMenu = ref([props.menus[0].value]);
-    let timeOuter = reactive(null);
+    const timeOuter = reactive({ value: null });
     const clickMenuItem = ({ key }) => {
       context.emit('clickMenu', key);
-      clearTimeout(timeOuter);
-      timeOuter = setTimeout(() => {
+      clearTimeout(timeOuter.value);
+      timeOuter.value = setTimeout(() => {
         currentMenu.value = ['Home'];
       }, 0);
     };
     onBeforeUnmount(() => {
-      clearTimeout(timeOuter);
+      clearTimeout(timeOuter.value);
     });
 
     return {

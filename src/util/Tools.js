@@ -48,11 +48,9 @@ export default class Tools {
     return false;
   }
 
-  static findSymbol(ibcBaseDenoms, baseDenomStr, chainId) {
+  static findSymbol(ibcBaseDenoms, baseDenomStr) {
     if (ibcBaseDenoms) {
-      const findBaseDenom = ibcBaseDenoms.find(
-        (baseDenom) => baseDenom.denom === baseDenomStr && baseDenom.chain_id === chainId,
-      );
+      const findBaseDenom = ibcBaseDenoms.find((baseDenom) => baseDenom.denom === baseDenomStr);
       if (findBaseDenom) {
         return findBaseDenom;
       }
