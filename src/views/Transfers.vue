@@ -19,7 +19,9 @@
         :ibcBaseDenoms="ibcBaseDenoms"
         buttonTitle="REGEN"
         :options="tokens"
-        @clickItem="item => onClickDropdownItem('token', item)"
+        :selectedToken="selectedToken.value"
+        @clickItem="onClickDropdownItem"
+        @clickSearch="onClickDropdownItem"
       />
 
       <dropdown
@@ -27,10 +29,12 @@
         :type="'chain'"
         buttonTitle="All Chains"
         :options="ibcChains.value?.all"
+        :selectedChain="selectedChain.value"
         :itemKey="'chain_id'"
         :iconKey="'icon'"
         :titleKey="'chain_name'"
-        @clickItem="item => onClickDropdownItem('chain', item)"
+        @clickItem="onClickDropdownItem"
+        @clickSearch="onClickDropdownItem"
       />
 
       <a-select
@@ -263,20 +267,29 @@ export default {
 
     const tableColumns = reactive(transferTableColumn);
 
+    const selectedToken = reactive({ value: 'REGEN' });
+    const selectedChain = reactive({ value: 'All Chains' });
     const onClickDropdownItem = (type, item) => {
       pagination.current = 1;
       switch (type) {
         case 'chain':
-          queryParam.chain_id = item.chain_id;
+          selectedChain.value = item || 'All Chains';
+          queryParam.chain_id = item;
           queryDatas();
           break;
         case 'token':
-          queryParam.token = item === unAuthed
-            ? computed(() => store.state.ibcDenoms)
+          selectedToken.value = item || 'REGEN';
+          if (item === unAuthed) {
+            queryParam.token = computed(() => store.state.ibcDenoms)
               .value.value.filter((subItem) => !subItem.auth)
-              .map((subItem) => subItem.denom)
-            : tokens[item].map((subItem) => subItem.denom);
-
+              .map((subItem) => subItem.denom);
+          } else if (tokens[item]) {
+            queryParam.token = tokens[item].map((subItem) => subItem.denom);
+          } else if (item) {
+            queryParam.token = [item];
+          } else {
+            queryParam.token = undefined;
+          }
           queryDatas();
           break;
         default:
@@ -326,6 +339,8 @@ export default {
       pagination,
       onPaginationChange,
       onClickDropdownItem,
+      selectedToken,
+      selectedChain,
       ibcTxStatusSelectOptions,
       handleSelectChange,
       onChangeRangePicker,

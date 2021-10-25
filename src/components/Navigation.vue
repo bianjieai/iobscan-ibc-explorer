@@ -1,7 +1,7 @@
 <template>
   <a-menu
     class="header__menu"
-    v-model:selectedKeys="currentMenu"
+    :selectedKeys="currentMenu"
     mode="horizontal"
     @click="clickMenuItem"
   >
@@ -12,28 +12,23 @@
 </template>
 
 <script>
-import { ref, reactive, onBeforeUnmount } from 'vue';
+import { reactive, onBeforeUnmount } from 'vue';
 
 export default {
   props: {
     menus: Array,
+    currentMenu: Array,
   },
   setup(props, context) {
-    const currentMenu = ref([props.menus[0].value]);
     const timeOuter = reactive({ value: null });
     const clickMenuItem = ({ key }) => {
       context.emit('clickMenu', key);
-      clearTimeout(timeOuter.value);
-      timeOuter.value = setTimeout(() => {
-        currentMenu.value = ['Home'];
-      }, 0);
     };
     onBeforeUnmount(() => {
       clearTimeout(timeOuter.value);
     });
 
     return {
-      currentMenu,
       clickMenuItem,
     };
   },

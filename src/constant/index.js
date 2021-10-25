@@ -316,7 +316,7 @@ const transferTableColumn = [
   },
 ];
 
-const unAuthed = '!unAuthed';
+const unAuthed = 'Others';
 
 export {
   testChains,
