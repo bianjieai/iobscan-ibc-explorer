@@ -6,9 +6,21 @@
     @visibleChange="visibleChange"
   >
     <a-button class="button">
-      {{ buttonTitle }}
-      <span class="button__icon" >
-        <svg focusable="false" data-icon="down" width="12px" height="12px" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"><path d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"></path></svg>
+      <span class="button__title">{{ type === 'chain' ? selectedChain : selectedToken }}</span>
+      <span class="button__icon">
+        <svg
+          focusable="false"
+          data-icon="down"
+          width="12px"
+          height="12px"
+          fill="currentColor"
+          aria-hidden="true"
+          viewBox="64 64 896 896"
+        >
+          <path
+            d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
+          ></path>
+        </svg>
       </span>
     </a-button>
     <template #overlay>
@@ -21,11 +33,11 @@
               v-for="(item, key) of options"
               :key="item[itemKey] || item"
               :class="
-                Array.isArray(options)
-                  ? selectedItem.value &&
-                    selectedItem.value[itemKey] === item[itemKey] &&
+                type === 'chain'
+                  ? selectedChain &&
+                    selectedChain === item[itemKey] &&
                     'content__item__selected'
-                  : selectedItem.value && selectedItem.value === key && 'content__item__selected'
+                  : selectedToken && selectedToken === key && 'content__item__selected'
               "
               @click="onClickItem(item, key)"
             >
@@ -59,9 +71,11 @@
           <div class="overlay__item__content flex">
             <a-input
               class="overlay__item__input"
+              v-model:value="inputValue"
+              allowClear
               :placeholder="type === 'token' ? 'Intern the ibc/hash' : 'Inter the Chain ID'"
             />
-            <a-button type="primary" @click="onClickItem()">Confirm</a-button>
+            <a-button type="primary" @click="onClickSearch">Confirm</a-button>
           </div>
         </div>
       </div>
@@ -72,7 +86,7 @@
 <script>
 /* eslint-disable max-len */
 
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 import { unAuthed } from '../constant';
 
 export default {
@@ -85,22 +99,30 @@ export default {
     ibcBaseDenoms: {
       default: () => [],
     },
+    selectedChain: {
+      default: () => '',
+    },
+    selectedToken: {
+      default: () => '',
+    },
     itemKey: String,
     iconKey: String,
     titleKey: String,
   },
   setup(props, context) {
     const isVisible = ref(false);
-    const selectedItem = reactive({ value: null });
-
+    const inputValue = ref('');
     const visibleChange = (visible) => {
       isVisible.value = visible;
     };
     const onClickItem = (item, key) => {
-      const selected = Array.isArray(props.options) ? item : key;
-      selectedItem.value = selected;
-      context.emit('clickItem', selected);
+      inputValue.value = '';
+      const selected = props.type === 'chain' ? item[props.itemKey] : key;
+      context.emit('clickItem', props.type, selected);
       isVisible.value = false;
+    };
+    const onClickSearch = () => {
+      context.emit('clickSearch', props.type, inputValue.value);
     };
     const isShowSymbol = (key) => {
       const result = {
@@ -116,9 +138,10 @@ export default {
     };
     return {
       isVisible,
-      selectedItem,
       visibleChange,
       onClickItem,
+      inputValue,
+      onClickSearch,
       unAuthed,
       isShowSymbol,
     };
@@ -136,6 +159,11 @@ export default {
   @include flex(row, wrap, space-between, center);
   font-family: Montserrat-Regular, Montserrat;
   font-weight: 400;
+  &__title {
+    max-width: 80px;
+    text-overflow:ellipsis;
+    overflow: hidden;
+  }
   &:hover {
     .button__icon {
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);

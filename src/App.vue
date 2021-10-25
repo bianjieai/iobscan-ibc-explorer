@@ -13,7 +13,11 @@
             </div>
           </a-col>
           <a-col flex="auto">
-            <navigation :menus="headerMenus" @clickMenu="clickMenu" />
+            <navigation
+              :menus="headerMenus"
+              @clickMenu="clickMenu"
+              :currentMenu="currentMenu.value"
+            />
           </a-col>
           <a-col flex="auto" class="col__layout">
             <header-input @pressedEnter="onPressEnter" />
@@ -106,14 +110,32 @@ export default {
     const onPressEnter = (val) => {
       console.log(val);
     };
+    const currentMenu = reactive({ value: [] });
+    watch(
+      () => route.path,
+      (to) => {
+        switch (to) {
+          case '/home':
+            currentMenu.value = ['Home'];
+            break;
+          case '/transfers':
+            currentMenu.value = ['Transfers'];
+            break;
+          default:
+            break;
+        }
+      },
+    );
     const clickMenu = (val) => {
       switch (val) {
         case 'Home':
+          currentMenu.value = ['Home'];
           router.push({
             name: 'Home',
           });
           break;
         case 'Transfers':
+          currentMenu.value = ['Transfers'];
           router.push({
             name: 'Transfers',
           });
@@ -131,6 +153,7 @@ export default {
       onClickLogo,
       onClickIcon,
       onPressEnter,
+      currentMenu,
       clickMenu,
       isShowBackground,
     };
