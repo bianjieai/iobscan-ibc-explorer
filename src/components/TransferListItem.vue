@@ -99,7 +99,7 @@ export default {
 
 .list__item {
   @include flex(row, nowrap, flex-start, center);
-  padding: 0 16px;
+  padding: 0 16px 0 0;
   cursor: pointer;
   &__number {
     font-size: $font-size5;

@@ -78,10 +78,12 @@ export default {
       margin: 24px;
       height: 24px;
       line-height: 24px;
+      border: 0;
       border-radius: 12px;
       background-color: #3d50ff;
       color: #ffffff;
       font-size: $font-size5;
+      font-weight: 600;
       @include flex(row, nowrap, center, center);
     }
   }
@@ -128,6 +130,6 @@ export default {
   border-bottom: 1px solid rgba(#979797, 0.2);
   overflow-y: auto;
   overflow-x: hidden;
-  margin: 0 24px;
+  margin: 0 24px 0 16px;
 }
 </style>

@@ -180,6 +180,7 @@ export default {
   background-repeat: no-repeat;
   background-size: 1920px 396px;
   background-position: top center;
+  background-color: #F5F7FC;
   & .header {
     @include flex(column, nowrap, center, center);
     text-align: center;
