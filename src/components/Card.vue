@@ -1,6 +1,14 @@
 <template>
   <div class="card ibc__selected__title">
-    <img class="card__img" src="../assets/chains_all.png" alt="chains_all" />
+    <img
+      class="card__img"
+      :src="
+        require(msg.statistics_name.indexOf('24') !== -1
+          ? '../assets/chains_24hr.png'
+          : '../assets/chains_all.png')
+      "
+      alt="chains_all"
+    />
     <div class="card__content">
       <span class="card__content__name"
         >{{ statisticsName[msg.statistics_name]
@@ -59,7 +67,7 @@ export default {
       font-family: Montserrat-Regular, Montserrat;
       color: $font-color1;
       line-height: $font-size2;
-      transition:color 0.3s;
+      transition: color 0.3s;
       transition-timing-function: ease;
     }
     &__tip {

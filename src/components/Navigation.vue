@@ -61,7 +61,7 @@ export default {
     background-image: url("../assets/NavSelected.png");
     background-repeat: no-repeat;
     background-size: contain;
-    background-position: 30% center;
+    background-position: 50% 90%;
     .ant-menu-title-content {
       color: #ffffff !important;
     }
@@ -73,7 +73,7 @@ export default {
     background-image: url("../assets/NavSelected.png");
     background-repeat: no-repeat;
     background-size: contain;
-    background-position: 30% center;
+    background-position: 50% 90%;
     .ant-menu-title-content {
       color: #ffffff !important;
     }

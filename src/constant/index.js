@@ -309,7 +309,7 @@ const transferTableColumn = [
     ellipsis: true,
   },
   {
-    title: 'Time',
+    title: 'Create Time',
     dataIndex: 'time',
     slots: { customRender: 'time' },
     ellipsis: true,

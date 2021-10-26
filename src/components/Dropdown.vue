@@ -6,7 +6,9 @@
     @visibleChange="visibleChange"
   >
     <a-button class="button">
-      <span class="button__title">{{ type === 'chain' ? selectedChain : selectedToken }}</span>
+      <span class="button__title">{{
+        type === "chain" ? selectedChain : isShowSymbol(selectedToken)?.symbolDenom
+      }}</span>
       <span class="button__icon">
         <svg
           focusable="false"
@@ -25,18 +27,20 @@
     </a-button>
     <template #overlay>
       <div class="overlay">
+        <div class="overlay__title" @click="onClickAll">
+          {{ type === "token" ? "All Token" : "All Chains" }}
+        </div>
         <div class="overlay__item">
           <h2 class="overlay__item__title" v-if="type === 'token'">Authed IBC Tokens</h2>
           <div class="overlay__item__content">
             <div
               class="content__item"
               v-for="(item, key) of options"
+              :title="item[titleKey] || isShowSymbol(key)?.symbolDenom"
               :key="item[itemKey] || item"
               :class="
                 type === 'chain'
-                  ? selectedChain &&
-                    selectedChain === item[itemKey] &&
-                    'content__item__selected'
+                  ? selectedChain && selectedChain === item[itemKey] && 'content__item__selected'
                   : selectedToken && selectedToken === key && 'content__item__selected'
               "
               @click="onClickItem(item, key)"
@@ -124,6 +128,10 @@ export default {
     const onClickSearch = () => {
       context.emit('clickSearch', props.type, inputValue.value);
     };
+    const onClickAll = () => {
+      context.emit('clickSearch', props.type, undefined);
+      isVisible.value = false;
+    };
     const isShowSymbol = (key) => {
       const result = {
         symbolDenom: '',
@@ -142,6 +150,7 @@ export default {
       onClickItem,
       inputValue,
       onClickSearch,
+      onClickAll,
       unAuthed,
       isShowSymbol,
     };
@@ -161,7 +170,7 @@ export default {
   font-weight: 400;
   &__title {
     max-width: 80px;
-    text-overflow:ellipsis;
+    text-overflow: ellipsis;
     overflow: hidden;
   }
   &:hover {
@@ -180,12 +189,33 @@ export default {
   }
 }
 .overlay {
-  width: 828px;
+  width: 780px;
   background-color: #fff;
   box-shadow: 0px 2px 8px 0px #d9deec;
   border-radius: 4px;
   border: 1px solid #d9dfee;
   padding: 16px;
+  &__title {
+    display: inline-block;
+    background: #f5f7fc;
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    font-size: 14px;
+    font-family: Montserrat-Regular, Montserrat;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+    margin-bottom: 16px;
+    width: 132px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+    &:hover {
+      border: 1px solid $font-color4;
+      color: $font-color4;
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+      background-color: #ffffff;
+    }
+  }
   &__item {
     width: 100%;
     &__title {
@@ -199,6 +229,7 @@ export default {
       width: 100%;
       @include flex(row, wrap, flex-start, center);
       .content__item {
+        width: 132px;
         background: #f5f7fc;
         border-radius: 4px;
         border: 1px solid transparent;
@@ -206,6 +237,7 @@ export default {
         padding: 6px 12px;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+        @include flex(row, nowrap, flex-start, center);
         &:hover {
           border: 1px solid $font-color4;
           color: $font-color4;
@@ -226,6 +258,9 @@ export default {
           font-size: 14px;
           font-family: Montserrat-Regular, Montserrat;
           font-weight: 400;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
           color: rgba(0, 0, 0, 0.65);
         }
       }

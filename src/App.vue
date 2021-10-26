@@ -180,6 +180,7 @@ export default {
   background-repeat: no-repeat;
   background-size: 1920px 396px;
   background-position: top center;
+  background-color: #F5F7FC;
   & .header {
     @include flex(column, nowrap, center, center);
     text-align: center;
@@ -225,7 +226,7 @@ export default {
   @include flex(row, nowrap, flex-start, center);
 }
 .show__background {
-  background-color: #f0f2f5 !important;
+  background-color: #F5F7FC !important;
   // background-color: transparent;
 }
 @media screen and (max-width: 1920px) {
