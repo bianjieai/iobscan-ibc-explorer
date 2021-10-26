@@ -80,6 +80,7 @@ export default {
     position: absolute;
     margin-left: 16px;
     margin-top: -10px;
+    cursor: pointer;
   }
 }
 </style>

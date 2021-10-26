@@ -225,7 +225,7 @@ export default {
   @include flex(row, nowrap, flex-start, center);
 }
 .show__background {
-  background-color: #f0f2f5 !important;
+  background-color: #F5F7FC !important;
   // background-color: transparent;
 }
 @media screen and (max-width: 1920px) {

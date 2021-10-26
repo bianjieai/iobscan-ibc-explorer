@@ -25,6 +25,7 @@
     </a-button>
     <template #overlay>
       <div class="overlay">
+        <div class="overlay__title">{{type === 'token' ? 'All Token' : 'All Chains'}}</div>
         <div class="overlay__item">
           <h2 class="overlay__item__title" v-if="type === 'token'">Authed IBC Tokens</h2>
           <div class="overlay__item__content">
@@ -186,6 +187,19 @@ export default {
   border-radius: 4px;
   border: 1px solid #d9dfee;
   padding: 16px;
+  &__title {
+    display: inline-block;
+    background: #f5f7fc;
+    border-radius: 4px;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    font-size: 14px;
+    font-family: Montserrat-Regular, Montserrat;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+    margin-bottom: 16px;
+    width: 97px;
+  }
   &__item {
     width: 100%;
     &__title {

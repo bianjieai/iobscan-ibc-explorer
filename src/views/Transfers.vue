@@ -369,7 +369,7 @@ export default {
 .transfer {
   width: 100%;
   max-width: 1200px;
-  background-color: rgb(240, 242, 245);
+  background-color: #F5F7FC;
   padding-top: 40px;
   &__header__container {
     width: 100%;
