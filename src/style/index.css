@@ -58,6 +58,7 @@ progress {
   padding: 0;
   border: 0;
   vertical-align: baseline;
+  font-family: Montserrat-Regular, Montserrat;
 }
 
 @font-face {
@@ -93,7 +94,21 @@ progress {
 }
 
 .ant-anchor-link-title {
+  width: 28px;
   font-family: Montserrat-Regular, Montserrat;
+  text-align: justify;
+  /* display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center; */
+}
+
+.ant-anchor-link-title::after {
+  content:"";
+  display: inline-block;
+  width: 1px;
+  height: 1px;
+  overflow:hidden;
 }
 
 .ibc__selected__border:hover .ant-card-bordered {
@@ -161,4 +176,7 @@ progress {
 }
 .ant-select-item-option:hover {
   color: #3D50FF;
+}
+.ant-popover {
+  z-index: 1051;
 }

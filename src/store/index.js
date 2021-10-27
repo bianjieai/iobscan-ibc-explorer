@@ -204,7 +204,7 @@ export default createStore({
                       symbolNum,
                       symbolDenom,
                       symbolIcon,
-                      tx_time: Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', ''),
+                      parseTime: Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', ''),
                     };
                   }),
                 );

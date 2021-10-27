@@ -52,6 +52,8 @@
       </a-select>
 
       <a-range-picker
+        :value="dateRange.value"
+        :disabledDate="disabledDate"
         class="date__range hover"
         :allowClear="false"
         @change="onChangeRangePicker"
@@ -221,12 +223,12 @@
         </a-popover>
       </template>
       <template #time="{ record }">
-        <span>{{ record.tx_time }}</span>
+        <span>{{ moment(record.tx_time * 1000).format('YYYY-MM-DD hh:mm:ss') }}</span>
       </template>
     </a-table>
 
-    <div class="transfer__bottom">
-      <span class="status__tips" v-if="tableCount.value">
+    <div class="transfer__bottom" v-if="tableCount.value">
+      <span class="status__tips">
         Status:
         <span class="status__tip status__tip__success"></span> Success
         <span class="status__tip status__tip__warning"></span> Processing
@@ -316,7 +318,7 @@ export default {
 
     const tableColumns = reactive(transferTableColumn);
 
-    const selectedToken = reactive({ value: 'All token' });
+    const selectedToken = reactive({ value: 'All Tokens' });
     const selectedChain = reactive({ value: 'All Chains' });
     const onClickDropdownItem = (type, item) => {
       pagination.current = 1;
@@ -327,7 +329,7 @@ export default {
           queryDatas();
           break;
         case 'token':
-          selectedToken.value = item || 'All token';
+          selectedToken.value = item || 'All Tokens';
           if (item === unAuthed) {
             queryParam.token = computed(() => store.state.ibcDenoms)
               .value.value.filter((subItem) => !subItem.auth)
@@ -351,15 +353,19 @@ export default {
       queryDatas();
     };
 
+    const dateRange = reactive({ value: [] });
     const onChangeRangePicker = (dates) => {
+      dateRange.value = dates;
       queryParam.date_range[0] = Math.floor(moment(dates[0]).valueOf() / 1000);
       queryParam.date_range[1] = Math.floor(moment(dates[1]).valueOf() / 1000);
       queryDatas();
     };
+    const disabledDate = (current) => current && current > moment().endOf('day');
 
     const onClickReset = () => {
       selectedChain.value = 'All Chains';
-      selectedToken.value = 'All token';
+      selectedToken.value = 'All Tokens';
+      dateRange.value = [];
       queryParam.date_range = [0, Math.floor(new Date().getTime() / 1000)];
       queryParam.status = [1, 2, 3, 4];
       queryParam.chain_id = undefined;
@@ -395,6 +401,8 @@ export default {
       ibcTxStatusSelectOptions,
       handleSelectChange,
       onChangeRangePicker,
+      dateRange,
+      disabledDate,
       onClickReset,
       queryParam,
       ibcChains,
