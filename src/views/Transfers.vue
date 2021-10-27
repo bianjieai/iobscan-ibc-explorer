@@ -223,7 +223,7 @@
         </a-popover>
       </template>
       <template #time="{ record }">
-        <span>{{ moment(record.tx_time * 1000).format('YYYY-MM-DD hh:mm:ss') }}</span>
+        <span>{{ moment(record.tx_time * 1000).format('yyyy-MM-DD HH:mm:ss') }}</span>
       </template>
     </a-table>
 
