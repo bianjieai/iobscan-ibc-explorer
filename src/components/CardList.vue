@@ -208,6 +208,9 @@ export default {
   }
   .list__anchor {
     width: 50px;
+    &__item {
+      width: 100%;
+    }
   }
   .nodatas__icon {
     width: 120px;

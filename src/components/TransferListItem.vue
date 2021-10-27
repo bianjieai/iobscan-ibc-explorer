@@ -17,11 +17,25 @@
         <div class="hash__container">
           <span class="hash__value">
             <img class="hash__icon" :src="require(`../assets/tx.png`)" alt="icon" />
-            {{ getRestString(item.sc_tx_info.hash, 6, 5) }}
+            <a-popover destroyTooltipOnHide>
+              <template #content>
+                <div>
+                  <p class="tip__color">{{ item.sc_tx_info.hash }}</p>
+                </div>
+              </template>
+              <span class="hover">{{ getRestString(item.sc_tx_info.hash, 6, 5) }}</span>
+            </a-popover>
           </span>
           <span class="hash__value" style="margin-top: 14px;">
             <img class="hash__icon" :src="require(`../assets/adress.png`)" alt="icon" />
-            {{ getRestString(item.sc_addr, 6, 5) }}
+            <a-popover destroyTooltipOnHide>
+              <template #content>
+                <div>
+                  <p class="tip__color">{{ item.sc_addr }}</p>
+                </div>
+              </template>
+              <span class="hover">{{ getRestString(item.sc_addr, 6, 5) }}</span>
+            </a-popover>
           </span>
         </div>
 
@@ -36,15 +50,29 @@
         <div class="hash__container">
           <span class="hash__value">
             <img class="hash__icon" :src="require(`../assets/tx.png`)" alt="icon" />
-            {{ getRestString(item?.dc_tx_info?.hash || "", 6, 6) }}
+            <a-popover destroyTooltipOnHide>
+              <template #content>
+                <div>
+                  <p class="tip__color">{{ item?.dc_tx_info?.hash || "" }}</p>
+                </div>
+              </template>
+              <span class="hover">{{ getRestString(item?.dc_tx_info?.hash || "", 6, 6) }}</span>
+            </a-popover>
           </span>
           <span class="hash__value" style="margin-top: 14px;">
             <img class="hash__icon" :src="require(`../assets/adress.png`)" alt="icon" />
-            {{ getRestString(item.dc_addr, 6, 6) }}
+            <a-popover destroyTooltipOnHide>
+              <template #content>
+                <div>
+                  <p class="tip__color">{{ item.dc_addr }}</p>
+                </div>
+              </template>
+              <span class="hover">{{ getRestString(item.dc_addr, 6, 6) }}</span>
+            </a-popover>
           </span>
         </div>
 
-        <p class="list__item__ago">{{ item.tx_time }} ago</p>
+        <p class="list__item__ago">{{ item.parseTime }} ago</p>
       </div>
     </div>
   </div>
@@ -190,5 +218,13 @@ export default {
 .status__icon {
   width: 22px;
   margin: 0 16px;
+}
+.hover {
+  cursor: pointer;
+}
+.tip {
+  &__color {
+    color: $font-color2;
+  }
 }
 </style>

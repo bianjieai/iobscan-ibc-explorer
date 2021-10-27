@@ -71,7 +71,17 @@
         </div>
 
         <div class="overlay__item">
-          <h2 class="overlay__item__title" v-if="type === 'token'">Custom IBC Tokens</h2>
+          <h2 class="overlay__item__title" v-if="type === 'token'">
+            Custom IBC Tokens
+            <a-popover destroyTooltipOnHide >
+              <template #content>
+                <div>
+                  <p class="tip__color">Hash (in hex format) of the denomination trace information.</p>
+                </div>
+              </template>
+              <img class="tip hover" style="margin-left: 8px;" src="../assets/tip.png" />
+            </a-popover>
+          </h2>
           <div class="overlay__item__content flex">
             <a-input
               class="overlay__item__input"
@@ -126,7 +136,8 @@ export default {
       isVisible.value = false;
     };
     const onClickSearch = () => {
-      context.emit('clickSearch', props.type, inputValue.value);
+      context.emit('clickSearch', props.type, `ibc/${inputValue.value.toUpperCase()}`);
+      isVisible.value = false;
     };
     const onClickAll = () => {
       context.emit('clickSearch', props.type, undefined);
@@ -274,5 +285,14 @@ export default {
 }
 .flex {
   @include flex(row, nowrap, flex-start, center);
+}
+.tip {
+  width: 20px;
+  &__color {
+    color: $font-color2;
+  }
+}
+.hover {
+  cursor: pointer;
 }
 </style>
