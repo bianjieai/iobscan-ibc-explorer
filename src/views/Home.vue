@@ -100,7 +100,7 @@ export default {
     const router = useRouter();
 
     const onClickViewAll = (msg) => {
-      if (msg && msg.includes('tx')) {
+      if (msg && msg.includes && msg.includes('tx')) {
         router.push({
           name: 'Transfers',
         });
