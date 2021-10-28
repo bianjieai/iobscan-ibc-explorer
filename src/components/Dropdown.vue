@@ -11,6 +11,7 @@
       }}</span>
       <span class="button__icon">
         <svg
+          :style="{ transform: isVisible ? 'rotate(180deg)' : 'rotate(0)' }"
           focusable="false"
           data-icon="down"
           width="12px"

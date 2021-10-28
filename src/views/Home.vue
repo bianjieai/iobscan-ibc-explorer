@@ -43,7 +43,7 @@
         <statistic-list type="horizontal" :msg="ibcStatisticsTxs" @clickItem="onClickViewAll" />
         <transfer-list
           :transferList="ibcTxs.value"
-          @clickViewAll="onClickViewAll"
+          @clickViewAll="onClickViewAll('tx_all')"
           @clickItem="onClickViewAll"
         />
       </layer-block>
@@ -54,6 +54,7 @@
 <script>
 import { onBeforeUnmount, h, computed } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import LayerBlock from '../components/LayerBlock.vue';
 import Card from '../components/Card.vue';
@@ -96,11 +97,19 @@ export default {
       // ibcChainsFilter
     };
 
-    const onClickViewAll = () => {
-      message.info({
-        content: h(Message),
-        icon: h('div'),
-      });
+    const router = useRouter();
+
+    const onClickViewAll = (msg) => {
+      if (msg && msg.includes && msg.includes('tx')) {
+        router.push({
+          name: 'Transfers',
+        });
+      } else {
+        message.info({
+          content: h(Message),
+          icon: h('div'),
+        });
+      }
     };
 
     const tipMsg = 'Denom is the token denomination to be transferred, base denomination of the relayed fungible token.';
