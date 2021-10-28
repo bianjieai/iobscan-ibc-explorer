@@ -94,23 +94,13 @@ progress {
 }
 
 .ant-anchor-link-title {
-  width: 28px;
+  width: 26px;
   font-family: Montserrat-Regular, Montserrat;
   text-align: justify;
-  /* display: flex;
-  flex-flow: row nowrap;
-  justify-content: space-between;
-  align-items: center; */
 }
-
-.ant-anchor-link-title::after {
-  content:"";
-  display: inline-block;
-  width: 1px;
-  height: 1px;
-  overflow:hidden;
+.ant-anchor-link-title-active {
+  width: 30px !important;
 }
-
 .ibc__selected__border:hover .ant-card-bordered {
   border: 1px solid #3d50ff;
   cursor: pointer;
@@ -179,4 +169,7 @@ progress {
 }
 .ant-popover {
   z-index: 1051;
+}
+.ant-select-open .ant-select-arrow {
+  transform: rotate(180deg);
 }

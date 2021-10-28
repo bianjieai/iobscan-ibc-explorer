@@ -50,9 +50,17 @@
           class="list__anchor__item"
           v-for="item of anchors"
           :key="item.title"
-          :title="item.title"
           :href="`#list${item.title}`"
-        />
+        >
+          <template #title>
+            <div class="custom__title">
+              <span class="custom__title__left">{{item.title.split('')[0]}}</span>
+              <span>{{item.title.split('')[1]}}</span>
+              <span class="custom__title__right">{{item.title.split('')[2]}}</span>
+              <!-- {{ item.title }} -->
+            </div>
+          </template>
+        </a-anchor-link>
       </a-anchor>
 
       <no-datas
@@ -78,9 +86,7 @@ export default {
   setup(props, context) {
     const getBindElement = ref(null);
     onMounted(() => {
-      getBindElement.value = () => document.querySelector(
-        '#card__list',
-      );
+      getBindElement.value = () => document.querySelector('#card__list');
     });
     const menus = reactive(chainMenus);
     const currentMenu = ref([menus[0].value]);
@@ -222,6 +228,16 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: $font-color2;
+  }
+}
+.custom__title {
+  @include flex(row, nowrap, space-between, center);
+  &__left {
+    width: 10px;
+  }
+  &__right {
+    width: 10px;
+    text-align: right;
   }
 }
 </style>
