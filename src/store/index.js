@@ -180,7 +180,7 @@ export default createStore({
                 commit(
                   SET_IBCTXS,
                   result.map((item) => {
-                    const auth = Tools.findDenomAuth(
+                    const symbol = Tools.findDenomSymbol(
                       state.ibcDenoms.value,
                       item.denoms.sc_denom,
                       item.sc_chain_id,
@@ -188,10 +188,10 @@ export default createStore({
                     let symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
                     let symbolDenom = item.base_denom || '';
                     let symbolIcon = '';
-                    if (auth) {
+                    if (symbol) {
                       const findSymbol = Tools.findSymbol(
                         state.ibcBaseDenoms.value,
-                        item.base_denom,
+                        symbol,
                       );
                       if (findSymbol) {
                         symbolNum = (item.sc_tx_info?.msg_amount?.amount || 0) * 10 ** -findSymbol.scale;

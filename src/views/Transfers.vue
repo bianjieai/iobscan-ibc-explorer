@@ -17,24 +17,23 @@
         class="dropdown__token"
         :type="'token'"
         :ibcBaseDenoms="ibcBaseDenoms"
-        buttonTitle="REGEN"
         :options="tokens"
-        :selectedToken="selectedToken.value"
+        :selectedSymbol="selectedSymbol.value"
+        :showIcon="selectedSymbol.value !== 'All Tokens'"
         @clickItem="onClickDropdownItem"
-        @clickSearch="onClickDropdownItem"
+        @clickSearch="(type, item) => onClickDropdownItem(type, item, 'customToken')"
       />
 
       <dropdown
         class="dropdown__token"
         :type="'chain'"
-        buttonTitle="All Chains"
         :options="ibcChains.value?.all"
         :selectedChain="selectedChain.value"
-        :itemKey="'chain_id'"
+        :showIcon="!!selectedChain.value.chain_name"
         :iconKey="'icon'"
         :titleKey="'chain_name'"
         @clickItem="onClickDropdownItem"
-        @clickSearch="onClickDropdownItem"
+        @clickSearch="(type, item) => onClickDropdownItem(type, item, 'customChain')"
       />
 
       <a-select
@@ -127,6 +126,7 @@
       :loading="loading"
       :data-source="tableDatas.value"
       :pagination="false"
+      :customRow="onClickTableRow"
     >
       <template #customTitle>
         <p>
@@ -223,7 +223,7 @@
         </a-popover>
       </template>
       <template #time="{ record }">
-        <span>{{ moment(record.tx_time * 1000).format('yyyy-MM-DD HH:mm:ss') }}</span>
+        <span>{{ moment(record.tx_time * 1000).format("yyyy-MM-DD HH:mm:ss") }}</span>
       </template>
     </a-table>
 
@@ -245,15 +245,17 @@
 </template>
 
 <script>
+import { message } from 'ant-design-vue';
 import {
-  ref, reactive, computed, onBeforeUnmount,
+  ref, reactive, computed, onBeforeUnmount, h,
 } from 'vue';
 import { useStore } from 'vuex';
 import { groupBy } from 'lodash';
 import moment from 'moment';
 import { GET_IBCTXS } from '../store/action-types';
-import { transferTableColumn, unAuthed, ibcTxStatusSelectOptions } from '../constant';
+import { transferTableColumn, ibcTxStatusSelectOptions } from '../constant';
 import Dropdown from '../components/Dropdown.vue';
+import Message from '../components/Message.vue';
 import { JSONparse, getRestString, formatNum } from '../helper/parseString';
 import placeHoderImg from '../assets/placeHoder.png';
 
@@ -268,18 +270,14 @@ export default {
       current: 1,
       pageSize: 10,
     });
-    const tokens = reactive(
-      groupBy(
-        computed(() => store.state.ibcDenoms).value.value.filter((item) => item.auth),
-        'base_denom',
-      ),
-    );
+    const tokens = reactive(groupBy(computed(() => store.state.ibcDenoms).value.value, 'symbol'));
 
     const queryParam = reactive({
       date_range: [0, Math.floor(new Date().getTime() / 1000)],
       status: [1, 2, 3, 4],
       chain_id: undefined,
-      token: undefined,
+      symbol: undefined,
+      denom: undefined,
     });
 
     const loading = ref(false);
@@ -310,6 +308,15 @@ export default {
 
     queryDatas();
 
+    const onClickTableRow = () => ({
+      onClick: () => {
+        message.info({
+          content: h(Message),
+          icon: h('div'),
+        });
+      },
+    });
+
     const onPaginationChange = (page) => {
       if (loading.value) return;
       pagination.current = page;
@@ -318,28 +325,40 @@ export default {
 
     const tableColumns = reactive(transferTableColumn);
 
-    const selectedToken = reactive({ value: 'All Tokens' });
-    const selectedChain = reactive({ value: 'All Chains' });
-    const onClickDropdownItem = (type, item) => {
+    const selectedSymbol = reactive({ value: 'All Tokens' });
+    const selectedChain = reactive({
+      value: {
+        chain_name: undefined,
+      },
+    });
+    const onClickDropdownItem = (type, item, custom) => {
       pagination.current = 1;
       switch (type) {
         case 'chain':
-          selectedChain.value = item || 'All Chains';
-          queryParam.chain_id = item;
+          selectedChain.value = custom
+            ? {
+              chain_name: item.chain_id,
+            }
+            : {
+              ...item,
+              chain_name: item.chain_name || undefined,
+            };
+          queryParam.chain_id = item.chain_id;
           queryDatas();
           break;
         case 'token':
-          selectedToken.value = item || 'All Tokens';
-          if (item === unAuthed) {
-            queryParam.token = computed(() => store.state.ibcDenoms)
-              .value.value.filter((subItem) => !subItem.auth)
-              .map((subItem) => subItem.denom);
-          } else if (tokens[item]) {
-            queryParam.token = tokens[item].map((subItem) => subItem.denom);
-          } else if (item) {
-            queryParam.token = [item];
+          selectedSymbol.value = item || 'All Tokens';
+          if (item === 'All Tokens') {
+            queryParam.symbol = undefined;
+          } else if (custom) {
+            if (item && item.length && item.length > 8) {
+              selectedSymbol.value = getRestString(item, 4, 4);
+            }
+            queryParam.symbol = undefined;
+            queryParam.denom = item ? `ibc/${item.toUpperCase()}` : undefined;
           } else {
-            queryParam.token = undefined;
+            queryParam.symbol = item;
+            queryParam.denom = undefined;
           }
           queryDatas();
           break;
@@ -363,28 +382,31 @@ export default {
     const disabledDate = (current) => current && current > moment().endOf('day');
 
     const onClickReset = () => {
-      selectedChain.value = 'All Chains';
-      selectedToken.value = 'All Tokens';
+      selectedChain.value = {
+        chain_name: undefined,
+      };
+      selectedSymbol.value = 'All Tokens';
       dateRange.value = [];
       queryParam.date_range = [0, Math.floor(new Date().getTime() / 1000)];
       queryParam.status = [1, 2, 3, 4];
       queryParam.chain_id = undefined;
-      queryParam.token = undefined;
+      queryParam.symbol = undefined;
+      queryParam.denom = undefined;
       pagination.current = 1;
       queryDatas();
     };
 
     const ibcChains = computed(() => store.state.ibcChains)?.value;
 
-    const findIbcChainIcon = (chainId) => {
+    const findIbcChainIcon = computed(() => (chainId) => {
       if (ibcChains.value && ibcChains.value.all) {
         const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
         if (result) {
-          return result.icon;
+          return result.icon || placeHoderImg;
         }
       }
       return placeHoderImg;
-    };
+    });
 
     onBeforeUnmount(() => {
       clearInterval(computed(() => store.state.ibcTxTimer)?.value);
@@ -396,7 +418,7 @@ export default {
       pagination,
       onPaginationChange,
       onClickDropdownItem,
-      selectedToken,
+      selectedSymbol,
       selectedChain,
       ibcTxStatusSelectOptions,
       handleSelectChange,
@@ -407,6 +429,7 @@ export default {
       queryParam,
       ibcChains,
       tokens,
+      onClickTableRow,
       ibcDenoms: computed(() => store.state.ibcDenoms)?.value,
       ibcBaseDenoms: computed(() => store.state.ibcBaseDenoms)?.value,
       tableDatas: computed(() => store.state.ibcTxs)?.value,
@@ -567,7 +590,7 @@ export default {
 }
 .status__select {
   font-family: Montserrat-Regular, Montserrat;
-  width: 124px;
+  width: 140px;
   margin-right: 8px;
 }
 .date__range {

@@ -94,15 +94,15 @@ export default {
     const store = useStore();
     const ibcChains = computed(() => store.state.ibcChains)?.value;
 
-    const findIbcChainIcon = (chainId) => {
+    const findIbcChainIcon = computed(() => (chainId) => {
       if (ibcChains.value && ibcChains.value.all) {
         const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
         if (result) {
-          return result.icon;
+          return result.icon || placeHoderImg;
         }
       }
       return placeHoderImg;
-    };
+    });
 
     const clickListItem = () => {
       context.emit('clickItem', props.item);

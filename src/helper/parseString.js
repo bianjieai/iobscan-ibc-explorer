@@ -1,4 +1,6 @@
 /* eslint-disable import/prefer-default-export */
+import { floor } from 'lodash';
+
 function getRestString(string, left, right) {
   return string ? `${string.substr(0, left)}...${string.substr(-right)}` : '';
 }
@@ -33,7 +35,7 @@ function formatNum(numOrigin) {
   } else if (num <= thousandDecimal) {
     result = thousandDecimal;
   } else {
-    result = num.toFixed(4);
+    result = floor(num, 4);
   }
   return result;
 }
