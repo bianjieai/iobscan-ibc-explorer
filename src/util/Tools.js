@@ -36,21 +36,21 @@ export default class Tools {
     return Math.floor(new Date().getTime() / 1000);
   }
 
-  static findDenomAuth(ibcDenoms, denomStr, chainId) {
+  static findDenomSymbol(ibcDenoms, denomStr, chainId) {
     if (ibcDenoms) {
       const findDenom = ibcDenoms.find(
         (denom) => denom.denom === denomStr && denom.chain_id === chainId,
       );
       if (findDenom) {
-        return findDenom.auth;
+        return findDenom.symbol;
       }
     }
     return false;
   }
 
-  static findSymbol(ibcBaseDenoms, baseDenomStr) {
+  static findSymbol(ibcBaseDenoms, symbol) {
     if (ibcBaseDenoms) {
-      const findBaseDenom = ibcBaseDenoms.find((baseDenom) => baseDenom.denom === baseDenomStr);
+      const findBaseDenom = ibcBaseDenoms.find((baseDenom) => baseDenom.symbol === symbol);
       if (findBaseDenom) {
         return findBaseDenom;
       }

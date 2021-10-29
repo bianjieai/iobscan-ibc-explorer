@@ -6,8 +6,15 @@
     @visibleChange="visibleChange"
   >
     <a-button class="button">
+      <img
+        class="button__pre__icon"
+        :style="{ visibility: showIcon ? 'visible' : 'hidden' }"
+        :src="type === 'chain' ? findChainIcon() : findSymbolIcon()"
+      />
       <span class="button__title">{{
-        type === "chain" ? selectedChain : isShowSymbol(selectedToken)?.symbolDenom
+        type === "chain"
+          ? selectedChain.chain_name || "All Chains"
+          : isShowSymbol(selectedSymbol)?.symbolDenom
       }}</span>
       <span class="button__icon">
         <svg
@@ -34,30 +41,34 @@
         <div class="overlay__item">
           <h2 class="overlay__item__title" v-if="type === 'token'">Authed IBC Tokens</h2>
           <div class="overlay__item__content">
-            <div
-              class="content__item"
-              v-for="(item, key) of options"
-              :title="item[titleKey] || isShowSymbol(key)?.symbolDenom"
-              :key="item[itemKey] || item"
-              :class="
-                type === 'chain'
-                  ? selectedChain && selectedChain === item[itemKey] && 'content__item__selected'
-                  : selectedToken && selectedToken === key && 'content__item__selected'
-              "
-              @click="onClickItem(item, key)"
-            >
-              <img
-                class="content__item__icon"
-                :src="
-                  item[iconKey] ||
-                    isShowSymbol(key)?.symbolIcon ||
-                    require('../assets/placeHoder.png')
+            <template v-for="(item, key) of options" :key="type === 'chain' ? item.chain_id : key">
+              <div
+                class="content__item"
+                v-if="key !== ''"
+                :title="type === 'chain' ? item[titleKey] : key"
+                :class="
+                  type === 'chain'
+                    ? selectedChain &&
+                      selectedChain.chain_id &&
+                      selectedChain.chain_id === item.chain_id &&
+                      'content__item__selected'
+                    : selectedSymbol && selectedSymbol === key && 'content__item__selected'
                 "
-              />
-              <span class="content__item__title">{{
-                item[titleKey] || isShowSymbol(key)?.symbolDenom
-              }}</span>
-            </div>
+                @click="onClickItem(item, key)"
+              >
+                <img
+                  class="content__item__icon"
+                  :src="
+                    item[iconKey] ||
+                      isShowSymbol(key)?.symbolIcon ||
+                      require('../assets/placeHoder.png')
+                  "
+                />
+                <span class="content__item__title">{{
+                  item[titleKey] || isShowSymbol(key)?.symbolDenom
+                }}</span>
+              </div>
+            </template>
           </div>
         </div>
 
@@ -74,10 +85,12 @@
         <div class="overlay__item">
           <h2 class="overlay__item__title" v-if="type === 'token'">
             Custom IBC Tokens
-            <a-popover destroyTooltipOnHide >
+            <a-popover destroyTooltipOnHide>
               <template #content>
                 <div>
-                  <p class="tip__color">Hash (in hex format) of the denomination trace information.</p>
+                  <p class="tip__color">
+                    Hash (in hex format) of the denomination trace information.
+                  </p>
                 </div>
               </template>
               <img class="tip hover" style="margin-left: 8px;" src="../assets/tip.png" />
@@ -88,7 +101,7 @@
               class="overlay__item__input"
               v-model:value="inputValue"
               allowClear
-              :placeholder="type === 'token' ? 'Intern the ibc/hash' : 'Inter the Chain ID'"
+              :placeholder="type === 'token' ? 'Search ibc/hash' : 'Search Chain ID'"
             />
             <a-button type="primary" @click="onClickSearch">Confirm</a-button>
           </div>
@@ -103,24 +116,22 @@
 
 import { ref } from 'vue';
 import { unAuthed } from '../constant';
+import placeHoderImg from '../assets/placeHoder.png';
 
 export default {
   props: {
     type: String,
-    buttonTitle: String,
     options: {
       default: () => [],
     },
     ibcBaseDenoms: {
       default: () => [],
     },
-    selectedChain: {
+    selectedChain: Object,
+    selectedSymbol: {
       default: () => '',
     },
-    selectedToken: {
-      default: () => '',
-    },
-    itemKey: String,
+    showIcon: Boolean,
     iconKey: String,
     titleKey: String,
   },
@@ -132,16 +143,24 @@ export default {
     };
     const onClickItem = (item, key) => {
       inputValue.value = '';
-      const selected = props.type === 'chain' ? item[props.itemKey] : key;
+      const selected = props.type === 'chain' ? item : key;
       context.emit('clickItem', props.type, selected);
       isVisible.value = false;
     };
     const onClickSearch = () => {
-      context.emit('clickSearch', props.type, `ibc/${inputValue.value.toUpperCase()}`);
+      context.emit(
+        'clickSearch',
+        props.type,
+        props.type === 'chain' ? { chain_id: inputValue.value } : inputValue.value,
+      );
       isVisible.value = false;
     };
     const onClickAll = () => {
-      context.emit('clickSearch', props.type, undefined);
+      context.emit(
+        'clickSearch',
+        props.type,
+        props.type === 'chain' ? { chain_id: undefined } : undefined,
+      );
       isVisible.value = false;
     };
     const isShowSymbol = (key) => {
@@ -150,12 +169,31 @@ export default {
         symbolIcon: '',
       };
       if (props.type === 'token' && Array.isArray(props.ibcBaseDenoms.value)) {
-        const findSymbol = props.ibcBaseDenoms.value?.find((baseDenom) => baseDenom.denom === key);
+        const findSymbol = props.ibcBaseDenoms.value?.find((baseDenom) => baseDenom.symbol === key);
         result.symbolDenom = findSymbol ? findSymbol.symbol : key;
         result.symbolIcon = findSymbol ? findSymbol.icon : '';
       }
       return result;
     };
+    const findChainIcon = () => {
+      const findChainConfig = props.options.find(
+        (item) => item.chain_id === props.selectedChain.chain_id,
+      );
+      if (findChainConfig) {
+        return findChainConfig.icon || placeHoderImg;
+      }
+      return placeHoderImg;
+    };
+    const findSymbolIcon = () => {
+      const findSymbolConfig = props.ibcBaseDenoms.value?.find(
+        (baseDenom) => baseDenom.symbol === props.selectedSymbol,
+      );
+      if (findSymbolConfig) {
+        return findSymbolConfig.icon || placeHoderImg;
+      }
+      return placeHoderImg;
+    };
+
     return {
       isVisible,
       visibleChange,
@@ -163,6 +201,8 @@ export default {
       inputValue,
       onClickSearch,
       onClickAll,
+      findChainIcon,
+      findSymbolIcon,
       unAuthed,
       isShowSymbol,
     };
@@ -174,8 +214,8 @@ export default {
 @import "../style/mixin.scss";
 @import "../style/variable.scss";
 .button {
-  padding: 0 5px 0 15px;
-  width: 124px;
+  padding: 0 5px 0 5px;
+  width: 140px;
   margin-right: 8px;
   @include flex(row, wrap, space-between, center);
   font-family: Montserrat-Regular, Montserrat;
@@ -193,11 +233,15 @@ export default {
   }
   &__icon {
     height: 100%;
-    margin-left: 5px;
+    margin: 0 5px;
     @include flex(column, nowrap, center, center);
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     // border-left: 1px solid #d9dfee;
     color: rgba(0, 0, 0, 0.25);
+  }
+  &__pre__icon {
+    width: 18px;
+    margin-right: 5px;
   }
 }
 .overlay {

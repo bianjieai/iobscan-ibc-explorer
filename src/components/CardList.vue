@@ -21,8 +21,8 @@
       >
         <template #renderItem="{ item }">
           <a-list-item
-            :class="findClassName(item.chain_id)"
-            :id="`list${findClassName(item.chain_id)}`"
+            :class="findClassName(item.chain_name)"
+            :id="`list${findClassName(item.chain_name)}`"
             class="ibc__selected__border card__list__item"
             @click="clickListItem({ type: 'chainList', value: item.chain_id })"
           >
@@ -54,9 +54,9 @@
         >
           <template #title>
             <div class="custom__title">
-              <span class="custom__title__left">{{item.title.split('')[0]}}</span>
-              <span>{{item.title.split('')[1]}}</span>
-              <span class="custom__title__right">{{item.title.split('')[2]}}</span>
+              <span class="custom__title__left">{{ item.title.split("")[0] }}</span>
+              <span>{{ item.title.split("")[1] }}</span>
+              <span class="custom__title__right">{{ item.title.split("")[2] }}</span>
               <!-- {{ item.title }} -->
             </div>
           </template>
@@ -97,8 +97,8 @@ export default {
       context.emit('onMenuSelected', key);
     };
 
-    const findClassName = (chainId) => {
-      const chainQuery = chainId.substr(0, 1).toUpperCase();
+    const findClassName = (chainName) => {
+      const chainQuery = chainName.substr(0, 1).toUpperCase();
       let className = '';
 
       try {

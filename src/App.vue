@@ -20,7 +20,8 @@
             />
           </a-col>
           <a-col flex="auto" class="col__layout">
-            <header-input @pressedEnter="onPressEnter" />
+            <!-- disabled can remove if have tx details -->
+            <header-input @pressedEnter="onPressEnter" disabled />
             <img
               class="header__input__icon"
               :src="require('./assets/ioblink.png')"

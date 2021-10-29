@@ -3,6 +3,7 @@
     class="header__input"
     placeholder="Search by TxHash"
     allowClear
+    disabled
     v-model:value="inputValue"
     @pressEnter="onPressEnter"
   >
@@ -16,6 +17,9 @@
 import { ref } from 'vue';
 
 export default {
+  props: {
+    disabled: Boolean,
+  },
   setup(props, context) {
     const inputValue = ref('');
     const onPressEnter = (evt) => {
