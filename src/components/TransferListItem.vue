@@ -8,14 +8,7 @@
     >
       <div class="list__subItem__title__container">
         <span class="list__subItem__value">{{ formatNum(item.symbolNum) || 0 }}</span>
-        <a-popover destroyTooltipOnHide placement="right">
-          <template #content>
-            <div>
-              <p class="tip__color">Sended Token: {{ item.symbolDenom || "" }}</p>
-            </div>
-          </template>
         <span class="list__subItem__title">{{ item.symbolDenom || "" }}</span>
-        </a-popover>
       </div>
 
       <div class="list__subItem__adress__container">
