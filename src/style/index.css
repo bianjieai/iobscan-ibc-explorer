@@ -173,3 +173,7 @@ progress {
 .ant-select-open .ant-select-arrow {
   transform: rotate(180deg);
 }
+.ant-calendar-date:hover {
+  background-color: #3D50FF;
+  color: #ffffff;
+}

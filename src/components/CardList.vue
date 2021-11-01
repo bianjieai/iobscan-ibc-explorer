@@ -234,10 +234,11 @@ export default {
   @include flex(row, nowrap, space-between, center);
   &__left {
     width: 10px;
+    text-align: left;
   }
   &__right {
-    width: 10px;
-    text-align: right;
+    width: 12px;
+    text-align: center;
   }
 }
 </style>

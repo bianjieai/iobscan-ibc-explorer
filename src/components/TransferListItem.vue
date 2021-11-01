@@ -8,7 +8,14 @@
     >
       <div class="list__subItem__title__container">
         <span class="list__subItem__value">{{ formatNum(item.symbolNum) || 0 }}</span>
+        <a-popover destroyTooltipOnHide placement="right">
+          <template #content>
+            <div>
+              <p class="tip__color">Sended Token: {{ item.symbolDenom || "" }}</p>
+            </div>
+          </template>
         <span class="list__subItem__title">{{ item.symbolDenom || "" }}</span>
+        </a-popover>
       </div>
 
       <div class="list__subItem__adress__container">
@@ -81,7 +88,9 @@
 <script>
 import { computed } from 'vue';
 import { useStore } from 'vuex';
-import { getRestString, prefixInteger, formatNum } from '../helper/parseString';
+import {
+  getRestString, getLasttyString, prefixInteger, formatNum,
+} from '../helper/parseString';
 import placeHoderImg from '../assets/placeHoder.png';
 
 export default {
@@ -110,6 +119,7 @@ export default {
 
     return {
       getRestString,
+      getLasttyString,
       prefixInteger,
       findIbcChainIcon,
       placeHoderImg,
@@ -151,7 +161,7 @@ export default {
       width: 100%;
       max-width: 150px;
       margin: 8px;
-      @include flex(column, nowrap, flex-start, center);
+      @include flex(column, nowrap, flex-start, flex-start);
     }
     &__value {
       width: 100%;
@@ -163,7 +173,7 @@ export default {
       line-height: $font-size4;
     }
     &__title {
-      width: 100%;
+      // width: 100%;
       text-align: left;
       margin-top: 4px;
       font-size: $font-size5;

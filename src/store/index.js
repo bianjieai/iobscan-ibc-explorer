@@ -19,6 +19,7 @@ import {
   SET_IBCCONFIGS,
   SET_IBCTXS,
   SET_IBCTXSCOUNT,
+  SET_IBCTXSTARTTIME,
   SET_IBCTXTIMER,
 } from './mutation-types';
 import {
@@ -52,6 +53,7 @@ export default createStore({
     configs: {},
     ibcTxs: { value: [] },
     ibcTxsCount: { value: 0 },
+    ibcTxsStartTime: { value: 0 },
     ibcTxTimer: { value: {} },
   },
   mutations: {
@@ -103,6 +105,9 @@ export default createStore({
       } else {
         state.ibcTxsCount.value = ibcTxsCount;
       }
+    },
+    [SET_IBCTXSTARTTIME](state, ibcTxsStartTime) {
+      state.ibcTxsStartTime.value = ibcTxsStartTime;
     },
     [SET_IBCTXTIMER](state, ibcTxTimer) {
       state.ibcTxTimer.value = ibcTxTimer;
@@ -165,13 +170,15 @@ export default createStore({
       return result;
     },
     [GET_IBCTXS]({ commit, state }, queryParams) {
-      const { use_count } = queryParams;
+      const { use_count, start_time } = queryParams;
       return new Promise((resolve) => {
         getIbcTxs(queryParams).then((res) => {
           const result = res.data;
           if (use_count) {
             commit(SET_IBCTXSCOUNT, res);
             resolve();
+          } else if (start_time) {
+            commit(SET_IBCTXSTARTTIME, res);
           } else {
             clearInterval(state.ibcTxTimer.value);
             commit(
