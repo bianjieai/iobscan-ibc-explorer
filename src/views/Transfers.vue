@@ -292,6 +292,9 @@ export default {
         .then(() => {
           pagination.total = computed(() => store.state.ibcTxsCount).value?.value;
         });
+      store.dispatch(GET_IBCTXS, {
+        start_time: true,
+      });
       store
         .dispatch(GET_IBCTXS, {
           page_num: pagination.current,
@@ -307,7 +310,11 @@ export default {
     };
 
     queryDatas();
-
+    // const disabledDate = (current) => current && current > moment().endOf('day');
+    const disabledDate = (current) => current
+      && (current > moment().endOf('day')
+        || current
+          < moment((computed(() => store.state.ibcTxsStartTime).value?.value - 60 * 60 * 24) * 1000));
     const onClickTableRow = () => ({
       onClick: () => {
         message.info({
@@ -368,6 +375,7 @@ export default {
     };
 
     const handleSelectChange = (item) => {
+      pagination.current = 1;
       queryParam.status = JSONparse(item);
       queryDatas();
     };
@@ -379,7 +387,6 @@ export default {
       queryParam.date_range[1] = Math.floor(moment(dates[1]).valueOf() / 1000);
       queryDatas();
     };
-    const disabledDate = (current) => current && current > moment().endOf('day');
 
     const onClickReset = () => {
       selectedChain.value = {
@@ -590,7 +597,7 @@ export default {
 }
 .status__select {
   font-family: Montserrat-Regular, Montserrat;
-  width: 140px;
+  width: 146px;
   margin-right: 8px;
 }
 .date__range {

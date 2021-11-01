@@ -33,7 +33,7 @@ function formatNum(numOrigin) {
   } else if (num >= thousand) {
     result = Math.floor(num);
   } else if (num <= thousandDecimal) {
-    result = thousandDecimal;
+    result = `< ${thousandDecimal}`;
   } else {
     result = floor(num, 4);
   }

@@ -215,13 +215,13 @@ export default {
 @import "../style/variable.scss";
 .button {
   padding: 0 5px 0 5px;
-  width: 140px;
+  width: 146px;
   margin-right: 8px;
   @include flex(row, wrap, space-between, center);
   font-family: Montserrat-Regular, Montserrat;
   font-weight: 400;
   &__title {
-    max-width: 80px;
+    max-width: 86px;
     text-overflow: ellipsis;
     overflow: hidden;
   }
