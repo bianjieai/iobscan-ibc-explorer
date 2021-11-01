@@ -13,8 +13,8 @@
       />
       <span class="button__title">{{
         type === "chain"
-          ? selectedChain.chain_name || "All Chains"
-          : isShowSymbol(selectedSymbol)?.symbolDenom
+          ? getLasttyString(selectedChain.chain_name) || "All Chains"
+          : getLasttyString(isShowSymbol(selectedSymbol)?.symbolDenom)
       }}</span>
       <span class="button__icon">
         <svg
@@ -65,7 +65,7 @@
                   "
                 />
                 <span class="content__item__title">{{
-                  item[titleKey] || isShowSymbol(key)?.symbolDenom
+                  getLasttyString(item[titleKey]) || isShowSymbol(key)?.symbolDenom
                 }}</span>
               </div>
             </template>
@@ -117,6 +117,7 @@
 import { ref, watch } from 'vue';
 import { unAuthed } from '../constant';
 import placeHoderImg from '../assets/placeHoder.png';
+import { getLasttyString } from '../helper/parseString';
 
 export default {
   props: {
@@ -142,9 +143,12 @@ export default {
     const visibleChange = (visible) => {
       isVisible.value = visible;
     };
-    watch(() => props.clearInput, () => {
-      inputValue.value = '';
-    });
+    watch(
+      () => props.clearInput,
+      () => {
+        inputValue.value = '';
+      },
+    );
 
     const onClickItem = (item, key) => {
       inputValue.value = '';
@@ -209,6 +213,7 @@ export default {
       findChainIcon,
       findSymbolIcon,
       unAuthed,
+      getLasttyString,
       isShowSymbol,
     };
   },
@@ -250,7 +255,7 @@ export default {
   }
 }
 .overlay {
-  width: 780px;
+  width: 820px;
   background-color: #fff;
   box-shadow: 0px 2px 8px 0px #d9deec;
   border-radius: 4px;
@@ -267,7 +272,7 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
     margin-bottom: 16px;
-    width: 132px;
+    width: 140px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     &:hover {
@@ -290,7 +295,7 @@ export default {
       width: 100%;
       @include flex(row, wrap, flex-start, center);
       .content__item {
-        width: 132px;
+        width: 140px;
         background: #f5f7fc;
         border-radius: 4px;
         border: 1px solid transparent;
@@ -320,8 +325,8 @@ export default {
           font-family: Montserrat-Regular, Montserrat;
           font-weight: 400;
           overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
+          // text-overflow: ellipsis;
+          // white-space: nowrap;
           color: rgba(0, 0, 0, 0.65);
         }
       }
