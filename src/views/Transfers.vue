@@ -17,7 +17,7 @@
         class="dropdown__token"
         :type="'token'"
         :ibcBaseDenoms="ibcBaseDenoms"
-        :options="tokens"
+        :options="tokens.value"
         :selectedSymbol="selectedSymbol.value"
         :showIcon="selectedSymbol.value !== 'All Tokens'"
         @clickItem="onClickDropdownItem"
@@ -118,6 +118,7 @@
       </a-button>
     </div>
 
+    <!-- :customRow="onClickTableRow" -->
     <a-table
       class="transfer__table"
       style="width: 100%"
@@ -126,7 +127,6 @@
       :loading="loading"
       :data-source="tableDatas.value"
       :pagination="false"
-      :customRow="onClickTableRow"
     >
       <template #customTitle>
         <p>
@@ -149,9 +149,15 @@
               <p class="tip__color">Recived Token: {{ record.denoms.dc_denom || "--" }}</p>
             </div>
           </template>
-          <img class="token__icon hover" :src="record.symbolIcon || placeHoderImg" />
-          <span class="token__num hover">{{ formatNum(record.symbolNum) }}</span>
-          <span class="token__denom hover">{{ record.symbolDenom }}</span>
+          <img
+            class="token__icon hover"
+            :src="record.symbolIcon || placeHoderImg"
+            @click="onClickTableRow"
+          />
+          <span class="token__num hover" @click="onClickTableRow">{{
+            formatNum(record.symbolNum)
+          }}</span>
+          <span class="token__denom hover" @click="onClickTableRow">{{ getLasttyString(record.symbolDenom) }}</span>
         </a-popover>
       </template>
       <template #hashOut="{ record }">
@@ -161,7 +167,9 @@
               <p class="tip__color">{{ record.sc_tx_info.hash }}</p>
             </div>
           </template>
-          <span class="hover">{{ getRestString(record.sc_tx_info.hash, 4, 4) }}</span>
+          <span class="hover" @click="onClickTableRow">{{
+            getRestString(record.sc_tx_info.hash, 4, 4)
+          }}</span>
         </a-popover>
       </template>
       <template #out="{ record }">
@@ -171,7 +179,9 @@
               <p class="tip__color">{{ record.sc_addr }}</p>
             </div>
           </template>
-          <span class="hover">{{ getRestString(record.sc_addr, 3, 8) }}</span>
+          <span class="hover" @click="onClickTableRow">{{
+            getRestString(record.sc_addr, 3, 8)
+          }}</span>
         </a-popover>
       </template>
       <template #status="{ record }">
@@ -179,12 +189,16 @@
         <a-popover placement="right" destroyTooltipOnHide>
           <template #content>
             <div>
-              <p class="tip__color">Chain ID：{{ record.sc_chain_id || "--" }}</p>
+              <p class="tip__color">Chain ID：{{ getLasttyString(record.sc_chain_id) || "--" }}</p>
               <p class="tip__color">Channel ID: {{ record.sc_channel || "--" }}</p>
               <p class="tip__color">Sequence: {{ record.sequence || "--" }}</p>
             </div>
           </template>
-          <img class="status__icon hover" :src="findIbcChainIcon(record.sc_chain_id)" />
+          <img
+            class="status__icon hover"
+            :src="findIbcChainIcon(record.sc_chain_id)"
+            @click="onClickTableRow"
+          />
         </a-popover>
         <img
           class="status__icon"
@@ -194,12 +208,16 @@
         <a-popover placement="right" destroyTooltipOnHide>
           <template #content>
             <div>
-              <p class="tip__color">Chain ID：{{ record.dc_chain_id || "--" }}</p>
+              <p class="tip__color">Chain ID：{{ getLasttyString(record.dc_chain_id) || "--" }}</p>
               <p class="tip__color">Channel ID: {{ record.dc_channel || "--" }}</p>
               <p class="tip__color">Sequence: {{ record.sequence || "--" }}</p>
             </div>
           </template>
-          <img class="status__icon hover" :src="findIbcChainIcon(record.dc_chain_id)" />
+          <img
+            class="status__icon hover"
+            :src="findIbcChainIcon(record.dc_chain_id)"
+            @click="onClickTableRow"
+          />
         </a-popover>
       </template>
       <template #hashIn="{ record }">
@@ -209,7 +227,9 @@
               <p class="tip__color">{{ record.dc_tx_info.hash || "--" }}</p>
             </div>
           </template>
-          <span class="hover">{{ getRestString(record.dc_tx_info.hash, 4, 4) || "--" }}</span>
+          <span class="hover" @click="onClickTableRow">{{
+            getRestString(record.dc_tx_info.hash, 4, 4) || "--"
+          }}</span>
         </a-popover>
       </template>
       <template #in="{ record }">
@@ -219,7 +239,9 @@
               <p class="tip__color">{{ record.dc_addr || "--" }}</p>
             </div>
           </template>
-          <span class="hover">{{ getRestString(record.dc_addr, 3, 8) || "--" }}</span>
+          <span class="hover" @click="onClickTableRow">{{
+            getRestString(record.dc_addr, 3, 8) || "--"
+          }}</span>
         </a-popover>
       </template>
       <template #time="{ record }">
@@ -256,8 +278,11 @@ import { GET_IBCTXS } from '../store/action-types';
 import { transferTableColumn, ibcTxStatusSelectOptions } from '../constant';
 import Dropdown from '../components/Dropdown.vue';
 import Message from '../components/Message.vue';
-import { JSONparse, getRestString, formatNum } from '../helper/parseString';
+import {
+  JSONparse, getRestString, getLasttyString, formatNum,
+} from '../helper/parseString';
 import placeHoderImg from '../assets/placeHoder.png';
+import { getIbcDenoms } from '../service/api';
 
 export default {
   components: {
@@ -270,8 +295,6 @@ export default {
       current: 1,
       pageSize: 10,
     });
-    const tokens = reactive(groupBy(computed(() => store.state.ibcDenoms).value.value, 'symbol'));
-
     const queryParam = reactive({
       date_range: [0, Math.floor(new Date().getTime() / 1000)],
       status: [1, 2, 3, 4],
@@ -315,14 +338,20 @@ export default {
       && (current > moment().endOf('day')
         || current
           < moment((computed(() => store.state.ibcTxsStartTime).value?.value - 60 * 60 * 24) * 1000));
-    const onClickTableRow = () => ({
-      onClick: () => {
-        message.info({
-          content: h(Message),
-          icon: h('div'),
-        });
-      },
-    });
+    // const onClickTableRow = () => ({
+    //   onClick: () => {
+    //     message.info({
+    //       content: h(Message),
+    //       icon: h('div'),
+    //     });
+    //   },
+    // });
+    const onClickTableRow = () => {
+      message.info({
+        content: h(Message),
+        icon: h('div'),
+      });
+    };
 
     const onPaginationChange = (page) => {
       if (loading.value) return;
@@ -419,6 +448,12 @@ export default {
       clearInterval(computed(() => store.state.ibcTxTimer)?.value);
     });
 
+    const tokens = reactive({ value: [] });
+
+    getIbcDenoms().then((res) => {
+      tokens.value = computed(() => groupBy(res, 'symbol')).value;
+    });
+
     return {
       tableColumns,
       loading,
@@ -445,6 +480,7 @@ export default {
       findIbcChainIcon,
       placeHoderImg,
       getRestString,
+      getLasttyString,
       formatNum,
     };
   },

@@ -222,7 +222,7 @@ export default {
   font-weight: 400;
   &__title {
     max-width: 86px;
-    text-overflow: ellipsis;
+    // text-overflow: ellipsis;
     overflow: hidden;
   }
   &:hover {

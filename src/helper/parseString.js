@@ -5,6 +5,10 @@ function getRestString(string, left, right) {
   return string ? `${string.substr(0, left)}...${string.substr(-right)}` : '';
 }
 
+function getLasttyString(string) {
+  return string && string.length > 10 ? `${string.substr(0, 10)}...` : string;
+}
+
 function prefixInteger(num, n) {
   return (Array(n).join(0) + num).slice(-n);
 }
@@ -41,5 +45,5 @@ function formatNum(numOrigin) {
 }
 
 export {
-  getRestString, prefixInteger, JSONparse, formatNum,
+  getRestString, prefixInteger, JSONparse, formatNum, getLasttyString,
 };
