@@ -114,7 +114,7 @@
 <script>
 /* eslint-disable max-len */
 
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { unAuthed } from '../constant';
 import placeHoderImg from '../assets/placeHoder.png';
 
@@ -131,6 +131,7 @@ export default {
     selectedSymbol: {
       default: () => '',
     },
+    clearInput: Number,
     showIcon: Boolean,
     iconKey: String,
     titleKey: String,
@@ -141,6 +142,10 @@ export default {
     const visibleChange = (visible) => {
       isVisible.value = visible;
     };
+    watch(() => props.clearInput, () => {
+      inputValue.value = '';
+    });
+
     const onClickItem = (item, key) => {
       inputValue.value = '';
       const selected = props.type === 'chain' ? item : key;

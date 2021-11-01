@@ -20,6 +20,7 @@
         :options="tokens.value"
         :selectedSymbol="selectedSymbol.value"
         :showIcon="selectedSymbol.value !== 'All Tokens'"
+        :clearInput="clearInput.value"
         @clickItem="onClickDropdownItem"
         @clickSearch="(type, item) => onClickDropdownItem(type, item, 'customToken')"
       />
@@ -31,6 +32,7 @@
         :selectedChain="selectedChain.value"
         :showIcon="!!selectedChain.value.chain_name"
         :iconKey="'icon'"
+        :clearInput="clearInput.value"
         :titleKey="'chain_name'"
         @clickItem="onClickDropdownItem"
         @clickSearch="(type, item) => onClickDropdownItem(type, item, 'customChain')"
@@ -417,7 +419,9 @@ export default {
       queryDatas();
     };
 
+    const clearInput = { value: 0 };
     const onClickReset = () => {
+      clearInput.value += 1;
       selectedChain.value = {
         chain_name: undefined,
       };
@@ -481,6 +485,7 @@ export default {
       placeHoderImg,
       getRestString,
       getLasttyString,
+      clearInput,
       formatNum,
     };
   },
