@@ -147,7 +147,7 @@
         <a-popover placement="right" destroyTooltipOnHide>
           <template #content>
             <div>
-              <p class="tip__color">Sended Token: {{ record.symbolDenom || "--" }}</p>
+              <p class="tip__color">Sended Token: {{ record.denoms.sc_denom || "--" }}</p>
               <p class="tip__color">Recived Token: {{ record.denoms.dc_denom || "--" }}</p>
             </div>
           </template>
