@@ -14,7 +14,7 @@
               <p class="tip__color">Sended Token: {{ item.symbolDenom || "" }}</p>
             </div>
           </template>
-        <span class="list__subItem__title">{{ getLasttyString(item.symbolDenom) || "" }}</span>
+        <span class="list__subItem__title">{{ item.symbolDenom || "" }}</span>
         </a-popover>
       </div>
 
