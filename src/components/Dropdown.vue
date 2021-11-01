@@ -14,7 +14,7 @@
       <span class="button__title">{{
         type === "chain"
           ? getLasttyString(selectedChain.chain_name) || "All Chains"
-          : getLasttyString(isShowSymbol(selectedSymbol)?.symbolDenom)
+          : isShowSymbol(selectedSymbol)?.symbolDenom
       }}</span>
       <span class="button__icon">
         <svg

@@ -339,7 +339,7 @@ export default {
     const disabledDate = (current) => current
       && (current > moment().endOf('day')
         || current
-          < moment((computed(() => store.state.ibcTxsStartTime).value?.value - 60 * 60 * 24) * 1000));
+          < moment((computed(() => store.state.ibcTxsStartTime).value?.value) * 1000));
     // const onClickTableRow = () => ({
     //   onClick: () => {
     //     message.info({
