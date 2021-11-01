@@ -189,7 +189,7 @@
         <a-popover placement="right" destroyTooltipOnHide>
           <template #content>
             <div>
-              <p class="tip__color">Chain ID：{{ getLasttyString(record.sc_chain_id) || "--" }}</p>
+              <p class="tip__color">Chain ID：{{ record.sc_chain_id || "--" }}</p>
               <p class="tip__color">Channel ID: {{ record.sc_channel || "--" }}</p>
               <p class="tip__color">Sequence: {{ record.sequence || "--" }}</p>
             </div>
@@ -208,7 +208,7 @@
         <a-popover placement="right" destroyTooltipOnHide>
           <template #content>
             <div>
-              <p class="tip__color">Chain ID：{{ getLasttyString(record.dc_chain_id) || "--" }}</p>
+              <p class="tip__color">Chain ID：{{ record.dc_chain_id || "--" }}</p>
               <p class="tip__color">Channel ID: {{ record.dc_channel || "--" }}</p>
               <p class="tip__color">Sequence: {{ record.sequence || "--" }}</p>
             </div>
