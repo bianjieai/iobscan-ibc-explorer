@@ -425,6 +425,7 @@ export default {
 
     const dateRange = reactive({ value: [] });
     const onChangeRangePicker = (dates) => {
+      pagination.current = 1;
       dateRange.value = dates;
       queryParam.date_range[0] = Math.floor(startTime(moment(dates[0]).valueOf()) / 1000);
       queryParam.date_range[1] = Math.floor(
