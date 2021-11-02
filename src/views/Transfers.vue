@@ -425,6 +425,8 @@ export default {
 
     const clearInput = { value: 0 };
     const onClickReset = () => {
+      isShowChainIcon.value = false;
+      isShowSymbolIcon.value = false;
       clearInput.value += 1;
       selectedChain.value = {
         chain_name: undefined,
