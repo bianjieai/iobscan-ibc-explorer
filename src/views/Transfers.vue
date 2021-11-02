@@ -58,6 +58,11 @@
         class="date__range hover"
         :allowClear="false"
         @change="onChangeRangePicker"
+        :show-time="{
+          hideDisabledOptions: true,
+          defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
+        }"
+        format="YYYY-MM-DD"
         separator="-"
       >
         <template #suffixIcon>
@@ -336,10 +341,14 @@ export default {
 
     queryDatas();
     // const disabledDate = (current) => current && current > moment().endOf('day');
+    const startTime = (time) => {
+      const nowTimeDate = new Date(time);
+      return nowTimeDate.setHours(0, 0, 0, 0);
+    };
     const disabledDate = (current) => current
       && (current > moment().endOf('day')
         || current
-          < moment((computed(() => store.state.ibcTxsStartTime).value?.value) * 1000));
+          < moment(startTime((computed(() => store.state.ibcTxsStartTime).value?.value) * 1000)));
     // const onClickTableRow = () => ({
     //   onClick: () => {
     //     message.info({
@@ -348,6 +357,7 @@ export default {
     //     });
     //   },
     // });
+
     const onClickTableRow = () => {
       message.info({
         content: h(Message),
