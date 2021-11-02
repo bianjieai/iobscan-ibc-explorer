@@ -19,7 +19,7 @@
         :ibcBaseDenoms="ibcBaseDenoms"
         :options="tokens.value"
         :selectedSymbol="selectedSymbol.value"
-        :showIcon="selectedSymbol.value !== 'All Tokens'"
+        :showIcon="isShowSymbolIcon"
         :clearInput="clearInput.value"
         @clickItem="onClickDropdownItem"
         @clickSearch="(type, item) => onClickDropdownItem(type, item, 'customToken')"
@@ -30,7 +30,7 @@
         :type="'chain'"
         :options="ibcChains.value?.all"
         :selectedChain="selectedChain.value"
-        :showIcon="!!selectedChain.value.chain_name"
+        :showIcon="isShowChainIcon"
         :iconKey="'icon'"
         :clearInput="clearInput.value"
         :titleKey="'chain_name'"
@@ -369,10 +369,13 @@ export default {
         chain_name: undefined,
       },
     });
+    const isShowSymbolIcon = ref(false);
+    const isShowChainIcon = ref(false);
     const onClickDropdownItem = (type, item, custom) => {
       pagination.current = 1;
       switch (type) {
         case 'chain':
+          isShowChainIcon.value = !custom;
           selectedChain.value = custom
             ? {
               chain_name: item.chain_id,
@@ -385,6 +388,7 @@ export default {
           queryDatas();
           break;
         case 'token':
+          isShowSymbolIcon.value = !custom;
           selectedSymbol.value = item || 'All Tokens';
           if (item === 'All Tokens') {
             queryParam.symbol = undefined;
@@ -487,6 +491,8 @@ export default {
       getLasttyString,
       clearInput,
       formatNum,
+      isShowChainIcon,
+      isShowSymbolIcon,
     };
   },
 };
