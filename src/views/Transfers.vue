@@ -58,10 +58,6 @@
         class="date__range hover"
         :allowClear="false"
         @change="onChangeRangePicker"
-        :show-time="{
-          hideDisabledOptions: true,
-          defaultValue: [moment('00:00:00', 'HH:mm:ss'), moment('23:59:59', 'HH:mm:ss')],
-        }"
         format="YYYY-MM-DD"
         separator="-"
       >
@@ -164,7 +160,9 @@
           <span class="token__num hover" @click="onClickTableRow">{{
             formatNum(record.symbolNum)
           }}</span>
-          <span class="token__denom hover" @click="onClickTableRow">{{ getLasttyString(record.symbolDenom) }}</span>
+          <span class="token__denom hover" @click="onClickTableRow">{{
+            getLasttyString(record.symbolDenom)
+          }}</span>
         </a-popover>
       </template>
       <template #hashOut="{ record }">
@@ -348,7 +346,7 @@ export default {
     const disabledDate = (current) => current
       && (current > moment().endOf('day')
         || current
-          < moment(startTime((computed(() => store.state.ibcTxsStartTime).value?.value) * 1000)));
+          < moment(startTime(computed(() => store.state.ibcTxsStartTime).value?.value * 1000)));
     // const onClickTableRow = () => ({
     //   onClick: () => {
     //     message.info({
@@ -428,8 +426,10 @@ export default {
     const dateRange = reactive({ value: [] });
     const onChangeRangePicker = (dates) => {
       dateRange.value = dates;
-      queryParam.date_range[0] = Math.floor(moment(dates[0]).valueOf() / 1000);
-      queryParam.date_range[1] = Math.floor(moment(dates[1]).valueOf() / 1000);
+      queryParam.date_range[0] = Math.floor(startTime(moment(dates[0]).valueOf()) / 1000);
+      queryParam.date_range[1] = Math.floor(
+        startTime(moment(dates[1]).valueOf()) / 1000 + 60 * 60 * 24,
+      );
       queryDatas();
     };
 
