@@ -177,3 +177,9 @@ progress {
   background-color: #3D50FF;
   color: #ffffff;
 }
+.ant-calendar-input-wrap {
+  display: none;
+}
+.ant-calendar-time-picker-btn {
+  display: none !important;
+}
