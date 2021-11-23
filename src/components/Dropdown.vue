@@ -36,7 +36,7 @@
     <template #overlay>
       <div class="overlay">
         <div class="overlay__title" @click="onClickAll">
-          {{ type === "token" ? "All Token" : "All Chains" }}
+          {{ type === "token" ? "All Tokens" : "All Chains" }}
         </div>
         <div class="overlay__item">
           <h2 class="overlay__item__title" v-if="type === 'token'">Authed IBC Tokens</h2>
