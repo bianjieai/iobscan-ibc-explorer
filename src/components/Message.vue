@@ -3,7 +3,7 @@
       <div class="tip__icon">
         <img style="width: 90%; height: 90%" src="../assets/commingsoon.png" />
       </div>
-    <span class="tip__title">Comming Soon…</span>
+    <span class="tip__title">Coming Soon…</span>
   </div>
 </template>
 

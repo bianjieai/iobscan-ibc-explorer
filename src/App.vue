@@ -1,15 +1,15 @@
 <template>
   <a-config-provider>
     <template #renderEmpty>
-      <no-datas />
+      <no-datas/>
     </template>
     <a-layout class="layout">
       <a-layout-header class="header">
         <a-row class="header__content" type="flex">
           <a-col flex="160px" class="col__layout">
             <div class="logo" @click="onClickLogo">
-              <img class="logo__icon" src="./assets/HeaderIcon.png" alt="logo" />
-              <img class="logo__text" src="./assets/iobscan.png" alt="title" />
+              <img class="logo__icon" src="./assets/HeaderIcon.png" alt="logo"/>
+              <img class="logo__text" src="./assets/iobscan.png" alt="title"/>
             </div>
           </a-col>
           <a-col flex="auto">
@@ -21,7 +21,7 @@
           </a-col>
           <a-col flex="auto" class="col__layout">
             <!-- disabled can remove if have tx details -->
-            <header-input @pressedEnter="onPressEnter" disabled />
+            <header-input @pressedEnter="onPressEnter" disabled/>
             <img
               class="header__input__icon"
               :src="require('./assets/ioblink.png')"
@@ -33,11 +33,11 @@
       </a-layout-header>
 
       <a-layout-content class="content" :class="isShowBackground.value ? 'show__background' : ''">
-        <router-view />
+        <router-view/>
       </a-layout-content>
 
       <a-layout-footer class="footer">
-        <ibc-footer />
+        <ibc-footer/>
       </a-layout-footer>
     </a-layout>
   </a-config-provider>
@@ -45,16 +45,14 @@
 
 <script>
 import {
-  reactive, h, computed, watch,
+  reactive, computed, watch,
 } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter, useRoute } from 'vue-router';
-import { message } from 'ant-design-vue';
-import { menus } from './constant';
+import {useStore} from 'vuex';
+import {useRouter, useRoute} from 'vue-router';
+import {menus} from './constant';
 import Navigation from './components/Navigation.vue';
 import HeaderInput from './components/HeaderInput.vue';
 import IbcFooter from './components/IbcFooter.vue';
-import Message from './components/Message.vue';
 import NoDatas from './components/NoDatas.vue';
 
 import {
@@ -99,7 +97,7 @@ export default {
       }
     };
 
-    const isShowBackground = reactive({ value: false });
+    const isShowBackground = reactive({value: false});
     const route = useRoute();
     watch(
       () => route.path,
@@ -111,7 +109,7 @@ export default {
     const onPressEnter = (val) => {
       console.log(val);
     };
-    const currentMenu = reactive({ value: [] });
+    const currentMenu = reactive({value: []});
     watch(
       () => route.path,
       (to) => {
@@ -122,12 +120,25 @@ export default {
           case '/transfers':
             currentMenu.value = ['Transfers'];
             break;
+          case '/tokens':
+            currentMenu.value = ['Tokens'];
+            break;
+          case '/network':
+            currentMenu.value = ['NetWork'];
+            break;
+          case '/channels':
+            currentMenu.value = ['Channels'];
+            break;
+          case '/relayers':
+            currentMenu.value = ['Relayers'];
+            break;
           default:
             break;
         }
       },
     );
     const clickMenu = (val) => {
+      console.log(val)
       switch (val) {
         case 'Home':
           currentMenu.value = ['Home'];
@@ -141,11 +152,31 @@ export default {
             name: 'Transfers',
           });
           break;
-        default:
-          message.info({
-            content: h(Message),
-            icon: h('div'),
+        case 'Tokens':
+          currentMenu.value = ['Tokens'];
+          router.push({
+            name: 'Tokens',
           });
+          break;
+        case 'Network':
+          currentMenu.value = ['NetWork'];
+          router.push({
+            name: 'NetWork',
+          });
+          break;
+        case 'Channels':
+          currentMenu.value = ['Channels'];
+          router.push({
+            name: 'Channels',
+          });
+          break;
+        case 'Relayers':
+          currentMenu.value = ['Relayers'];
+          router.push({
+            name: 'Relayers',
+          });
+          break;
+        default:
           break;
       }
     };
