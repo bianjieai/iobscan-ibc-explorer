@@ -263,4 +263,10 @@ export default {
 }
 @media screen and (max-width: 1920px) {
 }
+a{
+    color: rgba(0,0,0,0.7);
+    &:hover{
+        color: #3d50ff
+    }
+}
 </style>

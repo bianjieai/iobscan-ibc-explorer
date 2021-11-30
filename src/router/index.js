@@ -35,6 +35,26 @@ const routes = [
     name: 'Relayers',
     component: () => import(/* webpackChunkName: "transfers" */ '../views/ComingSoon.vue'),
   },
+    {
+        path: '/tokens/details',
+        name: 'tokensDetails',
+        component: () => import(/* webpackChunkName: "transfers" */ '../views/ComingSoon.vue'),
+    },
+    {
+        path: '/transfers/details',
+        name: 'transfersDetails',
+        component: () => import(/* webpackChunkName: "transfers" */ '../views/ComingSoon.vue'),
+    },
+    {
+        path: '/address/details',
+        name: 'addressDetails',
+        component: () => import(/* webpackChunkName: "transfers" */ '../views/ComingSoon.vue'),
+    },
+    {
+        path: '/network/details',
+        name: 'chainsDetails',
+        component: () => import(/* webpackChunkName: "transfers" */ '../views/ComingSoon.vue'),
+    },
 ];
 
 const router = createRouter({
