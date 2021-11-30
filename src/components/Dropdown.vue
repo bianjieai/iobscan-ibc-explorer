@@ -160,7 +160,7 @@ export default {
       context.emit(
         'clickSearch',
         props.type,
-        props.type === 'chain' ? { chain_id: inputValue.value } : inputValue.value.replace('ibc/', '').replace('IBC/', ''),
+        props.type === 'chain' ? { chain_id: inputValue.value } : inputValue.value.toLowerCase().replace('ibc/', '').replace('IBC/', ''),
       );
       isVisible.value = false;
     };
