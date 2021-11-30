@@ -4,12 +4,15 @@
     <layer-block class="home__top" title="Networks" type="dark">
       <div class="home__top__slot">
         <div class="home__top__left">
-          <card :msg="ibcStatisticsChains.chains_24hr" @click="onClickViewAll" />
-          <card
-            :msg="ibcStatisticsChains.chain_all"
-            style="margin-top: 18px;"
-            @click="onClickViewAll"
-          />
+            <router-link :to="`/network`">
+                <card :msg="ibcStatisticsChains.chains_24hr"/>
+            </router-link>
+            <router-link :to="`/network`">
+                <card
+                    :msg="ibcStatisticsChains.chain_all"
+                    style="margin-top: 18px;"
+                />
+            </router-link>
         </div>
         <div class="home__top__right">
           <card-list
@@ -29,13 +32,12 @@
           <statistic-list
             type="vertical"
             :msg="ibcStatisticsChannels"
-            @clickItem="onClickViewAll"
           />
         </layer-block>
 
         <!-- Tokens -->
         <layer-block title="IBC Tokens" style="margin-top: 47px" showTip :tipMsg="tipMsg">
-          <statistic-list type="vertical" :msg="ibcStatisticsDenoms" @clickItem="onClickViewAll" />
+          <statistic-list type="vertical" :msg="ibcStatisticsDenoms" />
         </layer-block>
       </div>
 
