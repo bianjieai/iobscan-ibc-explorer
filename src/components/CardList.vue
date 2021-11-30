@@ -24,16 +24,17 @@
             :class="findClassName(item.chain_name)"
             :id="`list${findClassName(item.chain_name)}`"
             class="ibc__selected__border card__list__item"
-            @click="clickListItem({ type: 'chainList', value: item.chain_id })"
           >
-            <a-card class="menu__card">
-              <img
-                class="card__img"
-                :src="item.icon ? item.icon : require('../assets/placeHoder.png')"
-              />
-              <p class="card__title">{{ item.chain_name }}</p>
-              <p class="card__value">{{ item.chain_id }}</p>
-            </a-card>
+              <router-link :to="`/network/details?chain_id=${item.chain_id}`">
+                  <a-card class="menu__card">
+                      <img
+                          class="card__img"
+                          :src="item.icon ? item.icon : require('../assets/placeHoder.png')"
+                      />
+                      <p class="card__title">{{ item.chain_name }}</p>
+                      <p class="card__value">{{ item.chain_id }}</p>
+                  </a-card>
+              </router-link>
           </a-list-item>
         </template>
       </a-list>
