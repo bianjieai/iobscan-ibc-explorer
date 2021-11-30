@@ -101,9 +101,9 @@ export default {
 
     const onClickViewAll = (msg) => {
       if (msg && msg.includes && msg.includes('tx')) {
-        router.push({
+        /*router.push({
           name: 'Transfers',
-        });
+        });*/
       } else {
         message.info({
           content: h(Message),

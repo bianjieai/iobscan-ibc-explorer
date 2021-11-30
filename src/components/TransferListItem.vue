@@ -1,5 +1,5 @@
 <template>
-  <div class="list__item" @click="clickListItem">
+  <div class="list__item">
     <span class="list__item__number">{{ prefixInteger(index + 1, 3) }}</span>
     <img class="list__item__icon" :src="item.symbolIcon || placeHoderImg" alt="icon" />
     <div
@@ -12,7 +12,9 @@
       </div>
 
       <div class="list__subItem__adress__container">
-        <img class="list__subItem__adress__icon" :src="findIbcChainIcon(item.sc_chain_id)" />
+          <router-link :to="`/network/details?chain_id=${item.sc_chain_id}`">
+              <img class="list__subItem__adress__icon" :src="findIbcChainIcon(item.sc_chain_id)" />
+          </router-link>
 
         <div class="hash__container">
           <span class="hash__value">
@@ -23,7 +25,9 @@
                   <p class="tip__color">{{ item.sc_tx_info.hash }}</p>
                 </div>
               </template>
-              <span class="hover">{{ getRestString(item.sc_tx_info.hash, 6, 5) }}</span>
+                <router-link :to="`/transfers/details?hash=${item.sc_tx_info.hash}`">
+                    <span class="hover">{{ getRestString(item.sc_tx_info.hash, 6, 5) }}</span>
+                </router-link>
             </a-popover>
           </span>
           <span class="hash__value" style="margin-top: 14px;">
@@ -34,7 +38,9 @@
                   <p class="tip__color">{{ item.sc_addr }}</p>
                 </div>
               </template>
-              <span class="hover">{{ getRestString(item.sc_addr, 6, 5) }}</span>
+                <router-link :to="`/address/details?address=${item.sc_addr}`">
+                    <span class="hover">{{ getRestString(item.sc_addr, 6, 5) }}</span>
+                </router-link>
             </a-popover>
           </span>
         </div>
@@ -44,8 +50,9 @@
           :src="require(`../assets/status${item.status}.png`)"
           alt="status"
         />
-
-        <img class="list__subItem__adress__icon" :src="findIbcChainIcon(item.dc_chain_id)" />
+        <router-link :to="`/network/details?chain_id=${item.dc_chain_id}`">
+            <img class="list__subItem__adress__icon" :src="findIbcChainIcon(item.dc_chain_id)" />
+        </router-link>
 
         <div class="hash__container">
           <span class="hash__value">
@@ -56,7 +63,10 @@
                   <p class="tip__color">{{ item?.dc_tx_info?.hash || "" }}</p>
                 </div>
               </template>
-              <span class="hover">{{ getRestString(item?.dc_tx_info?.hash || "", 6, 6) }}</span>
+                <router-link v-if="item?.dc_tx_info?.hash" :to="`/transfers/details?hash=${item.dc_tx_info.hash}`">
+                     <span class="hover">{{ getRestString(item?.dc_tx_info?.hash || "", 6, 6) }}</span>
+                </router-link>
+                <span v-else></span>
             </a-popover>
           </span>
           <span class="hash__value" style="margin-top: 14px;">
@@ -67,7 +77,9 @@
                   <p class="tip__color">{{ item.dc_addr }}</p>
                 </div>
               </template>
-              <span class="hover">{{ getRestString(item.dc_addr, 6, 6) }}</span>
+                <router-link :to="`/address/details?address=${item.dc_addr}`">
+                      <span class="hover">{{ getRestString(item.dc_addr, 6, 6) }}</span>
+                </router-link>
             </a-popover>
           </span>
         </div>
