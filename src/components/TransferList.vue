@@ -3,7 +3,9 @@
     <a-divider style="margin: 0px; margin-bottom: 0;" />
     <div class="list__top">
       <span class="list__top__name">Latest 100 IBC Token Transfer List</span>
-      <a-button class="list__top__button" @click="onClickViewAll">View All</a-button>
+        <router-link :to="'/transfers'">
+            <a-button class="list__top__button">View All</a-button>
+        </router-link>
     </div>
     <div class="list__middle" >
       <div class="transfer__list ibc__scrollbar" v-if="transferList && transferList.length">
