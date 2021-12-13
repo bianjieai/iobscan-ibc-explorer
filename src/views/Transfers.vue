@@ -150,7 +150,7 @@
         <template #content>
             <div>
                 <p class="tip__color">Sent Token: {{ record.denoms.sc_denom || "--" }}</p>
-                <p class="tip__color">Recived Token: {{ record.denoms.dc_denom || "--" }}</p>
+                <p class="tip__color">Received Token: {{ record.denoms.dc_denom || "--" }}</p>
             </div>
         </template>
         <router-link :to="`/tokens/details?token=${record.denoms.sc_denom}`">
