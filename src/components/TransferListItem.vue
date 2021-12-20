@@ -12,7 +12,7 @@
       </div>
 
       <div class="list__subItem__adress__container">
-          <router-link :to="`/tokens/details?chain_id=${item.sc_chain_id}`">
+          <router-link :to="`/network/details?chain_id=${item.sc_chain_id}`">
               <img class="list__subItem__adress__icon" :src="findIbcChainIcon(item.sc_chain_id)" />
           </router-link>
 
@@ -50,7 +50,7 @@
           :src="require(`../assets/status${item.status}.png`)"
           alt="status"
         />
-        <router-link :to="`/tokens/details?chain_id=${item.dc_chain_id}`">
+        <router-link :to="`/network/details?chain_id=${item.dc_chain_id}`">
             <img class="list__subItem__adress__icon" :src="findIbcChainIcon(item.dc_chain_id)" />
         </router-link>
 

@@ -17,7 +17,6 @@ export default {
 
 <style scoped lang="scss">
 .coming_soon_container{
-  flex: 1;
   width: 1200px;
   height: 442px;
   margin-top: 48px;
