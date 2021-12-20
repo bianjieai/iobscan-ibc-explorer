@@ -12,7 +12,7 @@
       </div>
 
       <div class="list__subItem__adress__container">
-          <router-link :to="`/network/details?chain_id=${item.sc_chain_id}`">
+          <router-link :to="`/tokens/details?chain_id=${item.sc_chain_id}`">
               <img class="list__subItem__adress__icon" :src="findIbcChainIcon(item.sc_chain_id)" />
           </router-link>
 
@@ -50,7 +50,7 @@
           :src="require(`../assets/status${item.status}.png`)"
           alt="status"
         />
-        <router-link :to="`/network/details?chain_id=${item.dc_chain_id}`">
+        <router-link :to="`/tokens/details?chain_id=${item.dc_chain_id}`">
             <img class="list__subItem__adress__icon" :src="findIbcChainIcon(item.dc_chain_id)" />
         </router-link>
 
@@ -143,7 +143,6 @@ export default {
 .list__item {
   @include flex(row, nowrap, flex-start, center);
   padding: 0 16px 0 0;
-  cursor: pointer;
   &__number {
     font-size: $font-size5;
     font-family: Montserrat-Regular, Montserrat;

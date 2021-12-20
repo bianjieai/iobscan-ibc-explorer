@@ -16,7 +16,9 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        // target: 'http://192.168.150.60:38080/api/',
+        target: 'https://stage.ibc.iobscan.io/api/',
+        // target: 'http://localhost:3000/api/api',
         secure: false,
         pathRewrite: { '^/api': '' },
       },

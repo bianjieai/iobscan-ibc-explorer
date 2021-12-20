@@ -6,7 +6,7 @@ function getRestString(string, left, right) {
 }
 
 function getLasttyString(string) {
-  return string && string.length > 10 ? `${string.substr(0, 10)}...` : string;
+  return string && string.length > 20 ? `${string.substr(0, 10)}...` : string;
 }
 
 function prefixInteger(num, n) {

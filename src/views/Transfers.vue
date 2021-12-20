@@ -303,26 +303,40 @@ import {
 } from '../helper/parseString';
 import placeHoderImg from '../assets/placeHoder.png';
 import {getIbcDenoms} from '../service/api';
-
+import {useRouter, useRoute} from 'vue-router';
+import Tools from "../util/Tools"
 export default {
     components: {
         Dropdown,
     },
     setup() {
+        let pageNum = 1,pageSize = 10;
+        let url = `/transfer?pageNum=${pageNum}&pageSize=${pageSize}`
         const store = useStore();
+        const router = useRoute();
         const pagination = reactive({
             total: 0,
             current: 1,
             pageSize: 10,
         });
-        const queryParam = reactive({
+       /* const queryParam = reactive({
             date_range: [0, Math.floor(new Date().getTime() / 1000)],
             status: [1, 2, 3, 4],
             chain_id: undefined,
             symbol: undefined,
             denom: undefined,
-        });
-
+        });*/
+        let paramsStatus = null
+        if( router?.query?.status){
+            paramsStatus = router?.query?.status.split(',')
+        }
+        const queryParam = {
+            date_range: [0, Math.floor(new Date().getTime() / 1000)],
+            status: paramsStatus || ['1', '2', '3', '4'],
+            chain_id: undefined,
+            symbol: undefined,
+            denom: undefined,
+        };
         const loading = ref(false);
 
         const queryDatas = () => {
@@ -372,7 +386,6 @@ export default {
         // });
 
         const onClickTableRow = () => {
-            console.log('？？？？？？？？？？？？？')
             message.info({
                 content: h(Message),
                 icon: h('div'),
@@ -382,6 +395,21 @@ export default {
         const onPaginationChange = (page) => {
             if (loading.value) return;
             pagination.current = page;
+            const params = Tools.urlParser(url);
+            url = `/transfer?pageNum=${page}&pageSize=${pageSize}`;
+            if(params?.chain_id){
+                url +=`&chain=${params.chain_id}`
+            }
+            if(params?.denom){
+                url += `&denom=${params.denom}`
+            }
+            if(params?.symbol){
+                url += `&symbol=${params.symbol}`
+            }
+            if(params?.status){
+                url += `&status=${params.status}`
+            }
+            history.pushState(null, null, url);
             queryDatas();
         };
 
@@ -431,6 +459,21 @@ export default {
                 default:
                     break;
             }
+            url = `/transfer?pageNum=${pageNum}&pageSize=${pageSize}`
+
+            if(queryParam?.chain){
+                url +=`&chain=${queryParam.chain}`
+            }
+            if(queryParam?.denom){
+                url += `&denom=${queryParam.denom}`
+            }
+            if(queryParam?.symbol){
+                url += `&symbol=${queryParam.symbol}`
+            }
+            if(queryParam?.status){
+                url += `&status=${queryParam.status.join(',')}`
+            }
+            history.pushState(null,null,url)
         };
 
         const handleSelectChange = (item) => {
@@ -461,7 +504,7 @@ export default {
             selectedSymbol.value = 'All Tokens';
             dateRange.value = [];
             queryParam.date_range = [0, Math.floor(new Date().getTime() / 1000)];
-            queryParam.status = [1, 2, 3, 4];
+            queryParam.status = ['1', '2', '3', '4'];
             queryParam.chain_id = undefined;
             queryParam.symbol = undefined;
             queryParam.denom = undefined;

@@ -16,9 +16,7 @@
            >24hr</span
            ></span
        >
-                <router-link :to="`/network`">
-                    <span class="list__item__value">{{ item.count }}</span>
-                </router-link>
+                <span class="list__item__value">{{ item.count }}</span>
                 <a-divider class="list__item__divider" v-show="index < Object.keys(msg).length - 1"/>
             </div>
         </div>

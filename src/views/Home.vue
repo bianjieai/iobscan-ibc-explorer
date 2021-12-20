@@ -4,7 +4,13 @@
     <layer-block class="home__top" title="Networks" type="dark">
       <div class="home__top__slot">
         <div class="home__top__left">
-            <router-link :to="`/network`">
+            <card :msg="ibcStatisticsChains.chains_24hr"  @click="onClickViewAll('channel')"/>
+            <card
+                :msg="ibcStatisticsChains.chain_all"
+                style="margin-top: 18px;"
+                @click="onClickViewAll('channel')"
+            />
+<!--            <router-link :to="`/network`">
                 <card :msg="ibcStatisticsChains.chains_24hr"/>
             </router-link>
             <router-link :to="`/network`">
@@ -12,7 +18,7 @@
                     :msg="ibcStatisticsChains.chain_all"
                     style="margin-top: 18px;"
                 />
-            </router-link>
+            </router-link>-->
         </div>
         <div class="home__top__right">
           <card-list
@@ -32,12 +38,13 @@
           <statistic-list
             type="vertical"
             :msg="ibcStatisticsChannels"
+            @clickItem="onClickViewAll"
           />
         </layer-block>
 
         <!-- Tokens -->
         <layer-block title="IBC Tokens" style="margin-top: 47px" showTip :tipMsg="tipMsg">
-          <statistic-list type="vertical" :msg="ibcStatisticsDenoms" />
+          <statistic-list type="vertical" :msg="ibcStatisticsDenoms"  @clickItem="onClickViewAll"/>
         </layer-block>
       </div>
 
@@ -102,11 +109,46 @@ export default {
     const router = useRouter();
 
     const onClickViewAll = (msg) => {
-      if (msg && msg.includes && msg.includes('tx')) {
-        /*router.push({
-          name: 'Transfers',
-        });*/
-      } else {
+        if(msg && msg.includes && msg.includes('channel')){
+            router.push({
+                name: 'Channels'
+            })
+        } else if (msg && msg.includes && msg.includes('tx')) {
+            if(msg === 'tx_all'){
+                router.push({
+                    name: 'Transfers',
+                    query:{
+                        status:'1,2,3,4'
+                    }
+                });
+            }else if(msg === 'tx_24hr_all'){
+                router.push({
+                    name: 'Transfers',
+                    query:{
+                        status:'1,2,3,4'
+                    }
+                });
+            }else if(msg === 'tx_success'){
+                router.push({
+                    name: 'Transfers',
+                    query:{
+                        status:'1'
+                    }
+                });
+            }else if(msg === 'tx_failed'){
+                router.push({
+                    name: 'Transfers',
+                    query:{
+                        status:'2,4'
+                    }
+                });
+            }
+
+      } else if (msg && msg.includes && msg.includes('denom')) {
+            router.push({
+              name: 'Tokens',
+            });
+        } else {
         message.info({
           content: h(Message),
           icon: h('div'),
@@ -115,7 +157,6 @@ export default {
     };
 
     const tipMsg = 'Denom is the token denomination to be transferred, base denomination of the relayed fungible token.';
-
     return {
       ibcTxs: computed(() => store.state.ibcTxs)?.value,
       ibcChains,
