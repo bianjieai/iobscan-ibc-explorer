@@ -123,7 +123,7 @@ export default {
                         currentMenu.value = ['Tokens'];
                         break;
                     case '/network':
-                        currentMenu.value = ['NetWork'];
+                        currentMenu.value = ['Network'];
                         break;
                     case '/channels':
                         currentMenu.value = ['Channels'];
