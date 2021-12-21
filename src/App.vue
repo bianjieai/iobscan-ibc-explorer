@@ -112,7 +112,23 @@ export default {
         watch(
             () => route.path,
             (to) => {
-                switch (to) {
+
+                if(to?.toString().includes('home')){
+                    currentMenu.value = ['Home'];
+                }else if(to?.toString().includes('transfers')){
+                    currentMenu.value = ['Transfers'];
+                }else if(to?.toString().includes('tokens')){
+                    currentMenu.value = ['Tokens'];
+                }else if(to?.toString().includes('network')){
+                    currentMenu.value = ['Network'];
+                }else if(to?.toString().includes('channels')){
+                    currentMenu.value = ['Channels'];
+                }else if(to?.toString().includes('relayers')){
+                    currentMenu.value = ['Relayers'];
+                }
+
+
+                /*switch (to) {
                     case '/home':
                         currentMenu.value = ['Home'];
                         break;
@@ -133,7 +149,7 @@ export default {
                         break;
                     default:
                         break;
-                }
+                }*/
             },
         );
         const clickMenu = (val) => {
