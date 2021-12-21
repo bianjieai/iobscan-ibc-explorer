@@ -50,6 +50,9 @@ export default {
   }
   .ant-menu-item {
     line-height: $nav-height;
+    &:hover{
+        cursor: url("../assets/tree_mouse.png"),pointer !important;
+    }
   }
   .ant-menu-title-content {
     font-size: $font-size4;

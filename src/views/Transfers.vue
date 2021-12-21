@@ -407,10 +407,17 @@ export default {
 
         const queryDatas = () => {
             loading.value = true;
+            const params = {
+                status : queryParam.status?.toString(),
+                chain_id:queryParam.chain_id,
+                date_range :queryParam.date_range?.toString(),
+                symbol: queryParam.symbol,
+                denom: queryParam.denom,
+            }
             store
                 .dispatch(GET_IBCTXS, {
                     use_count: true,
-                    ...queryParam,
+                    ...params,
                 })
                 .then(() => {
                     pagination.total = computed(() => store.state.ibcTxsCount).value?.value;
@@ -423,7 +430,7 @@ export default {
                     page_num: pagination.current,
                     page_size: pagination.pageSize,
                     use_count: false,
-                    ...queryParam,
+                    ...params,
                 })
                 .then(() => {
                     setTimeout(() => {
