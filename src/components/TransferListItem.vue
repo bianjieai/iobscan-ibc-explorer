@@ -33,7 +33,7 @@
             </a-popover>
           </span>
           <span class="hash__value" style="margin-top: 14px;">
-            <img class="hash__icon" :src="require(`../assets/adress.png`)" alt="icon" />
+            <img class="hash__icon" :src="require(`../assets/address.png`)" alt="icon" />
             <a-popover destroyTooltipOnHide>
               <template #content>
                 <div>
@@ -72,7 +72,7 @@
             </a-popover>
           </span>
           <span class="hash__value" style="margin-top: 14px;">
-            <img class="hash__icon" :src="require(`../assets/adress.png`)" alt="icon" />
+            <img class="hash__icon" :src="require(`../assets/address.png`)" alt="icon" />
             <a-popover destroyTooltipOnHide>
               <template #content>
                 <div>
@@ -236,7 +236,7 @@ export default {
   margin: 0 16px;
 }
 .hover {
-  cursor: pointer;
+  cursor: url("../assets/tree_mouse.png"),pointer !important;
 }
 .tip {
   &__color {

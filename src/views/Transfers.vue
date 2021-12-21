@@ -311,6 +311,7 @@ export default {
     },
 
     setup() {
+
         const tableColumns = reactive(transferTableColumn);
 
         const selectedSymbol = reactive({value: 'All Tokens'});
@@ -359,6 +360,7 @@ export default {
                             isShowChainIcon.value = true
                         }
                     })
+
                 }
             })
 
@@ -625,8 +627,57 @@ export default {
             history.pushState(null,null,url)
             queryDatas();
         };
+        let ibcChains = reactive({
+            value:{
+                all: null
+            }
+        });
+        ibcChains = computed(() => store.state.ibcChains)?.value;
+        if(ibcChains?.value?.all){
+            const cosmosChain = ibcChains.value.all.filter( item => item.chain_name === 'Cosmos Hub')
+            const irishubChain = ibcChains.value.all.filter( item => item.chain_name === 'IRIS Hub')
+            let notIncludesIrisAndCosmosChains = []
+            ibcChains.value.all.forEach( item => {
+                if(item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub'){
+                    notIncludesIrisAndCosmosChains.push(item)
+                }
+            })
+            if(notIncludesIrisAndCosmosChains?.length){
+                notIncludesIrisAndCosmosChains.sort( (a,b) => {
+                    return  a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
+                })
+            }
 
-        const ibcChains = computed(() => store.state.ibcChains)?.value;
+            ibcChains.value.all  = [
+                ...cosmosChain,
+                ...irishubChain,
+                ...notIncludesIrisAndCosmosChains,
+            ]
+        }
+        watch(store.state.ibcChains,(newValue,oldValue) => {
+            if(newValue?.value?.all){
+                const cosmosChain = newValue.value.all.filter( item => item.chain_name === 'Cosmos Hub')
+                const irishubChain = newValue.value.all.filter( item => item.chain_name === 'IRIS Hub')
+                let notIncludesIrisAndCosmosChains = []
+                newValue.value.all.forEach( item => {
+                    if(item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub'){
+                        notIncludesIrisAndCosmosChains.push(item)
+                    }
+                })
+                if(notIncludesIrisAndCosmosChains?.length){
+                    notIncludesIrisAndCosmosChains.sort( (a,b) => {
+                        return  a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
+                    })
+                }
+
+                ibcChains.value.all  = [
+                    ...cosmosChain,
+                    ...irishubChain,
+                    ...notIncludesIrisAndCosmosChains,
+                ]
+            }
+        })
+
 
         const findIbcChainIcon = computed(() => (chainId) => {
             if (ibcChains.value && ibcChains.value.all) {
@@ -646,6 +697,25 @@ export default {
 
         getIbcDenoms().then((res) => {
             tokens.value = computed(() => groupBy(res, 'symbol')).value;
+            const atomObj = {
+                'ATOM':tokens.value['ATOM']
+            }
+            const irisObj = {
+                'IRIS': tokens.value['IRIS']
+            }
+            delete tokens.value['ATOM']
+            delete tokens.value['IRIS']
+
+            let newkey = Object.keys(tokens.value).sort();
+            let newObj = {}
+            for (let i = 0; i < newkey.length; i++) {
+                newObj[newkey[i]] = tokens.value[newkey[i]];
+            }
+            tokens.value = {
+                ...atomObj,
+                ...irisObj,
+                ...newObj
+            }
         });
 
         return {
@@ -733,18 +803,18 @@ export default {
                 border-radius: 50%;
                 border: 1px solid rgba(0, 0, 0, 0.2);
                 margin-right: 8px;
-                cursor: pointer;
+                cursor: url("../assets/tree_mouse.png"),pointer !important;
             }
 
             &__num {
-                cursor: pointer;
+                cursor:url("../assets/tree_mouse.png"),pointer !important;
                 font-size: $font-size5;
                 color: $font-color5;
                 margin-right: 4px;
             }
 
             &__denom {
-                cursor: pointer;
+                cursor: url("../assets/tree_mouse.png"),pointer !important;
                 font-size: $font-size5;
                 color: $font-color3;
             }
@@ -872,7 +942,7 @@ export default {
 }
 
 .hover {
-    cursor: pointer;
+    cursor: url("../assets/tree_mouse.png"),pointer !important;
 }
 
 p {

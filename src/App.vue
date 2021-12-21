@@ -61,7 +61,7 @@ import {
     GET_IBCCHAINS,
     GET_IBCCONFIGS,
 } from './store/action-types';
-
+import config from '../config/config.json'
 export default {
     components: {
         Navigation,
@@ -70,12 +70,15 @@ export default {
         NoDatas,
     },
     setup() {
+        const script = document.createElement('script');
+        script.src = `https://s4.cnzz.com/z_stat.php?id=${config.UMENG_ID}&web_id=${config.UMENG_WEB_ID}`;
+        script.language = 'JavaScript';
+        document.body.appendChild(script);
         const store = useStore();
         store.dispatch(GET_IBCSTATISTICS);
         store.dispatch(GET_IBCDENOMS);
         store.dispatch(GET_IBCBASEDENOMS);
         store.dispatch(GET_IBCCHAINS);
-
         const router = useRouter();
 
         const headerMenus = reactive(menus);
@@ -212,7 +215,9 @@ export default {
 @import "./style/index.css";
 @import "./style/mixin.scss";
 @import "./style/variable.scss";
-
+a{
+    cursor: url('./assets/tree_mouse.png'),pointer !important;
+}
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -251,7 +256,7 @@ export default {
 
         .logo {
             // height: 30px;
-            cursor: pointer;
+            cursor: url("./assets/tree_mouse.png"),pointer !important;
 
             .logo__icon {
                 width: 34px;
@@ -269,7 +274,7 @@ export default {
             height: 32px;
             border-radius: 50%;
             margin-left: 24px;
-            cursor: pointer;
+            cursor: url("./assets/tree_mouse.png"),pointer !important;
         }
     }
 
