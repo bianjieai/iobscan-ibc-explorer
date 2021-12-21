@@ -101,7 +101,7 @@
               class="overlay__item__input"
               v-model:value="inputValue"
               allowClear
-              :placeholder="type === 'token' ? 'Search ibc/hash' : 'Search Chain ID'"
+              :placeholder="type === 'token' ? 'Search by ibc/hash' : 'Search by Chain ID'"
             />
             <a-button type="primary" @click="onClickSearch">Confirm</a-button>
           </div>
@@ -255,7 +255,7 @@ export default {
   }
 }
 .overlay {
-  width: 820px;
+  max-width: 870px;
   background-color: #fff;
   box-shadow: 0px 2px 8px 0px #d9deec;
   border-radius: 4px;
@@ -295,12 +295,12 @@ export default {
       width: 100%;
       @include flex(row, wrap, flex-start, center);
       .content__item {
-        width: 140px;
+        width: 158px;
         background: #f5f7fc;
         border-radius: 4px;
         border: 1px solid transparent;
-        margin: 0 16px 16px 0;
-        padding: 6px 12px;
+        margin: 0 8px 12px 0;
+        padding: 6px 6px;
         cursor: pointer;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         @include flex(row, nowrap, flex-start, center);

@@ -254,19 +254,19 @@ const ibcTxStatus = {
 const ibcTxStatusSelectOptions = [
   {
     title: 'All Status',
-    value: JSON.stringify([1, 2, 3, 4]),
+    value: JSON.stringify(['1', '2', '3', '4']),
   },
   {
     title: 'Success',
-    value: JSON.stringify([1]),
+    value: JSON.stringify(['1']),
   },
   {
     title: 'Processing',
-    value: JSON.stringify([3]),
+    value: JSON.stringify(['3']),
   },
   {
     title: 'Failed',
-    value: JSON.stringify([2, 4]),
+    value: JSON.stringify(['2', '4']),
   },
 ];
 

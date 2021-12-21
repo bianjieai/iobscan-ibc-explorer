@@ -289,7 +289,7 @@
 <script>
 import {message} from 'ant-design-vue';
 import {
-    ref, reactive, computed, onBeforeUnmount, h,
+    ref, reactive, computed, onBeforeUnmount, h,watch,
 } from 'vue';
 import {useStore} from 'vuex';
 import {groupBy} from 'lodash';
@@ -303,26 +303,86 @@ import {
 } from '../helper/parseString';
 import placeHoderImg from '../assets/placeHoder.png';
 import {getIbcDenoms} from '../service/api';
-
+import {useRouter, useRoute} from 'vue-router';
+import Tools from "../util/Tools"
 export default {
     components: {
         Dropdown,
     },
+
     setup() {
+        const tableColumns = reactive(transferTableColumn);
+
+        const selectedSymbol = reactive({value: 'All Tokens'});
+
+        const isShowSymbolIcon = ref(false);
+        const isShowChainIcon = ref(false);
+        const selectedChain = reactive({
+            value: {
+                chain_name: undefined,
+            },
+        });
+        let pageNum = 1,pageSize = 10;
+        let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
         const store = useStore();
+        const router = useRoute();
         const pagination = reactive({
             total: 0,
             current: 1,
             pageSize: 10,
         });
-        const queryParam = reactive({
+       /* const queryParam = reactive({
             date_range: [0, Math.floor(new Date().getTime() / 1000)],
             status: [1, 2, 3, 4],
             chain_id: undefined,
             symbol: undefined,
             denom: undefined,
-        });
+        });*/
+        let paramsStatus = null, chainId= null ,paramsSymbol = null,paramsDenom = null;
+        if( router?.query?.status){
+            paramsStatus = router?.query?.status.split(',')
+        }
 
+        if(router?.query?.chain){
+            chainId = router?.query.chain
+            watch(store.state.ibcChains,(newValue,oldValue) => {
+                if(newValue?.value?.all?.length){
+                    newValue?.value.all.forEach( item => {
+                        if(item?.chain_id === chainId){
+                            selectedChain.value.chain_name = item.chain_name
+                            selectedChain.value.icon = item.icon
+                            selectedChain.value.chain_id = item.chain_id
+                            isShowChainIcon.value = true
+                        }
+                    })
+                }
+            })
+
+        }
+
+        if(router?.query?.symbol){
+            paramsSymbol = router?.query.symbol
+            watch(store.state.ibcDenoms,(newValue,oldValue) => {
+                if(newValue?.value?.length){
+                    newValue?.value.forEach( item => {
+                        if(item?.symbol === paramsSymbol){
+                            selectedSymbol.value = item.symbol
+                            isShowSymbolIcon.value = true
+                        }
+                    })
+                }
+            })
+        }
+        if(router?.query?.denom){
+            paramsDenom = router?.query.denom
+        }
+        const queryParam = {
+            date_range: [0, Math.floor(new Date().getTime() / 1000)],
+            status: paramsStatus || ['1', '2', '3', '4'],
+            chain_id: chainId ||undefined,
+            symbol: paramsSymbol || undefined,
+            denom: paramsDenom || undefined,
+        };
         const loading = ref(false);
 
         const queryDatas = () => {
@@ -372,7 +432,6 @@ export default {
         // });
 
         const onClickTableRow = () => {
-            console.log('？？？？？？？？？？？？？')
             message.info({
                 content: h(Message),
                 icon: h('div'),
@@ -382,19 +441,36 @@ export default {
         const onPaginationChange = (page) => {
             if (loading.value) return;
             pagination.current = page;
-            queryDatas();
+            const params = Tools.urlParser(url);
+            url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
+            if(params?.chain){
+                url +=`&chain=${params.chain}`
+            }
+            if(params?.denom){
+                url += `&denom=${params.denom}`
+            }
+            if(params?.symbol){
+                url += `&symbol=${params.symbol}`
+            }
+            if(params?.status){
+                url += `&status=${params.status}`
+            }
+            history.pushState(null, null, url);
+            store
+                .dispatch(GET_IBCTXS, {
+                    page_num: pagination.current,
+                    page_size: pagination.pageSize,
+                    use_count: false,
+                    ...queryParam,
+                })
+                .then(() => {
+                    setTimeout(() => {
+                        loading.value = false;
+                    }, 1000);
+                });
         };
 
-        const tableColumns = reactive(transferTableColumn);
 
-        const selectedSymbol = reactive({value: 'All Tokens'});
-        const selectedChain = reactive({
-            value: {
-                chain_name: undefined,
-            },
-        });
-        const isShowSymbolIcon = ref(false);
-        const isShowChainIcon = ref(false);
         const onClickDropdownItem = (type, item, custom) => {
             pagination.current = 1;
             switch (type) {
@@ -408,7 +484,7 @@ export default {
                             ...item,
                             chain_name: item.chain_name || undefined,
                         };
-                    queryParam.chain_id = item.chain_id;
+                    queryParam.chain = item.chain_id;
                     queryDatas();
                     break;
                 case 'token':
@@ -431,11 +507,39 @@ export default {
                 default:
                     break;
             }
+            url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
+            if(queryParam?.chain){
+                url +=`&chain=${queryParam.chain}`
+            }
+            if(queryParam?.denom){
+                url += `&denom=${queryParam.denom}`
+            }
+            if(queryParam?.symbol){
+                url += `&symbol=${queryParam.symbol}`
+            }
+            if(queryParam?.status){
+                url += `&status=${queryParam.status.join(',')}`
+            }
+            history.pushState(null,null,url)
         };
 
         const handleSelectChange = (item) => {
             pagination.current = 1;
             queryParam.status = JSONparse(item);
+            url = `/transfers?pageNum=${ pagination.current}&pageSize=${pageSize}`
+            if(queryParam?.chain){
+                url +=`&chain=${queryParam.chain}`
+            }
+            if(queryParam?.denom){
+                url += `&denom=${queryParam.denom}`
+            }
+            if(queryParam?.symbol){
+                url += `&symbol=${queryParam.symbol}`
+            }
+            if(queryParam?.status){
+                url += `&status=${queryParam.status.join(',')}`
+            }
+            history.pushState(null,null,url)
             queryDatas();
         };
 
@@ -461,7 +565,7 @@ export default {
             selectedSymbol.value = 'All Tokens';
             dateRange.value = [];
             queryParam.date_range = [0, Math.floor(new Date().getTime() / 1000)];
-            queryParam.status = [1, 2, 3, 4];
+            queryParam.status = ['1', '2', '3', '4'];
             queryParam.chain_id = undefined;
             queryParam.symbol = undefined;
             queryParam.denom = undefined;
