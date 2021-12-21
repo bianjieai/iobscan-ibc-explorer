@@ -322,6 +322,8 @@ export default {
                 chain_name: undefined,
             },
         });
+        const dateRange = reactive({value: []});
+
         let pageNum = 1,pageSize = 10;
         let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
         const store = useStore();
@@ -338,13 +340,15 @@ export default {
             symbol: undefined,
             denom: undefined,
         });*/
-        let paramsStatus = null, chainId= null ,paramsSymbol = null,paramsDenom = null;
+        let paramsStatus = null, chainId= null ,paramsSymbol = null,paramsDenom = null, startTimestamp = 0 ,endTimestamp = 0;
         if( router?.query?.status){
             paramsStatus = router?.query?.status.split(',')
+            url += `&status=${paramsStatus}`
         }
 
         if(router?.query?.chain){
             chainId = router?.query.chain
+            url +=`&chain=${chainId}`
             watch(store.state.ibcChains,(newValue,oldValue) => {
                 if(newValue?.value?.all?.length){
                     newValue?.value.all.forEach( item => {
@@ -361,6 +365,7 @@ export default {
         }
 
         if(router?.query?.symbol){
+            url += `&symbol=${router.query.symbol}`
             paramsSymbol = router?.query.symbol
             watch(store.state.ibcDenoms,(newValue,oldValue) => {
                 if(newValue?.value?.length){
@@ -374,10 +379,23 @@ export default {
             })
         }
         if(router?.query?.denom){
+            url += `&denom=${router.query.denom}`
             paramsDenom = router?.query.denom
         }
+        if(router?.query?.startTime){
+            url += `&startTime=${router.query.startTime}`
+            startTimestamp = moment(router.query.startTime).unix()
+        }
+        if(router?.query?.endTime){
+            url += `&endTime=${router.query.endTime}`
+            endTimestamp = moment(router.query.endTime).unix()
+        }
+        if(startTimestamp && endTimestamp){
+            dateRange.value = [moment(startTimestamp * 1000 ),moment(endTimestamp * 1000)]
+        }
+        history.pushState(null, null, url);
         const queryParam = {
-            date_range: [0, Math.floor(new Date().getTime() / 1000)],
+            date_range:  startTimestamp && endTimestamp ? [startTimestamp,endTimestamp]  : [0, Math.floor(new Date().getTime() / 1000)],
             status: paramsStatus || ['1', '2', '3', '4'],
             chain_id: chainId ||undefined,
             symbol: paramsSymbol || undefined,
@@ -454,6 +472,12 @@ export default {
             }
             if(params?.status){
                 url += `&status=${params.status}`
+            }
+            if(params?.startTime || params.startTime === ''){
+                url += `&startTime=${params.startTime}`
+            }
+            if(params?.endTime || params.endTime === ''){
+                url += `&endTime=${params.endTime}`
             }
             history.pushState(null, null, url);
             store
@@ -543,7 +567,6 @@ export default {
             queryDatas();
         };
 
-        const dateRange = reactive({value: []});
         const onChangeRangePicker = (dates) => {
             pagination.current = 1;
             dateRange.value = dates;
@@ -551,6 +574,34 @@ export default {
             queryParam.date_range[1] = Math.floor(
                 startTime(moment(dates[1]).valueOf()) / 1000 + 60 * 60 * 24,
             );
+            url = `/transfers?pageNum=${ pagination.current}&pageSize=${pageSize}`
+            if(queryParam?.chain){
+                url +=`&chain=${queryParam.chain}`
+            }
+            if(queryParam?.denom){
+                url += `&denom=${queryParam.denom}`
+            }
+            if(queryParam?.symbol){
+                url += `&symbol=${queryParam.symbol}`
+            }
+            if(queryParam?.status){
+                url += `&status=${queryParam.status.join(',')}`
+            }
+            if(queryParam?.date_range?.length){
+                if(queryParam?.date_range.length === 1){
+                    const timeStamp = queryParam.date_range[0]
+                    const endTime = moment(timeStamp*1000).format('YYYY-MM-DD')
+                    url += `&startTime=&endTime=${endTime}`
+                }
+                if(queryParam?.date_range.length === 2){
+                    const startTimeStamp = queryParam.date_range[0]
+                    const entTimeStamp = queryParam.date_range[1]
+                    const startTime = moment(startTimeStamp*1000).format('YYYY-MM-DD')
+                    const endTime = moment((entTimeStamp - 24 * 60 * 60 )*1000).format('YYYY-MM-DD')
+                    url += `&startTime=${startTime}&endTime=${endTime}`
+                }
+            }
+            history.pushState(null,null,url)
             queryDatas();
         };
 
@@ -570,6 +621,8 @@ export default {
             queryParam.symbol = undefined;
             queryParam.denom = undefined;
             pagination.current = 1;
+            url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
+            history.pushState(null,null,url)
             queryDatas();
         };
 

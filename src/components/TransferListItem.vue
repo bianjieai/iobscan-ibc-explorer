@@ -1,7 +1,9 @@
 <template>
   <div class="list__item">
     <span class="list__item__number">{{ prefixInteger(index + 1, 3) }}</span>
-    <img class="list__item__icon" :src="item.symbolIcon || placeHoderImg" alt="icon" />
+      <router-link :to="`/tokens/details?token=${item.denoms.sc_denom}`">
+          <img class="list__item__icon" :src="item.symbolIcon || placeHoderImg" alt="icon" />
+      </router-link>
     <div
       class="list__subItem"
       :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }"
