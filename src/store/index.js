@@ -178,6 +178,12 @@ export default createStore({
             return result;
         },
         [GET_IBCTXS]({commit, state}, queryParams) {
+            if(queryParams?.date_range){
+                queryParams.date_range =queryParams.date_range?.toString()
+            }
+            if(queryParams?.status){
+                queryParams.status = queryParams.status?.toString()
+            }
             const {use_count, start_time} = queryParams;
             return new Promise((resolve) => {
                 getIbcTxs(queryParams).then((res) => {
