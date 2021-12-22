@@ -396,13 +396,13 @@ export default {
             dateRange.value = [moment(startTimestamp * 1000 ),moment(endTimestamp * 1000)]
         }
         history.pushState(null, null, url);
-        const queryParam = {
+        const queryParam = reactive({
             date_range:  startTimestamp && endTimestamp ? [startTimestamp,endTimestamp]  : [0, Math.floor(new Date().getTime() / 1000)],
             status: paramsStatus || ['1', '2', '3', '4'],
             chain_id: chainId ||undefined,
             symbol: paramsSymbol || undefined,
             denom: paramsDenom || undefined,
-        };
+        });
         const loading = ref(false);
 
         const queryDatas = () => {
@@ -518,6 +518,7 @@ export default {
                             chain_name: item.chain_name || undefined,
                         };
                     queryParam.chain = item.chain_id;
+                    queryParam.chain_id = item.chain_id;
                     queryDatas();
                     break;
                 case 'token':
