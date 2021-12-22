@@ -422,9 +422,9 @@ export default {
                 .then(() => {
                     pagination.total = computed(() => store.state.ibcTxsCount).value?.value;
                 });
-            store.dispatch(GET_IBCTXS, {
+            /*store.dispatch(GET_IBCTXS, {
                 start_time: true,
-            });
+            });*/
             store
                 .dispatch(GET_IBCTXS, {
                     page_num: pagination.current,
@@ -448,7 +448,7 @@ export default {
         const disabledDate = (current) => current
             && (current > moment().endOf('day')
                 || current
-                < moment(startTime(computed(() => store.state.ibcTxsStartTime).value?.value * 1000)));
+                < moment( 1617007625 * 1000));
         // const onClickTableRow = () => ({
         //   onClick: () => {
         //     message.info({
