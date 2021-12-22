@@ -1,7 +1,9 @@
 <template>
   <div class="list__item">
     <span class="list__item__number">{{ prefixInteger(index + 1, 3) }}</span>
-    <img class="list__item__icon" :src="item.symbolIcon || placeHoderImg" alt="icon" />
+      <router-link :to="`/tokens/details?token=${item.denoms.sc_denom}`">
+          <img class="list__item__icon" :src="item.symbolIcon || placeHoderImg" alt="icon" />
+      </router-link>
     <div
       class="list__subItem"
       :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }"
@@ -31,7 +33,7 @@
             </a-popover>
           </span>
           <span class="hash__value" style="margin-top: 14px;">
-            <img class="hash__icon" :src="require(`../assets/adress.png`)" alt="icon" />
+            <img class="hash__icon" :src="require(`../assets/address.png`)" alt="icon" />
             <a-popover destroyTooltipOnHide>
               <template #content>
                 <div>
@@ -70,7 +72,7 @@
             </a-popover>
           </span>
           <span class="hash__value" style="margin-top: 14px;">
-            <img class="hash__icon" :src="require(`../assets/adress.png`)" alt="icon" />
+            <img class="hash__icon" :src="require(`../assets/address.png`)" alt="icon" />
             <a-popover destroyTooltipOnHide>
               <template #content>
                 <div>
@@ -234,7 +236,7 @@ export default {
   margin: 0 16px;
 }
 .hover {
-  cursor: pointer;
+  cursor: url("../assets/tree_mouse.png"),pointer !important;
 }
 .tip {
   &__color {

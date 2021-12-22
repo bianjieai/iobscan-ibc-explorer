@@ -61,7 +61,7 @@ import {
     GET_IBCCHAINS,
     GET_IBCCONFIGS,
 } from './store/action-types';
-
+import config from '../config/config.json'
 export default {
     components: {
         Navigation,
@@ -70,12 +70,15 @@ export default {
         NoDatas,
     },
     setup() {
+        const script = document.createElement('script');
+        script.src = `https://s4.cnzz.com/z_stat.php?id=${config.UMENG_ID}&web_id=${config.UMENG_WEB_ID}`;
+        script.language = 'JavaScript';
+        document.body.appendChild(script);
         const store = useStore();
         store.dispatch(GET_IBCSTATISTICS);
         store.dispatch(GET_IBCDENOMS);
         store.dispatch(GET_IBCBASEDENOMS);
         store.dispatch(GET_IBCCHAINS);
-
         const router = useRouter();
 
         const headerMenus = reactive(menus);
@@ -112,7 +115,23 @@ export default {
         watch(
             () => route.path,
             (to) => {
-                switch (to) {
+
+                if(to?.toString().includes('home')){
+                    currentMenu.value = ['Home'];
+                }else if(to?.toString().includes('transfers')){
+                    currentMenu.value = ['Transfers'];
+                }else if(to?.toString().includes('tokens')){
+                    currentMenu.value = ['Tokens'];
+                }else if(to?.toString().includes('network')){
+                    currentMenu.value = ['Network'];
+                }else if(to?.toString().includes('channels')){
+                    currentMenu.value = ['Channels'];
+                }else if(to?.toString().includes('relayers')){
+                    currentMenu.value = ['Relayers'];
+                }
+
+
+                /*switch (to) {
                     case '/home':
                         currentMenu.value = ['Home'];
                         break;
@@ -123,7 +142,7 @@ export default {
                         currentMenu.value = ['Tokens'];
                         break;
                     case '/network':
-                        currentMenu.value = ['NetWork'];
+                        currentMenu.value = ['Network'];
                         break;
                     case '/channels':
                         currentMenu.value = ['Channels'];
@@ -133,7 +152,7 @@ export default {
                         break;
                     default:
                         break;
-                }
+                }*/
             },
         );
         const clickMenu = (val) => {
@@ -196,7 +215,9 @@ export default {
 @import "./style/index.css";
 @import "./style/mixin.scss";
 @import "./style/variable.scss";
-
+a{
+    cursor: url('./assets/tree_mouse.png'),pointer !important;
+}
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -235,7 +256,7 @@ export default {
 
         .logo {
             // height: 30px;
-            cursor: pointer;
+            cursor: url("./assets/tree_mouse.png"),pointer !important;
 
             .logo__icon {
                 width: 34px;
@@ -253,7 +274,7 @@ export default {
             height: 32px;
             border-radius: 50%;
             margin-left: 24px;
-            cursor: pointer;
+            cursor: url("./assets/tree_mouse.png"),pointer !important;
         }
     }
 

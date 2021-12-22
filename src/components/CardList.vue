@@ -152,7 +152,13 @@ export default {
     &__menu {
         width: 100%;
         border: 0;
-
+        ::v-deep.ant-menu-overflow{
+            .ant-menu-overflow-item{
+                &:hover{
+                    cursor: url("../assets/tree_mouse.png"),pointer !important;
+                }
+            }
+        }
         ::v-deep .ant-menu-title-content {
             font-size: 14px;
             font-family: Montserrat-Regular, Montserrat;

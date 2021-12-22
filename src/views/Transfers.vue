@@ -311,6 +311,7 @@ export default {
     },
 
     setup() {
+
         const tableColumns = reactive(transferTableColumn);
 
         const selectedSymbol = reactive({value: 'All Tokens'});
@@ -322,6 +323,8 @@ export default {
                 chain_name: undefined,
             },
         });
+        const dateRange = reactive({value: []});
+
         let pageNum = 1,pageSize = 10;
         let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
         const store = useStore();
@@ -338,13 +341,15 @@ export default {
             symbol: undefined,
             denom: undefined,
         });*/
-        let paramsStatus = null, chainId= null ,paramsSymbol = null,paramsDenom = null;
+        let paramsStatus = null, chainId= null ,paramsSymbol = null,paramsDenom = null, startTimestamp = 0 ,endTimestamp = 0;
         if( router?.query?.status){
             paramsStatus = router?.query?.status.split(',')
+            url += `&status=${paramsStatus}`
         }
 
         if(router?.query?.chain){
             chainId = router?.query.chain
+            url +=`&chain=${chainId}`
             watch(store.state.ibcChains,(newValue,oldValue) => {
                 if(newValue?.value?.all?.length){
                     newValue?.value.all.forEach( item => {
@@ -355,12 +360,14 @@ export default {
                             isShowChainIcon.value = true
                         }
                     })
+
                 }
             })
 
         }
 
         if(router?.query?.symbol){
+            url += `&symbol=${router.query.symbol}`
             paramsSymbol = router?.query.symbol
             watch(store.state.ibcDenoms,(newValue,oldValue) => {
                 if(newValue?.value?.length){
@@ -374,10 +381,23 @@ export default {
             })
         }
         if(router?.query?.denom){
+            url += `&denom=${router.query.denom}`
             paramsDenom = router?.query.denom
         }
+        if(router?.query?.startTime){
+            url += `&startTime=${router.query.startTime}`
+            startTimestamp = moment(router.query.startTime).unix()
+        }
+        if(router?.query?.endTime){
+            url += `&endTime=${router.query.endTime}`
+            endTimestamp = moment(router.query.endTime).unix()
+        }
+        if(startTimestamp && endTimestamp){
+            dateRange.value = [moment(startTimestamp * 1000 ),moment(endTimestamp * 1000)]
+        }
+        history.pushState(null, null, url);
         const queryParam = {
-            date_range: [0, Math.floor(new Date().getTime() / 1000)],
+            date_range:  startTimestamp && endTimestamp ? [startTimestamp,endTimestamp]  : [0, Math.floor(new Date().getTime() / 1000)],
             status: paramsStatus || ['1', '2', '3', '4'],
             chain_id: chainId ||undefined,
             symbol: paramsSymbol || undefined,
@@ -387,10 +407,17 @@ export default {
 
         const queryDatas = () => {
             loading.value = true;
+            const params = {
+                status : queryParam.status?.toString(),
+                chain_id:queryParam.chain_id,
+                date_range :queryParam.date_range?.toString(),
+                symbol: queryParam.symbol,
+                denom: queryParam.denom,
+            }
             store
                 .dispatch(GET_IBCTXS, {
                     use_count: true,
-                    ...queryParam,
+                    ...params,
                 })
                 .then(() => {
                     pagination.total = computed(() => store.state.ibcTxsCount).value?.value;
@@ -403,7 +430,7 @@ export default {
                     page_num: pagination.current,
                     page_size: pagination.pageSize,
                     use_count: false,
-                    ...queryParam,
+                    ...params,
                 })
                 .then(() => {
                     setTimeout(() => {
@@ -454,6 +481,12 @@ export default {
             }
             if(params?.status){
                 url += `&status=${params.status}`
+            }
+            if(params?.startTime || params.startTime === ''){
+                url += `&startTime=${params.startTime}`
+            }
+            if(params?.endTime || params.endTime === ''){
+                url += `&endTime=${params.endTime}`
             }
             history.pushState(null, null, url);
             store
@@ -543,7 +576,6 @@ export default {
             queryDatas();
         };
 
-        const dateRange = reactive({value: []});
         const onChangeRangePicker = (dates) => {
             pagination.current = 1;
             dateRange.value = dates;
@@ -551,6 +583,34 @@ export default {
             queryParam.date_range[1] = Math.floor(
                 startTime(moment(dates[1]).valueOf()) / 1000 + 60 * 60 * 24,
             );
+            url = `/transfers?pageNum=${ pagination.current}&pageSize=${pageSize}`
+            if(queryParam?.chain){
+                url +=`&chain=${queryParam.chain}`
+            }
+            if(queryParam?.denom){
+                url += `&denom=${queryParam.denom}`
+            }
+            if(queryParam?.symbol){
+                url += `&symbol=${queryParam.symbol}`
+            }
+            if(queryParam?.status){
+                url += `&status=${queryParam.status.join(',')}`
+            }
+            if(queryParam?.date_range?.length){
+                if(queryParam?.date_range.length === 1){
+                    const timeStamp = queryParam.date_range[0]
+                    const endTime = moment(timeStamp*1000).format('YYYY-MM-DD')
+                    url += `&startTime=&endTime=${endTime}`
+                }
+                if(queryParam?.date_range.length === 2){
+                    const startTimeStamp = queryParam.date_range[0]
+                    const entTimeStamp = queryParam.date_range[1]
+                    const startTime = moment(startTimeStamp*1000).format('YYYY-MM-DD')
+                    const endTime = moment((entTimeStamp - 24 * 60 * 60 )*1000).format('YYYY-MM-DD')
+                    url += `&startTime=${startTime}&endTime=${endTime}`
+                }
+            }
+            history.pushState(null,null,url)
             queryDatas();
         };
 
@@ -570,10 +630,61 @@ export default {
             queryParam.symbol = undefined;
             queryParam.denom = undefined;
             pagination.current = 1;
+            url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
+            history.pushState(null,null,url)
             queryDatas();
         };
+        let ibcChains = reactive({
+            value:{
+                all: null
+            }
+        });
+        ibcChains = computed(() => store.state.ibcChains)?.value;
+        if(ibcChains?.value?.all){
+            const cosmosChain = ibcChains.value.all.filter( item => item.chain_name === 'Cosmos Hub')
+            const irishubChain = ibcChains.value.all.filter( item => item.chain_name === 'IRIS Hub')
+            let notIncludesIrisAndCosmosChains = []
+            ibcChains.value.all.forEach( item => {
+                if(item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub'){
+                    notIncludesIrisAndCosmosChains.push(item)
+                }
+            })
+            if(notIncludesIrisAndCosmosChains?.length){
+                notIncludesIrisAndCosmosChains.sort( (a,b) => {
+                    return  a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
+                })
+            }
 
-        const ibcChains = computed(() => store.state.ibcChains)?.value;
+            ibcChains.value.all  = [
+                ...cosmosChain,
+                ...irishubChain,
+                ...notIncludesIrisAndCosmosChains,
+            ]
+        }
+        watch(store.state.ibcChains,(newValue,oldValue) => {
+            if(newValue?.value?.all){
+                const cosmosChain = newValue.value.all.filter( item => item.chain_name === 'Cosmos Hub')
+                const irishubChain = newValue.value.all.filter( item => item.chain_name === 'IRIS Hub')
+                let notIncludesIrisAndCosmosChains = []
+                newValue.value.all.forEach( item => {
+                    if(item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub'){
+                        notIncludesIrisAndCosmosChains.push(item)
+                    }
+                })
+                if(notIncludesIrisAndCosmosChains?.length){
+                    notIncludesIrisAndCosmosChains.sort( (a,b) => {
+                        return  a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
+                    })
+                }
+
+                ibcChains.value.all  = [
+                    ...cosmosChain,
+                    ...irishubChain,
+                    ...notIncludesIrisAndCosmosChains,
+                ]
+            }
+        })
+
 
         const findIbcChainIcon = computed(() => (chainId) => {
             if (ibcChains.value && ibcChains.value.all) {
@@ -593,6 +704,25 @@ export default {
 
         getIbcDenoms().then((res) => {
             tokens.value = computed(() => groupBy(res, 'symbol')).value;
+            const atomObj = {
+                'ATOM':tokens.value['ATOM']
+            }
+            const irisObj = {
+                'IRIS': tokens.value['IRIS']
+            }
+            delete tokens.value['ATOM']
+            delete tokens.value['IRIS']
+
+            let newkey = Object.keys(tokens.value).sort();
+            let newObj = {}
+            for (let i = 0; i < newkey.length; i++) {
+                newObj[newkey[i]] = tokens.value[newkey[i]];
+            }
+            tokens.value = {
+                ...atomObj,
+                ...irisObj,
+                ...newObj
+            }
         });
 
         return {
@@ -680,18 +810,18 @@ export default {
                 border-radius: 50%;
                 border: 1px solid rgba(0, 0, 0, 0.2);
                 margin-right: 8px;
-                cursor: pointer;
+                cursor: url("../assets/tree_mouse.png"),pointer !important;
             }
 
             &__num {
-                cursor: pointer;
+                cursor:url("../assets/tree_mouse.png"),pointer !important;
                 font-size: $font-size5;
                 color: $font-color5;
                 margin-right: 4px;
             }
 
             &__denom {
-                cursor: pointer;
+                cursor: url("../assets/tree_mouse.png"),pointer !important;
                 font-size: $font-size5;
                 color: $font-color3;
             }
@@ -819,7 +949,7 @@ export default {
 }
 
 .hover {
-    cursor: pointer;
+    cursor: url("../assets/tree_mouse.png"),pointer !important;
 }
 
 p {

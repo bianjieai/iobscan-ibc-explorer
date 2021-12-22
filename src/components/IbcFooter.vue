@@ -57,7 +57,7 @@ export default {
       padding: 6px;
       background-color: rgba(61, 80, 255, 0.1);
       border-radius: $card-radio;
-      cursor: pointer;
+      cursor: url("../assets/tree_mouse.png"),pointer !important;
     }
   }
   &__right {
