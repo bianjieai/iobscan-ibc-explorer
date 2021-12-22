@@ -4,7 +4,7 @@
             <no-datas/>
         </template>
         <a-layout class="layout">
-            <a-layout-header class="header">
+            <a-layout-header class="header" v-show="$store.state.isShowHeader">
                 <a-row class="header__content" type="flex">
                     <a-col flex="160px" class="col__layout">
                         <div class="logo" @click="onClickLogo">
@@ -35,7 +35,7 @@
             <a-layout-content class="content" :class="isShowBackground.value ? 'show__background' : ''">
                 <router-view/>
             </a-layout-content>
-            <a-layout-footer class="footer">
+            <a-layout-footer  v-show="$store.state.isShowFooter" class="footer">
                 <ibc-footer/>
             </a-layout-footer>
         </a-layout>
@@ -104,6 +104,12 @@ export default {
         watch(
             () => route.path,
             (to) => {
+                store.commit('isShowHeader',true)
+                store.commit('isShowFooter',true)
+                if(to === '/404'){
+                    store.commit('isShowHeader',false)
+                    store.commit('isShowFooter',false)
+                }
                 isShowBackground.value = to !== '/home';
             },
         );
@@ -295,7 +301,18 @@ a{
         //bottom: 0;
     }
 }
-
+.ant-btn{
+    cursor: url("./assets/tree_mouse.png"),pointer !important;
+}
+.ant-select{
+    cursor: url("./assets/tree_mouse.png"),pointer !important;
+}
+.ant-select-item{
+    cursor: url("./assets/tree_mouse.png"),pointer !important;
+}
+.ant-calendar-date{
+    cursor: url("./assets/tree_mouse.png"),pointer !important;
+}
 .col__layout {
     @include flex(row, nowrap, flex-start, center);
 }
