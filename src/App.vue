@@ -1,0 +1,335 @@
+<template>
+    <a-config-provider>
+        <template #renderEmpty>
+            <no-datas/>
+        </template>
+        <a-layout class="layout">
+            <a-layout-header class="header" v-show="$store.state.isShowHeader">
+                <a-row class="header__content" type="flex">
+                    <a-col flex="160px" class="col__layout">
+                        <div class="logo" @click="onClickLogo">
+                            <img class="logo__icon" src="./assets/HeaderIcon.png" alt="logo"/>
+                            <img class="logo__text" src="./assets/iobscan.png" alt="title"/>
+                        </div>
+                    </a-col>
+                    <a-col flex="auto">
+                        <navigation
+                            :menus="headerMenus"
+                            @clickMenu="clickMenu"
+                            :currentMenu="currentMenu.value"
+                        />
+                    </a-col>
+                    <a-col flex="auto" class="col__layout">
+                        <!-- disabled can remove if have tx details -->
+                        <header-input @pressedEnter="onPressEnter" disabled/>
+                        <img
+                            class="header__input__icon"
+                            :src="require('./assets/ioblink.png')"
+                            alt="icon"
+                            @click="onClickIcon"
+                        />
+                    </a-col>
+                </a-row>
+            </a-layout-header>
+
+            <a-layout-content class="content" :class="isShowBackground.value ? 'show__background' : ''">
+                <router-view/>
+            </a-layout-content>
+            <a-layout-footer  v-show="$store.state.isShowFooter" class="footer">
+                <ibc-footer/>
+            </a-layout-footer>
+        </a-layout>
+    </a-config-provider>
+</template>
+
+<script>
+import {
+    reactive, computed, watch,
+} from 'vue';
+import {useStore} from 'vuex';
+import {useRouter, useRoute} from 'vue-router';
+import {menus} from './constant';
+import Navigation from './components/Navigation.vue';
+import HeaderInput from './components/HeaderInput.vue';
+import IbcFooter from './components/IbcFooter.vue';
+import NoDatas from './components/NoDatas.vue';
+
+import {
+    GET_IBCSTATISTICS,
+    GET_IBCDENOMS,
+    GET_IBCBASEDENOMS,
+    GET_IBCCHAINS,
+    GET_IBCCONFIGS,
+} from './store/action-types';
+import config from '../config/config.json'
+export default {
+    components: {
+        Navigation,
+        HeaderInput,
+        IbcFooter,
+        NoDatas,
+    },
+    setup() {
+        const script = document.createElement('script');
+        script.src = `https://s4.cnzz.com/z_stat.php?id=${config.UMENG_ID}&web_id=${config.UMENG_WEB_ID}`;
+        script.language = 'JavaScript';
+        document.body.appendChild(script);
+        const store = useStore();
+        store.dispatch(GET_IBCSTATISTICS);
+        store.dispatch(GET_IBCDENOMS);
+        store.dispatch(GET_IBCBASEDENOMS);
+        store.dispatch(GET_IBCCHAINS);
+        const router = useRouter();
+
+        const headerMenus = reactive(menus);
+        const onClickLogo = () => {
+            router.push({
+                name: 'Home',
+            });
+        };
+
+        const iobscanUrl = computed(() => store.state.configs?.iobscan);
+        const onClickIcon = () => {
+            if (iobscanUrl.value) {
+                window.open(iobscanUrl.value);
+            } else {
+                store.dispatch(GET_IBCCONFIGS).then(() => {
+                    window.open(iobscanUrl.value);
+                });
+            }
+        };
+
+        const isShowBackground = reactive({value: false});
+        const route = useRoute();
+        watch(
+            () => route.path,
+            (to) => {
+                store.commit('isShowHeader',true)
+                store.commit('isShowFooter',true)
+                if(to === '/404'){
+                    store.commit('isShowHeader',false)
+                    store.commit('isShowFooter',false)
+                }
+                isShowBackground.value = to !== '/home';
+            },
+        );
+
+        const onPressEnter = (val) => {
+            console.log(val);
+        };
+        const currentMenu = reactive({value: []});
+        watch(
+            () => route.path,
+            (to) => {
+
+                if(to?.toString().includes('home')){
+                    currentMenu.value = ['Home'];
+                }else if(to?.toString().includes('transfers')){
+                    currentMenu.value = ['Transfers'];
+                }else if(to?.toString().includes('tokens')){
+                    currentMenu.value = ['Tokens'];
+                }else if(to?.toString().includes('network')){
+                    currentMenu.value = ['Network'];
+                }else if(to?.toString().includes('channels')){
+                    currentMenu.value = ['Channels'];
+                }else if(to?.toString().includes('relayers')){
+                    currentMenu.value = ['Relayers'];
+                }
+
+
+                /*switch (to) {
+                    case '/home':
+                        currentMenu.value = ['Home'];
+                        break;
+                    case '/transfers':
+                        currentMenu.value = ['Transfers'];
+                        break;
+                    case '/tokens':
+                        currentMenu.value = ['Tokens'];
+                        break;
+                    case '/network':
+                        currentMenu.value = ['Network'];
+                        break;
+                    case '/channels':
+                        currentMenu.value = ['Channels'];
+                        break;
+                    case '/relayers':
+                        currentMenu.value = ['Relayers'];
+                        break;
+                    default:
+                        break;
+                }*/
+            },
+        );
+        const clickMenu = (val) => {
+            console.log(val)
+            switch (val) {
+                case 'Home':
+                    currentMenu.value = ['Home'];
+                    router.push({
+                        name: 'Home',
+                    });
+                    break;
+                case 'Transfers':
+                    currentMenu.value = ['Transfers'];
+                    router.push({
+                        name: 'Transfers',
+                    });
+                    break;
+                case 'Tokens':
+                    currentMenu.value = ['Tokens'];
+                    router.push({
+                        name: 'Tokens',
+                    });
+                    break;
+                case 'Network':
+                    currentMenu.value = ['NetWork'];
+                    router.push({
+                        name: 'NetWork',
+                    });
+                    break;
+                case 'Channels':
+                    currentMenu.value = ['Channels'];
+                    router.push({
+                        name: 'Channels',
+                    });
+                    break;
+                case 'Relayers':
+                    currentMenu.value = ['Relayers'];
+                    router.push({
+                        name: 'Relayers',
+                    });
+                    break;
+                default:
+                    break;
+            }
+        };
+        return {
+            headerMenus,
+            onClickLogo,
+            onClickIcon,
+            onPressEnter,
+            currentMenu,
+            clickMenu,
+            isShowBackground,
+        };
+    },
+};
+</script>
+
+<style lang="scss">
+@import "./style/index.css";
+@import "./style/mixin.scss";
+@import "./style/variable.scss";
+a{
+    cursor: url('./assets/tree_mouse.png'),pointer !important;
+}
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 100Vh;
+}
+
+.layout {
+    width: 100%;
+    background-image: url("./assets/banner.png");
+    background-repeat: no-repeat;
+    background-size: 1920px 396px;
+    background-position: top center;
+    background-color: #F5F7FC;
+    flex: 1;
+    & .header {
+        width: 100%;
+        @include flex(column, nowrap, center, center);
+        text-align: center;
+        height: 80px;
+        background-color: transparent;
+        //position: fixed;
+        //top: 0;
+        //left: 0;
+        //z-index: 100;
+        & .header__content {
+            width: 100%;
+            max-width: 1200px;
+            height: 100%;
+            @include flex(row, nowrap, center, center);
+    }
+
+        .logo {
+            // height: 30px;
+            cursor: url("./assets/tree_mouse.png"),pointer !important;
+
+            .logo__icon {
+                width: 34px;
+                margin-right: 10px;
+            }
+
+            .logo__text {
+                width: 100px;
+            }
+        }
+
+        &__input__icon {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-left: 24px;
+            cursor: url("./assets/tree_mouse.png"),pointer !important;
+        }
+    }
+
+    & .content {
+        @include flex(column, nowrap, flex-start, center);
+        flex: 1;
+        .home{
+            margin-bottom: 80px;
+        }
+    }
+
+    & .footer {
+        @include flex(column, nowrap, flex-start, center);
+        padding: 0;
+        width: 100%;
+        background-color: #eef0f6;
+        //position: absolute;
+        //bottom: 0;
+    }
+}
+.ant-btn{
+    cursor: url("./assets/tree_mouse.png"),pointer !important;
+}
+.ant-select{
+    cursor: url("./assets/tree_mouse.png"),pointer !important;
+}
+.ant-select-item{
+    cursor: url("./assets/tree_mouse.png"),pointer !important;
+}
+.ant-calendar-date{
+    cursor: url("./assets/tree_mouse.png"),pointer !important;
+}
+.col__layout {
+    @include flex(row, nowrap, flex-start, center);
+}
+
+.show__background {
+    background-color: #F5F7FC !important;
+    // background-color: transparent;
+}
+
+@media screen and (max-width: 1920px) {
+}
+
+a {
+    color: rgba(0, 0, 0, 0.7);
+
+    &:hover {
+        color: #3d50ff
+    }
+}
+</style>
