@@ -4,11 +4,11 @@
     <layer-block class="home__top" title="Networks" type="dark">
       <div class="home__top__slot">
         <div class="home__top__left">
-            <card :msg="ibcStatisticsChains.chains_24hr"  @click="onClickViewAll('channel')"/>
+            <card :msg="ibcStatisticsChains.chains_24hr"  @click="onClickViewAll('network')"/>
             <card
                 :msg="ibcStatisticsChains.chain_all"
                 style="margin-top: 18px;"
-                @click="onClickViewAll('channel')"
+                @click="onClickViewAll('network')"
             />
 <!--            <router-link :to="`/network`">
                 <card :msg="ibcStatisticsChains.chains_24hr"/>
@@ -109,7 +109,11 @@ export default {
     const router = useRouter();
 
     const onClickViewAll = (msg) => {
-        if(msg && msg.includes && msg.includes('channel')){
+        if(msg && msg.includes && msg.includes('network')){
+            router.push({
+                name: 'NetWork'
+            })
+        }else if(msg && msg.includes && msg.includes('channel')){
             router.push({
                 name: 'Channels'
             })

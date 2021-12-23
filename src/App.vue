@@ -22,12 +22,13 @@
                     <a-col flex="auto" class="col__layout">
                         <!-- disabled can remove if have tx details -->
                         <header-input @pressedEnter="onPressEnter" disabled/>
-                        <img
-                            class="header__input__icon"
-                            :src="require('./assets/ioblink.png')"
-                            alt="icon"
-                            @click="onClickIcon"
-                        />
+                        <a href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
+                            <img
+                                class="header__input__icon"
+                                :src="require('./assets/ioblink.png')"
+                                alt="icon"
+                            />
+                        </a>
                     </a-col>
                 </a-row>
             </a-layout-header>
@@ -233,6 +234,8 @@ a{
     display: flex;
     flex-direction: column;
     min-height: 100Vh;
+    min-width: 1200px;
+    overflow-x: auto;
 }
 
 .layout {
