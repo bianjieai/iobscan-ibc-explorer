@@ -489,6 +489,7 @@ export default {
                 url += `&endTime=${params.endTime}`
             }
             history.pushState(null, null, url);
+            loading.value = true;
             store
                 .dispatch(GET_IBCTXS, {
                     page_num: pagination.current,
