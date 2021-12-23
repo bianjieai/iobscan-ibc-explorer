@@ -61,7 +61,7 @@ const routes = [
         component: () => import(/* webpackChunkName: "transfers" */ '../errorpage/404.vue'),
     },
     {
-        path: '/:pathMatch(.*)',
+        path: '/:pathMatch(.*)*',
         redirect: '/404',
     },
 ];
