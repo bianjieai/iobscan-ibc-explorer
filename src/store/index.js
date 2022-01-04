@@ -158,6 +158,7 @@ export default createStore({
         },
         [GET_IBCCHAINS]({commit}) {
             getIbcChains().then((res) => {
+                sessionStorage.setItem('allChains',JSON.stringify(res))
                 commit(SET_IBCCHAINS, res);
             });
         },

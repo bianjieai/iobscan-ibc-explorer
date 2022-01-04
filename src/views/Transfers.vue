@@ -390,7 +390,7 @@ export default {
         }
         if(router?.query?.endTime){
             url += `&endTime=${router.query.endTime}`
-            endTimestamp = moment(router.query.endTime).unix()
+            endTimestamp = moment(router.query.endTime).endOf('day').unix()
         }
         if(startTimestamp && endTimestamp){
             dateRange.value = [moment(startTimestamp * 1000 ),moment(endTimestamp * 1000)]
@@ -589,7 +589,7 @@ export default {
             dateRange.value = dates;
             queryParam.date_range[0] = Math.floor(startTime(moment(dates[0]).valueOf()) / 1000);
             queryParam.date_range[1] = Math.floor(
-                startTime(moment(dates[1]).valueOf()) / 1000 + 60 * 60 * 24,
+                moment(startTime(moment(dates[1]).valueOf()) / 1000).endOf('day'),
             );
             url = `/transfers?pageNum=${ pagination.current}&pageSize=${pageSize}`
             if(queryParam?.chain){
