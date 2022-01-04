@@ -343,10 +343,6 @@ export default {
             denom: undefined,
         });*/
         let paramsStatus = null, chainId= null ,paramsSymbol = null,paramsDenom = null, startTimestamp = 0 ,endTimestamp = 0;
-        if( router?.query?.status){
-            paramsStatus = router?.query?.status.split(',')
-            url += `&status=${paramsStatus}`
-        }
         if(router?.query?.chain){
             chainId = router?.query.chain
             url +=`&chain=${chainId}`
@@ -365,7 +361,10 @@ export default {
             })
 
         }
-
+        if(router?.query?.denom){
+            url += `&denom=${router.query.denom}`
+            paramsDenom = router?.query.denom
+        }
         if(router?.query?.symbol){
             url += `&symbol=${router.query.symbol}`
             paramsSymbol = router?.query.symbol
@@ -383,10 +382,11 @@ export default {
             })
         }
         console.log(selectedSymbol,'selected symbol')
-        if(router?.query?.denom){
-            url += `&denom=${router.query.denom}`
-            paramsDenom = router?.query.denom
+        if( router?.query?.status){
+            paramsStatus = router?.query?.status.split(',')
+            url += `&status=${paramsStatus}`
         }
+
         if(router?.query?.startTime){
             url += `&startTime=${router.query.startTime}`
             startTimestamp = moment(router.query.startTime).unix()
@@ -564,6 +564,20 @@ export default {
             if(queryParam?.status){
                 url += `&status=${queryParam.status.join(',')}`
             }
+            if(queryParam?.date_range?.length){
+                if(queryParam?.date_range.length === 1){
+                    const timeStamp = queryParam.date_range[0]
+                    const endTime = moment(timeStamp*1000).format('YYYY-MM-DD')
+                    url += `&startTime=&endTime=${endTime}`
+                }
+                if(queryParam?.date_range.length === 2){
+                    const startTimeStamp = queryParam.date_range[0]
+                    const entTimeStamp = queryParam.date_range[1]
+                    const startTime = moment(startTimeStamp*1000).format('YYYY-MM-DD')
+                    const endTime = moment(entTimeStamp*1000).format('YYYY-MM-DD')
+                    url += `&startTime=${startTime}&endTime=${endTime}`
+                }
+            }
             history.pushState(null,null,url)
         };
 
@@ -582,6 +596,20 @@ export default {
             }
             if(queryParam?.status){
                 url += `&status=${queryParam.status.join(',')}`
+            }
+            if(queryParam?.date_range?.length){
+                if(queryParam?.date_range.length === 1){
+                    const timeStamp = queryParam.date_range[0]
+                    const endTime = moment(timeStamp*1000).format('YYYY-MM-DD')
+                    url += `&startTime=&endTime=${endTime}`
+                }
+                if(queryParam?.date_range.length === 2){
+                    const startTimeStamp = queryParam.date_range[0]
+                    const entTimeStamp = queryParam.date_range[1]
+                    const startTime = moment(startTimeStamp*1000).format('YYYY-MM-DD')
+                    const endTime = moment(entTimeStamp*1000).format('YYYY-MM-DD')
+                    url += `&startTime=${startTime}&endTime=${endTime}`
+                }
             }
             history.pushState(null,null,url)
             queryDatas();
@@ -635,11 +663,13 @@ export default {
             };
             selectedSymbol.value = 'All Tokens';
             dateRange.value = [];
-            queryParam.date_range = [0, Math.floor(new Date().getTime() / 1000)];
+            queryParam.date_range = [];
             queryParam.status = ['1', '2', '3', '4'];
             queryParam.chain_id = undefined;
             queryParam.symbol = undefined;
+            queryParam.chain = undefined;
             queryParam.denom = undefined;
+            console.log(queryParam,'重置')
             pagination.current = 1;
             url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
             history.pushState(null,null,url)
