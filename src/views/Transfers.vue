@@ -370,16 +370,19 @@ export default {
             url += `&symbol=${router.query.symbol}`
             paramsSymbol = router?.query.symbol
             watch(store.state.ibcDenoms,(newValue,oldValue) => {
+                console.log(newValue,"denoms")
                 if(newValue?.value?.length){
                     newValue?.value.forEach( item => {
                         if(item?.symbol === paramsSymbol){
                             selectedSymbol.value = item.symbol
+
                             isShowSymbolIcon.value = true
                         }
                     })
                 }
             })
         }
+        console.log(selectedSymbol,'selected symbol')
         if(router?.query?.denom){
             url += `&denom=${router.query.denom}`
             paramsDenom = router?.query.denom
@@ -589,7 +592,7 @@ export default {
             dateRange.value = dates;
             queryParam.date_range[0] = Math.floor(startTime(moment(dates[0]).valueOf()) / 1000);
             queryParam.date_range[1] = Math.floor(
-                moment(startTime(moment(dates[1]).valueOf()) / 1000).endOf('day'),
+               startTime(moment(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1,
             );
             url = `/transfers?pageNum=${ pagination.current}&pageSize=${pageSize}`
             if(queryParam?.chain){
@@ -614,7 +617,7 @@ export default {
                     const startTimeStamp = queryParam.date_range[0]
                     const entTimeStamp = queryParam.date_range[1]
                     const startTime = moment(startTimeStamp*1000).format('YYYY-MM-DD')
-                    const endTime = moment((entTimeStamp - 24 * 60 * 60 )*1000).format('YYYY-MM-DD')
+                    const endTime = moment(entTimeStamp*1000).format('YYYY-MM-DD')
                     url += `&startTime=${startTime}&endTime=${endTime}`
                 }
             }
