@@ -315,6 +315,7 @@ export default {
         const tableColumns = reactive(transferTableColumn);
 
         const selectedSymbol = reactive({value: 'All Tokens'});
+        const tokens = reactive({value: []});
 
         const isShowSymbolIcon = ref(false);
         const isShowChainIcon = ref(false);
@@ -646,12 +647,15 @@ export default {
                 all: null
             }
         });
-        ibcChains = computed(() => store.state.ibcChains)?.value;
-        if(ibcChains?.value?.all){
-            const cosmosChain = ibcChains.value.all.filter( item => item.chain_name === 'Cosmos Hub')
-            const irishubChain = ibcChains.value.all.filter( item => item.chain_name === 'IRIS Hub')
+        let allChains = computed(() => store.state.ibcChains)?.value
+        if(!Object?.keys(allChains?.value).length){
+            allChains.value = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) :{}
+        }
+        if(allChains?.value?.all){
+            const cosmosChain = allChains.value.all.filter( item => item.chain_name === 'Cosmos Hub')
+            const irishubChain = allChains.value.all.filter( item => item.chain_name === 'IRIS Hub')
             let notIncludesIrisAndCosmosChains = []
-            ibcChains.value.all.forEach( item => {
+            allChains.value.all.forEach( item => {
                 if(item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub'){
                     notIncludesIrisAndCosmosChains.push(item)
                 }
@@ -661,38 +665,12 @@ export default {
                     return  a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
                 })
             }
-
             ibcChains.value.all  = [
                 ...cosmosChain,
                 ...irishubChain,
                 ...notIncludesIrisAndCosmosChains,
             ]
         }
-        watch(store.state.ibcChains,(newValue,oldValue) => {
-            if(newValue?.value?.all){
-                const cosmosChain = newValue.value.all.filter( item => item.chain_name === 'Cosmos Hub')
-                const irishubChain = newValue.value.all.filter( item => item.chain_name === 'IRIS Hub')
-                let notIncludesIrisAndCosmosChains = []
-                newValue.value.all.forEach( item => {
-                    if(item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub'){
-                        notIncludesIrisAndCosmosChains.push(item)
-                    }
-                })
-                if(notIncludesIrisAndCosmosChains?.length){
-                    notIncludesIrisAndCosmosChains.sort( (a,b) => {
-                        return  a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
-                    })
-                }
-
-                ibcChains.value.all  = [
-                    ...cosmosChain,
-                    ...irishubChain,
-                    ...notIncludesIrisAndCosmosChains,
-                ]
-            }
-        })
-
-
         const findIbcChainIcon = computed(() => (chainId) => {
             if (ibcChains.value && ibcChains.value.all) {
                 const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
@@ -707,24 +685,22 @@ export default {
             clearInterval(computed(() => store.state.ibcTxTimer)?.value);
         });
 
-        const tokens = reactive({value: []});
 
         getIbcDenoms().then((res) => {
-            tokens.value = computed(() => groupBy(res, 'symbol')).value;
+            let tokensObj = computed(() => groupBy(res, 'symbol')).value;
             const atomObj = {
-                'ATOM':tokens.value['ATOM']
+                'ATOM':tokensObj['ATOM']
             }
             const irisObj = {
-                'IRIS': tokens.value['IRIS']
+                'IRIS': tokensObj['IRIS']
             }
-            delete tokens.value['ATOM']
-            delete tokens.value['IRIS']
+            delete tokensObj['ATOM']
+            delete tokensObj['IRIS']
 
-            let newkey = Object?.keys(tokens.value);
-            newkey.sort()
+            let newkey = Object?.keys(tokensObj).sort();
             let newObj = {}
             for (let i = 0; i < newkey.length; i++) {
-                newObj[newkey[i]] = tokens.value[newkey[i]];
+                newObj[newkey[i]] = tokensObj[newkey[i]];
             }
             tokens.value = {
                 ...atomObj,
