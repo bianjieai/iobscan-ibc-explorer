@@ -223,7 +223,7 @@ export default {
 @import "./style/mixin.scss";
 @import "./style/variable.scss";
 a{
-    cursor: url('./assets/tree_mouse.png'),pointer !important;
+    cursor: pointer !important;
 }
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -265,7 +265,7 @@ a{
 
         .logo {
             // height: 30px;
-            cursor: url("./assets/tree_mouse.png"),pointer !important;
+            cursor: pointer !important;
 
             .logo__icon {
                 width: 34px;
@@ -283,7 +283,7 @@ a{
             height: 32px;
             border-radius: 50%;
             margin-left: 24px;
-            cursor: url("./assets/tree_mouse.png"),pointer !important;
+            cursor: pointer !important;
         }
     }
 
@@ -305,16 +305,16 @@ a{
     }
 }
 .ant-btn{
-    cursor: url("./assets/tree_mouse.png"),pointer !important;
+    cursor: pointer !important;
 }
 .ant-select{
-    cursor: url("./assets/tree_mouse.png"),pointer !important;
+    cursor:pointer !important;
 }
 .ant-select-item{
-    cursor: url("./assets/tree_mouse.png"),pointer !important;
+    cursor: pointer !important;
 }
 .ant-calendar-date{
-    cursor: url("./assets/tree_mouse.png"),pointer !important;
+    cursor: pointer !important;
 }
 .col__layout {
     @include flex(row, nowrap, flex-start, center);

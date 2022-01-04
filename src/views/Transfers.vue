@@ -829,18 +829,18 @@ export default {
                 border-radius: 50%;
                 border: 1px solid rgba(0, 0, 0, 0.2);
                 margin-right: 8px;
-                cursor: url("../assets/tree_mouse.png"),pointer !important;
+                cursor: pointer !important;
             }
 
             &__num {
-                cursor:url("../assets/tree_mouse.png"),pointer !important;
+                cursor:pointer !important;
                 font-size: $font-size5;
                 color: $font-color5;
                 margin-right: 4px;
             }
 
             &__denom {
-                cursor: url("../assets/tree_mouse.png"),pointer !important;
+                cursor: pointer !important;
                 font-size: $font-size5;
                 color: $font-color3;
             }
@@ -968,7 +968,7 @@ export default {
 }
 
 .hover {
-    cursor: url("../assets/tree_mouse.png"),pointer !important;
+    cursor: pointer !important;
 }
 
 p {

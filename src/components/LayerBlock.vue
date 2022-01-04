@@ -80,7 +80,7 @@ export default {
     position: absolute;
     margin-left: 16px;
     margin-top: -10px;
-    cursor: url("../assets/tree_mouse.png"),pointer !important;
+    cursor: pointer !important;
   }
 }
 </style>
