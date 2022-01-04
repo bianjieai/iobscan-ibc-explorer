@@ -346,7 +346,6 @@ export default {
             paramsStatus = router?.query?.status.split(',')
             url += `&status=${paramsStatus}`
         }
-
         if(router?.query?.chain){
             chainId = router?.query.chain
             url +=`&chain=${chainId}`
@@ -421,7 +420,9 @@ export default {
                 })
                 .then(() => {
                     pagination.total = computed(() => store.state.ibcTxsCount).value?.value;
-                });
+                }).catch(error => {
+                console.log(error)
+            });
             /*store.dispatch(GET_IBCTXS, {
                 start_time: true,
             });*/
@@ -436,7 +437,9 @@ export default {
                     setTimeout(() => {
                         loading.value = false;
                     }, 1000);
-                });
+                }).catch(error => {
+                console.log(error)
+            });
         };
 
         queryDatas();
@@ -501,7 +504,9 @@ export default {
                     setTimeout(() => {
                         loading.value = false;
                     }, 1000);
-                });
+                }).catch(error => {
+                console.log(error)
+            });
         };
 
 
@@ -715,7 +720,8 @@ export default {
             delete tokens.value['ATOM']
             delete tokens.value['IRIS']
 
-            let newkey = Object.keys(tokens.value).sort();
+            let newkey = Object?.keys(tokens.value);
+            newkey.sort()
             let newObj = {}
             for (let i = 0; i < newkey.length; i++) {
                 newObj[newkey[i]] = tokens.value[newkey[i]];
@@ -725,6 +731,8 @@ export default {
                 ...irisObj,
                 ...newObj
             }
+        }).catch(error => {
+            console.log(error)
         });
 
         return {
