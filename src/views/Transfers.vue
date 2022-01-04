@@ -551,9 +551,7 @@ export default {
                 default:
                     break;
             }
-            console.log(queryParam,'奇怪')
             url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
-            console.log(queryParam,'这东西是啥')
             if(queryParam?.chain){
                 url +=`&chain=${queryParam.chain}`
             }
