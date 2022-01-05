@@ -4,9 +4,7 @@ let program = require('commander');
 function list (val) {
     return val.split(',')
 }
-program
-    .option("-p, <items>","config list" ,list)
-    .parse(process.argv);
+program.option("-p, <items>","config list" ,list).parse(process.argv);
 
 replaceEnv([
         "./config/config.json",
@@ -14,6 +12,7 @@ replaceEnv([
     {
         "umeng_id": program.P[0],
         "umeng_web_id": program.P[1],
+        "date_picker_start_time": program.P[2],
     }
 );
 
