@@ -369,7 +369,6 @@ export default {
             url += `&symbol=${router.query.symbol}`
             paramsSymbol = router?.query.symbol
             watch(store.state.ibcDenoms,(newValue,oldValue) => {
-                console.log(newValue,"denoms")
                 if(newValue?.value?.length){
                     newValue?.value.forEach( item => {
                         if(item?.symbol === paramsSymbol){
@@ -381,7 +380,6 @@ export default {
                 }
             })
         }
-        console.log(selectedSymbol,'selected symbol')
         if( router?.query?.status){
             paramsStatus = router?.query?.status.split(',')
             url += `&status=${paramsStatus}`
@@ -554,6 +552,8 @@ export default {
             url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
             if(queryParam?.chain){
                 url +=`&chain=${queryParam.chain}`
+            }else if(queryParam?.chain_id){
+                url +=`&chain=${queryParam.chain_id}`
             }
             if(queryParam?.denom){
                 url += `&denom=${queryParam.denom}`
@@ -573,7 +573,7 @@ export default {
                 if(queryParam?.date_range.length === 2){
                     const startTimeStamp = queryParam.date_range[0]
                     const entTimeStamp = queryParam.date_range[1]
-                    const startTime = moment(startTimeStamp*1000).format('YYYY-MM-DD')
+                    const startTime = startTimeStamp ? moment(startTimeStamp*1000).format('YYYY-MM-DD') : ''
                     const endTime = moment(entTimeStamp*1000).format('YYYY-MM-DD')
                     url += `&startTime=${startTime}&endTime=${endTime}`
                 }
@@ -587,6 +587,8 @@ export default {
             url = `/transfers?pageNum=${ pagination.current}&pageSize=${pageSize}`
             if(queryParam?.chain){
                 url +=`&chain=${queryParam.chain}`
+            }else if(queryParam?.chain_id){
+                url +=`&chain=${queryParam.chain_id}`
             }
             if(queryParam?.denom){
                 url += `&denom=${queryParam.denom}`
@@ -669,7 +671,6 @@ export default {
             queryParam.symbol = undefined;
             queryParam.chain = undefined;
             queryParam.denom = undefined;
-            console.log(queryParam,'重置')
             pagination.current = 1;
             url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
             history.pushState(null,null,url)
@@ -680,30 +681,39 @@ export default {
                 all: null
             }
         });
+
+        const setAllChains = (allChains) => {
+            if(allChains?.value?.all){
+                const cosmosChain = allChains.value.all.filter( item => item.chain_name === 'Cosmos Hub')
+                const irishubChain = allChains.value.all.filter( item => item.chain_name === 'IRIS Hub')
+                let notIncludesIrisAndCosmosChains = []
+                allChains.value.all.forEach( item => {
+                    if(item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub'){
+                        notIncludesIrisAndCosmosChains.push(item)
+                    }
+                })
+                if(notIncludesIrisAndCosmosChains?.length){
+                    notIncludesIrisAndCosmosChains.sort( (a,b) => {
+                        return  a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
+                    })
+                }
+                ibcChains.value.all  = [
+                    ...cosmosChain,
+                    ...irishubChain,
+                    ...notIncludesIrisAndCosmosChains,
+                ]
+            }
+        }
         let allChains = computed(() => store.state.ibcChains)?.value
         if(!Object?.keys(allChains?.value).length){
             allChains.value = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) :{}
         }
-        if(allChains?.value?.all){
-            const cosmosChain = allChains.value.all.filter( item => item.chain_name === 'Cosmos Hub')
-            const irishubChain = allChains.value.all.filter( item => item.chain_name === 'IRIS Hub')
-            let notIncludesIrisAndCosmosChains = []
-            allChains.value.all.forEach( item => {
-                if(item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub'){
-                    notIncludesIrisAndCosmosChains.push(item)
-                }
-            })
-            if(notIncludesIrisAndCosmosChains?.length){
-                notIncludesIrisAndCosmosChains.sort( (a,b) => {
-                    return  a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
-                })
+        setAllChains(allChains)
+        watch(allChains,(newValue,oldValue) => {
+            if(newValue?.value?.all){
+                setAllChains(newValue)
             }
-            ibcChains.value.all  = [
-                ...cosmosChain,
-                ...irishubChain,
-                ...notIncludesIrisAndCosmosChains,
-            ]
-        }
+        })
         const findIbcChainIcon = computed(() => (chainId) => {
             if (ibcChains.value && ibcChains.value.all) {
                 const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
