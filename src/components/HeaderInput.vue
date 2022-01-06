@@ -3,7 +3,6 @@
     class="header__input"
     placeholder="Search by TxHash"
     allowClear
-    disabled
     v-model:value="inputValue"
     @pressEnter="onPressEnter"
   >

@@ -236,7 +236,7 @@ export default {
   margin: 0 16px;
 }
 .hover {
-  cursor: url("../assets/tree_mouse.png"),pointer !important;
+  cursor: pointer !important;
 }
 .tip {
   &__color {

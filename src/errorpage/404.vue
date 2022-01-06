@@ -60,7 +60,7 @@ export default {
                 font-size: 16px;
                 line-height: 36px;
                 margin: 40px auto 0 auto;
-                cursor: url("../assets/tree_mouse.png"),pointer !important;
+                cursor: pointer !important;
             }
         }
     }

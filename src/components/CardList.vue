@@ -155,7 +155,7 @@ export default {
         ::v-deep.ant-menu-overflow{
             .ant-menu-overflow-item{
                 &:hover{
-                    cursor: url("../assets/tree_mouse.png"),pointer !important;
+                    cursor: pointer !important;
                 }
             }
         }
