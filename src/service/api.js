@@ -102,7 +102,10 @@ function getIbcConfig() {
   const url = '/api/ibc/config';
   return get(url);
 }
-
+function getTxDetailsByTxHash(txHash){
+    const url=`/api/ibc/txs/${txHash}`
+    return get(url);
+}
 export {
-  getIbcTxs, getIbcChains, getIbcBaseDenoms, getIbcDenoms, getIbcStatistics, getIbcConfig,
+  getIbcTxs, getIbcChains, getIbcBaseDenoms, getIbcDenoms, getIbcStatistics, getIbcConfig,getTxDetailsByTxHash,
 };
