@@ -21,13 +21,17 @@ export default {
         disabled: Boolean,
     },
     setup(props, context) {
-        const inputValue = ref('');
+        let inputValue = ref('');
         const onPressEnter = (evt) => {
             context.emit('pressedEnter', evt.target.value);
         };
         const searchInput = (evt) => {
             if (/^[A-F0-9]{64}$/.test(inputValue.value)) {
                 router.push(`/transfers/details?hash=${inputValue.value}`)
+                inputValue.value = ''
+            }else {
+                router.push(`/searchResult?${inputValue.value}`)
+                inputValue.value = ''
             }
 
         }

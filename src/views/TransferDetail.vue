@@ -195,7 +195,7 @@ export default {
                         if (keys?.length) {
                             let result = res
                             keys.forEach(key => {
-                                result = result[key]
+                                result = result[key] || ''
                                 item.value = result
 
                             })
