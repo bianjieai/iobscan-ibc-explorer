@@ -1,4 +1,6 @@
 import { createApp } from 'vue';
+import './assets/icon/iconfont'
+import './assets/icon/iconfont.css'
 import {
   Layout,
   Menu,
