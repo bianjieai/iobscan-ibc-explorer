@@ -17,7 +17,7 @@
                     <span class="value_style" v-show="!isShowLink(details,item.value)">{{item.value  || '--'}}</span>
                     <a class="link_style" v-show="isShowLink(details,item.value)" :href="setExplorerLink(details,item.value)" target="_blank" rel="noreferrer noopener">{{item.value}}</a>
                 </span>
-                <span class="details_item_value" v-else>{{item.value || '--'}}</span>
+                <span class="details_item_value" v-else>{{item.value ? item.value : '--'}}</span>
             </li>
             <li class="details_item" v-for="(item,index) in expandDetails" :key="index" v-show="isExpand">
                 <span class="details_item_label">{{item.label}}</span>
@@ -34,7 +34,7 @@
                     <span class="value_style" v-show="!isShowLink(details,item.value)">{{item.value || '--'}}</span>
                     <a class="link_style" v-show="isShowLink(details,item.value)" :href="setExplorerLink(details,item.value)" target="_blank" rel="noreferrer noopener">{{item.value}}</a>
                 </span>
-                <span class="details_item_value" v-else>{{item.value || '--'}}</span>
+                <span class="details_item_value" v-else>{{item.value >= 0 ? item.value : '--'}}</span>
             </li>
             <li class="see_more_button" @click="expandInfo">
                 <span class="see_more_label">Click to see More</span>
