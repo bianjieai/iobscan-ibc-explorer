@@ -56,12 +56,14 @@
                 <div class="transfer_out_content">
                     <transfer-details-card :title="'IBC Out Details'"
                                            :details="transferOutDetails"
-                                           :expand-detail="transferOutExpandDetails"></transfer-details-card>
+                                           :expand-details="transferOutExpandDetails"
+                                           :base-denom="baseDenom"></transfer-details-card>
                 </div>
                 <div class="transfer_in_content">
                     <transfer-details-card :title="'IBC In Details'"
                                            :details="transferInDetails"
-                                           :expand-detail="transferInExpandDetails"></transfer-details-card>
+                                           :expand-details="transferInExpandDetails"
+                                           :base-denom="baseDenom"></transfer-details-card>
                 </div>
             </div>
         </div>
@@ -90,6 +92,7 @@ export default {
         let outTxStatus = ref('default')
         let inTxStatus = ref('default')
         let sequence = ref('')
+        let baseDenom = ref('')
         const transferOutDetails = reactive([
             {
                 label: 'MsgType:',
@@ -97,56 +100,58 @@ export default {
             },
             {
                 label: 'Chain ID:',
-                value: '',
+                value: '--',
                 dataKey: 'sc_chain_id',
+                isFormatChainID:true
             },
             {
                 label: 'Port:',
-                value: '',
+                value: '--',
                 dataKey: 'sc_port',
             },
             {
                 label: 'Channel ID:',
-                value: '',
+                value: '--',
                 dataKey: 'sc_channel',
             },
             {
                 label: 'Send Token:',
-                value: '',
+                value: '--',
                 dataKey: 'sc_tx_info.msg_amount',
                 isFormatToken: true
             },
             {
                 label: 'IBC Out Address:',
-                value: '',
+                value: '--',
                 dataKey: 'sc_tx_info.msg.msg.sender',
                 isAddress:true
             },
             {
                 label: 'Block:',
-                value: '',
+                value: '--',
                 dataKey: 'sc_tx_info.height',
             },
             {
                 label: 'Status:',
-                value: '',
+                value: '--',
                 dataKey: 'sc_tx_info.status',
                 isFormatStatus: true
             },
             {
                 label: 'Timestamp:',
-                value: '',
+                value: '--',
                 dataKey: 'tx_time',
+                isFormatDate: true
             },
             {
                 label: 'Fee:',
-                value: '',
-                dataKey: 'sc_tx_info.fee',
-                isFormatToken: true
+                value: '--',
+                dataKey: 'sc_tx_info.fee.amount',
+                isFormatFee: true
             },
             {
                 label: 'Signer:',
-                value: '',
+                value: '--',
                 dataKey: '',
                 isAddress:true
             },
@@ -155,20 +160,20 @@ export default {
         const transferOutExpandDetails = reactive([
             {
                 label: 'Connection:',
-                value: '',
+                value: '--',
                 dataKey: '',
                 isExpand: false,
             },
             {
                 label: 'Time Out Height:',
-                value: '',
+                value: '--',
                 dataKey: 'sc_tx_info.msg.msg.timeout_height',
                 isExpand: false,
                 isFormatHeight: true,
             },
             {
                 label: 'Time Out Timestamp:',
-                value: '',
+                value: '--',
                 dataKey: 'sc_tx_info.msg.msg.timeout_timestamp',
                 isExpand: false,
             }
@@ -180,56 +185,58 @@ export default {
             },
             {
                 label: 'Chain ID:',
-                value: '',
+                value: '--',
                 dataKey: 'dc_chain_id',
+                isFormatChainID:true
             },
             {
                 label: 'Port:',
-                value: '',
+                value: '--',
                 dataKey: 'dc_port',
             },
             {
                 label: 'Channel ID:',
-                value: '',
+                value: '--',
                 dataKey: 'dc_channel',
             },
             {
                 label: 'Received Token:',
-                value: '',
-                dataKey: 'sc_tx_info.msg_amount',
+                value: '--',
+                dataKey: 'dc_tx_info.msg.msg.packet.data',
                 isFormatToken: true
             },
             {
                 label: 'IBC In Address:',
-                value: '',
+                value: '--',
                 dataKey: 'sc_tx_info.msg.msg.receiver',
                 isAddress:true
             },
             {
                 label: 'Block:',
-                value: '',
+                value: '--',
                 dataKey: 'dc_tx_info.height',
             },
             {
                 label: 'Status:',
-                value: '',
+                value: '--',
                 dataKey: 'dc_tx_info.status',
                 isFormatStatus: true
             },
             {
                 label: 'Timestamp:',
-                value: '',
+                value: '--',
                 dataKey: 'dc_tx_info.time',
+                isFormatDate: true
             },
             {
                 label: 'Fee:',
-                value: '',
-                dataKey: 'dc_tx_info.fee',
-                isFormatToken: true
+                value: '--',
+                dataKey: 'dc_tx_info.fee.amount',
+                isFormatFee: true
             },
             {
                 label: 'Signer:',
-                value: '',
+                value: '--',
                 dataKey: 'dc_tx_info.msg.msg.signer',
                 isAddress:true
             },
@@ -238,19 +245,19 @@ export default {
         const transferInExpandDetails = [
             {
                 label: 'Connection:',
-                value: '',
+                value: '--',
                 dataKey: '',
                 isExpand: true,
             },
             {
                 label: 'Packet Ack:',
-                value: '',
+                value: '--',
                 dataKey: '',
                 isExpand: true,
             },
             {
                 label: 'Proof Height:',
-                value: '',
+                value: '--',
                 dataKey: 'dc_tx_info.msg.msg.proof_height',
                 isExpand: true,
                 isFormatHeight: true,
@@ -283,6 +290,9 @@ export default {
                 }
                 if(res?.status){
                     ibcTxStatus.value = res.status
+                }
+                if(res?.base_denom){
+                    baseDenom.value = res.base_denom
                 }
                 transferOutDetails.forEach(item => {
                     if (item?.dataKey?.includes('.')) {
@@ -371,7 +381,8 @@ export default {
             transferInExpandDetails,
             ibcTxStatus,
             outTxStatus,
-            inTxStatus
+            inTxStatus,
+            baseDenom
         }
     }
 }

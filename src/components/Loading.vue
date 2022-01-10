@@ -23,5 +23,6 @@ export default {
         top: 50%;
         transform: translate(-50%, -50%);
         background: rgba(255,255,255,0.6);
+        z-index: 10;
     }
 </style>

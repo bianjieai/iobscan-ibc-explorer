@@ -39,7 +39,7 @@ export default class Tools {
     static findDenomSymbol(ibcDenoms, denomStr, chainId) {
         if (ibcDenoms) {
             const findDenom = ibcDenoms.find(
-                (denom) => denom.denom === denomStr && denom.chain_id === chainId,
+                (denom) => denom.denom === denomStr && denom.chain_id.replace(new RegExp("\-", "g"),"_") === chainId,
             );
             if (findDenom) {
                 return findDenom.symbol;
