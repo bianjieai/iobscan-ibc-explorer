@@ -25,7 +25,7 @@
                         <i v-show="outTxStatus === 0" style="color:rgba(255, 90, 90, 1);" class="iconfont icon-address1"></i>
                         IBC Out TxHash:
                     </span>
-                    <span class="transfer_ibc_out_tx_hash_value">{{ibcTransferOutTxHash}} <copy-component v-show="ibcTransferOutTxHash" :copy-text="ibcTransferOutTxHash"></copy-component></span>
+                    <span class="transfer_ibc_out_tx_hash_value">{{ibcTransferOutTxHash}} <copy-component v-show="ibcTransferOutTxHash !== '--'" :copy-text="ibcTransferOutTxHash"></copy-component></span>
                 </div>
                 <div class="transfer_arrows_icon">
                     <i v-show="ibcTxStatus === 1" style="color: rgba(0, 200, 83, 1)"  class="iconfont_style iconfont icon-zhuangtai"></i>
@@ -42,7 +42,7 @@
                         <i v-show="inTxStatus === 0" style="color:rgba(255, 90, 90, 1);" class="iconfont icon-address1"></i>
                         IBC In TxHash:
                     </span>
-                    <span class="transfer_ibc_in_tx_hash_value">{{ibcTransferInTxHash}} <copy-component v-show="ibcTransferInTxHash"  :copy-text="ibcTransferInTxHash"></copy-component></span>
+                    <span class="transfer_ibc_in_tx_hash_value">{{ibcTransferInTxHash}} <copy-component v-show="ibcTransferInTxHash !== '--'"  :copy-text="ibcTransferInTxHash"></copy-component></span>
                 </div>
                 <div class="transfer_sequence">
                     <span class="transfer_sequence_label">
@@ -86,12 +86,12 @@ export default {
         const isShowLoading = reactive({
             value: true
         })
-        let ibcTransferOutTxHash= ref('')
-        let ibcTransferInTxHash = ref('')
+        let ibcTransferOutTxHash= ref('--')
+        let ibcTransferInTxHash = ref('--')
         let ibcTxStatus = ref('default')
         let outTxStatus = ref('default')
         let inTxStatus = ref('default')
-        let sequence = ref('')
+        let sequence = ref('--')
         let baseDenom = ref('')
         const transferOutDetails = reactive([
             {
@@ -510,7 +510,7 @@ export default {
                     font-weight: 400;
                     color: rgba(0, 0, 0, 0.35);
                     line-height: 14px;
-                    width: 120px;
+                    width: 140px;
                     display: inline-block;
                     i{
                         font-size: 14px;
