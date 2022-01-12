@@ -6,12 +6,15 @@
                 <div class="transfer__header__line">
                     <p class="transfer__header__title">
                         IBC Token Transfer List
-                        <span class="transfer__header__num"> ( {{ tableCount.value }} transfers found )</span>
+<!--                        <span class="transfer__header__num"> ( {{ tableCount.value }} transfers found )</span>-->
                     </p>
+
                 </div>
             </div>
         </div>
-
+        <p class="transfer__header__description">
+            <span class="transfer__header__description_text">{{ `More than > ${$store.state.ibcStatisticsTxs.tx_all.count} found`}} <i class="iconfont icon-shujuliebiao"></i>{{`(Showing the last ${tableCount.value}  records)`}}</span>
+        </p>
         <div class="transfer__middle__container">
             <dropdown
                 class="dropdown__token"
@@ -128,7 +131,7 @@
             style="width: 100%"
             :rowKey="record => record.record_id"
             :columns="tableColumns"
-            :loading="loading"
+            :loading="$store.state.isShowTransferLoading"
             :data-source="tableDatas.value"
             :pagination="false"
         >
@@ -176,8 +179,8 @@
         </template>
         <router-link :to="`/transfers/details?hash=${record.sc_tx_info.hash}`">
         <span class="hover">{{
-            getRestString(record.sc_tx_info.hash, 4, 4)
-        }}</span>
+                getRestString(record.sc_tx_info.hash, 4, 4)
+            }}</span>
         </router-link>
     </a-popover>
 </template>
@@ -247,7 +250,7 @@
                       getRestString(record.dc_tx_info.hash, 4, 4) || "--"
                   }}</span>
         </router-link>
-        <span v-else>{{'--'}}</span>
+        <span v-else>{{ '--' }}</span>
     </a-popover>
 </template>
 <template #in="{ record }">
@@ -289,12 +292,12 @@
 <script>
 import {message} from 'ant-design-vue';
 import {
-    ref, reactive, computed, onBeforeUnmount, h,watch,
+    ref, reactive, computed, onBeforeUnmount, h, watch,
 } from 'vue';
 import {useStore} from 'vuex';
 import {groupBy} from 'lodash';
 import moment from 'moment';
-import {GET_IBCTXS} from '../store/action-types';
+import {GET_IBCSTATISTICS, GET_IBCTXS} from '../store/action-types';
 import {transferTableColumn, ibcTxStatusSelectOptions} from '../constant';
 import Dropdown from '../components/Dropdown.vue';
 import Message from '../components/Message.vue';
@@ -305,6 +308,7 @@ import placeHoderImg from '../assets/placeHoder.png';
 import {getIbcDenoms} from '../service/api';
 import {useRouter, useRoute} from 'vue-router';
 import Tools from "../util/Tools"
+
 export default {
     components: {
         Dropdown,
@@ -313,10 +317,9 @@ export default {
     setup() {
 
         const tableColumns = reactive(transferTableColumn);
-
         const selectedSymbol = reactive({value: 'All Tokens'});
         const tokens = reactive({value: []});
-
+        const allTxCount = ref('')
         const isShowSymbolIcon = ref(false);
         const isShowChainIcon = ref(false);
         const selectedChain = reactive({
@@ -326,30 +329,44 @@ export default {
         });
         const dateRange = reactive({value: []});
 
-        let pageNum = 1,pageSize = 10;
+        let pageNum = 1, pageSize = 10;
         let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
         const store = useStore();
+        store.dispatch(GET_IBCSTATISTICS)
         const router = useRoute();
         const pagination = reactive({
             total: 0,
             current: 1,
             pageSize: 10,
         });
-       /* const queryParam = reactive({
-            date_range: [0, Math.floor(new Date().getTime() / 1000)],
-            status: [1, 2, 3, 4],
-            chain_id: undefined,
-            symbol: undefined,
-            denom: undefined,
-        });*/
-        let paramsStatus = null, chainId= null ,paramsSymbol = null,paramsDenom = null, startTimestamp = 0 ,endTimestamp = 0;
-        if(router?.query?.chain){
+        /* const queryParam = reactive({
+             date_range: [0, Math.floor(new Date().getTime() / 1000)],
+             status: [1, 2, 3, 4],
+             chain_id: undefined,
+             symbol: undefined,
+             denom: undefined,
+         });*/
+        let paramsStatus = null, chainId = null, paramsSymbol = null, paramsDenom = null, startTimestamp = 0,
+            endTimestamp = 0;
+
+        if (router?.query?.chain) {
             chainId = router?.query.chain
-            url +=`&chain=${chainId}`
-            watch(store.state.ibcChains,(newValue,oldValue) => {
-                if(newValue?.value?.all?.length){
-                    newValue?.value.all.forEach( item => {
-                        if(item?.chain_id === chainId){
+            url += `&chain=${chainId}`
+            if (store.state.ibcChains?.value?.all?.length) {
+                store.state.ibcChains?.value.all.forEach(item => {
+                    if (item?.chain_id === chainId) {
+                        selectedChain.value.chain_name = item.chain_name
+                        selectedChain.value.icon = item.icon
+                        selectedChain.value.chain_id = item.chain_id
+                        isShowChainIcon.value = true
+                    }
+                })
+
+            }
+            watch(store.state.ibcChains, (newValue, oldValue) => {
+                if (newValue?.value?.all?.length) {
+                    newValue?.value.all.forEach(item => {
+                        if (item?.chain_id === chainId) {
                             selectedChain.value.chain_name = item.chain_name
                             selectedChain.value.icon = item.icon
                             selectedChain.value.chain_id = item.chain_id
@@ -359,19 +376,18 @@ export default {
 
                 }
             })
-
         }
-        if(router?.query?.denom){
+        if (router?.query?.denom) {
             url += `&denom=${router.query.denom}`
             paramsDenom = router?.query.denom
         }
-        if(router?.query?.symbol){
+        if (router?.query?.symbol) {
             url += `&symbol=${router.query.symbol}`
             paramsSymbol = router?.query.symbol
-            watch(store.state.ibcDenoms,(newValue,oldValue) => {
-                if(newValue?.value?.length){
-                    newValue?.value.forEach( item => {
-                        if(item?.symbol === paramsSymbol){
+            watch(store.state.ibcDenoms, (newValue, oldValue) => {
+                if (newValue?.value?.length) {
+                    newValue?.value.forEach(item => {
+                        if (item?.symbol === paramsSymbol) {
                             selectedSymbol.value = item.symbol
 
                             isShowSymbolIcon.value = true
@@ -380,38 +396,41 @@ export default {
                 }
             })
         }
-        if( router?.query?.status){
+        if (router?.query?.status) {
             paramsStatus = router?.query?.status.split(',')
             url += `&status=${paramsStatus}`
         }
 
-        if(router?.query?.startTime){
+        if (router?.query?.startTime) {
             url += `&startTime=${router.query.startTime}`
             startTimestamp = moment(router.query.startTime).unix()
         }
-        if(router?.query?.endTime){
+
+        if (router?.query?.endTime) {
             url += `&endTime=${router.query.endTime}`
             endTimestamp = moment(router.query.endTime).endOf('day').unix()
         }
-        if(startTimestamp && endTimestamp){
-            dateRange.value = [moment(startTimestamp * 1000 ),moment(endTimestamp * 1000)]
+
+        if (startTimestamp && endTimestamp) {
+            dateRange.value = [moment(startTimestamp * 1000), moment(endTimestamp * 1000)]
         }
         history.pushState(null, null, url);
+
         const queryParam = reactive({
-            date_range:  startTimestamp && endTimestamp ? [startTimestamp,endTimestamp]  : [0, Math.floor(new Date().getTime() / 1000)],
+            date_range: startTimestamp && endTimestamp ? [startTimestamp, endTimestamp] : [0, Math.floor(new Date().getTime() / 1000)],
             status: paramsStatus || ['1', '2', '3', '4'],
-            chain_id: chainId ||undefined,
+            chain_id: chainId || undefined,
             symbol: paramsSymbol || undefined,
             denom: paramsDenom || undefined,
         });
-        const loading = ref(false);
+
 
         const queryDatas = () => {
-            loading.value = true;
+            store.commit('isShowTransferLoading',true)
             const params = {
-                status : queryParam.status?.toString(),
-                chain_id:queryParam.chain_id,
-                date_range :queryParam.date_range?.toString(),
+                status: queryParam.status?.toString(),
+                chain_id: queryParam.chain_id,
+                date_range: queryParam.date_range?.toString(),
                 symbol: queryParam.symbol,
                 denom: queryParam.denom,
             }
@@ -435,11 +454,10 @@ export default {
                     use_count: false,
                     ...params,
                 })
-                .then(() => {
-                    setTimeout(() => {
-                        loading.value = false;
-                    }, 1000);
+                .then((res) => {
+                    store.commit('isShowTransferLoading',false)
                 }).catch(error => {
+                store.commit('isShowTransferLoading',false)
                 console.log(error)
             });
         };
@@ -453,7 +471,7 @@ export default {
         const disabledDate = (current) => current
             && (current > moment().endOf('day')
                 || current
-                < moment( 1617007625 * 1000));
+                < moment(1617007625 * 1000));
         // const onClickTableRow = () => ({
         //   onClick: () => {
         //     message.info({
@@ -471,30 +489,30 @@ export default {
         };
 
         const onPaginationChange = (page) => {
-            if (loading.value) return;
+            if (store.state.isShowTransferLoading) return;
             pagination.current = page;
             const params = Tools.urlParser(url);
             url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
-            if(params?.chain){
-                url +=`&chain=${params.chain}`
+            if (params?.chain) {
+                url += `&chain=${params.chain}`
             }
-            if(params?.denom){
+            if (params?.denom) {
                 url += `&denom=${params.denom}`
             }
-            if(params?.symbol){
+            if (params?.symbol) {
                 url += `&symbol=${params.symbol}`
             }
-            if(params?.status){
+            if (params?.status) {
                 url += `&status=${params.status}`
             }
-            if(params?.startTime || params.startTime === ''){
+            if (params?.startTime || params.startTime === '') {
                 url += `&startTime=${params.startTime}`
             }
-            if(params?.endTime || params.endTime === ''){
+            if (params?.endTime || params.endTime === '') {
                 url += `&endTime=${params.endTime}`
             }
             history.pushState(null, null, url);
-            loading.value = true;
+            store.commit('isShowTransferLoading',true)
             store
                 .dispatch(GET_IBCTXS, {
                     page_num: pagination.current,
@@ -503,10 +521,9 @@ export default {
                     ...queryParam,
                 })
                 .then(() => {
-                    setTimeout(() => {
-                        loading.value = false;
-                    }, 1000);
+                    store.commit('isShowTransferLoading',false)
                 }).catch(error => {
+                store.commit('isShowTransferLoading',false)
                 console.log(error)
             });
         };
@@ -550,70 +567,70 @@ export default {
                     break;
             }
             url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
-            if(queryParam?.chain){
-                url +=`&chain=${queryParam.chain}`
-            }else if(queryParam?.chain_id){
-                url +=`&chain=${queryParam.chain_id}`
+            if (queryParam?.chain) {
+                url += `&chain=${queryParam.chain}`
+            } else if (queryParam?.chain_id) {
+                url += `&chain=${queryParam.chain_id}`
             }
-            if(queryParam?.denom){
+            if (queryParam?.denom) {
                 url += `&denom=${queryParam.denom}`
             }
-            if(queryParam?.symbol){
+            if (queryParam?.symbol) {
                 url += `&symbol=${queryParam.symbol}`
             }
-            if(queryParam?.status){
+            if (queryParam?.status) {
                 url += `&status=${queryParam.status.join(',')}`
             }
-            if(queryParam?.date_range?.length){
-                if(queryParam?.date_range.length === 1){
+            if (queryParam?.date_range?.length) {
+                if (queryParam?.date_range.length === 1) {
                     const timeStamp = queryParam.date_range[0]
-                    const endTime = moment(timeStamp*1000).format('YYYY-MM-DD')
+                    const endTime = moment(timeStamp * 1000).format('YYYY-MM-DD')
                     url += `&startTime=&endTime=${endTime}`
                 }
-                if(queryParam?.date_range.length === 2){
+                if (queryParam?.date_range.length === 2) {
                     const startTimeStamp = queryParam.date_range[0]
                     const entTimeStamp = queryParam.date_range[1]
-                    const startTime = startTimeStamp ? moment(startTimeStamp*1000).format('YYYY-MM-DD') : ''
-                    const endTime = moment(entTimeStamp*1000).format('YYYY-MM-DD')
+                    const startTime = startTimeStamp ? moment(startTimeStamp * 1000).format('YYYY-MM-DD') : ''
+                    const endTime = moment(entTimeStamp * 1000).format('YYYY-MM-DD')
                     url += `&startTime=${startTime}&endTime=${endTime}`
                 }
             }
-            history.pushState(null,null,url)
+            history.pushState(null, null, url)
         };
 
         const handleSelectChange = (item) => {
             pagination.current = 1;
             queryParam.status = JSONparse(item);
-            url = `/transfers?pageNum=${ pagination.current}&pageSize=${pageSize}`
-            if(queryParam?.chain){
-                url +=`&chain=${queryParam.chain}`
-            }else if(queryParam?.chain_id){
-                url +=`&chain=${queryParam.chain_id}`
+            url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`
+            if (queryParam?.chain) {
+                url += `&chain=${queryParam.chain}`
+            } else if (queryParam?.chain_id) {
+                url += `&chain=${queryParam.chain_id}`
             }
-            if(queryParam?.denom){
+            if (queryParam?.denom) {
                 url += `&denom=${queryParam.denom}`
             }
-            if(queryParam?.symbol){
+            if (queryParam?.symbol) {
                 url += `&symbol=${queryParam.symbol}`
             }
-            if(queryParam?.status){
+            if (queryParam?.status) {
                 url += `&status=${queryParam.status.join(',')}`
             }
-            if(queryParam?.date_range?.length){
-                if(queryParam?.date_range.length === 1){
+            if (queryParam?.date_range?.length) {
+                if (queryParam?.date_range.length === 1) {
                     const timeStamp = queryParam.date_range[0]
-                    const endTime = moment(timeStamp*1000).format('YYYY-MM-DD')
+                    const endTime = moment(timeStamp * 1000).format('YYYY-MM-DD')
                     url += `&startTime=&endTime=${endTime}`
                 }
-                if(queryParam?.date_range.length === 2){
+                if (queryParam?.date_range.length === 2) {
                     const startTimeStamp = queryParam.date_range[0]
                     const entTimeStamp = queryParam.date_range[1]
-                    const startTime = moment(startTimeStamp*1000).format('YYYY-MM-DD')
-                    const endTime = moment(entTimeStamp*1000).format('YYYY-MM-DD')
+                    const startTime = startTimeStamp ? moment(startTimeStamp * 1000).format('YYYY-MM-DD') : ''
+                    const endTime = moment(entTimeStamp * 1000).format('YYYY-MM-DD')
                     url += `&startTime=${startTime}&endTime=${endTime}`
                 }
             }
-            history.pushState(null,null,url)
+            history.pushState(null, null, url)
             queryDatas();
         };
 
@@ -622,36 +639,36 @@ export default {
             dateRange.value = dates;
             queryParam.date_range[0] = Math.floor(startTime(moment(dates[0]).valueOf()) / 1000);
             queryParam.date_range[1] = Math.floor(
-               startTime(moment(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1,
+                startTime(moment(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1,
             );
-            url = `/transfers?pageNum=${ pagination.current}&pageSize=${pageSize}`
-            if(queryParam?.chain){
-                url +=`&chain=${queryParam.chain}`
+            url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`
+            if (queryParam?.chain) {
+                url += `&chain=${queryParam.chain}`
             }
-            if(queryParam?.denom){
+            if (queryParam?.denom) {
                 url += `&denom=${queryParam.denom}`
             }
-            if(queryParam?.symbol){
+            if (queryParam?.symbol) {
                 url += `&symbol=${queryParam.symbol}`
             }
-            if(queryParam?.status){
+            if (queryParam?.status) {
                 url += `&status=${queryParam.status.join(',')}`
             }
-            if(queryParam?.date_range?.length){
-                if(queryParam?.date_range.length === 1){
+            if (queryParam?.date_range?.length) {
+                if (queryParam?.date_range.length === 1) {
                     const timeStamp = queryParam.date_range[0]
-                    const endTime = moment(timeStamp*1000).format('YYYY-MM-DD')
+                    const endTime = moment(timeStamp * 1000).format('YYYY-MM-DD')
                     url += `&startTime=&endTime=${endTime}`
                 }
-                if(queryParam?.date_range.length === 2){
+                if (queryParam?.date_range.length === 2) {
                     const startTimeStamp = queryParam.date_range[0]
                     const entTimeStamp = queryParam.date_range[1]
-                    const startTime = moment(startTimeStamp*1000).format('YYYY-MM-DD')
-                    const endTime = moment(entTimeStamp*1000).format('YYYY-MM-DD')
+                    const startTime = moment(startTimeStamp * 1000).format('YYYY-MM-DD')
+                    const endTime = moment(entTimeStamp * 1000).format('YYYY-MM-DD')
                     url += `&startTime=${startTime}&endTime=${endTime}`
                 }
             }
-            history.pushState(null,null,url)
+            history.pushState(null, null, url)
             queryDatas();
         };
 
@@ -673,31 +690,31 @@ export default {
             queryParam.denom = undefined;
             pagination.current = 1;
             url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
-            history.pushState(null,null,url)
+            history.pushState(null, null, url)
             queryDatas();
         };
         let ibcChains = reactive({
-            value:{
+            value: {
                 all: null
             }
         });
 
         const setAllChains = (allChains) => {
-            if(allChains?.value?.all){
-                const cosmosChain = allChains.value.all.filter( item => item.chain_name === 'Cosmos Hub')
-                const irishubChain = allChains.value.all.filter( item => item.chain_name === 'IRIS Hub')
+            if (allChains?.value?.all) {
+                const cosmosChain = allChains.value.all.filter(item => item.chain_name === 'Cosmos Hub')
+                const irishubChain = allChains.value.all.filter(item => item.chain_name === 'IRIS Hub')
                 let notIncludesIrisAndCosmosChains = []
-                allChains.value.all.forEach( item => {
-                    if(item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub'){
+                allChains.value.all.forEach(item => {
+                    if (item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub') {
                         notIncludesIrisAndCosmosChains.push(item)
                     }
                 })
-                if(notIncludesIrisAndCosmosChains?.length){
-                    notIncludesIrisAndCosmosChains.sort( (a,b) => {
-                        return  a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
+                if (notIncludesIrisAndCosmosChains?.length) {
+                    notIncludesIrisAndCosmosChains.sort((a, b) => {
+                        return a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
                     })
                 }
-                ibcChains.value.all  = [
+                ibcChains.value.all = [
                     ...cosmosChain,
                     ...irishubChain,
                     ...notIncludesIrisAndCosmosChains,
@@ -705,12 +722,12 @@ export default {
             }
         }
         let allChains = computed(() => store.state.ibcChains)?.value
-        if(!Object?.keys(allChains?.value).length){
-            allChains.value = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) :{}
+        if (!Object?.keys(allChains?.value).length) {
+            allChains.value = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) : {}
         }
         setAllChains(allChains)
-        watch(allChains,(newValue,oldValue) => {
-            if(newValue?.value?.all){
+        watch(allChains, (newValue, oldValue) => {
+            if (newValue?.value?.all) {
                 setAllChains(newValue)
             }
         })
@@ -732,7 +749,7 @@ export default {
         getIbcDenoms().then((res) => {
             let tokensObj = computed(() => groupBy(res, 'symbol')).value;
             const atomObj = {
-                'ATOM':tokensObj['ATOM']
+                'ATOM': tokensObj['ATOM']
             }
             const irisObj = {
                 'IRIS': tokensObj['IRIS']
@@ -753,10 +770,9 @@ export default {
         }).catch(error => {
             console.log(error)
         });
-
+        const tableDatas = computed(() => store.state.ibcTxs)?.value;
         return {
             tableColumns,
-            loading,
             pagination,
             onPaginationChange,
             onClickDropdownItem,
@@ -774,7 +790,7 @@ export default {
             onClickTableRow,
             ibcDenoms: computed(() => store.state.ibcDenoms)?.value,
             ibcBaseDenoms: computed(() => store.state.ibcBaseDenoms)?.value,
-            tableDatas: computed(() => store.state.ibcTxs)?.value,
+            tableDatas,
             tableCount: computed(() => store.state.ibcTxsCount)?.value,
             moment,
             findIbcChainIcon,
@@ -793,7 +809,21 @@ export default {
 <style lang="scss" scoped>
 @import "../style/mixin.scss";
 @import "../style/variable.scss";
-
+.transfer__header__container{
+    margin-top: 8px;
+    height: 24px;
+}
+.transfer__header__description{
+    color: #ffc400;
+    text-align: left;
+    margin: 17px 0 35px 3px;
+    .transfer__header__description_text{
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.65);
+        line-height: 14px;
+    }
+}
 .transfer {
     width: 100%;
     max-width: 1200px;
@@ -843,7 +873,7 @@ export default {
             }
 
             &__num {
-                cursor:pointer !important;
+                cursor: pointer !important;
                 font-size: $font-size5;
                 color: $font-color5;
                 margin-right: 4px;

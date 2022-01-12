@@ -75,13 +75,8 @@ export default {
         script.src = `https://s4.cnzz.com/z_stat.php?id=${config.UMENG_ID}&web_id=${config.UMENG_WEB_ID}`;
         script.language = 'JavaScript';
         document.body.appendChild(script);
-        const store = useStore();
-        store.dispatch(GET_IBCSTATISTICS);
-        store.dispatch(GET_IBCDENOMS);
-        store.dispatch(GET_IBCBASEDENOMS);
-        store.dispatch(GET_IBCCHAINS);
         const router = useRouter();
-
+        const store = useStore();
         const headerMenus = reactive(menus);
         const onClickLogo = () => {
             router.push({
@@ -107,7 +102,7 @@ export default {
             (to) => {
                 store.commit('isShowHeader',true)
                 store.commit('isShowFooter',true)
-                if(to === '/404'){
+                if(to === '/404' || to === '/500'){
                     store.commit('isShowHeader',false)
                     store.commit('isShowFooter',false)
                 }
@@ -122,7 +117,6 @@ export default {
         watch(
             () => route.path,
             (to) => {
-
                 if(to?.toString().includes('home')){
                     currentMenu.value = ['Home'];
                 }else if(to?.toString().includes('transfers')){

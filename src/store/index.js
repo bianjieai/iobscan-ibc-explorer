@@ -52,11 +52,12 @@ export default createStore({
         ibcChains: {value: []},
         configs: {},
         ibcTxs: {value: []},
-        ibcTxsCount: {value: 0},
+        ibcTxsCount: {value: ''},
         ibcTxsStartTime: {value: 0},
         ibcTxTimer: {value: {}},
         isShowHeader: true,
         isShowFooter: true,
+        isShowTransferLoading:false
     },
     mutations: {
         isShowFooter(state,data){
@@ -64,6 +65,9 @@ export default createStore({
         },
         isShowHeader(state,data){
             state.isShowHeader = data
+        },
+        isShowTransferLoading(state,data){
+            state.isShowTransferLoading = data
         },
         [SET_IBCSTATISTICS_CHAINS](state, {chains_24hr, chain_all}) {
             state.ibcStatisticsChains.chains_24hr = chains_24hr;
@@ -197,6 +201,37 @@ export default createStore({
                     } else {
                         clearInterval(state.ibcTxTimer.value);
                         commit(
+                            SET_IBCTXS,
+                            result.map((item) => {
+                                const symbol = Tools.findDenomSymbol(
+                                    state.ibcDenoms.value,
+                                    item.denoms.sc_denom,
+                                    item.sc_chain_id,
+                                );
+                                let symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
+                                let symbolDenom = item.base_denom || '';
+                                let symbolIcon = '';
+                                if (symbol) {
+                                    const findSymbol = Tools.findSymbol(
+                                        state.ibcBaseDenoms.value,
+                                        symbol,
+                                    );
+                                    if (findSymbol) {
+                                        symbolNum = (item.sc_tx_info?.msg_amount?.amount || 0) * 10 ** -findSymbol.scale;
+                                        symbolDenom = findSymbol.symbol;
+                                        symbolIcon = findSymbol.icon;
+                                    }
+                                }
+                                return {
+                                    ...item,
+                                    symbolNum,
+                                    symbolDenom,
+                                    symbolIcon,
+                                    parseTime: Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', ''),
+                                };
+                            }),
+                        );
+                        commit(
                             SET_IBCTXTIMER,
                             setInterval(() => {
                                 commit(
@@ -234,6 +269,8 @@ export default createStore({
                         );
                         resolve('ok');
                     }
+                }).catch(error => {
+                    commit('isShowTransferLoading',false)
                 });
             });
         },

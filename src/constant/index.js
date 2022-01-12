@@ -165,7 +165,14 @@ const anchorsDatas = [
     collection: ['#'],
   },
 ];
-
+const chainIDs = {
+    irishub:'irishub_1',
+    cosmoshub:'cosmoshub_4'
+}
+const chainAddressPrefix={
+    irishubPrefix:'iaa',
+    cosmoshubPrefix:'cos'
+}
 const statisticsName = {
   chains_24hr: 'Active IBC Chains',
   chain_all: 'All IBC Chains',
@@ -334,4 +341,6 @@ export {
   ibcTxStatusSelectOptions,
   transferTableColumn,
   unAuthed,
+  chainIDs,
+  chainAddressPrefix
 };
