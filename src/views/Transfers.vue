@@ -13,7 +13,7 @@
             </div>
         </div>
         <p class="transfer__header__description">
-            <span class="transfer__header__description_text">{{ `More than > ${tableCount.value} found`}} <i class="iconfont icon-shujuliebiao"></i> (Showing the last 500k records)</span>
+            <span class="transfer__header__description_text">{{ `More than > ${$store.state.ibcStatisticsTxs.tx_all.count} found`}} <i class="iconfont icon-shujuliebiao"></i>{{`(Showing the last ${tableCount.value}  records)`}}</span>
         </p>
         <div class="transfer__middle__container">
             <dropdown
@@ -297,7 +297,7 @@ import {
 import {useStore} from 'vuex';
 import {groupBy} from 'lodash';
 import moment from 'moment';
-import {GET_IBCTXS} from '../store/action-types';
+import {GET_IBCSTATISTICS, GET_IBCTXS} from '../store/action-types';
 import {transferTableColumn, ibcTxStatusSelectOptions} from '../constant';
 import Dropdown from '../components/Dropdown.vue';
 import Message from '../components/Message.vue';
@@ -317,10 +317,9 @@ export default {
     setup() {
 
         const tableColumns = reactive(transferTableColumn);
-
         const selectedSymbol = reactive({value: 'All Tokens'});
         const tokens = reactive({value: []});
-
+        const allTxCount = ref('')
         const isShowSymbolIcon = ref(false);
         const isShowChainIcon = ref(false);
         const selectedChain = reactive({
@@ -333,6 +332,7 @@ export default {
         let pageNum = 1, pageSize = 10;
         let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
         const store = useStore();
+        store.dispatch(GET_IBCSTATISTICS)
         const router = useRoute();
         const pagination = reactive({
             total: 0,
