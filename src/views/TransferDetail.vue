@@ -77,6 +77,7 @@ import Loading from "../components/Loading";
 import TransferDetailsCard from "../components/TransferDetailsCard";
 import {reactive, watch,onMounted,ref} from 'vue';
 import CopyComponent from "../components/CopyComponent";
+import router from "../router";
 
 export default {
     name: "TransferDetail",
@@ -152,7 +153,7 @@ export default {
             {
                 label: 'Signer:',
                 value: '--',
-                dataKey: '',
+                dataKey: 'sc_signers',
                 isAddress:true
             },
 
@@ -161,7 +162,7 @@ export default {
             {
                 label: 'Connection:',
                 value: '--',
-                dataKey: '',
+                dataKey: 'sc_connect',
                 isExpand: false,
             },
             {
@@ -237,8 +238,8 @@ export default {
             {
                 label: 'Signer:',
                 value: '--',
-                dataKey: 'dc_tx_info.msg.msg.signer',
-                isAddress:true
+                dataKey: 'dc_signers',
+                isAddress:true,
             },
 
         ])
@@ -246,14 +247,15 @@ export default {
             {
                 label: 'Connection:',
                 value: '--',
-                dataKey: '',
+                dataKey: 'dc_connect',
                 isExpand: true,
             },
             {
                 label: 'Packet Ack:',
                 value: '--',
-                dataKey: '',
+                dataKey: 'dc_tx_info.ack',
                 isExpand: true,
+                isAck:true
             },
             {
                 label: 'Proof Height:',
@@ -270,98 +272,104 @@ export default {
         })
         const getTxDetails = (txHash) => {
             isShowLoading.value = true
-            getTxDetailsByTxHash(router.query.hash).then(res => {
+            getTxDetailsByTxHash(router.query.hash).then(result => {
                 isShowLoading.value = false
-                if(res?.sc_tx_info?.hash){
-                    ibcTransferOutTxHash.value = res.sc_tx_info.hash
+                if(result?.length === 1000){
+                    const res = result[0]
+                    if(res?.sc_tx_info?.hash){
+                        ibcTransferOutTxHash.value = res.sc_tx_info.hash
 
-                }
-                if(res?.sc_tx_info?.status >= 0){
-                    outTxStatus.value = res.sc_tx_info.status
-                }
-                if(res?.dc_tx_info?.hash){
-                    ibcTransferInTxHash.value = res.dc_tx_info.hash
-                }
-                if(res?.dc_tx_info?.status >= 0){
-                    inTxStatus.value = res.dc_tx_info.status
-                }
-                if(res?.sequence){
-                    sequence.value = res.sequence
-                }
-                if(res?.status){
-                    ibcTxStatus.value = res.status
-                }
-                if(res?.base_denom){
-                    baseDenom.value = res.base_denom
-                }
-                transferOutDetails.forEach(item => {
-                    if (item?.dataKey?.includes('.')) {
-                        const keys = item.dataKey.split('.')
-                        if (keys?.length) {
-                            let result = res
-                            keys.forEach(key => {
-                                result = result[key] || result[key] === 0 ? result[key] : ''
-                                item.value = result
-
-                            })
-                        }
-                    } else {
-                        if (item.dataKey) {
-                            item.value = res[item.dataKey]
-                        }
                     }
-                })
-                transferOutExpandDetails.forEach(item => {
-                    if (item?.dataKey?.includes('.')) {
-                        const keys = item.dataKey.split('.')
-                        if (keys?.length) {
-                            let result = res
-                            keys.forEach(key => {
-                                result = result[key] || result[key] === 0 ? result[key] : ''
-                                item.value = result
-
-                            })
-                        }
-                    } else {
-                        if (item.dataKey) {
-                            item.value = res[item.dataKey]
-                        }
+                    if(res?.sc_tx_info?.status >= 0){
+                        outTxStatus.value = res.sc_tx_info.status
                     }
-                })
-                transferInDetails.forEach(item => {
-                    if (item?.dataKey?.includes('.')) {
-                        const keys = item.dataKey.split('.')
-                        if (keys?.length) {
-                            let result = res
-                            keys.forEach(key => {
-                                result = result[key] || result[key] === 0 ? result[key] : ''
-                                item.value = result
-
-                            })
-                        }
-                    } else {
-                        if (item.dataKey) {
-                            item.value = res[item.dataKey]
-                        }
+                    if(res?.dc_tx_info?.hash){
+                        ibcTransferInTxHash.value = res.dc_tx_info.hash
                     }
-                })
-                transferInExpandDetails.forEach(item => {
-                    if (item?.dataKey?.includes('.')) {
-                        const keys = item.dataKey.split('.')
-                        if (keys?.length) {
-                            let result = res
-                            keys.forEach(key => {
-                                result = result[key] || result[key] === 0 ? result[key] : ''
-                                item.value = result
-
-                            })
-                        }
-                    } else {
-                        if (item.dataKey) {
-                            item.value = res[item.dataKey]
-                        }
+                    if(res?.dc_tx_info?.status >= 0){
+                        inTxStatus.value = res.dc_tx_info.status
                     }
-                })
+                    if(res?.sequence){
+                        sequence.value = res.sequence
+                    }
+                    if(res?.status){
+                        ibcTxStatus.value = res.status
+                    }
+                    if(res?.base_denom){
+                        baseDenom.value = res.base_denom
+                    }
+                    transferOutDetails.forEach(item => {
+                        if (item?.dataKey?.includes('.')) {
+                            const keys = item.dataKey.split('.')
+                            if (keys?.length) {
+                                let result = res
+                                keys.forEach(key => {
+                                    result = result[key] || result[key] === 0 ? result[key] : ''
+                                    item.value = result
+
+                                })
+                            }
+                        } else {
+                            if (item.dataKey) {
+                                item.value = res[item.dataKey]
+                            }
+                        }
+                    })
+                    transferOutExpandDetails.forEach(item => {
+                        if (item?.dataKey?.includes('.')) {
+                            const keys = item.dataKey.split('.')
+                            if (keys?.length) {
+                                let result = res
+                                keys.forEach(key => {
+                                    result = result[key] || result[key] === 0 ? result[key] : ''
+                                    item.value = result
+
+                                })
+                            }
+                        } else {
+                            if (item.dataKey) {
+                                item.value = res[item.dataKey]
+                            }
+                        }
+                    })
+                    transferInDetails.forEach(item => {
+                        if (item?.dataKey?.includes('.')) {
+                            const keys = item.dataKey.split('.')
+                            if (keys?.length) {
+                                let result = res
+                                keys.forEach(key => {
+                                    result = result[key] || result[key] === 0 ? result[key] : ''
+                                    item.value = result
+
+                                })
+                            }
+                        } else {
+                            if (item.dataKey) {
+                                item.value = res[item.dataKey]
+                            }
+                        }
+                    })
+                    transferInExpandDetails.forEach(item => {
+                        if (item?.dataKey?.includes('.')) {
+                            const keys = item.dataKey.split('.')
+                            if (keys?.length) {
+                                let result = res
+                                keys.forEach(key => {
+                                    result = result[key] || result[key] === 0 ? result[key] : ''
+                                    item.value = result
+
+                                })
+                            }
+                        } else {
+                            if (item.dataKey) {
+                                item.value = res[item.dataKey]
+                            }
+                        }
+                    })
+                }else {
+                    router.push(`/searchResult`)
+                }
+
             }).catch(error => {
                 isShowLoading.value = false
                 console.error(error)
@@ -464,6 +472,11 @@ export default {
                     color: rgba(0, 0, 0, 0.35);
                     line-height: 14px;
                     width: 140px;
+                    i{
+                        position: relative;
+                        top:1px;
+                        left: 0;
+                    }
                 }
                 .transfer_ibc_out_tx_hash_value{
                     font-size: 14px;
@@ -493,6 +506,11 @@ export default {
                     color: rgba(0, 0, 0, 0.35);
                     line-height: 14px;
                     width: 140px;
+                    i{
+                        position: relative;
+                        top:1px;
+                        left: 0;
+                    }
                 }
                 .transfer_ibc_in_tx_hash_value{
                     font-size: 14px;

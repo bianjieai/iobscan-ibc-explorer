@@ -6,12 +6,15 @@
                 <div class="transfer__header__line">
                     <p class="transfer__header__title">
                         IBC Token Transfer List
-                        <span class="transfer__header__num"> ( {{ tableCount.value }} transfers found )</span>
+<!--                        <span class="transfer__header__num"> ( {{ tableCount.value }} transfers found )</span>-->
                     </p>
+
                 </div>
             </div>
         </div>
-
+        <p class="transfer__header__description">
+            <span class="transfer__header__description_text">{{ `More than > ${tableCount.value} found`}} <i class="iconfont icon-shujuliebiao"></i> (Showing the last 500k records)</span>
+        </p>
         <div class="transfer__middle__container">
             <dropdown
                 class="dropdown__token"
@@ -806,7 +809,21 @@ export default {
 <style lang="scss" scoped>
 @import "../style/mixin.scss";
 @import "../style/variable.scss";
-
+.transfer__header__container{
+    margin-top: 8px;
+    height: 24px;
+}
+.transfer__header__description{
+    color: #ffc400;
+    text-align: left;
+    margin: 17px 0 35px 3px;
+    .transfer__header__description_text{
+        font-size: 14px;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.65);
+        line-height: 14px;
+    }
+}
 .transfer {
     width: 100%;
     max-width: 1200px;

@@ -1,7 +1,7 @@
 <template>
     <div class="copy_component_content" id="tag_copy" :data-clipboard-text="copyText" @click="handleCopy($event,copyText)">
-        <span v-show="!isShowCopied" class="iconfont icon-fuzhi"></span>
-        <span v-show="isShowCopied" class="copied iconfont icon-fuzhichenggong"> <span class="text">Copied</span></span>
+        <span v-show="!isShowCopied" class="copied iconfont icon-fuzhi"></span>
+        <span v-show="isShowCopied" class="copied iconfont icon-fuzhichenggong1"> <span class="text">Copied</span></span>
     </div>
 </template>
 
@@ -58,10 +58,12 @@ export default {
             font-size: 14px;
             color: rgba(151, 151, 151, 1);
             cursor: pointer;
+            padding-bottom: 2px;
             .text{
                 margin-left: 7px;
                 color:rgba(151, 151, 151, 1);
                 font-size: 14px;
+                font-weight: 400;
             }
         }
     }

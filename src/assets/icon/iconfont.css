@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 2812235 */
-  src: url('iconfont.woff2?t=1641547166962') format('woff2'),
-       url('iconfont.woff?t=1641547166962') format('woff'),
-       url('iconfont.ttf?t=1641547166962') format('truetype');
+  src: url('iconfont.woff2?t=1641901182128') format('woff2'),
+       url('iconfont.woff?t=1641901182128') format('woff'),
+       url('iconfont.ttf?t=1641901182128') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-fuzhichenggong1:before {
+  content: "\e6da";
 }
 
 .icon-Sequence:before {

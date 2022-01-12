@@ -52,7 +52,7 @@ export default createStore({
         ibcChains: {value: []},
         configs: {},
         ibcTxs: {value: []},
-        ibcTxsCount: {value: 0},
+        ibcTxsCount: {value: ''},
         ibcTxsStartTime: {value: 0},
         ibcTxTimer: {value: {}},
         isShowHeader: true,

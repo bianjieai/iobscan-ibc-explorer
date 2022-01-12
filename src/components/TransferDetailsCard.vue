@@ -9,13 +9,21 @@
                 <span class="details_item_value" v-else-if="item.isFormatStatus">{{formatStatus(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatFee">{{formatFee(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatChainID">{{formatChainID(item.value)}}</span>
+                <span class="details_item_value" v-else-if="item.isAck">{{formatAck(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatDate">
                     <span style="display: none">{{formatDate(item.value)}}</span>
                     <span>{{date}}</span>
                 </span>
                 <span class="details_item_value" v-else-if="item.isAddress">
-                    <span class="value_style" v-show="!isShowLink(details,item.value)">{{item.value  || '--'}}</span>
-                    <a class="link_style" v-show="isShowLink(details,item.value)" :href="setExplorerLink(details,item.value)" target="_blank" rel="noreferrer noopener">{{item.value}}</a>
+                    <span v-show="Array.isArray(item.value)">
+                        <span v-if="item.value.length >= 1" v-for="(address,index) of item.value">
+                            <span class="value_style" v-show="!isShowLink(details,address)">{{address  || '--'}}</span>
+                            <a class="link_style" v-show="isShowLink(details,address)" :href="setExplorerLink(details,address)" target="_blank" rel="noreferrer noopener">{{address}}</a>
+                        </span>
+                        <span v-else>--</span>
+                    </span>
+                    <span v-if="!Array.isArray(item.value)" class="value_style" v-show="!isShowLink(details,item.value)">{{item.value  || '--'}}</span>
+                    <a v-if="!Array.isArray(item.value)" class="link_style" v-show="isShowLink(details,item.value)" :href="setExplorerLink(details,item.value)" target="_blank" rel="noreferrer noopener">{{item.value}}</a>
                 </span>
                 <span class="details_item_value" v-else>{{item.value ? item.value : '--'}}</span>
             </li>
@@ -26,6 +34,7 @@
                 <span class="details_item_value" v-else-if="item.isFormatStatus">{{formatStatus(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatFee">{{formatFee(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatChainID">{{formatChainID(item.value)}}</span>
+                <span class="details_item_value" v-else-if="item.isAck">{{formatAck(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatDate">
                     <span style="display: none">{{formatDate(item.value)}}</span>
                     <span>{{date}}</span>
@@ -34,7 +43,7 @@
                     <span class="value_style" v-show="!isShowLink(details,item.value)">{{item.value || '--'}}</span>
                     <a class="link_style" v-show="isShowLink(details,item.value)" :href="setExplorerLink(details,item.value)" target="_blank" rel="noreferrer noopener">{{item.value}}</a>
                 </span>
-                <span class="details_item_value" v-else>{{item.value >= 0 ? item.value : '--'}}</span>
+                <span class="details_item_value" v-else>{{item.value === 0 ? 0 : item.value ? item.value : '--'}}</span>
             </li>
             <li class="see_more_button" @click="expandInfo">
                 <span class="see_more_label">Click to see More</span>
@@ -212,7 +221,19 @@ export default {
             }
             return '--'
         }
+        const formatAck = (ack) => {
+            if(ack){
+                if(ack.includes('result:"\\001"')){
+                    return 'correct'
+                }else if(ack.includes('error')) {
+                    return 'error'
+                }
+            }else {
+                return '--'
+            }
+        }
         return {
+            formatAck,
             expandInfo,
             formatChainID,
             formatDate,
@@ -288,11 +309,15 @@ export default {
                 padding: 14px 0;
                 display: flex;
                 cursor: pointer;
+
                 .see_more_label{
                     color: rgba(61, 80, 255, 1);
                     font-size: 14px;
                     font-weight: 400;
-                    line-height: 14px
+                    line-height: 14px;
+                    &:hover{
+                        color: #1E2CB4
+                    }
                 }
                 .see_more_icon{
                     margin-left: 8px;
@@ -300,6 +325,9 @@ export default {
                     font-size: 14px;
                     line-height: 14px;
                     z-index: 1;
+                    &:hover{
+                        color: #1E2CB4;
+                    }
                 }
                 .more_style{
                     transform: rotate(180deg);

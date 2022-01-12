@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "27130745",
+      "name": "复制成功",
+      "font_class": "fuzhichenggong1",
+      "unicode": "e6da",
+      "unicode_decimal": 59098
+    },
+    {
       "icon_id": "27062358",
       "name": "Sequence",
       "font_class": "Sequence",
