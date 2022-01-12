@@ -71,7 +71,7 @@ import CardList from '../components/CardList.vue';
 import StatisticList from '../components/StatisticList.vue';
 import TransferList from '../components/TransferList.vue';
 import Message from '../components/Message.vue';
-import { GET_IBCTXS } from '../store/action-types';
+import {GET_IBCBASEDENOMS, GET_IBCCHAINS, GET_IBCDENOMS, GET_IBCSTATISTICS, GET_IBCTXS} from '../store/action-types';
 
 export default {
   name: 'Home',
@@ -89,6 +89,10 @@ export default {
       page_size: 100,
       use_count: false,
     });
+      store.dispatch(GET_IBCSTATISTICS);
+      store.dispatch(GET_IBCDENOMS);
+      store.dispatch(GET_IBCBASEDENOMS);
+      store.dispatch(GET_IBCCHAINS);
 
     const ibcChains = computed(() => store.state.ibcChains)?.value;
 

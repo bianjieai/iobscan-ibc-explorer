@@ -29,6 +29,7 @@ export default {
     justify-content: center;
     background: url("../assets/bg_default.png") no-repeat center center;
     background-size: cover;
+    cursor: url("../assets/errpr_mouse_tree.png"),default !important;
     .error_network_content_wrap{
         max-width: 550px;
         position: relative;
@@ -68,7 +69,6 @@ export default {
                 font-size: 16px;
                 line-height: 36px;
                 margin: 40px auto 0 auto;
-                cursor: pointer !important;
             }
         }
 
