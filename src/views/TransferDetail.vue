@@ -72,18 +72,18 @@
 
 <script>
 import {getTxDetailsByTxHash} from "../service/api";
-import {useRoute} from 'vue-router';
+import {useRoute,useRouter} from 'vue-router';
 import Loading from "../components/Loading";
 import TransferDetailsCard from "../components/TransferDetailsCard";
 import {reactive, watch,onMounted,ref} from 'vue';
 import CopyComponent from "../components/CopyComponent";
-import router from "../router";
 
 export default {
     name: "TransferDetail",
     components: {CopyComponent, TransferDetailsCard, Loading},
     setup() {
-        const router = useRoute();
+        const route = useRoute();
+        const router = useRouter();
         const isShowLoading = reactive({
             value: true
         })
@@ -265,16 +265,16 @@ export default {
                 isFormatHeight: true,
             }
         ]
-        watch(router, (newValue, oldValue) => {
+        watch(route, (newValue, oldValue) => {
             if(newValue?.query?.hash){
                 getTxDetails(newValue.query.hash)
             }
         })
         const getTxDetails = (txHash) => {
             isShowLoading.value = true
-            getTxDetailsByTxHash(router.query.hash).then(result => {
+            getTxDetailsByTxHash(route.query.hash).then(result => {
                 isShowLoading.value = false
-                if(result?.length === 1000){
+                if(result?.length === 1){
                     const res = result[0]
                     if(res?.sc_tx_info?.hash){
                         ibcTransferOutTxHash.value = res.sc_tx_info.hash
@@ -375,8 +375,8 @@ export default {
                 console.error(error)
             })
         }
-        if (router?.query?.hash) {
-            getTxDetails(router?.query?.hash)
+        if (route?.query?.hash) {
+            getTxDetails(route?.query?.hash)
         }
         return {
             transferOutDetails,

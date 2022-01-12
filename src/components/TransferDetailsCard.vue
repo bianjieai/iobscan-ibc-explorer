@@ -199,6 +199,9 @@ export default {
                     if(tokenInfo?.scale){
                         displayAmountNum =  moveDecimal(amountObj.amount,0 - tokenInfo.scale)
                         displayAmountDenom = tokenInfo.symbol
+                    }else {
+                        displayAmountNum = amountObj.amount
+                        displayAmountDenom = amountObj.denom
                     }
                 }
                 return `${displayAmountNum} ${displayAmountDenom}`
