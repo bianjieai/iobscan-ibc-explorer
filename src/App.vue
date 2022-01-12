@@ -107,7 +107,7 @@ export default {
             (to) => {
                 store.commit('isShowHeader',true)
                 store.commit('isShowFooter',true)
-                if(to === '/404'){
+                if(to === '/404' || to === '/500'){
                     store.commit('isShowHeader',false)
                     store.commit('isShowFooter',false)
                 }
@@ -122,9 +122,12 @@ export default {
         watch(
             () => route.path,
             (to) => {
-
                 if(to?.toString().includes('home')){
                     currentMenu.value = ['Home'];
+                    store.dispatch(GET_IBCSTATISTICS);
+                    store.dispatch(GET_IBCDENOMS);
+                    store.dispatch(GET_IBCBASEDENOMS);
+                    store.dispatch(GET_IBCCHAINS);
                 }else if(to?.toString().includes('transfers')){
                     currentMenu.value = ['Transfers'];
                 }else if(to?.toString().includes('tokens')){

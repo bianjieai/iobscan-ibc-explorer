@@ -61,6 +61,11 @@ const routes = [
         component: () => import(/* webpackChunkName: "transfers" */ '../views/NoResult.vue'),
     },
     {
+        path: '/500',
+        name: '500',
+        component: () => import(/* webpackChunkName: "transfers" */ '../errorpage/500.vue'),
+    },
+    {
         path: '/404',
         name: '404',
         component: () => import(/* webpackChunkName: "transfers" */ '../errorpage/404.vue'),
