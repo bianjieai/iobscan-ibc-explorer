@@ -123,7 +123,7 @@ export default {
             return '--'
         }
         const formatHeight = (heightObj) => {
-            if(Object.keys(heightObj)?.length){
+            if(Object.keys(heightObj)?.length && heightObj !== '--'){
                 return `${heightObj.revision_number}-${heightObj.revision_height}`
             }
             return  '--'
@@ -219,13 +219,13 @@ export default {
             }
         }
         const formatChainID = (chainID) => {
-            if(chainID){
+            if(chainID && chainID !== '--'){
                 return chainID.replace(new RegExp("\_", "g"),"-")
             }
             return '--'
         }
         const formatAck = (ack) => {
-            if(ack){
+            if(ack &&  ack !== '--'){
                 if(ack.includes('result:"\\001"')){
                     return 'correct'
                 }else if(ack.includes('error')) {
