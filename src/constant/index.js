@@ -169,6 +169,10 @@ const chainIDs = {
     irishub:'irishub_1',
     cosmoshub:'cosmoshub_4'
 }
+const tableChainIDs = {
+    irishub:'irishub-1',
+    cosmoshub:'cosmoshub-4'
+}
 const chainAddressPrefix={
     irishubPrefix:'iaa',
     cosmoshubPrefix:'cos'
@@ -342,5 +346,6 @@ export {
   transferTableColumn,
   unAuthed,
   chainIDs,
+  tableChainIDs,
   chainAddressPrefix
 };
