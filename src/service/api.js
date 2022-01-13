@@ -68,7 +68,7 @@ function get(url, params) {
 
             console.error(`error from ${url}:`, err.message);
             if(url?.includes('/api/ibc/chains') || url?.includes('/api/ibc/txs') ){
-                if (err?.message?.includes('code 500')) {
+                if (!err?.message?.includes('code 200')) {
                     router.push('/500')
                 }
             }
