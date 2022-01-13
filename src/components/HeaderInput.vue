@@ -77,7 +77,7 @@ export default {
     border-right:none;
     :hover{
         .input__prefix{
-            background-color: #1E2CB4;
+            background-color: #2C3EE3;
             color: rgba(255,255,255,1);
 
         }
