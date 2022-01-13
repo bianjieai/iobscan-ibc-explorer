@@ -334,6 +334,7 @@ export default {
                     })
                     transferInDetails.forEach(item => {
                         if (item?.dataKey?.includes('.')) {
+
                             const keys = item.dataKey.split('.')
                             if (keys?.length) {
                                 let result = res
@@ -342,6 +343,9 @@ export default {
                                     item.value = result
 
                                 })
+                            }
+                            if(item.label === 'Received Token:' && res?.denoms?.dc_denom){
+                                item.value.denom = res.denoms.dc_denom
                             }
                         } else {
                             if (item.dataKey) {
@@ -367,7 +371,7 @@ export default {
                         }
                     })
                 }else {
-                    router.push(`/searchResult`)
+                    router.push(`/searchResult?${route.query.hash}`)
                 }
 
             }).catch(error => {

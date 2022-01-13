@@ -219,6 +219,20 @@ export default {
 a{
     cursor: pointer !important;
 }
+.ant-tooltip{
+    .ant-tooltip-content{
+        .ant-tooltip-arrow{
+            .ant-tooltip-arrow-content{
+                background: rgba(255,255,255,1) !important;
+            }
+        }
+        .ant-tooltip-inner{
+            width: 400px;
+            background: rgba(255,255,255,1) !important;
+            color: rgba(0, 0, 0, 0.65);
+        }
+    }
+}
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;

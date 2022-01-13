@@ -36,6 +36,11 @@ export default {
             value: ['']
         })
         if(route?.query){
+            if (/^[A-F0-9]{64}$/.test(route.query)) {
+                router.push(`/transfers/details?hash=${route.query}`)
+            }else {
+                router.push(`/searchResult?${Object.keys(route.query)}`)
+            }
             searchInputValue.value = Object.keys(route.query)
         }
         const toHome = () => {
