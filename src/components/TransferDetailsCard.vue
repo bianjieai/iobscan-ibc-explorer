@@ -200,13 +200,13 @@ export default {
                 let explorerLink = ''
                 info.forEach(item => {
                     if (item.label === 'Chain ID:') {
-                        if (item.value === chainIDs.irishub) {
+                        if (item.value === tableChainIDs.irishub) {
                             const addressPrefix = getAddressPrefix(address)
                             if (addressPrefix === chainAddressPrefix.irishubPrefix) {
                                 explorerLink = `${config.IRISHUB_IOBSCAN_LINK}${address}`
                             }
                         }
-                        if (item.value === chainIDs.cosmoshub) {
+                        if (item.value === tableChainIDs.cosmoshub) {
                             const addressPrefix = getAddressPrefix(address)
                             if (addressPrefix === chainAddressPrefix.cosmoshubPrefix) {
                                 explorerLink = `${config.COSMOSHUB_IOBSCAN_LINK}${address}`
