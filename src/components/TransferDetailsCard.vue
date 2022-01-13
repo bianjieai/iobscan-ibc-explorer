@@ -4,7 +4,18 @@
         <ul class="details_item_content">
             <li class="details_item" v-for="(item,index) in details" :key="index">
                 <span class="details_item_label">{{item.label}}</span>
-                <span class="details_item_value" v-if="item.isFormatToken">{{formatToken(item.value,details)}}</span>
+                <span class="details_item_value" v-if="item.isFormatToken">
+
+<!--                    {{formatToken(item.value,details)}}-->
+
+                    <span class="details_item_amount">{{formatToken(item.value,details).symbolNum || '--'}}</span>
+                    <a-tooltip>
+                        <template #title>
+                            {{formatToken(item.value,details).symbol}}
+                        </template>
+                        <span>{{formatDenom(formatToken(item.value,details).symbol)}}</span>
+                    </a-tooltip>
+                </span>
                 <span class="details_item_value" v-else-if="item.isFormatHeight">{{formatHeight(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatStatus">{{formatStatus(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatFee">{{formatFee(item.value)}}</span>
@@ -29,7 +40,17 @@
             </li>
             <li class="details_item" v-for="(item,index) in expandDetails" :key="index" v-show="isExpand">
                 <span class="details_item_label">{{item.label}}</span>
-                <span class="details_item_value" v-if="item.isFormatToken">{{formatToken(item.value)}}</span>
+                <span class="details_item_value" v-if="item.isFormatToken">
+
+<!--                    {{formatToken(item.value)}}-->
+                    <span class="details_item_amount">{{formatToken(item.value,expandDetails).symbolNum || '--'}}</span>
+                    <a-tooltip>
+                        <template #title>
+                            {{formatToken(item.value,expandDetails).symbol}}
+                        </template>
+                        <span>{{formatDenom(formatToken(item.value,expandDetails).symbol)}}</span>
+                    </a-tooltip>
+                </span>
                 <span class="details_item_value" v-else-if="item.isFormatHeight">{{formatHeight(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatStatus">{{formatStatus(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatFee">{{formatFee(item.value)}}</span>
@@ -57,10 +78,12 @@
 import Tools from "../util/Tools";
 import {useStore} from 'vuex';
 import moveDecimal from 'move-decimal-point';
-import {chainAddressPrefix, chainIDs} from "../constant";
+import {chainAddressPrefix, chainIDs,tableChainIDs} from "../constant";
 import config from '../../config/config.json'
 import {ref} from 'vue'
 import moment from 'moment'
+import {getRestString} from "../helper/parseString";
+
 export default {
     name: "TransferDetailsCard",
     props:{
@@ -104,7 +127,7 @@ export default {
                     );
                 }
                 let symbolNum = token?.amount || 0;
-                let symbolDenom =  props.baseDenom || '';
+                let symbolDenom =  token?.denom || '';
 
                 if (symbol) {
                     const findSymbol = Tools.findSymbol(
@@ -118,7 +141,10 @@ export default {
                         symbolDenom = findSymbol.symbol;
                     }
                 }
-                return `${symbolNum} ${symbolDenom}`
+                return {
+                    symbol: symbolDenom,
+                    symbolNum: symbolNum,
+                }
             }
             return '--'
         }
@@ -151,13 +177,13 @@ export default {
                 let isExplorerLink = false
                 info.forEach( item => {
                     if(item.label ==='Chain ID:'){
-                        if(item.value === chainIDs.irishub){
+                        if(item.value === tableChainIDs.irishub){
                             const addressPrefix = getAddressPrefix(address)
                             if(addressPrefix === chainAddressPrefix.irishubPrefix){
                                 isExplorerLink = true
                             }
                         }
-                        if(item.value === chainIDs.cosmoshub){
+                        if(item.value === tableChainIDs.cosmoshub){
                             const addressPrefix = getAddressPrefix(address)
                             if(addressPrefix === chainAddressPrefix.cosmoshubPrefix){
                                 isExplorerLink = true
@@ -173,13 +199,13 @@ export default {
                 let explorerLink = ''
                 info.forEach(item => {
                     if (item.label === 'Chain ID:') {
-                        if (item.value === chainIDs.irishub) {
+                        if (item.value === tableChainIDs.irishub) {
                             const addressPrefix = getAddressPrefix(address)
                             if (addressPrefix === chainAddressPrefix.irishubPrefix) {
                                 explorerLink = `${config.IRISHUB_IOBSCAN_LINK}${address}`
                             }
                         }
-                        if (item.value === chainIDs.cosmoshub) {
+                        if (item.value === tableChainIDs.cosmoshub) {
                             const addressPrefix = getAddressPrefix(address)
                             if (addressPrefix === chainAddressPrefix.cosmoshubPrefix) {
                                 explorerLink = `${config.COSMOSHUB_IOBSCAN_LINK}${address}`
@@ -235,7 +261,14 @@ export default {
                 return '--'
             }
         }
+        const formatDenom = (denom) => {
+            if(denom?.includes('ibc/')){
+               return getRestString(denom,8,4)
+            }
+            return  denom
+        }
         return {
+            formatDenom,
             formatAck,
             expandInfo,
             formatChainID,
@@ -255,6 +288,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
     .details_content{
         width: 100%;
         background: rgba(255, 255, 255, 1);
@@ -292,6 +326,12 @@ export default {
                     color: rgba(0, 0, 0, 1);
                     line-height: 14px;
                     word-break: break-all;
+                    .details_item_amount{
+                        margin-right: 5px;
+                    }
+                    .ant-tooltip-open{
+
+                    }
                     .value_style{
                         word-break: break-all;
                         max-width: 300px;

@@ -22,7 +22,7 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    const copyright = ref('Copyright © 2021 IRIS Foundation Ltd. All Rights Reserved.');
+    const copyright = ref('Copyright © 2022 IRIS Foundation Ltd. All Rights Reserved.');
     const links = ['https://github.com/irisnet', 'https://t.me/irisnetwork', 'https://medium.com/irisnet-blog', 'https://twitter.com/irisnetwork'];
     const onClickIcon = (item) => {
       window.open(links[item - 1]);
