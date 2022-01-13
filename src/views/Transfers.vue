@@ -787,7 +787,6 @@ export default {
             queryParam,
             ibcChains,
             tokens,
-            onClickTableRow,
             ibcDenoms: computed(() => store.state.ibcDenoms)?.value,
             ibcBaseDenoms: computed(() => store.state.ibcBaseDenoms)?.value,
             tableDatas,
