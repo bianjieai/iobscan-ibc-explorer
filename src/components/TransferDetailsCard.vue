@@ -175,7 +175,6 @@ export default {
         const isShowLink = (info,address) => {
             if(info?.length){
                 let isExplorerLink = false
-                console.log(info,'二级果阿斯顿撒旦萨达撒撒as')
                 info.forEach( item => {
                     if(item.label ==='Chain ID:'){
                         if(item.value === tableChainIDs.irishub){
