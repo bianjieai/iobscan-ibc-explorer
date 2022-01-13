@@ -246,7 +246,7 @@
             </div>
         </template>
         <router-link v-if="record.dc_tx_info.hash" :to="`/transfers/details?hash=${record.dc_tx_info.hash}`">
-              <span class="hover" @click="onClickTableRow">{{
+              <span class="hover">{{
                       getRestString(record.dc_tx_info.hash, 4, 4) || "--"
                   }}</span>
         </router-link>
@@ -481,12 +481,12 @@ export default {
         //   },
         // });
 
-        const onClickTableRow = () => {
+        /*const onClickTableRow = () => {
             message.info({
                 content: h(Message),
                 icon: h('div'),
             });
-        };
+        };*/
 
         const onPaginationChange = (page) => {
             if (store.state.isShowTransferLoading) return;
