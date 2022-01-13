@@ -36,8 +36,8 @@ export default {
             value: ['']
         })
         if(route?.query){
-            if (/^[A-F0-9]{64}$/.test(route.query)) {
-                router.push(`/transfers/details?hash=${route.query}`)
+            if (/^[A-F0-9]{64}$/.test(Object.keys(route.query))) {
+                router.push(`/transfers/details?hash=${Object.keys(route.query)}`)
             }else {
                 router.push(`/searchResult?${Object.keys(route.query)}`)
             }
