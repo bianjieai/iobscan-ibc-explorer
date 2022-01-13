@@ -13,7 +13,7 @@
             </div>
         </div>
         <p class="transfer__header__description">
-            <span class="transfer__header__description_text">{{ `More than > ${$store.state.ibcStatisticsTxs.tx_all.count} found`}} <i class="iconfont icon-shujuliebiao"></i>{{`(Showing the last ${tableCount.value}  records)`}}</span>
+            <span class="transfer__header__description_text">{{ `More than > ${$store.state.ibcStatisticsTxs.tx_all.count} found`}} <i class="iconfont icon-shujuliebiao"></i> <span class="list_count_style">{{`(Showing the last ${tableCount.value}  records)`}}</span></span>
         </p>
         <div class="transfer__middle__container">
             <dropdown
@@ -816,12 +816,21 @@ export default {
 .transfer__header__description{
     color: #ffc400;
     text-align: left;
-    margin: 17px 0 35px 3px;
+    margin: 17px 0 30px 3px;
+    height: 17px;
+    line-height: 17px;
     .transfer__header__description_text{
         font-size: 14px;
         font-weight: 400;
         color: rgba(0, 0, 0, 0.65);
         line-height: 14px;
+        i{
+            display: inline-block;
+            margin: 0 3px;
+        }
+        .list_count_style{
+            color: rgba(0, 0, 0, 0.35);
+        }
     }
 }
 .transfer {
