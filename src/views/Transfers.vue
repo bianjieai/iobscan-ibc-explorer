@@ -6,14 +6,17 @@
                 <div class="transfer__header__line">
                     <p class="transfer__header__title">
                         IBC Token Transfer List
-<!--                        <span class="transfer__header__num"> ( {{ tableCount.value }} transfers found )</span>-->
+                        <!--                        <span class="transfer__header__num"> ( {{ tableCount.value }} transfers found )</span>-->
                     </p>
 
                 </div>
             </div>
         </div>
         <p class="transfer__header__description">
-            <span class="transfer__header__description_text">{{ `More than > ${$store.state.ibcStatisticsTxs.tx_all.count} found`}} <i class="iconfont icon-shujuliebiao"></i> <span class="list_count_style">{{`(Showing the last ${tableCount.value}  records)`}}</span></span>
+            <span
+                class="transfer__header__description_text">{{ `More than > ${$store.state.ibcStatisticsTxs.tx_all.count} found` }} <i
+                class="iconfont icon-shujuliebiao"></i> <span
+                class="list_count_style">{{ `(Showing the last ${tableCount.value}  records)` }}</span></span>
         </p>
         <div class="transfer__middle__container">
             <dropdown
@@ -191,11 +194,12 @@
                 <p class="tip__color">{{ record.sc_addr }}</p>
             </div>
         </template>
-        <router-link :to="`/address/details?address=${record.sc_addr}`">
-            <span class="hover">{{
-                    getRestString(record.sc_addr, 3, 8)
-                }}</span>
-        </router-link>
+        <a v-show="isShowLink(record.sc_addr,record.sc_chain_id)"
+           :href="setExplorerLink(record.sc_addr,record.sc_chain_id)"
+           target="_blank"
+           rel="noreferrer noopener">{{ getRestString(record.sc_addr, 3, 8) || "--" }}</a>
+        <span
+            v-show="!isShowLink(record.sc_addr,record.sc_chain_id)">{{ getRestString(record.sc_addr, 3, 8) || "--" }}</span>
     </a-popover>
 </template>
 <template #status="{ record }">
@@ -260,11 +264,17 @@
                 <p class="tip__color">{{ record.dc_addr || "--" }}</p>
             </div>
         </template>
-        <router-link :to="`/address/details?address=${record.dc_addr}`">
-              <span class="hover">{{
-                      getRestString(record.dc_addr, 3, 8) || "--"
-                  }}</span>
-        </router-link>
+        <!--        <router-link :to="`/address/details?address=${record.dc_addr}`">
+                      <span class="hover">{{
+                              getRestString(record.dc_addr, 3, 8) || "&#45;&#45;"
+                          }}</span>
+                </router-link>-->
+        <a v-show="isShowLink(record.dc_addr,record.dc_chain_id)"
+           :href="setExplorerLink(record.dc_addr,record.dc_chain_id)"
+           target="_blank"
+           rel="noreferrer noopener">{{ getRestString(record.dc_addr, 3, 8) || "--" }}</a>
+        <span
+            v-show="!isShowLink(record.dc_addr,record.dc_chain_id)">{{ getRestString(record.dc_addr, 3, 8) || "--" }}</span>
     </a-popover>
 </template>
 <template #time="{ record }">
@@ -298,9 +308,8 @@ import {useStore} from 'vuex';
 import {groupBy} from 'lodash';
 import moment from 'moment';
 import {GET_IBCSTATISTICS, GET_IBCTXS} from '../store/action-types';
-import {transferTableColumn, ibcTxStatusSelectOptions} from '../constant';
+import {transferTableColumn, ibcTxStatusSelectOptions, tableChainIDs, chainAddressPrefix} from '../constant';
 import Dropdown from '../components/Dropdown.vue';
-import Message from '../components/Message.vue';
 import {
     JSONparse, getRestString, getLasttyString, formatNum,
 } from '../helper/parseString';
@@ -308,6 +317,7 @@ import placeHoderImg from '../assets/placeHoder.png';
 import {getIbcDenoms} from '../service/api';
 import {useRouter, useRoute} from 'vue-router';
 import Tools from "../util/Tools"
+import config from "../../config/config.json";
 
 export default {
     components: {
@@ -426,7 +436,7 @@ export default {
 
 
         const queryDatas = () => {
-            store.commit('isShowTransferLoading',true)
+            store.commit('isShowTransferLoading', true)
             const params = {
                 status: queryParam.status?.toString(),
                 chain_id: queryParam.chain_id,
@@ -455,9 +465,9 @@ export default {
                     ...params,
                 })
                 .then((res) => {
-                    store.commit('isShowTransferLoading',false)
+                    store.commit('isShowTransferLoading', false)
                 }).catch(error => {
-                store.commit('isShowTransferLoading',false)
+                store.commit('isShowTransferLoading', false)
                 console.log(error)
             });
         };
@@ -512,7 +522,7 @@ export default {
                 url += `&endTime=${params.endTime}`
             }
             history.pushState(null, null, url);
-            store.commit('isShowTransferLoading',true)
+            store.commit('isShowTransferLoading', true)
             store
                 .dispatch(GET_IBCTXS, {
                     page_num: pagination.current,
@@ -521,9 +531,9 @@ export default {
                     ...queryParam,
                 })
                 .then(() => {
-                    store.commit('isShowTransferLoading',false)
+                    store.commit('isShowTransferLoading', false)
                 }).catch(error => {
-                store.commit('isShowTransferLoading',false)
+                store.commit('isShowTransferLoading', false)
                 console.log(error)
             });
         };
@@ -771,7 +781,52 @@ export default {
             console.log(error)
         });
         const tableDatas = computed(() => store.state.ibcTxs)?.value;
+        const getAddressPrefix = (address) => {
+            if (address) {
+                return address?.toString().substr(0, 3)
+            }
+            return '--'
+        }
+        const isShowLink = (address, chainID) => {
+            let isShowLink = false
+            if (address && chainID) {
+                if (chainID === tableChainIDs.irishub && address) {
+                    const addressPrefix = getAddressPrefix(address)
+                    if (addressPrefix === chainAddressPrefix.irishubPrefix) {
+                        isShowLink = true
+                    }
+                }
+                if (chainID === tableChainIDs.cosmoshub) {
+                    const addressPrefix = getAddressPrefix(address)
+                    if (addressPrefix === chainAddressPrefix.cosmoshubPrefix) {
+                        isShowLink = true
+                    }
+                }
+            }
+            return isShowLink
+
+        }
+        const setExplorerLink = (address, chainID) => {
+            let explorerLink = ''
+            if (address && chainID) {
+                if (chainID === tableChainIDs.irishub && address) {
+                    const addressPrefix = getAddressPrefix(address)
+                    if (addressPrefix === chainAddressPrefix.irishubPrefix) {
+                        explorerLink = `${config.IRISHUB_IOBSCAN_LINK}${address}`
+                    }
+                }
+                if (chainID === tableChainIDs.cosmoshub && address) {
+                    const addressPrefix = getAddressPrefix(address)
+                    if (addressPrefix === chainAddressPrefix.cosmoshubPrefix) {
+                        explorerLink = `${config.COSMOSHUB_IOBSCAN_LINK}${address}`
+                    }
+                }
+            }
+            return explorerLink
+        }
         return {
+            setExplorerLink,
+            isShowLink,
             tableColumns,
             pagination,
             onPaginationChange,
@@ -808,30 +863,36 @@ export default {
 <style lang="scss" scoped>
 @import "../style/mixin.scss";
 @import "../style/variable.scss";
-.transfer__header__container{
+
+.transfer__header__container {
     margin-top: 8px;
     height: 24px;
 }
-.transfer__header__description{
+
+.transfer__header__description {
     color: #ffc400;
     text-align: left;
     margin: 17px 0 30px 3px;
     height: 17px;
     line-height: 17px;
-    .transfer__header__description_text{
+
+    .transfer__header__description_text {
         font-size: 14px;
         font-weight: 400;
         color: rgba(0, 0, 0, 0.65);
         line-height: 14px;
-        i{
+
+        i {
             display: inline-block;
             margin: 0 3px;
         }
-        .list_count_style{
+
+        .list_count_style {
             color: rgba(0, 0, 0, 0.35);
         }
     }
 }
+
 .transfer {
     width: 100%;
     max-width: 1200px;
