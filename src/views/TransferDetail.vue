@@ -77,13 +77,17 @@ import Loading from "../components/Loading";
 import TransferDetailsCard from "../components/TransferDetailsCard";
 import {reactive, watch,onMounted,ref} from 'vue';
 import CopyComponent from "../components/CopyComponent";
-
+import {useStore} from 'vuex';
+import {GET_IBCBASEDENOMS, GET_IBCDENOMS} from "../store/action-types";
 export default {
     name: "TransferDetail",
     components: {CopyComponent, TransferDetailsCard, Loading},
     setup() {
         const route = useRoute();
         const router = useRouter();
+        const store = useStore();
+        store.dispatch(GET_IBCDENOMS);
+        store.dispatch(GET_IBCBASEDENOMS);
         const isShowLoading = reactive({
             value: true
         })

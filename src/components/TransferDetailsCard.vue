@@ -51,7 +51,7 @@
                         <span>{{formatDenom(formatToken(item.value,expandDetails).symbol)}}</span>
                     </a-tooltip>
                 </span>
-                <span class="details_item_value" v-else-if="item.isFormatHeight">{{formatHeight(item.value)}}</span>
+                <span class="details_item_value" v-if="item.isFormatHeight">{{formatHeight(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatStatus">{{formatStatus(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatFee">{{formatFee(item.value)}}</span>
                 <span class="details_item_value" v-else-if="item.isFormatChainID">{{formatChainID(item.value)}}</span>
@@ -112,7 +112,7 @@ export default {
             let chainID=''
             if(details?.length){
                 details.forEach( item => {
-                    if(item?.label === 'Chain ID:' && props?.title === 'IBC Out Details'){
+                    if(item?.label === 'Chain ID:'){
                         chainID = item.value
                     }
                 })
@@ -128,7 +128,6 @@ export default {
                 }
                 let symbolNum = token?.amount || 0;
                 let symbolDenom =  token?.denom || '';
-
                 if (symbol) {
                     const findSymbol = Tools.findSymbol(
                         store.state.ibcBaseDenoms.value,

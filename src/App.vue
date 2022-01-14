@@ -220,6 +220,7 @@ a{
     cursor: pointer !important;
 }
 .ant-tooltip{
+    max-width: 400px !important;
     .ant-tooltip-content{
         .ant-tooltip-arrow{
             .ant-tooltip-arrow-content{
@@ -227,7 +228,7 @@ a{
             }
         }
         .ant-tooltip-inner{
-            width: 400px;
+
             background: rgba(255,255,255,1) !important;
             color: rgba(0, 0, 0, 0.65);
         }
