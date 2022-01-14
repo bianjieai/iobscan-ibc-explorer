@@ -407,7 +407,21 @@ export default {
             })
         }
         if (router?.query?.status) {
+            const defaultOptions = ['1', '2', '3', '4']
+            const successOptions = ['1']
+            const failedOptions = ['2','4']
+            const processingOptions = ['3']
             paramsStatus = router?.query?.status.split(',')
+            //todo  Optimize the writing
+            if(JSON.stringify(paramsStatus) == JSON.stringify(successOptions)){
+                paramsStatus =  successOptions
+            }else if(JSON.stringify(paramsStatus) == JSON.stringify(failedOptions)){
+                paramsStatus =  failedOptions
+            }else if(JSON.stringify(paramsStatus) == JSON.stringify(processingOptions)){
+                paramsStatus =  processingOptions
+            }else {
+                paramsStatus =  defaultOptions
+            }
             url += `&status=${paramsStatus}`
         }
 
