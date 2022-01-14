@@ -304,6 +304,12 @@ export default {
         cursor: pointer !important;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         @include flex(row, nowrap, flex-start, center);
+          .content__item__title{
+                width: 112px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+          }
         &:hover {
           border: 1px solid $font-color4;
           color: $font-color4;
