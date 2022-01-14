@@ -22,6 +22,7 @@
 <script>
 import {useRoute,useRouter} from 'vue-router';
 import {reactive, watch,onMounted} from 'vue';
+import {getTxDetailsByTxHash} from "../service/api";
 export default {
     name: "NoResult",
     setup(){
@@ -37,7 +38,11 @@ export default {
         })
         if(route?.query){
             if (/^[A-F0-9]{64}$/.test(Object.keys(route.query))) {
-                router.push(`/transfers/details?hash=${Object.keys(route.query)}`)
+                getTxDetailsByTxHash(Object.keys(route.query)).then(result => {
+                    if(result.length === 1){
+                        router.push(`/transfers/details?hash=${Object.keys(route.query)}`)
+                    }
+                })
             }else {
                 router.push(`/searchResult?${Object.keys(route.query)}`)
             }
