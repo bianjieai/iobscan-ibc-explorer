@@ -11,7 +11,7 @@
                     <span class="details_item_amount">{{formatToken(item.value,details).symbolNum || '--'}}</span>
                     <a-tooltip>
                         <template #title>
-                            {{formatToken(item.value,details).symbol}}
+                            {{formatToken(item.value,details).denom}}
                         </template>
                         <span>{{formatDenom(formatToken(item.value,details).symbol)}}</span>
                     </a-tooltip>
@@ -43,10 +43,10 @@
                 <span class="details_item_value" v-if="item.isFormatToken">
 
 <!--                    {{formatToken(item.value)}}-->
-                    <span class="details_item_amount">{{formatToken(item.value,expandDetails).symbolNum || '--'}}</span>
+                    <span class="details_item_amount">{{formatToken(item.value,expandDetails).symbolNum || '--'}}{{formatToken(item.value,expandDetails).denom}}</span>
                     <a-tooltip>
                         <template #title>
-                            {{formatToken(item.value,expandDetails).symbol}}
+                            {{formatToken(item.value,expandDetails).denom}}
                         </template>
                         <span>{{formatDenom(formatToken(item.value,expandDetails).symbol)}}</span>
                     </a-tooltip>
@@ -128,6 +128,7 @@ export default {
                 }
                 let symbolNum = token?.amount || 0;
                 let symbolDenom =  token?.denom || '';
+                let denom = token?.denom || ''
                 if (symbol) {
                     const findSymbol = Tools.findSymbol(
                         store.state.ibcBaseDenoms.value,
@@ -141,6 +142,7 @@ export default {
                     }
                 }
                 return {
+                    denom:denom,
                     symbol: symbolDenom,
                     symbolNum: symbolNum,
                 }
