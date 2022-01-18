@@ -79,6 +79,7 @@ export default {
             line-height: 30px;
             .search_result_value{
                 margin-left: 8px;
+                word-break: break-all;
             }
         }
         .result_icon_content{

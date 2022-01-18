@@ -307,7 +307,7 @@ import {
 import {useStore} from 'vuex';
 import {groupBy} from 'lodash';
 import moment from 'moment';
-import {GET_IBCSTATISTICS, GET_IBCTXS} from '../store/action-types';
+import {GET_IBCBASEDENOMS, GET_IBCCHAINS, GET_IBCDENOMS, GET_IBCSTATISTICS, GET_IBCTXS} from '../store/action-types';
 import {transferTableColumn, ibcTxStatusSelectOptions, tableChainIDs, chainAddressPrefix} from '../constant';
 import Dropdown from '../components/Dropdown.vue';
 import {
@@ -342,7 +342,10 @@ export default {
         let pageNum = 1, pageSize = 10;
         let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
         const store = useStore();
-        store.dispatch(GET_IBCSTATISTICS)
+        store.dispatch(GET_IBCSTATISTICS);
+        store.dispatch(GET_IBCDENOMS);
+        store.dispatch(GET_IBCBASEDENOMS);
+        store.dispatch(GET_IBCCHAINS);
         const router = useRoute();
         const pagination = reactive({
             total: 0,
