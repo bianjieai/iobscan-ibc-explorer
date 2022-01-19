@@ -7,6 +7,7 @@
         v-model:value="inputValue"
         @focus="setInputBorderStyle"
         @blur="removeInputBorderStyle"
+        @pressEnter="searchInput"
     >
         <template #suffix>
             <div class="input__prefix" @click="searchInput">
