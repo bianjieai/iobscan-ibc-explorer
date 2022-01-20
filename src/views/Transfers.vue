@@ -6,18 +6,26 @@
                 <div class="transfer__header__line">
                     <p class="transfer__header__title">
                         IBC Token Transfer List
-                        <!--                        <span class="transfer__header__num"> ( {{ tableCount.value }} transfers found )</span>-->
+                                                <span class="transfer__header__num" v-show="!ibcTxTotalMornThan500k && !isHashFilterParams"><i
+                                                    class="iconfont icon-shujuliebiao"></i> A total of {{ $store.state.ibcStatisticsTxs.tx_all.count }} transfers found </span>
+                                                <span class="transfer__header__num" v-show="!ibcTxTotalMornThan500k && isHashFilterParams"><i
+                                                    class="iconfont icon-shujuliebiao"></i>  {{ tableCount.value }} of the {{ $store.state.ibcStatisticsTxs.tx_all.count }} transfers found </span>
+                                                <span class="transfer__header__num" v-show="ibcTxTotalMornThan500k && isHashFilterParams"><i
+                                                    class="iconfont icon-shujuliebiao"></i>  Last 500k transfers found  </span>
+                                                <span class="transfer__header__num" v-show="ibcTxTotalMornThan500k && !isHashFilterParams"><i
+                                                    class="iconfont icon-shujuliebiao"></i>  {{ tableCount.value }} of the last 500k transfers found </span>
+
                     </p>
 
                 </div>
             </div>
         </div>
-        <p class="transfer__header__description">
+<!--        <p class="transfer__header__description">
             <span
                 class="transfer__header__description_text">{{ `More than > ${$store.state.ibcStatisticsTxs.tx_all.count} found` }} <i
                 class="iconfont icon-shujuliebiao"></i> <span
                 class="list_count_style">{{ `(Showing the last ${tableCount.value}  records)` }}</span></span>
-        </p>
+        </p>-->
         <div class="transfer__middle__container">
             <dropdown
                 class="dropdown__token"
@@ -325,7 +333,9 @@ export default {
     },
 
     setup() {
-
+        const maxTableLength = ref(500000)
+        let isHashFilterParams = ref(false)
+        let ibcTxTotalMornThan500k = ref(true) // defualt ibc ta total morn than 500k
         const tableColumns = reactive(transferTableColumn);
         const selectedSymbol = reactive({value: 'All Tokens'});
         const tokens = reactive({value: []});
@@ -346,6 +356,7 @@ export default {
         store.dispatch(GET_IBCDENOMS);
         store.dispatch(GET_IBCBASEDENOMS);
         store.dispatch(GET_IBCCHAINS);
+
         const router = useRoute();
         const pagination = reactive({
             total: 0,
@@ -454,6 +465,15 @@ export default {
 
         const queryDatas = () => {
             store.commit('isShowTransferLoading', true)
+            let isDateDefaultValue = false
+            if(queryParam.date_range?.length === 2){
+                const startTime = queryParam.date_range[0]
+                if(!startTime){
+                    isDateDefaultValue = true
+                }
+            }else if(queryParam.date_range.length === 0){
+                isDateDefaultValue = true
+            }
             const params = {
                 status: queryParam.status?.toString(),
                 chain_id: queryParam.chain_id,
@@ -461,6 +481,11 @@ export default {
                 symbol: queryParam.symbol,
                 denom: queryParam.denom,
             }
+            isHashFilterParams.value = false
+            if(!params.chain_id && !params.denom && !params.symbol && params.status === '1,2,3,4' && isDateDefaultValue){
+                isHashFilterParams.value = true
+            }
+
             store
                 .dispatch(GET_IBCTXS, {
                     use_count: true,
@@ -841,6 +866,12 @@ export default {
             }
             return explorerLink
         }
+        watch(store.state.ibcStatisticsTxs,(newValue,oldValue) => {
+            if(newValue?.tx_all?.count < maxTableLength){
+                ibcTxTotalMornThan500k.value = false
+            }
+            ibcTxTotalMornThan500k.value = true
+        })
         return {
             setExplorerLink,
             isShowLink,
@@ -872,6 +903,9 @@ export default {
             formatNum,
             isShowChainIcon,
             isShowSymbolIcon,
+            isHashFilterParams,
+            maxTableLength,
+            ibcTxTotalMornThan500k
         };
     },
 };
@@ -884,6 +918,7 @@ export default {
 .transfer__header__container {
     margin-top: 8px;
     height: 24px;
+    margin-bottom: 24px;
 }
 
 .transfer__header__description {
