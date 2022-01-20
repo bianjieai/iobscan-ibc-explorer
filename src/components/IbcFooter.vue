@@ -22,7 +22,7 @@ import { ref } from 'vue';
 
 export default {
   setup() {
-    const copyright = ref('Copyright © 2021 IRIS Foundation Ltd. All Rights Reserved.');
+    const copyright = ref('Copyright © 2022 IRIS Foundation Ltd. All Rights Reserved.');
     const links = ['https://github.com/irisnet', 'https://t.me/irisnetwork', 'https://medium.com/irisnet-blog', 'https://twitter.com/irisnetwork'];
     const onClickIcon = (item) => {
       window.open(links[item - 1]);
@@ -57,7 +57,7 @@ export default {
       padding: 6px;
       background-color: rgba(61, 80, 255, 0.1);
       border-radius: $card-radio;
-      cursor: url("../assets/tree_mouse.png"),pointer !important;
+      cursor: pointer !important;
     }
   }
   &__right {

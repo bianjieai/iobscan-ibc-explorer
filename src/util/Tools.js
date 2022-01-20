@@ -39,7 +39,7 @@ export default class Tools {
     static findDenomSymbol(ibcDenoms, denomStr, chainId) {
         if (ibcDenoms) {
             const findDenom = ibcDenoms.find(
-                (denom) => denom.denom === denomStr && denom.chain_id === chainId,
+                (denom) => denom.denom === denomStr && denom.chain_id.replace(new RegExp("\_", "g"),"-") === chainId,
             );
             if (findDenom) {
                 return findDenom.symbol;
@@ -57,7 +57,15 @@ export default class Tools {
         }
         return null;
     }
-
+    static findDenom(ibcBaseDenoms, denom) {
+        if (ibcBaseDenoms) {
+            const findBaseDenom = ibcBaseDenoms.find((baseDenom) => baseDenom.denom === denom);
+            if (findBaseDenom) {
+                return findBaseDenom;
+            }
+        }
+        return null;
+    }
     static parseSymbolNum(num) {
         if (num > 999) {
             return Math.floor(num);

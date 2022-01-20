@@ -9,7 +9,7 @@ window.cancel = null
 class HttpHelper {
   static async get(url, params) {
       if(params?.params?.use_count){
-          window.cancel && window.cancel()
+          window.cancel && window.cancel('cancel request')
       }
       const data = await API.get(url,params,{cancelToken:new CancelToken((c) => {
               if(params?.params?.use_count){

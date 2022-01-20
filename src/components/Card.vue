@@ -48,7 +48,7 @@ export default {
   background-position: center;
   background-size: cover;
   border-radius: 4px;
-  cursor: url("../assets/tree_mouse.png"),pointer !important;
+  cursor:pointer !important;
   &__img {
     margin: 23px 29px;
     width: 60px;

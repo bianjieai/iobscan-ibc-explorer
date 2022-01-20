@@ -75,13 +75,8 @@ export default {
         script.src = `https://s4.cnzz.com/z_stat.php?id=${config.UMENG_ID}&web_id=${config.UMENG_WEB_ID}`;
         script.language = 'JavaScript';
         document.body.appendChild(script);
-        const store = useStore();
-        store.dispatch(GET_IBCSTATISTICS);
-        store.dispatch(GET_IBCDENOMS);
-        store.dispatch(GET_IBCBASEDENOMS);
-        store.dispatch(GET_IBCCHAINS);
         const router = useRouter();
-
+        const store = useStore();
         const headerMenus = reactive(menus);
         const onClickLogo = () => {
             router.push({
@@ -105,9 +100,12 @@ export default {
         watch(
             () => route.path,
             (to) => {
+                document.body.scrollTop = 0
+                // firefox
+                document.documentElement.scrollTop = 0
                 store.commit('isShowHeader',true)
                 store.commit('isShowFooter',true)
-                if(to === '/404'){
+                if(to === '/404' || to === '/500'){
                     store.commit('isShowHeader',false)
                     store.commit('isShowFooter',false)
                 }
@@ -122,7 +120,6 @@ export default {
         watch(
             () => route.path,
             (to) => {
-
                 if(to?.toString().includes('home')){
                     currentMenu.value = ['Home'];
                 }else if(to?.toString().includes('transfers')){
@@ -223,7 +220,22 @@ export default {
 @import "./style/mixin.scss";
 @import "./style/variable.scss";
 a{
-    cursor: url('./assets/tree_mouse.png'),pointer !important;
+    cursor: pointer !important;
+}
+.ant-tooltip{
+    max-width: 400px !important;
+    .ant-tooltip-content{
+        .ant-tooltip-arrow{
+            .ant-tooltip-arrow-content{
+                background: rgba(255,255,255,1) !important;
+            }
+        }
+        .ant-tooltip-inner{
+
+            background: rgba(255,255,255,1) !important;
+            color: rgba(0, 0, 0, 0.65);
+        }
+    }
 }
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -265,7 +277,7 @@ a{
 
         .logo {
             // height: 30px;
-            cursor: url("./assets/tree_mouse.png"),pointer !important;
+            cursor: pointer !important;
 
             .logo__icon {
                 width: 34px;
@@ -283,7 +295,7 @@ a{
             height: 32px;
             border-radius: 50%;
             margin-left: 24px;
-            cursor: url("./assets/tree_mouse.png"),pointer !important;
+            cursor: pointer !important;
         }
     }
 
@@ -305,16 +317,16 @@ a{
     }
 }
 .ant-btn{
-    cursor: url("./assets/tree_mouse.png"),pointer !important;
+    cursor: pointer !important;
 }
 .ant-select{
-    cursor: url("./assets/tree_mouse.png"),pointer !important;
+    cursor:pointer !important;
 }
 .ant-select-item{
-    cursor: url("./assets/tree_mouse.png"),pointer !important;
+    cursor: pointer !important;
 }
 .ant-calendar-date{
-    cursor: url("./assets/tree_mouse.png"),pointer !important;
+    cursor: pointer !important;
 }
 .col__layout {
     @include flex(row, nowrap, flex-start, center);

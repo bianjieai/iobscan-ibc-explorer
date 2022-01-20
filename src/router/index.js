@@ -43,7 +43,7 @@ const routes = [
     {
         path: '/transfers/details',
         name: 'transfersDetails',
-        component: () => import(/* webpackChunkName: "transfers" */ '../views/ComingSoon.vue'),
+        component: () => import(/* webpackChunkName: "transfers" */ '../views/TransferDetail.vue'),
     },
     {
         path: '/address/details',
@@ -54,6 +54,16 @@ const routes = [
         path: '/network/details',
         name: 'chainsDetails',
         component: () => import(/* webpackChunkName: "transfers" */ '../views/ComingSoon.vue'),
+    },
+    {
+        path: '/searchResult',
+        name: 'searchResult',
+        component: () => import(/* webpackChunkName: "transfers" */ '../views/NoResult.vue'),
+    },
+    {
+        path: '/500',
+        name: '500',
+        component: () => import(/* webpackChunkName: "transfers" */ '../errorpage/500.vue'),
     },
     {
         path: '/404',

@@ -103,11 +103,11 @@ progress {
 }
 .ibc__selected__border:hover .ant-card-bordered {
   border: 1px solid #3d50ff;
-  cursor: url("../assets/tree_mouse.png"),pointer !important;
+  cursor: pointer !important;
 }
 
 .ibc__selected__title:hover {
-  cursor: url("../assets/tree_mouse.png"),pointer !important;
+  cursor: pointer !important;
 }
 
 .ibc__selected__title:hover .list__item__value {

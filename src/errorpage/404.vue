@@ -26,6 +26,7 @@ export default {
         justify-content: center;
         background: url("../assets/bg_default.png") no-repeat center center;
         background-size: cover;
+        cursor: url("../assets/errpr_mouse_tree.png"),default !important;
         .error_page_content_wrap{
             max-width: 550px;
             .error_img_content{
@@ -36,7 +37,6 @@ export default {
             }
             .error_img_title{
                 font-size: 24px;
-                font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
                 line-height: 24px;
                 color:rgba(255, 255, 255, 0.65);
@@ -46,7 +46,6 @@ export default {
                 margin-top: 16px;
                 color: rgba(255, 255, 255, 0.65);
                 font-size: 14px;
-                font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
                 line-height: 16px;
             }
@@ -60,7 +59,7 @@ export default {
                 font-size: 16px;
                 line-height: 36px;
                 margin: 40px auto 0 auto;
-                cursor: url("../assets/tree_mouse.png"),pointer !important;
+                cursor: pointer !important;
             }
         }
     }
