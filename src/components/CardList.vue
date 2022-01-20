@@ -101,18 +101,17 @@ export default {
         const findClassName = (chainName) => {
             const chainQuery = chainName.substr(0, 1).toUpperCase();
             let className = '';
-
             try {
                 anchors.forEach((anchor) => {
                     className = anchor.collection.indexOf(chainQuery) !== -1 ? anchor.title : '#';
                     if (anchor.collection.indexOf(chainQuery) !== -1) {
+                        listRef.value.$el.scrollTop = 0
                         throw new Error('find className');
                     }
                 });
             } catch (e) {
                 // console.log(e.message);
             }
-
             return className;
         };
 
