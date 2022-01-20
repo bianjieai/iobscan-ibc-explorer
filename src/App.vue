@@ -100,6 +100,9 @@ export default {
         watch(
             () => route.path,
             (to) => {
+                document.body.scrollTop = 0
+                // firefox
+                document.documentElement.scrollTop = 0
                 store.commit('isShowHeader',true)
                 store.commit('isShowFooter',true)
                 if(to === '/404' || to === '/500'){
