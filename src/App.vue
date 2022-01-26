@@ -275,49 +275,53 @@ html body {
     .lantern_content{
         position: absolute;
         left: 50%;
-        top: 50%;
+        top: 396px;
         animation: flutter 10s infinite linear;
         z-index: -1;
     }
     .star_content{
         width: 100%;
-        height: 100%;
+        height: 396px;
+        overflow-y: hidden;
         position: absolute;
         left: 0%;
         top: 0%;
-        animation: flutter1 17s infinite linear;
+        animation: flutter1 37s infinite linear;
         z-index: -1;
         background: url("./assets/star4.png");
     }
     .star_content_1{
         width: 100%;
-        height: 100%;
+        height: 396px;
+        overflow-y: hidden;
         position: absolute;
         left: -100%;
         top: 0%;
-        animation: flutter2 20s infinite linear;
+        animation: flutter2 40s infinite linear;
         animation-delay: 3s;
         z-index: -1;
-        background: url("./assets/star4.png");
+        background: url("./assets/star1.png");
     }
     .star_content_2{
         width: 100%;
-        height: 100%;
+        height: 396px;
+        overflow-y: hidden;
         position: absolute;
         left: -100%;
         top: 0%;
-        animation: flutter2 20s infinite linear;
+        animation: flutter2 40s infinite linear;
         animation-delay: 10s;
         z-index: -1;
-        background: url("./assets/star4.png");
+        background: url("./assets/star2.png");
     }
     .star_content_3{
         width: 100%;
-        height: 100%;
+        height: 396px;
+        overflow-y: hidden;
         position: absolute;
         left: -100%;
         top: 0%;
-        animation: flutter2 20s infinite linear;
+        animation: flutter2 40s infinite linear;
         animation-delay: 17s;
         z-index: -1;
         background: url("./assets/star4.png");
@@ -413,7 +417,7 @@ a {
 }
 @keyframes flutter {
     0% {
-        transform: translate(-50%,0%);
+        transform: translate(-50%,-369px);
     }
     100%{
         transform: translate(0%,-250%);
@@ -432,7 +436,7 @@ a {
         transform: translate(-100%,-100%);
     }
     100%{
-        transform: translate(200%,0%);
+        transform: translate(100%,0%);
     }
 }
 
