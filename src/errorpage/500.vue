@@ -30,6 +30,7 @@ export default {
     background: url("../assets/bg_default.png") no-repeat center center;
     background-size: cover;
     cursor: url("../assets/errpr_mouse_tree.png"),default !important;
+    user-select: none;
     .error_network_content_wrap{
         max-width: 550px;
         position: relative;
