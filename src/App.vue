@@ -39,13 +39,6 @@
             <a-layout-footer  v-show="$store.state.isShowFooter" class="footer">
                 <ibc-footer/>
             </a-layout-footer>
-            <div class="lantern_content">
-                <img src="./assets/lantern.png" alt="">
-            </div>
-            <div class="star_content"></div>
-            <div class="star_content_1"></div>
-            <div class="star_content_2"></div>
-            <div class="star_content_3"></div>
         </a-layout>
     </a-config-provider>
 </template>
@@ -244,9 +237,6 @@ a{
         }
     }
 }
-html body {
-    cursor: url("./assets/fireWorks.png"),default !important;
-}
 #app {
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
@@ -258,7 +248,6 @@ html body {
     min-height: 100Vh;
     min-width: 1200px;
     overflow-x: auto;
-
 }
 
 .layout {
@@ -269,63 +258,6 @@ html body {
     background-position: top center;
     background-color: #F5F7FC;
     flex: 1;
-    position: relative;
-    z-index: 2;
-    overflow-x: hidden;
-    .lantern_content{
-        position: absolute;
-        left: 50%;
-        top: 396px;
-        animation: flutter 10s infinite linear;
-        z-index: -1;
-    }
-    .star_content{
-        width: 100%;
-        height: 396px;
-        overflow-y: hidden;
-        position: absolute;
-        left: 0%;
-        top: 0%;
-        animation: flutter1 37s infinite linear;
-        z-index: -1;
-        background: url("./assets/star4.png");
-    }
-    .star_content_1{
-        width: 100%;
-        height: 396px;
-        overflow-y: hidden;
-        position: absolute;
-        left: -100%;
-        top: 0%;
-        animation: flutter2 40s infinite linear;
-        animation-delay: 3s;
-        z-index: -1;
-        background: url("./assets/star1.png");
-    }
-    .star_content_2{
-        width: 100%;
-        height: 396px;
-        overflow-y: hidden;
-        position: absolute;
-        left: -100%;
-        top: 0%;
-        animation: flutter2 40s infinite linear;
-        animation-delay: 10s;
-        z-index: -1;
-        background: url("./assets/star2.png");
-    }
-    .star_content_3{
-        width: 100%;
-        height: 396px;
-        overflow-y: hidden;
-        position: absolute;
-        left: -100%;
-        top: 0%;
-        animation: flutter2 40s infinite linear;
-        animation-delay: 17s;
-        z-index: -1;
-        background: url("./assets/star4.png");
-    }
     & .header {
         width: 100%;
         @include flex(column, nowrap, center, center);
@@ -415,29 +347,4 @@ a {
         color: #3d50ff
     }
 }
-@keyframes flutter {
-    0% {
-        transform: translate(-50%,-369px);
-    }
-    100%{
-        transform: translate(0%,-250%);
-    }
-}
-@keyframes flutter1 {
-    0% {
-        transform: translate(-100%,-100%);
-    }
-    100%{
-        transform: translate(100%,0%);
-    }
-}
-@keyframes flutter2 {
-    0% {
-        transform: translate(-100%,-100%);
-    }
-    100%{
-        transform: translate(100%,0%);
-    }
-}
-
 </style>
