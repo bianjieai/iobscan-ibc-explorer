@@ -43,11 +43,7 @@
 <!--                <router-link :to="`/address/details?address=${item.sc_addr}`">
                     <span class="hover">{{ getRestString(item.sc_addr, 6, 5) }}</span>
                 </router-link>-->
-                <a v-show="isShowLink(item.sc_addr,item.sc_chain_id)"
-                   :href="setExplorerLink(item.sc_addr,item.sc_chain_id)"
-                   target="_blank"
-                   rel="noreferrer noopener">{{ getRestString(item.sc_addr, 6, 6) || "--" }}</a>
-                 <span v-show="!isShowLink(item.sc_addr,item.sc_chain_id)">{{ getRestString(item.sc_addr, 6, 6) || "--" }}</span>
+                 <span>{{ getRestString(item.sc_addr, 6, 6) || "--" }}</span>
             </a-popover>
           </span>
                 </div>
@@ -87,11 +83,7 @@
 <!--                <router-link :to="`/address/details?address=${item.dc_addr}`">
                       <span class="hover">{{ getRestString(item.dc_addr, 6, 6) }}</span>
                 </router-link>-->
-                <a v-show="isShowLink(item.dc_addr,item.dc_chain_id)"
-                   :href="setExplorerLink(item.dc_addr,item.dc_chain_id)"
-                   target="_blank"
-                   rel="noreferrer noopener">{{ getRestString(item.dc_addr, 6, 6) || "--" }}</a>
-                 <span v-show="!isShowLink(item.dc_addr,item.dc_chain_id)">{{ getRestString(item.dc_addr, 6, 6) || "--" }}</span>
+                 <span>{{ getRestString(item.dc_addr, 6, 6) || "--" }}</span>
             </a-popover>
           </span>
                 </div>
