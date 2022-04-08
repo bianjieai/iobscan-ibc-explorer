@@ -38,13 +38,11 @@
                 <span class="details_item_value" v-else-if="item.isAddress">
                     <span v-show="Array.isArray(item.value)">
                         <span v-if="item.value.length >= 1" v-for="(address,index) of item.value">
-                            <span class="value_style" v-show="!isShowLink(details,address)">{{address  || '--'}}</span>
-                            <a class="link_style" v-show="isShowLink(details,address)" :href="setExplorerLink(details,address)" target="_blank" rel="noreferrer noopener">{{address}}</a>
+                            <span class="value_style">{{address  || '--'}}</span>
                         </span>
                         <span v-else>--</span>
                     </span>
-                    <span v-if="!Array.isArray(item.value)" class="value_style" v-show="!isShowLink(details,item.value)">{{item.value  || '--'}}</span>
-                    <a v-if="!Array.isArray(item.value)" class="link_style" v-show="isShowLink(details,item.value)" :href="setExplorerLink(details,item.value)" target="_blank" rel="noreferrer noopener">{{item.value}}</a>
+                    <span v-if="!Array.isArray(item.value)" class="value_style">{{item.value  || '--'}}</span>
                 </span>
                 <span class="details_item_value" v-else>{{item.value ? item.value : '--'}}</span>
             </li>
@@ -71,8 +69,7 @@
                     <span>{{date}}</span>
                 </span>
                 <span class="details_item_value" v-else-if="item.isAddress">
-                    <span class="value_style" v-show="!isShowLink(details,item.value)">{{item.value || '--'}}</span>
-                    <a class="link_style" v-show="isShowLink(details,item.value)" :href="setExplorerLink(details,item.value)" target="_blank" rel="noreferrer noopener">{{item.value}}</a>
+                    <span class="value_style">{{item.value || '--'}}</span>
                 </span>
                 <span class="details_item_value" v-else>{{item.value === 0 ? 0 : item.value ? item.value : '--'}}</span>
             </li>

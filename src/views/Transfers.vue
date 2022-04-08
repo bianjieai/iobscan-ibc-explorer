@@ -202,12 +202,7 @@
                 <p class="tip__color">{{ record.sc_addr }}</p>
             </div>
         </template>
-        <a v-show="isShowLink(record.sc_addr,record.sc_chain_id)"
-           :href="setExplorerLink(record.sc_addr,record.sc_chain_id)"
-           target="_blank"
-           rel="noreferrer noopener">{{ getRestString(record.sc_addr, 3, 8) || "--" }}</a>
-        <span
-            v-show="!isShowLink(record.sc_addr,record.sc_chain_id)">{{ getRestString(record.sc_addr, 3, 8) || "--" }}</span>
+        <span>{{ getRestString(record.sc_addr, 3, 8) || "--" }}</span>
     </a-popover>
 </template>
 <template #status="{ record }">
@@ -277,12 +272,7 @@
                               getRestString(record.dc_addr, 3, 8) || "&#45;&#45;"
                           }}</span>
                 </router-link>-->
-        <a v-show="isShowLink(record.dc_addr,record.dc_chain_id)"
-           :href="setExplorerLink(record.dc_addr,record.dc_chain_id)"
-           target="_blank"
-           rel="noreferrer noopener">{{ getRestString(record.dc_addr, 3, 8) || "--" }}</a>
-        <span
-            v-show="!isShowLink(record.dc_addr,record.dc_chain_id)">{{ getRestString(record.dc_addr, 3, 8) || "--" }}</span>
+        <span>{{ getRestString(record.dc_addr, 3, 8) || "--" }}</span>
     </a-popover>
 </template>
 <template #time="{ record }">
