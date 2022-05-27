@@ -220,7 +220,6 @@ export default {
                     createDom.style.left = `${parseInt(Math.random() * windowClientWidth)}px`
                     createDom.style.top = `${parseInt(Math.random() * 320)}px`
                     const appendChildStartContainerDom = document.getElementsByClassName('star_container')
-                    console.log(appendChildStartContainerDom[0],'好饭啊')
                     appendChildStartContainerDom[0].appendChild(createDom)
 
                 }
