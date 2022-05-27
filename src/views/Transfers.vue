@@ -980,18 +980,18 @@ export default {
                 border-radius: 50%;
                 border: 1px solid rgba(0, 0, 0, 0.2);
                 margin-right: 8px;
-                cursor: pointer !important;
+                cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
             }
 
             &__num {
-                cursor: pointer !important;
+                cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
                 font-size: $font-size5;
                 color: $font-color5;
                 margin-right: 4px;
             }
 
             &__denom {
-                cursor: pointer !important;
+                cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
                 font-size: $font-size5;
                 color: $font-color3;
             }
@@ -1119,7 +1119,7 @@ export default {
 }
 
 .hover {
-    cursor: pointer !important;
+    cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
 }
 
 p {

@@ -52,12 +52,12 @@ export default {
         margin-left: 7px;
         display: flex;
         align-items: center;
-        cursor: pointer;
+        cursor: url("../assets/mouse/shiftlight_mouse.png"),default;
         user-select: none;
         .copied{
             font-size: 14px;
             color: rgba(151, 151, 151, 1);
-            cursor: pointer;
+            cursor: url("../assets/mouse/shiftlight_mouse.png"),default;
             padding-bottom: 2px;
             .text{
                 margin-left: 7px;

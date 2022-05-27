@@ -98,7 +98,7 @@ export default {
         display: flex;
         align-items: center;
         justify-items: center;
-        cursor: pointer;
+        cursor: url("../assets/mouse/shiftlight_mouse.png"),default;
         .input__prefix_icon{
             font-size: 24px;
             color: rgba(255,255,255,0.7);
