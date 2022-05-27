@@ -215,7 +215,7 @@ export default {
                 const windowClientWidth  = window.document.documentElement.clientWidth - 20
                 for (let i= 0; i < 20; i++) {
                     const createDom = document.createElement('div')
-                    createDom.className = 'test'
+                    createDom.className = 'star_content'
                     let leftNumber = `${parseInt(Math.random() * windowClientWidth)} px`
                     createDom.style.left = `${parseInt(Math.random() * windowClientWidth)}px`
                     createDom.style.top = `${parseInt(Math.random() * 320)}px`
@@ -249,7 +249,7 @@ export default {
 a{
     cursor: url("./assets/mouse/shiftlight_mouse.png"),default !important;
 }
-.test{
+.star_content{
     width: 2px;
     height: 2px;
     box-shadow: 0 0 10px 0 rgba(229, 232, 153, 0.8);
