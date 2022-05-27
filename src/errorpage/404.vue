@@ -59,7 +59,7 @@ export default {
                 font-size: 16px;
                 line-height: 36px;
                 margin: 40px auto 0 auto;
-                cursor: pointer !important;
+                cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
             }
         }
     }

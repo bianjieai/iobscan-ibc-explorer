@@ -51,7 +51,7 @@ export default {
   .ant-menu-item {
     line-height: $nav-height;
     &:hover{
-        cursor: pointer !important;
+        cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
     }
   }
   .ant-menu-title-content {

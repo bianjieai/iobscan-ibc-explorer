@@ -360,7 +360,7 @@ export default {
             .see_more_button{
                 padding: 14px 0;
                 display: flex;
-                cursor: pointer;
+                cursor: url("../assets/mouse/shiftlight_mouse.png"),default;
 
                 .see_more_label{
                     color: rgba(61, 80, 255, 1);

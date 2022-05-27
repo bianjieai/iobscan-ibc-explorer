@@ -273,7 +273,7 @@ export default {
     color: rgba(0, 0, 0, 0.65);
     margin-bottom: 16px;
     width: 140px;
-    cursor:pointer !important;
+    cursor:url("../assets/mouse/shiftlight_mouse.png"),default !important;
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     &:hover {
       border: 1px solid $font-color4;
@@ -301,7 +301,7 @@ export default {
         border: 1px solid transparent;
         margin: 0 8px 12px 0;
         padding: 6px 6px;
-        cursor: pointer !important;
+        cursor: url("../assets/mouse/shiftlight_mouse.png"),default  !important;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         @include flex(row, nowrap, flex-start, center);
           .content__item__title{
@@ -354,6 +354,6 @@ export default {
   }
 }
 .hover {
-  cursor: pointer !important;
+  cursor: url("../assets/mouse/shiftlight_mouse.png"),default  !important;
 }
 </style>

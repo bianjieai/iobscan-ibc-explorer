@@ -154,7 +154,7 @@ export default {
         ::v-deep.ant-menu-overflow{
             .ant-menu-overflow-item{
                 &:hover{
-                    cursor: pointer !important;
+                    cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
                 }
             }
         }

@@ -48,7 +48,7 @@ export default {
   background-position: center;
   background-size: cover;
   border-radius: 4px;
-  cursor:pointer !important;
+  cursor:url("../assets/mouse/shiftlight_mouse.png"),default !important;
   &__img {
     margin: 23px 29px;
     width: 60px;
