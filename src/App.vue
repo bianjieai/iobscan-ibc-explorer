@@ -203,30 +203,65 @@ export default {
             }
         };
         let layout = ref(null)
-        const setTest = () => {
-            setInterval(() => {
-                const removeStarContainerDom = document.getElementsByClassName('star_container')
-                if(removeStarContainerDom?.length !== 0){
-                    layout.value.$el.removeChild(removeStarContainerDom[0])
-                }
-                const starContainerDom = document.createElement('div')
-                starContainerDom.className = 'star_container'
-                layout.value.$el.appendChild(starContainerDom)
-                const windowClientWidth  = window.document.documentElement.clientWidth - 20
-                for (let i= 0; i < 20; i++) {
-                    const createDom = document.createElement('div')
-                    createDom.className = 'star_content'
-                    let leftNumber = `${parseInt(Math.random() * windowClientWidth)} px`
-                    createDom.style.left = `${parseInt(Math.random() * windowClientWidth)}px`
-                    createDom.style.top = `${parseInt(Math.random() * 320)}px`
-                    const appendChildStartContainerDom = document.getElementsByClassName('star_container')
-                    appendChildStartContainerDom[0].appendChild(createDom)
+        const setStart = () => {
+            const removeStarContainerDom = document.getElementsByClassName('star_container')
+            if(removeStarContainerDom?.length !== 0){
+                layout.value.$el.removeChild(removeStarContainerDom[0])
+            }
+            const starContainerDom = document.createElement('div')
+            starContainerDom.className = 'star_container'
+            layout.value.$el.appendChild(starContainerDom)
+            const windowClientWidth  = window.document.documentElement.clientWidth - 20
+            const starNumber = 20
+            for (let i= 0; i < starNumber; i++) {
+                const createDom = document.createElement('div')
+                createDom.className = 'star_content'
+                const widthAndHeight = parseInt(Math.random() * 6)
+                createDom.style.width= `${widthAndHeight}px`;
+                createDom.style.height= `${widthAndHeight}px`;
+                createDom.style.borderRadius = `${widthAndHeight / 2}px`;
+                createDom.style.animationDelay = 1000;
+                let leftNumber = `${parseInt(Math.random() * windowClientWidth)} px`
+                createDom.style.left = `${parseInt(Math.random() * windowClientWidth)}px`
+                createDom.style.top = `${parseInt(Math.random() * 320)}px`
+                const appendChildStartContainerDom = document.getElementsByClassName('star_container')
+                appendChildStartContainerDom[0].appendChild(createDom)
 
-                }
-            },3100)
+            }
+        };
+        const setStart2 = () => {
+            const removeStarContainerDom = document.getElementsByClassName('star_container_2')
+            if(removeStarContainerDom?.length !== 0){
+                layout.value.$el.removeChild(removeStarContainerDom[0])
+            }
+            const starContainerDom = document.createElement('div')
+            starContainerDom.className = 'star_container_2'
+            layout.value.$el.appendChild(starContainerDom)
+            const windowClientWidth  = window.document.documentElement.clientWidth - 20
+            const starNumber = 10
+            for (let i= 0; i < starNumber; i++) {
+                const createDom = document.createElement('div')
+                createDom.className = 'star_content_two'
+                const widthAndHeight = parseInt(Math.random() * 10)
+                createDom.style.width= `${widthAndHeight}px`;
+                createDom.style.height= `${widthAndHeight}px`;
+                createDom.style.borderRadius = `${widthAndHeight / 2}px`;
+                createDom.style.animationDelay = 1000;
+                let leftNumber = `${parseInt(Math.random() * windowClientWidth)} px`
+                createDom.style.left = `${parseInt(Math.random() * windowClientWidth)}px`
+                createDom.style.top = `${parseInt(Math.random() * 320)}px`
+                const appendChildStartContainerDom = document.getElementsByClassName('star_container_2')
+                appendChildStartContainerDom[0].appendChild(createDom)
+
+            }
         };
         onMounted(()=> {
-            setTest()
+            setInterval(() => {
+                setStart()
+            },3200)
+            setInterval(() => {
+                setStart2()
+            },4200)
         })
         return {
             headerMenus,
@@ -250,13 +285,16 @@ a{
     cursor: url("./assets/mouse/shiftlight_mouse.png"),default !important;
 }
 .star_content{
-    width: 2px;
-    height: 2px;
-    box-shadow: 0 0 10px 0 rgba(229, 232, 153, 0.8);
+    box-shadow: 0 0 0.1rem 0 rgba(229, 232, 153, 0.8);
     background: #FEFFA6;
     position: absolute;
-    border-radius: 1px;
     animation: flicker 3s ease-in-out infinite;
+}
+.star_content_two{
+    box-shadow: 0 0 0.1rem 0 rgba(229, 232, 153, 0.8);
+    background: #FEFFA6;
+    position: absolute;
+    animation: flicker 4s ease-in-out infinite;
 }
 .ant-tooltip{
     max-width: 400px !important;
@@ -297,6 +335,16 @@ a{
     position: relative;
 
     .star_container{
+        position: absolute;
+        left: 0;
+        top:0;
+        z-index: 1;
+        width: 100%;
+        min-height: 100%;
+        flex: 1;
+        background: transparent;
+    }
+    .star_container_2{
         position: absolute;
         left: 0;
         top:0;
@@ -405,7 +453,7 @@ a {
     }
     50% {
         opacity: 1;
-        transform: scale(5);
+        transform: scale(2);
     }
     100% {
         opacity: 0;
