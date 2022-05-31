@@ -299,7 +299,7 @@ export default {
 }
 
 .hover {
-    cursor: pointer !important;
+    cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
 }
 
 .tip {

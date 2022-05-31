@@ -3,7 +3,7 @@
         <template #renderEmpty>
             <no-datas/>
         </template>
-        <a-layout class="layout">
+        <a-layout class="layout"  ref="layout">
             <a-layout-header class="header" v-show="$store.state.isShowHeader">
                 <a-row class="header__content" type="flex">
                     <a-col flex="160px" class="col__layout">
@@ -45,7 +45,7 @@
 
 <script>
 import {
-    reactive, computed, watch,
+    reactive, computed, watch, ref, onMounted
 } from 'vue';
 import {useStore} from 'vuex';
 import {useRouter, useRoute} from 'vue-router';
@@ -202,6 +202,67 @@ export default {
                     break;
             }
         };
+        let layout = ref(null)
+        const setStart = () => {
+            const removeStarContainerDom = document.getElementsByClassName('star_container')
+            if(removeStarContainerDom?.length !== 0){
+                layout.value.$el.removeChild(removeStarContainerDom[0])
+            }
+            const starContainerDom = document.createElement('div')
+            starContainerDom.className = 'star_container'
+            layout.value.$el.appendChild(starContainerDom)
+            const windowClientWidth  = window.document.documentElement.clientWidth - 20
+            const starNumber = 20
+            for (let i= 0; i < starNumber; i++) {
+                const createDom = document.createElement('div')
+                createDom.className = 'star_content'
+                const widthAndHeight = parseInt(Math.random() * 6)
+                createDom.style.width= `${widthAndHeight}px`;
+                createDom.style.height= `${widthAndHeight}px`;
+                createDom.style.borderRadius = `${widthAndHeight / 2}px`;
+                createDom.style.animationDelay = 1000;
+                let leftNumber = `${parseInt(Math.random() * windowClientWidth)} px`
+                createDom.style.left = `${parseInt(Math.random() * windowClientWidth)}px`
+                createDom.style.top = `${parseInt(Math.random() * 320)}px`
+                const appendChildStartContainerDom = document.getElementsByClassName('star_container')
+                appendChildStartContainerDom[0].appendChild(createDom)
+
+            }
+        };
+        const setStart2 = () => {
+            const removeStarContainerDom = document.getElementsByClassName('star_container_2')
+            if(removeStarContainerDom?.length !== 0){
+                layout.value.$el.removeChild(removeStarContainerDom[0])
+            }
+            const starContainerDom = document.createElement('div')
+            starContainerDom.className = 'star_container_2'
+            layout.value.$el.appendChild(starContainerDom)
+            const windowClientWidth  = window.document.documentElement.clientWidth - 20
+            const starNumber = 10
+            for (let i= 0; i < starNumber; i++) {
+                const createDom = document.createElement('div')
+                createDom.className = 'star_content_two'
+                const widthAndHeight = parseInt(Math.random() * 10)
+                createDom.style.width= `${widthAndHeight}px`;
+                createDom.style.height= `${widthAndHeight}px`;
+                createDom.style.borderRadius = `${widthAndHeight / 2}px`;
+                createDom.style.animationDelay = 1000;
+                let leftNumber = `${parseInt(Math.random() * windowClientWidth)} px`
+                createDom.style.left = `${parseInt(Math.random() * windowClientWidth)}px`
+                createDom.style.top = `${parseInt(Math.random() * 320)}px`
+                const appendChildStartContainerDom = document.getElementsByClassName('star_container_2')
+                appendChildStartContainerDom[0].appendChild(createDom)
+
+            }
+        };
+        onMounted(()=> {
+            setInterval(() => {
+                setStart()
+            },3200)
+            setInterval(() => {
+                setStart2()
+            },4200)
+        })
         return {
             headerMenus,
             onClickLogo,
@@ -209,6 +270,7 @@ export default {
             onPressEnter,
             currentMenu,
             clickMenu,
+            layout,
             isShowBackground,
         };
     },
@@ -220,7 +282,19 @@ export default {
 @import "./style/mixin.scss";
 @import "./style/variable.scss";
 a{
-    cursor: pointer !important;
+    cursor: url("./assets/mouse/shiftlight_mouse.png"),default !important;
+}
+.star_content{
+    box-shadow: 0 0 0.1rem 0 rgba(229, 232, 153, 0.8);
+    background: #FEFFA6;
+    position: absolute;
+    animation: flicker 3s ease-in-out infinite;
+}
+.star_content_two{
+    box-shadow: 0 0 0.1rem 0 rgba(229, 232, 153, 0.8);
+    background: #FEFFA6;
+    position: absolute;
+    animation: flicker 4s ease-in-out infinite;
 }
 .ant-tooltip{
     max-width: 400px !important;
@@ -252,18 +326,41 @@ a{
 
 .layout {
     width: 100%;
-    background-image: url("./assets/banner.png");
+    background-image: url("./assets/Summer_bg.png");
     background-repeat: no-repeat;
     background-size: 1920px 396px;
     background-position: top center;
     background-color: #F5F7FC;
     flex: 1;
+    position: relative;
+
+    .star_container{
+        position: absolute;
+        left: 0;
+        top:0;
+        z-index: 1;
+        width: 100%;
+        min-height: 100%;
+        flex: 1;
+        background: transparent;
+    }
+    .star_container_2{
+        position: absolute;
+        left: 0;
+        top:0;
+        z-index: 1;
+        width: 100%;
+        min-height: 100%;
+        flex: 1;
+        background: transparent;
+    }
     & .header {
         width: 100%;
         @include flex(column, nowrap, center, center);
         text-align: center;
         height: 80px;
         background-color: transparent;
+        z-index: 10;
         //position: fixed;
         //top: 0;
         //left: 0;
@@ -277,7 +374,7 @@ a{
 
         .logo {
             // height: 30px;
-            cursor: pointer !important;
+            cursor: url("./assets/mouse/shiftlight_mouse.png"),default !important;
 
             .logo__icon {
                 width: 34px;
@@ -295,13 +392,14 @@ a{
             height: 32px;
             border-radius: 50%;
             margin-left: 24px;
-            cursor: pointer !important;
+            cursor: url("./assets/mouse/shiftlight_mouse.png"),default !important;
         }
     }
 
     & .content {
         @include flex(column, nowrap, flex-start, center);
         flex: 1;
+        z-index: 10;
         .home{
             margin-bottom: 80px;
         }
@@ -312,21 +410,22 @@ a{
         padding: 0;
         width: 100%;
         background-color: #eef0f6;
+        z-index: 10;
         //position: absolute;
         //bottom: 0;
     }
 }
 .ant-btn{
-    cursor: pointer !important;
+    cursor: url("./assets/mouse/shiftlight_mouse.png"),default !important;
 }
 .ant-select{
-    cursor:pointer !important;
+    cursor: url("./assets/mouse/shiftlight_mouse.png"),default !important;
 }
 .ant-select-item{
-    cursor: pointer !important;
+    cursor: url("./assets/mouse/shiftlight_mouse.png"),default !important;
 }
 .ant-calendar-date{
-    cursor: pointer !important;
+    cursor: url("./assets/mouse/shiftlight_mouse.png"),default !important;
 }
 .col__layout {
     @include flex(row, nowrap, flex-start, center);
@@ -345,6 +444,20 @@ a {
 
     &:hover {
         color: #3d50ff
+    }
+}
+@keyframes flicker {
+    0% {
+        opacity: 0;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(2);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1);
     }
 }
 </style>
