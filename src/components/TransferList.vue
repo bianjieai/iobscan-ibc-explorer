@@ -132,6 +132,6 @@ export default {
   border-bottom: 1px solid rgba(#979797, 0.2);
   overflow-y: auto;
   overflow-x: hidden;
-  margin: 0 24px 0 16px;
+  margin: 0 16px;
 }
 </style>
