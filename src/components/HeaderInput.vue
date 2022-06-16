@@ -59,7 +59,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 .ant-input-affix-wrapper-focused{
     box-shadow: none;
 }

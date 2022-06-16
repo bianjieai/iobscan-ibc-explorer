@@ -13,12 +13,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-@import "../style/mixin.scss";
-@import "../style/variable.scss";
+<style lang="less" scoped>
 
 .nodatas {
-    @include flex(column, nowrap, center, center);
+    .flex(column, nowrap, center, center);
     &__icon {
         width: 120px;
     }
@@ -27,7 +25,7 @@ export default {
         font-size: 14px;
         font-family: Montserrat-Regular, Montserrat;
         font-weight: 400;
-        color: $font-color2;
+        color: @font-color2;
     }
 }
 </style>
