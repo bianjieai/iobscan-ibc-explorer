@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { floor } from 'lodash';
+import { floor } from 'lodash-es';
 
 function getRestString(string, left, right) {
   return string ? `${string.substr(0, left)}...${string.substr(-right)}` : '';

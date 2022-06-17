@@ -1,6 +1,0 @@
-@mixin flex($dir, $wrap: nowrap, $jc, $ai) {
-  display: flex;
-  flex-flow: $dir $wrap;
-  justify-content: $jc;
-  align-items: $ai;
-}

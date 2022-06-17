@@ -1,7 +1,9 @@
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable no-param-reassign */
-import {HttpHelper} from '../helper/httpHelpers';
-import router from "../router";
+import { HttpHelper } from '../helper/httpHelpers.js';
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 function get(url, params) {
     return new Promise(async (res, rej) => {
@@ -67,7 +69,7 @@ function get(url, params) {
         } catch (err) {
 
             console.error(`error from ${url}:`, err.message);
-            if(url?.includes('/api/ibc/chains') || url?.includes('/api/ibc/txs') ){
+            if (url?.includes('/api/ibc/chains') || url?.includes('/api/ibc/txs')) {
                 if (!err?.message?.includes('code 200')) {
                     router.push('/500')
                 }
