@@ -16,7 +16,6 @@
   display: flex;
   flex-direction: column;
   min-height: 100Vh;
-  min-width: 1200px;
   overflow-x: auto;
 }
 </style>
