@@ -38,6 +38,8 @@ export default {
 <style lang="less">
 
 .header__menu {
+    flex: 1;
+    .flex(row, nowrap, center, center);
   height: @nav-height;
   line-height: @nav-height;
   background-color: transparent;
@@ -83,5 +85,20 @@ export default {
       display: none;
     }
   }
+}
+
+@media screen and (max-width: 1200px) {
+    .header__menu {
+        &__item {
+            width: 90px;
+        }
+    }
+}
+@media screen and (max-width: 1030px) {
+    .header__menu {
+        display: none;
+        &__item {
+        }
+    }
 }
 </style>

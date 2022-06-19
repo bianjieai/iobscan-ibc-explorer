@@ -24,8 +24,9 @@ const onClickIcon = (item: number) => {
 
 <style lang="less" scoped>
 .footer__content {
+    box-sizing: border-box;
+    padding: 16px 0;
   width: 100%;
-  height: 60px;
   max-width: 1200px;
   .flex(row, nowrap, space-between, center);
 
@@ -52,5 +53,32 @@ const onClickIcon = (item: number) => {
     font-weight: 400;
     color: @font-color2;
   }
+}
+
+@media screen and (max-width: 1200px) {
+    .footer__content {
+        padding: 16px 32px;
+        &__left {
+            &__icon {
+            }
+        }
+
+        &__right {
+        }
+    }
+}
+@media screen and (max-width: 768px) {
+    .footer__content {
+        .flex(column, nowrap, center, center);
+
+        &__left {
+            &__icon {
+            }
+        }
+
+        &__right {
+            margin-top: 16px;
+        }
+    }
 }
 </style>

@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Layout from '../layout/index.vue'
 import { createInterceptor } from './interceptor'
 
@@ -116,7 +116,7 @@ const routes: Array<RouteRecordRaw> = [
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL // base_url
 
 const router = createRouter({
-    history: createWebHashHistory('/'),
+    history: createWebHistory('/'),
     routes
 })
 
