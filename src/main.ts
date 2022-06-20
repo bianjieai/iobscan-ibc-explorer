@@ -4,7 +4,6 @@ import router from './router'
 import store from './store'
 import Antd from 'ant-design-vue'
 import './theme/index.less';
-// TODO theme 
 
 const app = createApp(App)
 app.use(router).mount('#app')

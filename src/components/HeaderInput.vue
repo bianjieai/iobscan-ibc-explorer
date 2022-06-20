@@ -100,7 +100,7 @@ export default {
         justify-items: center;
         cursor: url("../assets/mouse/shiftlight_mouse.png"),default;
         .input__prefix_icon{
-            font-size: 24px;
+            font-size: var(--bj-font-size-home-number);
             color: rgba(255,255,255,0.7);
         }
     }
