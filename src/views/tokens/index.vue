@@ -6,6 +6,7 @@
 </template>
 
 <script lang="ts" setup>
+// TODO clippers => 完善tokens页面
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 

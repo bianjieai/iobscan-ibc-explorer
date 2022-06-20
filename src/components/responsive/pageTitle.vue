@@ -13,6 +13,7 @@
 </template>
 
 <script lang="ts" setup>
+// TODO clippers => 完善props
 interface IProps {
   hasIcon?: boolean
 }
@@ -50,7 +51,7 @@ const props = defineProps<IProps>()
     margin-right: 8px;
 
     .title {
-      font-size: 20px;
+      font-size: var(--bj-font-size-title);
     }
   }
 

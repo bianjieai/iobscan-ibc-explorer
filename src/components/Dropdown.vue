@@ -265,7 +265,7 @@ export default {
     border-radius: 4px;
     padding: 6px 12px;
     border: 1px solid transparent;
-    font-size: 14px;
+    font-size: var(--bj-font-size-normal);
     font-family: Montserrat-Regular, Montserrat;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
@@ -283,7 +283,7 @@ export default {
   &__item {
     width: 100%;
     &__title {
-      font-size: 14px;
+      font-size: var(--bj-font-size-normal);
       font-family: Montserrat-Regular, Montserrat;
       font-weight: 400;
       color: #000000;
@@ -325,7 +325,7 @@ export default {
           margin-right: 8px;
         }
         &__title {
-          font-size: 14px;
+          font-size: var(--bj-font-size-normal);
           font-family: Montserrat-Regular, Montserrat;
           font-weight: 400;
           overflow: hidden;
