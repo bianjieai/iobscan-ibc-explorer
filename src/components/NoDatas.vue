@@ -22,7 +22,7 @@ export default {
     }
     &__title {
         margin-top: 16px;
-        font-size: 14px;
+        font-size: var(--bj-font-size-normal);
         font-family: Montserrat-Regular, Montserrat;
         font-weight: 400;
         color: @font-color2;

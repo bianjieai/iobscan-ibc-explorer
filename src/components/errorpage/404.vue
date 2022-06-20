@@ -45,7 +45,7 @@ export default {
             .error_content_description{
                 margin-top: 16px;
                 color: rgba(255, 255, 255, 0.65);
-                font-size: 14px;
+                font-size: var(--bj-font-size-normal);
                 font-weight: 400;
                 line-height: 16px;
             }

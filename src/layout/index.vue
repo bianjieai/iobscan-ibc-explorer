@@ -1,5 +1,8 @@
 <template>
-  <div class="bj-root">
+  <a-config-provider class="bj-root">
+    <template #renderEmpty>
+      <no-datas />
+    </template>
     <a-layout class="layout" ref="layout">
       <a-layout-header class="header">
         <a-row class="header__content" type="flex">
@@ -29,34 +32,35 @@
         <ibc-footer />
       </a-layout-footer>
     </a-layout>
-  </div>
+  </a-config-provider>
 </template>
 
 <script lang="ts" setup>
-import { onMounted, reactive, ref, VueElement } from 'vue';
+import { onMounted, reactive, Ref, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { menus } from '../constants/index.js';
 import Navigation from '../components/Navigation.vue';
 import HeaderInput from '../components/HeaderInput.vue';
 import IbcFooter from '../components/IbcFooter.vue';
-
-// const iconIoblink = new URL('../assets/ioblink.png', import.meta.url).href // fix require is not defined
+import { useStarAnimation } from './hooks/useStarAnimation'
 
 const isShowBackground = ref(false)
 const headerMenus = reactive(menus);
 const currentMenu = ref<string[]>([])
 const router = useRouter()
 const route = useRoute();
-const layout = ref<any>(null)
+const layout = ref<Ref>()
+
+const { setStar1, setStar2 } = useStarAnimation(layout)
 
 onMounted(() => {
-  // TODO 定时器回收
+  // TODO shan => 定时器回收 
 
   // setInterval(() => {
-  //   setStart()
+  //   setStar1()
   // }, 3200)
   // setInterval(() => {
-  //   setStart2()
+  //   setStar2()
   // }, 4200)
 })
 
@@ -77,63 +81,14 @@ const onPressEnter = (val: string) => {
 //   console.log(val);
 };
 
-// TODO 部分watch逻辑
-
-
-// TODO 两个setStart逻辑可以复用 / 重写
-const setStart = () => {
-  const removeStarContainerDom = document.getElementsByClassName('star_container')
-  if (removeStarContainerDom?.length !== 0) {
-    layout.value.$el.removeChild(removeStarContainerDom[0])
+watch(() => route.path, (newVal, oldVal) => {
+  if (!oldVal) { // 页面刚加载
+    const temp = newVal.replace(/\//, '')
+    currentMenu.value = [temp[0].toUpperCase() + temp.substr(1)]
   }
-  const starContainerDom = document.createElement('div')
-  starContainerDom.className = 'star_container'
-  layout.value.$el.appendChild(starContainerDom)
-  const windowClientWidth = window.document.documentElement.clientWidth - 20
-  const starNumber = 20
-  for (let i = 0; i < starNumber; i++) {
-    const createDom = document.createElement('div')
-    createDom.className = 'star_content'
-    const widthAndHeight = parseInt(String(Math.random() * 6))
-    createDom.style.width = `${widthAndHeight}px`;
-    createDom.style.height = `${widthAndHeight}px`;
-    createDom.style.borderRadius = `${widthAndHeight / 2}px`;
-    createDom.style.animationDelay = `1000`;
-    // let leftNumber = `${parseInt(Math.random() * windowClientWidth)} px`
-    createDom.style.left = `${parseInt(String(Math.random() * windowClientWidth))}px`
-    createDom.style.top = `${parseInt(String(Math.random() * 320))}px`
-    const appendChildStartContainerDom = document.getElementsByClassName('star_container')
-    appendChildStartContainerDom[0].appendChild(createDom)
-
-  }
-};
-const setStart2 = () => {
-  const removeStarContainerDom = document.getElementsByClassName('star_container_2')
-  if (removeStarContainerDom?.length !== 0) {
-    layout.value.$el.removeChild(removeStarContainerDom[0])
-  }
-  const starContainerDom = document.createElement('div')
-  starContainerDom.className = 'star_container_2'
-  layout.value.$el.appendChild(starContainerDom)
-  const windowClientWidth = window.document.documentElement.clientWidth - 20
-  const starNumber = 10
-  for (let i = 0; i < starNumber; i++) {
-    const createDom = document.createElement('div')
-    createDom.className = 'star_content_two'
-    const widthAndHeight = parseInt(String(Math.random() * 10))
-    createDom.style.width = `${widthAndHeight}px`;
-    createDom.style.height = `${widthAndHeight}px`;
-    createDom.style.borderRadius = `${widthAndHeight / 2}px`;
-    createDom.style.animationDelay = `1000`;
-    // let leftNumber = `${parseInt(String(Math.random() * windowClientWidth))} px`
-    createDom.style.left = `${parseInt(String(Math.random() * windowClientWidth))}px`
-    createDom.style.top = `${parseInt(String(Math.random() * 320))}px`
-    const appendChildStartContainerDom = document.getElementsByClassName('star_container_2')
-    appendChildStartContainerDom[0].appendChild(createDom)
-
-  }
-};
-
+}, {
+  immediate: true
+})
 </script>
 
 <style lang="less" scoped>
@@ -144,20 +99,6 @@ const setStart2 = () => {
 
 a {
   cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
-}
-
-.star_content {
-  box-shadow: 0 0 0.1rem 0 rgba(229, 232, 153, 0.8);
-  background: #FEFFA6;
-  position: absolute;
-  animation: flicker 3s ease-in-out infinite;
-}
-
-.star_content_two {
-  box-shadow: 0 0 0.1rem 0 rgba(229, 232, 153, 0.8);
-  background: #FEFFA6;
-  position: absolute;
-  animation: flicker 4s ease-in-out infinite;
 }
 
 .ant-tooltip {
@@ -186,28 +127,6 @@ a {
   background-color: #F5F7FC;
   flex: 1;
   position: relative;
-
-  .star_container {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 1;
-    width: 100%;
-    min-height: 100%;
-    flex: 1;
-    background: transparent;
-  }
-
-  .star_container_2 {
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 1;
-    width: 100%;
-    min-height: 100%;
-    flex: 1;
-    background: transparent;
-  }
 
   & .header {
     width: 100%;
@@ -273,55 +192,8 @@ a {
   }
 }
 
-.ant-btn {
-  cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
-}
-
-.ant-select {
-  cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
-}
-
-.ant-select-item {
-  cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
-}
-
-.ant-calendar-date {
-  cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
-}
-
 .col__layout {
-  .flex(row, nowrap, flex-start, center);
+    .flex(row, nowrap, flex-start, center);
 }
 
-.show__background {
-  background-color: #F5F7FC !important;
-  // background-color: transparent;
-}
-
-@media screen and (max-width: 1920px) {}
-
-a {
-  color: rgba(0, 0, 0, 0.7);
-
-  &:hover {
-    color: #3d50ff
-  }
-}
-
-@keyframes flicker {
-  0% {
-    opacity: 0;
-    transform: scale(1);
-  }
-
-  50% {
-    opacity: 1;
-    transform: scale(2);
-  }
-
-  100% {
-    opacity: 0;
-    transform: scale(1);
-  }
-}
 </style>
