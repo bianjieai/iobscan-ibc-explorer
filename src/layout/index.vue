@@ -74,7 +74,7 @@ const clickMenu = (val: string) => {
 }
 
 const onPressEnter = (val: string) => {
-  console.log(val);
+//   console.log(val);
 };
 
 // TODO 部分watch逻辑

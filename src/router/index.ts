@@ -65,15 +65,15 @@ const routes: Array<RouteRecordRaw> = [
         ]
     },
     {
-        path: '/network',
-        redirect: '/network',
+        path: '/chains',
+        redirect: '/chains',
         component: Layout,
         meta: {},
         children: [
             {
                 path: '',
-                name: 'Network',
-                component: () => import('../views/network/index.vue'),
+                name: 'Chains',
+                component: () => import('../views/chains/index.vue'),
                 meta: {}
             }
         ]
