@@ -6,7 +6,7 @@
             </a-menu-item>
         </a-menu>
         <div class="chainlist_bottom">
-            <!-- <a-list
+            <a-list
                 class="card_list ibc_scrollbar"
                 id="card_keyoflist"
                 v-show="chainList[currentMenu] && chainList[currentMenu].length"
@@ -32,9 +32,9 @@
                         </router-link>
                     </a-list-item>
                 </template>
-            </a-list> -->
+            </a-list>
 
-            <!-- <a-anchor
+            <a-anchor
                 class="list_anchor"
                 :affix="false"
                 :getContainer="getBindElement"
@@ -56,28 +56,175 @@
                         </div>
                     </template>
                 </a-anchor-link>
-            </a-anchor> -->
+            </a-anchor>
 
-            <!-- <no-datas
+            <no-datas
                 class="card_list"
                 v-if="!chainList[currentMenu] || !chainList[currentMenu].length"
-            /> -->
+            />
         </div>
     </div>
 </template>
 
 <script setup>
-import {ref, reactive, toRefs} from 'vue';
-import { chainMenus } from '../constants';
+import {ref, reactive, onMounted} from 'vue';
+import NoDatas from './NoDatas.vue';
+import { chainMenus, anchorsDatas } from '../constants';
 
 const menus = reactive(chainMenus);
 const currentMenu = ref([menus[0].value]);
+const emits = defineEmits(['onMenuSelected','clickItem']);
+const getBindElement = ref(null);
+const anchors = reactive(anchorsDatas);
+const listRef = ref(null);
 const props = defineProps({
     chainList: Object
 })
-const chainList = toRefs(props.chainList);
+
+const findClassName = (chainName) => {
+    const chainQuery = chainName.substr(0, 1).toUpperCase();
+    let className = '';
+    try {
+        anchors.forEach((anchor) => {
+            className = anchor.collection.indexOf(chainQuery) !== -1 ? anchor.title : '#';
+            if (anchor.collection.indexOf(chainQuery) !== -1) {
+                console.log(listRef.value,'listRef.value');
+                listRef.value.$el.scrollTop = 0
+                throw new Error('find className');
+            }
+        });
+    } catch (e) {
+        // console.log(e.message);
+    }
+    return className;
+};
+const onSelectedMenu = ({key}) => {
+    emits('onMenuSelected', key);
+};
+const onChangeAnchor = (title) => {
+    console.log(title,'title');
+    const findItem = document.getElementsByClassName(title.replace('#', ''))[0];
+    if (findItem) {
+        listRef.value.$el.scrollTop = findItem.parentElement.offsetTop;
+    }
+};
+const clickListItem = ({type, value}) => {
+    emits('clickItem', {type, value});
+};
+
+onMounted(() => {
+    getBindElement.value = () => document.querySelector('#card_list');
+})
+
 </script>
 
 <style lang="less" scoped>
+.chainlist {
+    width: 100%;
+    &_menu {
+        width: 100%;
+        border: 0;
+        ::v-deep.ant-menu-overflow{
+            .ant-menu-overflow-item{
+                &:hover{
+                    cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
+                }
+            }
+        }
+        ::v-deep .ant-menu-title-content {
+            font-size: var(--bj-font-size-normal);
+            font-family: Montserrat-Regular, Montserrat;
+            font-weight: 400;
+        }
+        .ant-menu-item-active {
+            .ant-menu-title-content {
+                color: var(--bj-text-third);
+            }
+        }
+        .ant-menu-item-selected {
+            .ant-menu-title-content {
+                color: var(--bj-text-normal);
+            }
+        }
+    }
+    &_bottom {
+        margin-top: 8px;
+        width: 100%;
+        .flex(row, nowrap, flex-start, flex-start);
+    }
+    &_item {
+        font-size: var(--bj-font-size-normal);
+        font-family: Montserrat-Regular, Montserrat;
+        font-weight: 400;
+        color: var(--bj-text-third);
+    }
+    .card_list {
+        width: calc(100% - 50px);
+        height: 182px;
+        padding-right: 20px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .menu_card {
+        border-radius: var(--border-radius-normal);
+        ::v-deep .ant-card-body {
+            padding: 12px;
+            height: 126px;
+        }
+    }
+    .card_img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        border: 1px solid rgba(#000000, 0.2);
+    }
+    .card_title {
+        margin-top: 6px;
+        font-size: var(--bj-font-size-sub-title);
+        line-height: var(--bj-font-size-sub-title);
+        font-family: Montserrat-SemiBold, Montserrat;
+        font-weight: 600;
+        color: var(--bj-text-second);
+    }
+    .card_value {
+        margin: 6px 0;
+        font-size: var(--bj-font-size-normal);
+        line-height: 16px;
+        font-family: Montserrat-Regular, Montserrat;
+        font-weight: 400;
+        color:rgba(0, 0, 0, 0.65);
+        word-break: break-all;
+    }
+    .list_anchor {
+        width: 50px;
 
+        &_item {
+            width: 100%;
+        }
+    }
+    .nodatas_icon {
+        width: 120px;
+        margin-top: 24px;
+    }
+
+    .nodatas_title {
+        margin-top: 16px;
+        font-size: 14px;
+        font-family: PingFangSC-Regular, PingFang SC;
+        font-weight: 400;
+        color: rgba(0, 0, 0, 0.65);
+    }
+}
+.custom_title {
+    .flex(row, nowrap, space-between, center);
+    color: var(--bj-text-third);
+    &_left {
+        width: 10px;
+        text-align: left;
+    }
+    &_right {
+        width: 12px;
+        text-align: center;
+    }
+}
 </style>

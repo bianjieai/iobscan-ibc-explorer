@@ -1,4 +1,4 @@
-.ant-anchor-ink::before {
+.ant-anchor-link::before {
     width: 0px !important;
 }
 
@@ -10,67 +10,67 @@
     color: white;
 }
 
-.ant-anchor-link-title {
-    width: 26px;
-    font-family: Montserrat-Regular, Montserrat;
-    text-align: justify;
-}
-
 .ant-anchor-link-title-active {
     width: 30px !important;
 }
 
-.ibc__selected__border:hover .ant-card-bordered {
+.ibc_selected_border:hover .ant-card-bordered {
     border: 1px solid #3d50ff;
     cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
 }
 
-.ibc__selected__title:hover {
+.ibc_selected_title:hover {
     cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
 }
 
-.ibc__selected__title:hover .list__item__value {
+.ibc_selected_title:hover .list_item_value {
     color: #3d50ff;
 }
 
-.ibc__selected__title:hover .card__content__value {
+.ibc_selected_title:hover .card_content_value {
     color: #3d50ff;
 }
 
-.ibc__scrollbar::-webkit-scrollbar {
+.ibc_scrollbar::-webkit-scrollbar {
     width: 4px;
 }
 
-.ibc__scrollbar::-webkit-scrollbar-thumb {
+.ibc_scrollbar::-webkit-scrollbar-thumb {
     border-radius: 4px;
     -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
     background: #3d50ff;
 }
 
-.ibc__scrollbar::-webkit-scrollbar-track {
+.ibc_scrollbar::-webkit-scrollbar-track {
     background-color: #F2F2F2;
 }
 
 .ant-anchor-link-title {
+    width: 26px;
+    font-family: Montserrat-Regular, Montserrat;
+    text-align: justify;
     font-size: var(--bj-font-size-normal);
     font-family: Montserrat-Regular, Montserrat;
     font-weight: 400;
-    color: rgba(0, 0, 0, 0.35);
+    color: var(--bj-text-third);
 }
 
 .ant-anchor-link-active .ant-anchor-link-title {
     color: #ffffff;
     width: 32px;
     background-color: #3d50ff;
-    border-radius: 4px;
+    border-radius: var(--border-radius-normal);
     padding: 2px;
 }
+.ant-anchor-link-active .ant-anchor-link-title-active .custom_title {
+    color: #fff;
+}
 
-.transfer__table .ant-table-thead tr th {
+.transfer_table .ant-table-thead tr th {
     background-color: #ffffff;
 }
 
-.transfer__table .ant-table-column-title {
+.transfer_table .ant-table-column-title {
     font-size: 16px;
     font-family: Montserrat-Regular, Montserrat;
     font-weight: 400;

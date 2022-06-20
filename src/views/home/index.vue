@@ -8,7 +8,7 @@
                         @click="onClickViewAll('chains')" />
                 </div>
                 <div class="home_top_right">
-                    <card-list :chainList="ibcChains.value" @onMenuSelected="onMenuSelected"
+                    <card-list :chainList="ibcChains" @onMenuSelected="onMenuSelected"
                         @clickItem="onClickViewAll" />
                 </div>
             </div>
@@ -16,20 +16,28 @@
     </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { computed, onMounted, provide } from 'vue';
+import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import LayerBlock from '../../components/LayerBlock.vue';
 import Card from '../../components/Card.vue';
 import { useIbcStatisticsChains } from '../../store/home/index';
-import { useRouter } from 'vue-router';
-import { computed } from 'vue';
+import { GET_IBCSTATISTICS, GET_IBCCHAINS } from '../../store/action-types';
 
 const router = useRouter();
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
-let ibcStatisticsChains = ibcStatisticsChainsStore.ibcStatisticsChains;
-const ibcChains = computed(() => ibcStatisticsChainsStore.ibcChains)?.value;
 
-const onClickViewAll = (msg: string) => {
+const ibcStatisticsChains = ibcStatisticsChainsStore.ibcStatisticsChains;
+// const ibcStatisticsChains = computed(() => ibcStatisticsChainsStore.ibcStatisticsChains);
+const ibcChains = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) : computed(() => ibcStatisticsChainsStore.ibcChains);
+
+onMounted(() => {
+    ibcStatisticsChainsStore[GET_IBCSTATISTICS]();
+    sessionStorage.getItem('allChains') ? '' : ibcStatisticsChainsStore[GET_IBCCHAINS]();
+})
+
+const onClickViewAll = (msg) => {
     if (msg?.includes && msg.includes('chains')) {
         router.push({
             name: 'Chains'
@@ -81,7 +89,7 @@ const onClickViewAll = (msg: string) => {
         // });
     }
 }
-const onMenuSelected = (menuKey: number) => {
+const onMenuSelected = (menuKey) => {
     // console.log(menuKey);
     // ibcChainsFilter
 };
@@ -103,6 +111,10 @@ const onMenuSelected = (menuKey: number) => {
             padding: 24px;
             width: 100%;
             max-width: 1200px;
+            .home_top_right {
+                margin-left: 17px;
+                width: 100%;
+            }
         }
     }
 }

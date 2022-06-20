@@ -54,4 +54,7 @@
   --bj-font-size-sub-title: 16px;
   --bj-font-size-normal: 14px;
   --bj-font-size-dropdown: 12px;
+
+  /* border-radius */
+  --border-radius-normal: 4px;
 }

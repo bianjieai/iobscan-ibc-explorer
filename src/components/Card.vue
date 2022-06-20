@@ -1,14 +1,14 @@
 <template>
     <div class="card ibc_selected_title">
-        <img class="card_img" :src="statistics_name.indexOf('24') !== -1
+        <img class="card_img" :src="msg.statistics_name.indexOf('24') !== -1
           ? chains24hrImg
           : chainsAllImg" alt="chains_all">
         <div class="card_content">
             <span class="card_content_name">
-                {{statisticsName[statistics_name]}}
-                <span v-if="statistics_name.indexOf('24') !== -1" class="card_content_tip">24hr</span>
+                {{statisticsName[msg.statistics_name]}}
+                <span v-if="msg.statistics_name.indexOf('24') !== -1" class="card_content_tip">24hr</span>
             </span>
-            <span class="card_content_value">{{ count }}</span>
+            <span class="card_content_value">{{ msg.count }}</span>
         </div>
     </div>
 </template>
@@ -16,22 +16,11 @@
 <script setup>
 import chains24hrImg from '../assets/chains_24hr.png';
 import chainsAllImg from '../assets/chains_all.png';
-import { toRefs } from 'vue';
 import {statisticsName} from '../constants/index';
 
 const props = defineProps({
-    msg: {
-        type: Object,
-        default: () => {
-            return {
-                statistics_name: '', 
-                count: 0
-            }
-        }
-    }
+    msg: Object
 })
-const {statistics_name, count} = toRefs(props.msg);
-
 </script>
 
 <style lang="less" scoped>

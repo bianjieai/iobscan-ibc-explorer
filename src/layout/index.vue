@@ -162,6 +162,7 @@ a {
                 .header_btn_mobile {
                     .flex(row, nowrap, center, center);
                     margin-left: 12px;
+                    cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
                     display: none;
                     img {
                         width: 32px;

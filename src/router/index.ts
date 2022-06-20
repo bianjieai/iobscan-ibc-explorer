@@ -59,7 +59,7 @@ const routes: Array<RouteRecordRaw> = [
             },
             {
                 path: 'details',
-                name: 'tokensDetails',
+                name: 'Tokens Details',
                 component: () => import('../components/ComingSoon.vue')
             }
         ]
@@ -74,6 +74,12 @@ const routes: Array<RouteRecordRaw> = [
                 path: '',
                 name: 'Chains',
                 component: () => import('../views/chains/index.vue'),
+                meta: {}
+            },
+            {
+                path: 'details',
+                name: 'Chains Details',
+                component: () => import('../components/ComingSoon.vue'),
                 meta: {}
             }
         ]

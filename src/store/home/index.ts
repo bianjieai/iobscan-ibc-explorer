@@ -20,7 +20,7 @@ export const useIbcStatisticsChains = defineStore('home', {
     state: () => {
         return {
             ibcStatisticsChains: ibcStatisticsChainsDefault,
-            ibcChains: {value: []},
+            ibcChains: {},
         }
     },
     actions: {
