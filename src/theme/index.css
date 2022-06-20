@@ -48,4 +48,10 @@
   --bj-success: #00C853;
   --bj-processing: #FFC400;
   --bj-failed: #FF5A5A;
+  --bj-font-size-home-title: 40px;
+  --bj-font-size-home-number: 24px;
+  --bj-font-size-title: 20px;
+  --bj-font-size-sub-title: 16px;
+  --bj-font-size-normal: 14px;
+  --bj-font-size-dropdown: 12px;
 }

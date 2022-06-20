@@ -54,7 +54,7 @@ const layout = ref<Ref>()
 const { setStar1, setStar2 } = useStarAnimation(layout)
 
 onMounted(() => {
-  // TODO 定时器回收
+  // TODO shan => 定时器回收 
 
   // setInterval(() => {
   //   setStar1()
@@ -81,7 +81,6 @@ const onPressEnter = (val: string) => {
   console.log(val);
 };
 
-// TODO 部分watch逻辑
 watch(() => route.path, (newVal, oldVal) => {
   if (!oldVal) { // 页面刚加载
     const temp = newVal.replace(/\//, '')

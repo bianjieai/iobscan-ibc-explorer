@@ -12,6 +12,14 @@
   </div>
 </template>
 
+<script lang="ts" setup>
+interface IProps {
+  hasIcon?: boolean
+}
+
+const props = defineProps<IProps>()
+
+</script>
 
 <style lang="less" scoped>
 .page-title-container {
@@ -65,19 +73,23 @@
 // pc
 @media screen and (min-width: 768px) {
   .page-title-container {
-    padding-top: 40px;
+    padding-top: 48px; 
   }
 }
 
 // tablet
-@media screen and (min-width: 414px) and (max-width: 768px) {}
+@media screen and (min-width: 414px) and (max-width: 768px) {
+  .page-title-container {
+    padding-top: 40px; 
+  }
+}
 
 // mobile
 @media screen and (max-width: 414px) {
   .page-title-container {
     display: inline-flex;
     text-align: left;
-    padding-top: 20px;
+    padding-top: 24px;
 
     .flex {
       display: block;
