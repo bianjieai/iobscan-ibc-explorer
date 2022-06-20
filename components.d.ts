@@ -18,7 +18,6 @@ declare module '@vue/runtime-core' {
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
     ARow: typeof import('ant-design-vue/es')['Row']
     ATooltip: typeof import('ant-design-vue/es')['Tooltip']
-    ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
     Card: typeof import('./src/components/Card.vue')['default']
     CardList: typeof import('./src/components/CardList.vue')['default']
     ComingSoon: typeof import('./src/components/ComingSoon.vue')['default']

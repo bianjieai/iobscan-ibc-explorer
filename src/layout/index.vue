@@ -5,24 +5,23 @@
     </template>
     <a-layout class="layout" ref="layout">
       <a-layout-header class="header">
-        <a-row class="header__content" type="flex">
-          <a-col flex="160px" class="col__layout">
+        <div class="header_content">
             <div class="logo" @click="onClickLogo">
-              <img class="logo__icon" src="../assets/HeaderIcon.png" alt="logo" />
-              <img class="logo__text" src="../assets/iobscan.png" alt="title" />
+              <img class="logo_icon" src="../assets/iobscan_logo.png" alt="logo" />
             </div>
-          </a-col>
-          <a-col flex="auto">
             <navigation :menus="headerMenus" @clickMenu="clickMenu" :currentMenu="currentMenu" />
-          </a-col>
-          <a-col flex="auto" class="col__layout">
-            <!-- disabled can remove if have tx details -->
-            <header-input @pressedEnter="onPressEnter" disabled />
-            <a href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
-              <img class="header__input__icon" src="/src/assets/ioblink.png" alt="icon" />
-            </a>
-          </a-col>
-        </a-row>
+            <div class="header_input_wrapper">
+                <header-input class="header_input_layput" @pressedEnter="onPressEnter" disabled />
+                <div class="header_input_icon_wrapper">
+                    <a href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
+                        <img class="header_input_icon" src="/src/assets/ioblink.png" alt="icon" />
+                    </a>
+                    <div class="header_btn_mobile">
+                        <img src="../assets/menu_mobile.png" alt="menu icon">
+                    </div>
+                </div>
+            </div>
+        </div>
       </a-layout-header>
 
       <a-layout-content class="content" :class="isShowBackground ? 'show__background' : ''">
@@ -129,71 +128,176 @@ a {
   position: relative;
 
   & .header {
+    box-sizing: border-box;
+    padding: 0;
     width: 100%;
-    .flex(column, nowrap, center, center);
-    text-align: center;
     height: 80px;
-    background-color: transparent;
+    line-height: 80px;
+    background: transparent;
     z-index: 10;
-
-    //position: fixed;
-    //top: 0;
-    //left: 0;
-    //z-index: 100;
-    & .header__content {
-      width: 100%;
-      max-width: 1200px;
-      height: 100%;
-      .flex(row, nowrap, center, center);
-    }
-
-    .logo {
-      // height: 30px;
-      cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
-
-      .logo__icon {
-        width: 34px;
-        margin-right: 10px;
-      }
-
-      .logo__text {
-        width: 100px;
-      }
-    }
-
-    &__input__icon {
-      display: inline-block;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      margin-left: 24px;
-      cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+    .header_content {
+        .flex(row, nowrap, space-between, center);
+        margin: 0 auto;
+        width: 100%;
+        max-width: 1200px;
+        height: 100%;
+        .logo {
+            width: 144px;
+            .logo_icon {
+                width: 100%;
+            }
+        }
+        .header_input_wrapper {
+            .flex(row, nowrap, space-between, center);
+            .header_input_icon_wrapper {
+                .flex(row, nowrap, space-between, center);
+                margin-left: 12px;
+                a {
+                    .flex(row, nowrap, center, center);
+                    .header_input_icon {
+                        width: 32px;
+                        height: 32px;
+                    }
+                }
+                .header_btn_mobile {
+                    .flex(row, nowrap, center, center);
+                    margin-left: 12px;
+                    display: none;
+                    img {
+                        width: 32px;
+                        height: 32px;
+                    }
+                }
+            }
+        }
     }
   }
-
   & .content {
+    box-sizing: border-box;
     .flex(column, nowrap, flex-start, center);
     flex: 1;
     z-index: 10;
-
-    .home {
-      margin-bottom: 80px;
-    }
   }
 
   & .footer {
-    .flex(column, nowrap, flex-start, center);
+    .flex(column, nowrap, space-between, center);
     padding: 0;
     width: 100%;
     background-color: #eef0f6;
     z-index: 10;
-    //position: absolute;
-    //bottom: 0;
   }
 }
 
-.col__layout {
-    .flex(row, nowrap, flex-start, center);
+@media screen and (max-width: 1200px) {
+    .layout {
+
+        & .header {
+            box-sizing: border-box;
+            padding: 0 32px;
+            .header_content {
+                .logo {
+                    .logo_icon {
+                    }
+                }
+                .header_input_wrapper {
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {
+                            }
+                        }
+                        .header_btn_mobile {
+                            img {
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        & .content {
+        }
+
+        & .footer {
+        }
+    }
 }
 
+@media screen and (max-width: 1030px) {
+    .layout {
+        & .header {
+            box-sizing: border-box;
+            padding: 0 32px;
+            .header_content {
+                .logo {
+                    .logo_icon {}
+                }
+                .header_input_wrapper {
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {}
+                        }
+                        .header_btn_mobile {
+                            display: inline-block;
+                            img {}
+                        }
+                    }
+                }
+            }
+        }
+        & .content {}
+        & .footer {}
+    }
+}
+
+@media screen and (max-width: 570px) {
+    .layout {
+        & .header {
+            padding: 0 16px;
+            .header_content {
+                .logo {
+                    width: 136px;
+                    .logo_icon {}
+                }
+                .header_input_wrapper {
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {}
+                        }
+                        .header_btn_mobile {
+                            img {}
+                        }
+                    }
+                }
+            }
+        }
+        & .content {}
+        & .footer {}
+    }
+}
+@media screen and (max-width: 460px) {
+    .layout {
+        & .header {
+            padding: 0 16px;
+            .header_content {
+                .logo {
+                    .logo_icon {}
+                }
+                .header_input_wrapper {
+                    .header_input_layput {
+                        display: none;
+                    }
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {}
+                        }
+                        .header_btn_mobile {
+                            img {}
+                        }
+                    }
+                }
+            }
+        }
+        & .content {}
+        & .footer {}
+    }
+}
 </style>
