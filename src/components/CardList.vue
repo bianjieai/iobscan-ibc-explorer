@@ -88,7 +88,7 @@ const findClassName = (chainName) => {
         anchors.forEach((anchor) => {
             className = anchor.collection.indexOf(chainQuery) !== -1 ? anchor.title : '#';
             if (anchor.collection.indexOf(chainQuery) !== -1) {
-                console.log(listRef.value,'listRef.value');
+                // todo listRef.value.$el 中没有 scrollTop 属性，需考虑换个方式
                 listRef.value.$el.scrollTop = 0
                 throw new Error('find className');
             }
@@ -102,9 +102,9 @@ const onSelectedMenu = ({key}) => {
     emits('onMenuSelected', key);
 };
 const onChangeAnchor = (title) => {
-    console.log(title,'title');
     const findItem = document.getElementsByClassName(title.replace('#', ''))[0];
     if (findItem) {
+        // todo listRef.value.$el 中没有 scrollTop 属性，需考虑换个方式
         listRef.value.$el.scrollTop = findItem.parentElement.offsetTop;
     }
 };

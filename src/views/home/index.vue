@@ -8,11 +8,27 @@
                         @click="onClickViewAll('chains')" />
                 </div>
                 <div class="home_top_right">
-                    <card-list :chainList="ibcChains" @onMenuSelected="onMenuSelected"
-                        @clickItem="onClickViewAll" />
+                    <card-list :chainList="ibcChains" @onMenuSelected="onMenuSelected" @clickItem="onClickViewAll" />
                 </div>
             </div>
         </layer-block>
+        <!-- <div class="home_bottom">
+            <div class="home_bottom_left">
+                <layer-block title="Channels">
+                    <statistic-list type="vertical" :msg="ibcStatisticsChannels" @clickItem="onClickViewAll" />
+                </layer-block>
+
+                <layer-block title="IBC Tokens" style="margin-top: 47px" showTip :tipMsg="tipMsg">
+                    <statistic-list type="vertical" :msg="ibcStatisticsDenoms" @clickItem="onClickViewAll" />
+                </layer-block>
+            </div>
+
+            <layer-block class="home_bottom_right" title="IBC Token Transfer">
+                <statistic-list type="horizontal" :msg="ibcStatisticsTxs" @clickItem="onClickViewAll" />
+                <transfer-list :transferList="ibcTxs.value" @clickViewAll="onClickViewAll('tx_all')"
+                    @clickItem="onClickViewAll" />
+            </layer-block>
+        </div> -->
     </div>
 </template>
 
@@ -111,9 +127,42 @@ const onMenuSelected = (menuKey) => {
             padding: 24px;
             width: 100%;
             max-width: 1200px;
+
             .home_top_right {
                 margin-left: 17px;
                 width: 100%;
+            }
+        }
+    }
+    &_bottom {
+        .flex(row, nowrap, space-between, center);
+        width: 100%;
+        &_left {
+
+        }
+        &_right {
+
+        }
+    }
+}
+
+@media screen and (max-width: 1155px) {
+    .home {
+        &_top {
+            &_slot {
+                .flex(column, nowrap, center, center);
+
+                .home_top_left {
+                    width: 100%;
+
+                    .ibc_selected_title {
+                        width: 100%;
+                    }
+                }
+
+                .home_top_right {
+                    margin-top: 32px;
+                }
             }
         }
     }
