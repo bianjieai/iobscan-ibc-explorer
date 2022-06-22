@@ -1,5 +1,3 @@
-import { Ref } from "vue";
-
 // TODO shan => 3端响应式
 
 /**
@@ -7,8 +5,8 @@ import { Ref } from "vue";
  * @param layout dom ref
  * @returns 生成两批star方法，编号count 1 / 2
  */
-export const useStarAnimation = (layout: Ref) => {
-    const setStar = (count: number) => {
+export const useStarAnimation = (layout) => {
+    const setStar = (count) => {
         const removeStarContainerDom = document.getElementsByClassName(`star_container_${count}`)
         if (removeStarContainerDom?.length !== 0) {
             layout.value && layout.value?.$el.removeChild(removeStarContainerDom[0])
@@ -54,4 +52,12 @@ export const useStarAnimation = (layout: Ref) => {
         setStar2: () => setStar(2)
     }
 }
+export const useOnPressEnter = () => {
+    const onPressEnter = (val) => {
+    //   console.log(val);
+    };
+    return {
+        onPressEnter
+    }
+} 
 

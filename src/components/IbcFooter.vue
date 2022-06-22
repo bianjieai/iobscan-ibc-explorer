@@ -1,11 +1,11 @@
 <template>
-  <div class="footer__content">
-    <div class="footer__content__left">
-      <img class="footer__content__left__icon" v-for="item of 4" @click="onClickIcon(item)" :key="item"
+  <div class="footer_content">
+    <div class="footer_content_left">
+      <img class="footer_content_left_icon" v-for="item of 4" @click="onClickIcon(item)" :key="item"
         :src="`/src/assets/f${item}.png`" alt="icon" />
       Contact us !
     </div>
-    <div class="footer__content__right">
+    <div class="footer_content_right">
       {{ copyright }}
     </div>
   </div>
@@ -23,20 +23,20 @@ const onClickIcon = (item: number) => {
 </script>
 
 <style lang="less" scoped>
-.footer__content {
+.footer_content {
     box-sizing: border-box;
     padding: 16px 0;
   width: 100%;
   max-width: 1200px;
   .flex(row, nowrap, space-between, center);
 
-  &__left {
+  &_left {
     font-size: @font-size5;
     font-family: Montserrat-Regular, Montserrat;
     font-weight: 400;
     color: @font-color2;
 
-    &__icon {
+    &_icon {
       margin-left: 8px;
       width: 28px;
       height: 28px;
@@ -47,7 +47,7 @@ const onClickIcon = (item: number) => {
     }
   }
 
-  &__right {
+  &_right {
     font-size: @font-size5;
     font-family: Montserrat-Regular, Montserrat;
     font-weight: 400;
@@ -56,27 +56,27 @@ const onClickIcon = (item: number) => {
 }
 
 @media screen and (max-width: 1200px) {
-    .footer__content {
+    .footer_content {
         padding: 16px 32px;
-        &__left {
-            &__icon {
+        &_left {
+            &_icon {
             }
         }
 
-        &__right {
+        &_right {
         }
     }
 }
 @media screen and (max-width: 768px) {
-    .footer__content {
+    .footer_content {
         .flex(column, nowrap, center, center);
 
-        &__left {
-            &__icon {
+        &_left {
+            &_icon {
             }
         }
 
-        &__right {
+        &_right {
             margin-top: 16px;
         }
     }

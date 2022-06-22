@@ -1,11 +1,11 @@
 <template>
   <a-menu
-    class="header__menu"
+    class="header_menu"
     :selectedKeys="currentMenu"
     mode="horizontal"
     @click="clickMenuItem"
   >
-    <a-menu-item class="header__menu__item" v-for="item of menus" :key="item.value">
+    <a-menu-item class="header_menu_item" v-for="item of menus" :key="item.value">
       {{ item.label }}
     </a-menu-item>
   </a-menu>
@@ -37,14 +37,14 @@ export default {
 
 <style lang="less">
 
-.header__menu {
+.header_menu {
     flex: 1;
     .flex(row, nowrap, center, center);
   height: @nav-height;
   line-height: @nav-height;
   background-color: transparent;
   border: 0;
-  &__item {
+  &_item {
     width: 110px;
     padding: 0 !important;
     text-align: center;
@@ -88,16 +88,16 @@ export default {
 }
 
 @media screen and (max-width: 1200px) {
-    .header__menu {
-        &__item {
+    .header_menu {
+        &_item {
             width: 90px;
         }
     }
 }
 @media screen and (max-width: 1030px) {
-    .header__menu {
+    .header_menu {
         display: none;
-        &__item {
+        &_item {
         }
     }
 }

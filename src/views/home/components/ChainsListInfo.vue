@@ -24,7 +24,7 @@
                             <a-card class="menu_card">
                                 <img
                                     class="card_img"
-                                    :src="item.icon ? item.icon : require('../assets/placeHoder.png')"
+                                    :src="item.icon ? item.icon : require('../../../assets/placeHoder.png')"
                                 />
                                 <p class="card_title">{{ item.chain_name }}</p>
                                 <p class="card_value">{{ item.chain_id }}</p>
@@ -67,51 +67,17 @@
 </template>
 
 <script setup>
-import {ref, reactive, onMounted} from 'vue';
-import NoDatas from './NoDatas.vue';
-import { chainMenus, anchorsDatas } from '../constants';
-
-const menus = reactive(chainMenus);
-const currentMenu = ref([menus[0].value]);
-const emits = defineEmits(['onMenuSelected','clickItem']);
-const getBindElement = ref(null);
-const anchors = reactive(anchorsDatas);
-const listRef = ref(null);
+import NoDatas from '../../../components/NoDatas.vue';
+import { onMounted } from 'vue';
+import { useMenus, useInterfaceActive, useAnchors, useGetBindElement } from '../hooks/useChainsListInfo';
 const props = defineProps({
     chainList: Object
 })
-
-const findClassName = (chainName) => {
-    const chainQuery = chainName.substr(0, 1).toUpperCase();
-    let className = '';
-    try {
-        anchors.forEach((anchor) => {
-            className = anchor.collection.indexOf(chainQuery) !== -1 ? anchor.title : '#';
-            if (anchor.collection.indexOf(chainQuery) !== -1) {
-                // todo listRef.value.$el 中没有 scrollTop 属性，需考虑换个方式
-                listRef.value.$el.scrollTop = 0
-                throw new Error('find className');
-            }
-        });
-    } catch (e) {
-        // console.log(e.message);
-    }
-    return className;
-};
-const onSelectedMenu = ({key}) => {
-    emits('onMenuSelected', key);
-};
-const onChangeAnchor = (title) => {
-    const findItem = document.getElementsByClassName(title.replace('#', ''))[0];
-    if (findItem) {
-        // todo listRef.value.$el 中没有 scrollTop 属性，需考虑换个方式
-        listRef.value.$el.scrollTop = findItem.parentElement.offsetTop;
-    }
-};
-const clickListItem = ({type, value}) => {
-    emits('clickItem', {type, value});
-};
-
+const emits = defineEmits(['onMenuSelected','clickItem']);
+const { menus, currentMenu } = useMenus();
+const { onSelectedMenu, clickListItem } = useInterfaceActive();
+const { anchors, findClassName, onChangeAnchor } = useAnchors();
+const { getBindElement } = useGetBindElement();
 onMounted(() => {
     getBindElement.value = () => document.querySelector('#card_list');
 })
@@ -127,7 +93,7 @@ onMounted(() => {
         ::v-deep.ant-menu-overflow{
             .ant-menu-overflow-item{
                 &:hover{
-                    cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
+                    cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default !important;
                 }
             }
         }

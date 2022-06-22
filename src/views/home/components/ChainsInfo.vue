@@ -14,9 +14,9 @@
 </template>
 
 <script setup>
-import chains24hrImg from '../assets/chains_24hr.png';
-import chainsAllImg from '../assets/chains_all.png';
-import {statisticsName} from '../constants/index';
+import chains24hrImg from '../../../assets/chains_24hr.png';
+import chainsAllImg from '../../../assets/chains_all.png';
+import {statisticsName} from '../../../constants/index';
 
 const props = defineProps({
     msg: Object
@@ -28,11 +28,11 @@ const props = defineProps({
   .flex(row, nowrap, flex-start, center);
   width: 360px;
   height: 108px;
-  background-image: url("../assets/card.png");
+  background-image: url("../../../assets/card.png");
   background-position: center;
   background-size: cover;
   border-radius: 4px;
-  cursor:url("../assets/mouse/shiftlight_mouse.png"),default !important;
+  cursor:url("../../../assets/mouse/shiftlight_mouse.png"),default !important;
   &_img {
     margin: 23px 29px;
     width: 60px;

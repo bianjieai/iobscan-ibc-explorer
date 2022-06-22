@@ -1,6 +1,6 @@
 <template>
     <a-input
-        class="header__input"
+        class="header_input"
         placeholder="Search by TxHash"
         :class="isActiveInputStyle ? 'active_input_style' : 'default_input_style'"
         allowClear
@@ -10,8 +10,8 @@
         @pressEnter="searchInput"
     >
         <template #suffix>
-            <div class="input__prefix" @click="searchInput">
-                <span class="input__prefix_icon iconfont icon-search"></span>
+            <div class="input_prefix" @click="searchInput">
+                <span class="input_prefix_icon iconfont icon-search"></span>
             </div>
         </template>
     </a-input>
@@ -70,14 +70,14 @@ export default {
 .default_input_style{
 
 }
-::v-deep.header__input {
+::v-deep.header_input {
     height: 40px;
     background-color: rgba(#ffffff, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 20px;
     border-right:none;
     :hover{
-        .input__prefix{
+        .input_prefix{
             background-color: #2C3EE3;
             color: rgba(255,255,255,1);
 
@@ -90,7 +90,7 @@ export default {
     .anticon{
         color: #fff;
     }
-    .input__prefix {
+    .input_prefix {
         height: 40px;
         border-radius:  0 20px 20px 0;
         padding: 4px 18px;
@@ -99,7 +99,7 @@ export default {
         align-items: center;
         justify-items: center;
         cursor: url("../assets/mouse/shiftlight_mouse.png"),default;
-        .input__prefix_icon{
+        .input_prefix_icon{
             font-size: var(--bj-font-size-home-number);
             color: rgba(255,255,255,0.7);
         }

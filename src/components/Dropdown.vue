@@ -7,16 +7,16 @@
   >
     <a-button class="button">
       <img
-        class="button__pre__icon"
+        class="button_pre_icon"
         :style="{ visibility: showIcon ? 'visible' : 'hidden' }"
         :src="type === 'chain' ? findChainIcon() : findSymbolIcon()"
       />
-      <span class="button__title">{{
+      <span class="button_title">{{
         type === "chain"
           ? getLasttyString(selectedChain.chain_name) || "All Chains"
           : isShowSymbol(selectedSymbol)?.symbolDenom
       }}</span>
-      <span class="button__icon">
+      <span class="button_icon">
         <svg
           :style="{ transform: isVisible ? 'rotate(180deg)' : 'rotate(0)' }"
           focusable="false"
@@ -35,15 +35,15 @@
     </a-button>
     <template #overlay>
       <div class="overlay">
-        <div class="overlay__title" @click="onClickAll">
+        <div class="overlay_title" @click="onClickAll">
           {{ type === "token" ? "All Tokens" : "All Chains" }}
         </div>
-        <div class="overlay__item">
-          <h2 class="overlay__item__title" v-if="type === 'token'">Authed IBC Tokens</h2>
-          <div class="overlay__item__content">
+        <div class="overlay_item">
+          <h2 class="overlay_item_title" v-if="type === 'token'">Authed IBC Tokens</h2>
+          <div class="overlay_item_content">
             <template v-for="(item, key) of options" :key="type === 'chain' ? item.chain_id : key">
               <div
-                class="content__item"
+                class="content_item"
                 v-if="key !== ''"
                 :title="type === 'chain' ? item[titleKey] : key"
                 :class="
@@ -51,20 +51,20 @@
                     ? selectedChain &&
                       selectedChain.chain_id &&
                       selectedChain.chain_id === item.chain_id &&
-                      'content__item__selected'
-                    : selectedSymbol && selectedSymbol === key && 'content__item__selected'
+                      'content_item_selected'
+                    : selectedSymbol && selectedSymbol === key && 'content_item_selected'
                 "
                 @click="onClickItem(item, key)"
               >
                 <img
-                  class="content__item__icon"
+                  class="content_item_icon"
                   :src="
                     item[iconKey] ||
                       isShowSymbol(key)?.symbolIcon ||
                       require('../assets/placeHoder.png')
                   "
                 />
-                <span class="content__item__title">{{
+                <span class="content_item_title">{{
                   getLasttyString(item[titleKey]) || isShowSymbol(key)?.symbolDenom
                 }}</span>
               </div>
@@ -72,23 +72,23 @@
           </div>
         </div>
 
-        <div class="overlay__item" v-if="type === 'token'">
-          <h2 class="overlay__item__title">Other IBC Tokens</h2>
-          <div class="overlay__item__content">
-            <div class="content__item" @click="onClickItem(undefined, unAuthed)">
-              <img class="content__item__icon" src="../assets/placeHoder.png" />
-              <span class="content__item__title">Others</span>
+        <div class="overlay_item" v-if="type === 'token'">
+          <h2 class="overlay_item_title">Other IBC Tokens</h2>
+          <div class="overlay_item_content">
+            <div class="content_item" @click="onClickItem(undefined, unAuthed)">
+              <img class="content_item_icon" src="../assets/placeHoder.png" />
+              <span class="content_item_title">Others</span>
             </div>
           </div>
         </div>
 
-        <div class="overlay__item">
-          <h2 class="overlay__item__title" v-if="type === 'token'">
+        <div class="overlay_item">
+          <h2 class="overlay_item_title" v-if="type === 'token'">
             Custom IBC Tokens
             <a-popover destroyTooltipOnHide>
               <template #content>
                 <div>
-                  <p class="tip__color">
+                  <p class="tip_color">
                     Hash (in hex format) of the denomination trace information.
                   </p>
                 </div>
@@ -96,9 +96,9 @@
               <img class="tip hover" style="margin-left: 8px;" src="/src/assets/tip.png" />
             </a-popover>
           </h2>
-          <div class="overlay__item__content flex-c">
+          <div class="overlay_item_content flex-c">
             <a-input
-              class="overlay__item__input"
+              class="overlay_item_input"
               v-model:value="inputValue"
               allowClear
               :placeholder="type === 'token' ? 'Search by ibc/hash' : 'Search by Chain ID'"
@@ -228,18 +228,18 @@ export default {
   .flex(row, wrap, space-between, center);
   font-family: Montserrat-Regular, Montserrat;
   font-weight: 400;
-  &__title {
+  &_title {
     max-width: 86px;
     // text-overflow: ellipsis;
     overflow: hidden;
   }
   &:hover {
-    .button__icon {
+    .button_icon {
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       // border-left: 1px solid $font-color4;
     }
   }
-  &__icon {
+  &_icon {
     height: 100%;
     margin: 0 5px;
     .flex(column, nowrap, center, center);
@@ -247,7 +247,7 @@ export default {
     // border-left: 1px solid #d9dfee;
     color: rgba(0, 0, 0, 0.25);
   }
-  &__pre__icon {
+  &_pre_icon {
     width: 18px;
     margin-right: 5px;
   }
@@ -259,7 +259,7 @@ export default {
   border-radius: 4px;
   border: 1px solid #d9dfee;
   padding: 16px;
-  &__title {
+  &_title {
     display: inline-block;
     background: #f5f7fc;
     border-radius: 4px;
@@ -280,19 +280,19 @@ export default {
       background-color: #ffffff;
     }
   }
-  &__item {
+  &_item {
     width: 100%;
-    &__title {
+    &_title {
       font-size: var(--bj-font-size-normal);
       font-family: Montserrat-Regular, Montserrat;
       font-weight: 400;
       color: #000000;
       margin-bottom: 14px;
     }
-    &__content {
+    &_content {
       width: 100%;
       .flex(row, wrap, flex-start, center);
-      .content__item {
+      .content_item {
         width: 158px;
         background: #f5f7fc;
         border-radius: 4px;
@@ -302,7 +302,7 @@ export default {
         cursor: url("../assets/mouse/shiftlight_mouse.png"),default  !important;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         .flex(row, nowrap, flex-start, center);
-          .content__item__title{
+          .content_item_title{
                 width: 112px;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -314,17 +314,17 @@ export default {
           transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
           background-color: #ffffff;
         }
-        &__selected {
+        &_selected {
           border: 1px solid $font-color4;
           color: $font-color4;
           background-color: #ffffff;
         }
-        &__icon {
+        &_icon {
           width: 24px;
           height: 24px;
           margin-right: 8px;
         }
-        &__title {
+        &_title {
           font-size: var(--bj-font-size-normal);
           font-family: Montserrat-Regular, Montserrat;
           font-weight: 400;
@@ -335,7 +335,7 @@ export default {
         }
       }
     }
-    &__input {
+    &_input {
       font-family: Montserrat-Regular, Montserrat;
       width: 240px;
       margin-right: 12px;
@@ -347,7 +347,7 @@ export default {
 }
 .tip {
   width: 20px;
-  &__color {
+  &_color {
     color: $font-color2;
   }
 }

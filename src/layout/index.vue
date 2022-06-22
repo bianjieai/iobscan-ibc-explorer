@@ -11,7 +11,7 @@
             </div>
             <navigation :menus="headerMenus" @clickMenu="clickMenu" :currentMenu="currentMenu" />
             <div class="header_input_wrapper">
-                <header-input class="header_input_layput" @pressedEnter="onPressEnter" disabled />
+                <header-input class="header_input_layout" @pressedEnter="onPressEnter" disabled />
                 <div class="header_input_icon_wrapper">
                     <a href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
                         <img class="header_input_icon" src="/src/assets/ioblink.png" alt="icon" />
@@ -24,7 +24,7 @@
         </div>
       </a-layout-header>
 
-      <a-layout-content class="content" :class="isShowBackground ? 'show__background' : ''">
+      <a-layout-content class="content" :class="isShowBackground ? 'show_background' : ''">
         <router-view />
       </a-layout-content>
       <a-layout-footer class="footer">
@@ -34,23 +34,24 @@
   </a-config-provider>
 </template>
 
-<script lang="ts" setup>
-import { onMounted, reactive, Ref, ref, watch } from 'vue';
+<script setup>
+import { onMounted, reactive, ref, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { menus } from '../constants/index.js';
 import Navigation from '../components/Navigation.vue';
 import HeaderInput from '../components/HeaderInput.vue';
 import IbcFooter from '../components/IbcFooter.vue';
-import { useStarAnimation } from './hooks/useStarAnimation'
+import { useStarAnimation, useOnPressEnter } from './hooks/useStarAnimation'
 
 const isShowBackground = ref(false)
 const headerMenus = reactive(menus);
-const currentMenu = ref<string[]>([])
+const currentMenu = ref([])
 const router = useRouter()
 const route = useRoute();
-const layout = ref<Ref>()
+const layout = ref()
 
 const { setStar1, setStar2 } = useStarAnimation(layout)
+const { onPressEnter } = useOnPressEnter(layout)
 
 onMounted(() => {
   // TODO shan => 定时器回收 
@@ -69,16 +70,12 @@ const onClickLogo = () => {
   });
 }
 
-const clickMenu = (val: string) => {
+const clickMenu = (val) => {
   currentMenu.value = [val]
   router.push({
     name: val
   })
 }
-
-const onPressEnter = (val: string) => {
-//   console.log(val);
-};
 
 watch(() => route.path, (newVal, oldVal) => {
   if (!oldVal) { // 页面刚加载
@@ -102,7 +99,6 @@ a {
 
 .ant-tooltip {
   max-width: 400px !important;
-
   .ant-tooltip-content {
     .ant-tooltip-arrow {
       .ant-tooltip-arrow-content {
@@ -135,7 +131,7 @@ a {
     line-height: 80px;
     background: transparent;
     z-index: 10;
-    .header_content {
+    &_content {
         .flex(row, nowrap, space-between, center);
         margin: 0 auto;
         width: 100%;
@@ -147,29 +143,29 @@ a {
                 width: 100%;
             }
         }
-        .header_input_wrapper {
-            .flex(row, nowrap, space-between, center);
-            .header_input_icon_wrapper {
-                .flex(row, nowrap, space-between, center);
-                margin-left: 12px;
-                a {
-                    .flex(row, nowrap, center, center);
-                    .header_input_icon {
-                        width: 32px;
-                        height: 32px;
-                    }
-                }
-                .header_btn_mobile {
-                    .flex(row, nowrap, center, center);
-                    margin-left: 12px;
-                    cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
-                    display: none;
-                    img {
-                        width: 32px;
-                        height: 32px;
-                    }
-                }
-            }
+    }
+    &_input_wrapper {
+        .flex(row, nowrap, space-between, center);
+    }
+    &_input_icon_wrapper {
+        .flex(row, nowrap, space-between, center);
+        margin-left: 12px;
+        a {
+            .flex(row, nowrap, center, center);
+        }
+    }
+    &_input_icon {
+        width: 32px;
+        height: 32px;
+    }
+    &_btn_mobile {
+        .flex(row, nowrap, center, center);
+        margin-left: 12px;
+        cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+        display: none;
+        img {
+            width: 32px;
+            height: 32px;
         }
     }
   }
@@ -195,53 +191,44 @@ a {
         & .header {
             box-sizing: border-box;
             padding: 0 32px;
-            .header_content {
+            &_content {
                 .logo {
                     .logo_icon {
                     }
                 }
-                .header_input_wrapper {
-                    .header_input_icon_wrapper {
-                        a {
-                            .header_input_icon {
-                            }
-                        }
-                        .header_btn_mobile {
-                            img {
-                            }
-                        }
-                    }
-                }
+            }
+            &_input_wrapper {
+            }
+            &_input_icon_wrapper {
+                a {}
+            }
+            &_input_icon {}
+            &_btn_mobile {
+                img {}
             }
         }
-        & .content {
-        }
-
-        & .footer {
-        }
+        & .content {}
+        & .footer {}
     }
 }
 
 @media screen and (max-width: 1030px) {
     .layout {
         & .header {
-            box-sizing: border-box;
-            padding: 0 32px;
-            .header_content {
+            &_content {
                 .logo {
                     .logo_icon {}
                 }
-                .header_input_wrapper {
-                    .header_input_icon_wrapper {
-                        a {
-                            .header_input_icon {}
-                        }
-                        .header_btn_mobile {
-                            display: inline-block;
-                            img {}
-                        }
-                    }
-                }
+            }
+            &_input_wrapper {
+            }
+            &_input_icon_wrapper {
+                a {}
+            }
+            &_input_icon {}
+            &_btn_mobile {
+                display: inline-block;
+                img {}
             }
         }
         & .content {}
@@ -249,52 +236,50 @@ a {
     }
 }
 
-@media screen and (max-width: 570px) {
+@media screen and (max-width: 768px) {
     .layout {
         & .header {
             padding: 0 16px;
-            .header_content {
+            &_content {
                 .logo {
                     width: 136px;
                     .logo_icon {}
                 }
-                .header_input_wrapper {
-                    .header_input_icon_wrapper {
-                        a {
-                            .header_input_icon {}
-                        }
-                        .header_btn_mobile {
-                            img {}
-                        }
-                    }
-                }
+            }
+            &_input_wrapper {
+            }
+            &_input_icon_wrapper {
+                a {}
+            }
+            &_input_icon {}
+            &_btn_mobile {
+                display: inline-block;
+                img {}
             }
         }
         & .content {}
         & .footer {}
     }
 }
-@media screen and (max-width: 460px) {
+@media screen and (max-width: 530px) {
     .layout {
         & .header {
-            padding: 0 16px;
-            .header_content {
+            &_content {
                 .logo {
                     .logo_icon {}
                 }
-                .header_input_wrapper {
-                    .header_input_layput {
-                        display: none;
-                    }
-                    .header_input_icon_wrapper {
-                        a {
-                            .header_input_icon {}
-                        }
-                        .header_btn_mobile {
-                            img {}
-                        }
-                    }
-                }
+            }
+            &_input_wrapper {
+            }
+            &_input_layout {
+                display: none;
+            }
+            &_input_icon_wrapper {
+                a {}
+            }
+            &_input_icon {}
+            &_btn_mobile {
+                img {}
             }
         }
         & .content {}

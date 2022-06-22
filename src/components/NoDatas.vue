@@ -1,7 +1,7 @@
 <template>
     <div class="nodatas">
-        <img class="nodatas__icon" src="../assets/noDatas.png" />
-        <p class="nodatas__title">No Data</p>
+        <img class="nodatas_icon" src="../assets/noDatas.png" />
+        <p class="nodatas_title">No Data</p>
     </div>
 </template>
 
@@ -17,10 +17,10 @@ export default {
 
 .nodatas {
     .flex(column, nowrap, center, center);
-    &__icon {
+    &_icon {
         width: 120px;
     }
-    &__title {
+    &_title {
         margin-top: 16px;
         font-size: var(--bj-font-size-normal);
         font-family: Montserrat-Regular, Montserrat;

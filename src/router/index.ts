@@ -42,7 +42,13 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'Transfers',
                 component: ()=> import('../views/transfers/index.vue'),
                 meta: {}
-            }
+            },
+            {
+                path: 'details',
+                name: 'Transfers Details',
+                component: ()=> import('../views/transfers/details/index.vue'),
+                meta: {}
+            },
         ]
     },
     {
