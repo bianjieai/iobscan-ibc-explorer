@@ -1,21 +1,23 @@
 <template>
   <div class="page-title-container">
-    <div class="icon"></div>
+    <div class="icon" v-if="hasIcon"></div>
     <div class="flex">
       <div class="title-p">
-        <div class="icon inline-icon"></div>
-        <a-typography-text class="title">IBC Tokens1111</a-typography-text>
-        <div class="background"></div>
+        <div class="icon inline-icon" v-if="hasIcon"></div>
+        <a-typography-text class="title">{{ title }}</a-typography-text>
+        <div class="background" :style="{ bottom: hasIcon ? '3px' : '-3px' }"></div>
       </div>
-      <a-typography-text class="number">( 254 tokens found )</a-typography-text>
+      <a-typography-text class="number">( {{ subtitle }} )</a-typography-text>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-// TODO clippers => 完善props
+// TODO clippers => icon 替换img
 interface IProps {
   hasIcon?: boolean
+  title: string
+  subtitle: string
 }
 
 const props = defineProps<IProps>()
@@ -74,14 +76,14 @@ const props = defineProps<IProps>()
 // pc
 @media screen and (min-width: 768px) {
   .page-title-container {
-    padding-top: 48px; 
+    padding-top: 48px;
   }
 }
 
 // tablet
 @media screen and (min-width: 414px) and (max-width: 768px) {
   .page-title-container {
-    padding-top: 40px; 
+    padding-top: 40px;
   }
 }
 
