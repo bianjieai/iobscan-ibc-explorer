@@ -58,6 +58,11 @@ const routes: Array<RouteRecordRaw> = [
                 meta: {}
             },
             {
+                path: 'ibc/:name',
+                name: 'singleToken',
+                component: () => import('../views/tokens/ibcToken.vue')
+            },
+            {
                 path: 'details',
                 name: 'tokensDetails',
                 component: () => import('../components/ComingSoon.vue')

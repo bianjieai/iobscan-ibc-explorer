@@ -27,7 +27,7 @@ const onClickIcon = (item: number) => {
   width: 100%;
   height: 60px;
   max-width: 1200px;
-  .flex(row, nowrap, space-between, center);
+  .flex-func(row, nowrap, space-between, center);
 
   &__left {
     font-size: @font-size5;

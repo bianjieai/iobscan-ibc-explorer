@@ -16,7 +16,7 @@ export default {
 <style lang="less" scoped>
 
 .nodatas {
-    .flex(column, nowrap, center, center);
+    .flex-func(column, nowrap, center, center);
     &__icon {
         width: 120px;
     }

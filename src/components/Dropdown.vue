@@ -225,7 +225,7 @@ export default {
   padding: 0 5px 0 5px;
   width: 146px;
   margin-right: 8px;
-  .flex(row, wrap, space-between, center);
+  .flex-func(row, wrap, space-between, center);
   font-family: Montserrat-Regular, Montserrat;
   font-weight: 400;
   &__title {
@@ -242,7 +242,7 @@ export default {
   &__icon {
     height: 100%;
     margin: 0 5px;
-    .flex(column, nowrap, center, center);
+    .flex-func(column, nowrap, center, center);
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     // border-left: 1px solid #d9dfee;
     color: rgba(0, 0, 0, 0.25);
@@ -291,7 +291,7 @@ export default {
     }
     &__content {
       width: 100%;
-      .flex(row, wrap, flex-start, center);
+      .flex-func(row, wrap, flex-start, center);
       .content__item {
         width: 158px;
         background: #f5f7fc;
@@ -301,7 +301,7 @@ export default {
         padding: 6px 6px;
         cursor: url("../assets/mouse/shiftlight_mouse.png"),default  !important;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-        .flex(row, nowrap, flex-start, center);
+        .flex-func(row, nowrap, flex-start, center);
           .content__item__title{
                 width: 112px;
                 overflow: hidden;
@@ -343,7 +343,7 @@ export default {
   }
 }
 .flex-c {
-  .flex(row, nowrap, flex-start, center);
+  .flex-func(row, nowrap, flex-start, center);
 }
 .tip {
   width: 20px;

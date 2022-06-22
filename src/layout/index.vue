@@ -130,7 +130,7 @@ a {
 
   & .header {
     width: 100%;
-    .flex(column, nowrap, center, center);
+    .flex-func(column, nowrap, center, center);
     text-align: center;
     height: 80px;
     background-color: transparent;
@@ -144,7 +144,7 @@ a {
       width: 100%;
       max-width: 1200px;
       height: 100%;
-      .flex(row, nowrap, center, center);
+      .flex-func(row, nowrap, center, center);
     }
 
     .logo {
@@ -172,7 +172,7 @@ a {
   }
 
   & .content {
-    .flex(column, nowrap, flex-start, center);
+    .flex-func(column, nowrap, flex-start, center);
     flex: 1;
     z-index: 10;
 
@@ -182,7 +182,7 @@ a {
   }
 
   & .footer {
-    .flex(column, nowrap, flex-start, center);
+    .flex-func(column, nowrap, flex-start, center);
     padding: 0;
     width: 100%;
     background-color: #eef0f6;
@@ -193,7 +193,7 @@ a {
 }
 
 .col__layout {
-    .flex(row, nowrap, flex-start, center);
+    .flex-func(row, nowrap, flex-start, center);
 }
 
 </style>
