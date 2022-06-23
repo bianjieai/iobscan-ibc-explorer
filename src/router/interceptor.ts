@@ -1,6 +1,5 @@
 import { Router } from "vue-router";
 import { useNProgress } from "@/hooks/useNProgress";
-import { Modal } from 'ant-design-vue'
 
 export function createInterceptor(router: Router) {
     const nprogress = useNProgress()

@@ -111,8 +111,8 @@ const testChains = {
       value: 'Tokens',
     },
     {
-      label: 'Network',
-      value: 'Network',
+      label: 'Chains',
+      value: 'Chains',
     },
     {
       label: 'Channels',
