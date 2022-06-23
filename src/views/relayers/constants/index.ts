@@ -8,7 +8,7 @@ export const COLUMNS: TableColumnsType= [
   },
   {
     title: 'Connected Channel',
-    dataIndex: 'chain_a', // todo 确认字段
+    dataIndex: 'chain_a', // todo clippers => 确认字段
     key: 'chain_a'
   },
   {

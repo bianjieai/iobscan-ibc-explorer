@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center">
-    <div :class="['icon', 'mr-8', iconSize === 'small' ? 'small-icon' : '']"></div>
-    <div class="flex flex-col justify-around" :style="{ height: iconSize === 'small' ? '32px' : '40px' }">
+    <div :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']"></div>
+    <div class="flex flex-col justify-around" :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
       <div class="title leading-none">{{ title }}</div>
       <div :class="['subtitle', 'leading-none', subtitleIsTag ? 'tag' : '']" v-if="subtitle">{{ subtitle }}</div>
     </div>
@@ -10,16 +10,18 @@
 </template>
 
 <script setup lang="ts">
+import { TableCellIconSize } from '../component.interface';
+
 // TODO clippers => icon 替换img
 interface IProps {
-  iconSize?: 'small' | 'normal'
+  iconSize?: TableCellIconSize
   title: string
   subtitle?: string
   subtitleIsTag?: boolean
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-  iconSize: 'normal'
+  iconSize: TableCellIconSize.NORMAL
 })
 
 

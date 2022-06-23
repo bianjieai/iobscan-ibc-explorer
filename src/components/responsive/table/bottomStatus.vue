@@ -5,11 +5,11 @@
       <div class="flex">
         <div class="flex items-center">
           <div class="icon"></div>
-          <div>{{ type === 'Channel' ? 'Open' : 'Running' }}</div>
+          <div>{{ type === BottomStatusType.CHANNEL ? 'Open' : 'Running' }}</div>
         </div>
         <div class="flex items-center">
           <div class="icon"></div>
-          <div>{{ type === 'Channel' ? 'Closed' : 'Stopped' }}</div>
+          <div>{{ type === BottomStatusType.CHANNEL ? 'Closed' : 'Stopped' }}</div>
         </div>
       </div>
     </div>
@@ -17,9 +17,11 @@
 </template>
 
 <script setup lang="ts">
+import { BottomStatusType } from '../component.interface';
+
 // TODO clippers => icon替换
 interface IProps {
-  type: 'Channel' | 'Relayer' // 目前支持 channels 和 relayers
+  type: BottomStatusType // 目前支持 channels 和 relayers
 }
 
 defineProps<IProps>()

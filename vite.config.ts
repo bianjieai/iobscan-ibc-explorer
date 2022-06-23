@@ -11,7 +11,6 @@ import * as path from 'path'
 // https://vitejs.dev/config/
 export default ({ mode }) => {
   const env = loadEnv(mode, './')
-  console.log(env)
 
   return defineConfig({
     css: {

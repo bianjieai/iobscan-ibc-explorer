@@ -41,7 +41,7 @@ export const COLUMNS: TableColumnsType = [{
 }, {
   dataIndex: 'origional_chain',
   key: 'origional_chain',
-  title: 'Origional Chain',// todo 确认字段
+  title: 'Origional Chain',// todo clippers => 确认字段
   sorter: (a, b) => a.chains_involved - b.chains_involved
 }
 ]
@@ -52,13 +52,13 @@ export const IBC_COLUMNS: TableColumnsType = [
   {
     dataIndex: 'denom',
     key: 'denom',
-    title: 'Name', // todo 确认字段
+    title: 'Name', // todo clippers => 确认字段
   },
   {
     dataIndex: 'price',
     key: 'price',
     title: 'Current Chain',
-    sorter: (a, b) => a.price - b.price, // todo 确认字段
+    sorter: (a, b) => a.price - b.price, // todo clippers => 确认字段
     align: 'right' 
   },
   {

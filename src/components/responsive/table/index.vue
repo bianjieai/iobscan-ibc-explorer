@@ -21,13 +21,13 @@
 </template>
 
 <script setup lang="ts">
-// todo => 处理数据比较少的时候 最小300px高度
-import { ColumnsType } from 'ant-design-vue/lib/table';
+// todo clippers => 处理数据比较少的时候 最小300px高度
+import { TableColumnsType } from "ant-design-vue";
 import { computed, onMounted, reactive, ref, toRaw, watch } from 'vue';
 import { compareValues } from './utils'
 
 interface IProps {
-  columns: ColumnsType
+  columns: TableColumnsType
   data: any[]
   needCustomColumns: string[]
   needCount?: boolean
@@ -35,7 +35,6 @@ interface IProps {
   current?: number
 }
 
-let backUpColumns: ColumnsType = []
 let backUpDataSource: any[] = []
 
 const props = defineProps<IProps>()
@@ -61,9 +60,6 @@ const backUpData = () => {
       key: '_count',
       title: ''
     })
-    backUpColumns = columns
-  } else {
-    backUpColumns = columns
   }
   backUpDataSource = data.map((item: any, index: number) => ({
     _count: index + 1,
@@ -96,7 +92,7 @@ const onPageChange = (page: number, pageSize: number) => {
   }
 }
 
-// todo clippeprs => 后端分页序号处理
+// todo clippers => 后端分页序号处理
 const onTableChange = (pagination: any, filters: any, sorter: any) => {
   const { columnKey, order } = sorter
 

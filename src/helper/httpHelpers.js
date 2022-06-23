@@ -1,8 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import axios from 'axios';
-
 const API = axios.create({
-  baseURL: '',
+  baseURL: import.meta.env.VITE_BASE_API,
 });
 let CancelToken = axios.CancelToken;
 window.cancel = null

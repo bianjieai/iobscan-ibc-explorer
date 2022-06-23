@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Layout from '../layout/index.vue'
 import { createInterceptor } from './interceptor'
 
@@ -42,7 +42,13 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'Transfers',
                 component: ()=> import('../views/transfers/index.vue'),
                 meta: {}
-            }
+            },
+            {
+                path: 'details',
+                name: 'Transfers Details',
+                component: ()=> import('../views/transfers/details/index.vue'),
+                meta: {}
+            },
         ]
     },
     {
@@ -64,21 +70,27 @@ const routes: Array<RouteRecordRaw> = [
             },
             {
                 path: 'details',
-                name: 'tokensDetails',
+                name: 'Tokens Details',
                 component: () => import('../components/ComingSoon.vue')
             }
         ]
     },
     {
-        path: '/network',
-        redirect: '/network',
+        path: '/chains',
+        redirect: '/chains',
         component: Layout,
         meta: {},
         children: [
             {
                 path: '',
-                name: 'Network',
-                component: () => import('../views/network/index.vue'),
+                name: 'Chains',
+                component: () => import('../views/chains/index.vue'),
+                meta: {}
+            },
+            {
+                path: 'details',
+                name: 'Chains Details',
+                component: () => import('../components/ComingSoon.vue'),
                 meta: {}
             }
         ]
@@ -121,7 +133,7 @@ const routes: Array<RouteRecordRaw> = [
 const VITE_BASE_URL = import.meta.env.VITE_BASE_URL // base_url
 
 const router = createRouter({
-    history: createWebHashHistory('/'),
+    history: createWebHistory('/'),
     routes
 })
 

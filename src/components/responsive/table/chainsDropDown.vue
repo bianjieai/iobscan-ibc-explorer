@@ -25,7 +25,8 @@
 </template>
 
 <script lang="ts" setup>
-// todo chains 获取
+// todo clippers => chains 获取
+// todo clippers => 完成overlay
 import { ref } from 'vue';
 
 const visible = ref(false)
@@ -71,7 +72,7 @@ const chain_b = ref('All Chains')
   background: #FFFFFF;
   box-shadow: 0px 2px 8px 0px #D9DEEC;
   border-radius: 4px;
-  height: 278px; // todo 高度可变
+  height: 278px; // todo clippers => 高度可变
   border: 1px solid var(--bj-border-color);
 }
 </style>

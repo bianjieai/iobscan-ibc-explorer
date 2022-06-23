@@ -1,6 +1,7 @@
 import { getKeyValue } from "@/helper/object-helper";
+import { CompareOrder } from "../component.interface";
 
-export function compareValues(key: string, order: 'ascend' | 'descend' = 'ascend') {
+export function compareValues(key: string, order: CompareOrder = CompareOrder.ASCEND) {
   return function innerSort(a: object, b: object) {
     if (!a.hasOwnProperty(key) || !b.hasOwnProperty(key)) {
       // 该属性在其中一个对象上不存在 
@@ -19,7 +20,7 @@ export function compareValues(key: string, order: 'ascend' | 'descend' = 'ascend
       comparison = -1;
     }
     return (
-      (order === 'descend') ? (comparison * -1) : comparison
+      (order === CompareOrder.DESCEND) ? (comparison * -1) : comparison
     );
   };
 } 
