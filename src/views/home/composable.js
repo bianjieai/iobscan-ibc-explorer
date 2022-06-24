@@ -7,10 +7,10 @@ import { GET_IBCSTATISTICS, GET_IBCCHAINS, GET_IBCTXS, GET_IBCDENOMS, GET_IBCBAS
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
 export const useIbcStatistics = () => {
-    const ibcStatisticsChains = computed(() => ibcStatisticsChainsStore.ibcStatisticsChains);
-    const ibcStatisticsChannels = computed(() => ibcStatisticsChainsStore.ibcStatisticsChannels);
-    const ibcStatisticsDenoms = computed(() => ibcStatisticsChainsStore.ibcStatisticsDenoms);
-    const ibcStatisticsTxs = computed(() => ibcStatisticsChainsStore.ibcStatisticsTxs);
+    const ibcStatisticsChains = ibcStatisticsChainsStore.ibcStatisticsChains;
+    const ibcStatisticsChannels = ibcStatisticsChainsStore.ibcStatisticsChannels;
+    const ibcStatisticsDenoms = ibcStatisticsChainsStore.ibcStatisticsDenoms;
+    const ibcStatisticsTxs = ibcStatisticsChainsStore.ibcStatisticsTxs;
     const getIbcStatistics = ibcStatisticsChainsStore[GET_IBCSTATISTICS];
     return {
         ibcStatisticsChains,
@@ -21,7 +21,7 @@ export const useIbcStatistics = () => {
     }
 }
 export const useIbcChains = () => {
-    const ibcChains = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) : computed(() => ibcStatisticsChainsStore.ibcChains);
+    const ibcChains = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) : ibcStatisticsChainsStore.ibcChains;
     const getIbcChains = ibcStatisticsChainsStore[GET_IBCCHAINS];
     return {
         ibcChains,
@@ -29,16 +29,26 @@ export const useIbcChains = () => {
     }
 }
 export const useIbcTxs = () => {
-    const ibcTxs = computed(()=> ibcStatisticsChainsStore.ibcTxs)?.value;
+    const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
     const getIbcTxs = ibcStatisticsChainsStore[GET_IBCTXS];
+    const setExpandByIndex = (idx)=>{
+        ibcStatisticsChainsStore.ibcTxs.value.forEach((item, index) => {
+            if (idx == index) {
+                item.expanded = !item.expanded;
+            }else{
+                item.expanded = false;
+            }
+        });
+    }
     return {
         ibcTxs,
-        getIbcTxs
+        getIbcTxs,
+        setExpandByIndex
     }
 }
 export const useClearInterval = () => {
     const clearInterval = () => {
-        clearInterval(computed(() => ibcStatisticsChainsStore.ibcTxTimer)?.value);
+        clearInterval(ibcStatisticsChainsStore.ibcTxTimer.value);
     }
     return {
         clearInterval
