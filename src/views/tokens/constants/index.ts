@@ -88,3 +88,18 @@ export const IBC_COLUMNS: TableColumnsType = [
     align: 'right'
   }
 ]
+
+export const STATUS_OPTIONS = [
+  {
+    value: undefined,
+    key: 'All Token Types'
+  },
+  {
+    value: 'Authed',
+    key: 'Authed'
+  },
+  {
+    value: 'Other',
+    key: 'Other'
+  }
+]

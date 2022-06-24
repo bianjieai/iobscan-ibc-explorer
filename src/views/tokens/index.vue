@@ -1,6 +1,13 @@
 <template>
   <PageContainer>
     <PageTitle title="IBC Tokens" subtitle="254 tokens found" />
+    <div class="select flex items-center flex-wrap">
+      <TokensDropDown @on-tokens-selected="onSelectedToken" ref="tokensDropdown" />
+      <ChainsDropdown @on-selected-chain="onSelectedChain" ref="chainDropdown" />
+      <BaseDropdown :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
+      <ResetButton @on-reset="resetSearchCondition" />
+    </div>
+
     <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="COLUMNS">
       <!-- <template #name="{ record, column }">
                 <h1>{{ record[column.key] }}</h1>
@@ -21,7 +28,13 @@
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
-import { COLUMNS } from './constants'
+import { COLUMNS, STATUS_OPTIONS } from './constants'
+import TokensDropDown from '@/components/responsive/dropdown/tokens.vue';
+import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
+import BaseDropdown from '@/components/responsive/dropdown/base.vue';
+import ResetButton from '@/components/responsive/resetButton.vue';
+import { ref } from 'vue';
+
 
 const needCustomColumns = [
   'base_denom', 'origional_chain'
@@ -35,7 +48,70 @@ const data: any = [{
   ibc_transfer_txs: 12323,
   chains_involved: 123,
   origional_chain: 'bbb'
-}, ]
+},]
 
+const chainDropdown = ref()
+const statusDropdown = ref()
+const tokensDropdown = ref()
+
+const onSelectedToken = (denom?: string | number) => {
+  console.log(denom, 'denom')
+}
+
+const onSelectedChain = (chain?: string | number) => {
+  console.log(chain, 'chain')
+}
+
+const onSelectedStatus = (status?: string |number) => {
+  console.log(status, 'status')
+}
+
+const resetSearchCondition = () => {
+  chainDropdown.value.selectedChain = []
+  statusDropdown.value.selectOption = []
+  tokensDropdown.value.selectToken = []
+  // todo clippers => refresh list
+}
 
 </script>
+
+<style lang="less" scoped>
+.select {
+  margin-top: 32px;
+  margin-bottom: 16px;
+
+  :deep(.ant-dropdown-trigger) {
+    margin-right: 8px;
+  }
+}
+
+// pc
+@media screen and (min-width: 768px) {}
+
+// tablet
+@media screen and (min-width: 414px) and (max-width: 768px) {
+  .select {
+    margin-top: 24px;
+  }
+}
+
+// mobile
+@media screen and (max-width: 414px) {
+  .select {
+    margin-top: 16px;
+  }
+
+  :deep(.ant-dropdown-trigger) {
+    &:first-of-type {
+      margin-top: 8px;
+    }
+
+    margin-right: 150px;
+    margin-top: 8px;
+  }
+
+  :deep(.ant-btn-icon-only) {
+    margin-top: 8px;
+  }
+}
+</style>

@@ -46,3 +46,18 @@ export const COLUMNS: TableColumnsType = [
     align: 'right'
   }
 ]
+
+export const STATUS_OPTIONS = [
+  {
+    value: undefined,
+    key: 'All Status'
+  },
+  {
+    value: 1,
+    key: 'Opened'
+  },
+  {
+    value: 2,
+    key: 'Closed'
+  }
+]

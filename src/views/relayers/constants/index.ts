@@ -43,3 +43,18 @@ export const COLUMNS: TableColumnsType= [
     sorter: (a, b) => a.ibc_transfer_txs - b.ibc_transfer_txs
   }
 ]
+
+export const STATUS_OPTIONS = [
+  {
+    value: undefined,
+    key: 'All Status'
+  },
+  {
+    value: 1,
+    key: 'Running'
+  },
+  {
+    value: 2,
+    key: 'Stopped'
+  }
+]

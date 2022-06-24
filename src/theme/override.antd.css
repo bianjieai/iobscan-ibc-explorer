@@ -129,3 +129,7 @@
 .ant-calendar-date {
     cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
 }
+
+.ant-dropdown {
+    z-index: 1020;
+}
