@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @font-face {
   font-family: "DroidSansMono";
   src: url("../assets/font/DroidSansMono-enMp.ttf");
@@ -42,6 +46,7 @@
   --bj-background-color: #F5F7FC;
   --bj-background-color-second: #EAECF3;
   --bj-background-color-third: #EAEAEA;
+  --bj-border-color: rgba(151, 151, 151, 0.2);
   --bj-text-normal: #000;
   --bj-text-second: rgba(0, 0, 0, 0.75);
   --bj-text-third: rgba(0, 0, 0, 0.35);
@@ -53,8 +58,7 @@
   --bj-font-size-title: 20px;
   --bj-font-size-sub-title: 16px;
   --bj-font-size-normal: 14px;
-  --bj-font-size-dropdown: 12px;
-
+  --bj-font-size-small: 12px;
   /* border-radius */
   --border-radius-normal: 4px;
 }
