@@ -1,5 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { floor } from 'lodash-es';
+import { BigNumber } from "bignumber.js";
 
 function getRestString(string, left, right) {
   return string ? `${string.substr(0, left)}...${string.substr(-right)}` : '';
@@ -44,6 +45,13 @@ function formatNum(numOrigin) {
   return result;
 }
 
+function formatBigNumber(value, num) {
+  if (value == 0) {
+    return value
+  }
+  return new BigNumber(value).toFormat(num)
+}
+
 export {
-  getRestString, prefixInteger, JSONparse, formatNum, getLasttyString,
+  getRestString, prefixInteger, JSONparse, formatNum, getLasttyString, formatBigNumber
 };

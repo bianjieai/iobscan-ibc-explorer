@@ -14,7 +14,8 @@ export const COLUMNS: TableColumnsType= [
   {
     title: 'Status',
     dataIndex: 'status',
-    key: 'status'
+    key: 'status',
+    align: 'center'
   },
   {
     title: 'Connected Channel',
@@ -23,10 +24,10 @@ export const COLUMNS: TableColumnsType= [
   },
   {
     title: 'Last Updated',
-    dataIndex: 'last_updated',
-    key: 'last_updated',
+    dataIndex: 'update_time',
+    key: 'update_time',
     align:'right',
-    sorter: (a, b) => a.last_updated - b.last_updated
+    sorter: (a, b) => a.update_time - b.update_time
   },
   {
     title: 'Txs Success rate',

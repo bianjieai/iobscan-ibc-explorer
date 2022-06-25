@@ -9,13 +9,21 @@
     </div>
 
     <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="COLUMNS">
-      <!-- <template #name="{ record, column }">
-                <h1>{{ record[column.key] }}</h1>
-            </template>
+      <template #base_denom="{ record, column }">
+        <IconAndTitle title-can-click
+          @click-title="goIbcToken(record[column.key], useBaseDenomInfo(record[column.key]).title)" subtitle-is-tag
+          :title="useBaseDenomInfo(record[column.key]).title" :subtitle="useBaseDenomInfo(record[column.key]).subtitle"
+          :img-src="useBaseDenomInfo(record[column.key]).imgSrc" />
+      </template>
+      <template #price="{ record, column }">
+        <div>{{ `$ ${record[column.key]}` }}</div>
+      </template>
 
-            <template #age="{ record, column }">
-                <h1>{{ record[column.key] }}</h1>
-            </template> -->
+      <template #chain_id="{ record, column }">
+        <IconAndTitle :title="useBaseChainsInfo(record[column.key]).title"
+          :subtitle="useBaseChainsInfo(record[column.key]).subtitle"
+          :img-src="useBaseChainsInfo(record[column.key]).imgSrc" />
+      </template>
     </BjTable>
   </PageContainer>
 </template>
@@ -33,11 +41,16 @@ import TokensDropDown from '@/components/responsive/dropdown/tokens.vue';
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
+import { useRouter } from 'vue-router'
+import { useBaseChainsInfo } from '@/hooks/useChain'
+import { useBaseDenomInfo } from '@/hooks/useDenom'
 
+const router = useRouter()
 
 const needCustomColumns = [
-  'base_denom', 'origional_chain'
+  'base_denom', 'price', 'chain_id'
 ]
 
 const data: any = [{
@@ -47,8 +60,17 @@ const data: any = [{
   ibc_transfer_amount: 23322123433,
   ibc_transfer_txs: 12323,
   chains_involved: 123,
-  origional_chain: 'bbb'
-},]
+  chain_id: 'irishub-1'
+},
+{
+  base_denom: 'uiris',
+  price: 12321233,
+  supply: 2020202032,
+  ibc_transfer_amount: 23322123433,
+  ibc_transfer_txs: 12323,
+  chains_involved: 123,
+  chain_id: 'bbb'
+}]
 
 const chainDropdown = ref()
 const statusDropdown = ref()
@@ -62,7 +84,7 @@ const onSelectedChain = (chain?: string | number) => {
   console.log(chain, 'chain')
 }
 
-const onSelectedStatus = (status?: string |number) => {
+const onSelectedStatus = (status?: string | number) => {
   console.log(status, 'status')
 }
 
@@ -71,6 +93,15 @@ const resetSearchCondition = () => {
   statusDropdown.value.selectOption = []
   tokensDropdown.value.selectToken = []
   // todo clippers => refresh list
+}
+
+const goIbcToken = (denom: string, symbol: string) => {
+  router.push({
+    path: `/tokens/ibc/${denom}`,
+    query: {
+      symbol
+    }
+  })
 }
 
 </script>

@@ -192,6 +192,7 @@ onMounted(() => {
 :deep(.ant-table-tbody .ant-table-cell) {
   color: var(--bj-text-second);
   line-height: 1;
+  vertical-align: middle;
 }
 
 :deep(.ant-table-thead > tr > th) {
@@ -200,7 +201,8 @@ onMounted(() => {
 
 :deep(.ant-table-tbody > tr > td) {
   border-bottom: 1px solid var(--bj-border-color);
-
+  padding: 15px 16px;
+  padding-left: 0;
   &:only-child {
     border-bottom: none;
   }

@@ -104,10 +104,11 @@ const onSelect = (key: TKey, value: TValue) => {
 
   .item {
     padding: 9px 0;
+    cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
 
     &:hover {
       color: var(--bj-primary-color);
-      cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
+
     }
   }
 }

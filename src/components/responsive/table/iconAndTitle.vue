@@ -1,8 +1,21 @@
 <template>
   <div class="flex items-center">
-    <div :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']"></div>
-    <div class="flex flex-col justify-around" :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
-      <div class="title leading-none">{{ title }}</div>
+    <div>
+      <img v-if="!relayer" :src="imgSrc"
+        :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']">
+      <div v-else>
+        <img :src="relayerImageSrc" alt="" v-if="relayerImageSrc" class="icon mr-8 small-icon">
+        <div v-else class="bg-text-c flex items-center justify-center mr-8">
+          <div class="bg-text leading-none">{{ title.substring(0, 1) }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col justify-around"
+      :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
+      <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ relayer ? relayerName
+          :
+          title
+      }}</div>
       <div :class="['subtitle', 'leading-none', subtitleIsTag ? 'tag' : '']" v-if="subtitle">{{ subtitle }}</div>
     </div>
 
@@ -10,20 +23,46 @@
 </template>
 
 <script setup lang="ts">
-import { TableCellIconSize } from '../component.interface';
+import { computed } from 'vue';
+import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
 
-// TODO clippers => icon 替换img
+// TODO clippers => relayer icon 背景
 interface IProps {
-  iconSize?: TableCellIconSize
+  iconSize?: TTableCellIconSize
   title: string
   subtitle?: string
   subtitleIsTag?: boolean
+  imgSrc?: string
+  titleCanClick?: boolean
+  relayer?: boolean
 }
 
 const props = withDefaults(defineProps<IProps>(), {
   iconSize: TableCellIconSize.NORMAL
 })
 
+
+
+// relayer 处理
+const relayerName = computed(() => props.title ? props.title : 'Unknown')
+
+const relayerImageSrc = computed(() => {
+  if (props.imgSrc) {
+    return props.imgSrc
+  } else if (relayerName.value === 'Unknown') {
+    return new URL('../../../assets/default.png', import.meta.url).href
+  } else {
+    return ''
+  }
+})
+
+const emit = defineEmits<{
+  (e: 'clickTitle'): void
+}>()
+
+const go = () => {
+  emit('clickTitle')
+}
 
 
 </script>
@@ -33,7 +72,6 @@ const props = withDefaults(defineProps<IProps>(), {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: burlywood;
 }
 
 .small-icon {
@@ -59,5 +97,21 @@ const props = withDefaults(defineProps<IProps>(), {
   display: inline-flex;
   justify-content: center;
   align-items: center;
+}
+
+.bg-text-c {
+  width: 32px;
+  height: 32px;
+  background: url('../../../assets/relayer-default.png') no-repeat center center;
+  border-radius: 50%;
+}
+
+.bg-text {
+  font-size: 22px;
+  background: linear-gradient(to right, #B3BBFF, #8594ff);
+  background-size: cover;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 </style>

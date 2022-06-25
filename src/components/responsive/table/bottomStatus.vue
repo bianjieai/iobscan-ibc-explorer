@@ -3,12 +3,12 @@
     <div class="flex justify-between items-center flex-wrap">
       <div>{{ type }} Status: </div>
       <div class="flex">
-        <div class="flex items-center">
-          <div class="icon"></div>
+        <div class="flex items-center ml-16">
+          <img :src="activeImgInfo.src" :width="activeImgInfo.width" :height="activeImgInfo.height" class="mr-4"/>
           <div>{{ type === BottomStatusType.CHANNEL ? 'Open' : 'Running' }}</div>
         </div>
-        <div class="flex items-center">
-          <div class="icon"></div>
+        <div class="flex items-center ml-24">
+          <img :src="inActiveImgInfo.src" :width="inActiveImgInfo.width" :height="inActiveImgInfo.height" class="mr-4"/>
           <div>{{ type === BottomStatusType.CHANNEL ? 'Closed' : 'Stopped' }}</div>
         </div>
       </div>
@@ -17,14 +17,48 @@
 </template>
 
 <script setup lang="ts">
-import { BottomStatusType } from '../component.interface';
+import { computed } from 'vue';
+import { BottomStatusType, TBottomStatus } from '../component.interface';
 
 // TODO clippers => icon替换
 interface IProps {
-  type: BottomStatusType // 目前支持 channels 和 relayers
+  type: TBottomStatus // 目前支持 channels 和 relayers
 }
 
-defineProps<IProps>()
+const props = defineProps<IProps>()
+
+const activeImgInfo = computed(() => {
+  if (props.type === BottomStatusType.CHANNEL) {
+    return {
+      src: new URL('../../../assets/channel-open.png', import.meta.url).href,
+      height: 16,
+      width: 46
+    }
+     
+  } else {
+    return {
+      src: new URL('../../../assets/relayer-running.png', import.meta.url).href,
+      height: 18.5,
+      width: 18.5
+    }
+  }
+})
+
+const inActiveImgInfo = computed(() => {
+  if (props.type === BottomStatusType.CHANNEL) {
+    return {
+      src: new URL('../../../assets/channel-closed.png', import.meta.url).href,
+      height: 16,
+      width: 46
+    }
+  } else {
+    return {
+      src: new URL('../../../assets/relayer-stopped.png', import.meta.url).href,
+      height: 18.5,
+      width: 18.5
+    }
+  }
+})
 
 </script>
 

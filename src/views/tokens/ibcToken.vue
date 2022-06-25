@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <PageTitle title="xxx IBC Tokens" subtitle="254 tokens found" has-icon/>
+    <PageTitle :title="`${symbol} IBC Tokens`" subtitle="254 tokens found" has-icon />
     <div class="select flex items-center flex-wrap">
       <ChainsDropdown @on-selected-chain="onSelectedChain" ref="chainDropdown" />
       <BaseDropdown :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
@@ -8,13 +8,27 @@
     </div>
 
     <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
-      <!-- <template #name="{ record, column }">
-                <h1>{{ record[column.key] }}</h1>
-            </template>
+      <template #denom="{ record, column }">
+        <a-popover>
+          <template #content>
+            <div class="notice-text">
+              <div>Path: {{ record.denom_path }}</div>
+              <div>Token Hash: {{ record[column.key] }}</div>
+            </div>
+          </template>
+          <div>{{ record[column.key] }}</div>
+        </a-popover>
+      </template>
 
-            <template #age="{ record, column }">
-                <h1>{{ record[column.key] }}</h1>
-            </template> -->
+      <template #chain_id="{ record, column }">
+        <IconAndTitle :title="useBaseChainsInfo(record[column.key]).title"
+          :subtitle="useBaseChainsInfo(record[column.key]).subtitle"
+          :img-src="useBaseChainsInfo(record[column.key]).imgSrc" />
+      </template>
+
+      <template #receive_txs="{ record, column }">
+        <div class="hover-cursor">{{ record[column.key] }}</div>
+      </template>
     </BjTable>
   </PageContainer>
 </template>
@@ -24,29 +38,36 @@
 // todo clippers => 筛选
 // todo clippers => 处理请求
 // todo clippers => 各个插槽处理
+// todo clippers => 确认提示Name单元格Token Hash:的字段
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
 import { IBC_COLUMNS, STATUS_OPTIONS } from './constants'
-import TokensDropDown from '@/components/responsive/dropdown/tokens.vue';
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import { useRoute } from 'vue-router'
+import { useBaseChainsInfo } from '@/hooks/useChain';
 
+const route = useRoute()
+
+const symbol = ref<string>(route.query.symbol as string)
+const denom = route.params.name
 
 const needCustomColumns = [
-  'base_denom', 'origional_chain'
+  'denom', 'chain_id', 'receive_txs'
 ]
 
 const data: any = [{
-  base_denom: 'aaa',
+  denom: 'aaa',
   price: 12321233,
-  supply: 2020202032,
-  ibc_transfer_amount: 23322123433,
-  ibc_transfer_txs: 12323,
-  chains_involved: 123,
-  origional_chain: 'bbb'
+  token_type: 2020202032,
+  ibc_hops: 23322123433,
+  amount: 12323,
+  receive_txs: 123,
+  chain_id: 'irishub-1',
+  path: 'sadd'
 },]
 
 const chainDropdown = ref()
@@ -57,7 +78,7 @@ const onSelectedChain = (chain?: string | number) => {
   console.log(chain, 'chain')
 }
 
-const onSelectedStatus = (status?: string |number) => {
+const onSelectedStatus = (status?: string | number) => {
   console.log(status, 'status')
 }
 
@@ -77,6 +98,10 @@ const resetSearchCondition = () => {
   :deep(.ant-dropdown-trigger) {
     margin-right: 8px;
   }
+}
+
+.notice-text {
+  color: var(--bj-text-second);
 }
 
 // pc
