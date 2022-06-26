@@ -114,7 +114,7 @@ export const useIbcStatisticsChains = defineStore('home', {
                             }
                             return {
                                 ...item,
-                                expanded: oldData?.[index]?.expanded || false,
+                                expanded: oldData?.[index]?.expanded ?? false,
                                 symbolNum,
                                 symbolDenom,
                                 symbolIcon,
