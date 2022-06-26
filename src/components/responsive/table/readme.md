@@ -30,3 +30,11 @@
 
 - 说明
 1. 当current 和 pageSize都不传的时候，表示开启前端分页
+
+
+
+#### chainsDropDown
+> chains 筛选框
+- 接受参数
+1. selectedDouble 非必需 支持双选
+2. needBadge 非必需 支持角标transfer / receive

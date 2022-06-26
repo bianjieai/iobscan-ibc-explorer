@@ -16,7 +16,7 @@ export const useInterfaceActive = () => {
 export const useIsExpand = () => {
     const isExpand = ref(true);
     const onClickExpandBtn = () => {
-        isExpand = !isExpand;
+        isExpand.value = !isExpand.value;
     }
     return {
         isExpand,

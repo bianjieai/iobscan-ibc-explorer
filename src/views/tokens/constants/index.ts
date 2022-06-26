@@ -17,7 +17,7 @@ export const COLUMNS: TableColumnsType = [{
   title: 'Supply',
   sorter: (a, b) => a.supply - b.supply,
   align: 'right'
-  
+
 }, {
   dataIndex: 'ibc_transfer_amount',
   key: 'ibc_transfer_amount',
@@ -34,15 +34,15 @@ export const COLUMNS: TableColumnsType = [{
 }, {
   dataIndex: 'chains_involved',
   key: 'chains_involved',
-  title: 'Chains Involved', 
+  title: 'Chains Involved',
   sorter: (a, b) => a.chains_involved - b.chains_involved,
   align: 'right'
 
 }, {
-  dataIndex: 'origional_chain',
-  key: 'origional_chain',
-  title: 'Origional Chain',// todo clippers => 确认字段
-  sorter: (a, b) => a.chains_involved - b.chains_involved
+  dataIndex: 'chain_id',
+  key: 'chain_id',
+  title: 'Origional Chain',
+  sorter: (a, b) => a.chain_id - b.chain_id
 }
 ]
 
@@ -52,14 +52,13 @@ export const IBC_COLUMNS: TableColumnsType = [
   {
     dataIndex: 'denom',
     key: 'denom',
-    title: 'Name', // todo clippers => 确认字段
+    title: 'Name',
   },
   {
-    dataIndex: 'price',
-    key: 'price',
+    dataIndex: 'chain_id',
+    key: 'chain_id',
     title: 'Current Chain',
-    sorter: (a, b) => a.price - b.price, // todo clippers => 确认字段
-    align: 'right' 
+    sorter: (a, b) => a.chain_id - b.chain_id, 
   },
   {
     dataIndex: 'token_type',
@@ -86,5 +85,39 @@ export const IBC_COLUMNS: TableColumnsType = [
     title: 'Receive Txs',
     sorter: (a, b) => a.receive_txs - b.receive_txs,
     align: 'right'
+  }
+]
+
+export const STATUS_OPTIONS = [
+  {
+    value: undefined,
+    key: 'All Token Types'
+  },
+  {
+    value: 'Authed',
+    key: 'Authed'
+  },
+  {
+    value: 'Other',
+    key: 'Other'
+  }
+]
+
+export const IBC_STATUS_OPTIONS = [
+  {
+    value: undefined,
+    key: 'All Token Types'
+  },
+  {
+    value: 'Authed',
+    key: 'Authed'
+  },
+  {
+    value: 'Other',
+    key: 'Other'
+  },
+  {
+    value: 'Genesis',
+    key: 'Genesis'
   }
 ]
