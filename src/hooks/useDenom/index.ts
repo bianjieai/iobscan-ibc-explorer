@@ -5,6 +5,7 @@ import { computed } from "vue"
 const demonsData = JSON.parse(localStorage.getItem('baseDenoms')!) as TBaseDenoms[]
 
 export const useBaseDenomInfo = computed(() => (denom: string) => {
+  console.log(111)
   const filterData = demonsData.filter(item => item.denom === denom)
   if (filterData.length > 0) {
     return {

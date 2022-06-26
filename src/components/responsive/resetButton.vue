@@ -13,13 +13,13 @@
 </template>
 
 <script lang="ts" setup>
-
+import { debounce } from 'lodash-es'
 const emits = defineEmits<{
   (e: 'onReset'): void
 }>()
-const reset = () => {
+const reset = debounce(() => {
   emits('onReset')
-}
+}, 300)
 </script>
 
 <style lang="less" scoped>

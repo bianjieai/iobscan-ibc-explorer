@@ -1,13 +1,11 @@
 <template>
   <PageContainer>
-    <PageTitle title="IBC Chains" subtitle="xxx chains supported" />
+    <PageTitle title="IBC Chains" :subtitle="`${data.length} chains supported`" />
 
     <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count no-pagination
       :scroll="{ y: 610 }">
       <template #chain_id="{ record, column }">
-        <IconAndTitle :title="useBaseChainsInfo(record[column.key]).title"
-          :subtitle="useBaseChainsInfo(record[column.key]).subtitle"
-          :img-src="useBaseChainsInfo(record[column.key]).imgSrc" />
+        <ChainIcon :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
       </template>
 
       <template #channels="{ record, column }">
@@ -27,7 +25,8 @@
       </template>
 
       <template #ibc_transfer_txs="{ record, column }">
-        <TransferTxs :title="record[column.key]" :subtitle="record.ibc_transfer_txs_value" />
+        <TransferTxs :title="record[column.key]" :subtitle="record.ibc_transfer_txs_value"
+          :currency="record.currency" />
       </template>
     </BjTable>
   </PageContainer>
@@ -35,34 +34,36 @@
 
 
 <script lang="ts" setup>
-// todo clippers => subtitle
-// todo clippers => 请求
 // todo clippers => 跳转
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
-import { useBaseChainsInfo } from '@/hooks/useChain';
 import { COLUMNS } from './constants'
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
+import ChainIcon from '@/components/responsive/table/chainIcon.vue';
+import { useIbcChains } from '../home/composable';
+import { onMounted } from 'vue';
+import { useGetChainsList } from '@/service/chains'
 
 
-const data: any = [
-  {
-    chain_id: 'irishub-1',
-    connected_chains: 10,
-    channels: 20,
-    relayers: 158,
-    ibc_tokens: 20,
-    ibc_tokens_value: 20,
-    ibc_transfer_txs: 1000,
-    ibc_transfer_txs_value: 10000000
-  }
+const { ibcChains, getIbcChains } = useIbcChains();
+const { data, getList } = useGetChainsList()
+
+onMounted(() => {
+  !sessionStorage.getItem('allChains') && getIbcChains();
+
+  getList()
+})
+
+
+const needCustomColumns = [
+  'chain_id',
+  'channels',
+  'relayers',
+  'ibc_tokens',
+  'ibc_tokens_value',
+  'ibc_transfer_txs'
 ]
-
-
-
-
-const needCustomColumns = ['chain_id', 'channels', 'relayers', 'ibc_tokens', 'ibc_tokens_value', 'ibc_transfer_txs']
 
 
 </script>

@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <PageTitle title="IBC Channels" subtitle="xxx channels found" />
+    <PageTitle title="IBC Channels" :subtitle="`${data.length} channels found`" />
     <div class="select flex items-center flex-wrap">
       <ChainsDropdown @on-selected-chain="onSelectedChain" selected-double ref="chainDropdown" />
       <BaseDropdown :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
@@ -9,17 +9,16 @@
     </div>
     <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
       <template #chain_a="{ record, column }">
-        <IconAndTitle :title="record.channel_a" :img-src="useBaseChainsInfo(record[column.key]).imgSrc"
+        <ChainIcon :title="record.channel_a" no-subtitle :chain_id="record[column.key]" :chains-data="ibcChains.all"
           icon-size="small" />
       </template>
 
       <template #status="{ record, column }">
-        <StatusImg type="Channel" :status="(String(record[column.key]) as TChannelStatus)" :height="16"
-          :width="46" />
+        <StatusImg type="Channel" :status="(String(record[column.key]) as TChannelStatus)" :height="16" :width="46" />
       </template>
 
       <template #chain_b="{ record, column }">
-        <IconAndTitle :title="record.channel_b" :img-src="useBaseChainsInfo(record[column.key]).imgSrc"
+        <ChainIcon :title="record.channel_b" no-subtitle :chain_id="record[column.key]" :chains-data="ibcChains.all"
           icon-size="small" />
       </template>
 
@@ -44,8 +43,6 @@
 </template>
 
 <script setup lang="ts">
-// todo clippers => subtitle
-// todo clippers => 请求
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
@@ -53,62 +50,63 @@ import { COLUMNS, STATUS_OPTIONS } from './constants'
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import BottomStatus from '@/components/responsive/table/bottomStatus.vue';
-import { useBaseChainsInfo } from '@/hooks/useChain'
 import { formatLastUpdated, formatOperatingPeriod } from '@/helper/time-helper';
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
-import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
 import StatusImg from '@/components/responsive/table/statusImg.vue';
 import { TChannelStatus } from '@/components/responsive/component.interface';
+import { useGetChannelsList } from '@/service/channels'
+import ChainIcon from '@/components/responsive/table/chainIcon.vue';
+import { useIbcChains } from '../home/composable';
 
+const { ibcChains, getIbcChains } = useIbcChains();
+const { data, getList } = useGetChannelsList()
 
-const data: any = [{
-  chain_a: 'irishub-1',
-  channel_a: 'a',
-  status: '1',
-  chain_b: 'irishub-1',
-  channel_b: 'b',
-  operating_period: 300000000,
-  last_updated: 1656147685957,
-  relayers: 11,
-  ibc_transfer_txs: 11,
-  ibc_transfer_txs_value: 1000000000,
-  currency: '$'
-},{
-  chain_a: 'irishub-1',
-  channel_a: 'a',
-  status: '2',
-  chain_b: 'irishub-1',
-  channel_b: 'b',
-  operating_period: 300000000,
-  last_updated: 1656147685957,
-  relayers: 11,
-  ibc_transfer_txs: 11,
-  ibc_transfer_txs_value: 1000000000,
-  currency: '$'
-}]
-const needCustomColumns = ['chain_a', 'status', 'chain_b', 'operating_period', 'last_updated', 'ibc_transfer_txs']
+const needCustomColumns = [
+  'chain_a',
+  'status',
+  'chain_b',
+  'operating_period',
+  'last_updated',
+  'ibc_transfer_txs'
+]
 
 const chainDropdown = ref()
 const statusDropdown = ref()
 
+const searchChain = ref()
+const searchStatus = ref()
+
+onMounted(() => {
+  !sessionStorage.getItem('allChains') && getIbcChains();
+
+  getList()
+})
+
+const refreshList = () => {
+  getList({
+    chain: searchChain.value,
+    status: searchStatus.value
+  })
+}
 
 const onSelectedChain = (chain_id: string) => {
-  console.log(chain_id, 'chain_id')
-  // todo clippers => refresh list
+  searchChain.value = chain_id
+  refreshList()
 }
 
 const onSelectedStatus = (value?: number | string) => {
-  console.log(value, 'value')
-  // todo clippers => refresh list
+  searchStatus.value = value
+  refreshList()
 }
 
 // reset
 const resetSearchCondition = () => {
   chainDropdown.value.selectedChain = []
   statusDropdown.value.selectOption = []
-  // todo clippers => refresh list
+  
+  getList()
 }
 
 </script>

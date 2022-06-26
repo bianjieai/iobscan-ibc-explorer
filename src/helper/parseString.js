@@ -3,6 +3,9 @@ import { floor } from 'lodash-es';
 import { BigNumber } from "bignumber.js";
 
 function getRestString(string, left, right) {
+  if (string.length < Number(left) + Number(right)) {
+    return string
+  }
   return string ? `${string.substr(0, left)}...${string.substr(-right)}` : '';
 }
 

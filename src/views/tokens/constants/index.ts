@@ -102,3 +102,22 @@ export const STATUS_OPTIONS = [
     key: 'Other'
   }
 ]
+
+export const IBC_STATUS_OPTIONS = [
+  {
+    value: undefined,
+    key: 'All Token Types'
+  },
+  {
+    value: 'Authed',
+    key: 'Authed'
+  },
+  {
+    value: 'Other',
+    key: 'Other'
+  },
+  {
+    value: 'Genesis',
+    key: 'Genesis'
+  }
+]

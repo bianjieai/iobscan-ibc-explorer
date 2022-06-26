@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <PageTitle title="IBC Tokens" subtitle="254 tokens found" />
+    <PageTitle title="IBC Tokens" :subtitle="`${data.length} tokens found`" />
     <div class="select flex items-center flex-wrap">
       <TokensDropDown @on-tokens-selected="onSelectedToken" ref="tokensDropdown" />
       <ChainsDropdown @on-selected-chain="onSelectedChain" ref="chainDropdown" />
@@ -10,29 +10,37 @@
 
     <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="COLUMNS">
       <template #base_denom="{ record, column }">
-        <IconAndTitle title-can-click
-          @click-title="goIbcToken(record[column.key], useBaseDenomInfo(record[column.key]).title)" subtitle-is-tag
-          :title="useBaseDenomInfo(record[column.key]).title" :subtitle="useBaseDenomInfo(record[column.key]).subtitle"
-          :img-src="useBaseDenomInfo(record[column.key]).imgSrc" />
+        <TokenIcon @click-title="goIbcToken(record[column.key])" :denom="record[column.key]"
+          :denoms-data="ibcBaseDenoms.value" />
       </template>
       <template #price="{ record, column }">
-        <div>{{ `$ ${record[column.key]}` }}</div>
+        <div>{{ `${record.currency} ${formatBigNumber(record[column.key], 2)}` }}</div>
+      </template>
+
+      <template #supply="{ record, column }">
+        <div>{{ `${formatBigNumber(record[column.key], 0)}` }}</div>
+      </template>
+
+      <template #ibc_transfer_amount="{ record, column }">
+        <div>{{ `${formatBigNumber(record[column.key], 2)}` }}</div>
+      </template>
+
+      <template #ibc_transfer_txs="{ record, column }">
+        <div>{{ `${formatBigNumber(record[column.key], 0)}` }}</div>
       </template>
 
       <template #chain_id="{ record, column }">
-        <IconAndTitle :title="useBaseChainsInfo(record[column.key]).title"
-          :subtitle="useBaseChainsInfo(record[column.key]).subtitle"
-          :img-src="useBaseChainsInfo(record[column.key]).imgSrc" />
+        <ChainIcon :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
       </template>
     </BjTable>
   </PageContainer>
 </template>
 
 <script lang="ts" setup>
-// TODO clippers => subtitle完善 （数量 / chains跳转过来）
-// todo clippers => 筛选
-// todo clippers => 处理请求
-// todo clippers => 各个插槽处理
+// TODO clippers => subtitle完善 （ chains跳转过来）
+
+// todo clippers => price 留几位小数
+// todo clippers => supply 留几位小数
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
@@ -41,66 +49,82 @@ import TokensDropDown from '@/components/responsive/dropdown/tokens.vue';
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
-import { computed, ref } from 'vue';
-import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router'
-import { useBaseChainsInfo } from '@/hooks/useChain'
-import { useBaseDenomInfo } from '@/hooks/useDenom'
+import TokenIcon from '@/components/responsive/table/tokenIcon.vue';
+import { useGetIbcDenoms, useIbcChains } from '../home/composable';
+import { formatBigNumber, formatNum } from '@/helper/parseString'
+import ChainIcon from '@/components/responsive/table/chainIcon.vue';
+import { useGetTokenList } from '@/service/tokens';
+
 
 const router = useRouter()
 
+const { ibcChains, getIbcChains } = useIbcChains();
+const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
+const { data, getList } = useGetTokenList()
+
+
 const needCustomColumns = [
-  'base_denom', 'price', 'chain_id'
+  'base_denom',
+  'price',
+  'chain_id',
+  'supply',
+  'ibc_transfer_amount',
+  'ibc_transfer_txs'
 ]
 
-const data: any = [{
-  base_denom: 'aaa',
-  price: 12321233,
-  supply: 2020202032,
-  ibc_transfer_amount: 23322123433,
-  ibc_transfer_txs: 12323,
-  chains_involved: 123,
-  chain_id: 'irishub-1'
-},
-{
-  base_denom: 'uiris',
-  price: 12321233,
-  supply: 2020202032,
-  ibc_transfer_amount: 23322123433,
-  ibc_transfer_txs: 12323,
-  chains_involved: 123,
-  chain_id: 'bbb'
-}]
 
 const chainDropdown = ref()
 const statusDropdown = ref()
 const tokensDropdown = ref()
 
+// 缓存筛选条件
+const searchDenom = ref()
+const searchChain = ref()
+const searchStatus = ref<'Authed' | 'Other'>()
+
+onMounted(() => {
+  !sessionStorage.getItem('allChains') && getIbcChains();
+  getIbcBaseDenom()
+
+  getList()
+})
+
+const refreshList = () => {
+  getList({
+    base_denom: searchDenom.value,
+    chain: searchChain.value,
+    token_type: searchStatus.value
+  })
+}
+
 const onSelectedToken = (denom?: string | number) => {
-  console.log(denom, 'denom')
+  searchDenom.value = denom
+  refreshList()
 }
 
 const onSelectedChain = (chain?: string | number) => {
-  console.log(chain, 'chain')
+  searchChain.value = chain
+  refreshList()
 }
 
 const onSelectedStatus = (status?: string | number) => {
-  console.log(status, 'status')
+  searchStatus.value = status as 'Authed' | 'Other'
+  refreshList()
 }
 
 const resetSearchCondition = () => {
   chainDropdown.value.selectedChain = []
   statusDropdown.value.selectOption = []
   tokensDropdown.value.selectToken = []
-  // todo clippers => refresh list
+  // reset list
+  getList()
 }
 
-const goIbcToken = (denom: string, symbol: string) => {
+const goIbcToken = (denom: string) => {
   router.push({
-    path: `/tokens/ibc/${denom}`,
-    query: {
-      symbol
-    }
+    path: `/tokens/ibc/${denom}`
   })
 }
 

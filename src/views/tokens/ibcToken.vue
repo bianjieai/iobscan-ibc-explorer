@@ -1,9 +1,10 @@
 <template>
   <PageContainer>
-    <PageTitle :title="`${symbol} IBC Tokens`" subtitle="254 tokens found" has-icon />
+    <PageTitle :title="`${baseDenomInfo.symbol} IBC Tokens`" :subtitle="`${data.length} tokens found`" has-icon
+      :img-src="baseDenomInfo.imgSrc" />
     <div class="select flex items-center flex-wrap">
       <ChainsDropdown @on-selected-chain="onSelectedChain" ref="chainDropdown" />
-      <BaseDropdown :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
+      <BaseDropdown :options="IBC_STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
@@ -16,18 +17,20 @@
               <div>Token Hash: {{ record[column.key] }}</div>
             </div>
           </template>
-          <div>{{ record[column.key] }}</div>
+          <div>{{ getRestString(record[column.key], 3, 8) }}</div>
         </a-popover>
       </template>
 
       <template #chain_id="{ record, column }">
-        <IconAndTitle :title="useBaseChainsInfo(record[column.key]).title"
-          :subtitle="useBaseChainsInfo(record[column.key]).subtitle"
-          :img-src="useBaseChainsInfo(record[column.key]).imgSrc" />
+        <ChainIcon :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
+      </template>
+
+      <template #amount="{ record, column }">
+        <div>{{ `${formatBigNumber(record[column.key], 2)}` }}</div>
       </template>
 
       <template #receive_txs="{ record, column }">
-        <div class="hover-cursor">{{ record[column.key] }}</div>
+        <div class="hover-cursor">{{ formatBigNumber(record[column.key], 0) }}</div>
       </template>
     </BjTable>
   </PageContainer>
@@ -36,56 +39,81 @@
 <script lang="ts" setup>
 // TODO clippers => subtitle完善 （数量 / chains跳转过来）
 // todo clippers => 筛选
-// todo clippers => 处理请求
-// todo clippers => 各个插槽处理
 // todo clippers => 确认提示Name单元格Token Hash:的字段
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
-import { IBC_COLUMNS, STATUS_OPTIONS } from './constants'
+import { IBC_COLUMNS, IBC_STATUS_OPTIONS } from './constants'
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router'
-import { useBaseChainsInfo } from '@/hooks/useChain';
+import { useGetIbcTokenList } from '@/service/tokens';
+import { useGetIbcDenoms, useIbcChains } from '../home/composable';
+import { getRestString, formatBigNumber } from '@/helper/parseString'
+import ChainIcon from '@/components/responsive/table/chainIcon.vue';
+
+const { ibcChains, getIbcChains } = useIbcChains();
+const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
 
 const route = useRoute()
+const base_denom = route.params.name as string
 
-const symbol = ref<string>(route.query.symbol as string)
-const denom = route.params.name
+const { data, getList } = useGetIbcTokenList(base_denom)
+
+const baseDenomInfo = computed(() => {
+  const filterData = ibcBaseDenoms.value.value.filter((item: any) => item.denom === base_denom) as any // todo clippers => 补上类型
+  return {
+    symbol: filterData[0]?.symbol ?? 'Unknown',
+    imgSrc: filterData[0]?.icon ?? new URL('../../assets/token-default.png', import.meta.url).href
+  }
+})
 
 const needCustomColumns = [
-  'denom', 'chain_id', 'receive_txs'
+  'denom',
+  'chain_id',
+  'amount',
+  'receive_txs'
 ]
-
-const data: any = [{
-  denom: 'aaa',
-  price: 12321233,
-  token_type: 2020202032,
-  ibc_hops: 23322123433,
-  amount: 12323,
-  receive_txs: 123,
-  chain_id: 'irishub-1',
-  path: 'sadd'
-},]
 
 const chainDropdown = ref()
 const statusDropdown = ref()
 
+const searchChain = ref()
+const searchStatus = ref()
+
+
+onMounted(() => {
+  !sessionStorage.getItem('allChains') && getIbcChains();
+  getIbcBaseDenom()
+
+  getList()
+})
+
+const refreshList = () => {
+  getList({
+    chain: searchChain.value,
+    token_type: searchStatus.value
+  })
+}
+
 
 const onSelectedChain = (chain?: string | number) => {
-  console.log(chain, 'chain')
+  searchChain.value = chain
+  refreshList()
 }
 
 const onSelectedStatus = (status?: string | number) => {
-  console.log(status, 'status')
+  searchStatus.value = status
+  refreshList()
 }
 
 const resetSearchCondition = () => {
   chainDropdown.value.selectedChain = []
   statusDropdown.value.selectOption = []
-  // todo clippers => refresh list
+  // reset list
+  getList()
 }
 
 </script>

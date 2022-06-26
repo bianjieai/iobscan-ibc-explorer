@@ -45,9 +45,11 @@ export const useClearInterval = () => {
     }
 }
 export const useGetIbcDenoms = () => {
+    const ibcBaseDenoms = computed(() => ibcStatisticsChainsStore.ibcBaseDenoms)
     const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
     const getIbcBaseDenom = ibcStatisticsChainsStore[GET_IBCBASEDENOMS];
     return {
+        ibcBaseDenoms,
         getIbcDenoms,
         getIbcBaseDenom
     }

@@ -26,7 +26,7 @@
 import { computed } from 'vue';
 import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
 
-// TODO clippers => relayer icon 背景
+// 说明 现已将 token chain 拆除。 仅剩relayer
 interface IProps {
   iconSize?: TTableCellIconSize
   title: string
