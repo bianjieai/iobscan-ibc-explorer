@@ -5,7 +5,6 @@ import './theme/index.less';
 import './assets/icon/iconfont'
 import './assets/icon/iconfont.css'
 import {createPinia} from 'pinia';
-// TODO theme 
 
 const app = createApp(App)
 app.use(router)

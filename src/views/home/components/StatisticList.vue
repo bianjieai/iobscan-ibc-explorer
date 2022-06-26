@@ -111,10 +111,10 @@ const clickListItem = (value) => {
     &_tip {
         margin-left: 8px;
         padding: 0 4px;
-        font-size: var(--bj-font-size-dropdown);
+        font-size: var(--bj-font-size-small);
         font-family: Montserrat-Regular, Montserrat;
         color: #3d50ff;
-        line-height: var(--bj-font-size-dropdown);
+        line-height: var(--bj-font-size-small);
         background: rgba(61, 80, 255, 0.15);
         border-radius: 7px;
     }
