@@ -68,6 +68,9 @@ export const useIbcStatisticsChains = defineStore('home', {
         },
         async [GET_IBCBASEDENOMS]() {
             const res = await getIbcBaseDenoms();
+            sessionStorage.setItem('ibcBaseDenoms', JSON.stringify({
+                value: res
+            }));
             this.ibcBaseDenoms.value = res;
         },
         async [GET_IBCTXS](queryParams) {
@@ -83,15 +86,15 @@ export const useIbcStatisticsChains = defineStore('home', {
                 const result = res.data;
                 if(use_count) {
                     if(typeof res !== 'number') {
-                        this.ibcTxsCount.value = res.data.data;
-                    } else {
                         this.ibcTxsCount.value = res.data;
+                    } else {
+                        this.ibcTxsCount.value = res;
                     }
                 } else if(start_time){
-                    this.ibcTxsStartTime.value = res.data;
+                    this.ibcTxsStartTime.value = res;
                 } else {
                     const getSymbolInfo = () => {
-                        return result.map(item => {
+                        return result?.map(item => {
                             const symbol = Tools.findDenomSymbol(
                                 this.ibcDenoms.value,
                                 item.denoms.sc_denom,

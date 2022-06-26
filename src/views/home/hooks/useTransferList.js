@@ -24,7 +24,7 @@ export const useIsExpand = () => {
     }
 }
 export const useFindIbcChainIcon = (props) => {
-    const findIbcChainIcon = computed(() => (chainId) => {
+    const findIbcChainIcon = (chainId) => {
         if (props.ibcChains && props.ibcChains.all) {
             const result = props.ibcChains.all.find((item) => item.chain_id === chainId);
             if (result) {
@@ -32,7 +32,7 @@ export const useFindIbcChainIcon = (props) => {
             }
         }
         return placeHoderImg;
-    });
+    };
     return {
         findIbcChainIcon
     }

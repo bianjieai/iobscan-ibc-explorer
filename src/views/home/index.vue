@@ -20,7 +20,7 @@
                 </layer-block>
 
                 <layer-block title="IBC Tokens" style="margin-top: 47px" showTip :tipMsg="tipMsg">
-                    <statistic-list type="vertical" :msg="ibcStatisticsDenoms" @clickItem="onClickViewAll" />
+                    <statistic-list  type="vertical" :msg="ibcStatisticsDenoms" @clickItem="onClickViewAll" />
                 </layer-block>
             </div>
 
@@ -62,7 +62,7 @@ onMounted(() => {
     !sessionStorage.getItem('allChains') && getIbcChains();
     getIbcTxs({page_num: 1, page_size: 10, use_count: false});
     getIbcDenoms();
-    getIbcBaseDenom();
+    !sessionStorage.getItem('ibcBaseDenom') && getIbcBaseDenom();
 })
 onBeforeUnmount(() => {
     clearInterval();

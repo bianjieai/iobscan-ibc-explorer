@@ -61,7 +61,7 @@
                   :src="
                     item[iconKey] ||
                       isShowSymbol(key)?.symbolIcon ||
-                      require('../assets/placeHoder.png')
+                      require('../../../assets/placeHoder.png')
                   "
                 />
                 <span class="content_item_title">{{
@@ -76,7 +76,7 @@
           <h2 class="overlay_item_title">Other IBC Tokens</h2>
           <div class="overlay_item_content">
             <div class="content_item" @click="onClickItem(undefined, unAuthed)">
-              <img class="content_item_icon" src="../assets/placeHoder.png" />
+              <img class="content_item_icon" src="../../../assets/placeHoder.png" />
               <span class="content_item_title">Others</span>
             </div>
           </div>
@@ -111,16 +111,11 @@
   </a-dropdown>
 </template>
 
-<script>
-/* eslint-disable max-len */
-
+<script setup>
+import { getLasttyString } from '../../../helper/parseString';
+import { useFindIcon, useIsVisible } from '../composable';
 import { ref, watch } from 'vue';
-import { unAuthed } from '../constants/index.js';
-import placeHoderImg from '../assets/placeHoder.png';
-import { getLasttyString } from '../helper/parseString.js';
-
-export default {
-  props: {
+const props = defineProps({
     type: String,
     options: {
       default: () => [],
@@ -136,88 +131,37 @@ export default {
     showIcon: Boolean,
     iconKey: String,
     titleKey: String,
-  },
-  setup(props, context) {
-    const isVisible = ref(false);
-    const inputValue = ref('');
-    const visibleChange = (visible) => {
-      isVisible.value = visible;
-    };
-    watch(
-      () => props.clearInput,
-      () => {
+})
+const emits = defineEmits(['clickItem','clickSearch']);
+const { findSymbolIcon, findChainIcon, isShowSymbol } = useFindIcon(props);
+const { isVisible, visibleChange } = useIsVisible();
+const inputValue = ref('');
+
+watch(
+    () => props.clearInput,
+    () => {
         inputValue.value = '';
-      },
-    );
-
-    const onClickItem = (item, key) => {
-      inputValue.value = '';
-      const selected = props.type === 'chain' ? item : key;
-      context.emit('clickItem', props.type, selected);
-      isVisible.value = false;
-    };
-    const onClickSearch = () => {
-      context.emit(
-        'clickSearch',
-        props.type,
-        props.type === 'chain' ? { chain_id: inputValue.value } : inputValue.value.toLowerCase().replace('ibc/', '').replace('IBC/', ''),
-      );
-      isVisible.value = false;
-    };
-    const onClickAll = () => {
-      context.emit(
-        'clickSearch',
-        props.type,
-        props.type === 'chain' ? { chain_id: undefined } : undefined,
-      );
-      isVisible.value = false;
-    };
-    const isShowSymbol = (key) => {
-      const result = {
-        symbolDenom: '',
-        symbolIcon: '',
-      };
-      if (props.type === 'token' && Array.isArray(props.ibcBaseDenoms.value)) {
-        const findSymbol = props.ibcBaseDenoms.value?.find((baseDenom) => baseDenom.symbol === key);
-        result.symbolDenom = findSymbol ? findSymbol.symbol : key;
-        result.symbolIcon = findSymbol ? findSymbol.icon : '';
-      }
-      return result;
-    };
-    const findChainIcon = () => {
-      const findChainConfig = props?.options?.find(
-        (item) => item.chain_id === props.selectedChain.chain_id,
-      );
-      if (findChainConfig) {
-        return findChainConfig.icon || placeHoderImg;
-      }
-      return placeHoderImg;
-    };
-    const findSymbolIcon = () => {
-      const findSymbolConfig = props.ibcBaseDenoms.value?.find(
-        (baseDenom) => baseDenom.symbol === props.selectedSymbol,
-      );
-      if (findSymbolConfig) {
-        return findSymbolConfig.icon || placeHoderImg;
-      }
-      return placeHoderImg;
-    };
-
-    return {
-      isVisible,
-      visibleChange,
-      onClickItem,
-      inputValue,
-      onClickSearch,
-      onClickAll,
-      findChainIcon,
-      findSymbolIcon,
-      unAuthed,
-      getLasttyString,
-      isShowSymbol,
-    };
-  },
+    },
+);
+const onClickItem = (item, key) => {
+    inputValue.value = '';
+    const selected = props.type === 'chain' ? item : key;
+    emits('clickItem', props.type, selected);
+    isVisible.value = false;
 };
+const onClickSearch = () => {
+    emits('clickSearch', props.type, props.type === 'chain' ? { chain_id: inputValue.value } : inputValue.value.toLowerCase().replace('ibc/', '').replace('IBC/', ''));
+    isVisible.value = false;
+}
+const onClickAll = () => {
+    emits(
+    'clickSearch',
+    props.type,
+    props.type === 'chain' ? { chain_id: undefined } : undefined,
+    );
+    isVisible.value = false;
+};
+
 </script>
 
 <style lang="less" scoped>
@@ -226,7 +170,6 @@ export default {
   width: 146px;
   margin-right: 8px;
   .flex(row, wrap, space-between, center);
-  font-family: Montserrat-Regular, Montserrat;
   font-weight: 400;
   &_title {
     max-width: 86px;
@@ -236,7 +179,6 @@ export default {
   &:hover {
     .button_icon {
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-      // border-left: 1px solid $font-color4;
     }
   }
   &_icon {
@@ -244,7 +186,6 @@ export default {
     margin: 0 5px;
     .flex(column, nowrap, center, center);
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-    // border-left: 1px solid #d9dfee;
     color: rgba(0, 0, 0, 0.25);
   }
   &_pre_icon {
@@ -268,14 +209,14 @@ export default {
     font-size: var(--bj-font-size-normal);
     font-family: Montserrat-Regular, Montserrat;
     font-weight: 400;
-    color: rgba(0, 0, 0, 0.65);
+    color: var(--bj-font-color-65);
     margin-bottom: 16px;
     width: 140px;
-    cursor:url("../assets/mouse/shiftlight_mouse.png"),default !important;
+    cursor:url("../../../assets/mouse/shiftlight_mouse.png"),default !important;
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     &:hover {
-      border: 1px solid $font-color4;
-      color: $font-color4;
+      border: 1px solid var(--bj-primary-color);
+      color: var(--bj-primary-color);
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       background-color: #ffffff;
     }
@@ -284,7 +225,6 @@ export default {
     width: 100%;
     &_title {
       font-size: var(--bj-font-size-normal);
-      font-family: Montserrat-Regular, Montserrat;
       font-weight: 400;
       color: #000000;
       margin-bottom: 14px;
@@ -299,24 +239,23 @@ export default {
         border: 1px solid transparent;
         margin: 0 8px 12px 0;
         padding: 6px 6px;
-        cursor: url("../assets/mouse/shiftlight_mouse.png"),default  !important;
+        cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default  !important;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-        .flex(row, nowrap, flex-start, center);
+        .flex(row, nowrap, center, center);
           .content_item_title{
-                width: 112px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
           }
         &:hover {
-          border: 1px solid $font-color4;
-          color: $font-color4;
+          border: 1px solid var(--bj-primary-color);
+          color: var(--bj-primary-color);
           transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
           background-color: #ffffff;
         }
         &_selected {
-          border: 1px solid $font-color4;
-          color: $font-color4;
+          border: 1px solid var(--bj-primary-color);
+          color: var(--bj-primary-color);
           background-color: #ffffff;
         }
         &_icon {
@@ -331,12 +270,11 @@ export default {
           overflow: hidden;
           // text-overflow: ellipsis;
           // white-space: nowrap;
-          color: rgba(0, 0, 0, 0.65);
+          color: var(--bj-font-color-65);
         }
       }
     }
     &_input {
-      font-family: Montserrat-Regular, Montserrat;
       width: 240px;
       margin-right: 12px;
     }
@@ -347,11 +285,17 @@ export default {
 }
 .tip {
   width: 20px;
+  z-index: 1;
   &_color {
-    color: $font-color2;
+    color: var(--bj-font-color-65);
   }
 }
 .hover {
-  cursor: url("../assets/mouse/shiftlight_mouse.png"),default  !important;
+  cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default  !important;
+}
+.ant-dropdown-open {
+    .button_icon {
+        color: var(--bj-primary-color);
+    }
 }
 </style>
