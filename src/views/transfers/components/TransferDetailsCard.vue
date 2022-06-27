@@ -8,7 +8,7 @@
 
                     <!--                    {{formatToken(item.value,details)}}-->
 
-                    <span class="details_item_amount">{{ formatToken(item.value, details).symbolNum || '--' }}</span>
+                    <router-link :to="`/tokens?chain=${chain1}`" class="details_item_amount">{{ formatToken(item.value, details).symbolNum || '--' }}</router-link>
                     <a-tooltip>
                         <template #title>
                             {{ formatToken(item.value, details).denom }}
@@ -31,7 +31,7 @@
 
                     <!--                    {{formatFee(item.value)}}-->
                 </span>
-                <span class="details_item_value" v-else-if="item.isFormatChainID">{{ formatChainID(item.value) }}</span>
+                <router-link :to="`/chains`" class="details_item_value" v-else-if="item.isFormatChainID">{{ formatChainID(item.value) }}</router-link>
                 <span class="details_item_value" v-else-if="item.isAck">{{ formatAck(item.value) }}</span>
                 <span class="details_item_value" v-else-if="item.isFormatDate">
                     <span style="display: none">{{ formatDate(item.value) }}</span>
@@ -46,6 +46,8 @@
                     </span>
                     <span v-if="!Array.isArray(item.value)" class="value_style">{{ item.value || '--' }}</span>
                 </span>
+                <!-- todo shan 确认传递的 chain 参数 chian -->
+                <router-link :to="`/channels?chain=${chain1}`" class="details_item_value" v-else-if="item.isChannelID">{{ item.value ? item.value : '--' }}</router-link>
                 <span class="details_item_value" v-else>{{ item.value ? item.value : '--' }}</span>
             </li>
             <li class="details_item" v-for="(item, index) in expandDetails" :key="index" v-show="isExpand">
@@ -66,7 +68,7 @@
                 <span class="details_item_value" v-if="item.isFormatHeight">{{ formatHeight(item.value) }}</span>
                 <span class="details_item_value" v-else-if="item.isFormatStatus">{{ formatStatus(item.value) }}</span>
                 <span class="details_item_value" v-else-if="item.isFormatFee">{{ formatFee(item.value) }}</span>
-                <span class="details_item_value" v-else-if="item.isFormatChainID">{{ formatChainID(item.value) }}</span>
+                <router-link :to="`/chains`" class="details_item_value" v-else-if="item.isFormatChainID">{{ formatChainID(item.value) }}</router-link>
                 <span class="details_item_value" v-else-if="item.isAck">{{ formatAck(item.value) }}</span>
                 <span class="details_item_value" v-else-if="item.isFormatDate">
                     <span style="display: none">{{ formatDate(item.value) }}</span>
@@ -151,7 +153,6 @@ const formatToken = (token, details) => {
             if (findSymbol) {
                 // (token.amount || 0) * 10 ** -findSymbol.scale;
                 symbolNum = moveDecimal(token.amount, 0 - findSymbol.scale)
-
                 symbolDenom = findSymbol.symbol;
             }
         }

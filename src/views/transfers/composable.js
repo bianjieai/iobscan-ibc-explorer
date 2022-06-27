@@ -37,7 +37,7 @@ export const useIbcChains = () => {
 }
 
 export const useGetIbcBaseDenoms = () => {
-    const ibcBaseDenoms = sessionStorage.getItem('ibcBaseDenoms') ? JSON.parse(sessionStorage.getItem('ibcBaseDenoms')) : {};
+    const ibcBaseDenoms = sessionStorage.getItem('ibcBaseDenoms') ? JSON.parse(sessionStorage.getItem('ibcBaseDenoms')) : ibcStatisticsChainsStore.ibcBaseDenoms;
     const getIbcBaseDenom = ibcStatisticsChainsStore[GET_IBCBASEDENOMS];
     return {
         ibcBaseDenoms,
@@ -223,6 +223,7 @@ export const useTransfersDetailsInfo = () => {
             label: 'Channel ID:',
             value: '--',
             dataKey: 'sc_channel',
+            isChannelID: true
         },
         {
             label: 'Send Token:',

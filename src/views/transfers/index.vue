@@ -16,7 +16,6 @@
         <div class="transfer_middle">
             <div class="transfer_middle_top">
                 <div class="transfer_middle_left">
-                    <!-- all tokens -->
                     <dropdown
                         class="dropdown_token"
                         :type="'token'"
@@ -28,17 +27,13 @@
                         @clickItem="onClickDropdownItem"
                         @clickSearch="(type, item) => onClickDropdownItem(type, item, 'customToken')"
                     />
-                    <dropdown
-                        class="dropdown_token"
-                        :type="'chain'"
-                        :options="ibcChains?.all"
-                        :selectedChain="selectedChain.value"
-                        :showIcon="isShowChainIcon"
-                        :iconKey="'icon'"
-                        :clearInput="clearInput.value"
-                        :titleKey="'chain_name'"
-                        @clickItem="onClickDropdownItem"
-                        @clickSearch="(type, item) => onClickDropdownItem(type, item, 'customChain')"
+                    <chains-dropdown 
+                        :selectedDouble="selectedDouble"
+                        :needBadge="needBadge"
+                        @onSelectedChain="onSelectedChain"
+                        :dropdown-data="ibcChains.all"
+                        :chain_id="chainId"
+                        ref="chainDropdown"
                     />
                     <a-select
                         class="status_select"
@@ -201,12 +196,18 @@
                                     <p class="tip_color">Sequence: {{ record.sequence || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="`/chains/details?chain_id=${record.dc_chain_id}`">
+                            <router-link :to="`/chains`">
                                 <img
                                     class="status_icon hover"
                                     :src="findIbcChainIcon(record.sc_chain_id)"
                                 />
                             </router-link>
+                            <!-- <router-link :to="`/chains/details?chain_id=${record.dc_chain_id}`">
+                                <img
+                                    class="status_icon hover"
+                                    :src="findIbcChainIcon(record.sc_chain_id)"
+                                />
+                            </router-link> -->
 
                         </a-popover>
                         <img
@@ -222,12 +223,18 @@
                                     <p class="tip_color">Sequence: {{ record.sequence || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="`/chains/details?chain_id=${record.dc_chain_id}`">
+                            <router-link :to="`/chains`">
                                 <img
                                     class="status_icon hover"
                                     :src="findIbcChainIcon(record.dc_chain_id)"
                                 />
                             </router-link>
+                            <!-- <router-link :to="`/chains/details?chain_id=${record.dc_chain_id}`">
+                                <img
+                                    class="status_icon hover"
+                                    :src="findIbcChainIcon(record.dc_chain_id)"
+                                />
+                            </router-link> -->
 
                         </a-popover>
                     </template>
@@ -286,7 +293,8 @@
 
 <script setup>
 import Dropdown from "./components/Dropdown.vue";
-import { transferTableColumn, ibcTxStatusSelectOptions, tableChainIDs, chainAddressPrefix } from '../../constants';
+import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
+import { ibcTxStatusSelectOptions, tableChainIDs, chainAddressPrefix } from '../../constants';
 import Tools from '../../utils/Tools';
 import placeHoderImg from '../../assets/placeHoder.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
@@ -312,6 +320,10 @@ const { selectedSymbol, isShowSymbolIcon, clearInput, selectedChain, isShowChain
 const { pagination } = usePagination();
 const { ibcChains, getIbcChains } = useIbcChains();
 const { tableColumns, isShowTransferLoading, tableDatas } = useGetTableColumns();
+
+const chainDropdown = ref()
+const selectedDouble = ref(true);
+const needBadge = ref(true);
 
 let paramsStatus = null, chainId = null, paramsSymbol = null, paramsDenom = null, startTimestamp = 0, endTimestamp = 0;
 const dateRange = reactive({value: []});
@@ -695,13 +707,15 @@ const onPaginationChange = (page) => {
         console.log(error);
     })
 };
+console.log(chainDropdown.value?.selectedChain,'chainDropdown.value.selectedChain');
 const onClickReset = () => {
     isShowChainIcon.value = false;
     isShowSymbolIcon.value = false;
     clearInput.value += 1;
-    selectedChain.value = {
-        chain_name: undefined,
-    };
+    // selectedChain.value = {
+    //     chain_name: undefined,
+    // };
+    chainDropdown.value.selectedChain = [];
     selectedSymbol.value = 'All Tokens';
     dateRange.value = [];
     queryParam.date_range = [];
@@ -720,6 +734,12 @@ const getAddressPrefix = (address) => {
         return address?.toString().substr(0, 3)
     }
     return '--'
+}
+
+const onSelectedChain = (chain_id) => {
+    console.log(chain_id,'chain_id');
+  chainId = chain_id
+  queryDatas();
 }
 const isShowLink = (address, chainID) => {
     let isShowLink = false
@@ -758,6 +778,7 @@ const setExplorerLink = (address, chainID) => {
     }
     return explorerLink
 }
+
 watch(ibcStatisticsTxs,(newValue,oldValue) => {
     if(newValue?.tx_all?.count < maxTableLength){
         ibcTxTotalMoreThan500k.value = false
@@ -926,7 +947,7 @@ onMounted(() => {
 }
 .status_select {
     width: 146px;
-    margin-right: 8px;
+    margin: 0 8px;
 }
 
 .date_range {
