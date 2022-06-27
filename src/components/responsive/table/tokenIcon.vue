@@ -3,7 +3,7 @@
     <img :src="tokenInfo.imgSrc" :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']">
     <div class="flex flex-col justify-around"
       :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
-      <div :class="['title', 'leading-none', 'hover-cursor']" @click="go">{{ tokenInfo.title }}</div>
+      <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ tokenInfo.title }}</div>
       <div :class="['subtitle', 'leading-none', 'tag']">{{ tokenInfo.subtitle }}</div>
     </div>
   </div>
@@ -18,6 +18,7 @@ interface IProps {
   iconSize?: TTableCellIconSize
   denom: string
   denomsData: TBaseDenoms[]
+  titleCanClick?: boolean
 }
 
 const props = withDefaults(defineProps<IProps>(), {

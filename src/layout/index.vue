@@ -78,10 +78,10 @@ const clickMenu = (val) => {
 }
 
 watch(() => route.path, (newVal, oldVal) => {
-  if (!oldVal) { // 页面刚加载
+  // if (!oldVal) { // 页面刚加载
     const temp = newVal.replace(/\//, '')
     currentMenu.value = [temp[0].toUpperCase() + temp.substr(1)]
-  }
+  // }
 }, {
   immediate: true
 })

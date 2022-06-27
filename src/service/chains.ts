@@ -9,30 +9,20 @@ const getChainListUrl = `${urlPrefix}/ibc/chainList`
 export const useGetChainsList = () => {
   const data = ref([])
 
-  const getList = async() => {
+  const getList = async () => {
     const result = await HttpHelper.get(getChainListUrl, {
       params: baseParams
     })
 
-    if (result) {
-      const { items } = result
+    const { code, data, message } = result
+
+    if (code === 0) {
+      const { items } = data
       data.value = items
+    } else {
+      console.error(message)
     }
   }
-
-  data.value = [
-    {
-      chain_id: 'irishub-1',
-      connected_chains: 10,
-      channels: 20,
-      relayers: 158,
-      ibc_tokens: 20,
-      ibc_tokens_value: 20,
-      ibc_transfer_txs: 1000,
-      ibc_transfer_txs_value: 10000000,
-      currency:'$'
-    }
-  ]
 
   return {
     data,

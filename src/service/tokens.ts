@@ -36,22 +36,16 @@ export const useGetTokenList = () => {
   const getList = async (params: TTokenListParams = {}) => {
     const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...params } })
 
-    if (result) {
-      const { items } = result
+    const { code, data, message } = result
+
+    if (code === 0) {
+      const { items } = data
       data.value = items
+    } else {
+      console.error(message)
     }
   }
 
-  data.value = [{
-    base_denom: 'uiris',
-  price: 12321233,
-  supply: 2020202032,
-  ibc_transfer_amount: 23322123433,
-  ibc_transfer_txs: 12323,
-  chains_involved: 123,
-  chain_id: 'bbb',
-  currency: '$'
-  }]
   return {
     data,
     getList
@@ -70,51 +64,8 @@ export const useGetIbcTokenList = (base_denom: string) => {
     }
   }
 
-  data.value = [{
-    denom: 'xxx322',
-    denom_path: 'sss',
-    chain_id: 'irishub-1',
-    token_type: 'Authed',
-    ibc_hops: 10,
-    amount: 2000,
-    receive_txs: 11000
-  }]
-
   return {
     data,
     getList
   }
 }
-
-// const data: any = [{
-//   base_denom: 'aaa',
-//   price: 12321233,
-//   supply: 2020202032,
-//   ibc_transfer_amount: 23322123433,
-//   ibc_transfer_txs: 12323,
-//   chains_involved: 123,
-//   chain_id: 'irishub-1',
-//   currency: '$'
-// },
-// {
-//   base_denom: 'uiris',
-//   price: 12321233,
-//   supply: 2020202032,
-//   ibc_transfer_amount: 23322123433,
-//   ibc_transfer_txs: 12323,
-//   chains_involved: 123,
-//   chain_id: 'bbb',
-//   currency: '$'
-// }]
-
-// for (let i = 0; i < 20; i++) {
-//   data.push({
-//     base_denom: 'uiris',
-//     price: 12321233,
-//     supply: 2020202032,
-//     ibc_transfer_amount: 23322123433,
-//     ibc_transfer_txs: 12323,
-//     chains_involved: 123,
-//     chain_id: 'bbb', currency: '$'
-//   })
-// }
