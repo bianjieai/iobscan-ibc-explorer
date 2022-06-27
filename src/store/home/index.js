@@ -93,8 +93,9 @@ export const useIbcStatisticsChains = defineStore('home', {
                 } else if(start_time){
                     this.ibcTxsStartTime.value = res;
                 } else {
-                    const getSymbolInfo = () => {
-                        return result?.map(item => {
+                    const getSymbolInfo = (oldData) => {
+                        // oldData 中保留有 列表项展开收起的自定义数据
+                        return result.map((item, index) => {
                             const symbol = Tools.findDenomSymbol(
                                 this.ibcDenoms.value,
                                 item.denoms.sc_denom,
@@ -116,17 +117,18 @@ export const useIbcStatisticsChains = defineStore('home', {
                             }
                             return {
                                 ...item,
+                                expanded: oldData?.[index]?.expanded ?? false,
                                 symbolNum,
                                 symbolDenom,
                                 symbolIcon,
                                 parseTime: Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', ''),
                             };
-                        })
+                        });
                     }
                     clearInterval(this.ibcTxTimer.value);
                     this.ibcTxs.value = getSymbolInfo();
                     this.ibcTxTimer.value = setInterval(() => {
-                        this.ibcTxs.value = getSymbolInfo();
+                        this.ibcTxs.value = getSymbolInfo(this.ibcTxs.value);
                     }, ageTimerInterval)
                 }
             } else {

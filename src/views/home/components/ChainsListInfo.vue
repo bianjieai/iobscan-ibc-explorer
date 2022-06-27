@@ -8,7 +8,7 @@
         <div class="chainlist_bottom">
             <a-list
                 class="card_list ibc_scrollbar"
-                id="card_keyoflist"
+                id="card__list"
                 v-show="chainList[currentMenu] && chainList[currentMenu].length"
                 :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }"
                 :data-source="chainList[currentMenu]"
@@ -33,7 +33,6 @@
                     </a-list-item>
                 </template>
             </a-list>
-
             <a-anchor
                 class="list_anchor"
                 :affix="false"
@@ -68,7 +67,6 @@
 
 <script setup>
 import NoDatas from '../../../components/NoDatas.vue';
-import { onMounted } from 'vue';
 import { useMenus, useInterfaceActive, useAnchors, useGetBindElement } from '../hooks/useChainsListInfo';
 const props = defineProps({
     chainList: Object
@@ -78,9 +76,6 @@ const { menus, currentMenu } = useMenus();
 const { onSelectedMenu, clickListItem } = useInterfaceActive();
 const { anchors, findClassName, onChangeAnchor } = useAnchors();
 const { getBindElement } = useGetBindElement();
-onMounted(() => {
-    getBindElement.value = () => document.querySelector('#card_list');
-})
 
 </script>
 

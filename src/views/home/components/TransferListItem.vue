@@ -1,10 +1,10 @@
 <template>
     <div class="list_item">
-        <div class="list_item_wrap">
-            <div class="list_item_expand_btn" @click.native="onClickExpandBtn">
-                <img :src="isExpand ? '/src/assets/expand.png' : '/src/assets/pack_up.png' " alt="">
+        <div class="list_item_wrap" :class="!item.expanded? '': 'list_item_line_hidden'">
+            <div class="list_item_expand_btn" @click="onClickExpandBtn">
+                <img :src="!item.expanded ? '/src/assets/expand.png' : '/src/assets/pack_up.png' " alt="">
             </div>
-            <div class="list_item_info">
+            <div class="list_item_info" :class="!item.expanded? 'list_item_line': ''">
                 <span class="list_item_number">{{ prefixInteger(index + 1, 3) }}</span>
                 <router-link :to="`/tokens/details?token=${item.denoms.sc_denom}`">
                     <img class="list_item_icon" :src="item.symbolIcon || placeHoderImg" alt="icon" />
@@ -22,7 +22,7 @@
                 </div>
             </div>
         </div>
-        <div class="out_hash_wrap">
+        <div class="out_hash_wrap" v-if="item.expanded">
             <hash-addr-icon :item="item" :ibcChains="ibcChains"></hash-addr-icon>
         </div>
     </div>
@@ -37,16 +37,17 @@ import {
 import placeHoderImg from '../../../assets/placeHoder.png';
 import { chainAddressPrefix, tableChainIDs } from "../../../constants";
 import config from "../../../../config/config.json";
-import { useIsExpand, useClientWidth } from '../hooks/useTransferList';
-const { isExpand, onClickExpandBtn } = useIsExpand();
-const { clientWidth } = useClientWidth();
+import { useIsExpand } from '../hooks/useTransferList';
 const props = defineProps({
     isFinal: Boolean,
     index: Number,
     item: Object,
     ibcChains: Object
 })
-const emits = defineEmits(['clickItem']);
+const emits = defineEmits(['clickItem','clickViewAll','itemDidExpand']);
+
+const { onClickExpandBtn } = useIsExpand(emits, props.index);
+
 const clickListItem = () => {
     emits('clickItem', props.item);
 };
@@ -106,6 +107,9 @@ const setExplorerLink = (address, chainID) => {
     &_wrap {
         width: 100%;
     }
+    &_line_hidden {
+            border-bottom: none;
+        }
     &_expand_btn {
         display: none;
     }
@@ -147,6 +151,9 @@ const setExplorerLink = (address, chainID) => {
             }
         }
     }
+    &_line{
+        
+    }
     &_ago {
         width: 150px;
         text-align: right;
@@ -183,6 +190,9 @@ const setExplorerLink = (address, chainID) => {
         &_wrap {
             .flex(row, nowrap, space-between, center);
         }
+        &_line_hidden {
+            border-bottom: none;
+        }
         &_expand_btn {
             display: block;
             img {
@@ -192,7 +202,6 @@ const setExplorerLink = (address, chainID) => {
         }
         &_info{
             width: 100%;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
             .list_subItem {
                 border-bottom: 0 !important;
                 &_adress_container {
@@ -206,6 +215,9 @@ const setExplorerLink = (address, chainID) => {
 
                 &_title {}
             }
+        }
+        &_line{
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
         }
         &_ago {}
         &_number {}
@@ -224,6 +236,9 @@ const setExplorerLink = (address, chainID) => {
         width: 100%;
         &_wrap {
             border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        }
+        &_line_hidden {
+            border-bottom: none;
         }
         &_expand_btn {
             img {}
@@ -248,7 +263,12 @@ const setExplorerLink = (address, chainID) => {
                 &_title {}
             }
         }
-        &_ago {}
+        &_line{
+            
+        }
+        &_ago {
+            max-width: 70px;
+        }
         &_number {
             margin-left: 4px;
         }
@@ -258,36 +278,6 @@ const setExplorerLink = (address, chainID) => {
             .out_hash {
                 .flex(column, nowrap, flex-start, flex-start);
             }
-        }
-    }
-}
-@media screen and (max-width: 600px) {
-    .list_item {
-        &_wrap {}
-        &_expand_btn {
-            img {}
-        }
-        &_info{
-            & a {
-                img {}
-            }
-            .list_subItem {
-                &_adress_container {
-                    .out_hash {}
-                }
-                &_title_container {}
-                &_value {}
-                &_title {}
-            }
-        }
-        &_ago {
-            max-width: 70px;
-        }
-        &_number {}
-
-        &_icon {}
-        & .out_hash_wrap {
-            .out_hash {}
         }
     }
 }

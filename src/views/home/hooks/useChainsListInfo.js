@@ -59,6 +59,9 @@ export const useAnchors = () => {
 
 export const useGetBindElement = () => {
     const getBindElement = ref(null);
+    onMounted(() => {
+        getBindElement.value = () => document.querySelector('#card__list');
+    });
     return {
         getBindElement,
     }

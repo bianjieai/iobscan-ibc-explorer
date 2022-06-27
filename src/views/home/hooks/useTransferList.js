@@ -1,25 +1,27 @@
 import placeHoderImg from '../../../assets/placeHoder.png';
-import { ref, computed } from 'vue';
-export const useInterfaceActive = () => {
+import {  computed } from 'vue';
+export const useInterfaceActive = (emits) => {
     const onClickViewAll = () => {
         emits('clickViewAll');
     };
     const clickListItem = (item) => {
         emits('clickItem', item);
     };
+    const itemDidExpand = (idx) => {
+        emits('itemDidExpand', idx);
+    };
     return {
         onClickViewAll,
-        clickListItem
+        clickListItem,
+        itemDidExpand
     }
 }
 
-export const useIsExpand = () => {
-    const isExpand = ref(true);
+export const useIsExpand = (emits ,index) => {
     const onClickExpandBtn = () => {
-        isExpand.value = !isExpand.value;
+        emits('itemDidExpand', index);
     }
     return {
-        isExpand,
         onClickExpandBtn
     }
 }
@@ -35,11 +37,5 @@ export const useFindIbcChainIcon = (props) => {
     };
     return {
         findIbcChainIcon
-    }
-}
-export const useClientWidth = () => {
-    const clientWidth = ref(+document.body.clientWidth);
-    return {
-        clientWidth
     }
 }

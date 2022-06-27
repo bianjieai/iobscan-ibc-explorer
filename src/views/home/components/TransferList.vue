@@ -17,6 +17,7 @@
           :isFinal="index >= transferList.length - 1"
           :ibcChains="ibcChains"
           @clickItem="clickListItem"
+          @itemDidExpand="itemDidExpand"
         />
       </div>
 
@@ -41,8 +42,9 @@ const props = defineProps({
     transferList: Array,
     ibcChains: Object
 })
-const emits = defineEmits(['clickViewAll', 'clickItem'])
-const { onClickViewAll, clickListItem } = useInterfaceActive();
+const emits = defineEmits(['clickViewAll', 'clickItem', 'itemDidExpand'])
+const { onClickViewAll, clickListItem, itemDidExpand } = useInterfaceActive(emits);
+
 </script>
 
 <style lang="less" scoped>
