@@ -9,14 +9,14 @@
             <div class="logo" @click="onClickLogo">
               <img class="logo_icon" src="../assets/iobscan_logo.png" alt="logo" />
             </div>
-            <navigation :menus="headerMenus" @clickMenu="clickMenu" :currentMenu="currentMenu" />
+            <navigation :menus="headerMenus" @clickMenu="clickMenu" :currentMenu="currentMenu" :isShowNav="isShowNav" />
             <div class="header_input_wrapper">
                 <header-input class="header_input_layout" @pressedEnter="onPressEnter" disabled />
                 <div class="header_input_icon_wrapper">
                     <a href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
                         <img class="header_input_icon" src="/src/assets/ioblink.png" alt="icon" />
                     </a>
-                    <div class="header_btn_mobile">
+                    <div class="header_btn_mobile" @click="changeShowNav">
                         <img src="../assets/menu_mobile.png" alt="menu icon">
                     </div>
                 </div>
@@ -43,6 +43,7 @@ import HeaderInput from '../components/HeaderInput.vue';
 import IbcFooter from '../components/IbcFooter.vue';
 import { useStarAnimation, useOnPressEnter } from './hooks/useStarAnimation'
 
+const isShowNav = ref(false)
 const isShowBackground = ref(false)
 const headerMenus = reactive(menus);
 const currentMenu = ref([])
@@ -75,6 +76,10 @@ const clickMenu = (val) => {
   router.push({
     name: val
   })
+}
+
+const changeShowNav = ()=>{
+  isShowNav.value = !isShowNav.value
 }
 
 watch(() => route.path, (newVal, oldVal) => {
@@ -173,7 +178,7 @@ a {
     box-sizing: border-box;
     .flex(column, nowrap, flex-start, center);
     flex: 1;
-    z-index: 10;
+    // z-index: 10;
   }
 
   & .footer {
@@ -216,6 +221,7 @@ a {
     .layout {
         & .header {
             &_content {
+              position: relative;
                 .logo {
                     .logo_icon {}
                 }

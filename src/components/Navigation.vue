@@ -1,11 +1,13 @@
 <template>
   <a-menu
+    v-if="isShowNav"
     class="header_menu"
     :selectedKeys="currentMenu"
     mode="horizontal"
     @click="clickMenuItem"
   >
     <a-menu-item class="header_menu_item" v-for="item of menus" :key="item.value">
+      <img src="../assets/tips_icon.png" alt="" class="header_menu_item_img">
       {{ item.label }}
     </a-menu-item>
   </a-menu>
@@ -18,6 +20,7 @@ export default {
   props: {
     menus: Array,
     currentMenu: Array,
+    isShowNav:Boolean
   },
   setup(props, context) {
     const timeOuter = reactive({ value: null });
@@ -96,8 +99,38 @@ export default {
 }
 @media screen and (max-width: 1030px) {
     .header_menu {
-        display: none;
+        position: absolute;
+        top: 80px;
+        background-color:#0E1232;
+        width:100%;
+        height: 245px;
+        border-top: 4px solid #3D50FF;
+        flex-direction: column;
+        align-items: baseline;
+        justify-content: space-around;
+        padding: 20px 0 0 2px;
         &_item {
+          width: 40px;
+          height: 15px;
+          line-height: 15px !important;
+          text-align: left;
+          margin-bottom: 24px !important;
+          &_img{
+            visibility: hidden;
+            height: 8px;
+          }
+        }
+    }
+    .ant-menu-item-selected{
+      background-image: none !important;
+      .header_menu_item_img{
+        visibility: visible;
+        }
+    }
+    .ant-menu-item-active {
+      background-image: none!important;
+      .header_menu_item_img{
+        visibility: visible;
         }
     }
 }
