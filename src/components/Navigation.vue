@@ -1,7 +1,6 @@
 <template>
   <a-menu
-    v-if="isShowNav"
-    class="header_menu"
+    :class="isShowNav?'header_menu': 'header_menu_hide header_menu'"
     :selectedKeys="currentMenu"
     mode="horizontal"
     @click="clickMenuItem"
@@ -98,6 +97,9 @@ export default {
     }
 }
 @media screen and (max-width: 1030px) {
+    .header_menu_hide{
+      display: none;
+    }
     .header_menu {
         position: absolute;
         top: 80px;
