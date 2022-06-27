@@ -109,7 +109,7 @@ const { findIbcChainIcon } = useFindIbcChainIcon(props);
         font-size: var(--bj-font-size-normal);
         font-family: Montserrat-Regular, Montserrat;
         font-weight: 400;
-        color: rgba(0, 0, 0, 0.65);
+        color: var(--bj-font-color-65);
         line-height: var(--bj-font-size-normal);
     }
     &_icon {
@@ -123,7 +123,7 @@ const { findIbcChainIcon } = useFindIbcChainIcon(props);
 }
 .tip {
     &_color {
-        color: rgba(0, 0, 0, 0.65);
+        color: var(--bj-font-color-65);
     }
 }
 .hover {

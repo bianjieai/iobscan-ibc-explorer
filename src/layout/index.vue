@@ -78,10 +78,10 @@ const clickMenu = (val) => {
 }
 
 watch(() => route.path, (newVal, oldVal) => {
-  if (!oldVal) { // 页面刚加载
+  // if (!oldVal) { // 页面刚加载
     const temp = newVal.replace(/\//, '')
     currentMenu.value = [temp[0].toUpperCase() + temp.substr(1)]
-  }
+  // }
 }, {
   immediate: true
 })
@@ -108,7 +108,7 @@ a {
 
     .ant-tooltip-inner {
       background: rgba(255, 255, 255, 1) !important;
-      color: rgba(0, 0, 0, 0.65);
+      color: var(--bj-font-color-65);
     }
   }
 }
@@ -173,6 +173,8 @@ a {
     box-sizing: border-box;
     .flex(column, nowrap, flex-start, center);
     flex: 1;
+    // background-color: #f5f7fc;
+
     z-index: 10;
   }
 

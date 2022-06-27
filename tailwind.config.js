@@ -3,7 +3,8 @@ const spacing = {
   4: '4px',
   8: '8px',
   12: '12px',
-  16: '16px'
+  16: '16px',
+  24: '24px'
 }
 
 module.exports = {
@@ -17,5 +18,8 @@ module.exports = {
     theme: {
       margin: spacing,
       padding: spacing
-    }
+    },
+    corePlugins: {
+      preflight: false, // 禁用默认
+    }  
   }

@@ -1,9 +1,9 @@
 <template>
   <div class="page-title-container">
-    <div class="icon" v-if="hasIcon"></div>
+    <img class="icon" v-if="hasIcon" :src="imgSrc">
     <div class="flex">
       <div class="title-p">
-        <div class="icon inline-icon" v-if="hasIcon"></div>
+        <img class="icon inline-icon" v-if="hasIcon" :src="imgSrc">
         <a-typography-text class="title">{{ title }}</a-typography-text>
         <div class="background" :style="{ bottom: hasIcon ? '3px' : '-3px' }"></div>
       </div>
@@ -13,11 +13,11 @@
 </template>
 
 <script lang="ts" setup>
-// TODO clippers => icon 替换img
 interface IProps {
   hasIcon?: boolean
   title: string
   subtitle: string
+  imgSrc?:string
 }
 
 const props = defineProps<IProps>()
@@ -41,7 +41,6 @@ const props = defineProps<IProps>()
     width: 32px;
     height: 32px;
     border-radius: 32px;
-    background-color: aqua;
     margin-right: 8px;
   }
 

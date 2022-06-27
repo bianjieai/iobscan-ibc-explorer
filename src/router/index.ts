@@ -52,6 +52,19 @@ const routes: Array<RouteRecordRaw> = [
         ]
     },
     {
+        path: '/searchResult',
+        name: 'searchResult',
+        component: Layout,
+        children: [
+            {
+                path: '',
+                name: 'Search Result',
+                component: ()=> import('../views/transfers/components/NoResult.vue'),
+                meta: {}
+            }
+        ]
+    },
+    {
         path: '/tokens',
         redirect: '/tokens',
         component: Layout,

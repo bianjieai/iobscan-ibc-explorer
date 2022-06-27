@@ -1,7 +1,7 @@
 <template>
   <div class="table-warpper">
     <a-table rowKey="record_id" :columns="columnsSource" :data-source="dataSource" :pagination="false"
-      @change="onTableChange">
+      @change="onTableChange" :scroll="scroll">
       <template #bodyCell="{ column, record, index, text }">
         <template v-if="isKeyInNeedCustomColumns(column.key)">
           <slot :name="column.key" :column="column" :record="record" :text="text" :index="index"></slot>
@@ -9,20 +9,20 @@
       </template>
     </a-table>
     <div class="thead-border-bottom"></div>
-    <div class="flex justify-between pt-16 pb-16 items-center bottom" v-if="hasData || $slots.table_bottom_status" >
+    <div :class="['flex', 'justify-between', 'pt-16', !noPagination ? 'pb-16' : '', 'items-center', 'bottom']"
+      v-if="hasData || $slots.table_bottom_status">
       <slot name="table_bottom_status">
         <div></div>
       </slot>
-      <a-pagination v-if="hasData" v-model:current="pageInfo.current" :pageSize="pageInfo.pageSize" :total="pageInfo.total"
-        @change="onPageChange" />
+      <a-pagination v-if="hasData && !noPagination" v-model:current="pageInfo.current" :pageSize="pageInfo.pageSize"
+        :total="pageInfo.total" @change="onPageChange" />
     </div>
   </div>
 
 </template>
 
 <script setup lang="ts">
-// todo clippers => 处理数据比较少的时候 最小300px高度
-import { TableColumnsType } from "ant-design-vue";
+import { TableColumnsType } from 'ant-design-vue';
 import { computed, onMounted, reactive, ref, toRaw, watch } from 'vue';
 import { compareValues } from './utils'
 
@@ -33,6 +33,8 @@ interface IProps {
   needCount?: boolean
   pageSize?: number
   current?: number
+  noPagination?: boolean
+  scroll?: { x?: number, y?: number }
 }
 
 let backUpDataSource: any[] = []
@@ -48,23 +50,25 @@ const pageInfo = reactive({
 const columnsSource = ref(props.columns)
 const dataSource = ref(props.data)
 
-const needPagination = computed(() => !(props.current && props.pageSize)) // 需要前端分页
+const needPagination = computed(() => !props.noPagination && !(props.current && props.pageSize)) // 需要前端分页
 const isKeyInNeedCustomColumns = computed(() => (key: string) => props.needCustomColumns.includes(key)) // 判断key
 const hasData = computed(() => props.data.length > 0)
 const backUpData = () => {
   const { columns, data, needCount } = props
 
-  if (needCount && hasData.value) {
+  if (needCount && hasData.value && columns.filter(item => item.key === '_count').length === 0) {
     columns.unshift({
       dataIndex: '_count',
       key: '_count',
       title: ''
     })
+    props.noPagination && (columns[0].width = 50)
   }
   backUpDataSource = data.map((item: any, index: number) => ({
     _count: index + 1,
     ...item
   }))
+  dataSource.value = backUpDataSource;
 }
 
 const emits = defineEmits<{
@@ -132,6 +136,7 @@ onMounted(() => {
   &::-webkit-scrollbar-track {
     box-shadow: inset006pxrgba(0, 0, 0, 0.3);
     border-radius: 2px;
+    height: 6px;
     background: rgba(61, 80, 255, 0.1);
   }
 
@@ -148,7 +153,32 @@ onMounted(() => {
 }
 
 :deep(.ant-table-container) {
-  min-width: 1000px; // TODO clippers => 宽度待定
+  min-width: 1150px; // TODO clippers => 宽度待定
+  min-height: 300px;
+}
+
+:deep(div.ant-table-body) {
+  overflow-y: auto !important;
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    box-shadow: inset006pxrgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    width: 8px;
+    background: rgba(61, 80, 255, 0.1);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+    background: rgba(61, 80, 255, 0.5);
+  }
+
+  &::-webkit-scrollbar-thumb:window-inactive {
+    background: rgba(61, 80, 255, 0.9);
+  }
 }
 
 :deep(.ant-table-thead .ant-table-cell) {
@@ -162,6 +192,7 @@ onMounted(() => {
 :deep(.ant-table-tbody .ant-table-cell) {
   color: var(--bj-text-second);
   line-height: 1;
+  vertical-align: middle;
 }
 
 :deep(.ant-table-thead > tr > th) {
@@ -170,6 +201,11 @@ onMounted(() => {
 
 :deep(.ant-table-tbody > tr > td) {
   border-bottom: 1px solid var(--bj-border-color);
+  padding: 15px 16px;
+  padding-left: 0;
+  &:only-child {
+    border-bottom: none;
+  }
 }
 
 :deep(.ant-table-cell) {
@@ -221,6 +257,7 @@ onMounted(() => {
 :deep(.ant-pagination-item-container > span > svg) {
   margin-bottom: 6px;
 }
+
 
 .table-warpper {
   padding: 0 24px;
