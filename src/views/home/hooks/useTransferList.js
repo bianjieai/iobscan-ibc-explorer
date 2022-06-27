@@ -19,7 +19,6 @@ export const useInterfaceActive = (emits) => {
 
 export const useIsExpand = (emits ,index) => {
     const onClickExpandBtn = () => {
-        isExpand.value = !isExpand.value;
         emits('itemDidExpand', index);
     }
     return {

@@ -7,6 +7,7 @@
 
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
+
     <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
       <template #relayer_name="{ record, column }">
         <a-popover placement="topLeft">

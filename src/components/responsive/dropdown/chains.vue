@@ -211,6 +211,7 @@ const confirmChains = () => {
 
 .visible_color {
   color: var(--bj-primary-color) !important;
+  background: #fff !important;
 }
 
 .default_color {

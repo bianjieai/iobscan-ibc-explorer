@@ -51,15 +51,7 @@ const { onClickExpandBtn } = useIsExpand(emits, props.index);
 const clickListItem = () => {
     emits('clickItem', props.item);
 };
-const findIbcChainIcon = computed(() => (chainId) => {
-    if (props.ibcChains && props.ibcChains.all) {
-        const result = props.ibcChains.all.find((item) => item.chain_id === chainId);
-        if (result) {
-            return result.icon || placeHoderImg;
-        }
-    }
-    return placeHoderImg;
-});
+
 
 const getAddressPrefix = (address) => {
     if (address) {
@@ -168,7 +160,7 @@ const setExplorerLink = (address, chainID) => {
         font-size: var(--bj-font-size-normal);
         font-family: Montserrat-Regular, Montserrat;
         font-weight: 400;
-        color: rgba(0, 0, 0, 0.65);
+        color: var(--bj-font-color-65);
         line-height: var(--bj-font-size-normal);
     }
     &_number {

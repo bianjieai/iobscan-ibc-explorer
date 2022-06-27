@@ -153,7 +153,7 @@ const { getBindElement } = useGetBindElement();
         line-height: 16px;
         font-family: Montserrat-Regular, Montserrat;
         font-weight: 400;
-        color:rgba(0, 0, 0, 0.65);
+        color:var(--bj-font-color-65);
         word-break: break-all;
     }
     .list_anchor {
@@ -173,7 +173,7 @@ const { getBindElement } = useGetBindElement();
         font-size: 14px;
         font-family: PingFangSC-Regular, PingFang SC;
         font-weight: 400;
-        color: rgba(0, 0, 0, 0.65);
+        color: var(--bj-font-color-65);
     }
 }
 .custom_title {
