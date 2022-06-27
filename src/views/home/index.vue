@@ -23,11 +23,10 @@
                     <statistic-list type="vertical" :msg="ibcStatisticsDenoms" @clickItem="onClickViewAll" />
                 </layer-block>
             </div>
-
             <layer-block class="home_bottom_right" title="IBC Token Transfer">
                 <statistic-list type="horizontal" :msg="ibcStatisticsTxs" @clickItem="onClickViewAll" />
                 <transfer-list :ibcChains="ibcChains" :transferList="ibcTxs.value" @clickViewAll="onClickViewAll('tx_all')"
-                    @clickItem="onClickViewAll" />
+                    @clickItem="onClickViewAll" @itemDidExpand="setExpandByIndex"/>
             </layer-block>
         </div>
     </div>
@@ -51,7 +50,7 @@ const {
     getIbcStatistics 
 } = useIbcStatistics();
 const { ibcChains, getIbcChains } = useIbcChains();
-const { ibcTxs, getIbcTxs } = useIbcTxs();
+const { ibcTxs, getIbcTxs, setExpandByIndex } = useIbcTxs();
 const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
 const { getIbcDenoms, getIbcBaseDenom } = useGetIbcDenoms();
 const { clearInterval } = useClearInterval();
