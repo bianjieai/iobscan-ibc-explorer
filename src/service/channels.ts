@@ -22,38 +22,15 @@ export const useGetChannelsList = () => {
         ...params
       }
     })
-    if (result) {
-      const { items } = result
+    const { code, data, message } = result
+
+    if (code === 0) {
+      const { items } = data
       data.value = items
+    } else {
+      console.error(message)
     }
   }
-
-
-  data.value = [{
-    chain_a: 'irishub-1',
-    channel_a: 'a',
-    status: '1',
-    chain_b: 'irishub-1',
-    channel_b: 'b',
-    operating_period: 300000000,
-    last_updated: 1656147685957,
-    relayers: 11,
-    ibc_transfer_txs: 11,
-    ibc_transfer_txs_value: 1000000000,
-    currency: '$'
-  }, {
-    chain_a: 'irishub-1',
-    channel_a: 'a',
-    status: '2',
-    chain_b: 'irishub-1',
-    channel_b: 'b',
-    operating_period: 300000000,
-    last_updated: 1656147685957,
-    relayers: 11,
-    ibc_transfer_txs: 11,
-    ibc_transfer_txs_value: 1000000000,
-    currency: '$'
-  }]
 
   return {
     data,

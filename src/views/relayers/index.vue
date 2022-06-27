@@ -2,7 +2,7 @@
   <PageContainer>
     <PageTitle title="IBC Relayers" subtitle="xxx relayers found" />
     <div class="select flex items-center flex-wrap">
-      <ChainsDropdown @on-selected-chain="onSelectedChain" selected-double ref="chainDropdown" />
+      <ChainsDropdown :dropdown-data="ibcChains.all" :chain_id="chain_id" @on-selected-chain="onSelectedChain" selected-double ref="chainDropdown" />
       <BaseDropdown :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
 
       <ResetButton @on-reset="resetSearchCondition" />
@@ -23,8 +23,8 @@
       </template>
 
       <template #chain_a="{ record, column }">
-        <ChainIcon :title="record.channel_a" no-subtitle :chain_id="record[column.key]" :chains-data="ibcChains.all"
-          icon-size="small" />
+        <ChainIcon avatar-can-click @click-avatar="goChains" :title="record.channel_a" no-subtitle
+          :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
       </template>
 
       <template #status="{ record, column }">
@@ -32,8 +32,8 @@
       </template>
 
       <template #chain_b="{ record, column }">
-        <ChainIcon :title="record.channel_b" no-subtitle :chain_id="record[column.key]" :chains-data="ibcChains.all"
-          icon-size="small" />
+        <ChainIcon avatar-can-click @click-avatar="goChains" :title="record.channel_b" no-subtitle
+          :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
       </template>
 
       <template #update_time="{ record, column }">
@@ -49,7 +49,7 @@
           :currency="record.currency" />
       </template>
 
-      <template #table_bottom_status>
+      <template #table_bottom_status v-if="data.length !== 0">
         <BottomStatus type="Relayer" />
       </template>
     </BjTable>
@@ -66,7 +66,6 @@ import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
 import { onMounted, ref } from 'vue';
 import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
-import { useBaseChainsInfo } from '@/hooks/useChain'
 import { formatLastUpdated } from '@/helper/time-helper';
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
 import StatusImg from '@/components/responsive/table/statusImg.vue';
@@ -74,6 +73,11 @@ import { TRelayerStatus } from '@/components/responsive/component.interface';
 import { useIbcChains } from '../home/composable';
 import { useGetRelayersList } from '@/service/relayers';
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
+import { useRoute, useRouter } from 'vue-router';
+
+const route = useRoute()
+const router = useRouter()
+const chain_id = route.query.chain_id as string
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { data, getList } = useGetRelayersList()
@@ -92,13 +96,13 @@ const needCustomColumns = [
 const chainDropdown = ref()
 const statusDropdown = ref()
 
-const searchChain = ref()
+const searchChain = ref(`${chain_id},allChains`)
 const searchStatus = ref()
 
 onMounted(() => {
   !sessionStorage.getItem('allChains') && getIbcChains();
 
-  getList()
+  refreshList()
 })
 
 const refreshList = () => {
@@ -124,6 +128,10 @@ const resetSearchCondition = () => {
   statusDropdown.value.selectOption = []
 
   getList()
+}
+
+const goChains = () => {
+  router.push('/chains')
 }
 
 </script>

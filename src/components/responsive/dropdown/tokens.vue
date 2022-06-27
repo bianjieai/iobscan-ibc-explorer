@@ -25,7 +25,7 @@
         <div class="mt-24">
           <div :style="{ marginBottom: '-2px' }" class="leading-none">Authed IBC Tokens</div>
           <div class="flex flex-wrap">
-            <span v-for="item in demonsData" @click="onSelected(item.symbol, item.denom)"
+            <span v-for="item in dropdownData" @click="onSelected(item.symbol, item.denom)"
               :class="['chains-tag', 'mr-12', 'mt-16', isSelected(item.denom) ? 'visible_color visible_border' : '']"
               :key="item.denom">
               <img :src="item.icon" width="24" height="24" class="mr-8" />{{ item.symbol }}
@@ -70,9 +70,13 @@ type TSelectToken = {
   denom: TDenom,
   symbol: string
 }
+interface IProps {
+  dropdownData: any[] 
+}
 
-// todo clippers => demonsData 获取
-const demonsData = JSON.parse(localStorage.getItem('baseDenoms')!)
+const props = withDefaults(defineProps<IProps>(), {
+  dropdownData: (sessionStorage.getItem('baseDenoms') && JSON.parse(sessionStorage.getItem('baseDenoms')!)) || []
+})
 
 const visible = ref(false)
 const selectToken = ref<TSelectToken[]>([])

@@ -9,15 +9,15 @@
       </template>
 
       <template #channels="{ record, column }">
-        <div class="hover-cursor">{{ record[column.key] }}</div>
+        <div class="hover-cursor" @click="goChannels(record.chain_id)">{{ record[column.key] }}</div>
       </template>
 
       <template #relayers="{ record, column }">
-        <div class="hover-cursor">{{ record[column.key] }}</div>
+        <div class="hover-cursor" @click="goRelayers(record.chain_id)">{{ record[column.key] }}</div>
       </template>
 
       <template #ibc_tokens="{ record, column }">
-        <div class="hover-cursor">{{ record[column.key] }}</div>
+        <div class="hover-cursor" @click="goTokens(record.chain_id)">{{ record[column.key] }}</div>
       </template>
 
       <template #ibc_tokens_value="{ record, column }">
@@ -25,7 +25,7 @@
       </template>
 
       <template #ibc_transfer_txs="{ record, column }">
-        <TransferTxs :title="record[column.key]" :subtitle="record.ibc_transfer_txs_value"
+        <TransferTxs @on-title-click="goTransfer" :title="record[column.key]" :subtitle="record.ibc_transfer_txs_value"
           :currency="record.currency" />
       </template>
     </BjTable>
@@ -34,7 +34,6 @@
 
 
 <script lang="ts" setup>
-// todo clippers => 跳转
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
@@ -44,7 +43,9 @@ import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useIbcChains } from '../home/composable';
 import { onMounted } from 'vue';
 import { useGetChainsList } from '@/service/chains'
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { data, getList } = useGetChainsList()
@@ -65,6 +66,39 @@ const needCustomColumns = [
   'ibc_transfer_txs'
 ]
 
+const goChannels = (chain_id: string) => {
+  router.push({
+    path: '/channels',
+    query: {
+      chain_id
+    }
+  })
+}
+
+const goRelayers = (chain_id: string) => {
+  router.push({
+    path: '/relayers',
+    query: {
+      chain_id
+    }
+  })
+}
+
+const goTokens = (chain_id: string) => {
+  router.push({
+    path: '/tokens',
+    query: {
+      chain_id
+    }
+  })
+}
+
+// todo clippers => 跳转的参数
+const goTransfer = () => {
+  // router.push({
+
+  // })
+}
 
 </script>
 

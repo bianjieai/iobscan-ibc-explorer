@@ -32,7 +32,7 @@
           </a-badge>
         </div>
         <div class="flex flex-wrap">
-          <a-badge v-for="item in chainsData">
+          <a-badge v-for="item in dropdownData">
             <template #count v-if="needBadge && isSelected(item.chain_id)">
               <span class="badge">{{ badgeText(item.chain_id) }}</span>
             </template>
@@ -56,15 +56,18 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
-
-// todo clippers => chains 获取
-const chainsData = JSON.parse(localStorage.getItem('allChains')!).all
+import { computed, onMounted, ref } from 'vue';
 
 interface IProps {
   selectedDouble?: boolean // 需要选两个chain
   needBadge?: false // 需要角标
+  chain_id?: string // 回填
+  dropdownData: any[]
 }
+
+const props = withDefaults(defineProps<IProps>(), {
+  dropdownData: (sessionStorage.getItem('allChains') && JSON.parse(sessionStorage.getItem('allChains')!)).all ?? []
+})
 
 type TChainName = string
 type TChainID = string | 'allchain'
@@ -74,7 +77,19 @@ type TSelectedChain = {
   chain_name: TChainName,
 }
 
-const props = defineProps<IProps>()
+
+onMounted(() => {
+  if (props.chain_id) {
+    const filterData = props.dropdownData.filter((item: any) => item.chain_id === props.chain_id)
+    if (filterData.length > 0) {
+      const chain_name = filterData[0].chain_name
+      selectedChain.value = [{
+        chain_id: props.chain_id,
+        chain_name
+      }]
+    }
+  }
+})
 
 const visible = ref(false)
 const selectedChain = ref<TSelectedChain[]>([])

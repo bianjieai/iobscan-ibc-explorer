@@ -1,6 +1,7 @@
 <template>
   <div class="flex items-center">
-    <img :src="chainInfo.imgSrc" :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']">
+    <img :src="chainInfo.imgSrc" :class="['icon', 'mr-8', avatarCanClick ? 'hover-cursor' : '',
+    iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']" @click="avatarClick">
     <div class="flex flex-col justify-around"
       :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
       <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ title ? title :
@@ -24,6 +25,7 @@ interface IProps {
   titleCanClick?: boolean
   title?: string
   noSubtitle?: boolean
+  avatarCanClick?: boolean
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -48,12 +50,17 @@ const chainInfo = computed(() => {
   }
 })
 
-const emit = defineEmits<{
+const emits = defineEmits<{
   (e: 'clickTitle'): void
+  (e: 'clickAvatar'): void
 }>()
 
 const go = () => {
-  props.titleCanClick && emit('clickTitle')
+  props.titleCanClick && emits('clickTitle')
+}
+
+const avatarClick = () => {
+  props.avatarCanClick && emits('clickAvatar')
 }
 
 </script>

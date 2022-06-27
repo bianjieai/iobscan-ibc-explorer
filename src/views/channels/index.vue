@@ -2,15 +2,15 @@
   <PageContainer>
     <PageTitle title="IBC Channels" :subtitle="`${data.length} channels found`" />
     <div class="select flex items-center flex-wrap">
-      <ChainsDropdown @on-selected-chain="onSelectedChain" selected-double ref="chainDropdown" />
+      <ChainsDropdown :dropdown-data="ibcChains.all" :chain_id="chain_id" @on-selected-chain="onSelectedChain" selected-double ref="chainDropdown" />
       <BaseDropdown :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
 
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
     <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
       <template #chain_a="{ record, column }">
-        <ChainIcon :title="record.channel_a" no-subtitle :chain_id="record[column.key]" :chains-data="ibcChains.all"
-          icon-size="small" />
+        <ChainIcon avatar-can-click @click-avatar="goChains" :title="record.channel_a" no-subtitle
+          :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
       </template>
 
       <template #status="{ record, column }">
@@ -18,8 +18,8 @@
       </template>
 
       <template #chain_b="{ record, column }">
-        <ChainIcon :title="record.channel_b" no-subtitle :chain_id="record[column.key]" :chains-data="ibcChains.all"
-          icon-size="small" />
+        <ChainIcon avatar-can-click @click-avatar="goChains" :title="record.channel_b" no-subtitle
+          :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
       </template>
 
       <template #last_updated="{ record, column }">
@@ -35,7 +35,7 @@
           :currency="record.currency" />
       </template>
 
-      <template #table_bottom_status>
+      <template #table_bottom_status v-if="data.length !== 0">
         <BottomStatus type="Channel" />
       </template>
     </BjTable>
@@ -59,6 +59,12 @@ import { TChannelStatus } from '@/components/responsive/component.interface';
 import { useGetChannelsList } from '@/service/channels'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useIbcChains } from '../home/composable';
+import { useRoute, useRouter } from 'vue-router';
+
+const route = useRoute()
+const router = useRouter()
+const chain_id = route.query.chain_id as string
+
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { data, getList } = useGetChannelsList()
@@ -75,13 +81,13 @@ const needCustomColumns = [
 const chainDropdown = ref()
 const statusDropdown = ref()
 
-const searchChain = ref()
+const searchChain = ref(`${chain_id},allChains`)
 const searchStatus = ref()
 
 onMounted(() => {
   !sessionStorage.getItem('allChains') && getIbcChains();
 
-  getList()
+  refreshList()
 })
 
 const refreshList = () => {
@@ -105,8 +111,12 @@ const onSelectedStatus = (value?: number | string) => {
 const resetSearchCondition = () => {
   chainDropdown.value.selectedChain = []
   statusDropdown.value.selectOption = []
-  
+
   getList()
+}
+
+const goChains = () => {
+  router.push('/chains')
 }
 
 </script>

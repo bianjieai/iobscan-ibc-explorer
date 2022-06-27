@@ -3,7 +3,7 @@
     <PageTitle :title="`${baseDenomInfo.symbol} IBC Tokens`" :subtitle="`${data.length} tokens found`" has-icon
       :img-src="baseDenomInfo.imgSrc" />
     <div class="select flex items-center flex-wrap">
-      <ChainsDropdown @on-selected-chain="onSelectedChain" ref="chainDropdown" />
+      <ChainsDropdown :dropdown-data="ibcChains.all" @on-selected-chain="onSelectedChain" ref="chainDropdown" />
       <BaseDropdown :options="IBC_STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
@@ -22,7 +22,8 @@
       </template>
 
       <template #chain_id="{ record, column }">
-        <ChainIcon :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
+        <ChainIcon title-can-click @click-title="goChains" :chain_id="record[column.key]" :chains-data="ibcChains.all"
+          icon-size="small" />
       </template>
 
       <template #amount="{ record, column }">
@@ -30,7 +31,7 @@
       </template>
 
       <template #receive_txs="{ record, column }">
-        <div class="hover-cursor">{{ formatBigNumber(record[column.key], 0) }}</div>
+        <div class="hover-cursor" @click="goTransfer">{{ formatBigNumber(record[column.key], 0) }}</div>
       </template>
     </BjTable>
   </PageContainer>
@@ -38,7 +39,6 @@
 
 <script lang="ts" setup>
 // TODO clippers => subtitle完善 （数量 / chains跳转过来）
-// todo clippers => 筛选
 // todo clippers => 确认提示Name单元格Token Hash:的字段
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
@@ -48,11 +48,13 @@ import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
 import { computed, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useGetIbcTokenList } from '@/service/tokens';
 import { useGetIbcDenoms, useIbcChains } from '../home/composable';
 import { getRestString, formatBigNumber } from '@/helper/parseString'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
+
+const router = useRouter()
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
@@ -116,6 +118,14 @@ const resetSearchCondition = () => {
   getList()
 }
 
+const goChains = () => {
+  router.push('/chains')
+}
+
+// todo clippers => 确认参数
+const goTransfer = () => {
+
+}
 </script>
 
 <style lang="less" scoped>
