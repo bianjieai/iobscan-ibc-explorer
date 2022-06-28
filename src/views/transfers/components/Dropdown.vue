@@ -62,7 +62,7 @@
                       :src="
                         item[iconKey] ||
                           isShowSymbol(key)?.symbolIcon ||
-                          require('../../../assets/placeHoder.png')
+                          require('../../../assets/token-default.png')
                       "
                     />
                     <span class="content_item_title">{{
@@ -77,7 +77,7 @@
               <h2 class="overlay_item_title">Other IBC Tokens</h2>
               <div class="overlay_item_content">
                 <div class="content_item" @click="onClickItem(undefined, unAuthed)">
-                  <img class="content_item_icon" src="../../../assets/placeHoder.png" />
+                  <img class="content_item_icon" src="../../../assets/token-default.png" />
                   <span class="content_item_title">Others</span>
                 </div>
               </div>

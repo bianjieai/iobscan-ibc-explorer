@@ -59,7 +59,7 @@ const { onPressEnter } = useOnPressEnter();
 onMounted(() => {
     getIbcStatistics();
     !sessionStorage.getItem('allChains') && getIbcChains();
-    getIbcTxs({page_num: 1, page_size: 10, use_count: false});
+    getIbcTxs({page_num: 1, page_size: 100, use_count: false});
     getIbcDenoms();
     !sessionStorage.getItem('ibcBaseDenom') && getIbcBaseDenom();
 })

@@ -261,6 +261,10 @@ const testChains = {
     REFUNDED: 4,
     SETTING: 5,
   };
+  const channelsStatus = {
+    channelOpenedStatus: '1',
+    channelClosedStatus: '2',
+  }
   
   const ibcTxStatusSelectOptions = [
     {
@@ -348,6 +352,7 @@ const testChains = {
     ibcStatisticsDenomsDefault,
     ibcStatisticsTxsDefault,
     ibcTxStatus,
+    channelsStatus,
     ibcTxStatusSelectOptions,
     transfersStatusOptions,
     transferTableColumn,
