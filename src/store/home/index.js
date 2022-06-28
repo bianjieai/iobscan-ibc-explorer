@@ -37,7 +37,7 @@ export const useIbcStatisticsChains = defineStore('home', {
             ibcTxsStartTime: {value: 0},
             ibcTxTimer: {value: {}},
             ibcDenoms: {value: []},
-            ibcBaseDenoms: JSON.parse(sessionStorage.getItem('ibcBaseDenoms').length ? sessionStorage.getItem('ibcBaseDenoms') : '[]'),
+            ibcBaseDenoms: JSON.parse(sessionStorage.getItem('ibcBaseDenoms').length ? sessionStorage.getItem('ibcBaseDenoms') : '{value:[]}'),
             isShowTransferLoading: false
         }
     },
