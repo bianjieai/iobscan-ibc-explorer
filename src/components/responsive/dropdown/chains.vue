@@ -32,15 +32,17 @@
           </a-badge>
         </div>
         <div class="flex flex-wrap">
-          <a-badge v-for="item in dropdownData">
+          <a-badge v-for="item in handleDropdownData">
             <template #count v-if="needBadge && isSelected(item.chain_id)">
               <span class="badge">{{ badgeText(item.chain_id) }}</span>
             </template>
-            <span @click="onSelected(item.chain_name, item.chain_id)"
+
+            <span @click="onSelected(getRestString(item.chain_name, 7, 8), item.chain_id)"
               :class="['chains-tag', isSelected(item.chain_id) ? 'visible_color visible_border' : '']"
               :key="item.chain_id">
-              <img :src="item.icon" width="24" height="24" class="mr-8" />{{ item.chain_name }}
+              <img :src="item.icon" width="24" height="24" class="mr-8" />{{ getRestString(item.chain_name, 7, 8) }}
             </span>
+
           </a-badge>
 
         </div>
@@ -57,12 +59,19 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref } from 'vue';
+import { getRestString } from '@/helper/parseString';
+
+type TChainData = {
+  chain_id: string
+  chain_name: string
+  icon: string
+}
 
 interface IProps {
   selectedDouble?: boolean // 需要选两个chain
   needBadge?: false // 需要角标
   chain_id?: string // 回填
-  dropdownData: any[]
+  dropdownData: TChainData[]
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -77,8 +86,35 @@ type TSelectedChain = {
   chain_name: TChainName,
 }
 
+const handleDropdownData = ref<TChainData[]>()
+
+const setAllChains = () => {
+  if (props.dropdownData.length > 0) {
+    const cosmosChain = props.dropdownData.filter(item => item.chain_name === 'Cosmos Hub')
+    const irishubChain = props.dropdownData.filter(item => item.chain_name === 'IRIS Hub')
+    let notIncludesIrisAndCosmosChains: TChainData[] = []
+    props.dropdownData.forEach(item => {
+      if (item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub') {
+        notIncludesIrisAndCosmosChains.push(item)
+      }
+    })
+    if (notIncludesIrisAndCosmosChains?.length) {
+      notIncludesIrisAndCosmosChains.sort((a, b) => {
+        return a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
+      })
+    }
+    handleDropdownData.value = [
+      ...cosmosChain,
+      ...irishubChain,
+      ...notIncludesIrisAndCosmosChains,
+    ]
+  }
+}
+
 
 onMounted(() => {
+  setAllChains() // 排序
+
   if (props.chain_id) {
     const filterData = props.dropdownData.filter((item: any) => item.chain_id === props.chain_id)
     if (filterData.length > 0) {
@@ -117,10 +153,10 @@ defineExpose({
 })
 
 const emits = defineEmits<{
-  (e: 'onSelectedChain', chain_id: string): void
+  (e: 'onSelectedChain', chain_id?: string): void
 }>()
 
-const submitChain = (chain_id: string) => {
+const submitChain = (chain_id?: string) => {
   emits('onSelectedChain', chain_id)
   visible.value = false
   chainIdIput.value = undefined // reset
@@ -164,8 +200,11 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
         chain_name,
         chain_id
       })
-
-      submitChain(selectedChain.value[0].chain_id)
+      if (selectedChain.value[0].chain_id === 'allchain') {
+        submitChain(undefined)
+      } else {
+        submitChain(selectedChain.value[0].chain_id)
+      }
     }
   }
 }

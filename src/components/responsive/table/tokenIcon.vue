@@ -3,8 +3,9 @@
     <img :src="tokenInfo.imgSrc" :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']">
     <div class="flex flex-col justify-around"
       :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
-      <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ tokenInfo.title }}</div>
-      <div :class="['subtitle', 'leading-none', 'tag']">{{ tokenInfo.subtitle }}</div>
+      <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ tokenInfo.title }}
+      </div>
+      <div :class="['subtitle', 'leading-none', 'tag']">{{ token_type ? token_type : tokenInfo.subtitle }}</div>
     </div>
   </div>
 </template>
@@ -19,6 +20,7 @@ interface IProps {
   denom: string
   denomsData: TBaseDenoms[]
   titleCanClick?: boolean
+  token_type?: string
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -30,7 +32,7 @@ const tokenInfo = computed(() => {
   if (filterData.length > 0) {
     return {
       title: filterData[0].symbol,
-      subtitle: 'Authed', // todo clippers => 状态处理
+      subtitle: 'Authed',
       imgSrc: filterData[0].icon
     }
   } else {

@@ -26,7 +26,7 @@
 
 <script setup lang="ts">
 // todo clippers => 向下箭头换个清晰的svg
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 type TKey = string
 type TValue = number | undefined | string
 
@@ -37,6 +37,7 @@ type TOption = {
 
 interface IProps {
   options: TOption[]
+  status?: string
 }
 
 const props = defineProps<IProps>()
@@ -49,6 +50,16 @@ const selectedText = computed(() => {
     return selectOption.value[0].key
   } else {
     return props.options[0]?.key ?? 'All Status'
+  }
+})
+
+onMounted(() => {
+  if (props.status) {
+    const { options } = props
+    const filterData = options.filter(item => item.value == props.status)
+    if (filterData.length > 0) {
+      selectOption.value = filterData
+    }
   }
 })
 

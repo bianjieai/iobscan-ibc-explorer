@@ -25,7 +25,7 @@
       </template>
 
       <template #transfer_txs="{ record, column }">
-        <TransferTxs @on-title-click="goTransfer" :title="record[column.key]" :subtitle="record.transfer_txs_value"
+        <TransferTxs @on-title-click="goTransfer(record.chain_id)" :title="record[column.key]" :subtitle="record.transfer_txs_value"
           :currency="record.currency" />
       </template>
     </BjTable>
@@ -95,10 +95,13 @@ const goTokens = (chain_id: string) => {
 }
 
 // todo clippers => 跳转的参数
-const goTransfer = () => {
-  // router.push({
-
-  // })
+const goTransfer = (chain_id: string) => {
+  router.push({
+    path: '/transfers',
+    query: {
+      chain: chain_id
+    }
+  })
 }
 
 </script>

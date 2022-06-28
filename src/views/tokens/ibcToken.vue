@@ -37,14 +37,13 @@
       </template>
 
       <template #receive_txs="{ record, column }">
-        <div class="hover-cursor" @click="goTransfer">{{ formatBigNumber(record[column.key], 0) }}</div>
+        <div class="hover-cursor" @click="goTransfer(record.chain_id)">{{ formatBigNumber(record[column.key], 0) }}</div>
       </template>
     </BjTable>
   </PageContainer>
 </template>
 
 <script lang="ts" setup>
-// TODO clippers => subtitle完善 （数量 / chains跳转过来）
 // todo clippers => 确认提示Name单元格Token Hash:的字段
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
@@ -143,9 +142,15 @@ const goChains = () => {
   router.push('/chains')
 }
 
-// todo clippers => 确认参数
-const goTransfer = () => {
 
+const goTransfer = (chain_id: string) => {
+  router.push({
+    path: '/transfers',
+    query: {
+      denom: base_denom,
+      chain: chain_id
+    }
+  })
 }
 </script>
 

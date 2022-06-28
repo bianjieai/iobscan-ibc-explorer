@@ -4,7 +4,8 @@
     <div class="select flex items-center flex-wrap">
       <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" :chain_id="chain_id" @on-selected-chain="onSelectedChain"
         selected-double ref="chainDropdown" />
-      <BaseDropdown :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
+      <BaseDropdown :status="status" :options="STATUS_OPTIONS" ref="statusDropdown"
+        @on-selected-change="onSelectedStatus" />
 
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
@@ -80,6 +81,7 @@ import { formatTransfer_success_txs } from '@/helper/tablecell-helper';
 const route = useRoute()
 const router = useRouter()
 const chain_id = route.query.chain_id as string
+const status = route.query.status as TRelayerStatus
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { list, getList } = useGetRelayersList()
@@ -98,7 +100,7 @@ const chainDropdown = ref()
 const statusDropdown = ref()
 
 const searchChain = ref(chain_id ? `${chain_id},allchain` : undefined)
-const searchStatus = ref()
+const searchStatus = ref(status ? status : undefined)
 
 onMounted(() => {
   !sessionStorage.getItem('allChains') && getIbcChains();
@@ -113,13 +115,13 @@ const refreshList = () => {
   })
 }
 
-const onSelectedChain = (chain_id: string) => {
+const onSelectedChain = (chain_id?: string) => {
   searchChain.value = chain_id
   refreshList()
 }
 
 const onSelectedStatus = (value?: number | string) => {
-  searchStatus.value = value
+  searchStatus.value = value as TRelayerStatus
   refreshList()
 }
 

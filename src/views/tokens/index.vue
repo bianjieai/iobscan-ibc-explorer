@@ -11,7 +11,7 @@
 
     <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS">
       <template #base_denom="{ record, column }">
-        <TokenIcon :denom="record[column.key]" :denoms-data="ibcBaseDenoms.value" />
+        <TokenIcon :token_type="record.token_type" :denom="record[column.key]" :denoms-data="ibcBaseDenoms.value" />
       </template>
       <template #price="{ record, column }">
         <a-popover>
@@ -36,7 +36,8 @@
       </template>
 
       <template #ibc_transfer_txs="{ record, column }">
-        <div class="hover-cursor" @click="goTransfer">{{ `${formatBigNumber(record[column.key], 0)}` }}</div>
+        <div class="hover-cursor" @click="goTransfer(record.base_denom)">{{ `${formatBigNumber(record[column.key], 0)}`
+        }}</div>
       </template>
 
       <template #chains_involved="{ record, column }">
@@ -159,9 +160,14 @@ const goIbcToken = (denom: string) => {
   })
 }
 
-// todo clippers => 跳转参数
-const goTransfer = () => {
 
+const goTransfer = (denom: string) => {
+  router.push({
+    path: '/transfers',
+    query: {
+      denom
+    }
+  })
 }
 
 const goChains = () => {
