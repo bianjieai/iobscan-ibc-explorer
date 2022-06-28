@@ -27,6 +27,8 @@
 5. 事件 @onPageChange
 6. needCount 非必需 表示是否需要计数
 7. needCustomColumns 必须 表示需要自定义tablecell的字段(例如`['name', 'age']`)
+8. noPagination 非需要 表示无需分页器
+9. scroll 非需要 设置滚动方式
 
 - 说明
 1. 当current 和 pageSize都不传的时候，表示开启前端分页

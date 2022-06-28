@@ -7,7 +7,7 @@ const urlPrefix = import.meta.env.VITE_BASE_GO_API
 const getChainListUrl = `${urlPrefix}/ibc/chainList`
 
 export const useGetChainsList = () => {
-  const data = ref([])
+  const list = ref([])
 
   const getList = async () => {
     const result = await HttpHelper.get(getChainListUrl, {
@@ -18,14 +18,14 @@ export const useGetChainsList = () => {
 
     if (code === 0) {
       const { items } = data
-      data.value = items
+      list.value = items
     } else {
       console.error(message)
     }
   }
 
   return {
-    data,
+    list,
     getList
   }
 }

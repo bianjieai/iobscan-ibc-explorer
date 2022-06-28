@@ -1,11 +1,11 @@
 <template>
   <PageContainer>
-    <PageTitle title="IBC Chains" :subtitle="`${data.length} chains supported`" />
+    <PageTitle title="IBC Chains" :subtitle="`${list.length} chains supported`" />
 
-    <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count no-pagination
+    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count no-pagination
       :scroll="{ y: 610 }">
       <template #chain_id="{ record, column }">
-        <ChainIcon :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
+        <ChainIcon :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
       </template>
 
       <template #channels="{ record, column }">
@@ -21,11 +21,11 @@
       </template>
 
       <template #ibc_tokens_value="{ record, column }">
-        <div>{{ `$ ${record[column.key]}` }}</div>
+        <div>{{ `$ ${formatAmount(record[column.key])}` }}</div>
       </template>
 
-      <template #ibc_transfer_txs="{ record, column }">
-        <TransferTxs @on-title-click="goTransfer" :title="record[column.key]" :subtitle="record.ibc_transfer_txs_value"
+      <template #transfer_txs="{ record, column }">
+        <TransferTxs @on-title-click="goTransfer(record.chain_id)" :title="record[column.key]" :subtitle="record.transfer_txs_value"
           :currency="record.currency" />
       </template>
     </BjTable>
@@ -44,11 +44,12 @@ import { useIbcChains } from '../home/composable';
 import { onMounted } from 'vue';
 import { useGetChainsList } from '@/service/chains'
 import { useRouter } from 'vue-router';
+import { formatAmount } from '@/helper/tablecell-helper'; 
 
 const router = useRouter()
 
 const { ibcChains, getIbcChains } = useIbcChains();
-const { data, getList } = useGetChainsList()
+const { list, getList } = useGetChainsList()
 
 onMounted(() => {
   !sessionStorage.getItem('allChains') && getIbcChains();
@@ -63,7 +64,7 @@ const needCustomColumns = [
   'relayers',
   'ibc_tokens',
   'ibc_tokens_value',
-  'ibc_transfer_txs'
+  'transfer_txs'
 ]
 
 const goChannels = (chain_id: string) => {
@@ -93,11 +94,13 @@ const goTokens = (chain_id: string) => {
   })
 }
 
-// todo clippers => 跳转的参数
-const goTransfer = () => {
-  // router.push({
-
-  // })
+const goTransfer = (chain_id: string) => {
+  router.push({
+    path: '/transfers',
+    query: {
+      chain: chain_id
+    }
+  })
 }
 
 </script>
