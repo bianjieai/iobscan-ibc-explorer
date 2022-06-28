@@ -195,7 +195,7 @@ a {
     box-sizing: border-box;
     .flex(column, nowrap, flex-start, center);
     flex: 1;
-    // z-index: 10;
+    z-index: 10;
   }
 
   & .footer {

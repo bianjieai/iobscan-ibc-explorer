@@ -154,7 +154,10 @@ const resetSearchCondition = () => {
 
 const goIbcToken = (denom: string) => {
   router.push({
-    path: `/tokens/ibc/${denom}`
+    path: `/tokens/details`,
+    query: {
+      denom
+    }
   })
 }
 
