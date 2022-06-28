@@ -9,7 +9,7 @@ export const useMenus = () => {
         currentMenu
     }
 }
-export const useInterfaceActive = () => {
+export const useInterfaceActive = (emits) => {
     const onSelectedMenu = ({key}) => {
         emits('onMenuSelected', key);
     };
