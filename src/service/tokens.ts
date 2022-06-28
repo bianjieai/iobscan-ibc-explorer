@@ -21,7 +21,7 @@ export type TBaseParams = {
 export const baseParams: TBaseParams = {
   use_count: false,
   page_num: 1,
-  page_size: 1000 // todo clippers => 前端分页
+  page_size: 1000 
 }
 
 

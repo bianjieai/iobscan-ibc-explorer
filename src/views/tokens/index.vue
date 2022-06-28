@@ -23,15 +23,16 @@
       </template>
 
       <template #supply="{ record, column }">
-        <div>{{ `${formatSupply(record[column.key])}` }}</div>
+        <div>{{ `${formatSupply(record[column.key], record.base_denom, ibcBaseDenoms.value)}` }}</div>
       </template>
 
       <template #ibc_transfer_amount="{ record, column }">
         <a-popover>
           <template #content>
-            <div class="popover-c">{{ `${formatAmount(record[column.key])}` }}</div>
+            <div class="popover-c">{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value)}` }}
+            </div>
           </template>
-          <div>{{ `${formatAmount(record[column.key])}` }}</div>
+          <div>{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value)}` }}</div>
         </a-popover>
       </template>
 
@@ -53,8 +54,6 @@
 </template>
 
 <script lang="ts" setup>
-// todo clippers => price 留几位小数
-// todo clippers => supply 留几位小数
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
@@ -113,7 +112,6 @@ const subtitle = computed(() => {
   } else {
     return ``
   }
-
 })
 
 onMounted(() => {

@@ -94,7 +94,6 @@ const goTokens = (chain_id: string) => {
   })
 }
 
-// todo clippers => 跳转的参数
 const goTransfer = (chain_id: string) => {
   router.push({
     path: '/transfers',

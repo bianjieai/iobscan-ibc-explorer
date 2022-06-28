@@ -4,7 +4,7 @@ export const COLUMNS: TableColumnsType = [
   {
     dataIndex: 'chain_a',
     key: 'chain_a',
-    title: 'Connected Chain' // todo clippers => 确认字段
+    title: 'Connected Chain'
   },
   {
     dataIndex: 'status',
@@ -15,7 +15,7 @@ export const COLUMNS: TableColumnsType = [
   {
     dataIndex: 'chain_b',
     key: 'chain_b',
-    title: 'Connected Chain' // todo clippers => 确认字段
+    title: 'Connected Chain' 
   },
   {
     dataIndex: 'operating_period',
