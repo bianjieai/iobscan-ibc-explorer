@@ -1,16 +1,16 @@
 <template>
   <PageContainer>
-    <PageTitle :title="`${baseDenomInfo.symbol} IBC Tokens`" :subtitle="`${data.length} tokens found`" has-icon
+    <PageTitle :title="`${baseDenomInfo.symbol} IBC Tokens`" :subtitle="`${list.length} tokens found`" has-icon
       :img-src="baseDenomInfo.imgSrc" />
     <div class="select flex items-center flex-wrap">
-      <ChainsDropdown :dropdown-data="ibcChains.all" @on-selected-chain="onSelectedChain" ref="chainDropdown" />
+      <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" @on-selected-chain="onSelectedChain" ref="chainDropdown" />
       <BaseDropdown :options="IBC_STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
-    <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
+    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
       <template #denom="{ record, column }">
-        <a-popover>
+        <a-popover v-if="record.token_type !== 'Genesis'">
           <template #content>
             <div class="notice-text">
               <div>Path: {{ record.denom_path }}</div>
@@ -19,15 +19,21 @@
           </template>
           <div>{{ getRestString(record[column.key], 3, 8) }}</div>
         </a-popover>
+        <div v-else>{{ getRestString(record[column.key], 3, 8) }}</div>
       </template>
 
       <template #chain_id="{ record, column }">
-        <ChainIcon title-can-click @click-title="goChains" :chain_id="record[column.key]" :chains-data="ibcChains.all"
+        <ChainIcon title-can-click @click-title="goChains" :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []"
           icon-size="small" />
       </template>
 
       <template #amount="{ record, column }">
-        <div>{{ `${formatBigNumber(record[column.key], 2)}` }}</div>
+        <a-popover>
+          <template #content>
+            <div class="popover-c">{{ `${formatAmount(record[column.key])}` }}</div>
+          </template>
+          <div>{{ `${formatAmount(record[column.key])}` }}</div>
+        </a-popover>
       </template>
 
       <template #receive_txs="{ record, column }">
@@ -53,6 +59,8 @@ import { useGetIbcTokenList } from '@/service/tokens';
 import { useGetIbcDenoms, useIbcChains } from '../home/composable';
 import { getRestString, formatBigNumber } from '@/helper/parseString'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
+import { formatAmount } from '@/helper/tablecell-helper';
+import { isNullOrEmpty } from '@/helper/object-helper';
 
 const router = useRouter()
 
@@ -62,12 +70,25 @@ const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
 const route = useRoute()
 const base_denom = route.params.name as string
 
-const { data, getList } = useGetIbcTokenList(base_denom)
+const { list, getList } = useGetIbcTokenList(base_denom)
 
 const baseDenomInfo = computed(() => {
   const filterData = ibcBaseDenoms.value.value.filter((item: any) => item.denom === base_denom) as any // todo clippers => 补上类型
+  let symbol = ''
+  const filterSymbol = filterData[0]?.symbol
+
+  if (filterData.length === 0 || isNullOrEmpty(filterSymbol)) {
+    symbol = 'Unknown'
+  } else {
+    if (filterSymbol.includes('ibc')) {
+      symbol = getRestString(filterSymbol.replace(/ibc\//, ''), 3, 8)
+    } else {
+      symbol = filterSymbol
+    }
+  }
+
   return {
-    symbol: filterData[0]?.symbol ?? 'Unknown',
+    symbol,
     imgSrc: filterData[0]?.icon ?? new URL('../../assets/token-default.png', import.meta.url).href
   }
 })

@@ -66,7 +66,7 @@ interface IProps {
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-  dropdownData: (sessionStorage.getItem('allChains') && JSON.parse(sessionStorage.getItem('allChains')!)).all ?? []
+  dropdownData: (sessionStorage.getItem('allChains') && JSON.parse(sessionStorage.getItem('allChains')!))?.all ?? []
 })
 
 type TChainName = string

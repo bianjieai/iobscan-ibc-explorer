@@ -1,16 +1,17 @@
 <template>
   <PageContainer>
-    <PageTitle title="IBC Channels" :subtitle="`${data.length} channels found`" />
+    <PageTitle title="IBC Channels" :subtitle="`${list.length} channels found`" />
     <div class="select flex items-center flex-wrap">
-      <ChainsDropdown :dropdown-data="ibcChains.all" :chain_id="chain_id" @on-selected-chain="onSelectedChain" selected-double ref="chainDropdown" />
+      <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" :chain_id="chain_id" @on-selected-chain="onSelectedChain"
+        selected-double ref="chainDropdown" />
       <BaseDropdown :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
 
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
-    <BjTable :data="data" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
+    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
       <template #chain_a="{ record, column }">
         <ChainIcon avatar-can-click @click-avatar="goChains" :title="record.channel_a" no-subtitle
-          :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
+          :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
       </template>
 
       <template #status="{ record, column }">
@@ -19,7 +20,7 @@
 
       <template #chain_b="{ record, column }">
         <ChainIcon avatar-can-click @click-avatar="goChains" :title="record.channel_b" no-subtitle
-          :chain_id="record[column.key]" :chains-data="ibcChains.all" icon-size="small" />
+          :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
       </template>
 
       <template #last_updated="{ record, column }">
@@ -27,7 +28,7 @@
       </template>
 
       <template #operating_period="{ record, column }">
-        <div>{{ formatOperatingPeriod(record[column.key]) }}</div>
+        <div>{{ formatOperatingPeriod(record[column.key], record.status) }}</div>
       </template>
 
       <template #ibc_transfer_txs="{ record, column }">
@@ -35,7 +36,7 @@
           :currency="record.currency" />
       </template>
 
-      <template #table_bottom_status v-if="data.length !== 0">
+      <template #table_bottom_status v-if="list.length !== 0">
         <BottomStatus type="Channel" />
       </template>
     </BjTable>
@@ -55,7 +56,7 @@ import BottomStatus from '@/components/responsive/table/bottomStatus.vue';
 import { formatLastUpdated, formatOperatingPeriod } from '@/helper/time-helper';
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
 import StatusImg from '@/components/responsive/table/statusImg.vue';
-import { TChannelStatus } from '@/components/responsive/component.interface';
+import { ChannelStatus, TChannelStatus } from '@/components/responsive/component.interface';
 import { useGetChannelsList } from '@/service/channels'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useIbcChains } from '../home/composable';
@@ -67,7 +68,7 @@ const chain_id = route.query.chain_id as string
 
 
 const { ibcChains, getIbcChains } = useIbcChains();
-const { data, getList } = useGetChannelsList()
+const { list, getList } = useGetChannelsList()
 
 const needCustomColumns = [
   'chain_a',
@@ -81,7 +82,7 @@ const needCustomColumns = [
 const chainDropdown = ref()
 const statusDropdown = ref()
 
-const searchChain = ref(`${chain_id},allChains`)
+const searchChain = ref(chain_id ? `${chain_id},allchain` : undefined)
 const searchStatus = ref()
 
 onMounted(() => {

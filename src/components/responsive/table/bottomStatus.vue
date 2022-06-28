@@ -9,7 +9,7 @@
         </div>
         <div class="flex items-center ml-24">
           <img :src="inActiveImgInfo.src" :width="inActiveImgInfo.width" :height="inActiveImgInfo.height" class="mr-4"/>
-          <div>{{ type === BottomStatusType.CHANNEL ? 'Closed' : 'Stopped' }}</div>
+          <div>{{ type === BottomStatusType.CHANNEL ? 'Closed' : 'Unknown' }}</div>
         </div>
       </div>
     </div>
@@ -20,7 +20,6 @@
 import { computed } from 'vue';
 import { BottomStatusType, TBottomStatus } from '../component.interface';
 
-// TODO clippers => icon替换
 interface IProps {
   type: TBottomStatus // 目前支持 channels 和 relayers
 }
