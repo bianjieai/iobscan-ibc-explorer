@@ -294,7 +294,7 @@
 <script setup>
 import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
-import { ibcTxStatusSelectOptions, tableChainIDs, chainAddressPrefix } from '../../constants';
+import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix } from '../../constants';
 import Tools from '../../utils/Tools';
 import placeHoderImg from '../../assets/placeHoder.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
@@ -358,10 +358,10 @@ if (router?.query?.symbol) {
     })
 }
 if (router?.query?.status) {
-    const defaultOptions = ['1', '2', '3', '4']
-    const successOptions = ['1']
-    const failedOptions = ['2','4']
-    const processingOptions = ['3']
+    const defaultOptions = transfersStatusOptions.DEFAULT_OPTIONS;
+    const successOptions = transfersStatusOptions.SUCCESS_OPTIONS;
+    const failedOptions = transfersStatusOptions.FAILED_OPTIONS;
+    const processingOptions = transfersStatusOptions.PROCESSING_OPTIONS;
     paramsStatus = router?.query?.status.split(',')
     //todo  Optimize the writing
     if(JSON.stringify(paramsStatus) == JSON.stringify(successOptions)){
@@ -391,7 +391,7 @@ if (startTimestamp && endTimestamp) {
 }
 const queryParam = reactive({
     date_range: startTimestamp && endTimestamp ? [startTimestamp, endTimestamp] : [0, Math.floor(new Date().getTime() / 1000)],
-    status: paramsStatus || ['1', '2', '3', '4'],
+    status: paramsStatus || transfersStatusOptions.DEFAULT_OPTIONS,
     chain_id: chainId || undefined,
     symbol: paramsSymbol || undefined,
     denom: paramsDenom || undefined,
@@ -678,7 +678,7 @@ const onClickReset = () => {
     selectedSymbol.value = 'All Tokens';
     dateRange.value = [];
     queryParam.date_range = [];
-    queryParam.status = ['1', '2', '3', '4'];
+    queryParam.status = transfersStatusOptions.DEFAULT_OPTIONS;
     queryParam.chain_id = undefined;
     queryParam.symbol = undefined;
     queryParam.chain = undefined;

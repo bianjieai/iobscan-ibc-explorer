@@ -280,6 +280,12 @@ const testChains = {
       value: JSON.stringify(['2', '4']),
     },
   ];
+  const transfersStatusOptions = {
+    DEFAULT_OPTIONS: ['1', '2', '3', '4'],
+    SUCCESS_OPTIONS: ['1'],
+    FAILED_OPTIONS:  ['2','4'],
+    PROCESSING_OPTIONS: ['3'],
+  }
   
   const transferTableColumn = [
     {
@@ -343,6 +349,7 @@ const testChains = {
     ibcStatisticsTxsDefault,
     ibcTxStatus,
     ibcTxStatusSelectOptions,
+    transfersStatusOptions,
     transferTableColumn,
     unAuthed,
     chainIDs,
