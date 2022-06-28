@@ -195,11 +195,14 @@ a {
 
         & .header {
             box-sizing: border-box;
-            padding: 0 32px;
             &_content {
                 .logo {
+                  margin-left: 32px;
                     .logo_icon {
                     }
+                }
+                .header_input_wrapper{
+                  margin-right: 32px;
                 }
             }
             &_input_wrapper {
@@ -245,11 +248,14 @@ a {
 @media screen and (max-width: 768px) {
     .layout {
         & .header {
-            padding: 0 16px;
             &_content {
                 .logo {
+                  margin-left: 16px;
                     width: 136px;
                     .logo_icon {}
+                }
+                .header_input_wrapper{
+                  margin-right: 16px;
                 }
             }
             &_input_wrapper {
