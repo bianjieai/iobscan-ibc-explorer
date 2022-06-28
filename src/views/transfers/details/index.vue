@@ -69,12 +69,12 @@
             <div class="transfer_detail_content">
                 <div class="transfer_out_content">
                     <transfer-details-card :title="'IBC Out Details'" :details="transferOutDetails"
-                        :ibcDenoms="ibcDenoms" :expand-details="transferOutExpandDetails" :base-denom="baseDenom">
+                        :ibcDenoms="ibcDenoms" :expand-details="transferOutExpandDetails" :base-denom="baseDenom" :chainId="scChainId">
                     </transfer-details-card>
                 </div>
                 <div class="transfer_in_content">
                     <transfer-details-card :title="'IBC In Details'" :details="transferInDetails"
-                        :expand-details="transferInExpandDetails" :base-denom="baseDenom"></transfer-details-card>
+                        :expand-details="transferInExpandDetails" :base-denom="baseDenom" :chainId="dcChainId"></transfer-details-card>
                 </div>
             </div>
         </div>
@@ -99,7 +99,9 @@ const {
     transferOutExpandDetails,
     transferInDetails,
     transferInExpandDetails,
-    isShowLoading
+    isShowLoading,
+    scChainId,
+    dcChainId
 } = useTransfersDetailsInfo();
 
 </script>
