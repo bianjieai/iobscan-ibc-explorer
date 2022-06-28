@@ -196,13 +196,15 @@ export const useIsVisible = () => {
 export const useTransfersDetailsInfo = () => {
     const route = useRoute();
     const router = useRouter();
-    let ibcTransferOutTxHash = ref('--')
-    let ibcTransferInTxHash = ref('--')
-    let ibcTxStatus = ref('default')
-    let outTxStatus = ref('default')
-    let inTxStatus = ref('default')
-    let sequence = ref('--')
-    let baseDenom = ref('')
+    let ibcTransferOutTxHash = ref('--');
+    let ibcTransferInTxHash = ref('--');
+    let ibcTxStatus = ref('default');
+    let outTxStatus = ref('default');
+    let inTxStatus = ref('default');
+    let sequence = ref('--');
+    let baseDenom = ref('');
+    let scChainId = ref('');
+    let dcChainId = ref('');
     const transferOutDetails = reactive([
         {
             label: 'MsgType:',
@@ -390,6 +392,8 @@ export const useTransfersDetailsInfo = () => {
             isShowLoading.value = false
             if (result?.length === 1) {
                 const res = result[0]
+                scChainId.value = res?.sc_chain_id;
+                dcChainId.value = res?.dc_chain_id;
                 if (res?.sc_tx_info?.hash) {
                     ibcTransferOutTxHash.value = res.sc_tx_info.hash
 
@@ -508,7 +512,9 @@ export const useTransfersDetailsInfo = () => {
         transferOutExpandDetails,
         transferInDetails,
         transferInExpandDetails,
-        isShowLoading
+        isShowLoading,
+        scChainId,
+        dcChainId
     }
 }
 
