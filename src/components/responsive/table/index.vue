@@ -1,6 +1,6 @@
 <template>
   <div class="table-warpper">
-    <a-table rowKey="record_id" :columns="columnsSource" :data-source="dataSource" :pagination="false"
+    <a-table :rowKey="rowKey" :columns="columnsSource" :data-source="dataSource" :pagination="false"
       @change="onTableChange" :scroll="scroll">
       <template #bodyCell="{ column, record, index, text }">
         <template v-if="isKeyInNeedCustomColumns(column.key)">
@@ -35,11 +35,14 @@ interface IProps {
   current?: number
   noPagination?: boolean
   scroll?: { x?: number, y?: number }
+  rowKey?: string
 }
 
 let backUpDataSource: any[] = []
 
-const props = defineProps<IProps>()
+const props = withDefaults(defineProps<IProps>(), {
+  rowKey: 'record_id'
+})
 
 const pageInfo = reactive({
   pageSize: props.pageSize || 10,
@@ -47,8 +50,24 @@ const pageInfo = reactive({
   total: props.data.length
 })
 
-const columnsSource = ref(props.columns)
-const dataSource = ref(props.data)
+const { data, columns } = props
+
+const columnsSource = ref(columns)
+const dataSource = ref<any[]>(data)
+
+onMounted(() => {
+  backUpData()
+})
+
+watch(() => props.data, (_new, _old) => {
+  backUpData()
+  pageInfo.total = _new.length
+  needPagination.value && onPageChange(1, 10)
+  if (_new.length === 0) {
+    columnsSource.value = columnsSource.value.filter(item => item.key !== '_count')
+  }
+})
+
 
 const needPagination = computed(() => !props.noPagination && !(props.current && props.pageSize)) // 需要前端分页
 const isKeyInNeedCustomColumns = computed(() => (key: string) => props.needCustomColumns.includes(key)) // 判断key
@@ -56,7 +75,7 @@ const hasData = computed(() => props.data.length > 0)
 const backUpData = () => {
   const { columns, data, needCount } = props
 
-  if (needCount && hasData.value && columns.filter(item => item.key === '_count').length === 0) {
+  if (needCount && columns.filter(item => item.key === '_count').length === 0) {
     columns.unshift({
       dataIndex: '_count',
       key: '_count',
@@ -76,24 +95,20 @@ const emits = defineEmits<{
 }>()
 
 const onPageChange = (page: number, pageSize: number) => {
-  if (needPagination.value) {
-    dataSource.value = backUpDataSource; // back up
+  dataSource.value = backUpDataSource; // back up
 
-    pageInfo.current = page
-    pageInfo.pageSize = pageSize
-    const p = (page - 1) * pageSize
-    const pSize = page * pageSize
-    const data: any[] = []
-    toRaw(dataSource.value).forEach((item, index) => {
-      if (p <= index && index < pSize) {
-        data.push(item)
-      }
-    })
+  pageInfo.current = page
+  pageInfo.pageSize = pageSize
+  const p = (page - 1) * pageSize
+  const pSize = page * pageSize
+  const data: any[] = []
+  toRaw(dataSource.value).forEach((item, index) => {
+    if (p <= index && index < pSize) {
+      data.push(item)
+    }
+  })
 
-    dataSource.value = data
-  } else {
-    emits('onPageChange', page, pageSize)
-  }
+  dataSource.value = data
 }
 
 // todo clippers => 后端分页序号处理
@@ -112,13 +127,6 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
     needPagination.value && onPageChange(1, 10) // reset去第一页
   }
 }
-
-
-onMounted(() => {
-  backUpData()
-
-  needPagination.value && onPageChange(1, 10) // 初始默认分页
-})
 
 
 </script>
@@ -159,6 +167,7 @@ onMounted(() => {
 
 :deep(div.ant-table-body) {
   overflow-y: auto !important;
+
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -203,6 +212,7 @@ onMounted(() => {
   border-bottom: 1px solid var(--bj-border-color);
   padding: 15px 16px;
   padding-left: 0;
+
   &:only-child {
     border-bottom: none;
   }
@@ -255,7 +265,7 @@ onMounted(() => {
 }
 
 :deep(.ant-pagination-item-container > span > svg) {
-  margin-bottom: 6px;
+  // margin-bottom: 6px;
 }
 
 

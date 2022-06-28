@@ -13,7 +13,7 @@ const urlPrefix = import.meta.env.VITE_BASE_GO_API
 const getRelayersListUrl = `${urlPrefix}/ibc/relayerList`
 
 export const useGetRelayersList = () => {
-  const data = ref([])
+  const list = ref([])
 
   const getList = async (params: TRelayersListParams = {}) => {
     const result = await HttpHelper.get(getRelayersListUrl, {
@@ -26,14 +26,14 @@ export const useGetRelayersList = () => {
 
     if (code === 0) {
       const { items } = data
-      data.value = items
+      list.value = items ?? []
     } else {
       console.error(message)
     }
   }
 
   return {
-    data,
+    list,
     getList
   }
 }

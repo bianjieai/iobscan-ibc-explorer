@@ -1,8 +1,10 @@
 /* eslint-disable import/prefer-default-export */
 import { floor } from 'lodash-es';
 import { BigNumber } from "bignumber.js";
+import { isNumber, isString } from './object-helper';
 
 function getRestString(string, left, right) {
+  if (!isString(string)) return
   if (string.length < Number(left) + Number(right)) {
     return string
   }

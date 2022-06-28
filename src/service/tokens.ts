@@ -28,10 +28,10 @@ export const baseParams: TBaseParams = {
 const urlPrefix = import.meta.env.VITE_BASE_GO_API
 
 const getTokenListUrl = `${urlPrefix}/ibc/tokenList`
-const getIbcTokenListUrl = (base_denom: string) => `${urlPrefix}/${base_denom}/ibcTokenList`
+const getIbcTokenListUrl = (base_denom: string) => `${urlPrefix}/ibc/${base_denom}/ibcTokenList`
 
 export const useGetTokenList = () => {
-  const data = ref([])
+  const list = ref([])
 
   const getList = async (params: TTokenListParams = {}) => {
     const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...params } })
@@ -40,32 +40,32 @@ export const useGetTokenList = () => {
 
     if (code === 0) {
       const { items } = data
-      data.value = items
+      list.value = items
     } else {
       console.error(message)
     }
   }
 
   return {
-    data,
+    list,
     getList
   }
 }
 
 export const useGetIbcTokenList = (base_denom: string) => {
-  const data = ref([])
+  const list = ref([])
 
   const getList = async (params: TIbcTokenListParams = {}) => {
     const result = await HttpHelper.get(getIbcTokenListUrl(base_denom), { params: { ...baseParams, ...params } })
 
     if (result) {
       const { items } = result
-      data.value = items
+      list.value = items
     }
   }
 
   return {
-    data,
+    list,
     getList
   }
 }
