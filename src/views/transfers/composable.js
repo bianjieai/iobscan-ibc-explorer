@@ -37,9 +37,11 @@ export const useIbcChains = () => {
 }
 
 export const useGetIbcBaseDenoms = () => {
+    const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
     const ibcBaseDenoms = sessionStorage.getItem('ibcBaseDenoms') ? JSON.parse(sessionStorage.getItem('ibcBaseDenoms')) : ibcStatisticsChainsStore.ibcBaseDenoms;
     const getIbcBaseDenom = ibcStatisticsChainsStore[GET_IBCBASEDENOMS];
     return {
+        getIbcDenoms,
         ibcBaseDenoms,
         getIbcBaseDenom
     }
