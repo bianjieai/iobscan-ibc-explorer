@@ -346,7 +346,7 @@ const confirmChains = () => {
 @media screen and (min-width: 414px) and (max-width: 630px) {
   .dropdown-container {
     margin-top: 12px;
-    width: 250px;
+    width: 220px;
   }
 }
 
@@ -378,10 +378,6 @@ const confirmChains = () => {
       background: rgba(61, 80, 255, 0.9);
     }
   }
-  .dropdown-container {
-    margin-top: 12px;
-    width: 220px;
-  }
 
   .confirm-button {
     margin: 12px 0 0;
@@ -389,6 +385,10 @@ const confirmChains = () => {
 
   .chain-input {
     width: 245px;
+  }
+  .dropdown-container {
+    margin-top: 12px;
+    width: 220px;
   }
 }
 </style>

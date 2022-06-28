@@ -63,3 +63,9 @@
   /* border-radius */
   --border-radius-normal: 4px;
 }
+
+@media screen and (max-width: 630px) {
+    .ant-picker-panels {
+        flex-direction: column;
+    }
+}

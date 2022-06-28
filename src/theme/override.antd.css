@@ -135,3 +135,10 @@
 .ant-dropdown {
     z-index: 1020;
 }
+.ant-tooltip-inner {
+    color: var(--bj-font-color-65);
+    background: #fff;
+}
+.ant-tooltip-arrow-content {
+    background: #fff;
+}

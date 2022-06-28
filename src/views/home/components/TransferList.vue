@@ -25,7 +25,7 @@
     </div>
     <div class="list_bottom" >
       <span class="status_tips" v-if="transferList && transferList.length">
-        Status:
+        <span class="status_log">Status:</span>
         <span class="status_tip status_tip_success"></span> Success
         <span class="status_tip status_tip_warning"></span> Processing
         <span class="status_tip status_tip_error"></span> Failed
@@ -82,7 +82,6 @@ const { onClickViewAll, clickListItem, itemDidExpand } = useInterfaceActive(emit
     .status_tips {
       margin: 15px 24px;
       padding: 0 24px;
-      height: 24px;
       background-color: #f8f9fc;
       border-radius: 8px;
       font-size: var(--bj-font-size-normal);
@@ -131,6 +130,40 @@ const { onClickViewAll, clickListItem, itemDidExpand } = useInterfaceActive(emit
                 padding: 0 4px;
                 .status_tip {
                     margin: 0 4px 0 8px;
+                }
+                .status_tip_success {
+                }
+                .status_tip_warning {
+                }
+                .status_tip_error {
+                }
+            }
+        }
+    }
+}
+@media screen and (max-width:414px) {
+    .list {
+        &_top {
+            &_name {
+            }
+            &_button {
+            }
+        }
+        &_middle {
+        }
+        &_bottom {
+            .status_tips {
+                width: 100%;
+                .status_log {
+                    display: block;
+                    margin-left: 8px;
+                    width: 100%;
+                    text-align: left;
+                }
+                .status_tip {
+                    &:first-child {
+                        margin-left: 0;
+                    }
                 }
                 .status_tip_success {
                 }

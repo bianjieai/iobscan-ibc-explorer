@@ -313,6 +313,7 @@ export const useTransfersDetailsInfo = () => {
             label: 'Channel ID:',
             value: '--',
             dataKey: 'dc_channel',
+            isChannelID: true
         },
         {
             label: 'Received Token:',

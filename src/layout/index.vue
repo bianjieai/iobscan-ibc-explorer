@@ -153,6 +153,7 @@ a {
 
       .logo {
         width: 144px;
+        cursor: url(../assets/mouse/shiftlight_mouse.png), default;
 
         .logo_icon {
           width: 100%;

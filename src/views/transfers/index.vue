@@ -7,7 +7,7 @@
                         IBC Token Transfer List
                         <span class="transfer_header_num">
                             <i class="iconfont icon-shujuliebiao"></i>
-                            {{ `${isIbcTxTotalAndHashFilter()}`}}
+                            {{ `${isIbcTxTotalAndHashFilter}`}}
                         </span>
                     </p>
                 </div>
@@ -149,7 +149,8 @@
                                     <p class="tip_color">Received Token: {{ record.denoms.dc_denom || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="`/tokens/details?token=${record.denoms.sc_denom}`">
+                            <router-link :to="record.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${record.denoms.dc_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.denoms.sc_denom}&chain=${record.sc_chain_id}`">
+                            <!-- <router-link :to="`/tokens/details?token=${record.denoms.sc_denom}`"> -->
                                 <img
                                     class="token_icon hover"
                                     :src="record.symbolIcon || tokenDefaultImg"
@@ -294,7 +295,7 @@
 <script setup>
 import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
-import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix } from '../../constants';
+import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus } from '../../constants';
 import Tools from '../../utils/Tools';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
@@ -320,7 +321,6 @@ const { selectedSymbol, isShowSymbolIcon, clearInput, selectedChain, isShowChain
 const { pagination } = usePagination();
 const { ibcChains, getIbcChains } = useIbcChains();
 const { tableColumns, isShowTransferLoading, tableDatas } = useGetTableColumns();
-
 const chainDropdown = ref()
 const selectedDouble = ref(true);
 const needBadge = ref(true);
@@ -452,17 +452,17 @@ const disabledDate = (current) => current
     || current
     < dayjs(1617007625 * 1000));
 
-const isIbcTxTotalAndHashFilter = () => {
-    if(!ibcTxTotalMoreThan500k && !isHashFilterParams) {
+const isIbcTxTotalAndHashFilter = computed(() => {
+    if(!ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
         return `A total of ${ibcStatisticsTxs.value.tx_all.count} transfers found`;
-    } else if(!ibcTxTotalMoreThan500k && isHashFilterParams) {
-        return `${tableCount.value.value} of the ${ibcStatisticsTxs.value.tx_all.count} transfers found`;
-    } else if(ibcTxTotalMoreThan500k && !isHashFilterParams) {
-        return `${tableCount.value.value} of the last 500k transfers found`;
-    } else if(ibcTxTotalMoreThan500k && isHashFilterParams) {
+    } else if(!ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
+        return `${tableCount.value} of the ${ibcStatisticsTxs.value.tx_all.count} transfers found`;
+    } else if(ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
         return `Last 500k transfers found`;
+    } else if(ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
+        return `${tableCount.value} of the last 500k transfers found`;
     }
-}
+})
 const setAllChains = (allChains) => {
     if (allChains?.all) {
         const cosmosChain = allChains.all.filter(item => item.chain_name === 'Cosmos Hub')
@@ -970,6 +970,9 @@ onMounted(() => {
 }
 .hover {
     cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
+    &:hover {
+        color: var(--bj-primary-color);
+    }
 }
 @media screen and (max-width: 1200px) {
     .transfer {
@@ -1184,7 +1187,7 @@ onMounted(() => {
             }
             &_right {
                 & .tip {
-                    margin-left: 2px;
+                    margin-left: 0;
                 }
                 & button {
                     margin-left: 7px;
