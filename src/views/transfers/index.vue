@@ -314,7 +314,7 @@ import {
 } from "./composable";
 const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
 const { tableCount, getIbcTxs } = useIbcTxs();
-const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcBaseDenoms();
+const { getIbcDenoms,ibcBaseDenoms, getIbcBaseDenom } = useGetIbcBaseDenoms();
 const { tokens, ibcDenoms } = useGetTokens();
 const { selectedSymbol, isShowSymbolIcon, clearInput, selectedChain, isShowChainIcon } = useSelectedSymbol();
 const { pagination } = usePagination();
@@ -787,6 +787,7 @@ watch(ibcStatisticsTxs,(newValue,oldValue) => {
 })
 onMounted(() => {
     getIbcStatistics();
+    getIbcDenoms();
     !sessionStorage.getItem('ibcBaseDenoms') && getIbcBaseDenom();
     !sessionStorage.getItem('allChains') && getIbcChains();
 })
