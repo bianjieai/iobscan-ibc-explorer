@@ -94,7 +94,7 @@ const clickListItem = (value) => {
     &_name {
         font-size: var(--bj-font-size-sub-title);
         font-family: Montserrat-Regular, Montserrat;
-        color: rgba(0, 0, 0, 0.65);
+        color: var(--bj-font-color-65);
         line-height: var(--bj-font-size-sub-title);
         margin-bottom: 16px;
     }

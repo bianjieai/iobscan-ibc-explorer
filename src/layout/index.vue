@@ -113,7 +113,7 @@ a {
 
     .ant-tooltip-inner {
       background: rgba(255, 255, 255, 1) !important;
-      color: rgba(0, 0, 0, 0.65);
+      color: var(--bj-font-color-65);
     }
   }
 }
