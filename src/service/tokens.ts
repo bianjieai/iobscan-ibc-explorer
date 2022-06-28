@@ -21,7 +21,7 @@ export type TBaseParams = {
 export const baseParams: TBaseParams = {
   use_count: false,
   page_num: 1,
-  page_size: 1000 // todo clippers => 前端分页
+  page_size: 1000 
 }
 
 
@@ -58,9 +58,12 @@ export const useGetIbcTokenList = (base_denom: string) => {
   const getList = async (params: TIbcTokenListParams = {}) => {
     const result = await HttpHelper.get(getIbcTokenListUrl(base_denom), { params: { ...baseParams, ...params } })
 
-    if (result) {
-      const { items } = result
+    const { code, data, message } = result
+    if (code === 0) {
+      const { items } = data
       list.value = items
+    } else {
+      console.error(message)
     }
   }
 

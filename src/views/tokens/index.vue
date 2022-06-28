@@ -11,7 +11,7 @@
 
     <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS">
       <template #base_denom="{ record, column }">
-        <TokenIcon :denom="record[column.key]" :denoms-data="ibcBaseDenoms.value" />
+        <TokenIcon :token_type="record.token_type" :denom="record[column.key]" :denoms-data="ibcBaseDenoms.value" />
       </template>
       <template #price="{ record, column }">
         <a-popover>
@@ -23,20 +23,22 @@
       </template>
 
       <template #supply="{ record, column }">
-        <div>{{ `${formatSupply(record[column.key])}` }}</div>
+        <div>{{ `${formatSupply(record[column.key], record.base_denom, ibcBaseDenoms.value)}` }}</div>
       </template>
 
       <template #ibc_transfer_amount="{ record, column }">
         <a-popover>
           <template #content>
-            <div class="popover-c">{{ `${formatAmount(record[column.key])}` }}</div>
+            <div class="popover-c">{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value)}` }}
+            </div>
           </template>
-          <div>{{ `${formatAmount(record[column.key])}` }}</div>
+          <div>{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value)}` }}</div>
         </a-popover>
       </template>
 
       <template #ibc_transfer_txs="{ record, column }">
-        <div class="hover-cursor" @click="goTransfer">{{ `${formatBigNumber(record[column.key], 0)}` }}</div>
+        <div class="hover-cursor" @click="goTransfer(record.base_denom)">{{ `${formatBigNumber(record[column.key], 0)}`
+        }}</div>
       </template>
 
       <template #chains_involved="{ record, column }">
@@ -52,8 +54,6 @@
 </template>
 
 <script lang="ts" setup>
-// todo clippers => price 留几位小数
-// todo clippers => supply 留几位小数
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
@@ -112,7 +112,6 @@ const subtitle = computed(() => {
   } else {
     return ``
   }
-
 })
 
 onMounted(() => {
@@ -155,13 +154,21 @@ const resetSearchCondition = () => {
 
 const goIbcToken = (denom: string) => {
   router.push({
-    path: `/tokens/ibc/${denom}`
+    path: `/tokens/details`,
+    query: {
+      denom
+    }
   })
 }
 
-// todo clippers => 跳转参数
-const goTransfer = () => {
 
+const goTransfer = (denom: string) => {
+  router.push({
+    path: '/transfers',
+    query: {
+      denom
+    }
+  })
 }
 
 const goChains = () => {

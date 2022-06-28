@@ -28,7 +28,7 @@ export const useIbcStatisticsChains = defineStore('home', {
     state: () => {
         return {
             ibcStatisticsChains: ibcStatisticsChainsDefault,
-            ibcChains: {},
+            ibcChains: JSON.parse(sessionStorage.getItem('allChains')?.length ? sessionStorage.getItem('allChains') : '[]'),
             ibcStatisticsChannels: ibcStatisticsChannelsDefault,
             ibcStatisticsDenoms: ibcStatisticsDenomsDefault,
             ibcStatisticsTxs: ibcStatisticsTxsDefault,
@@ -37,7 +37,7 @@ export const useIbcStatisticsChains = defineStore('home', {
             ibcTxsStartTime: {value: 0},
             ibcTxTimer: {value: {}},
             ibcDenoms: {value: []},
-            ibcBaseDenoms: {value: []},
+            ibcBaseDenoms: JSON.parse(sessionStorage.getItem('ibcBaseDenoms').length ? sessionStorage.getItem('ibcBaseDenoms') : '{value:[]}'),
             isShowTransferLoading: false
         }
     },

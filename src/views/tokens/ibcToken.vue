@@ -3,7 +3,8 @@
     <PageTitle :title="`${baseDenomInfo.symbol} IBC Tokens`" :subtitle="`${list.length} tokens found`" has-icon
       :img-src="baseDenomInfo.imgSrc" />
     <div class="select flex items-center flex-wrap">
-      <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" @on-selected-chain="onSelectedChain" ref="chainDropdown" />
+      <ChainsDropdown :chain_id="chain_id" :dropdown-data="ibcChains?.all ?? []" @on-selected-chain="onSelectedChain"
+        ref="chainDropdown" />
       <BaseDropdown :options="IBC_STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
@@ -23,28 +24,28 @@
       </template>
 
       <template #chain_id="{ record, column }">
-        <ChainIcon title-can-click @click-title="goChains" :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []"
-          icon-size="small" />
+        <ChainIcon title-can-click @click-title="goChains" :chain_id="record[column.key]"
+          :chains-data="ibcChains?.all ?? []" icon-size="small" />
       </template>
 
       <template #amount="{ record, column }">
         <a-popover>
           <template #content>
-            <div class="popover-c">{{ `${formatAmount(record[column.key])}` }}</div>
+            <div class="popover-c">{{ `${formatAmount(record[column.key], base_denom, ibcBaseDenoms.value)}` }}</div>
           </template>
-          <div>{{ `${formatAmount(record[column.key])}` }}</div>
+          <div>{{ `${formatAmount(record[column.key], base_denom, ibcBaseDenoms.value)}` }}</div>
         </a-popover>
       </template>
 
       <template #receive_txs="{ record, column }">
-        <div class="hover-cursor" @click="goTransfer">{{ formatBigNumber(record[column.key], 0) }}</div>
+        <div class="hover-cursor" @click="goTransfer(record.chain_id)">{{ formatBigNumber(record[column.key], 0) }}
+        </div>
       </template>
     </BjTable>
   </PageContainer>
 </template>
 
 <script lang="ts" setup>
-// TODO clippers => subtitle完善 （数量 / chains跳转过来）
 // todo clippers => 确认提示Name单元格Token Hash:的字段
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
@@ -68,7 +69,8 @@ const { ibcChains, getIbcChains } = useIbcChains();
 const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
 
 const route = useRoute()
-const base_denom = route.params.name as string
+const base_denom = route.query.denom as string
+const chain_id = route.query.chain_id as string
 
 const { list, getList } = useGetIbcTokenList(base_denom)
 
@@ -103,7 +105,7 @@ const needCustomColumns = [
 const chainDropdown = ref()
 const statusDropdown = ref()
 
-const searchChain = ref()
+const searchChain = ref<string | undefined>(chain_id ?? undefined)
 const searchStatus = ref()
 
 
@@ -111,7 +113,7 @@ onMounted(() => {
   !sessionStorage.getItem('allChains') && getIbcChains();
   getIbcBaseDenom()
 
-  getList()
+  refreshList()
 })
 
 const refreshList = () => {
@@ -123,7 +125,7 @@ const refreshList = () => {
 
 
 const onSelectedChain = (chain?: string | number) => {
-  searchChain.value = chain
+  searchChain.value = chain as string
   refreshList()
 }
 
@@ -143,9 +145,15 @@ const goChains = () => {
   router.push('/chains')
 }
 
-// todo clippers => 确认参数
-const goTransfer = () => {
 
+const goTransfer = (chain_id: string) => {
+  router.push({
+    path: '/transfers',
+    query: {
+      denom: base_denom,
+      chain: chain_id
+    }
+  })
 }
 </script>
 
