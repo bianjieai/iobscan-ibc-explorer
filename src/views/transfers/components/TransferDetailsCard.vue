@@ -8,7 +8,7 @@
 
                     <!--                    {{formatToken(item.value,details)}}-->
 
-                    <router-link :to="`/tokens?chain=${chain1}`" class="details_item_amount">{{ formatToken(item.value, details).symbolNum || '--' }}</router-link>
+                    <router-link :to="`/tokens?chain=${chainId}`" class="details_item_amount">{{ formatToken(item.value, details).symbolNum || '--' }}</router-link>
                     <a-tooltip>
                         <template #title>
                             {{ formatToken(item.value, details).denom }}
@@ -39,9 +39,11 @@
                 </span>
                 <span class="details_item_value" v-else-if="item.isAddress">
                     <span v-show="Array.isArray(item.value)">
-                        <span v-if="item.value.length >= 1" v-for="(address, index) of item.value">
-                            <span class="value_style">{{ address || '--' }}</span>
-                        </span>
+                        <div v-if="item.value.length >= 1">
+                            <span  v-for="(address, index) of item.value" :key="index">
+                                <span class="value_style">{{ address || '--' }}</span>
+                            </span>
+                        </div>
                         <span v-else>--</span>
                     </span>
                     <span v-if="!Array.isArray(item.value)" class="value_style">{{ item.value || '--' }}</span>
@@ -119,6 +121,10 @@ const props = defineProps({
     ibcDenoms: {
         type: Object,
         default: {}
+    },
+    chainId:{
+        type: String,
+        default: ''
     }
 })
 
