@@ -56,6 +56,7 @@
 </template>
 
 <script lang="ts" setup>
+import { forEach } from 'lodash-es';
 import { computed, onMounted, ref } from 'vue';
 
 interface IProps {
@@ -79,16 +80,19 @@ type TSelectedChain = {
 
 
 onMounted(() => {
-  if (props.chain_id) {
-    const filterData = props.dropdownData.filter((item: any) => item.chain_id === props.chain_id)
-    if (filterData.length > 0) {
-      const chain_name = filterData[0].chain_name
-      selectedChain.value = [{
-        chain_id: props.chain_id,
-        chain_name
-      }]
+    if (props.chain_id) {
+        const idArr = props.chain_id.split(',')
+        for (let i = 0; i < idArr.length; i++) {
+            const filterData = props.dropdownData.filter((item: any) => item.chain_id === idArr[i])
+            if (filterData.length > 0) {
+                const chain_name = filterData[0].chain_name
+                selectedChain.value.push({
+                    chain_id: idArr[i],
+                    chain_name
+                })
+            }
+        }
     }
-  }
 })
 
 const visible = ref(false)
@@ -192,6 +196,9 @@ const confirmChains = () => {
   background-color: #fff;
   cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
   min-width: 124px;
+  &:hover {
+    border-color: var(--bj-primary-color);
+  }
 }
 
 .button__icon {
@@ -223,7 +230,7 @@ const confirmChains = () => {
 }
 
 .overlay {
-  width: 872px;
+  max-width: 872px;
   background: #FFFFFF;
   box-shadow: 0px 2px 8px 0px #D9DEEC;
   border-radius: 4px;
@@ -236,6 +243,7 @@ const confirmChains = () => {
 .chains-tag {
   position: relative;
   display: flex;
+  justify-content: center;
   align-items: center;
   white-space: nowrap;
   text-align: left;
@@ -292,9 +300,15 @@ const confirmChains = () => {
 @media screen and (min-width: 768px) {}
 
 // tablet
-@media screen and (min-width: 414px) and (max-width: 768px) {
+@media screen and (min-width: 630px) and (max-width: 768px) {
   .overlay {
     width: 702px;
+  }
+}
+@media screen and (min-width: 414px) and (max-width: 630px) {
+  .dropdown-container {
+    margin-top: 12px;
+    width: 250px;
   }
 }
 
@@ -325,6 +339,10 @@ const confirmChains = () => {
     &::-webkit-scrollbar-thumb:window-inactive {
       background: rgba(61, 80, 255, 0.9);
     }
+  }
+  .dropdown-container {
+    margin-top: 12px;
+    width: 220px;
   }
 
   .confirm-button {
