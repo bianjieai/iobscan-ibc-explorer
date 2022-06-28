@@ -41,7 +41,7 @@ import StatisticList from './components/StatisticList.vue';
 import TransferList from './components/TransferList.vue';
 import { useIbcStatistics, useIbcChains, useIbcTxs, useInterfaceActive, useClearInterval, useGetIbcDenoms } from './composable';
 import { useOnPressEnter } from '../../layout/hooks/useStarAnimation';
-import { onMounted, onBeforeUnmount } from 'vue';
+import { onMounted } from 'vue';
 const {
     ibcStatisticsChains,
     ibcStatisticsChannels,
@@ -53,7 +53,7 @@ const { ibcChains, getIbcChains } = useIbcChains();
 const { ibcTxs, getIbcTxs, setExpandByIndex } = useIbcTxs();
 const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
 const { getIbcDenoms, getIbcBaseDenom } = useGetIbcDenoms();
-const { clearInterval } = useClearInterval();
+useClearInterval();
 const { onPressEnter } = useOnPressEnter();
 
 onMounted(() => {
@@ -62,9 +62,6 @@ onMounted(() => {
     getIbcTxs({page_num: 1, page_size: 100, use_count: false});
     getIbcDenoms();
     !sessionStorage.getItem('ibcBaseDenom') && getIbcBaseDenom();
-})
-onBeforeUnmount(() => {
-    clearInterval();
 })
 </script>
 

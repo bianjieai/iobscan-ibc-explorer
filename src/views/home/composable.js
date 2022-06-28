@@ -1,4 +1,4 @@
-import { computed } from 'vue';
+import { computed, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { useIbcStatisticsChains } from '../../store/home/index';
@@ -48,11 +48,14 @@ export const useIbcTxs = () => {
     }
 }
 export const useClearInterval = () => {
-    const clearInterval = () => {
+    const clearIntervalTimer = () => {
         clearInterval(ibcStatisticsChainsStore.ibcTxTimer.value);
     }
+    onBeforeUnmount(() => {
+        clearIntervalTimer();
+    })
     return {
-        clearInterval
+        clearIntervalTimer
     }
 }
 export const useGetIbcDenoms = () => {

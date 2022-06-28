@@ -83,7 +83,7 @@ const props = defineProps({
 })
 const emits = defineEmits(['onMenuSelected','clickItem']);
 const { menus, currentMenu } = useMenus();
-const { onSelectedMenu, clickListItem } = useInterfaceActive();
+const { onSelectedMenu, clickListItem } = useInterfaceActive(emits);
 const { anchors, findClassName, onChangeAnchor } = useAnchors();
 const { getBindElement } = useGetBindElement();
 
