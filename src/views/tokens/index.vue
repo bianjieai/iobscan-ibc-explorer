@@ -3,7 +3,7 @@
     <PageTitle title="IBC Tokens" :subtitle="subtitle" />
     <div class="select flex items-center flex-wrap">
       <TokensDropDown :dropdown-data="ibcBaseDenoms.value" @on-tokens-selected="onSelectedToken" ref="tokensDropdown" />
-      <ChainsDropdown :dropdown-data="ibcChains.all" :chain_id="chain_id" @on-selected-chain="onSelectedChain"
+      <ChainsDropdown :dropdown-data="ibcChains?.all" :chain_id="chain_id" @on-selected-chain="onSelectedChain"
         ref="chainDropdown" />
       <BaseDropdown :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
       <ResetButton @on-reset="resetSearchCondition" />
@@ -105,9 +105,9 @@ const subtitle = computed(() => {
   if (Array.isArray(ibcChains.value?.all)) {
     const chain_name = ibcChains.value?.all.filter((item: any) => item.chain_id === chain_id)[0]?.chain_name ?? 'Unknown'
     if (chain_id) {
-      return `${list.value.length} tokens found in ${chain_name}`
+      return `${formatBigNumber(list.value.length, 0)} tokens found in ${chain_name}`
     } else {
-      return `${list.value.length} tokens found`
+      return `${formatBigNumber(list.value.length, 0)} tokens found`
     }
   } else {
     return ``
@@ -171,7 +171,7 @@ const goTransfer = (denom: string) => {
   router.push({
     path: '/transfers',
     query: {
-      token: denom
+      denom
     }
   })
 }
