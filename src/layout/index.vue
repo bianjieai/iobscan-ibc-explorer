@@ -253,7 +253,6 @@ a {
     & .footer {}
   }
 
-
 @media screen and (max-width: 1030px) {
   .layout {
     & .header {
