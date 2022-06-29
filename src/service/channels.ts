@@ -14,6 +14,7 @@ const getChannelsListUrl = `${urlPrefix}/ibc/channelList`
 
 export const useGetChannelsList = () => {
   const list = ref([])
+  const total = ref(0)
 
   const getList = async (params: TChannelsListParams = {}) => {
     const result = await HttpHelper.get(getChannelsListUrl, {
@@ -23,10 +24,14 @@ export const useGetChannelsList = () => {
       }
     })
     const { code, data, message } = result
+    
 
     if (code === 0) {
       const { items } = data
       list.value = items
+      if (!params.chain && !params.status) {
+        total.value = items.length
+      }
     } else {
       console.error(message)
     }
@@ -34,6 +39,7 @@ export const useGetChannelsList = () => {
 
   return {
     list,
+    total,
     getList
   }
 }

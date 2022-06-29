@@ -128,7 +128,10 @@ const onSelectedStatus = (value?: number | string) => {
 // reset
 const resetSearchCondition = () => {
   chainDropdown.value.selectedChain = []
+  chainDropdown.value.chainIdIput =  undefined
   statusDropdown.value.selectOption = []
+  searchChain.value = undefined
+  searchStatus.value = undefined
 
   getList()
 }
