@@ -16,8 +16,8 @@
               <a href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
                 <img class="header_input_icon" src="/src/assets/ioblink.png" alt="icon" />
               </a>
-              <div class="header_btn_mobile" @click="changeShowNav">
-                <img src="../assets/menu_mobile.png" alt="menu icon">
+              <div class="header_btn_mobile" >
+                <img src="../assets/menu_mobile.png" alt="menu icon" class="header_btn_img" @click="changeShowNav">
               </div>
             </div>
           </div>
@@ -64,6 +64,12 @@ onMounted(() => {
   timer2 = setInterval(() => {
     setStar2()
   }, 4200)
+   document.addEventListener("click", (e) => {
+      if (e.target.className !== "header_btn_img" && e.target.className !== "ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light header_menu") {  //不是该选择器的class
+        isShowNav.value = false
+      }
+    });
+
 })
 
 const onClickLogo = () => {
