@@ -1,20 +1,18 @@
 let fs = require('fs');
-let program = require('commander');
 
-function list (val) {
-    return val.split(',')
-}
-program.option("-p, <items>","config list" ,list).parse(process.argv);
+let arguments = process.argv.splice(2);
+let programs = (arguments[0] || '').split(',');
+console.log('programsprogramsprograms:',programs);
 
 replaceEnv([
         "./config/config.json",
     ],
     {
-        "umeng_id": program.P[0],
-        "umeng_web_id": program.P[1],
-        "date_picker_start_time": program.P[2],
-        "irishub_iobcan_link": program.P[3],
-        "cosmoshub_iobcan_link": program.P[4],
+        "umeng_id": programs[0] ,
+        "umeng_web_id": programs[1],
+        "date_picker_start_time": programs[2],
+        "irishub_iobcan_link": programs[3] || 'https://irishub.iobscan.io/#/address/',
+        "cosmoshub_iobcan_link": programs[4] || 'https://cosmoshub.iobscan.io/#/address/',
     }
 );
 
