@@ -55,7 +55,6 @@ const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
 const { getIbcDenoms, getIbcBaseDenom } = useGetIbcDenoms();
 useClearInterval();
 const { onPressEnter } = useOnPressEnter();
-
 onMounted(() => {
     getIbcStatistics();
     !sessionStorage.getItem('allChains') && getIbcChains();
@@ -198,7 +197,7 @@ onMounted(() => {
 }
 @media screen and (max-width: 768px) {
     .home {
-        padding: 24px 16px 48px 16px;
+        padding: 36px 16px 48px 16px;
         &_top {
             &_slot {
                 .flex(column, nowrap, center, center);

@@ -343,23 +343,15 @@ const confirmChains = () => {
 
 
 // pc
-@media screen and (min-width: 768px) {}
-
 // tablet
-@media screen and (min-width: 630px) and (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .overlay {
-    width: 702px;
-  }
-}
-@media screen and (min-width: 414px) and (max-width: 630px) {
-  .dropdown-container {
-    margin-top: 12px;
-    width: 220px;
+    max-width: 680px;
   }
 }
 
 // mobile
-@media screen and (max-width: 414px) {
+@media screen and (max-width: 420px) {
   .overlay {
     width: 284px;
     height: 450px;
@@ -396,7 +388,7 @@ const confirmChains = () => {
   }
   .dropdown-container {
     margin-top: 12px;
-    width: 220px;
+    width: 210px;
   }
 }
 </style>
