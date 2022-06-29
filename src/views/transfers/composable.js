@@ -4,7 +4,7 @@ import { useIbcStatisticsChains } from '../../store/home/index';
 import { GET_IBCSTATISTICS, GET_IBCTXS, GET_IBCBASEDENOMS, GET_IBCCHAINS, GET_IBCDENOMS } from '../../store/action-types';
 import { getIbcDenoms, getTxDetailsByTxHash } from '../../service/api';
 import { groupBy } from 'lodash-es';
-import placeHoderImg from '../../assets/placeHoder.png';
+import tokenDefaultImg from '../../assets/token-default.png';
 import { transferTableColumn } from '../../constants';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -118,18 +118,18 @@ export const useFindIcon = (props) => {
             (baseDenom) => baseDenom.symbol === props.selectedSymbol,
         );
         if (findSymbolConfig) {
-            return findSymbolConfig.icon || placeHoderImg;
+            return findSymbolConfig.icon || tokenDefaultImg;
         }
-        return placeHoderImg;
+        return tokenDefaultImg;
     };
     const findChainIcon = () => {
         const findChainConfig = props?.options?.find(
             (item) => item.chain_id === props.selectedChain.chain_id,
         );
         if (findChainConfig) {
-            return findChainConfig.icon || placeHoderImg;
+            return findChainConfig.icon || tokenDefaultImg;
         }
-        return placeHoderImg;
+        return tokenDefaultImg;
     };
     const isShowSymbol = (key) => {
         const result = {
@@ -155,10 +155,10 @@ export const useFindIbcChainIcon = () => {
         if (ibcChains.value && ibcChains.value.all) {
             const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
             if (result) {
-                return result.icon || placeHoderImg;
+                return result.icon || tokenDefaultImg;
             }
         }
-        return placeHoderImg;
+        return tokenDefaultImg;
     };
     return {
         findIbcChainIcon
@@ -313,6 +313,7 @@ export const useTransfersDetailsInfo = () => {
             label: 'Channel ID:',
             value: '--',
             dataKey: 'dc_channel',
+            isChannelID: true
         },
         {
             label: 'Received Token:',

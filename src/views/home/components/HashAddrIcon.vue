@@ -1,9 +1,12 @@
 <template>
     <div class="out_hash">
         <div class="out_hash_address_wrap">
-            <router-link :to="`/chains/details?chain_id=${item.sc_chain_id}`">
+            <router-link :to="`/chains`">
                 <img class="out_hash_address_icon" :src="findIbcChainIcon(item.sc_chain_id)" />
             </router-link>
+            <!-- <router-link :to="`/chains/details?chain_id=${item.sc_chain_id}`">
+                <img class="out_hash_address_icon" :src="findIbcChainIcon(item.sc_chain_id)" />
+            </router-link> -->
     
             <div class="out_hash_container">
                 <span class="out_hash_value">
@@ -38,9 +41,12 @@
 
         <img class="status_icon" :src="`/src/assets/status${item.status}.png`" alt="status" />
         <div class="out_hash_address_wrap">
-            <router-link :to="`/chains/details?chain_id=${item.dc_chain_id}`">
+            <router-link :to="`/chains`">
                 <img class="out_hash_address_icon" :src="findIbcChainIcon(item.dc_chain_id)" />
             </router-link>
+            <!-- <router-link :to="`/chains/details?chain_id=${item.dc_chain_id}`">
+                <img class="out_hash_address_icon" :src="findIbcChainIcon(item.dc_chain_id)" />
+            </router-link> -->
     
             <div class="out_hash_container">
                 <span class="out_hash_value">
@@ -111,6 +117,14 @@ const { findIbcChainIcon } = useFindIbcChainIcon(props);
         font-weight: 400;
         color: var(--bj-font-color-65);
         line-height: var(--bj-font-size-normal);
+        cursor: text;
+        & .hover {
+            color: var(--bj-font-color-65);
+            cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
+            &:hover {
+                color: var(--bj-primary-color);
+            }
+        }
     }
     &_icon {
         width: 14px;
@@ -125,9 +139,6 @@ const { findIbcChainIcon } = useFindIbcChainIcon(props);
     &_color {
         color: var(--bj-font-color-65);
     }
-}
-.hover {
-    cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
 }
 @media screen and (max-width: 600px) {
     .status_icon {
