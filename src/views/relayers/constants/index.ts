@@ -1,3 +1,4 @@
+import { CompareOrder } from "@/components/responsive/component.interface";
 import { TableColumnsType } from "ant-design-vue";
 
 export const COLUMNS: TableColumnsType= [
@@ -41,7 +42,8 @@ export const COLUMNS: TableColumnsType= [
     dataIndex: 'transfer_total_txs',
     key: 'transfer_total_txs',
     align: 'right',
-    sorter: (a, b) => a.transfer_total_txs - b.transfer_total_txs
+    sorter: (a, b) => a.transfer_total_txs - b.transfer_total_txs,
+    defaultSortOrder: CompareOrder.DESCEND
   }
 ]
 

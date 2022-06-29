@@ -29,7 +29,7 @@ export const useIbcStatisticsChains = defineStore('home', {
     state: () => {
         return {
             ibcStatisticsChains: ibcStatisticsChainsDefault,
-            ibcChains: JSON.parse(sessionStorage.getItem('allChains')?.length ? sessionStorage.getItem('allChains') : '[]'),
+            ibcChains: JSON.parse(sessionStorage.getItem('allChains')?.length ? sessionStorage.getItem('allChains') : '{}'),
             ibcStatisticsChannels: ibcStatisticsChannelsDefault,
             ibcStatisticsDenoms: ibcStatisticsDenomsDefault,
             ibcStatisticsTxs: ibcStatisticsTxsDefault,

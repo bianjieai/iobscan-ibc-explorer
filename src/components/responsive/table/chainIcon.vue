@@ -34,8 +34,8 @@ const props = withDefaults(defineProps<IProps>(), {
 
 const computedTitle = computed(() => {
   let title = ''
-  if (props.title) {
-    title = props.title
+  if (typeof props.title !== 'undefined') {
+    title = props.title === '' ? 'channel- --' : props.title
   } else {
     title = chainInfo.value.title
   }

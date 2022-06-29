@@ -270,7 +270,7 @@
                         </a-popover>
                     </template>
                     <template #time="{ record }">
-                        <span>{{ dayjs(record.tx_time * 1000).format("YYYY-MM-DD HH:mm:ss") }}</span>
+                        <span>{{ formatDate(record.tx_time * 1000) }}</span>
                     </template>
                 </a-table>
             </div>
@@ -299,10 +299,12 @@ import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainA
 import Tools from '../../utils/Tools';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
-import * as dayjs from 'dayjs';
+import * as djs from 'dayjs';
 import config from "../../../config/config.json";
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute } from 'vue-router';
+import { useClearInterval } from '../home/composable';
+
 import { 
     useIbcStatistics, 
     useIbcTxs, 
@@ -313,6 +315,8 @@ import {
     useIbcChains,
     useGetTableColumns,
 } from "./composable";
+
+useClearInterval();
 const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
 const { tableCount, getIbcTxs } = useIbcTxs();
 const { getIbcDenoms,ibcBaseDenoms, getIbcBaseDenom } = useGetIbcBaseDenoms();
@@ -333,6 +337,12 @@ let ibcTxTotalMoreThan500k = ref(true);
 let pageNum = 1, pageSize = 10;
 let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
 const router = useRoute();
+
+const dayjs = (djs?.default || djs);
+
+const formatDate = (time)=>{
+    return dayjs(time).format("YYYY-MM-DD HH:mm:ss")
+}
 
 let chainId = router?.query.chain;
 if (router?.query?.chain) {
@@ -490,7 +500,7 @@ if (!Object?.keys(allChains).length) {
     allChains = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) : {}
 }
 setAllChains(allChains)
-watch(allChains, (newValue, oldValue) => {
+watch(()=>allChains, (newValue, oldValue) => {
     if (newValue?.all) {
         setAllChains(newValue)
     }
