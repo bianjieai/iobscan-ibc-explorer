@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <PageTitle :title="`${baseDenomInfo.symbol} IBC Tokens`" :subtitle="`${list.length} tokens found`" has-icon
+    <PageTitle :title="`${baseDenomInfo.symbol} IBC Tokens`" :subtitle="`${formatBigNumber(list.length, 0)} tokens found`" has-icon
       :img-src="baseDenomInfo.imgSrc" />
     <div class="select flex items-center flex-wrap">
       <ChainsDropdown :chain_id="chain_id" :dropdown-data="ibcChains?.all ?? []" @on-selected-chain="onSelectedChain"
@@ -75,7 +75,7 @@ const chain_id = route.query.chain_id as string
 const { list, getList } = useGetIbcTokenList(base_denom)
 
 const baseDenomInfo = computed(() => {
-  const filterData = ibcBaseDenoms.value.value.filter((item: any) => item.denom === base_denom) as any // todo clippers => 补上类型
+  const filterData = ibcBaseDenoms.value.filter((item: any) => item.denom === base_denom) as any // todo clippers => 补上类型
   let symbol = ''
   const filterSymbol = filterData[0]?.symbol
 

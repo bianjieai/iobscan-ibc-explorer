@@ -22,7 +22,7 @@ export const useIbcStatistics = () => {
     }
 }
 export const useIbcChains = () => {
-    const ibcChains = ibcStatisticsChainsStore.ibcChains;
+    const ibcChains = computed(() => ibcStatisticsChainsStore.ibcChains);
     const getIbcChains = ibcStatisticsChainsStore[GET_IBCCHAINS];
     return {
         ibcChains,

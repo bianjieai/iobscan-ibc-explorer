@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <PageTitle title="IBC Relayers" :subtitle="`${list.length} relayers found`" />
+    <PageTitle title="IBC Relayers" :subtitle="`${formatBigNumber(list.length, 0)} relayers found`" />
     <div class="select flex items-center flex-wrap">
       <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" :chain_id="chain_id" @on-selected-chain="onSelectedChain"
         selected-double ref="chainDropdown" />
@@ -77,6 +77,7 @@ import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { formatTransfer_success_txs } from '@/helper/tablecell-helper';
 import NamePopover from './components/namePopover.vue';
+import { formatBigNumber } from '@/helper/parseString';
 
 const route = useRoute()
 const router = useRouter()
