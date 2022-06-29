@@ -58,12 +58,12 @@ const { setStar1, setStar2 } = useStarAnimation(layout)
 const { onPressEnter } = useOnPressEnter(layout)
 
 onMounted(() => {
-  timer1 = setInterval(() => {
-    setStar1()
-  }, 3200)
-  timer2 = setInterval(() => {
-    setStar2()
-  }, 4200)
+  // timer1 = setInterval(() => {
+  //   setStar1()
+  // }, 3200)
+  // timer2 = setInterval(() => {
+  //   setStar2()
+  // }, 4200)
 })
 
 const onClickLogo = () => {
