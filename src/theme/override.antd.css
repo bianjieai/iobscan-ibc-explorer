@@ -96,7 +96,7 @@
 }
 
 .ant-popover {
-    z-index: 1051;
+    z-index: 1051 !important;
 }
 
 .ant-select-open .ant-select-arrow {
