@@ -29,11 +29,11 @@ interface IProps {
 
 const props = defineProps<IProps>()
 
-const filterChainName = (chainId: string) => {
+const findChainName = (chainId: string) => {
   if (Array.isArray(props.ibcChains)) {
-    const filterData = props.ibcChains.filter(item => item.chain_id === chainId)
-    if (filterData.length > 0) {
-      return filterData[0].chain_name.length > 15 ? getRestString(filterData[0].chain_name, 3, 8) : filterData[0].chain_name
+    const ibcChain = props.ibcChains.find(item => item.chain_id === chainId);
+    if (ibcChain) {
+      return ibcChain.chain_name.length > 15 ? getRestString(ibcChain.chain_name, 3, 8) : ibcChain.chain_name
     } else {
       return 'Unknown'
     }
@@ -43,11 +43,11 @@ const filterChainName = (chainId: string) => {
 }
 
 const chain_a_name = computed(() => {
-  return filterChainName(props.chain_a)
+  return findChainName(props.chain_a)
 })
 
 const chain_b_name = computed(() => {
-  return filterChainName(props.chain_b)
+  return findChainName(props.chain_b)
 })
 
 </script>
