@@ -2,12 +2,16 @@
   <a-dropdown v-model:visible="visible" :trigger="['click']">
     <div
       :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']">
-      <div :class="['mr-8', 'ml-8', selectedChain[0] ? 'selected_color' : '', chain_a === defaultTitle.defaultChains? 'selected_color_default':'selected_color']" :style="{
-        flex: !selectedDouble ? '1' : 'auto',
-        textAlign: !selectedDouble ? 'center' : 'left'
-      }">{{ chain_a }}</div>
+      <div
+        :class="['mr-8', 'ml-8', selectedChain[0] ? 'selected_color' : '', chain_a === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color']"
+        :style="{
+          flex: !selectedDouble ? '1' : 'auto',
+          textAlign: !selectedDouble ? 'center' : 'left'
+        }">{{ chain_a }}</div>
       <template v-if="selectedDouble">
-        - <div :class="['mr-8', 'ml-8', selectedChain[1] ? 'selected_color' : '',chain_b === defaultTitle.defaultChains? 'selected_color_default':'selected_color']">{{ chain_b }}</div>
+        - <div
+          :class="['mr-8', 'ml-8', selectedChain[1] ? 'selected_color' : '', chain_b === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color']">
+          {{ chain_b }}</div>
       </template>
       <span class="button__icon flex justify-between items-center">
         <svg :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }" focusable="false" data-icon="down"
@@ -61,9 +65,8 @@
 </template>
 
 <script lang="ts" setup>
-import { forEach } from 'lodash-es';
 import { computed, onMounted, ref } from 'vue';
-import {defaultTitle} from '@/constants'
+import { defaultTitle } from '@/constants'
 import { getRestString } from '@/helper/parseString';
 
 type TChainData = {
@@ -118,27 +121,42 @@ const setAllChains = () => {
 
 
 onMounted(() => {
-    setAllChains() // 排序
-    if (props.chain_id) {
-        const idArr = props.chain_id.split(',')
-        for (let i = 0; i < idArr.length; i++) {
-            const filterData = props.dropdownData.filter((item: any) => item.chain_id === idArr[i])
-            if (filterData.length > 0) {
-                const chain_name = filterData[0].chain_name
-                selectedChain.value.push({
-                    chain_id: idArr[i],
-                    chain_name
-                })
-            }
-        }
+  setAllChains() // 排序
+  if (props.chain_id) {
+    const idArr = props.chain_id.split(',')
+    for (let i = 0; i < idArr.length; i++) {
+      const filterData = props.dropdownData.filter((item: any) => item.chain_id === idArr[i])
+      if (filterData.length > 0) {
+        const chain_name = filterData[0].chain_name
+        selectedChain.value.push({
+          chain_id: idArr[i],
+          chain_name
+        })
+      }
     }
+  }
 })
 
 const visible = ref(false)
 const selectedChain = ref<TSelectedChain[]>([])
 const chainIdIput = ref<string | undefined>(undefined)
-const chain_a = computed(() => selectedChain.value[0]?.chain_name ?? 'All Chains')
-const chain_b = computed(() => selectedChain.value[1]?.chain_name ?? 'All Chains')
+const chain_a = computed(() => {
+  if (chainIdIput.value) {
+    const chain_a_input = chainIdIput.value.split(',')[0]
+    return chain_a_input.length > 15 ? getRestString(chain_a_input, 3, 8) : chain_a_input
+  } else {
+    return selectedChain.value[0]?.chain_name ?? 'All Chains'
+  }
+})
+
+const chain_b = computed(() => {
+  const chain_b_input = chainIdIput.value?.split(',')[1]
+  if (chain_b_input) {
+    return chain_b_input.length > 15 ? getRestString(chain_b_input, 3, 8) : chain_b_input
+  } else {
+    return selectedChain.value[1]?.chain_name ?? 'All Chains'
+  }
+})
 
 const isSelected = computed(() => (chain_id: TChainID) => selectedChain.value.filter(item => item.chain_id === chain_id).length > 0)
 const badgeText = computed(() => (chain_id: TChainID) => {
@@ -156,7 +174,8 @@ const badgeText = computed(() => (chain_id: TChainID) => {
 })
 
 defineExpose({
-  selectedChain
+  selectedChain,
+  chainIdIput
 })
 
 const emits = defineEmits<{
@@ -166,7 +185,7 @@ const emits = defineEmits<{
 const submitChain = (chain_id?: string) => {
   emits('onSelectedChain', chain_id)
   visible.value = false
-  chainIdIput.value = undefined // reset
+  // chainIdIput.value = undefined // reset
 }
 
 const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
@@ -218,9 +237,24 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
 
 const confirmChains = () => {
   if (props.selectedDouble) {
-    if (chainIdIput.value?.includes(',') || chainIdIput.value?.includes('，')) {
+    if (chainIdIput.value?.includes(',')) {
+      const chain = chainIdIput.value.split(',')
+      selectedChain.value = [{
+        chain_name: chain[0],
+        chain_id: chain[0]
+      }, {
+        chain_name: chain[1],
+        chain_id: chain[1]
+      }]
       submitChain(chainIdIput.value.replace(/，/, ','))
     } else {
+      if (chainIdIput.value) {
+        selectedChain.value.push({
+          chain_name: chainIdIput.value,
+          chain_id: chainIdIput.value
+        })
+      }
+
       submitChain(`${chainIdIput.value},allchain`)
     }
   } else {
@@ -238,7 +272,8 @@ const confirmChains = () => {
   background-color: #fff;
   cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
   min-width: 124px;
-  &:hover{
+
+  &:hover {
     border-color: #667aff;
   }
 }
@@ -269,9 +304,9 @@ const confirmChains = () => {
 
 .selected_color {
   color: var(--bj-primary-color);
-  &_default{
-    color: var(--bj-text-second) 
 
+  &_default {
+    color: var(--bj-text-second)
   }
 }
 
@@ -346,7 +381,7 @@ const confirmChains = () => {
 // tablet
 @media screen and (max-width: 768px) {
   .overlay {
-    max-width: 680px;
+    width: 532px;
   }
 }
 
@@ -386,6 +421,7 @@ const confirmChains = () => {
   .chain-input {
     width: 245px;
   }
+
   .dropdown-container {
     margin-top: 12px;
     width: 210px;

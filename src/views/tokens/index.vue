@@ -102,8 +102,8 @@ const searchChain = ref<string | undefined>(chain_id)
 const searchStatus = ref<'Authed' | 'Other'>()
 
 const subtitle = computed(() => {
-  if (Array.isArray(ibcChains.all)) {
-    const chain_name = ibcChains.all.filter((item: any) => item.chain_id === chain_id)[0]?.chain_name ?? 'Unknown'
+  if (Array.isArray(ibcChains.value?.all)) {
+    const chain_name = ibcChains.value?.all.filter((item: any) => item.chain_id === chain_id)[0]?.chain_name ?? 'Unknown'
     if (chain_id) {
       return `${list.value.length} tokens found in ${chain_name}`
     } else {
@@ -146,8 +146,13 @@ const onSelectedStatus = (status?: string | number) => {
 
 const resetSearchCondition = () => {
   chainDropdown.value.selectedChain = []
+  chainDropdown.value.chainIdIput =  undefined
   statusDropdown.value.selectOption = []
   tokensDropdown.value.selectToken = []
+  tokensDropdown.value.tokenInput = undefined
+  searchDenom.value = undefined
+  searchChain.value = undefined
+  searchStatus.value = undefined
   // reset list
   getList()
 }

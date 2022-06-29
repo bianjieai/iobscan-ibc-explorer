@@ -35,8 +35,8 @@
         <div class="mt-24">
           <div class="leading-none">Other IBC Tokens</div>
           <span :class="['chains-tag', 'mr-12', 'mt-16', isSelected('others') ? 'visible_color visible_border' : '']"
-            key="others" @click="onSelected('Others', 'others')"><img :src="imgSrc" width="24"
-              height="24" class="mr-8" />
+            key="others" @click="onSelected('Others', 'others')"><img :src="imgSrc" width="24" height="24"
+              class="mr-8" />
             Others</span>
         </div>
         <div class="mt-24">
@@ -52,7 +52,7 @@
             </a-popover>
           </div>
           <div class="flex items-center mt-12 flex-wrap">
-            <a-input allowClear v-model:value="tokenIput" class="token-input" placeholder="Search by ibc/hash"
+            <a-input allowClear v-model:value="tokenInput" class="token-input" placeholder="Search by ibc/hash"
               @input="() => selectToken = []" />
             <a-button @click="confirmChains" type="primary" class="confirm-button ml-12">Confirm</a-button>
           </div>
@@ -63,6 +63,7 @@
 </template>
 
 <script lang="ts" setup>
+import { getRestString } from '@/helper/parseString';
 import { computed, ref } from 'vue';
 
 const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href
@@ -74,7 +75,7 @@ type TSelectToken = {
   symbol: string
 }
 interface IProps {
-  dropdownData: any[] 
+  dropdownData: any[]
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -83,10 +84,14 @@ const props = withDefaults(defineProps<IProps>(), {
 
 const visible = ref(false)
 const selectToken = ref<TSelectToken[]>([])
-const tokenIput = ref<TDenom>(undefined)
+const tokenInput = ref<TDenom>(undefined)
 
 const isSelected = computed(() => (denom: TDenom) => selectToken.value.length > 0 && selectToken.value[0]?.denom === denom)
 const selectedText = computed(() => {
+  if (tokenInput.value !== undefined && tokenInput.value !== '') {
+    return tokenInput.value.length > 15 ? getRestString(tokenInput.value, 3, 8) : tokenInput.value
+  }
+
   if (selectToken.value.length > 0) {
     return selectToken.value[0].symbol
   } else {
@@ -95,7 +100,8 @@ const selectedText = computed(() => {
 })
 
 defineExpose({
-  selectToken
+  selectToken,
+  tokenInput
 })
 
 const emit = defineEmits<{
@@ -108,7 +114,13 @@ const sumbitTokens = (denom: TDenom) => {
 }
 
 const confirmChains = () => {
-  sumbitTokens(tokenIput.value)
+  if (tokenInput.value) {
+    selectToken.value = [{
+      denom: tokenInput.value,
+      symbol: tokenInput.value
+    }]
+  }
+  sumbitTokens(tokenInput.value)
 }
 
 const onSelected = (symbol: string, denom: TDenom) => {

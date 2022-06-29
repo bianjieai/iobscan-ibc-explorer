@@ -1,3 +1,4 @@
+import { CompareOrder } from "@/components/responsive/component.interface";
 import { TableColumnsType } from "ant-design-vue";
 
 export const COLUMNS:TableColumnsType = [
@@ -37,7 +38,8 @@ export const COLUMNS:TableColumnsType = [
     title: 'IBC Tokens',
     sorter: (a, b) => a.ibc_tokens - b.ibc_tokens,
     align: 'right',
-    width: 150
+    width: 150,
+    defaultSortOrder: CompareOrder.DESCEND
   },
   {
     dataIndex: 'ibc_tokens_value',

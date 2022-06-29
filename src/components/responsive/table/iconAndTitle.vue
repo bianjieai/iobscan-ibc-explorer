@@ -23,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+import { getRestString } from '@/helper/parseString';
 import { computed } from 'vue';
 import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
 
@@ -44,7 +45,7 @@ const props = withDefaults(defineProps<IProps>(), {
 
 
 // relayer 处理
-const relayerName = computed(() => props.title ? props.title : 'Unknown')
+const relayerName = computed(() => props.title ? getRestString(props.title, 3, 8) : 'Unknown')
 
 const relayerImageSrc = computed(() => {
   if (props.imgSrc) {
