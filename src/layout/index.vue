@@ -209,15 +209,29 @@ a {
 }
 
 @media screen and (max-width: 1200px) {
-  .layout {
+    .layout {
 
-    & .header {
-      box-sizing: border-box;
-      padding: 0 32px;
-
-      &_content {
-        .logo {
-          .logo_icon {}
+        & .header {
+            box-sizing: border-box;
+            &_content {
+                .logo {
+                  margin-left: 32px;
+                    .logo_icon {
+                    }
+                }
+                .header_input_wrapper{
+                  margin-right: 32px;
+                }
+            }
+            &_input_wrapper {
+            }
+            &_input_icon_wrapper {
+                a {}
+            }
+            &_input_icon {}
+            &_btn_mobile {
+                img {}
+            }
         }
       }
 
@@ -232,13 +246,12 @@ a {
       &_btn_mobile {
         img {}
       }
-    }
+    
 
     & .content {}
 
     & .footer {}
   }
-}
 
 @media screen and (max-width: 1030px) {
   .layout {
@@ -288,38 +301,44 @@ a {
 
 
 @media screen and (max-width: 768px) {
-  .layout {
-    & .header {
-      padding: 0 16px;
+    .layout {
+        & .header {
+            &_content {
+                .logo {
+                  margin-left: 16px;
+                    width: 136px;
+                    .logo_icon {}
+                }
+                .header_input_wrapper{
+                  margin-right: 16px;
+                }
+            }
+            &_input_wrapper {
+            }
+            &_input_icon_wrapper {
+                a {}
+            }
+            &_input_icon {}
+            &_btn_mobile {
+                display: inline-block;
+                img {}
+            }
+            &_input_wrapper {}
 
-      &_content {
-        .logo {
-          width: 136px;
+            &_input_icon_wrapper {
+              a {}
+            }
 
-          .logo_icon {}
+            &_input_icon {}
+
+            &_btn_mobile {
+              display: inline-block;
+
+              img {}
+            }
         }
       }
-
-      &_input_wrapper {}
-
-      &_input_icon_wrapper {
-        a {}
-      }
-
-      &_input_icon {}
-
-      &_btn_mobile {
-        display: inline-block;
-
-        img {}
-      }
     }
-
-    & .content {}
-
-    & .footer {}
-  }
-}
 
 @media screen and (max-width: 530px) {
   .layout {

@@ -1,4 +1,4 @@
-<template>
+<template> 
   <a-dropdown
     :trigger="['click']"
     :placement="'bottomLeft'"
@@ -11,10 +11,8 @@
         :style="{ visibility: showIcon ? 'visible' : 'hidden' }"
         :src="type === 'chain' ? findChainIcon() : findSymbolIcon()"
       />
-      <span class="button_title">{{
-        type === "chain"
-          ? getLasttyString(selectedChain.chain_name) || "All Chains"
-          : isShowSymbol(selectedSymbol)?.symbolDenom
+      <span :class="content===defaultTitle.defaultTokens?'button_title_default':'button_title'">{{
+        content
       }}</span>
       <span class="button_icon">
         <svg
@@ -116,7 +114,8 @@
 <script setup>
 import { getLasttyString } from '../../../helper/parseString';
 import { useFindIcon, useIsVisible } from '../composable';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import {defaultTitle,selectedType} from '@/constants'
 const props = defineProps({
     type: String,
     options: {
@@ -138,6 +137,9 @@ const emits = defineEmits(['clickItem','clickSearch']);
 const { findSymbolIcon, findChainIcon, isShowSymbol } = useFindIcon(props);
 const { isVisible, visibleChange } = useIsVisible();
 const inputValue = ref('');
+const content = computed(()=>props.type === selectedType.chain
+          ? getLasttyString(props.selectedChain?.chain_name) || defaultTitle.defaultChains
+          : isShowSymbol(props.selectedSymbol)?.symbolDenom)
 
 watch(
     () => props.clearInput,
@@ -174,12 +176,17 @@ const onClickAll = () => {
   margin-right: 8px;
   .flex(row, wrap, space-between, center);
   font-weight: 400;
+  height: 36px;
   border: 1px solid var(--bj-border-color);
   &_title {
     max-width: 86px;
     // text-overflow: ellipsis;
     color: var(--bj-text-third);
     overflow: hidden;
+    color: var(--bj-primary-color);
+    &_default {
+      color: var(--bj-text-second);
+    }
   }
   &:hover {
     border-color: var(--bj-primary-color);
@@ -226,9 +233,9 @@ const onClickAll = () => {
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     &:hover {
       border: 1px solid var(--bj-primary-color);
-      color: var(--bj-primary-color);
+      // color: var(--bj-primary-color);
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-      background-color: #ffffff;
+      // background-color: #ffffff;
     }
   }
   &_item {
@@ -261,12 +268,15 @@ const onClickAll = () => {
           border: 1px solid var(--bj-primary-color);
           color: var(--bj-primary-color);
           transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-          background-color: #ffffff;
+          // background-color: #ffffff;
         }
         &_selected {
           border: 1px solid var(--bj-primary-color);
           color: var(--bj-primary-color);
           background-color: #ffffff;
+          .content_item_title{
+            color: var(--bj-primary-color)
+          }
         }
         &_icon {
           width: 24px;
@@ -307,8 +317,12 @@ const onClickAll = () => {
     border-color: var(--bj-primary-color);
     .button_icon {
         color: var(--bj-primary-color);
+      }
+      &_title{
+      color: var(--bj-primary-color);
+      }
     }
-}
+
 @media screen and (max-width: 970px) {
     .button {
         &_title {

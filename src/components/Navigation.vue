@@ -87,6 +87,9 @@ export default {
       display: none;
     }
   }
+  .header_menu_item_img{
+    display: none;
+  }
 }
 
 @media screen and (max-width: 1200px) {
@@ -112,6 +115,7 @@ export default {
         justify-content: space-around;
         padding: 20px 0 0 2px;
         &_item {
+          margin-left: 32px;
           width: 40px;
           height: 15px;
           line-height: 15px !important;
@@ -121,6 +125,9 @@ export default {
             visibility: hidden;
             height: 8px;
           }
+        }
+        .header_menu_item_img{
+          display: inline-block;
         }
     }
     .ant-menu-item-selected{
@@ -135,5 +142,10 @@ export default {
         visibility: visible;
         }
     }
+}
+@media screen and (max-width: 768px){
+  .header_menu_item{
+    margin-left: 16px;
+  }
 }
 </style>

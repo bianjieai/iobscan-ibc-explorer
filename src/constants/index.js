@@ -338,7 +338,17 @@ const testChains = {
   ];
   
   const unAuthed = 'Others';
+
+  const defaultTitle = {
+    defaultStatus:'All Status',
+    defaultChains:'All Chains',
+    defaultTokens:'All Tokens',
+  }
   
+  const selectedType = {
+    chain:'chain'
+  }
+
   export {
     testChains,
     ibcStatisticsTxsTest,
@@ -359,6 +369,8 @@ const testChains = {
     unAuthed,
     chainIDs,
     tableChainIDs,
-    chainAddressPrefix
+    chainAddressPrefix,
+    defaultTitle,
+    selectedType
   };
   

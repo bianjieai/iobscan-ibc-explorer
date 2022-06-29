@@ -2,12 +2,12 @@
   <a-dropdown v-model:visible="visible" :trigger="['click']">
     <div
       :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']">
-      <div :class="['mr-8', 'ml-8', selectedChain[0] ? 'selected_color' : '']" :style="{
+      <div :class="['mr-8', 'ml-8', selectedChain[0] ? 'selected_color' : '', chain_a === defaultTitle.defaultChains? 'selected_color_default':'selected_color']" :style="{
         flex: !selectedDouble ? '1' : 'auto',
         textAlign: !selectedDouble ? 'center' : 'left'
       }">{{ chain_a }}</div>
       <template v-if="selectedDouble">
-        - <div :class="['mr-8', 'ml-8', selectedChain[1] ? 'selected_color' : '']">{{ chain_b }}</div>
+        - <div :class="['mr-8', 'ml-8', selectedChain[1] ? 'selected_color' : '',chain_b === defaultTitle.defaultChains? 'selected_color_default':'selected_color']">{{ chain_b }}</div>
       </template>
       <span class="button__icon flex justify-between items-center">
         <svg :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }" focusable="false" data-icon="down"
@@ -60,6 +60,7 @@
 <script lang="ts" setup>
 import { forEach } from 'lodash-es';
 import { computed, onMounted, ref } from 'vue';
+import {defaultTitle} from '@/constants'
 import { getRestString } from '@/helper/parseString';
 
 type TChainData = {
@@ -234,8 +235,8 @@ const confirmChains = () => {
   background-color: #fff;
   cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
   min-width: 124px;
-  &:hover {
-    border-color: var(--bj-primary-color);
+  &:hover{
+    border-color: #667aff;
   }
 }
 
@@ -264,7 +265,11 @@ const confirmChains = () => {
 }
 
 .selected_color {
-  color: var(--bj-text-second)
+  color: var(--bj-primary-color);
+  &_default{
+    color: var(--bj-text-second) 
+
+  }
 }
 
 .overlay {

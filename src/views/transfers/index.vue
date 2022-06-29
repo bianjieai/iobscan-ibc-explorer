@@ -45,7 +45,7 @@
                             v-for="item of ibcTxStatusSelectOptions"
                             :key="item.title"
                             :value="item.value"
-                        >{{ item.title }}
+                        ><span :class="item.title ===defaultTitle.defaultStatus?'status_select_default':'status_select_title'">{{ item.title }}</span>
                         </a-select-option
                         >
                     </a-select>
@@ -295,7 +295,7 @@
 <script setup>
 import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
-import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus } from '../../constants';
+import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus,defaultTitle } from '../../constants';
 import Tools from '../../utils/Tools';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
@@ -938,6 +938,17 @@ onMounted(() => {
 .status_select {
     width: 146px;
     margin: 0 8px;
+    &_default{
+        color:var(--bj-text-second);
+    }
+    .status_select_title{
+    color: var(--bj-primary-color);
+    }
+    ::v-deep .ant-select-selector{
+        height: 36px;
+        .ant-select-selection-item{
+            line-height: 34px;
+        }
     ::v-deep .ant-select-selector {
         height: 36px;
         border: 1px solid var(--bj-border-color);
@@ -953,12 +964,18 @@ onMounted(() => {
         right: 8px;
         color: rgba(164, 171, 192, 1);
     }
-}
+}}
 
 .date_range {
     margin-right: 8px;
     width: 250px;
     height: 36px;
+    ::v-deep .ant-picker-input > input{
+        color: var(--bj-primary-color);
+        &::placeholder{
+            color: var(--bj-text-second);
+        }
+    }
     border: 1px solid var(--bj-border-color);
 }
 .tip {
