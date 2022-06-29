@@ -52,7 +52,7 @@ export const IBC_COLUMNS: TableColumnsType = [
   {
     dataIndex: 'denom',
     key: 'denom',
-    title: 'Name',
+    title: 'Name'
   },
   {
     dataIndex: 'chain_id',

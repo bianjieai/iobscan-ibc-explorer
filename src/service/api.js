@@ -14,53 +14,53 @@ function get(url, params) {
         try {
             const data = await HttpHelper.get(url, params);
             if (data) {
-                if (data?.data?.data?.length) {
-                    data.data.data.forEach(item => {
-                        if (item?.sc_chain_id) {
-                            item.sc_chain_id = item.sc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.sc_chain_id
-                        }
-                        if (item?.sc_chain_id) {
-                            item.dc_chain_id = item.dc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.dc_chain_id
-                        }
-                        if (item?.chain_id) {
-                            item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
-                        }
-                    })
-                }
-                if (data?.data?.length) {
-                    data.data.forEach(item => {
-                        if (item?.sc_chain_id) {
-                            item.sc_chain_id = item.sc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.sc_chain_id
-                        }
-                        if (item?.sc_chain_id) {
-                            item.dc_chain_id = item.dc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.dc_chain_id
-                        }
-                        if (item?.chain_id) {
-                            item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
-                        }
-                    })
-                }
-                if (data?.data?.active?.length) {
-                    data.data.active.forEach(item => {
-                        if (item?.chain_id) {
-                            item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
-                        }
-                    })
-                }
-                if (data?.data?.all?.length) {
-                    data.data.all.forEach(item => {
-                        if (item?.chain_id) {
-                            item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
-                        }
-                    })
-                }
-                if (data?.data?.inactive?.length) {
-                    data.data.inactive.forEach(item => {
-                        if (item?.chain_id) {
-                            item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
-                        }
-                    })
-                }
+                // if (data?.data?.data?.length) {
+                //     data.data.data.forEach(item => {
+                //         if (item?.sc_chain_id) {
+                //             item.sc_chain_id = item.sc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.sc_chain_id
+                //         }
+                //         if (item?.sc_chain_id) {
+                //             item.dc_chain_id = item.dc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.dc_chain_id
+                //         }
+                //         if (item?.chain_id) {
+                //             item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
+                //         }
+                //     })
+                // }
+                // if (data?.data?.length) {
+                //     data.data.forEach(item => {
+                //         if (item?.sc_chain_id) {
+                //             item.sc_chain_id = item.sc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.sc_chain_id
+                //         }
+                //         if (item?.sc_chain_id) {
+                //             item.dc_chain_id = item.dc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.dc_chain_id
+                //         }
+                //         if (item?.chain_id) {
+                //             item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
+                //         }
+                //     })
+                // }
+                // if (data?.data?.active?.length) {
+                //     data.data.active.forEach(item => {
+                //         if (item?.chain_id) {
+                //             item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
+                //         }
+                //     })
+                // }
+                // if (data?.data?.all?.length) {
+                //     data.data.all.forEach(item => {
+                //         if (item?.chain_id) {
+                //             item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
+                //         }
+                //     })
+                // }
+                // if (data?.data?.inactive?.length) {
+                //     data.data.inactive.forEach(item => {
+                //         if (item?.chain_id) {
+                //             item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
+                //         }
+                //     })
+                // }
                 res(data.data || data);
             } else {
                 console.error(`error from ${url}:`, JSON.stringify(data));

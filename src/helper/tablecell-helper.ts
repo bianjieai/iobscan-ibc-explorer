@@ -25,8 +25,8 @@ export const formatPrice = (price: number | string, numberOfDecimal: number = 4)
   }
 }
 
-const getScale = (denom: string, baseDenomData: TBaseDenoms[]) => {
-  if (Array.isArray(baseDenomData)) {
+const getScale = (denom?: string, baseDenomData?: TBaseDenoms[]) => {
+  if (Array.isArray(baseDenomData) && denom) {
     const filterData = baseDenomData.filter(item => item.denom === denom)
     if (filterData.length > 0) {
       return filterData[0].scale ?? 0
@@ -55,14 +55,15 @@ export const formatSupply = (supply: number | string, denom: string, baseDenomDa
 }
 
 
-export const formatAmount = (amount: number | string, denom: string, baseDenomData: TBaseDenoms[], numberOfDecimal: number = 2) => {
+export const formatAmount = (amount: number | string, denom?: string, baseDenomData?: TBaseDenoms[], numberOfDecimal: number = 2) => {
   if (amount === -1 || amount === '-1' || amount === '') {
     return `--`
   }
+  if (!denom && !baseDenomData) return formatBigNumber(amount, numberOfDecimal)
   const scale = getScale(denom, baseDenomData)
   let result = 0
 
-  if (amount > 0) {
+  if (scale > 0) {
     result = Number(amount) / Math.pow(10, scale)
   } else {
     result = Number(amount)

@@ -4,9 +4,7 @@
     iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']" @click="avatarClick">
     <div class="flex flex-col justify-around"
       :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
-      <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ title ? title :
-          chainInfo.title
-      }}
+      <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ computedTitle }}
       </div>
       <div v-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">{{ chainInfo.subtitle }}</div>
     </div>
@@ -14,6 +12,7 @@
 </template>
 
 <script setup lang="ts">
+import { getRestString } from '@/helper/parseString';
 import { TBaseChains } from '@/hooks/chainAndDenom.interface';
 import { computed } from 'vue';
 import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
@@ -33,12 +32,23 @@ const props = withDefaults(defineProps<IProps>(), {
   chainsData: JSON.parse(sessionStorage.getItem('allChains')!)?.all ?? []
 })
 
+const computedTitle = computed(() => {
+  let title = ''
+  if (props.title) {
+    title = props.title
+  } else {
+    title = chainInfo.value.title
+  }
+
+  return title.length > 15 ? getRestString(title, 3, 8) : title
+})
+
 const chainInfo = computed(() => {
   const filterData = props.chainsData.filter(item => item.chain_id === props.chain_id)
   if (filterData.length > 0) {
     return {
       title: filterData[0].chain_name,
-      subtitle: filterData[0].chain_id,
+      subtitle: filterData[0].chain_id.replace(/\_/g, '-'),
       imgSrc: filterData[0].icon
     }
   } else {

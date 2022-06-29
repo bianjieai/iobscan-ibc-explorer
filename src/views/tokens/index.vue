@@ -166,7 +166,7 @@ const goTransfer = (denom: string) => {
   router.push({
     path: '/transfers',
     query: {
-      denom
+      token: denom
     }
   })
 }
