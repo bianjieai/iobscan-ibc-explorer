@@ -11,7 +11,7 @@
         :style="{ visibility: showIcon ? 'visible' : 'hidden' }"
         :src="type === 'chain' ? findChainIcon() : findSymbolIcon()"
       />
-      <span :class="content==='All Tokens'?'button_title_default':'button_title'">{{
+      <span :class="content===defaultTitle.defaultTokens?'button_title_default':'button_title'">{{
         content
       }}</span>
       <span class="button_icon">
@@ -113,6 +113,7 @@
 import { getLasttyString } from '../../../helper/parseString';
 import { useFindIcon, useIsVisible } from '../composable';
 import { computed, ref, watch } from 'vue';
+import {defaultTitle,selectedType} from '@/constants'
 const props = defineProps({
     type: String,
     options: {
@@ -134,8 +135,8 @@ const emits = defineEmits(['clickItem','clickSearch']);
 const { findSymbolIcon, findChainIcon, isShowSymbol } = useFindIcon(props);
 const { isVisible, visibleChange } = useIsVisible();
 const inputValue = ref('');
-const content = computed(()=>props.type === "chain"
-          ? getLasttyString(props.selectedChain?.chain_name) || "All Chains"
+const content = computed(()=>props.type === selectedType.chain
+          ? getLasttyString(props.selectedChain?.chain_name) || defaultTitle.defaultChains
           : isShowSymbol(props.selectedSymbol)?.symbolDenom)
 
 watch(

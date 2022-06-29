@@ -45,7 +45,7 @@
                             v-for="item of ibcTxStatusSelectOptions"
                             :key="item.title"
                             :value="item.value"
-                        ><span :class="item.title ==='All Status'?'status_select_default':'status_select_title'">{{ item.title }}</span>
+                        ><span :class="item.title ===defaultTitle.defaultStatus?'status_select_default':'status_select_title'">{{ item.title }}</span>
                         </a-select-option
                         >
                     </a-select>
@@ -294,7 +294,7 @@
 <script setup>
 import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
-import { ibcTxStatusSelectOptions, tableChainIDs, chainAddressPrefix } from '../../constants';
+import { ibcTxStatusSelectOptions, tableChainIDs, chainAddressPrefix,defaultTitle } from '../../constants';
 import Tools from '../../utils/Tools';
 import placeHoderImg from '../../assets/placeHoder.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
