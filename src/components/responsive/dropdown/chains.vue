@@ -32,7 +32,7 @@
           </a-badge>
         </div>
         <div class="flex flex-wrap">
-          <a-badge v-for="item in handleDropdownData">
+          <a-badge v-for="(item,index) in handleDropdownData" :key="index">
             <template #count v-if="needBadge && isSelected(item.chain_id)">
               <span class="badge">{{ badgeText(item.chain_id) }}</span>
             </template>
