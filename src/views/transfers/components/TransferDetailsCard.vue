@@ -95,7 +95,7 @@ import moveDecimal from 'move-decimal-point';
 import { chainAddressPrefix, chainIDs, tableChainIDs } from "../../../constants";
 import config from '../../../../config/config.json'
 import { ref } from 'vue'
-import * as dayjs from 'dayjs'
+import * as djs from 'dayjs'
 import { getRestString } from "../../../helper/parseString";
 import { useGetTokens, useGetIbcBaseDenoms } from '../composable';
 const { ibcBaseDenoms } = useGetIbcBaseDenoms();
@@ -126,6 +126,7 @@ const props = defineProps({
         default: ''
     }
 })
+const dayjs = (djs?.default || djs);
 
 const isExpand = ref(false)
 const date = ref('')
