@@ -37,10 +37,13 @@
               <span class="badge">{{ badgeText(item.chain_id) }}</span>
             </template>
 
-            <span @click="onSelected(getRestString(item.chain_name, 7, 8), item.chain_id)"
+            <span
+              @click="onSelected(item.chain_name.length > 15 ? getRestString(item.chain_name, 3, 8) : item.chain_name, item.chain_id)"
               :class="['chains-tag', isSelected(item.chain_id) ? 'visible_color visible_border' : '']"
               :key="item.chain_id">
-              <img :src="item.icon" width="24" height="24" class="mr-8" />{{ getRestString(item.chain_name, 7, 8) }}
+              <img :src="item.icon" width="24" height="24" class="mr-8" />{{ item.chain_name.length > 15
+                  ? getRestString(item.chain_name, 3, 8) : item.chain_name
+              }}
             </span>
 
           </a-badge>
