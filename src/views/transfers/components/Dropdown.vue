@@ -6,14 +6,16 @@
     @visibleChange="visibleChange"
   >
     <a-button class="button">
-      <img
-        class="button_pre_icon"
-        :style="{ visibility: showIcon ? 'visible' : 'hidden' }"
-        :src="type === 'chain' ? findChainIcon() : findSymbolIcon()"
-      />
-      <span :class="content===defaultTitle.defaultTokens?'button_title_default':'button_title'">{{
-        content
-      }}</span>
+        <div class="button_token_icon">
+            <img
+                class="button_pre_icon"
+                :style="{ display: showIcon ? 'block' : 'none' }"
+                :src="type === 'chain' ? findChainIcon() : findSymbolIcon()"
+            />
+            <span :class="content===defaultTitle.defaultTokens?'button_title_default':'button_title'">{{
+                content
+            }}</span>
+        </div>
       <span class="button_icon">
         <svg
           :style="{ transform: isVisible ? 'rotate(180deg)' : 'rotate(0)' }"
@@ -179,6 +181,9 @@ const onClickAll = () => {
   font-weight: 400;
   height: 36px;
   border: 1px solid var(--bj-border-color);
+  &_token_icon {
+    .flex(row, wrap, flex-start, center);
+  }
   &_title {
     max-width: 86px;
     // text-overflow: ellipsis;

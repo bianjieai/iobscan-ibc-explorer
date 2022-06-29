@@ -346,7 +346,7 @@ const confirmChains = () => {
 // tablet
 @media screen and (max-width: 768px) {
   .overlay {
-    width: 702px;
+    max-width: 680px;
   }
 }
 

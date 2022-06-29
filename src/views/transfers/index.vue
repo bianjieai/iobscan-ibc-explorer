@@ -934,6 +934,10 @@ onMounted(() => {
 .status_select {
     width: 146px;
     margin: 0 8px;
+    ::v-deep .ant-select-arrow {
+        right: 8px;
+        color: rgba(164, 171, 192, 1);
+    }
     ::v-deep .ant-select-selector{
         height: 36px;
         border: 1px solid var(--bj-border-color);
@@ -943,9 +947,7 @@ onMounted(() => {
         .ant-select-selection-search {
             border-right: 1px solid var(--bj-border-color);
         }
-    ::v-deep .ant-select-arrow {
-        color: rgba(164, 171, 192, 1);
-    }
+    
     &_default{
         color:var(--bj-text-second);
     }
