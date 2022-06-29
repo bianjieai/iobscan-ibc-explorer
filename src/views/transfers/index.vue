@@ -7,7 +7,7 @@
                         IBC Token Transfer List
                         <span class="transfer_header_num">
                             <i class="iconfont icon-shujuliebiao"></i>
-                            {{ `${isIbcTxTotalAndHashFilter()}`}}
+                            {{ `${isIbcTxTotalAndHashFilter}`}}
                         </span>
                     </p>
                 </div>
@@ -149,10 +149,11 @@
                                     <p class="tip_color">Received Token: {{ record.denoms.dc_denom || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="`/tokens/details?token=${record.denoms.sc_denom}`">
+                            <router-link :to="record.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${record.denoms.dc_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.denoms.sc_denom}&chain=${record.sc_chain_id}`">
+                            <!-- <router-link :to="`/tokens/details?token=${record.denoms.sc_denom}`"> -->
                                 <img
                                     class="token_icon hover"
-                                    :src="record.symbolIcon || placeHoderImg"
+                                    :src="record.symbolIcon || tokenDefaultImg"
                                 />
                                 <span class="token_num hover">{{
                                         formatNum(record.symbolNum)
@@ -276,7 +277,7 @@
         </div>
         <div class="transfer_bottom" v-if="tableCount.value">
             <span class="status_tips">
-                Status:
+                <span class="status_log">Status:</span>
                 <span class="status_tip status_tip_success"></span> Success
                 <span class="status_tip status_tip_warning"></span> Processing
                 <span class="status_tip status_tip_error"></span> Failed
@@ -294,9 +295,9 @@
 <script setup>
 import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
-import { ibcTxStatusSelectOptions, tableChainIDs, chainAddressPrefix,defaultTitle } from '../../constants';
+import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus,defaultTitle } from '../../constants';
 import Tools from '../../utils/Tools';
-import placeHoderImg from '../../assets/placeHoder.png';
+import tokenDefaultImg from '../../assets/token-default.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
 import * as dayjs from 'dayjs';
 import config from "../../../config/config.json";
@@ -314,18 +315,17 @@ import {
 } from "./composable";
 const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
 const { tableCount, getIbcTxs } = useIbcTxs();
-const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcBaseDenoms();
+const { getIbcDenoms,ibcBaseDenoms, getIbcBaseDenom } = useGetIbcBaseDenoms();
 const { tokens, ibcDenoms } = useGetTokens();
 const { selectedSymbol, isShowSymbolIcon, clearInput, selectedChain, isShowChainIcon } = useSelectedSymbol();
 const { pagination } = usePagination();
 const { ibcChains, getIbcChains } = useIbcChains();
 const { tableColumns, isShowTransferLoading, tableDatas } = useGetTableColumns();
-
 const chainDropdown = ref()
 const selectedDouble = ref(true);
 const needBadge = ref(true);
 
-let paramsStatus = null, chainId = null, paramsSymbol = null, paramsDenom = null, startTimestamp = 0, endTimestamp = 0;
+let paramsStatus = null, paramsSymbol = null, paramsDenom = null, startTimestamp = 0, endTimestamp = 0;
 const dateRange = reactive({value: []});
 const maxTableLength = ref(500000);
 let isHashFilterParams = ref(false);
@@ -334,33 +334,10 @@ let pageNum = 1, pageSize = 10;
 let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
 const router = useRoute();
 
+let chainId = router?.query.chain;
 if (router?.query?.chain) {
     chainId = router?.query.chain
-    url += `&chain=${chainId}`
-    if (ibcChains?.all?.length) {
-        ibcChains.all.forEach(item => {
-            if (item?.chain_id === chainId) {
-                selectedChain.value.chain_name = item.chain_name
-                selectedChain.value.icon = item.icon
-                selectedChain.value.chain_id = item.chain_id
-                isShowChainIcon.value = true
-            }
-        })
-
-    }
-    watch(ibcChains, (newValue, oldValue) => {
-        if (newValue?.all?.length) {
-            newValue.all.forEach(item => {
-                if (item?.chain_id === chainId) {
-                    selectedChain.value.chain_name = item.chain_name
-                    selectedChain.value.icon = item.icon
-                    selectedChain.value.chain_id = item.chain_id
-                    isShowChainIcon.value = true
-                }
-            })
-
-        }
-    })
+    url += `&chain=${chainId}`;
 }
 if (router?.query?.denom) {
     url += `&denom=${router.query.denom}`
@@ -381,10 +358,10 @@ if (router?.query?.symbol) {
     })
 }
 if (router?.query?.status) {
-    const defaultOptions = ['1', '2', '3', '4']
-    const successOptions = ['1']
-    const failedOptions = ['2','4']
-    const processingOptions = ['3']
+    const defaultOptions = transfersStatusOptions.DEFAULT_OPTIONS;
+    const successOptions = transfersStatusOptions.SUCCESS_OPTIONS;
+    const failedOptions = transfersStatusOptions.FAILED_OPTIONS;
+    const processingOptions = transfersStatusOptions.PROCESSING_OPTIONS;
     paramsStatus = router?.query?.status.split(',')
     //todo  Optimize the writing
     if(JSON.stringify(paramsStatus) == JSON.stringify(successOptions)){
@@ -414,7 +391,7 @@ if (startTimestamp && endTimestamp) {
 }
 const queryParam = reactive({
     date_range: startTimestamp && endTimestamp ? [startTimestamp, endTimestamp] : [0, Math.floor(new Date().getTime() / 1000)],
-    status: paramsStatus || ['1', '2', '3', '4'],
+    status: paramsStatus || transfersStatusOptions.DEFAULT_OPTIONS,
     chain_id: chainId || undefined,
     symbol: paramsSymbol || undefined,
     denom: paramsDenom || undefined,
@@ -475,23 +452,23 @@ const disabledDate = (current) => current
     || current
     < dayjs(1617007625 * 1000));
 
-const isIbcTxTotalAndHashFilter = () => {
-    if(!ibcTxTotalMoreThan500k && !isHashFilterParams) {
+const isIbcTxTotalAndHashFilter = computed(() => {
+    if(!ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
         return `A total of ${ibcStatisticsTxs.value.tx_all.count} transfers found`;
-    } else if(!ibcTxTotalMoreThan500k && isHashFilterParams) {
-        return `${tableCount.value.value} of the ${ibcStatisticsTxs.value.tx_all.count} transfers found`;
-    } else if(ibcTxTotalMoreThan500k && !isHashFilterParams) {
-        return `${tableCount.value.value} of the last 500k transfers found`;
-    } else if(ibcTxTotalMoreThan500k && isHashFilterParams) {
+    } else if(!ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
+        return `${tableCount.value} of the ${ibcStatisticsTxs.value.tx_all.count} transfers found`;
+    } else if(ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
         return `Last 500k transfers found`;
+    } else if(ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
+        return `${tableCount.value} of the last 500k transfers found`;
     }
-}
+})
 const setAllChains = (allChains) => {
-    if (allChains?.value?.all) {
-        const cosmosChain = allChains.value.all.filter(item => item.chain_name === 'Cosmos Hub')
-        const irishubChain = allChains.value.all.filter(item => item.chain_name === 'IRIS Hub')
+    if (allChains?.all) {
+        const cosmosChain = allChains.all.filter(item => item.chain_name === 'Cosmos Hub')
+        const irishubChain = allChains.all.filter(item => item.chain_name === 'IRIS Hub')
         let notIncludesIrisAndCosmosChains = []
-        allChains.value.all.forEach(item => {
+        allChains.all.forEach(item => {
             if (item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub') {
                 notIncludesIrisAndCosmosChains.push(item)
             }
@@ -522,28 +499,14 @@ const findIbcChainIcon = computed(() => (chainId) => {
     if (ibcChains && ibcChains.all) {
         const result = ibcChains.all.find((item) => item.chain_id === chainId);
         if (result) {
-            return result.icon || placeHoderImg;
+            return result.icon || tokenDefaultImg;
         }
     }
-    return placeHoderImg;
+    return tokenDefaultImg;
 });
 const onClickDropdownItem = (type, item, custom) => {
     pagination.current = 1;
     switch (type) {
-        case 'chain':
-            isShowChainIcon.value = !custom;
-            selectedChain.value = custom
-                ? {
-                    chain_name: item.chain_id,
-                }
-                : {
-                    ...item,
-                    chain_name: item.chain_name || undefined,
-                };
-            queryParam.chain = item.chain_id;
-            queryParam.chain_id = item.chain_id;
-            queryDatas();
-            break;
         case 'token':
             isShowSymbolIcon.value = !custom;
             selectedSymbol.value = item || 'All Tokens';
@@ -707,19 +670,15 @@ const onPaginationChange = (page) => {
         console.log(error);
     })
 };
-console.log(chainDropdown.value?.selectedChain,'chainDropdown.value.selectedChain');
 const onClickReset = () => {
     isShowChainIcon.value = false;
     isShowSymbolIcon.value = false;
     clearInput.value += 1;
-    // selectedChain.value = {
-    //     chain_name: undefined,
-    // };
     chainDropdown.value.selectedChain = [];
     selectedSymbol.value = 'All Tokens';
     dateRange.value = [];
     queryParam.date_range = [];
-    queryParam.status = ['1', '2', '3', '4'];
+    queryParam.status = transfersStatusOptions.DEFAULT_OPTIONS;
     queryParam.chain_id = undefined;
     queryParam.symbol = undefined;
     queryParam.chain = undefined;
@@ -737,9 +696,40 @@ const getAddressPrefix = (address) => {
 }
 
 const onSelectedChain = (chain_id) => {
-    console.log(chain_id,'chain_id');
-  chainId = chain_id
-  queryDatas();
+    queryParam.chain = chain_id;
+    queryParam.chain_id = chain_id;
+    pagination.current = 1;
+    url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`
+    if(queryParam?.chain) {
+        url += `&chain=${queryParam.chain_id}`
+    } else if (queryParam?.chain_id) {
+        url += `&chain=${queryParam.chain_id}`
+    }
+    if (queryParam?.denom) {
+        url += `&denom=${queryParam.denom}`
+    }
+    if (queryParam?.symbol) {
+        url += `&symbol=${queryParam.symbol}`
+    }
+    if (queryParam?.status) {
+        url += `&status=${queryParam.status.join(',')}`
+    }
+    if (queryParam?.date_range?.length) {
+        if (queryParam?.date_range.length === 1) {
+            const timeStamp = queryParam.date_range[0]
+            const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD')
+            url += `&startTime=&endTime=${endTime}`
+        }
+        if (queryParam?.date_range.length === 2) {
+            const startTimeStamp = queryParam.date_range[0]
+            const entTimeStamp = queryParam.date_range[1]
+            const startTime = dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
+            const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD')
+            url += `&startTime=${startTime}&endTime=${endTime}`
+        }
+    }
+    history.pushState(null, null, url)
+    queryDatas();
 }
 const isShowLink = (address, chainID) => {
     let isShowLink = false
@@ -787,6 +777,7 @@ watch(ibcStatisticsTxs,(newValue,oldValue) => {
 })
 onMounted(() => {
     getIbcStatistics();
+    getIbcDenoms();
     !sessionStorage.getItem('ibcBaseDenoms') && getIbcBaseDenom();
     !sessionStorage.getItem('allChains') && getIbcChains();
 })
@@ -845,7 +836,6 @@ onMounted(() => {
         }
         &_right {
             .flex(row, nowrap, center, center);
-            margin-left: 8px;
             & .tip {
                 margin-left: 7px;
             }
@@ -959,8 +949,22 @@ onMounted(() => {
         .ant-select-selection-item{
             line-height: 34px;
         }
+    ::v-deep .ant-select-selector {
+        height: 36px;
+        border: 1px solid var(--bj-border-color);
     }
-}
+    ::v-deep .ant-select-selection-item {
+        color: var(--bj-text-third);
+        line-height: 36px;
+    }
+    ::v-deep .ant-select-selection-search {
+        border-right: 1px solid var(--bj-border-color);
+    }
+    ::v-deep .ant-select-arrow {
+        right: 8px;
+        color: rgba(164, 171, 192, 1);
+    }
+}}
 
 .date_range {
     margin-right: 8px;
@@ -972,6 +976,7 @@ onMounted(() => {
             color: var(--bj-text-second);
         }
     }
+    border: 1px solid var(--bj-border-color);
 }
 .tip {
     width: 20px;
@@ -980,8 +985,366 @@ onMounted(() => {
         color: var(--bj-font-color-65);
     }
 }
-
 .hover {
     cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
+    &:hover {
+        color: var(--bj-primary-color);
+    }
 }
+@media screen and (max-width: 1200px) {
+    .transfer {
+        &_header {
+            &_container {
+            }
+            &_line {
+            }
+            &_title {
+            }
+            &_num {
+            }
+        }
+        &_middle {
+            &_top {
+            }
+            &_left {
+                .ant-select {
+                }
+            }
+            &_right {
+                & .tip {
+                }
+                & button {
+                }
+            }
+            &_bottom {
+            }
+        }
+        &_table {
+            width: 100%;
+            overflow-x: auto;
+            ::v-deep .ant-table-placeholder {
+            }
+            ::v-deep a, span {
+            }
+            ::v-deep table {
+                width: 1200px;
+                background-color: #fff;
+            }
+            &::-webkit-scrollbar {
+                height: 4px;
+            }
+
+            &::-webkit-scrollbar-track {
+                box-shadow: inset006pxrgba(0, 0, 0, 0.3);
+                border-radius: 2px;
+                height: 6px;
+                background: rgba(61, 80, 255, 0.1);
+            }
+
+            &::-webkit-scrollbar-thumb {
+                border-radius: 4px;
+                box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+                background: rgba(61, 80, 255, 0.5);
+            }
+
+            &::-webkit-scrollbar-thumb:window-inactive {
+                background: rgba(61, 80, 255, 0.9);
+            }
+            .token {
+                &_icon {
+                }
+
+                &_num {
+                }
+
+                &_denom {
+                }
+            }
+            .status_icon {
+            }
+        }
+        &_bottom {
+            & .status_tips {
+                .status_tip {
+                }
+                .status_tip_success {
+                }
+                .status_tip_warning {
+                }
+                .status_tip_error {
+                }
+            }
+            & .table_pagination {
+                ::v-deep .ant-pagination-options {
+                }
+            }
+        }
+    }
+    .status_select {
+        ::v-deep .ant-select-selector {
+        }
+        ::v-deep .ant-select-selection-item {
+        }
+        ::v-deep .ant-select-selection-search {
+        }
+        ::v-deep .ant-select-arrow {
+        }
+    }
+}
+@media screen and (max-width: 970px) {
+    .transfer {
+        &_header {
+            &_container {
+            }
+            &_line {
+            }
+            &_title {
+            }
+            &_num {
+            }
+        }
+        &_middle {
+            &_top {
+                .flex(column, nowrap, flex-start, flex-start);
+            }
+            &_left {
+                .ant-select {
+                }
+            }
+            &_right {
+                margin-top: 12px;
+                & .tip {
+                }
+                & button {
+                }
+            }
+            &_bottom {
+            }
+        }
+        &_table {
+            ::v-deep .ant-table-placeholder {
+            }
+            ::v-deep a, span {
+            }
+            ::v-deep table {
+            }
+            .token {
+                &_icon {
+                }
+
+                &_num {
+                }
+
+                &_denom {
+                }
+            }
+            .status_icon {
+            }
+        }
+        &_bottom {
+            .flex(column, nowrap, flex-start, flex-start);
+            & .status_tips {
+                .status_tip {
+                }
+                .status_tip_success {
+                }
+                .status_tip_warning {
+                }
+                .status_tip_error {
+                }
+            }
+            & .table_pagination {
+                margin-top: 16px;
+                ::v-deep .ant-pagination-options {
+                }
+            }
+        }
+    }
+    .status_select {
+        ::v-deep .ant-select-selector {
+        }
+        ::v-deep .ant-select-selection-item {
+        }
+        ::v-deep .ant-select-selection-search {
+        }
+        ::v-deep .ant-select-arrow {
+        }
+    }
+    .date_range {
+        width: 220px;
+    }
+}
+@media screen and (max-width: 630px) {
+    .transfer {
+        padding: 24px 16px 80px;
+        &_header {
+            &_container {
+            }
+            &_line {
+            }
+            &_title {
+                .flex(column, nowrap, flex-start, flex-start);
+            }
+            &_num {
+                margin-top: 12px;
+                margin-left: 0;
+            }
+        }
+        &_middle {
+            margin-top: 60px;
+            &_top {
+            }
+            &_left {
+                .flex(column, wrap, flex-start, flex-start);
+                .ant-select {
+                    margin-top: 12px;
+                    margin-left: 0;
+                    width: 220px;
+                }
+            }
+            &_right {
+                & .tip {
+                    margin-left: 0;
+                }
+                & button {
+                    margin-left: 7px;
+                }
+            }
+            &_bottom {
+            }
+        }
+        &_table {
+            ::v-deep .ant-table-placeholder {
+            }
+            ::v-deep a, span {
+            }
+            .token {
+                &_icon {
+                }
+
+                &_num {
+                }
+
+                &_denom {
+                }
+            }
+            .status_icon {
+            }
+        }
+        &_bottom {
+            padding: 16px;
+            & .status_tips {
+                width: 100%;
+                .status_log {
+                }
+
+                .status_tip {
+                    margin-left: 0;
+                }
+                .status_tip_success {
+                }
+                .status_tip_warning {
+                }
+                .status_tip_error {
+                }
+            }
+            & .table_pagination {
+                ::v-deep .ant-pagination-options {
+                }
+            }
+        }
+    }
+    .status_select {
+        ::v-deep .ant-select-selector {
+        }
+        ::v-deep .ant-select-selection-item {
+        }
+        ::v-deep .ant-select-selection-search {
+        }
+        ::v-deep .ant-select-arrow {
+        }
+    }
+}
+@media screen and (max-width: 414px) {
+    .transfer {
+        &_header {
+            &_container {
+            }
+            &_line {
+            }
+            &_title {
+            }
+            &_num {
+            }
+        }
+        &_middle {
+            &_top {
+            }
+            &_left {
+                .ant-select {
+                }
+            }
+            &_right {
+                & .tip {
+                }
+                & button {
+                }
+            }
+            &_bottom {
+            }
+        }
+        &_table {
+            ::v-deep .ant-table-placeholder {
+            }
+            ::v-deep a, span {
+            }
+            .token {
+                &_icon {
+                }
+
+                &_num {
+                }
+
+                &_denom {
+                }
+            }
+            .status_icon {
+            }
+        }
+        &_bottom {
+            & .status_tips {
+                flex-wrap: wrap;
+                .status_log {
+                    width: 100%;
+                    margin-bottom: 8px;
+                }
+
+                .status_tip {
+                    margin-left: 0;
+                }
+                .status_tip_success {
+                }
+                .status_tip_warning {
+                }
+                .status_tip_error {
+                }
+            }
+            & .table_pagination {
+                ::v-deep .ant-pagination-options {
+                }
+            }
+        }
+    }
+    .status_select {
+        ::v-deep .ant-select-selector {
+        }
+        ::v-deep .ant-select-selection-item {
+        }
+        ::v-deep .ant-select-selection-search {
+        }
+        ::v-deep .ant-select-arrow {
+        }
+    }
+}
+
 </style>

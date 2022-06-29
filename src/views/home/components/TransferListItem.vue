@@ -6,8 +6,8 @@
             </div>
             <div class="list_item_info" :class="!item.expanded? 'list_item_line': ''">
                 <span class="list_item_number">{{ prefixInteger(index + 1, 3) }}</span>
-                <router-link :to="`/tokens/details?token=${item.denoms.sc_denom}`">
-                    <img class="list_item_icon" :src="item.symbolIcon || placeHoderImg" alt="icon" />
+                <router-link :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.denoms.dc_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.denoms.sc_denom}&chain=${item.sc_chain_id}`">
+                    <img class="list_item_icon" :src="item.symbolIcon || tokenDefaultImg" alt="icon" />
                 </router-link>
                 <div class="list_subItem" :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }">
                     <div class="list_subItem_title_container">
@@ -34,8 +34,8 @@ import { computed, watch } from 'vue';
 import {
     getRestString, getLasttyString, prefixInteger, formatNum,
 } from '../../../helper/parseString';
-import placeHoderImg from '../../../assets/placeHoder.png';
-import { chainAddressPrefix, tableChainIDs } from "../../../constants";
+import tokenDefaultImg from '../../../assets/token-default.png';
+import { chainAddressPrefix, tableChainIDs, ibcTxStatus } from "../../../constants";
 import config from "../../../../config/config.json";
 import { useIsExpand } from '../hooks/useTransferList';
 const props = defineProps({

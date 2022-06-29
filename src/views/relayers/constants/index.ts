@@ -8,7 +8,7 @@ export const COLUMNS: TableColumnsType= [
   },
   {
     title: 'Connected Channel',
-    dataIndex: 'chain_a', // todo clippers => 确认字段
+    dataIndex: 'chain_a', 
     key: 'chain_a'
   },
   {
@@ -31,17 +31,17 @@ export const COLUMNS: TableColumnsType= [
   },
   {
     title: 'Txs Success rate',
-    dataIndex: 'ibc_success_transfer_txs',
-    key: 'ibc_success_transfer_txs',
+    dataIndex: 'transfer_success_txs',
+    key: 'transfer_success_txs',
     align:'right',
-    sorter: (a, b) => a.ibc_success_transfer_txs - b.ibc_success_transfer_txs
+    sorter: (a, b) => a.transfer_success_txs - b.transfer_success_txs
   },
   {
     title: 'IBC Transfer Txs',
-    dataIndex: 'ibc_transfer_txs',
-    key: 'ibc_transfer_txs',
+    dataIndex: 'transfer_total_txs',
+    key: 'transfer_total_txs',
     align: 'right',
-    sorter: (a, b) => a.ibc_transfer_txs - b.ibc_transfer_txs
+    sorter: (a, b) => a.transfer_total_txs - b.transfer_total_txs
   }
 ]
 
@@ -56,6 +56,6 @@ export const STATUS_OPTIONS = [
   },
   {
     value: 2,
-    key: 'Stopped'
+    key: 'Unknown'
   }
 ]

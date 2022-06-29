@@ -22,7 +22,7 @@ export enum CompareOrder {
 export type TRelayerStatus = '1' | '2'
 export enum RelayerStatus {
   RUNNING = '1',
-  STOPPED = '2'
+  UNKNOWN = '2'
 }
 
 export type TChannelStatus = '1' | '2'

@@ -22,7 +22,7 @@ const imgSrc = computed(() => {
       case RelayerStatus.RUNNING:
         src = new URL('../../../assets/relayer-running.png', import.meta.url).href
         break
-      case RelayerStatus.STOPPED:
+      case RelayerStatus.UNKNOWN:
         src = new URL('../../../assets/relayer-stopped.png', import.meta.url).href
         break
       default:

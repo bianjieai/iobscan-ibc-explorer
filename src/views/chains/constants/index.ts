@@ -48,10 +48,10 @@ export const COLUMNS:TableColumnsType = [
     width: 180
   },
   {
-    dataIndex: 'ibc_transfer_txs',
-    key: 'ibc_transfer_txs',
+    dataIndex: 'transfer_txs',
+    key: 'transfer_txs',
     title: 'IBC Transfer Txs',
-    sorter: (a, b) => a.ibc_transfer_txs - b.ibc_transfer_txs,
+    sorter: (a, b) => a.transfer_txs - b.transfer_txs,
     align: 'right',
     width: 180
   }

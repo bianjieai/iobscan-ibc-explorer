@@ -261,6 +261,10 @@ const testChains = {
     REFUNDED: 4,
     SETTING: 5,
   };
+  const channelsStatus = {
+    channelOpenedStatus: '1',
+    channelClosedStatus: '2',
+  }
   
   const ibcTxStatusSelectOptions = [
     {
@@ -280,6 +284,12 @@ const testChains = {
       value: JSON.stringify(['2', '4']),
     },
   ];
+  const transfersStatusOptions = {
+    DEFAULT_OPTIONS: ['1', '2', '3', '4'],
+    SUCCESS_OPTIONS: ['1'],
+    FAILED_OPTIONS:  ['2','4'],
+    PROCESSING_OPTIONS: ['3'],
+  }
   
   const transferTableColumn = [
     {
@@ -352,7 +362,9 @@ const testChains = {
     ibcStatisticsDenomsDefault,
     ibcStatisticsTxsDefault,
     ibcTxStatus,
+    channelsStatus,
     ibcTxStatusSelectOptions,
+    transfersStatusOptions,
     transferTableColumn,
     unAuthed,
     chainIDs,

@@ -13,7 +13,7 @@ const urlPrefix = import.meta.env.VITE_BASE_GO_API
 const getChannelsListUrl = `${urlPrefix}/ibc/channelList`
 
 export const useGetChannelsList = () => {
-  const data = ref([])
+  const list = ref([])
 
   const getList = async (params: TChannelsListParams = {}) => {
     const result = await HttpHelper.get(getChannelsListUrl, {
@@ -26,14 +26,14 @@ export const useGetChannelsList = () => {
 
     if (code === 0) {
       const { items } = data
-      data.value = items
+      list.value = items
     } else {
       console.error(message)
     }
   }
 
   return {
-    data,
+    list,
     getList
   }
 }

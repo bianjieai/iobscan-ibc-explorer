@@ -20,16 +20,26 @@
                         :id="`list${findClassName(item.chain_name)}`"
                         class="ibc_selected_border card_list_item"
                     >
-                        <router-link :to="`/chains/details?chain_id=${item.chain_id}`">
+                        <router-link :to="`/chains`">
                             <a-card class="menu_card">
                                 <img
                                     class="card_img"
-                                    :src="item.icon ? item.icon : require('../../../assets/placeHoder.png')"
+                                    :src="item.icon ? item.icon : require('../../../assets/token-default.png')"
                                 />
                                 <p class="card_title">{{ item.chain_name }}</p>
                                 <p class="card_value">{{ item.chain_id }}</p>
                             </a-card>
                         </router-link>
+                        <!-- <router-link :to="`/chains/details?chain_id=${item.chain_id}`">
+                            <a-card class="menu_card">
+                                <img
+                                    class="card_img"
+                                    :src="item.icon ? item.icon : require('../../../assets/token-default.png')"
+                                />
+                                <p class="card_title">{{ item.chain_name }}</p>
+                                <p class="card_value">{{ item.chain_id }}</p>
+                            </a-card>
+                        </router-link> -->
                     </a-list-item>
                 </template>
             </a-list>

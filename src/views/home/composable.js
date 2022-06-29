@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { useIbcStatisticsChains } from '../../store/home/index';
 import { GET_IBCSTATISTICS, GET_IBCCHAINS, GET_IBCTXS, GET_IBCDENOMS, GET_IBCBASEDENOMS } from '../../store/action-types';
+import { ibcStatisticsChannelsDefault, channelsStatus } from '../../constants';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
@@ -58,7 +59,7 @@ export const useClearInterval = () => {
     }
 }
 export const useGetIbcDenoms = () => {
-    const ibcBaseDenoms = computed(() => ibcStatisticsChainsStore.ibcBaseDenoms)
+    const ibcBaseDenoms = ibcStatisticsChainsStore.ibcBaseDenoms;
     const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
     const getIbcBaseDenom = ibcStatisticsChainsStore[GET_IBCBASEDENOMS];
     return {
@@ -76,9 +77,25 @@ export const useInterfaceActive = () => {
                 name: 'Chains'
             })
         } else if (msg?.includes && msg.includes('channel')) {
-            router.push({
-                name: 'Channels'
-            })
+            if(msg === ibcStatisticsChannelsDefault['channel_opened'].statistics_name) {
+                router.push({
+                    name: 'Channels',
+                    query: {
+                        status: channelsStatus.channelOpenedStatus
+                    }
+                })
+            } else if(msg === ibcStatisticsChannelsDefault['channel_closed'].statistics_name) {
+                router.push({
+                    name: 'Channels',
+                    query: {
+                        status: channelsStatus.channelClosedStatus
+                    }
+                })
+            } else {
+                router.push({
+                    name: 'Channels'
+                })
+            }
         } else if (msg?.includes && msg.includes('tx')) {
             if (msg === 'tx_all') {
                 router.push({

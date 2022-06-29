@@ -35,7 +35,7 @@
         <div class="mt-24">
           <div class="leading-none">Other IBC Tokens</div>
           <span :class="['chains-tag', 'mr-12', 'mt-16', isSelected('others') ? 'visible_color visible_border' : '']"
-            key="others" @click="onSelected('Others', 'others')"><img src="src/assets/placeHoder.png" width="24"
+            key="others" @click="onSelected('Others', 'others')"><img src="src/assets/token-default.png" width="24"
               height="24" class="mr-8" />
             Others</span>
         </div>

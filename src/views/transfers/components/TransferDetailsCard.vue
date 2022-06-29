@@ -5,16 +5,16 @@
             <li class="details_item" v-for="(item, index) in details" :key="index">
                 <span class="details_item_label">{{ item.label }}</span>
                 <span class="details_item_value" v-if="item.isFormatToken">
-
-                    <!--                    {{formatToken(item.value,details)}}-->
-
-                    <router-link :to="`/tokens?chain=${chainId}`" class="details_item_amount">{{ formatToken(item.value, details).symbolNum || '--' }}</router-link>
-                    <a-tooltip>
-                        <template #title>
-                            {{ formatToken(item.value, details).denom }}
-                        </template>
-                        <span>{{ formatDenom(formatToken(item.value, details).symbol) }}</span>
-                    </a-tooltip>
+                    <router-link v-if="item.value" :to="`/tokens/details?denom=${item.value.denom}&chain=${chainId}`">
+                        <span class="details_item_amount">{{ formatToken(item.value, details).symbolNum || '--' }}</span>
+                        <a-tooltip>
+                            <template #title>
+                                {{ formatToken(item.value, details).denom }}
+                            </template>
+                            <span>{{ formatDenom(formatToken(item.value, details).symbol) }}</span>
+                        </a-tooltip>
+                    </router-link>
+                    <span v-else>--</span>
                 </span>
                 <span class="details_item_value" v-else-if="item.isFormatHeight">{{ formatHeight(item.value) }}</span>
                 <span class="details_item_value" v-else-if="item.isFormatStatus">{{ formatStatus(item.value) }}</span>
@@ -41,15 +41,14 @@
                     <span v-show="Array.isArray(item.value)">
                         <div v-if="item.value.length >= 1">
                             <span  v-for="(address, index) of item.value" :key="index">
-                                <span class="value_style">{{ address || '--' }}</span>
+                                <router-link :to="`/relayers?chain=${chainId}`" class="value_style">{{ address || '--' }}</router-link>
                             </span>
                         </div>
                         <span v-else>--</span>
                     </span>
                     <span v-if="!Array.isArray(item.value)" class="value_style">{{ item.value || '--' }}</span>
                 </span>
-                <!-- todo shan 确认传递的 chain 参数 chian -->
-                <router-link :to="`/channels?chain=${chain1}`" class="details_item_value" v-else-if="item.isChannelID">{{ item.value ? item.value : '--' }}</router-link>
+                <router-link :to="`/channels?chain=${chainId}`" class="details_item_value" v-else-if="item.isChannelID">{{ item.value ? item.value : '--' }}</router-link>
                 <span class="details_item_value" v-else>{{ item.value ? item.value : '--' }}</span>
             </li>
             <li class="details_item" v-for="(item, index) in expandDetails" :key="index" v-show="isExpand">
@@ -356,6 +355,13 @@ const formatDenom = (denom) => {
                     line-height: 17px;
                     max-width: 300px;
                     display: inline-block;
+                }
+            }
+            a {
+                color: var(--bj-text-normal);
+                cursor: url(../../../assets/mouse/shiftlight_mouse.png),default;
+                &:hover {
+                    color: var(--bj-primary-color);
                 }
             }
         }

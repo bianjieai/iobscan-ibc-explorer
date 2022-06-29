@@ -33,76 +33,78 @@
     </a-button>
     <template #overlay>
       <div class="overlay">
-        <div class="overlay_title" @click="onClickAll">
-          {{ type === "token" ? "All Tokens" : "All Chains" }}
-        </div>
-        <div class="overlay_item">
-          <h2 class="overlay_item_title" v-if="type === 'token'">Authed IBC Tokens</h2>
-          <div class="overlay_item_content">
-            <template v-for="(item, key) of options" :key="type === 'chain' ? item.chain_id : key">
-              <div
-                class="content_item"
-                v-if="key !== ''"
-                :title="type === 'chain' ? item[titleKey] : key"
-                :class="
-                  type === 'chain'
-                    ? selectedChain &&
-                      selectedChain.chain_id &&
-                      selectedChain.chain_id === item.chain_id &&
-                      'content_item_selected'
-                    : selectedSymbol && selectedSymbol === key && 'content_item_selected'
-                "
-                @click="onClickItem(item, key)"
-              >
-                <img
-                  class="content_item_icon"
-                  :src="
-                    item[iconKey] ||
-                      isShowSymbol(key)?.symbolIcon ||
-                      require('../../../assets/placeHoder.png')
-                  "
-                />
-                <span class="content_item_title">{{
-                  getLasttyString(item[titleKey]) || isShowSymbol(key)?.symbolDenom
-                }}</span>
-              </div>
-            </template>
-          </div>
-        </div>
-
-        <div class="overlay_item" v-if="type === 'token'">
-          <h2 class="overlay_item_title">Other IBC Tokens</h2>
-          <div class="overlay_item_content">
-            <div class="content_item" @click="onClickItem(undefined, unAuthed)">
-              <img class="content_item_icon" src="../../../assets/placeHoder.png" />
-              <span class="content_item_title">Others</span>
+        <div class="overlay_wrap">
+            <div class="overlay_title" @click="onClickAll">
+              {{ type === "token" ? "All Tokens" : "All Chains" }}
             </div>
-          </div>
-        </div>
-
-        <div class="overlay_item">
-          <h2 class="overlay_item_title" v-if="type === 'token'">
-            Custom IBC Tokens
-            <a-popover destroyTooltipOnHide>
-              <template #content>
-                <div>
-                  <p class="tip_color">
-                    Hash (in hex format) of the denomination trace information.
-                  </p>
+            <div class="overlay_item">
+              <h2 class="overlay_item_title" v-if="type === 'token'">Authed IBC Tokens</h2>
+              <div class="overlay_item_content">
+                <template v-for="(item, key) of options" :key="type === 'chain' ? item.chain_id : key">
+                  <div
+                    class="content_item"
+                    v-if="key !== ''"
+                    :title="type === 'chain' ? item[titleKey] : key"
+                    :class="
+                      type === 'chain'
+                        ? selectedChain &&
+                          selectedChain.chain_id &&
+                          selectedChain.chain_id === item.chain_id &&
+                          'content_item_selected'
+                        : selectedSymbol && selectedSymbol === key && 'content_item_selected'
+                    "
+                    @click="onClickItem(item, key)"
+                  >
+                    <img
+                      class="content_item_icon"
+                      :src="
+                        item[iconKey] ||
+                          isShowSymbol(key)?.symbolIcon ||
+                          require('../../../assets/token-default.png')
+                      "
+                    />
+                    <span class="content_item_title">{{
+                      getLasttyString(item[titleKey]) || isShowSymbol(key)?.symbolDenom
+                    }}</span>
+                  </div>
+                </template>
+              </div>
+            </div>
+    
+            <div class="overlay_item" v-if="type === 'token'">
+              <h2 class="overlay_item_title">Other IBC Tokens</h2>
+              <div class="overlay_item_content">
+                <div class="content_item" @click="onClickItem(undefined, unAuthed)">
+                  <img class="content_item_icon" src="../../../assets/token-default.png" />
+                  <span class="content_item_title">Others</span>
                 </div>
-              </template>
-              <img class="tip hover" style="margin-left: 8px;" src="/src/assets/tip.png" />
-            </a-popover>
-          </h2>
-          <div class="overlay_item_content flex-c">
-            <a-input
-              class="overlay_item_input"
-              v-model:value="inputValue"
-              allowClear
-              :placeholder="type === 'token' ? 'Search by ibc/hash' : 'Search by Chain ID'"
-            />
-            <a-button type="primary" @click="onClickSearch">Confirm</a-button>
-          </div>
+              </div>
+            </div>
+    
+            <div class="overlay_item">
+              <h2 class="overlay_item_title" v-if="type === 'token'">
+                Custom IBC Tokens
+                <a-popover destroyTooltipOnHide>
+                  <template #content>
+                    <div>
+                      <p class="tip_color">
+                        Hash (in hex format) of the denomination trace information.
+                      </p>
+                    </div>
+                  </template>
+                  <img class="tip hover" style="margin-left: 8px;" src="/src/assets/tip.png" />
+                </a-popover>
+              </h2>
+              <div class="overlay_item_content flex-c">
+                <a-input
+                  class="overlay_item_input"
+                  v-model:value="inputValue"
+                  allowClear
+                  :placeholder="type === 'token' ? 'Search by ibc/hash' : 'Search by Chain ID'"
+                />
+                <a-button type="primary" @click="onClickSearch">Confirm</a-button>
+              </div>
+            </div>
         </div>
       </div>
     </template>
@@ -170,13 +172,16 @@ const onClickAll = () => {
 .button {
   padding: 0 5px 0 5px;
   width: 146px;
+  height: 36px;
   margin-right: 8px;
   .flex(row, wrap, space-between, center);
   font-weight: 400;
   height: 36px;
+  border: 1px solid var(--bj-border-color);
   &_title {
     max-width: 86px;
     // text-overflow: ellipsis;
+    color: var(--bj-text-third);
     overflow: hidden;
     color: var(--bj-primary-color);
     &_default {
@@ -184,16 +189,18 @@ const onClickAll = () => {
     }
   }
   &:hover {
+    border-color: var(--bj-primary-color);
     .button_icon {
       transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
   }
   &_icon {
     height: 100%;
-    margin: 0 5px;
+    padding-left: 6px;
     .flex(column, nowrap, center, center);
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-    color: rgba(0, 0, 0, 0.25);
+    color: rgba(0, 0, 0, 0.35);
+    border-left: 1px solid var(--bj-border-color);
   }
   &_pre_icon {
     width: 18px;
@@ -207,6 +214,9 @@ const onClickAll = () => {
   border-radius: 4px;
   border: 1px solid #d9dfee;
   padding: 16px;
+  &_wrap {
+
+  }
   &_title {
     display: inline-block;
     background: #f5f7fc;
@@ -304,13 +314,154 @@ const onClickAll = () => {
   cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default  !important;
 }
 .ant-dropdown-open {
-    .button{
-      &_icon {
+    border-color: var(--bj-primary-color);
+    .button_icon {
         color: var(--bj-primary-color);
       }
       &_title{
       color: var(--bj-primary-color);
       }
+    }
+
+@media screen and (max-width: 970px) {
+    .button {
+        &_title {
+        }
+        &:hover {
+            .button_icon {
+            }
+        }
+        &_icon {
+        }
+        &_pre_icon {
+        }
+    }
+    .overlay {
+        max-width: 680px;
+        &_wrap {
+            height: 454px;
+            overflow: auto;
+            &::-webkit-scrollbar {
+                width: 4px;
+            }
+
+            &::-webkit-scrollbar-track {
+                box-shadow: inset006pxrgba(0, 0, 0, 0.3);
+                border-radius: 2px;
+                width: 8px;
+                background: rgba(61, 80, 255, 0.1);
+            }
+
+            &::-webkit-scrollbar-thumb {
+                border-radius: 4px;
+                box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+                background: rgba(61, 80, 255, 0.5);
+            }
+
+            &::-webkit-scrollbar-thumb:window-inactive {
+                background: rgba(61, 80, 255, 0.9);
+            }
+        }
+        &_title {
+            &:hover {
+            }
+        }
+        &_item {
+            &_title {
+            }
+            &_content {
+            .content_item {
+                max-width: 120px;
+                .content_item_title{
+                }
+                &:hover {
+                }
+                &_selected {
+                }
+                &_icon {
+                }
+                &_title {
+                }
+            }
+            }
+            &_input {
+            }
+        }
+    }
+    .flex-c {
+    }
+    .tip {
+        &_color {
+        }
+    }
+    .hover {
+    }
+    .ant-dropdown-open {
+        .button_icon {
+        }
+    }
+}
+@media screen and (max-width: 630px) {
+    .button {
+        &_title {
+        }
+        &:hover {
+            .button_icon {
+            }
+        }
+        &_icon {
+        }
+        &_pre_icon {
+        }
+    }
+    .overlay {
+        padding: 16px 12px;
+        max-width: 300px;
+        &_wrap {
+
+        }
+        &_title {
+            &:hover {
+            }
+        }
+        &_item {
+            &_title {
+            }
+            &_content {
+                width: 95%;
+            .content_item {
+                max-width: 120px;
+                .content_item_title{
+                }
+                &:hover {
+                }
+                &_selected {
+                }
+                &_icon {
+                }
+                &_title {
+                }
+            }
+            }
+            &_input {
+                margin-right: 4px;
+            }
+        }
+    }
+    .flex-c {
+    }
+    .tip {
+        &_color {
+        }
+    }
+    .hover {
+    }
+    .ant-dropdown-open {
+        .button_icon {
+        }
+    }
+    .dropdown_token {
+        width: 220px;
     }
 }
 </style>
