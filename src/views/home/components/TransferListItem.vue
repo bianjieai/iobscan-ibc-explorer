@@ -177,7 +177,6 @@ const setExplorerLink = (address, chainID) => {
     &_icon {
         width: 40px;
         border-radius: 50%;
-        border: 1px solid rgba(0, 0, 0, 0.2);
         margin: 0 24px 0 18px;
     }
     & .out_hash_wrap {

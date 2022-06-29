@@ -23,6 +23,7 @@ import {
     GET_IBCBASEDENOMS,
     GET_IBCCONFIGS,
 } from '../action-types';
+import { forEach } from "lodash-es";
 
 export const useIbcStatisticsChains = defineStore('home', {
     state: () => {
@@ -59,6 +60,27 @@ export const useIbcStatisticsChains = defineStore('home', {
         },
         async [GET_IBCCHAINS]() {
             const res = await getIbcChains();
+            if(res?.active) {
+                res.active?.forEach(item => {
+                    if(item?.chain_id) {
+                        item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id;
+                    }
+                })
+            }
+            if(res?.all) {
+                res.all?.forEach(item => {
+                    if(item?.chain_id) {
+                        item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id;
+                    }
+                })
+            }
+            if(res?.inactive) {
+                res.inactive?.forEach(item => {
+                    if(item?.chain_id) {
+                        item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id;
+                    }
+                })
+            }
             this.ibcChains = res;
             sessionStorage.setItem('allChains', JSON.stringify(res));
         },
@@ -84,6 +106,14 @@ export const useIbcStatisticsChains = defineStore('home', {
             const res = await getIbcTxs(queryParams);
             if(res) {
                 const result = res.data;
+                result?.forEach(item => {
+                    if(item?.sc_chain_id) {
+                        item.sc_chain_id = item.sc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.sc_chain_id;
+                    }
+                    if(item?.dc_chain_id) {
+                        item.dc_chain_id = item.dc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.dc_chain_id;
+                    }
+                })
                 if(use_count) {
                     if(typeof res !== 'number') {
                         this.ibcTxsCount.value = res.data;

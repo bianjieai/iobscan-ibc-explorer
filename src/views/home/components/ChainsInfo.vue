@@ -8,7 +8,7 @@
                 {{statisticsName[msg.statistics_name]}}
                 <span v-if="msg.statistics_name.indexOf('24') !== -1" class="card_content_tip">24hr</span>
             </span>
-            <span class="card_content_value">{{ msg.count }}</span>
+            <span class="card_content_value">{{ `${formatBigNumber(msg.count)}` }}</span>
         </div>
     </div>
 </template>
@@ -17,6 +17,7 @@
 import chains24hrImg from '../../../assets/chains_24hr.png';
 import chainsAllImg from '../../../assets/chains_all.png';
 import {statisticsName} from '../../../constants/index';
+import {formatBigNumber} from '../../../helper/parseString';
 
 const props = defineProps({
     msg: Object

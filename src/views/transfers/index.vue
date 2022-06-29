@@ -295,7 +295,7 @@
 <script setup>
 import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
-import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus,defaultTitle } from '../../constants';
+import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus,defaultTitle, unknownSymbol } from '../../constants';
 import Tools from '../../utils/Tools';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
@@ -343,7 +343,7 @@ if (router?.query?.denom) {
     url += `&denom=${router.query.denom}`
     paramsDenom = router?.query.denom
 }
-if (router?.query?.symbol) {
+if (router?.query?.symbol && router?.query?.symbol?.toLowerCase() !== unknownSymbol) {
     url += `&symbol=${router.query.symbol}`
     paramsSymbol = router?.query.symbol
     watch(ibcDenoms, (newValue, oldValue) => {
@@ -536,7 +536,7 @@ const onClickDropdownItem = (type, item, custom) => {
     if (queryParam?.denom) {
         url += `&denom=${queryParam.denom}`
     }
-    if (queryParam?.symbol) {
+    if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
         url += `&symbol=${queryParam.symbol}`
     }
     if (queryParam?.status) {
@@ -570,7 +570,7 @@ const handleSelectChange = (item) => {
     if (queryParam?.denom) {
         url += `&denom=${queryParam.denom}`
     }
-    if (queryParam?.symbol) {
+    if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
         url += `&symbol=${queryParam.symbol}`
     }
     if (queryParam?.status) {
@@ -608,7 +608,7 @@ const onChangeRangePicker = (dates) => {
     if (queryParam?.denom) {
         url += `&denom=${queryParam.denom}`
     }
-    if (queryParam?.symbol) {
+    if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
         url += `&symbol=${queryParam.symbol}`
     }
     if (queryParam?.status) {
@@ -708,7 +708,7 @@ const onSelectedChain = (chain_id) => {
     if (queryParam?.denom) {
         url += `&denom=${queryParam.denom}`
     }
-    if (queryParam?.symbol) {
+    if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
         url += `&symbol=${queryParam.symbol}`
     }
     if (queryParam?.status) {

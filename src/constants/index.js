@@ -348,6 +348,7 @@ const testChains = {
   const selectedType = {
     chain:'chain'
   }
+  const unknownSymbol = 'unknown';
 
   export {
     testChains,
@@ -371,6 +372,7 @@ const testChains = {
     tableChainIDs,
     chainAddressPrefix,
     defaultTitle,
-    selectedType
+    selectedType,
+    unknownSymbol
   };
   
