@@ -58,12 +58,12 @@ const { setStar1, setStar2 } = useStarAnimation(layout)
 const { onPressEnter } = useOnPressEnter(layout)
 
 onMounted(() => {
-  timer1 = setInterval(() => {
-    setStar1()
-  }, 3200)
-  timer2 = setInterval(() => {
-    setStar2()
-  }, 4200)
+  // timer1 = setInterval(() => {
+  //   setStar1()
+  // }, 3200)
+  // timer2 = setInterval(() => {
+  //   setStar2()
+  // }, 4200)
    document.addEventListener("click", (e) => {
       if (e.target.className !== "header_btn_img" && e.target.className !== "ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light header_menu") {  //不是该选择器的class
         isShowNav.value = false
