@@ -12,16 +12,15 @@
 
     <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count rowKey="relayer_id">
       <template #relayer_name="{ record, column }">
-        <a-popover placement="topLeft">
-          <template #content>
-            <div class="popover-c">
-              <div>Relayer Name: {{ record[column.key] }}</div>
-              <div>RIS Hub Address: {{ record.chain_a_address }}</div>
-              <div>Cosmos Hub Address: {{ record.chain_b_address }}</div>
-            </div>
-          </template>
-          <IconAndTitle :title="record[column.key]" :img-src="record.relayer_icon" relayer icon-size="small" />
-        </a-popover>
+        <NamePopover 
+          :chain_a="record.chain_a"
+          :chain_b="record.chain_b"
+          :chain_a_address="record.chain_b_address"
+          :chain_b_address="record.chain_b_address"
+          :img-src="record.relayer_icon"
+          :relayer_name="record[column.key]"
+          :ibc-chains="ibcChains?.all"
+        />
       </template>
 
       <template #chain_a="{ record, column }">
@@ -77,6 +76,7 @@ import { useGetRelayersList } from '@/service/relayers';
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { formatTransfer_success_txs } from '@/helper/tablecell-helper';
+import NamePopover from './components/namePopover.vue';
 
 const route = useRoute()
 const router = useRouter()
