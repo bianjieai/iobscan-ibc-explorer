@@ -8,7 +8,7 @@
     "build:staging": "vue-tsc --noEmit && vite build --mode staging",
     "build": "vue-tsc --noEmit && vite build --mode production",
     "preview": "vite preview",
-    "params": "node config.js -p"
+    "params": "node config.js"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^6.1.0",

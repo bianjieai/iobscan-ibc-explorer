@@ -2,6 +2,9 @@
   "UMENG_ID": "${umeng_id}",
   "UMENG_WEB_ID": "${umeng_web_id}",
   "DATE_PICKER_START_TIME":"${date_picker_start_time}",
-  "IRISHUB_IOBSCAN_LINK": "https://irishub.iobscan.io/#/address/",
-  "COSMOSHUB_IOBSCAN_LINK": "https://cosmoshub.iobscan.io/#/address/"
+  "IRISHUB_IOBSCAN_LINK": "${irishub_iobcan_link}",
+  "COSMOSHUB_IOBSCAN_LINK": "${cosmoshub_iobcan_link}"
 }
+
+
+
