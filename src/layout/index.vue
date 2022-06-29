@@ -16,8 +16,8 @@
               <a href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
                 <img class="header_input_icon" src="/src/assets/ioblink.png" alt="icon" />
               </a>
-              <div class="header_btn_mobile" @click="changeShowNav">
-                <img src="../assets/menu_mobile.png" alt="menu icon">
+              <div class="header_btn_mobile" >
+                <img src="../assets/menu_mobile.png" alt="menu icon" class="header_btn_img" @click="changeShowNav">
               </div>
             </div>
           </div>
@@ -58,12 +58,18 @@ const { setStar1, setStar2 } = useStarAnimation(layout)
 const { onPressEnter } = useOnPressEnter(layout)
 
 onMounted(() => {
-  timer1 = setInterval(() => {
-    setStar1()
-  }, 3200)
-  timer2 = setInterval(() => {
-    setStar2()
-  }, 4200)
+  // timer1 = setInterval(() => {
+  //   setStar1()
+  // }, 3200)
+  // timer2 = setInterval(() => {
+  //   setStar2()
+  // }, 4200)
+   document.addEventListener("click", (e) => {
+      if (e.target.className !== "header_btn_img" && e.target.className !== "ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light header_menu") {  //不是该选择器的class
+        isShowNav.value = false
+      }
+    });
+
 })
 
 const onClickLogo = () => {
@@ -103,28 +109,23 @@ onUnmounted(() => {
   flex: 1;
   display: flex;
 }
-
 a {
   cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
 }
-
 .ant-tooltip {
   max-width: 400px !important;
-
   .ant-tooltip-content {
     .ant-tooltip-arrow {
       .ant-tooltip-arrow-content {
         background: rgba(255, 255, 255, 1) !important;
       }
     }
-
     .ant-tooltip-inner {
       background: rgba(255, 255, 255, 1) !important;
       color: var(--bj-font-color-65);
     }
   }
 }
-
 .layout {
   width: 100%;
   background-image: url("../assets/Summer_bg.png");
@@ -134,7 +135,6 @@ a {
   background-color: #F5F7FC;
   flex: 1;
   position: relative;
-
   & .header {
     box-sizing: border-box;
     padding: 0;
@@ -143,62 +143,50 @@ a {
     line-height: 80px;
     background: transparent;
     z-index: 10;
-
     &_content {
-      .flex(row, nowrap, space-between, center);
-      margin: 0 auto;
-      width: 100%;
-      max-width: 1200px;
-      height: 100%;
-
-      .logo {
-        width: 144px;
-        cursor: url(../assets/mouse/shiftlight_mouse.png), default;
-
-        .logo_icon {
-          width: 100%;
+        .flex(row, nowrap, space-between, center);
+        margin: 0 auto;
+        width: 100%;
+        max-width: 1200px;
+        height: 100%;
+        .logo {
+            width: 144px;
+            .logo_icon {
+                width: 100%;
+            }
         }
-      }
     }
-
     &_input_wrapper {
-      .flex(row, nowrap, space-between, center);
+        .flex(row, nowrap, space-between, center);
     }
-
     &_input_icon_wrapper {
-      .flex(row, nowrap, space-between, center);
-      margin-left: 12px;
-
-      a {
-        .flex(row, nowrap, center, center);
-      }
+        .flex(row, nowrap, space-between, center);
+        margin-left: 12px;
+        a {
+            .flex(row, nowrap, center, center);
+        }
     }
-
     &_input_icon {
-      width: 32px;
-      height: 32px;
-    }
-
-    &_btn_mobile {
-      .flex(row, nowrap, center, center);
-      margin-left: 12px;
-      cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
-      display: none;
-
-      img {
         width: 32px;
         height: 32px;
-      }
+    }
+    &_btn_mobile {
+        .flex(row, nowrap, center, center);
+        margin-left: 12px;
+        cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+        display: none;
+        img {
+            width: 32px;
+            height: 32px;
+        }
     }
   }
-
   & .content {
     box-sizing: border-box;
     .flex(column, nowrap, flex-start, center);
     flex: 1;
-    z-index: 10;
+    // z-index: 10;
   }
-
   & .footer {
     .flex(column, nowrap, space-between, center);
     padding: 0;
@@ -207,10 +195,8 @@ a {
     z-index: 10;
   }
 }
-
 @media screen and (max-width: 1200px) {
     .layout {
-
         & .header {
             box-sizing: border-box;
             &_content {
@@ -233,73 +219,34 @@ a {
                 img {}
             }
         }
-      }
-
-      &_input_wrapper {}
-
-      &_input_icon_wrapper {
-        a {}
-      }
-
-      &_input_icon {}
-
-      &_btn_mobile {
-        img {}
-      }
-    
-
-    & .content {}
-
-    & .footer {}
-  }
-
-@media screen and (max-width: 1030px) {
-  .layout {
-    & .header {
-      &_content {
-        position: relative;
-
-        .logo {
-          .logo_icon {}
-        }
-      }
-
-      &_input_wrapper {}
-
-      &_input_icon_wrapper {
-        a {}
-      }
-
-      &_input_icon {}
-
-      &_btn_mobile {
-        display: inline-block;
-
-        img {}
-      }
+        & .content {}
+        & .footer {}
     }
-  }
-
-  &_input_wrapper {}
-
-  &_input_icon_wrapper {
-    a {}
-  }
-
-  &_input_icon {}
-
-  &_btn_mobile {
-    display: inline-block;
-
-    img {}
-  }
 }
-
-& .content {}
-
-& .footer {}
-
-
+@media screen and (max-width: 1030px) {
+    .layout {
+        & .header {
+            &_content {
+              position: relative;
+                .logo {
+                    .logo_icon {}
+                }
+            }
+            &_input_wrapper {
+            }
+            &_input_icon_wrapper {
+                a {}
+            }
+            &_input_icon {}
+            &_btn_mobile {
+                display: inline-block;
+                img {}
+            }
+        }
+        & .content {}
+        & .footer {}
+    }
+}
 @media screen and (max-width: 768px) {
     .layout {
         & .header {
@@ -323,52 +270,34 @@ a {
                 display: inline-block;
                 img {}
             }
-            &_input_wrapper {}
-
-            &_input_icon_wrapper {
-              a {}
-            }
-
-            &_input_icon {}
-
-            &_btn_mobile {
-              display: inline-block;
-
-              img {}
-            }
         }
-      }
+        & .content {}
+        & .footer {}
     }
-
+}
 @media screen and (max-width: 530px) {
-  .layout {
-    & .header {
-      &_content {
-        .logo {
-          .logo_icon {}
+    .layout {
+        & .header {
+            &_content {
+                .logo {
+                    .logo_icon {}
+                }
+            }
+            &_input_wrapper {
+            }
+            &_input_layout {
+                display: none;
+            }
+            &_input_icon_wrapper {
+                a {}
+            }
+            &_input_icon {}
+            &_btn_mobile {
+                img {}
+            }
         }
-      }
-
-      &_input_wrapper {}
-
-      &_input_layout {
-        display: none;
-      }
-
-      &_input_icon_wrapper {
-        a {}
-      }
-
-      &_input_icon {}
-
-      &_btn_mobile {
-        img {}
-      }
+        & .content {}
+        & .footer {}
     }
-
-    & .content {}
-
-    & .footer {}
-  }
 }
 </style>
