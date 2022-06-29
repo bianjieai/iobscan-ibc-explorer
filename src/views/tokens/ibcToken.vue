@@ -69,7 +69,7 @@ const { ibcChains, getIbcChains } = useIbcChains();
 const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
 
 const route = useRoute()
-const base_denom = route.query.token as string
+const base_denom = route.query.denom as string
 const chain_id = route.query.chain_id as string
 
 const { list, getList } = useGetIbcTokenList(base_denom)

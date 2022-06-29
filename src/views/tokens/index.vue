@@ -161,7 +161,7 @@ const goIbcToken = (denom: string) => {
   router.push({
     path: `/tokens/details`,
     query: {
-      token: denom
+      denom
     }
   })
 }
@@ -171,7 +171,7 @@ const goTransfer = (denom: string) => {
   router.push({
     path: '/transfers',
     query: {
-      symbol: denom
+      denom
     }
   })
 }
