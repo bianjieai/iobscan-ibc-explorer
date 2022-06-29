@@ -24,7 +24,7 @@
                             <a-card class="menu_card">
                                 <img
                                     class="card_img"
-                                    :src="item.icon ? item.icon : require('../../../assets/token-default.png')"
+                                    :src="item.icon ? item.icon : tokenDefaultImg"
                                 />
                                 <p class="card_title">{{ item.chain_name }}</p>
                                 <p class="card_value">{{ item.chain_id }}</p>
@@ -34,7 +34,7 @@
                             <a-card class="menu_card">
                                 <img
                                     class="card_img"
-                                    :src="item.icon ? item.icon : require('../../../assets/token-default.png')"
+                                    :src="item.icon ? item.icon : tokenDefaultImg"
                                 />
                                 <p class="card_title">{{ item.chain_name }}</p>
                                 <p class="card_value">{{ item.chain_id }}</p>
@@ -78,6 +78,7 @@
 <script setup>
 import NoDatas from '../../../components/NoDatas.vue';
 import { useMenus, useInterfaceActive, useAnchors, useGetBindElement } from '../hooks/useChainsListInfo';
+const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
 const props = defineProps({
     chainList: Object
 })

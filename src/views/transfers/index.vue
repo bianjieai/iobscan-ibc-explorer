@@ -800,9 +800,7 @@ onMounted(() => {
         &_line {
             position: absolute;
             top: 11px;
-            // bottom: 0;
             display: inline-block;
-            // width: 100%;
             height: 12px;
             background: linear-gradient(90deg, rgba(112, 136, 255, 0) 0%, rgba(61, 80, 255, 0.15) 100%);
             border-radius: 5px;
@@ -847,8 +845,6 @@ onMounted(() => {
         }
         &_bottom {
             margin-top: 16px;
-            // padding: 0 24px;
-            // background: #fff;
         }
     }
     &_table {
@@ -938,31 +934,25 @@ onMounted(() => {
 .status_select {
     width: 146px;
     margin: 0 8px;
+    ::v-deep .ant-select-arrow {
+        right: 8px;
+        color: rgba(164, 171, 192, 1);
+    }
+    ::v-deep .ant-select-selector{
+        height: 36px;
+        border: 1px solid var(--bj-border-color);
+        .ant-select-selection-item{
+            line-height: 34px;
+        }
+        .ant-select-selection-search {
+            border-right: 1px solid var(--bj-border-color);
+        }
+    
     &_default{
         color:var(--bj-text-second);
     }
     .status_select_title{
-    color: var(--bj-primary-color);
-    }
-    ::v-deep .ant-select-selector{
-        height: 36px;
-        .ant-select-selection-item{
-            line-height: 34px;
-        }
-    ::v-deep .ant-select-selector {
-        height: 36px;
-        border: 1px solid var(--bj-border-color);
-    }
-    ::v-deep .ant-select-selection-item {
-        color: var(--bj-text-third);
-        line-height: 36px;
-    }
-    ::v-deep .ant-select-selection-search {
-        border-right: 1px solid var(--bj-border-color);
-    }
-    ::v-deep .ant-select-arrow {
-        right: 8px;
-        color: rgba(164, 171, 192, 1);
+        color: var(--bj-primary-color);
     }
 }}
 
@@ -1170,13 +1160,9 @@ onMounted(() => {
         ::v-deep .ant-select-arrow {
         }
     }
-    .date_range {
-        width: 220px;
-    }
 }
-@media screen and (max-width: 630px) {
+@media screen and (max-width: 768px) {
     .transfer {
-        padding: 24px 16px 80px;
         &_header {
             &_container {
             }
@@ -1191,23 +1177,17 @@ onMounted(() => {
             }
         }
         &_middle {
-            margin-top: 60px;
+            margin-top: 72px;
             &_top {
             }
             &_left {
-                .flex(column, wrap, flex-start, flex-start);
                 .ant-select {
-                    margin-top: 12px;
-                    margin-left: 0;
-                    width: 220px;
                 }
             }
             &_right {
                 & .tip {
-                    margin-left: 0;
                 }
                 & button {
-                    margin-left: 7px;
                 }
             }
             &_bottom {
@@ -1265,7 +1245,7 @@ onMounted(() => {
         }
     }
 }
-@media screen and (max-width: 414px) {
+@media screen and (max-width: 574px) {
     .transfer {
         &_header {
             &_container {
@@ -1281,7 +1261,89 @@ onMounted(() => {
             &_top {
             }
             &_left {
+                flex-wrap: wrap;
                 .ant-select {
+                    margin-left: 0;
+                    margin-top: 12px;
+                }
+            }
+            &_right {
+                & .tip {
+                }
+                & button {
+                }
+            }
+            &_bottom {
+            }
+        }
+        &_table {
+            ::v-deep .ant-table-placeholder {
+            }
+            ::v-deep a, span {
+            }
+            .token {
+                &_icon {
+                }
+
+                &_num {
+                }
+
+                &_denom {
+                }
+            }
+            .status_icon {
+            }
+        }
+        &_bottom {
+            & .status_tips {
+                .status_log {
+                }
+
+                .status_tip {
+                }
+                .status_tip_success {
+                }
+                .status_tip_warning {
+                }
+                .status_tip_error {
+                }
+            }
+            & .table_pagination {
+                ::v-deep .ant-pagination-options {
+                }
+            }
+        }
+    }
+    .status_select {
+        ::v-deep .ant-select-selector {
+        }
+        ::v-deep .ant-select-selection-item {
+        }
+        ::v-deep .ant-select-selection-search {
+        }
+        ::v-deep .ant-select-arrow {
+        }
+    }
+}
+@media screen and (max-width: 420px) {
+    .transfer {
+       padding: 24px 16px 80px;
+        &_header {
+            &_container {
+            }
+            &_line {
+            }
+            &_title {
+            }
+            &_num {
+            }
+        }
+        &_middle {
+            &_top {
+            }
+            &_left {
+                .ant-select {
+                    width: 210px;
                 }
             }
             &_right {
@@ -1344,6 +1406,9 @@ onMounted(() => {
         }
         ::v-deep .ant-select-arrow {
         }
+    }
+    .date_range {
+        width: 210px;
     }
 }
 
