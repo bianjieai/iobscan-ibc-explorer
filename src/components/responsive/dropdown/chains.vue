@@ -66,7 +66,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { defaultTitle } from '@/constants'
+import { CHAINID, defaultTitle } from '@/constants'
 import { getRestString } from '@/helper/parseString';
 
 type TChainData = {
@@ -103,11 +103,11 @@ const handleDropdownData = ref<TChainData[]>()
 
 const setAllChains = (dropdownData: TChainData[] = props.dropdownData) => {
   if (dropdownData?.length > 0) {
-    const cosmosChain = dropdownData.filter(item => item.chain_name === 'Cosmos Hub')
-    const irishubChain = dropdownData.filter(item => item.chain_name === 'IRIS Hub')
+    const cosmosChain = dropdownData.filter(item => item.chain_name === CHAINID.COSMOSHUB)
+    const irishubChain = dropdownData.filter(item => item.chain_name === CHAINID.IRISHUB)
     let notIncludesIrisAndCosmosChains: TChainData[] = []
     dropdownData.forEach(item => {
-      if (item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub') {
+      if (item.chain_name !== CHAINID.COSMOSHUB && item.chain_name !== CHAINID.IRISHUB) {
         notIncludesIrisAndCosmosChains.push(item)
       }
     })

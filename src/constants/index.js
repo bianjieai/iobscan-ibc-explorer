@@ -349,6 +349,11 @@ const testChains = {
     chain:'chain'
   }
 
+  const CHAINID = {
+    COSMOSHUB: 'Cosmos Hub',
+    IRISHUB: 'IRIS Hub'
+  }
+
   export {
     testChains,
     ibcStatisticsTxsTest,
@@ -371,6 +376,7 @@ const testChains = {
     tableChainIDs,
     chainAddressPrefix,
     defaultTitle,
-    selectedType
+    selectedType,
+    CHAINID
   };
   
