@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { useIbcStatisticsChains } from '../../store/home/index';
 import { GET_IBCSTATISTICS, GET_IBCCHAINS, GET_IBCTXS, GET_IBCDENOMS, GET_IBCBASEDENOMS } from '../../store/action-types';
-import { ibcStatisticsChannelsDefault, channelsStatus } from '../../constants';
+import { ibcStatisticsChannelsDefault, ibcStatisticsDenomsDefault, channelsStatus } from '../../constants';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
@@ -22,7 +22,7 @@ export const useIbcStatistics = () => {
     }
 }
 export const useIbcChains = () => {
-    const ibcChains = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) : ibcStatisticsChainsStore.ibcChains;
+    const ibcChains = computed(() => ibcStatisticsChainsStore.ibcChains);
     const getIbcChains = ibcStatisticsChainsStore[GET_IBCCHAINS];
     return {
         ibcChains,
@@ -127,9 +127,11 @@ export const useInterfaceActive = () => {
                 });
             }
         } else if (msg?.includes && msg.includes('denom')) {
-            router.push({
-                name: 'Tokens',
-            });
+            if(msg !== ibcStatisticsDenomsDefault['denom_all'].statistics_name) {
+                router.push({
+                    name: 'Tokens',
+                });
+            }
         } else {
             // TODO shan 路由中不包含以上路由的提示
     

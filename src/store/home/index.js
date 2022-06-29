@@ -59,8 +59,8 @@ export const useIbcStatisticsChains = defineStore('home', {
         },
         async [GET_IBCCHAINS]() {
             const res = await getIbcChains();
-            sessionStorage.setItem('allChains', JSON.stringify(res));
             this.ibcChains = res;
+            sessionStorage.setItem('allChains', JSON.stringify(res));
         },
         async [GET_IBCDENOMS]() {
             const res = await getIbcDenoms();
