@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import { getRestString } from '@/helper/parseString';
+import { getRestString, getRestString2 } from '@/helper/parseString';
 import { TBaseDenoms } from '@/hooks/chainAndDenom.interface';
 import { computed } from 'vue';
 import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
@@ -22,6 +22,7 @@ interface IProps {
   denomsData: TBaseDenoms[]
   titleCanClick?: boolean
   token_type?: string
+  basePage?: boolean // 是否是 /tokens 页面
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -33,13 +34,13 @@ const tokenInfo = computed(() => {
  
  if (filterData) {
     return {
-      title: getRestString(filterData?.symbol,6,0),
+      title: props.basePage ? getRestString2(filterData.symbol, 6) : getRestString(filterData.symbol, 3, 8),
       subtitle: 'Authed',
-      imgSrc: filterData.icon
+      imgSrc: filterData.icon ? filterData.icon : new URL('../../../assets/token-default.png', import.meta.url).href
     }
   } else {
     return {
-      title: getRestString(props.denom,6,0),
+      title: props.basePage ? getRestString2(props.denom, 6) : getRestString(props.denom, 3, 8),
       subtitle: 'Other',
       imgSrc: new URL('../../../assets/token-default.png', import.meta.url).href
     }

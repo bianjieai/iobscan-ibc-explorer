@@ -41,15 +41,13 @@
               <span class="badge">{{ badgeText(item.chain_id) }}</span>
             </template>
 
-            <span
-              @click="onSelected(item.chain_name.length > 15 ? getRestString(item.chain_name, 3, 8) : item.chain_name, item.chain_id)"
+            <span @click="onSelected(formatLongTitleString(item.chain_name), item.chain_id)"
               :class="['chains-tag', isSelected(item.chain_id) ? 'visible_color visible_border' : '']"
               :key="item.chain_id">
-              <img :src="item.icon" width="24" height="24" class="mr-8" />{{ item.chain_name.length > 15
-                  ? getRestString(item.chain_name, 3, 8) : item.chain_name
+              <img :src="chainImg(item.icon)" width="24" height="24" class="mr-8" />{{
+                  formatLongTitleString(item.chain_name)
               }}
             </span>
-
           </a-badge>
 
         </div>
@@ -67,7 +65,7 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
 import { CHAINID, defaultTitle } from '@/constants'
-import { getRestString } from '@/helper/parseString';
+import { formatLongTitleString, getRestString } from '@/helper/parseString';
 
 type TChainData = {
   chain_id: string
@@ -135,7 +133,7 @@ onMounted(() => {
         const chain_name = filterData[0].chain_name
         selectedChain.value.push({
           chain_id: idArr[i],
-          chain_name
+          chain_name: formatLongTitleString(chain_name)
         })
       }
     }
@@ -148,7 +146,7 @@ const chainIdIput = ref<string | undefined>(undefined)
 const chain_a = computed(() => {
   if (chainIdIput.value) {
     const chain_a_input = chainIdIput.value.split(',')[0]
-    return chain_a_input.length > 15 ? getRestString(chain_a_input, 3, 8) : chain_a_input
+    return formatLongTitleString(chain_a_input)
   } else {
     return selectedChain.value[0]?.chain_name ?? 'All Chains'
   }
@@ -157,7 +155,7 @@ const chain_a = computed(() => {
 const chain_b = computed(() => {
   const chain_b_input = chainIdIput.value?.split(',')[1]
   if (chain_b_input) {
-    return chain_b_input.length > 15 ? getRestString(chain_b_input, 3, 8) : chain_b_input
+    return formatLongTitleString(chain_b_input)
   } else {
     return selectedChain.value[1]?.chain_name ?? 'All Chains'
   }
@@ -177,6 +175,11 @@ const badgeText = computed(() => (chain_id: TChainID) => {
     }
   }
 })
+
+const chainImg = (imgsrc: string) => {
+  if (imgsrc) return imgsrc
+  return new URL('../../../assets/default.png', import.meta.url).href
+}
 
 defineExpose({
   selectedChain,
@@ -198,7 +201,7 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
     chainIdIput.value = undefined// 清空
     selectedChain.value = []
   }
-  
+
   if (props.selectedDouble) { // 双选
     switch (selectedChain.value.length) {
       case 0:

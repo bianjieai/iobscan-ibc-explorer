@@ -1,7 +1,7 @@
 <template>
   <div class="table-warpper">
     <a-table :rowKey="rowKey" :columns="columnsSource" :data-source="dataSource" :pagination="false"
-      @change="onTableChange" :scroll="scroll">
+      :showSorterTooltip="false"  @change="onTableChange" :scroll="scroll">
       <template #bodyCell="{ column, record, index, text }">
         <template v-if="isKeyInNeedCustomColumns(column.key)">
           <slot :name="column.key" :column="column" :record="record" :text="text" :index="index"></slot>
@@ -268,6 +268,9 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
   // margin-bottom: 6px;
 }
 
+:deep(td.ant-table-column-sort) {
+  background: transparent;
+}
 
 .table-warpper {
   padding: 0 24px;

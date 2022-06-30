@@ -8,10 +8,10 @@ export function compareValues(key: string, order: CompareOrder = CompareOrder.AS
       return 0;
     }
 
-    const varA = (typeof getKeyValue(key, a) === 'string')
-      ? getKeyValue(key, a).toUpperCase() : getKeyValue(key, a);
-    const varB = (typeof getKeyValue(key, b) === 'string')
-      ? getKeyValue(key, b).toUpperCase() : getKeyValue(key, b);
+    const varA = ((typeof getKeyValue(key, a) === 'string') && isNaN(Number(getKeyValue(key, a))))
+      ? getKeyValue(key, a).toUpperCase() : Number(getKeyValue(key, a));
+    const varB = ((typeof getKeyValue(key, b) === 'string') && isNaN(Number(getKeyValue(key, b))))
+      ? getKeyValue(key, b).toUpperCase() : Number(getKeyValue(key, b));
 
     let comparison = 0;
     if (varA > varB) {

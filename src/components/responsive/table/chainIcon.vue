@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-import { getRestString } from '@/helper/parseString';
+import { formatLongTitleString, getRestString } from '@/helper/parseString';
 import { TBaseChains } from '@/hooks/chainAndDenom.interface';
 import { computed } from 'vue';
 import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
@@ -41,7 +41,7 @@ const computedTitle = computed(() => {
     title = chainInfo.value.title
   }
 
-  return title.length > 15 ? getRestString(title, 3, 8) : title
+  return formatLongTitleString(title)
 })
 
 const chainInfo = computed(() => {
@@ -50,7 +50,7 @@ const chainInfo = computed(() => {
     return {
       title: filterData.chain_name,
       subtitle: filterData.chain_id,
-      imgSrc: filterData.icon
+      imgSrc: filterData.icon ? filterData.icon : new URL('../../../assets/default.png', import.meta.url).href
     }
   } else {
     return {
@@ -61,8 +61,8 @@ const chainInfo = computed(() => {
   }
 })
 
-const formatChainID = (chainId: string)=>{
-    return ChainHelper.formatChainId(chainId);
+const formatChainID = (chainId: string) => {
+  return ChainHelper.formatChainId(chainId);
 }
 
 const emits = defineEmits<{

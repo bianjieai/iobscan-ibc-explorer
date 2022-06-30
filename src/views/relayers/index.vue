@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <PageTitle title="IBC Relayers" :subtitle="`${formatBigNumber(list.length, 0)} relayers found`" />
+    <PageTitle title="IBC Relayers" :subtitle="subtitle" />
     <div class="select flex items-center flex-wrap">
       <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" :chain_id="chain_id" @on-selected-chain="onSelectedChain"
         selected-double ref="chainDropdown" />
@@ -65,7 +65,7 @@ import { COLUMNS, STATUS_OPTIONS } from './constants'
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
 import { formatLastUpdated } from '@/helper/time-helper';
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
@@ -85,7 +85,7 @@ const chain_id = route.query.chain_id as string
 const status = route.query.status as TRelayerStatus
 
 const { ibcChains, getIbcChains } = useIbcChains();
-const { list, getList } = useGetRelayersList()
+const { list, getList, total } = useGetRelayersList()
 
 const needCustomColumns = [
   'relayer_name',
@@ -107,6 +107,14 @@ onMounted(() => {
   !sessionStorage.getItem('allChains') && getIbcChains();
 
   refreshList()
+})
+
+const subtitle = computed(() => {
+  if (!searchChain.value && !searchStatus.value) {
+    return `${formatBigNumber(total.value, 0)} ralyers found`
+  } else {
+    return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} ralyers found`
+  }
 })
 
 const refreshList = () => {
