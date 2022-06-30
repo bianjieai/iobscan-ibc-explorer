@@ -149,8 +149,7 @@
                                     <p class="tip_color">Received Token: {{ record.denoms.dc_denom || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="record.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${record.denoms.dc_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.denoms.sc_denom}&chain=${record.sc_chain_id}`">
-                            <!-- <router-link :to="`/tokens/details?token=${record.denoms.sc_denom}`"> -->
+                            <router-link :to="record.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`">
                                 <img
                                     class="token_icon hover"
                                     :src="record.symbolIcon || tokenDefaultImg"

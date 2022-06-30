@@ -6,11 +6,11 @@
             </div>
             <div class="list_item_info" :class="!item.expanded? 'list_item_line': ''">
                 <span class="list_item_number">{{ prefixInteger(index + 1, 3) }}</span>
-                <router-link class="list_item_link" :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.denoms.dc_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.denoms.sc_denom}&chain=${item.sc_chain_id}`">
+                <router-link class="list_item_link" :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.base_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.base_denom}&chain=${item.sc_chain_id}`">
                     <img class="list_item_icon" :src="item.symbolIcon || tokenDefaultImg" alt="icon" />
                 </router-link>
                 <div class="list_subItem" :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }">
-                    <router-link :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.denoms.dc_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.denoms.sc_denom}&chain=${item.sc_chain_id}`" class="list_subItem_title_container">
+                    <router-link :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.base_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.base_denom}&chain=${item.sc_chain_id}`" class="list_subItem_title_container">
                         <span class="list_subItem_value">{{ formatNum(item.symbolNum) || 0 }}</span>
                         <a-tooltip placement="topLeft">
                             <template #title>{{ item.symbolDenom || "" }}</template>

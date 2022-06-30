@@ -74,7 +74,7 @@ import { formatPrice, formatSupply, formatAmount } from '@/helper/tablecell-help
 
 const router = useRouter()
 const route = useRoute()
-const chain_id = route.query.chain_id as string
+const chain_id = route.query.chain as string
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()

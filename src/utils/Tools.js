@@ -38,7 +38,7 @@ export default class Tools {
 
     static findDenomSymbol(ibcDenoms, denomStr, chainId) {
         if (ibcDenoms) {
-            const findDenom = ibcDenoms.find(
+            const findDenom = ibcDenoms?.find(
                 (denom) => denom.denom === denomStr && denom.chain_id === chainId,
             );
             if (findDenom) {

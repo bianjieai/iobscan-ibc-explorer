@@ -86,7 +86,7 @@ import Loading from "../../../components/Loading.vue";
 import TransferDetailsCard from "../components/TransferDetailsCard.vue";
 import CopyComponent from "../../../components/CopyComponent.vue";
 import { useGetTokens, useTransfersDetailsInfo } from '../composable';
-const { ibcDenoms } = useGetTokens();
+const {ibcDenoms} = useGetTokens();
 const {
     ibcTransferOutTxHash,
     ibcTransferInTxHash,

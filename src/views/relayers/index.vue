@@ -80,7 +80,8 @@ import { formatBigNumber } from '@/helper/parseString';
 
 const route = useRoute()
 const router = useRouter()
-const chain_id = route.query.chain_id as string
+
+const chain_id = route.query.chain as string
 const status = route.query.status as TRelayerStatus
 
 const { ibcChains, getIbcChains } = useIbcChains();
