@@ -214,7 +214,7 @@
                         <img
                             class="status_icon"
                             style="margin: 0 24px;"
-                            :src="`/src/assets/status${record.status}.png`"
+                            :src="getImageUrl(record.status)"
                         />
                         <a-popover placement="right" destroyTooltipOnHide>
                             <template #content>
@@ -278,9 +278,10 @@
         <div class="transfer_bottom" v-if="tableCount.value">
             <span class="status_tips">
                 <span class="status_log">Status:</span>
-                <span class="status_tip status_tip_success"></span> Success
-                <span class="status_tip status_tip_warning"></span> Processing
-                <span class="status_tip status_tip_error"></span> Failed
+                <span class="status_tip" v-for="(item, index) in ibcTxStatusDesc" :key="index">
+                    <img :src="getImageUrl(item.status)" alt="">
+                    <span>{{item.label}}</span>
+                </span>
             </span>
             <a-pagination
                 class="table_pagination"
@@ -295,7 +296,7 @@
 <script setup>
 import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
-import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus,defaultTitle, unknownSymbol } from '../../constants';
+import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus, ibcTxStatusDesc, defaultTitle, unknownSymbol } from '../../constants';
 import Tools from '../../utils/Tools';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
@@ -342,6 +343,9 @@ const dayjs = (djs?.default || djs);
 
 const formatDate = (time)=>{
     return dayjs(time).format("YYYY-MM-DD HH:mm:ss")
+}
+const getImageUrl = (status) => {
+    return new URL(`../../assets/status${status}.png`, import.meta.url).href;
 }
 
 let chainId = router?.query.chain;
@@ -474,11 +478,11 @@ const isIbcTxTotalAndHashFilter = computed(() => {
     }
 })
 const setAllChains = (allChains) => {
-    if (allChains?.all) {
-        const cosmosChain = allChains.all.filter(item => item.chain_name === 'Cosmos Hub')
-        const irishubChain = allChains.all.filter(item => item.chain_name === 'IRIS Hub')
+    if (allChains?.value?.all) {
+        const cosmosChain = allChains.value.all.filter(item => item.chain_name === 'Cosmos Hub')
+        const irishubChain = allChains.value.all.filter(item => item.chain_name === 'IRIS Hub')
         let notIncludesIrisAndCosmosChains = []
-        allChains.all.forEach(item => {
+        allChains.value.all.forEach(item => {
             if (item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub') {
                 notIncludesIrisAndCosmosChains.push(item)
             }
@@ -488,7 +492,7 @@ const setAllChains = (allChains) => {
                 return a.chain_name.toLowerCase() < b.chain_name.toLowerCase() ? -1 : a.chain_name.toLowerCase() > b.chain_name.toLowerCase() ? 1 : 0
             })
         }
-        ibcChains.all = [
+        ibcChains.value.all = [
             ...cosmosChain,
             ...irishubChain,
             ...notIncludesIrisAndCosmosChains,
@@ -501,19 +505,19 @@ if (!Object?.keys(allChains).length) {
 }
 setAllChains(allChains)
 watch(()=>allChains, (newValue, oldValue) => {
-    if (newValue?.all) {
+    if (newValue?.value?.all) {
         setAllChains(newValue)
     }
-})
-const findIbcChainIcon = computed(() => (chainId) => {
-    if (ibcChains && ibcChains.all) {
-        const result = ibcChains.all.find((item) => item.chain_id === chainId);
+}, {immeidate: true})
+const findIbcChainIcon = (chainId) => {
+    if (ibcChains && ibcChains.value.all) {
+        const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
         if (result) {
             return result.icon || tokenDefaultImg;
         }
     }
     return tokenDefaultImg;
-});
+};
 const onClickDropdownItem = (type, item, custom) => {
     pagination.current = 1;
     switch (type) {
@@ -877,7 +881,6 @@ onMounted(() => {
                 width: 32px;
                 height: 32px;
                 border-radius: 50%;
-                border: 1px solid rgba(0, 0, 0, 0.2);
                 margin-right: 8px;
                 cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
             }
@@ -918,19 +921,11 @@ onMounted(() => {
             background: #F8F9FC;
             border-radius: 8px;
             .status_tip {
-                margin-left: 8px;
-                width: 8px;
-                height: 8px;
-                border-radius: 50%;
-            }
-            .status_tip_success {
-                background: var(--bj-success);
-            }
-            .status_tip_warning {
-                background: var(--bj-processing);
-            }
-            .status_tip_error {
-                background: var(--bj-failed);
+                .flex(row, wrap, flex-start, center);
+                img {
+                    margin-right: 8px;
+                    height: 8px;
+                }
             }
         }
         & .table_pagination {
@@ -944,6 +939,7 @@ onMounted(() => {
 .status_select {
     width: 146px;
     margin: 0 8px;
+    color: var(--bj-text-second);
     ::v-deep .ant-select-arrow {
         right: 8px;
         color: rgba(164, 171, 192, 1);
@@ -952,6 +948,7 @@ onMounted(() => {
         height: 36px;
         border: 1px solid var(--bj-border-color);
         .ant-select-selection-item{
+            text-align: center;
             line-height: 34px;
         }
         .ant-select-selection-search {
@@ -972,6 +969,7 @@ onMounted(() => {
     height: 36px;
     ::v-deep .ant-picker-input > input{
         color: var(--bj-primary-color);
+        text-align: center;
         &::placeholder{
             color: var(--bj-text-second);
         }
@@ -1067,12 +1065,6 @@ onMounted(() => {
             & .status_tips {
                 .status_tip {
                 }
-                .status_tip_success {
-                }
-                .status_tip_warning {
-                }
-                .status_tip_error {
-                }
             }
             & .table_pagination {
                 ::v-deep .ant-pagination-options {
@@ -1146,12 +1138,6 @@ onMounted(() => {
             & .status_tips {
                 .status_tip {
                 }
-                .status_tip_success {
-                }
-                .status_tip_warning {
-                }
-                .status_tip_error {
-                }
             }
             & .table_pagination {
                 margin-top: 16px;
@@ -1224,18 +1210,11 @@ onMounted(() => {
         &_bottom {
             padding: 16px;
             & .status_tips {
-                width: 100%;
                 .status_log {
                 }
 
                 .status_tip {
                     margin-left: 0;
-                }
-                .status_tip_success {
-                }
-                .status_tip_warning {
-                }
-                .status_tip_error {
                 }
             }
             & .table_pagination {
@@ -1305,17 +1284,14 @@ onMounted(() => {
             }
         }
         &_bottom {
+            padding: 8px 8px 0 8px;
             & .status_tips {
+                width: 100%;
                 .status_log {
                 }
 
                 .status_tip {
-                }
-                .status_tip_success {
-                }
-                .status_tip_warning {
-                }
-                .status_tip_error {
+                    margin-bottom: 8px;
                 }
             }
             & .table_pagination {
@@ -1393,12 +1369,6 @@ onMounted(() => {
 
                 .status_tip {
                     margin-left: 0;
-                }
-                .status_tip_success {
-                }
-                .status_tip_warning {
-                }
-                .status_tip_error {
                 }
             }
             & .table_pagination {

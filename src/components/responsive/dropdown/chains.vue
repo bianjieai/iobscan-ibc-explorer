@@ -369,15 +369,14 @@ const confirmChains = () => {
 
 .badge {
   border-radius: 16px;
-  line-height: 32px;
+  line-height: 14px;
   color: #fff;
   background-color: var(--bj-primary-color);
-  top: -8px;
-  transform: translate(0, 0);
-  transform: scale(.5);
-  font-size: 20px; //  展示10px
-  padding: 0 16px;
+  right: 36px;
+  font-size: 12px; //  展示10px
+  padding: 1px 8px;
   white-space: nowrap;
+  z-index: 1;
 }
 
 :deep(.ant-badge) {

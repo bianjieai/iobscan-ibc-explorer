@@ -64,6 +64,15 @@
   --border-radius-normal: 4px;
 }
 
+.ant-table-cell::before {
+    width: 0 !important;
+}
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    font-weight: 400 !important;
+}
+.ant-picker-focused {
+    border-color: var(--bj-primary-color) !important;
+}
 @media screen and (max-width: 630px) {
     .ant-picker-panels {
         flex-direction: column;

@@ -261,6 +261,20 @@ const testChains = {
     REFUNDED: 4,
     SETTING: 5,
   };
+  const ibcTxStatusDesc = [
+    {
+        label: 'Success',
+        status: 1
+    },
+    {
+        label: 'Failed',
+        status: 2
+    },
+    {
+        label: 'Processing',
+        status: 3
+    }
+  ]
   const channelsStatus = {
     channelOpenedStatus: '1',
     channelClosedStatus: '2',
@@ -368,6 +382,7 @@ const testChains = {
     ibcStatisticsDenomsDefault,
     ibcStatisticsTxsDefault,
     ibcTxStatus,
+    ibcTxStatusDesc,
     channelsStatus,
     ibcTxStatusSelectOptions,
     transfersStatusOptions,
