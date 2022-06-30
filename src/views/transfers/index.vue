@@ -294,6 +294,9 @@
 </template>
 
 <script setup>
+import successImg from '../../assets/status1.png'
+import processingImg from '../../assets/status3.png'
+import failedImg from '../../assets/status2.png'
 import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
 import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus, ibcTxStatusDesc, defaultTitle, unknownSymbol } from '../../constants';
@@ -926,6 +929,10 @@ onMounted(() => {
                     margin-right: 8px;
                     height: 8px;
                 }
+            }
+            .status_img{
+                width: 22px;
+                margin: 0 16px;
             }
         }
         & .table_pagination {

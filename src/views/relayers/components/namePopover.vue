@@ -15,7 +15,7 @@
 import { TBaseChains } from '@/hooks/chainAndDenom.interface';
 import { computed } from 'vue';
 import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
-import { getRestString } from '@/helper/parseString';
+import { formatLongTitleString, getRestString } from '@/helper/parseString';
 interface IProps {
   relayer_name: string
   imgSrc: string
@@ -33,7 +33,7 @@ const findChainName = (chainId: string) => {
   if (Array.isArray(props.ibcChains)) {
     const ibcChain = props.ibcChains.find(item => item.chain_id === chainId);
     if (ibcChain) {
-      return ibcChain.chain_name.length > 15 ? getRestString(ibcChain.chain_name, 3, 8) : ibcChain.chain_name
+      return formatLongTitleString(ibcChain.chain_name)
     } else {
       return 'Unknown'
     }

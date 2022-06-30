@@ -156,10 +156,13 @@ const formatChainID = (chainId)=>{
     }
     .card_title {
         margin-top: 6px;
+        max-width: 152px;
         font-size: var(--bj-font-size-sub-title);
         line-height: var(--bj-font-size-sub-title);
         font-family: Montserrat-SemiBold, Montserrat;
         font-weight: 600;
+        overflow:hidden;
+        text-overflow:ellipsis;
         color: var(--bj-text-second);
     }
     .card_value {

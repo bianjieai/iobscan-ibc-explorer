@@ -34,12 +34,12 @@
                     <span class="hover">{{ getRestString(item.sc_addr, 6, 5) }}</span>
                 </router-link>-->
                         <span>{{ getRestString(item.sc_addr, 6, 6) || "--" }}</span>
-                    </a-popover>
+                    </a-popover> 
                 </span>
             </div>
         </div>
 
-        <img class="status_icon" :src="`/src/assets/status${item.status}.png`" alt="status" />
+        <img class="status_icon" :src="getImageUrl(item.status)" alt="status" />
         <div class="out_hash_address_wrap">
             <router-link :to="`/chains`">
                 <img class="out_hash_address_icon" :src="findIbcChainIcon(item.dc_chain_id)" />
@@ -84,12 +84,16 @@
 
 <script setup>
 import { getRestString } from '../../../helper/parseString';
-import { useFindIbcChainIcon } from '../hooks/useTransferList';
+import { useFindIbcChainIcon } from '../hooks/useTransferList'; 
 const props = defineProps({
     item: Object,
     ibcChains: Object
 })
 const { findIbcChainIcon } = useFindIbcChainIcon(props);
+
+const getImageUrl = (name) => {
+    return new URL(`../../../assets/status${name}.png`, import.meta.url).href
+}
 </script>
 
 <style lang="less" scoped>

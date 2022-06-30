@@ -26,15 +26,18 @@
     <div class="list_bottom" >
       <span class="status_tips" v-if="transferList && transferList.length">
         <span class="status_log">Status:</span>
-        <span class="status_tip status_tip_success"></span> Success
-        <span class="status_tip status_tip_warning"></span> Processing
-        <span class="status_tip status_tip_error"></span> Failed
+        <img class="status_img" :src="successImg" alt=""> Success
+        <img class="status_img" :src="processingImg" alt=""> Processing
+        <img class="status_img" :src="failedImg" alt=""> Failed
       </span>
     </div>
   </div>
 </template>
 
 <script setup>
+import successImg from '../../../assets/status1.png'
+import processingImg from '../../../assets/status3.png'
+import failedImg from '../../../assets/status2.png'
 import TransferListItem from './TransferListItem.vue';
 import NoDatas from '../../../components/NoDatas.vue';
 import { useInterfaceActive } from '../hooks/useTransferList';
@@ -104,6 +107,10 @@ const { onClickViewAll, clickListItem, itemDidExpand } = useInterfaceActive(emit
       .status_tip_error {
         background-color: var(--bj-failed);
       }
+    }
+    .status_img{
+      width: 22px;
+      margin: 0 16px;
     }
   }
 }

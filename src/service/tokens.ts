@@ -32,6 +32,7 @@ const getIbcTokenListUrl = (base_denom: string) => `${urlPrefix}/ibc/${base_deno
 
 export const useGetTokenList = () => {
   const list = ref([])
+  const total = ref(0)
 
   const getList = async (params: TTokenListParams = {}) => {
     const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...params } })
@@ -41,6 +42,9 @@ export const useGetTokenList = () => {
     if (code === 0) {
       const { items } = data
       list.value = items
+      if (!params.chain && !params.base_denom && !params.token_type) {
+        total.value = items.length
+      }
     } else {
       console.error(message)
     }
@@ -48,6 +52,7 @@ export const useGetTokenList = () => {
 
   return {
     list,
+    total,
     getList
   }
 }
