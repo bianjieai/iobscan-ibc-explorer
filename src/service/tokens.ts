@@ -28,7 +28,7 @@ export const baseParams: TBaseParams = {
 const urlPrefix = import.meta.env.VITE_BASE_GO_API
 
 const getTokenListUrl = `${urlPrefix}/ibc/tokenList`
-const getIbcTokenListUrl = (base_denom: string) => `${urlPrefix}/ibc/${base_denom}/ibcTokenList`
+const getIbcTokenListUrl = (base_denom: string) => `${urlPrefix}/ibc/${base_denom.replace('ibc/', '')}/ibcTokenList`
 
 export const useGetTokenList = () => {
   const list = ref([])
