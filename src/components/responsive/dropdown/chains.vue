@@ -1,5 +1,5 @@
 <template>
-  <a-dropdown v-model:visible="visible" :trigger="['click']">
+  <a-dropdown v-model:visible="visible" :trigger="['click']" @visibleChange="visibleChange">
     <div
       :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']">
       <div
@@ -97,6 +97,7 @@ type TSelectedChain = {
   chain_name: TChainName,
 }
 
+let backupDropdownData:TSelectedChain[] = []
 const handleDropdownData = ref<TChainData[]>()
 
 const setAllChains = (dropdownData: TChainData[] = props.dropdownData) => {
@@ -196,6 +197,13 @@ const submitChain = (chain_id?: string) => {
   // chainIdIput.value = undefined // reset
 }
 
+const visibleChange = (visible: boolean) => {
+  if (!props.selectedDouble) return
+  if (!visible && selectedChain.value.length === 1) {
+    selectedChain.value = backupDropdownData
+  }
+}
+
 const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
   if (chainIdIput.value || chainIdIput.value === '') {
     chainIdIput.value = undefined// 清空
@@ -216,6 +224,7 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
             chain_name,
             chain_id
           })
+          backupDropdownData = selectedChain.value // backup
           submitChain(`${selectedChain.value[0].chain_id},${selectedChain.value[1].chain_id}`)
         }
         break
