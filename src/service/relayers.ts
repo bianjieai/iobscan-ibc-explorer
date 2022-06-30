@@ -14,6 +14,7 @@ const getRelayersListUrl = `${urlPrefix}/ibc/relayerList`
 
 export const useGetRelayersList = () => {
   const list = ref([])
+  const total = ref(0)
 
   const getList = async (params: TRelayersListParams = {}) => {
     const result = await HttpHelper.get(getRelayersListUrl, {
@@ -27,6 +28,9 @@ export const useGetRelayersList = () => {
     if (code === 0) {
       const { items } = data
       list.value = items ?? []
+      if (!params.chain && !params.status) {
+        total.value = items.length
+      }
     } else {
       console.error(message)
     }
@@ -34,6 +38,7 @@ export const useGetRelayersList = () => {
 
   return {
     list,
+    total,
     getList
   }
 }
