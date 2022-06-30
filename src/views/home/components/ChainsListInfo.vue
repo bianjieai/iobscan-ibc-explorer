@@ -179,6 +179,9 @@ const formatChainID = (chainId)=>{
 
         &_item {
             width: 100%;
+            ::v-deep .ant-anchor-link-title {
+                cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default;
+            }
         }
     }
     .nodatas_icon {
