@@ -194,7 +194,11 @@ const submitChain = (chain_id?: string) => {
 }
 
 const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
-  chainIdIput.value = undefined // 清空
+  if (chainIdIput.value || chainIdIput.value === '') {
+    chainIdIput.value = undefined// 清空
+    selectedChain.value = []
+  }
+  
   if (props.selectedDouble) { // 双选
     switch (selectedChain.value.length) {
       case 0:
@@ -254,10 +258,10 @@ const confirmChains = () => {
       submitChain(chainIdIput.value.replace(/，/, ','))
     } else {
       if (chainIdIput.value) {
-        selectedChain.value.push({
+        selectedChain.value = [{
           chain_name: chainIdIput.value,
           chain_id: chainIdIput.value
-        })
+        }]
       }
 
       submitChain(`${chainIdIput.value},allchain`)
