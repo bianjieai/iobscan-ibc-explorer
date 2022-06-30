@@ -4,7 +4,7 @@
 
 import { TBaseDenoms } from "@/hooks/chainAndDenom.interface"
 import { isString } from "./object-helper"
-import { formatBigNumber, formatNum } from "./parseString"
+import { formatBigNumber, formatPriceNumber } from "./parseString"
 
 /**
  * 
@@ -17,7 +17,7 @@ export const formatPrice = (price: number | string, numberOfDecimal: number = 4)
     return `--`
   }
 
-  const _formatNum = formatNum(price)
+  const _formatNum = formatPriceNumber(price)
   if (isString(_formatNum)) {
     return `${_formatNum}`
   } else {

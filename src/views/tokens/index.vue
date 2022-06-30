@@ -9,14 +9,14 @@
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
-    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS">
+    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
       <template #base_denom="{ record, column }">
-        <TokenIcon :token_type="record.token_type" :denom="record[column.key]" :denoms-data="ibcBaseDenoms.value" />
+        <TokenIcon base-page title-can-click @click-title="goIbcToken(record.base_denom)" :token_type="record.token_type" :denom="record[column.key]" :denoms-data="ibcBaseDenoms.value" />
       </template>
       <template #price="{ record, column }">
         <a-popover>
           <template #content>
-            <div class="popover-c">{{ `${record.currency} ${formatPrice(record[column.key])}` }}</div>
+            <div class="popover-c">{{ `${record.currency} ${record[column.key]}` }}</div>
           </template>
           <div>{{ `${record.currency} ${formatPrice(record[column.key])}` }}</div>
         </a-popover>
@@ -66,7 +66,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import TokenIcon from '@/components/responsive/table/tokenIcon.vue';
 import { useGetIbcDenoms, useIbcChains } from '../home/composable';
-import { formatBigNumber, formatNum } from '@/helper/parseString'
+import { formatBigNumber, formatNum, getRestString } from '@/helper/parseString'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useGetTokenList } from '@/service/tokens';
 import { formatPrice, formatSupply, formatAmount } from '@/helper/tablecell-helper';
@@ -78,7 +78,7 @@ const chain_id = route.query.chain_id as string
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
-const { list, getList } = useGetTokenList()
+const { list, getList, total } = useGetTokenList()
 
 
 const needCustomColumns = [
@@ -101,16 +101,25 @@ const searchDenom = ref()
 const searchChain = ref<string | undefined>(chain_id)
 const searchStatus = ref<'Authed' | 'Other'>()
 
+// todo 逻辑需要重写
+// const subtitle = computed(() => {
+//   if (Array.isArray(ibcChains.value?.all)) {
+//     const chain_name = ibcChains.value?.all.filter((item: any) => item.chain_id === searchChain.value)[0]?.chain_name ?? 'Unknown'
+//     if (searchChain.value) {
+//       return `${formatBigNumber(list.value.length, 0)} tokens found in ${chain_name.length > 15 ? getRestString(chain_name, 3, 8) : chain_name}`
+//     } else {
+//       return `${formatBigNumber(list.value.length, 0)} tokens found`
+//     }
+//   } else {
+//     return ``
+//   }
+// })
+
 const subtitle = computed(() => {
-  if (Array.isArray(ibcChains.value?.all)) {
-    const chain_name = ibcChains.value?.all.filter((item: any) => item.chain_id === chain_id)[0]?.chain_name ?? 'Unknown'
-    if (chain_id) {
-      return `${formatBigNumber(list.value.length, 0)} tokens found in ${chain_name}`
-    } else {
-      return `${formatBigNumber(list.value.length, 0)} tokens found`
-    }
+  if (!searchChain.value && !searchStatus.value && !searchDenom.value) {
+    return `${formatBigNumber(total.value, 0)} tokens found`
   } else {
-    return ``
+    return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} tokens found`
   }
 })
 
@@ -145,16 +154,18 @@ const onSelectedStatus = (status?: string | number) => {
 }
 
 const resetSearchCondition = () => {
-  chainDropdown.value.selectedChain = []
-  chainDropdown.value.chainIdIput =  undefined
-  statusDropdown.value.selectOption = []
-  tokensDropdown.value.selectToken = []
-  tokensDropdown.value.tokenInput = undefined
-  searchDenom.value = undefined
-  searchChain.value = undefined
-  searchStatus.value = undefined
-  // reset list
-  getList()
+  // chainDropdown.value.selectedChain = []
+  // chainDropdown.value.chainIdIput = undefined
+  // statusDropdown.value.selectOption = []
+  // tokensDropdown.value.selectToken = []
+  // tokensDropdown.value.tokenInput = undefined
+  // searchDenom.value = undefined
+  // searchChain.value = undefined
+  // searchStatus.value = undefined
+  // // reset list
+  // getList()
+
+  location.href = '/tokens'
 }
 
 const goIbcToken = (denom: string) => {
