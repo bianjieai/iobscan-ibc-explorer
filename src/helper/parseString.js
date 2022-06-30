@@ -16,7 +16,7 @@ function getLasttyString(string) {
 }
 
 function getRestString2(string, length) {
-  if (!isString(string)) return string
+  if (!isString(string) || String(string).length <= length) return string
   return `${string.substr(0, length)}...`
 }
 

@@ -38,7 +38,7 @@
       </template>
 
       <template #receive_txs="{ record, column }">
-        <div class="hover-cursor" @click="goTransfer(record.chain_id)">{{ formatBigNumber(record[column.key], 0) }}
+        <div class="hover-cursor" @click="goTransfer(`${record.chain_id},allchain`)">{{ formatBigNumber(record[column.key], 0) }}
         </div>
       </template>
     </BjTable>

@@ -36,7 +36,7 @@ export const useGetChannelsList = () => {
       console.error(message)
     }
   }
-
+  getList(); // todo taishan 为了获取 total, 后期优化
   return {
     list,
     total,
