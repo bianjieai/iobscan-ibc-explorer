@@ -80,24 +80,6 @@ const isShowLink = (address, chainID) => {
     return isShowLink
 
 }
-const setExplorerLink = (address, chainID) => {
-    let explorerLink = ''
-    if (address && chainID) {
-        if (chainID === tableChainIDs.irishub && address) {
-            const addressPrefix = getAddressPrefix(address)
-            if (addressPrefix === chainAddressPrefix.irishubPrefix) {
-                explorerLink = `${config.IRISHUB_IOBSCAN_LINK}${address}`
-            }
-        }
-        if (chainID === tableChainIDs.cosmoshub && address) {
-            const addressPrefix = getAddressPrefix(address)
-            if (addressPrefix === chainAddressPrefix.cosmoshubPrefix) {
-                explorerLink = `${config.COSMOSHUB_IOBSCAN_LINK}${address}`
-            }
-        }
-    }
-    return explorerLink
-}
 
 </script>
 
