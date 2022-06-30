@@ -350,6 +350,11 @@ const testChains = {
   }
   const unknownSymbol = 'unknown';
 
+  const CHAINID = {
+    COSMOSHUB: 'Cosmos Hub',
+    IRISHUB: 'IRIS Hub'
+  }
+
   export {
     testChains,
     ibcStatisticsTxsTest,
@@ -373,6 +378,7 @@ const testChains = {
     chainAddressPrefix,
     defaultTitle,
     selectedType,
-    unknownSymbol
+    unknownSymbol,
+    CHAINID
   };
   

@@ -36,7 +36,7 @@
           </a-badge>
         </div>
         <div class="flex flex-wrap">
-          <a-badge v-for="(item,index) in handleDropdownData" :key="index">
+          <a-badge v-for="(item, index) in handleDropdownData" :key="index">
             <template #count v-if="needBadge && isSelected(item.chain_id)">
               <span class="badge">{{ badgeText(item.chain_id) }}</span>
             </template>
@@ -65,8 +65,8 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from 'vue';
-import { defaultTitle } from '@/constants'
+import { computed, onMounted, ref, watch } from 'vue';
+import { CHAINID, defaultTitle } from '@/constants'
 import { getRestString } from '@/helper/parseString';
 
 type TChainData = {
@@ -86,6 +86,11 @@ const props = withDefaults(defineProps<IProps>(), {
   dropdownData: (sessionStorage.getItem('allChains') && JSON.parse(sessionStorage.getItem('allChains')!))?.all ?? []
 })
 
+
+watch(() => props.dropdownData, (_new, _old) => {
+  if (_new) setAllChains(_new)
+})
+
 type TChainName = string
 type TChainID = string | 'allchain'
 
@@ -96,13 +101,13 @@ type TSelectedChain = {
 
 const handleDropdownData = ref<TChainData[]>()
 
-const setAllChains = () => {
-  if (props.dropdownData.length > 0) {
-    const cosmosChain = props.dropdownData.filter(item => item.chain_name === 'Cosmos Hub')
-    const irishubChain = props.dropdownData.filter(item => item.chain_name === 'IRIS Hub')
+const setAllChains = (dropdownData: TChainData[] = props.dropdownData) => {
+  if (dropdownData?.length > 0) {
+    const cosmosChain = dropdownData.filter(item => item.chain_name === CHAINID.COSMOSHUB)
+    const irishubChain = dropdownData.filter(item => item.chain_name === CHAINID.IRISHUB)
     let notIncludesIrisAndCosmosChains: TChainData[] = []
-    props.dropdownData.forEach(item => {
-      if (item.chain_name !== 'Cosmos Hub' && item.chain_name !== 'IRIS Hub') {
+    dropdownData.forEach(item => {
+      if (item.chain_name !== CHAINID.COSMOSHUB && item.chain_name !== CHAINID.IRISHUB) {
         notIncludesIrisAndCosmosChains.push(item)
       }
     })

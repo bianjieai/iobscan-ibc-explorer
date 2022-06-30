@@ -28,7 +28,8 @@ export const useIbcTxs = () => {
 }
 
 export const useIbcChains = () => {
-    const ibcChains = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) : {};
+    const ibcChains = computed(() => ibcStatisticsChainsStore.ibcChains);
+    
     const getIbcChains = ibcStatisticsChainsStore[GET_IBCCHAINS];
     return {
         ibcChains,

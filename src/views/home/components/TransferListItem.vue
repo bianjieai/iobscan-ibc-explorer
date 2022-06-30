@@ -12,7 +12,10 @@
                 <div class="list_subItem" :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }">
                     <div class="list_subItem_title_container">
                         <span class="list_subItem_value">{{ formatNum(item.symbolNum) || 0 }}</span>
-                        <span class="list_subItem_title">{{ item.symbolDenom || "" }}</span>
+                        <a-tooltip placement="topLeft">
+                            <template #title>{{ item.symbolDenom || "" }}</template>
+                            <span class="list_subItem_title">{{ item.symbolDenom || "" }}</span>
+                        </a-tooltip>
                     </div>
         
                     <div class="list_subItem_adress_container">
@@ -150,6 +153,10 @@ const setExplorerLink = (address, chainID) => {
                 font-weight: 400;
                 color: var(--bj-text-third);
                 line-height: var(--bj-font-size-normal);
+                width: 150px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
         }
     }
@@ -211,10 +218,15 @@ const setExplorerLink = (address, chainID) => {
                         display: none;
                     }
                 }
-                &_title_container {}
+                &_title_container {
+                    overflow: auto;
+                    text-overflow: e;
+                }
                 &_value {}
 
-                &_title {}
+                &_title {
+                    width: 100%;
+                }
             }
         }
         &_line{
