@@ -57,9 +57,17 @@ export const formatSupply = (supply: number | string, denom: string, baseDenomDa
 
 export const formatAmount = (amount: number | string, denom?: string, baseDenomData?: TBaseDenoms[], numberOfDecimal: number = 2) => {
   if (amount === -1 || amount === '-1' || amount === '') {
-    return `--`
+    return {
+      title: '--',
+      popover: '--'
+    }
   }
-  if (!denom && !baseDenomData) return formatBigNumber(amount, numberOfDecimal)
+  if (!denom && !baseDenomData) {
+    return {
+      title: formatBigNumber(amount, numberOfDecimal),
+      popover: formatBigNumber(amount, numberOfDecimal)
+    }
+  }
   const scale = getScale(denom, baseDenomData)
   let result = 0
 
@@ -69,7 +77,11 @@ export const formatAmount = (amount: number | string, denom?: string, baseDenomD
     result = Number(amount)
   }
 
-  return formatBigNumber(result, numberOfDecimal)
+  return {
+    popover: result,
+    title: formatBigNumber(result, numberOfDecimal)
+  }
+
 }
 
 export const formatTransfer_success_txs = (transfer_success_txs: number, transfer_total_txs: number) => {
