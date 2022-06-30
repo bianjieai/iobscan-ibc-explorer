@@ -303,7 +303,6 @@ import Tools from '../../utils/Tools';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
 import * as djs from 'dayjs';
-import config from "../../../config/config.json";
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute } from 'vue-router';
 import { useClearInterval } from '../home/composable';

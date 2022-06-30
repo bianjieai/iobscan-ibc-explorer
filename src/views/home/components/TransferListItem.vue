@@ -38,7 +38,6 @@ import tokenDefaultImg from '../../../assets/token-default.png';
 import expandImg from '../../../assets/expand.png';
 import packUpImg from '../../../assets/pack_up.png';
 import { chainAddressPrefix, tableChainIDs, ibcTxStatus } from "../../../constants";
-import config from "../../../../config/config.json";
 import { useIsExpand } from '../hooks/useTransferList';
 const props = defineProps({
     isFinal: Boolean,

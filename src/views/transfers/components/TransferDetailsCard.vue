@@ -93,7 +93,6 @@
 import Tools from "../../../utils/Tools";
 import moveDecimal from 'move-decimal-point';
 import { chainAddressPrefix, tableChainIDs } from "../../../constants";
-import config from '../../../../config/config.json'
 import { ref } from 'vue'
 import * as djs from 'dayjs'
 import { getRestString } from "../../../helper/parseString";

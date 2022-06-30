@@ -54,9 +54,6 @@ export default ({ mode }) => {
       },
       host: '0.0.0.0',
       port: 3000,
-      // proxy: {
-      //   [env.VITE_BASE_API]: env.VITE_BASE_URL
-      // }
     },
     build: {
       terserOptions: {
