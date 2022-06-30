@@ -138,7 +138,6 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 
-const VITE_BASE_URL = import.meta.env.VITE_BASE_URL // base_url
 
 const router = createRouter({
     history: createWebHistory('/'),

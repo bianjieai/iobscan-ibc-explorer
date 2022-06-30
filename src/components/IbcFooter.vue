@@ -2,7 +2,7 @@
   <div class="footer_content">
     <div class="footer_content_left">
       <img class="footer_content_left_icon" v-for="item of 4" @click="onClickIcon(item)" :key="item"
-        :src="getImageUrl(item)" alt="icon" />
+        :src="getImageUrl(String(item))" alt="icon" />
       Contact us !
     </div>
     <div class="footer_content_right">

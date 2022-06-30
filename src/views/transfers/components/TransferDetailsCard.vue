@@ -93,7 +93,6 @@
 import Tools from "../../../utils/Tools";
 import moveDecimal from 'move-decimal-point';
 import { chainAddressPrefix, tableChainIDs } from "../../../constants";
-import config from '../../../../config/config.json'
 import { ref } from 'vue'
 import * as djs from 'dayjs'
 import { getRestString } from "../../../helper/parseString";
@@ -217,28 +216,7 @@ const isShowLink = (info, address) => {
         return isExplorerLink
     }
 }
-const setExplorerLink = (info, address) => {
-    if (info?.length) {
-        let explorerLink = ''
-        info.forEach(item => {
-            if (item.label === 'Chain ID:') {
-                if (item.value === tableChainIDs.irishub) {
-                    const addressPrefix = getAddressPrefix(address)
-                    if (addressPrefix === chainAddressPrefix.irishubPrefix) {
-                        explorerLink = `${config.IRISHUB_IOBSCAN_LINK}${address}`
-                    }
-                }
-                if (item.value === tableChainIDs.cosmoshub) {
-                    const addressPrefix = getAddressPrefix(address)
-                    if (addressPrefix === chainAddressPrefix.cosmoshubPrefix) {
-                        explorerLink = `${config.COSMOSHUB_IOBSCAN_LINK}${address}`
-                    }
-                }
-            }
-        })
-        return explorerLink
-    }
-}
+
 const formatFee = (fee) => {
     if (Array.isArray(fee)) {
         const amountObj = fee[0]

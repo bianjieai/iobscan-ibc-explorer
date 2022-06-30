@@ -2,8 +2,11 @@
   <router-view />
 </template>
 
-<script setup lang="ts">
-
+<script setup>
+let script = document.createElement('script');
+script.src = `https://s4.cnzz.com/z_stat.php?id=${import.meta.env.VITE_UMENG_ID}&web_id=${import.meta.env.VITE_UMENG_WEB_ID}`;
+script.language = 'JavaScript';
+document.body.appendChild(script);
 </script>
 
 <style>

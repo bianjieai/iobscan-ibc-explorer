@@ -38,7 +38,6 @@ import tokenDefaultImg from '../../../assets/token-default.png';
 import expandImg from '../../../assets/expand.png';
 import packUpImg from '../../../assets/pack_up.png';
 import { chainAddressPrefix, tableChainIDs, ibcTxStatus } from "../../../constants";
-import config from "../../../../config/config.json";
 import { useIsExpand } from '../hooks/useTransferList';
 const props = defineProps({
     isFinal: Boolean,
@@ -79,24 +78,6 @@ const isShowLink = (address, chainID) => {
     }
     return isShowLink
 
-}
-const setExplorerLink = (address, chainID) => {
-    let explorerLink = ''
-    if (address && chainID) {
-        if (chainID === tableChainIDs.irishub && address) {
-            const addressPrefix = getAddressPrefix(address)
-            if (addressPrefix === chainAddressPrefix.irishubPrefix) {
-                explorerLink = `${config.IRISHUB_IOBSCAN_LINK}${address}`
-            }
-        }
-        if (chainID === tableChainIDs.cosmoshub && address) {
-            const addressPrefix = getAddressPrefix(address)
-            if (addressPrefix === chainAddressPrefix.cosmoshubPrefix) {
-                explorerLink = `${config.COSMOSHUB_IOBSCAN_LINK}${address}`
-            }
-        }
-    }
-    return explorerLink
 }
 
 </script>
