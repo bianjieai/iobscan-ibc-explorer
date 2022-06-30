@@ -66,7 +66,7 @@ import { formatBigNumber } from '@/helper/parseString';
 
 const route = useRoute()
 const router = useRouter()
-const chain_id = route.query.chain_id as string
+const chain_id = route.query.chain as string
 const status = route.query.status as TChannelStatus
 
 
@@ -85,7 +85,7 @@ const needCustomColumns = [
 const chainDropdown = ref()
 const statusDropdown = ref()
 
-const searchChain = ref(chain_id ? `${chain_id},allchain` : undefined)
+const searchChain = ref(chain_id ? chain_id : undefined)
 const searchStatus = ref(status ? status : undefined)
 
 onMounted(() => {

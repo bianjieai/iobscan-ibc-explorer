@@ -69,12 +69,12 @@
             <div class="transfer_detail_content">
                 <div class="transfer_out_content">
                     <transfer-details-card :title="'IBC Out Details'" :details="transferOutDetails"
-                        :ibcDenoms="ibcDenoms" :expand-details="transferOutExpandDetails" :base-denom="baseDenom" :chainId="scChainId">
+                        :ibcDenoms="ibcDenoms" :expand-details="transferOutExpandDetails" :base-denom="baseDenom" :chainId="scChainId" :scChainId="scChainId" :dcChainId="dcChainId">
                     </transfer-details-card>
                 </div>
                 <div class="transfer_in_content">
                     <transfer-details-card :title="'IBC In Details'" :details="transferInDetails"
-                        :expand-details="transferInExpandDetails" :base-denom="baseDenom" :chainId="dcChainId"></transfer-details-card>
+                        :expand-details="transferInExpandDetails" :base-denom="baseDenom" :chainId="dcChainId" :scChainId="scChainId" :dcChainId="dcChainId"></transfer-details-card>
                 </div>
             </div>
         </div>

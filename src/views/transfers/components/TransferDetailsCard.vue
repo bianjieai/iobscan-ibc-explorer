@@ -48,7 +48,7 @@
                     </span>
                     <span v-if="!Array.isArray(item.value)" class="value_style">{{ item.value || '--' }}</span>
                 </span>
-                <router-link :to="`/channels?chain=${chainId}`" class="details_item_value" v-else-if="item.isChannelID">{{ item.value ? item.value : '--' }}</router-link>
+                <router-link :to="`/channels?chain=${scChainId},${dcChainId}`" class="details_item_value" v-else-if="item.isChannelID">{{ item.value ? item.value : '--' }}</router-link>
                 <span class="details_item_value" v-else>{{ item.value ? item.value : '--' }}</span>
             </li>
             <li class="details_item" v-for="(item, index) in expandDetails" :key="index" v-show="isExpand">
@@ -122,6 +122,14 @@ const props = defineProps({
         default: {}
     },
     chainId:{
+        type: String,
+        default: ''
+    },
+    scChainId:{
+        type: String,
+        default: ''
+    },
+    dcChainId:{
         type: String,
         default: ''
     }
