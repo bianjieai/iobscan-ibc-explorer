@@ -89,11 +89,10 @@ const tokenInput = ref<TDenom>(undefined)
 const isSelected = computed(() => (denom: TDenom) => selectToken.value.length > 0 && selectToken.value[0]?.denom === denom)
 const selectedText = computed(() => {
   if (tokenInput.value !== undefined && tokenInput.value !== '') {
-    return formatLongTitleString(tokenInput.value)
+    return getRestString(tokenInput.value, 4, 4);
   }
-
   if (selectToken.value.length > 0) {
-    return selectToken.value[0].symbol
+    return getRestString(selectToken.value[0].symbol, 4, 4);
   } else {
     return 'All Tokens'
   }

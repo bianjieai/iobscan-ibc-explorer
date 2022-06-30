@@ -8,7 +8,7 @@ function getRestString(string, left, right) {
   if (string.length < Number(left) + Number(right)) {
     return string
   }
-  return string ? `${string.substr(0, left)}...${string.substr(-right)}` : '';
+  return string ? `${string.substr(0, left)}...${right > 0 ?string.substr(-right) : ''}` : '';
 }
 
 function getLasttyString(string) {

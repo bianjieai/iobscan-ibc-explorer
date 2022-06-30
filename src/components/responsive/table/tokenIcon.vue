@@ -30,12 +30,13 @@ const props = withDefaults(defineProps<IProps>(), {
 })
 
 const tokenInfo = computed(() => {
-  const filterData = props.denomsData.filter(item => item.denom === props.denom)
-  if (filterData.length > 0) {
+  const filterData = props.denomsData.find(item => item.denom === props.denom)
+ 
+ if (filterData) {
     return {
-      title: props.basePage ? getRestString2(filterData[0].symbol, 6) : getRestString(filterData[0].symbol, 3, 8),
+      title: props.basePage ? getRestString2(filterData.symbol, 6) : getRestString(filterData.symbol, 3, 8),
       subtitle: 'Authed',
-      imgSrc: filterData[0].icon ? filterData[0].icon : new URL('../../../assets/token-default.png', import.meta.url).href
+      imgSrc: filterData.icon ? filterData.icon : new URL('../../../assets/token-default.png', import.meta.url).href
     }
   } else {
     return {
