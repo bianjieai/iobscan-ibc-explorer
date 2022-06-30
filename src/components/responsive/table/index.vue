@@ -166,7 +166,8 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
 }
 
 :deep(div.ant-table-body) {
-  overflow-y: auto !important;
+    overflow-y: auto !important;
+    max-height: 690px !important;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -196,12 +197,18 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
   height: 48px;
   line-height: 1;
   background-color: #fff;
+  &:nth-of-type(6) {
+    padding-right: 24px;
+  }
 }
 
 :deep(.ant-table-tbody .ant-table-cell) {
   color: var(--bj-text-second);
   line-height: 1;
   vertical-align: middle;
+  &:nth-of-type(6) {
+    padding-right: 24px;
+  }
 }
 
 :deep(.ant-table-thead > tr > th) {
