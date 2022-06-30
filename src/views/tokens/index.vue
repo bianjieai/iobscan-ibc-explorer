@@ -135,7 +135,7 @@ const onSelectedToken = (denom?: string | number) => {
 }
 
 const onSelectedChain = (chain?: string | number) => {
-  searchChain.value = String(chain)
+  searchChain.value = chain ? String(chain) : undefined;
   refreshList()
 }
 
