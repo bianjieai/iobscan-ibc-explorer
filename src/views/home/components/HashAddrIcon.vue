@@ -97,6 +97,9 @@ const { findIbcChainIcon } = useFindIbcChainIcon(props);
     .flex(row, nowrap, space-between, center);
     &_address_wrap {
         .flex(row, nowrap, space-between, center);
+        & a {
+            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
+        }
     }
     &_address_icon {
         width: 24px;

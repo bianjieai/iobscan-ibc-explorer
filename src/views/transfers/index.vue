@@ -346,7 +346,7 @@ const formatDate = (time)=>{
 
 let chainId = router?.query.chain;
 if (router?.query?.chain) {
-    chainId = router?.query.chain?.replace(new RegExp("\_", "g"), "-")
+    chainId = router?.query.chain
     url += `&chain=${chainId}`;
 }
 if (router?.query?.denom) {

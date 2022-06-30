@@ -30,7 +30,6 @@ const props = defineProps({
 
 .block {
   .flex(column, nowrap, flex-start, flex-start);
-  cursor: url("../assets/mouse/shiftlight_mouse.png"),default;
   &_header {
     display: inline-block;
     &_title {

@@ -23,7 +23,6 @@ import {
     GET_IBCBASEDENOMS,
     GET_IBCCONFIGS,
 } from '../action-types';
-import { forEach } from "lodash-es";
 
 export const useIbcStatisticsChains = defineStore('home', {
     state: () => {

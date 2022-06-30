@@ -10,13 +10,13 @@
                     <img class="list_item_icon" :src="item.symbolIcon || tokenDefaultImg" alt="icon" />
                 </router-link>
                 <div class="list_subItem" :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }">
-                    <div class="list_subItem_title_container">
+                    <router-link :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.denoms.dc_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.denoms.sc_denom}&chain=${item.sc_chain_id}`" class="list_subItem_title_container">
                         <span class="list_subItem_value">{{ formatNum(item.symbolNum) || 0 }}</span>
                         <a-tooltip placement="topLeft">
                             <template #title>{{ item.symbolDenom || "" }}</template>
                             <span class="list_subItem_title">{{ item.symbolDenom || "" }}</span>
                         </a-tooltip>
-                    </div>
+                    </router-link>
         
                     <div class="list_subItem_adress_container">
                         <hash-addr-icon :item="item" :ibcChains="ibcChains"></hash-addr-icon>
@@ -161,6 +161,9 @@ const setExplorerLink = (address, chainID) => {
         }
     }
     &_line{
+        a {
+            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
+        }
         
     }
     &_ago {
