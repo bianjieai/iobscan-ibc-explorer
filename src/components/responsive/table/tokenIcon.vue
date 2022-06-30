@@ -11,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+import { getRestString } from '@/helper/parseString';
 import { TBaseDenoms } from '@/hooks/chainAndDenom.interface';
 import { computed } from 'vue';
 import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
@@ -28,16 +29,17 @@ const props = withDefaults(defineProps<IProps>(), {
 })
 
 const tokenInfo = computed(() => {
-  const filterData = props.denomsData.filter(item => item.denom === props.denom)
-  if (filterData.length > 0) {
+  const filterData = props.denomsData.find(item => item.denom === props.denom)
+ 
+ if (filterData) {
     return {
-      title: filterData[0].symbol,
+      title: getRestString(filterData?.symbol,6,0),
       subtitle: 'Authed',
-      imgSrc: filterData[0].icon
+      imgSrc: filterData.icon
     }
   } else {
     return {
-      title: props.denom,
+      title: getRestString(props.denom,6,0),
       subtitle: 'Other',
       imgSrc: new URL('../../../assets/token-default.png', import.meta.url).href
     }
