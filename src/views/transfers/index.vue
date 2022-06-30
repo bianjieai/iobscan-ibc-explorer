@@ -511,7 +511,7 @@ watch(()=>allChains, (newValue, oldValue) => {
     if (newValue?.value?.all) {
         setAllChains(newValue)
     }
-}, {immeidate: true})
+})
 const findIbcChainIcon = (chainId) => {
     if (ibcChains && ibcChains.value.all) {
         const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
