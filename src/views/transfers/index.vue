@@ -214,7 +214,7 @@
                         <img
                             class="status_icon"
                             style="margin: 0 24px;"
-                            :src="`/src/assets/status${record.status}.png`"
+                            :src="getImageUrl(record.status)"
                         />
                         <a-popover placement="right" destroyTooltipOnHide>
                             <template #content>
@@ -780,6 +780,9 @@ const setExplorerLink = (address, chainID) => {
         }
     }
     return explorerLink
+}
+const getImageUrl = (name) => {
+    return new URL(`../../assets/status${name}.png`, import.meta.url).href
 }
 
 watch(ibcStatisticsTxs,(newValue,oldValue) => {
