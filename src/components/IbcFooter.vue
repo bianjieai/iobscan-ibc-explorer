@@ -2,7 +2,7 @@
   <div class="footer_content">
     <div class="footer_content_left">
       <img class="footer_content_left_icon" v-for="item of 4" @click="onClickIcon(item)" :key="item"
-        :src="`/src/assets/f${item}.png`" alt="icon" />
+        :src="getImageUrl(item)" alt="icon" />
       Contact us !
     </div>
     <div class="footer_content_right">
@@ -19,7 +19,9 @@ const links = ['https://github.com/irisnet', 'https://t.me/irisnetwork', 'https:
 const onClickIcon = (item: number) => {
   window.open(links[item - 1]);
 };
-
+const getImageUrl = (name:string) => {
+    return new URL(`../assets/f${name}.png`, import.meta.url).href
+}
 </script>
 
 <style lang="less" scoped>

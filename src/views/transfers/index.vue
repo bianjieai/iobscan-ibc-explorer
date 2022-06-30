@@ -278,9 +278,9 @@
         <div class="transfer_bottom" v-if="tableCount.value">
             <span class="status_tips">
                 <span class="status_log">Status:</span>
-                <span class="status_tip status_tip_success"></span> Success
-                <span class="status_tip status_tip_warning"></span> Processing
-                <span class="status_tip status_tip_error"></span> Failed
+                <img class="status_img" :src="successImg" alt=""> Success
+                <img class="status_img" :src="processingImg" alt=""> Processing
+                <img class="status_img" :src="failedImg" alt=""> Failed
             </span>
             <a-pagination
                 class="table_pagination"
@@ -293,6 +293,9 @@
 </template>
 
 <script setup>
+import successImg from '../../assets/status1.png'
+import processingImg from '../../assets/status3.png'
+import failedImg from '../../assets/status2.png'
 import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
 import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus,defaultTitle } from '../../constants';
@@ -931,6 +934,10 @@ onMounted(() => {
             }
             .status_tip_error {
                 background: var(--bj-failed);
+            }
+            .status_img{
+                width: 22px;
+                margin: 0 16px;
             }
         }
         & .table_pagination {

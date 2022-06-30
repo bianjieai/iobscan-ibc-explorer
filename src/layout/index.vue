@@ -153,6 +153,7 @@ a {
             width: 144px;
             .logo_icon {
                 width: 100%;
+                cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
             }
         }
     }
