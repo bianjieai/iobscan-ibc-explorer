@@ -2,7 +2,7 @@
     <div class="list_item">
         <div class="list_item_wrap" :class="!item.expanded? '': 'list_item_line_hidden'">
             <div class="list_item_expand_btn" @click="onClickExpandBtn">
-                <img :src="!item.expanded ? '/src/assets/expand.png' : '/src/assets/pack_up.png' " alt="">
+                <img :src="!item.expanded ? expandImg : packUpImg " alt="">
             </div>
             <div class="list_item_info" :class="!item.expanded? 'list_item_line': ''">
                 <span class="list_item_number">{{ prefixInteger(index + 1, 3) }}</span>
@@ -35,6 +35,8 @@ import {
     getRestString, getLasttyString, prefixInteger, formatNum,
 } from '../../../helper/parseString';
 import tokenDefaultImg from '../../../assets/token-default.png';
+import expandImg from '../../../assets/expand.png';
+import packUpImg from '../../../assets/pack_up.png';
 import { chainAddressPrefix, tableChainIDs, ibcTxStatus } from "../../../constants";
 import config from "../../../../config/config.json";
 import { useIsExpand } from '../hooks/useTransferList';

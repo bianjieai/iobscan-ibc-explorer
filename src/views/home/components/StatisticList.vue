@@ -17,7 +17,7 @@
                     >24hr</span
                     ></span
                 >
-                         <span class="list_item_value">{{ item.count }}</span>
+                         <span class="list_item_value"  :style="item.statistics_name === ibcStatisticsDenomsDefault['denom_all'].statistics_name ? 'color: var(--bj-text-normal); cursor: text;' : ''">{{ item.count }}</span>
             </div>
                 <a-divider class="list_item_divider" v-show="index < Object.keys(msg).length - 1"/>
             </div>
@@ -40,7 +40,7 @@
                             >24hr</span
                             ></span
                         >
-                                  <span class="list_item_value">{{ item.count }}</span>
+                                  <span class="list_item_value" :style="item.statistics_name === ibcStatisticsDenomsDefault['denom_all'].statistics_name ? 'cursor: text;' : ''">{{ item.count }}</span>
                     </div>
                 </div>
                 <a-divider
@@ -54,7 +54,7 @@
 </template>
 
 <script setup>
-import {statisticsName} from '../../../constants/index';
+import {statisticsName, ibcStatisticsDenomsDefault} from '../../../constants/index';
 const props = defineProps({
     type: String,
     msg: Object

@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <PageTitle title="IBC Chains" :subtitle="`${list.length} chains supported`" />
+    <PageTitle title="IBC Chains" :subtitle="`${formatBigNumber(list.length, 0)} chains supported`" />
 
     <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count no-pagination
       :scroll="{ y: 610 }">
@@ -45,6 +45,7 @@ import { onMounted } from 'vue';
 import { useGetChainsList } from '@/service/chains'
 import { useRouter } from 'vue-router';
 import { formatAmount } from '@/helper/tablecell-helper'; 
+import { formatBigNumber } from '@/helper/parseString';
 
 const router = useRouter()
 

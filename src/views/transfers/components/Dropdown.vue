@@ -6,14 +6,16 @@
     @visibleChange="visibleChange"
   >
     <a-button class="button">
-      <img
-        class="button_pre_icon"
-        :style="{ visibility: showIcon ? 'visible' : 'hidden' }"
-        :src="type === 'chain' ? findChainIcon() : findSymbolIcon()"
-      />
-      <span :class="content===defaultTitle.defaultTokens?'button_title_default':'button_title'">{{
-        content
-      }}</span>
+        <div class="button_token_icon">
+            <img
+                class="button_pre_icon"
+                :style="{ display: showIcon ? 'block' : 'none' }"
+                :src="type === 'chain' ? findChainIcon() : findSymbolIcon()"
+            />
+            <span :class="content===defaultTitle.defaultTokens?'button_title_default':'button_title'">{{
+                content
+            }}</span>
+        </div>
       <span class="button_icon">
         <svg
           :style="{ transform: isVisible ? 'rotate(180deg)' : 'rotate(0)' }"
@@ -60,7 +62,7 @@
                       :src="
                         item[iconKey] ||
                           isShowSymbol(key)?.symbolIcon ||
-                          require('../../../assets/token-default.png')
+                          tokenDefaultImg
                       "
                     />
                     <span class="content_item_title">{{
@@ -75,7 +77,7 @@
               <h2 class="overlay_item_title">Other IBC Tokens</h2>
               <div class="overlay_item_content">
                 <div class="content_item" @click="onClickItem(undefined, unAuthed)">
-                  <img class="content_item_icon" src="../../../assets/token-default.png" />
+                  <img class="content_item_icon" :src="tokenDefaultImg" />
                   <span class="content_item_title">Others</span>
                 </div>
               </div>
@@ -116,6 +118,7 @@ import { getLasttyString } from '../../../helper/parseString';
 import { useFindIcon, useIsVisible } from '../composable';
 import { computed, ref, watch } from 'vue';
 import {defaultTitle,selectedType} from '@/constants'
+const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
 const props = defineProps({
     type: String,
     options: {
@@ -178,6 +181,9 @@ const onClickAll = () => {
   font-weight: 400;
   height: 36px;
   border: 1px solid var(--bj-border-color);
+  &_token_icon {
+    .flex(row, wrap, flex-start, center);
+  }
   &_title {
     max-width: 86px;
     // text-overflow: ellipsis;
@@ -401,7 +407,7 @@ const onClickAll = () => {
         }
     }
 }
-@media screen and (max-width: 630px) {
+@media screen and (max-width: 768px) {
     .button {
         &_title {
         }
@@ -415,12 +421,12 @@ const onClickAll = () => {
         }
     }
     .overlay {
-        padding: 16px 12px;
-        max-width: 300px;
+        padding: 16px;
         &_wrap {
 
         }
         &_title {
+            width: 120px;
             &:hover {
             }
         }
@@ -460,8 +466,120 @@ const onClickAll = () => {
         .button_icon {
         }
     }
+}
+@media screen and (max-width: 574px) {
+    .button {
+        &_title {
+        }
+        &:hover {
+            .button_icon {
+            }
+        }
+        &_icon {
+        }
+        &_pre_icon {
+        }
+    }
+    .overlay {
+        max-width: 450px;
+        &_wrap {
+
+        }
+        &_title {
+            &:hover {
+            }
+        }
+        &_item {
+            &_title {
+            }
+            &_content {
+            .content_item {
+                .content_item_title{
+                }
+                &:hover {
+                }
+                &_selected {
+                }
+                &_icon {
+                }
+                &_title {
+                }
+            }
+            }
+            &_input {
+            }
+        }
+    }
+    .flex-c {
+    }
+    .tip {
+        &_color {
+        }
+    }
+    .hover {
+    }
+    .ant-dropdown-open {
+        .button_icon {
+        }
+    }
+}
+@media screen and (max-width: 420px) {
+    .button {
+        &_title {
+        }
+        &:hover {
+            .button_icon {
+            }
+        }
+        &_icon {
+        }
+        &_pre_icon {
+        }
+    }
+    .overlay {
+        max-width: 310px;
+        &_wrap {
+
+        }
+        &_title {
+            &:hover {
+            }
+        }
+        &_item {
+            &_title {
+            }
+            &_content {
+            .content_item {
+                .content_item_title{
+                }
+                &:hover {
+                }
+                &_selected {
+                }
+                &_icon {
+                }
+                &_title {
+                }
+            }
+            }
+            &_input {
+            }
+        }
+    }
+    .flex-c {
+    }
+    .tip {
+        &_color {
+        }
+    }
+    .hover {
+    }
+    .ant-dropdown-open {
+        .button_icon {
+        }
+    }
     .dropdown_token {
-        width: 220px;
+        width: 210px;
     }
 }
 </style>

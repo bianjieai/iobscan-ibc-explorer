@@ -1,3 +1,4 @@
+import { CompareOrder } from "@/components/responsive/component.interface";
 import { TableColumnsType } from "ant-design-vue";
 
 export const COLUMNS: TableColumnsType = [{
@@ -36,8 +37,8 @@ export const COLUMNS: TableColumnsType = [{
   key: 'chains_involved',
   title: 'Chains Involved',
   sorter: (a, b) => a.chains_involved - b.chains_involved,
-  align: 'right'
-
+  align: 'right',
+  defaultSortOrder: CompareOrder.DESCEND
 }, {
   dataIndex: 'chain_id',
   key: 'chain_id',

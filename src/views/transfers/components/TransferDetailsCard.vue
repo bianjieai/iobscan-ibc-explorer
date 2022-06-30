@@ -92,12 +92,13 @@
 <script setup>
 import Tools from "../../../utils/Tools";
 import moveDecimal from 'move-decimal-point';
-import { chainAddressPrefix, chainIDs, tableChainIDs } from "../../../constants";
+import { chainAddressPrefix, tableChainIDs } from "../../../constants";
 import config from '../../../../config/config.json'
 import { ref } from 'vue'
-import * as dayjs from 'dayjs'
+import * as djs from 'dayjs'
 import { getRestString } from "../../../helper/parseString";
-import { useGetTokens, useGetIbcBaseDenoms } from '../composable';
+import { useGetIbcBaseDenoms } from '../composable';
+import ChainHelper from '@/helper/chainHepler';
 const { ibcBaseDenoms } = useGetIbcBaseDenoms();
 
 const props = defineProps({
@@ -126,6 +127,7 @@ const props = defineProps({
         default: ''
     }
 })
+const dayjs = (djs?.default || djs);
 
 const isExpand = ref(false)
 const date = ref('')
@@ -256,6 +258,11 @@ const formatFee = (fee) => {
     }
     return fee
 }
+
+const formatChainID = (chainId)=>{
+    return ChainHelper.formatChainId(chainId);
+}
+
 const formatDate = (timestamp) => {
     if (timestamp > 0) {
         date.value = `${dayjs(timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')} (${Tools.formatAge(Tools.getTimestamp(), timestamp * 1000, 'ago', '>')})`
@@ -266,12 +273,7 @@ const formatDate = (timestamp) => {
         date.value = '--'
     }
 }
-const formatChainID = (chainID) => {
-    if (chainID && chainID !== '--') {
-        return chainID.replace(new RegExp("\_", "g"), "-")
-    }
-    return '--'
-}
+
 const formatAck = (ack) => {
     if (ack && ack !== '--') {
         if (ack.includes('result:"\\001"')) {

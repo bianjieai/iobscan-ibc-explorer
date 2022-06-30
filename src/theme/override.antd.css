@@ -96,10 +96,11 @@
 }
 
 .ant-popover {
-    z-index: 1200;
+    z-index: 1051 !important;
 }
 
 .ant-select-open .ant-select-arrow {
+    color: var(--bj-primary-color);
     transform: rotate(180deg);
 }
 

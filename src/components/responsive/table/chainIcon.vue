@@ -6,7 +6,7 @@
       :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
       <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ computedTitle }}
       </div>
-      <div v-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">{{ chainInfo.subtitle }}</div>
+      <div v-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">{{ formatChainID(chainInfo.subtitle) }}</div>
     </div>
   </div>
 </template>
@@ -16,6 +16,7 @@ import { getRestString } from '@/helper/parseString';
 import { TBaseChains } from '@/hooks/chainAndDenom.interface';
 import { computed } from 'vue';
 import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
+import ChainHelper from '@/helper/chainHepler';
 
 interface IProps {
   iconSize?: TTableCellIconSize
@@ -34,8 +35,8 @@ const props = withDefaults(defineProps<IProps>(), {
 
 const computedTitle = computed(() => {
   let title = ''
-  if (props.title) {
-    title = props.title
+  if (typeof props.title !== 'undefined') {
+    title = props.title === '' ? 'channel- --' : props.title
   } else {
     title = chainInfo.value.title
   }
@@ -44,21 +45,25 @@ const computedTitle = computed(() => {
 })
 
 const chainInfo = computed(() => {
-  const filterData = props.chainsData.filter(item => item.chain_id === props.chain_id)
-  if (filterData.length > 0) {
+  const filterData = props.chainsData.find(item => item.chain_id === props.chain_id)
+  if (filterData) {
     return {
-      title: filterData[0].chain_name,
-      subtitle: filterData[0].chain_id.replace(/\_/g, '-'),
-      imgSrc: filterData[0].icon
+      title: filterData.chain_name,
+      subtitle: filterData.chain_id,
+      imgSrc: filterData.icon
     }
   } else {
     return {
       title: 'Unknown',
-      subtitle: '- -',
+      subtitle: '--',
       imgSrc: new URL('../../../assets/default.png', import.meta.url).href
     }
   }
 })
+
+const formatChainID = (chainId: string)=>{
+    return ChainHelper.formatChainId(chainId);
+}
 
 const emits = defineEmits<{
   (e: 'clickTitle'): void

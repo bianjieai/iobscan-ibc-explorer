@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <PageTitle title="IBC Channels" :subtitle="`${list.length} channels found`" />
+    <PageTitle title="IBC Channels" :subtitle="subtitle" />
     <div class="select flex items-center flex-wrap">
       <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" :chain_id="chain_id" @on-selected-chain="onSelectedChain"
         selected-double ref="chainDropdown" />
@@ -52,7 +52,7 @@ import { COLUMNS, STATUS_OPTIONS } from './constants'
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import BottomStatus from '@/components/responsive/table/bottomStatus.vue';
 import { formatLastUpdated, formatOperatingPeriod } from '@/helper/time-helper';
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
@@ -62,6 +62,7 @@ import { useGetChannelsList } from '@/service/channels'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useIbcChains } from '../home/composable';
 import { useRoute, useRouter } from 'vue-router';
+import { formatBigNumber } from '@/helper/parseString';
 
 const route = useRoute()
 const router = useRouter()
@@ -70,7 +71,7 @@ const status = route.query.status as TChannelStatus
 
 
 const { ibcChains, getIbcChains } = useIbcChains();
-const { list, getList } = useGetChannelsList()
+const { list, total, getList } = useGetChannelsList()
 
 const needCustomColumns = [
   'chain_a',
@@ -93,6 +94,14 @@ onMounted(() => {
   refreshList()
 })
 
+const subtitle = computed(() => {
+  if (!searchChain.value && !searchStatus.value) {
+    return `${formatBigNumber(total.value, 0)} channels found`
+  } else {
+    return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} channels found`
+  }
+})
+
 const refreshList = () => {
   getList({
     chain: searchChain.value,
@@ -113,7 +122,10 @@ const onSelectedStatus = (value?: number | string) => {
 // reset
 const resetSearchCondition = () => {
   chainDropdown.value.selectedChain = []
+  chainDropdown.value.chainIdIput =  undefined
   statusDropdown.value.selectOption = []
+  searchChain.value = undefined
+  searchStatus.value = undefined
 
   getList()
 }

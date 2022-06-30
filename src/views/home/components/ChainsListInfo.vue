@@ -24,17 +24,17 @@
                             <a-card class="menu_card">
                                 <img
                                     class="card_img"
-                                    :src="item.icon ? item.icon : require('../../../assets/token-default.png')"
+                                    :src="item.icon ? item.icon : tokenDefaultImg"
                                 />
                                 <p class="card_title">{{ item.chain_name }}</p>
-                                <p class="card_value">{{ item.chain_id }}</p>
+                                <p class="card_value">{{ formatChainID(item.chain_id) }}</p>
                             </a-card>
                         </router-link>
                         <!-- <router-link :to="`/chains/details?chain_id=${item.chain_id}`">
                             <a-card class="menu_card">
                                 <img
                                     class="card_img"
-                                    :src="item.icon ? item.icon : require('../../../assets/token-default.png')"
+                                    :src="item.icon ? item.icon : tokenDefaultImg"
                                 />
                                 <p class="card_title">{{ item.chain_name }}</p>
                                 <p class="card_value">{{ item.chain_id }}</p>
@@ -78,6 +78,8 @@
 <script setup>
 import NoDatas from '../../../components/NoDatas.vue';
 import { useMenus, useInterfaceActive, useAnchors, useGetBindElement } from '../hooks/useChainsListInfo';
+import ChainHelper from '@/helper/chainHepler';
+const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
 const props = defineProps({
     chainList: Object
 })
@@ -87,6 +89,9 @@ const { onSelectedMenu, clickListItem } = useInterfaceActive(emits);
 const { anchors, findClassName, onChangeAnchor } = useAnchors();
 const { getBindElement } = useGetBindElement();
 
+const formatChainID = (chainId)=>{
+    return ChainHelper.formatChainId(chainId);
+}
 </script>
 
 <style lang="less" scoped>
