@@ -11,6 +11,7 @@
 </template>
 
 <script setup lang="ts">
+import { getRestString, getRestString2 } from '@/helper/parseString';
 import { TBaseDenoms } from '@/hooks/chainAndDenom.interface';
 import { computed } from 'vue';
 import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
@@ -21,6 +22,7 @@ interface IProps {
   denomsData: TBaseDenoms[]
   titleCanClick?: boolean
   token_type?: string
+  basePage?: boolean // 是否是 /tokens 页面
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -28,16 +30,17 @@ const props = withDefaults(defineProps<IProps>(), {
 })
 
 const tokenInfo = computed(() => {
-  const filterData = props.denomsData.filter(item => item.denom === props.denom)
-  if (filterData.length > 0) {
+  const filterData = props.denomsData.find(item => item.denom === props.denom)
+ 
+ if (filterData) {
     return {
-      title: filterData[0].symbol,
+      title: props.basePage ? getRestString2(filterData.symbol, 6) : getRestString(filterData.symbol, 3, 8),
       subtitle: 'Authed',
-      imgSrc: filterData[0].icon
+      imgSrc: filterData.icon ? filterData.icon : new URL('../../../assets/token-default.png', import.meta.url).href
     }
   } else {
     return {
-      title: props.denom,
+      title: props.basePage ? getRestString2(props.denom, 6) : getRestString(props.denom, 3, 8),
       subtitle: 'Other',
       imgSrc: new URL('../../../assets/token-default.png', import.meta.url).href
     }
