@@ -79,6 +79,9 @@
 .ant-table-tbody>tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)>td {
     background: #f0f4ff;
 }
+.ant-table-column-title {
+    white-space: nowrap;
+}
 @media screen and (max-width: 630px) {
     .ant-picker-panels {
         flex-direction: column;

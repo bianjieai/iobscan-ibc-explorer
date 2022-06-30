@@ -11,7 +11,8 @@ export const COLUMNS: TableColumnsType = [{
   key: 'price',
   title: 'Price',
   sorter: (a, b) => a.price - b.price,
-  align: 'right'
+  align: 'right',
+  width: 100
 }, {
   dataIndex: 'supply',
   key: 'supply',
