@@ -1,7 +1,7 @@
 <template>
     <div class="out_hash">
         <div class="out_hash_address_wrap">
-            <router-link :to="`/chains`">
+            <router-link :to="`/chains`" class="out_hash_address_link">
                 <img class="out_hash_address_icon" :src="findIbcChainIcon(item.sc_chain_id)" />
             </router-link>
             <!-- <router-link :to="`/chains/details?chain_id=${item.sc_chain_id}`">
@@ -41,7 +41,7 @@
 
         <img class="status_icon" :src="getImageUrl(item.status)" alt="status" />
         <div class="out_hash_address_wrap">
-            <router-link :to="`/chains`">
+            <router-link :to="`/chains`" class="out_hash_address_link">
                 <img class="out_hash_address_icon" :src="findIbcChainIcon(item.dc_chain_id)" />
             </router-link>
             <!-- <router-link :to="`/chains/details?chain_id=${item.dc_chain_id}`">
@@ -102,10 +102,14 @@ const getImageUrl = (name) => {
     &_address_wrap {
         .flex(row, nowrap, space-between, center);
     }
+    &_address_link{
+        margin: 0 10px;
+        cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default;
+    }
     &_address_icon {
         width: 24px;
         height: 24px;
-        margin: 0 10px;
+        // margin: 0 10px;
         border-radius: 50%;
         border: 1px solid rgba(0, 0, 0, 0.2);
     }
