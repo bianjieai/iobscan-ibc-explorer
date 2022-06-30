@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <PageTitle title="IBC Chains" :subtitle="`${formatBigNumber(list.length, 0)} chains supported`" />
+    <PageTitle title="IBC Chains" :subtitle="`${formatBigNumber(list?.length, 0)} chains supported`" />
 
     <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count no-pagination
       :scroll="{ y: 610 }">
@@ -110,7 +110,11 @@ const goTransfer = (chain_id: string) => {
 .table-warpper {
   margin-top: 32px;
 }
-
+:deep(.ant-table-cell) {
+    &:nth-of-type(4) {
+        padding-right: 26px;
+    }
+}
 // pc
 @media screen and (min-width: 768px) {}
 

@@ -5,7 +5,7 @@
             <li class="details_item" v-for="(item, index) in details" :key="index">
                 <span class="details_item_label">{{ item.label }}</span>
                 <span class="details_item_value" v-if="item.isFormatToken">
-                    <router-link v-if="item.value" :to="`/tokens/details?denom=${item.value.denom}&chain=${chainId}`">
+                    <router-link v-if="item.value" :to="`/tokens/details?denom=${baseDenom}&chain=${chainId}`">
                         <span class="details_item_amount">{{ formatToken(item.value, details).symbolNum || '--' }}</span>
                         <a-tooltip>
                             <template #title>
@@ -134,6 +134,7 @@ const props = defineProps({
         default: ''
     }
 })
+
 const dayjs = (djs?.default || djs);
 
 const isExpand = ref(false)

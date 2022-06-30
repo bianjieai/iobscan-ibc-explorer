@@ -261,6 +261,20 @@ const testChains = {
     REFUNDED: 4,
     SETTING: 5,
   };
+  const ibcTxStatusDesc = [
+    {
+        label: 'Success',
+        status: 1
+    },
+    {
+        label: 'Failed',
+        status: 2
+    },
+    {
+        label: 'Processing',
+        status: 3
+    }
+  ]
   const channelsStatus = {
     channelOpenedStatus: '1',
     channelClosedStatus: '2',
@@ -348,6 +362,7 @@ const testChains = {
   const selectedType = {
     chain:'chain'
   }
+  const unknownSymbol = 'unknown';
 
   const CHAINID = {
     COSMOSHUB: 'Cosmos Hub',
@@ -367,6 +382,7 @@ const testChains = {
     ibcStatisticsDenomsDefault,
     ibcStatisticsTxsDefault,
     ibcTxStatus,
+    ibcTxStatusDesc,
     channelsStatus,
     ibcTxStatusSelectOptions,
     transfersStatusOptions,
@@ -377,6 +393,7 @@ const testChains = {
     chainAddressPrefix,
     defaultTitle,
     selectedType,
+    unknownSymbol,
     CHAINID
   };
   

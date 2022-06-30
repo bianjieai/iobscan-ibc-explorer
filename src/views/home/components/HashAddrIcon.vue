@@ -101,6 +101,9 @@ const getImageUrl = (name) => {
     .flex(row, nowrap, space-between, center);
     &_address_wrap {
         .flex(row, nowrap, space-between, center);
+        & a {
+            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
+        }
     }
     &_address_link{
         margin: 0 10px;

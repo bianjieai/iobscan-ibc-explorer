@@ -47,7 +47,7 @@ export const COLUMNS:TableColumnsType = [
     title: 'IBC Tokens Value',
     sorter: (a, b) => a.ibc_tokens_value - b.ibc_tokens_value,
     align: 'right',
-    width: 180
+    width: 200
   },
   {
     dataIndex: 'transfer_txs',

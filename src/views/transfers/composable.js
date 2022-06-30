@@ -1,4 +1,4 @@
-import { ref, reactive, computed, watch } from 'vue';
+import { ref, reactive, computed, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useIbcStatisticsChains } from '../../store/home/index';
 import { GET_IBCSTATISTICS, GET_IBCTXS, GET_IBCBASEDENOMS, GET_IBCCHAINS, GET_IBCDENOMS } from '../../store/action-types';
@@ -28,7 +28,7 @@ export const useIbcTxs = () => {
 }
 
 export const useIbcChains = () => {
-    const ibcChains = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) : {};
+    const ibcChains = computed(() => ibcStatisticsChainsStore.ibcChains);
     const getIbcChains = ibcStatisticsChainsStore[GET_IBCCHAINS];
     return {
         ibcChains,
@@ -38,7 +38,7 @@ export const useIbcChains = () => {
 
 export const useGetIbcBaseDenoms = () => {
     const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
-    const ibcBaseDenoms = sessionStorage.getItem('ibcBaseDenoms') ? JSON.parse(sessionStorage.getItem('ibcBaseDenoms')) : ibcStatisticsChainsStore.ibcBaseDenoms;
+    const ibcBaseDenoms = ibcStatisticsChainsStore.ibcBaseDenoms;
     const getIbcBaseDenom = ibcStatisticsChainsStore[GET_IBCBASEDENOMS];
     return {
         getIbcDenoms,
@@ -49,9 +49,9 @@ export const useGetIbcBaseDenoms = () => {
 
 export const useGetTokens = () => {
     const tokens = reactive({ value: [] });
-    const ibcDenoms = ibcStatisticsChainsStore.ibcDenoms;
-    const getIbcDenomsFn = ibcStatisticsChainsStore[GET_IBCDENOMS];
+    let ibcDenoms = reactive({value: []});
     getIbcDenoms().then((res) => {
+        ibcDenoms.value = res;
         let tokensObj = groupBy(res, 'symbol');
         const atomObj = {
             'ATOM': tokensObj['ATOM']
@@ -77,8 +77,7 @@ export const useGetTokens = () => {
     });
     return {
         tokens,
-        ibcDenoms,
-        getIbcDenomsFn
+        ibcDenoms
     }
 }
 
@@ -175,7 +174,6 @@ export const useGetTableColumns = () => {
             ibcStatisticsChainsStore.isShowTransferLoading = newValue;
         }
     })
-    // const tableDatas = {value: []};
     const tableDatas = ibcStatisticsChainsStore.ibcTxs;
     return {
         tableColumns,
@@ -503,6 +501,9 @@ export const useTransfersDetailsInfo = () => {
     if (route?.query?.hash) {
         getTxDetails(route?.query?.hash)
     }
+    onMounted(() => {
+        ibcStatisticsChainsStore[GET_IBCDENOMS];
+    })
     return {
         ibcTransferOutTxHash,
         ibcTransferInTxHash,

@@ -182,7 +182,8 @@ const onClickAll = () => {
   height: 36px;
   border: 1px solid var(--bj-border-color);
   &_token_icon {
-    .flex(row, wrap, flex-start, center);
+      flex: 1;
+    .flex(row, wrap, center, center);
   }
   &_title {
     max-width: 86px;

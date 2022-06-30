@@ -6,14 +6,17 @@
             </div>
             <div class="list_item_info" :class="!item.expanded? 'list_item_line': ''">
                 <span class="list_item_number">{{ prefixInteger(index + 1, 3) }}</span>
-                <router-link class="list_item_link" :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.denoms.dc_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.denoms.sc_denom}&chain=${item.sc_chain_id}`">
+                <router-link class="list_item_link" :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.base_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.base_denom}&chain=${item.sc_chain_id}`">
                     <img class="list_item_icon" :src="item.symbolIcon || tokenDefaultImg" alt="icon" />
                 </router-link>
                 <div class="list_subItem" :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }">
-                    <div class="list_subItem_title_container">
+                    <router-link :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.base_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.base_denom}&chain=${item.sc_chain_id}`" class="list_subItem_title_container">
                         <span class="list_subItem_value">{{ formatNum(item.symbolNum) || 0 }}</span>
-                        <span class="list_subItem_title">{{ item.symbolDenom || "" }}</span>
-                    </div>
+                        <a-tooltip placement="topLeft">
+                            <template #title>{{ item.symbolDenom || "" }}</template>
+                            <span class="list_subItem_title">{{ item.symbolDenom || "" }}</span>
+                        </a-tooltip>
+                    </router-link>
         
                     <div class="list_subItem_adress_container">
                         <hash-addr-icon :item="item" :ibcChains="ibcChains"></hash-addr-icon>
@@ -131,10 +134,17 @@ const isShowLink = (address, chainID) => {
                 font-weight: 400;
                 color: var(--bj-text-third);
                 line-height: var(--bj-font-size-normal);
+                width: 150px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
         }
     }
     &_line{
+        a {
+            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
+        }
         
     }
     &_ago {
@@ -161,7 +171,7 @@ const isShowLink = (address, chainID) => {
     &_icon {
         width: 40px;
         border-radius: 50%;
-        border: 1px solid rgba(0, 0, 0, 0.2);
+        margin: 0 24px 0 18px;
     }
     & .out_hash_wrap {
         display: none;
@@ -195,10 +205,15 @@ const isShowLink = (address, chainID) => {
                         display: none;
                     }
                 }
-                &_title_container {}
+                &_title_container {
+                    overflow: auto;
+                    text-overflow: e;
+                }
                 &_value {}
 
-                &_title {}
+                &_title {
+                    width: 100%;
+                }
             }
         }
         &_line{

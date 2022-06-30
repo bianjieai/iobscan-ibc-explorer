@@ -47,7 +47,7 @@ const props = withDefaults(defineProps<IProps>(), {
 const pageInfo = reactive({
   pageSize: props.pageSize || 10,
   current: props.current || 1,
-  total: props.data.length
+  total: props.data?.length
 })
 
 const { data, columns } = props
@@ -61,9 +61,9 @@ onMounted(() => {
 
 watch(() => props.data, (_new, _old) => {
   backUpData()
-  pageInfo.total = _new.length
+  pageInfo.total = _new?.length
   needPagination.value && onPageChange(1, 10)
-  if (_new.length === 0) {
+  if (_new?.length === 0) {
     columnsSource.value = columnsSource.value.filter(item => item.key !== '_count')
   }
 })
@@ -71,7 +71,7 @@ watch(() => props.data, (_new, _old) => {
 
 const needPagination = computed(() => !props.noPagination && !(props.current && props.pageSize)) // 需要前端分页
 const isKeyInNeedCustomColumns = computed(() => (key: string) => props.needCustomColumns.includes(key)) // 判断key
-const hasData = computed(() => props.data.length > 0)
+const hasData = computed(() => props.data?.length > 0)
 const backUpData = () => {
   const { columns, data, needCount } = props
 
@@ -83,7 +83,7 @@ const backUpData = () => {
     })
     props.noPagination && (columns[0].width = 50)
   }
-  backUpDataSource = data.map((item: any, index: number) => ({
+  backUpDataSource = data?.map((item: any, index: number) => ({
     _count: index + 1,
     ...item
   }))
@@ -161,12 +161,13 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
 }
 
 :deep(.ant-table-container) {
-  min-width: 1150px; // TODO clippers => 宽度待定
+  min-width: 1170px; // TODO clippers => 宽度待定
   min-height: 300px;
 }
 
 :deep(div.ant-table-body) {
-  overflow-y: auto !important;
+    overflow-y: auto !important;
+    max-height: 690px !important;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -199,6 +200,7 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
 }
 
 :deep(.ant-table-tbody .ant-table-cell) {
+    padding-right: 35px;
   color: var(--bj-text-second);
   line-height: 1;
   vertical-align: middle;
