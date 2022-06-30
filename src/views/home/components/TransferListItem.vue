@@ -6,7 +6,7 @@
             </div>
             <div class="list_item_info" :class="!item.expanded? 'list_item_line': ''">
                 <span class="list_item_number">{{ prefixInteger(index + 1, 3) }}</span>
-                <router-link :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.denoms.dc_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.denoms.sc_denom}&chain=${item.sc_chain_id}`">
+                <router-link class="list_item_link" :to="item.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${item.denoms.dc_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.denoms.sc_denom}&chain=${item.sc_chain_id}`">
                     <img class="list_item_icon" :src="item.symbolIcon || tokenDefaultImg" alt="icon" />
                 </router-link>
                 <div class="list_subItem" :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }">
@@ -41,7 +41,6 @@ import tokenDefaultImg from '../../../assets/token-default.png';
 import expandImg from '../../../assets/expand.png';
 import packUpImg from '../../../assets/pack_up.png';
 import { chainAddressPrefix, tableChainIDs, ibcTxStatus } from "../../../constants";
-import config from "../../../../config/config.json";
 import { useIsExpand } from '../hooks/useTransferList';
 const props = defineProps({
     isFinal: Boolean,
@@ -82,24 +81,6 @@ const isShowLink = (address, chainID) => {
     }
     return isShowLink
 
-}
-const setExplorerLink = (address, chainID) => {
-    let explorerLink = ''
-    if (address && chainID) {
-        if (chainID === tableChainIDs.irishub && address) {
-            const addressPrefix = getAddressPrefix(address)
-            if (addressPrefix === chainAddressPrefix.irishubPrefix) {
-                explorerLink = `${config.IRISHUB_IOBSCAN_LINK}${address}`
-            }
-        }
-        if (chainID === tableChainIDs.cosmoshub && address) {
-            const addressPrefix = getAddressPrefix(address)
-            if (addressPrefix === chainAddressPrefix.cosmoshubPrefix) {
-                explorerLink = `${config.COSMOSHUB_IOBSCAN_LINK}${address}`
-            }
-        }
-    }
-    return explorerLink
 }
 
 </script>
@@ -183,7 +164,10 @@ const setExplorerLink = (address, chainID) => {
         line-height: var(--bj-font-size-normal);
         margin: 0 0 0 8px;
     }
-
+    &_link {
+        margin: 0 24px 0 18px;
+        cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;
+    }
     &_icon {
         width: 40px;
         border-radius: 50%;

@@ -304,7 +304,6 @@ import Tools from '../../utils/Tools';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
 import * as djs from 'dayjs';
-import config from "../../../config/config.json";
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute } from 'vue-router';
 import { useClearInterval } from '../home/composable';
@@ -766,24 +765,6 @@ const isShowLink = (address, chainID) => {
     }
     return isShowLink
 
-}
-const setExplorerLink = (address, chainID) => {
-    let explorerLink = ''
-    if (address && chainID) {
-        if (chainID === tableChainIDs.irishub && address) {
-            const addressPrefix = getAddressPrefix(address)
-            if (addressPrefix === chainAddressPrefix.irishubPrefix) {
-                explorerLink = `${config.IRISHUB_IOBSCAN_LINK}${address}`
-            }
-        }
-        if (chainID === tableChainIDs.cosmoshub && address) {
-            const addressPrefix = getAddressPrefix(address)
-            if (addressPrefix === chainAddressPrefix.cosmoshubPrefix) {
-                explorerLink = `${config.COSMOSHUB_IOBSCAN_LINK}${address}`
-            }
-        }
-    }
-    return explorerLink
 }
 
 watch(ibcStatisticsTxs,(newValue,oldValue) => {

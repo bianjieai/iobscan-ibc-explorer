@@ -29,10 +29,10 @@
       <template #ibc_transfer_amount="{ record, column }">
         <a-popover>
           <template #content>
-            <div class="popover-c">{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value)}` }}
+            <div class="popover-c">{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value).popover}` }}
             </div>
           </template>
-          <div>{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value)}` }}</div>
+          <div>{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value).title}` }}</div>
         </a-popover>
       </template>
 
@@ -66,7 +66,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import TokenIcon from '@/components/responsive/table/tokenIcon.vue';
 import { useGetIbcDenoms, useIbcChains } from '../home/composable';
-import { formatBigNumber, formatNum, getRestString } from '@/helper/parseString'
+import { formatBigNumber } from '@/helper/parseString'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useGetTokenList } from '@/service/tokens';
 import { formatPrice, formatSupply, formatAmount } from '@/helper/tablecell-helper';
@@ -154,17 +154,7 @@ const onSelectedStatus = (status?: string | number) => {
 }
 
 const resetSearchCondition = () => {
-  // chainDropdown.value.selectedChain = []
-  // chainDropdown.value.chainIdIput = undefined
-  // statusDropdown.value.selectOption = []
-  // tokensDropdown.value.selectToken = []
-  // tokensDropdown.value.tokenInput = undefined
-  // searchDenom.value = undefined
-  // searchChain.value = undefined
-  // searchStatus.value = undefined
-  // // reset list
-  // getList()
-
+  // 重制所有, 包括默认的排序列
   location.href = '/tokens'
 }
 

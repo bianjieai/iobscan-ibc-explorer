@@ -31,9 +31,9 @@
       <template #amount="{ record, column }">
         <a-popover>
           <template #content>
-            <div class="popover-c">{{ `${formatAmount(record[column.key], base_denom, ibcBaseDenoms.value)}` }}</div>
+            <div class="popover-c">{{ `${formatAmount(record[column.key], base_denom, ibcBaseDenoms.value).popover}` }}</div>
           </template>
-          <div>{{ `${formatAmount(record[column.key], base_denom, ibcBaseDenoms.value)}` }}</div>
+          <div>{{ `${formatAmount(record[column.key], base_denom, ibcBaseDenoms.value).title}` }}</div>
         </a-popover>
       </template>
 

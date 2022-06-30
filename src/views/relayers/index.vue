@@ -65,8 +65,7 @@ import { COLUMNS, STATUS_OPTIONS } from './constants'
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
-import { computed, onMounted, ref, watch } from 'vue';
-import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
+import { computed, onMounted, ref } from 'vue';
 import { formatLastUpdated } from '@/helper/time-helper';
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
 import StatusImg from '@/components/responsive/table/statusImg.vue';
@@ -136,13 +135,7 @@ const onSelectedStatus = (value?: number | string) => {
 
 // reset
 const resetSearchCondition = () => {
-  chainDropdown.value.selectedChain = []
-  chainDropdown.value.chainIdIput =  undefined
-  statusDropdown.value.selectOption = []
-  searchChain.value = undefined
-  searchStatus.value = undefined
-
-  getList()
+  location.href = '/relayers'
 }
 
 const goChains = () => {

@@ -17,11 +17,11 @@
       </template>
 
       <template #ibc_tokens="{ record, column }">
-        <div class="hover-cursor" @click="goTokens(record.chain_id)">{{ record[column.key] }}</div>
+        <div>{{ record[column.key] }}</div>
       </template>
 
       <template #ibc_tokens_value="{ record, column }">
-        <div>{{ `$ ${formatAmount(record[column.key])}` }}</div>
+        <div>{{ `$ ${formatAmount(record[column.key]).title}` }}</div>
       </template>
 
       <template #transfer_txs="{ record, column }">
@@ -86,14 +86,14 @@ const goRelayers = (chain_id: string) => {
   })
 }
 
-const goTokens = (chain_id: string) => {
-  router.push({
-    path: '/tokens',
-    query: {
-      chain_id
-    }
-  })
-}
+// const goTokens = (chain_id: string) => {
+//   router.push({
+//     path: '/tokens',
+//     query: {
+//       chain_id
+//     }
+//   })
+// }
 
 const goTransfer = (chain_id: string) => {
   router.push({

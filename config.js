@@ -2,17 +2,14 @@ let fs = require('fs');
 
 let arguments = process.argv.splice(2);
 let programs = (arguments[0] || '').split(',');
-console.log('programsprogramsprograms:',programs);
+console.log('programs:',programs);
 
 replaceEnv([
-        "./config/config.json",
+        "./.env.production",
     ],
     {
         "umeng_id": programs[0] ,
         "umeng_web_id": programs[1],
-        "date_picker_start_time": programs[2],
-        "irishub_iobcan_link": programs[3] || 'https://irishub.iobscan.io/#/address/',
-        "cosmoshub_iobcan_link": programs[4] || 'https://cosmoshub.iobscan.io/#/address/',
     }
 );
 
