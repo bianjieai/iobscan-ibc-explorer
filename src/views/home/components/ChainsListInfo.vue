@@ -152,10 +152,9 @@ const formatChainID = (chainId)=>{
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        border: 1px solid rgba(#000000, 0.2);
     }
     .card_title {
-        margin-top: 6px;
+        margin: 6px auto 0;
         max-width: 152px;
         font-size: var(--bj-font-size-sub-title);
         line-height: 20px;
