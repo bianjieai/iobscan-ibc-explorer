@@ -105,7 +105,7 @@ const needCustomColumns = [
 const chainDropdown = ref()
 const statusDropdown = ref()
 
-const searchChain = ref(chain_id ? `${chain_id},allchain` : undefined)
+const searchChain = ref(chain_id ? `${chain_id}` : undefined)
 const searchStatus = ref(status ? status : undefined)
 
 onMounted(() => {
