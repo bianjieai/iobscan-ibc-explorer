@@ -3,8 +3,14 @@
     <img :src="tokenInfo.imgSrc" :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']">
     <div class="flex flex-col justify-around"
       :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
-      <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ tokenInfo.title }}
+      <a-popover>
+          <template #content>
+            <div class="popover-c" >{{tokenInfo.defaultTitle}}</div>
+          </template>
+          <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ tokenInfo.title }}
       </div>
+        </a-popover>
+      
       <div :class="['subtitle', 'leading-none', 'tag']">{{ token_type ? token_type : tokenInfo.subtitle }}</div>
     </div>
   </div>
@@ -34,12 +40,14 @@ const tokenInfo = computed(() => {
  
  if (filterData) {
     return {
+      defaultTitle:filterData.symbol,
       title: props.basePage ? getRestString2(filterData.symbol, 6) : getRestString(filterData.symbol, 3, 8),
       subtitle: 'Authed',
       imgSrc: filterData.icon ? filterData.icon : new URL('../../../assets/token-default.png', import.meta.url).href
     }
   } else {
     return {
+      defaultTitle:props.denom,
       title: props.basePage ? getRestString2(props.denom, 6) : getRestString(props.denom, 3, 8),
       subtitle: 'Other',
       imgSrc: new URL('../../../assets/token-default.png', import.meta.url).href
