@@ -67,7 +67,7 @@ onMounted(() => {
 <style lang="less">
 .home {
     box-sizing: border-box;
-    padding: 48px 0 102px 0;
+    padding: 48px 0 100px 0;
     width: 100%;
     max-width: 1200px;
     & .header_input_layout {
@@ -83,7 +83,6 @@ onMounted(() => {
             padding: 24px;
             width: 100%;
             max-width: 1200px;
-
         }
         &_left {}
         &_right {
@@ -96,18 +95,17 @@ onMounted(() => {
         margin-top: 24px;
         width: 100%;
         &_left {
-
         }
         &_right {
+            flex: 1;
             margin-left: 24px;
-            width: 100%;
         }
     }
 }
 
 @media screen and (max-width: 1200px) {
     .home {
-        padding: 48px 32px 102px 32px;
+        padding: 48px 32px 100px 32px;
         &_top {
             width: 100%;
             &_slot {

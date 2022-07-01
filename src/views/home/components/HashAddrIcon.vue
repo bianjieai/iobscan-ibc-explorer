@@ -106,7 +106,7 @@ const getImageUrl = (name) => {
         }
     }
     &_address_link{
-        margin: 0 10px;
+        margin: 0 10px 0 0;
         cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default;
     }
     &_address_icon {
@@ -122,7 +122,7 @@ const getImageUrl = (name) => {
     &_value {
         .flex(row, nowrap, flex-start, center);
         width: 100%;
-        min-width: 150px;
+        min-width: 145px;
         font-size: var(--bj-font-size-normal);
         font-family: Montserrat-Regular, Montserrat;
         font-weight: 400;
@@ -153,7 +153,7 @@ const getImageUrl = (name) => {
 }
 @media screen and (max-width: 600px) {
     .status_icon {
-        margin: 7px 0 7px 10px;
+        margin: 7px 0 7px 1px;
         height: auto;
         transform: rotateZ(90deg);
     }

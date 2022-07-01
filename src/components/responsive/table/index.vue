@@ -147,6 +147,7 @@ if (props.realTimeKey && props.realTimeKey.length) {
 <style lang="less" scoped>
 :deep(.ant-table) {
   overflow-x: auto;
+  font-size: 14px;
 
   /* 设置滚动条的样式 */
   &::-webkit-scrollbar {
@@ -174,7 +175,7 @@ if (props.realTimeKey && props.realTimeKey.length) {
 }
 
 :deep(.ant-table-container) {
-  min-width: 1170px; // TODO clippers => 宽度待定
+  width: 1150px; // TODO clippers => 宽度待定
   min-height: 300px;
 }
 
@@ -217,9 +218,15 @@ if (props.realTimeKey && props.realTimeKey.length) {
   color: var(--bj-text-second);
   line-height: 1;
   vertical-align: middle;
+  &:first-child {
+    padding-right: 16px;
+    width: 24px;
+    text-align: left;
+  }
 }
 
 :deep(.ant-table-thead > tr > th) {
+    white-space: nowrap;
   border-bottom: none;
 }
 
