@@ -25,6 +25,8 @@
 import { TableColumnsType } from 'ant-design-vue';
 import { computed, onMounted, reactive, ref, toRaw, watch } from 'vue';
 import { compareValues } from './utils'
+import { useTimeInterval } from '@/composables'
+import { formatLastUpdated } from '@/helper/time-helper';
 
 interface IProps {
   columns: TableColumnsType
@@ -35,7 +37,8 @@ interface IProps {
   current?: number
   noPagination?: boolean
   scroll?: { x?: number, y?: number }
-  rowKey?: string
+  rowKey?: string,
+  realTimeKey?:{scKey:string, dcKey:string}[]
 }
 
 let backUpDataSource: any[] = []
@@ -87,34 +90,37 @@ const backUpData = () => {
     _count: index + 1,
     ...item
   }))
-  dataSource.value = backUpDataSource;
+  if (props.noPagination) {
+      dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
+    }
 }
 
 const emits = defineEmits<{
   (e: 'onPageChange', current: number, pageSize: number): void
 }>()
 
-const onPageChange = (page: number, pageSize: number) => {
-  dataSource.value = backUpDataSource; // back up
+const formatDataSourceWithRealTime = (data:any[])=>{
+  if (data.length && props.realTimeKey && props.realTimeKey.length) {
+    data.forEach((item:any)=>{
+      props.realTimeKey?.forEach((key)=>{
+        item[key.dcKey] = formatLastUpdated(item[key.scKey]);
+      });
+    });
+  }
+  return data;
+}
 
+const onPageChange = (page: number, pageSize: number) => {
   pageInfo.current = page
   pageInfo.pageSize = pageSize
   const p = (page - 1) * pageSize
   const pSize = page * pageSize
-  const data: any[] = []
-  toRaw(dataSource.value).forEach((item, index) => {
-    if (p <= index && index < pSize) {
-      data.push(item)
-    }
-  })
-
-  dataSource.value = data
+  dataSource.value = formatDataSourceWithRealTime(backUpDataSource.slice(p,pSize));
 }
 
 // todo clippers => 后端分页序号处理
 const onTableChange = (pagination: any, filters: any, sorter: any) => {
   const { columnKey, order } = sorter
-
   if (sorter.order) {
     backUpDataSource = backUpDataSource
       .sort(compareValues(columnKey, order))
@@ -122,12 +128,19 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
         ...item,
         _count: index + 1
       })) // reset backup
-    dataSource.value = backUpDataSource
-
-    needPagination.value && onPageChange(1, 10) // reset去第一页
+    if (props.noPagination) {
+      dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
+    }else{
+      needPagination.value && onPageChange(1, 10) // reset去第一页
+    }
   }
 }
 
+if (props.realTimeKey && props.realTimeKey.length) {
+  useTimeInterval(()=>{
+    dataSource.value =  formatDataSourceWithRealTime(dataSource.value);
+  });
+}
 
 </script>
 

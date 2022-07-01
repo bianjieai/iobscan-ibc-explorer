@@ -10,7 +10,12 @@
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
-    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count rowKey="relayer_id">
+    <BjTable 
+      :data="list" 
+      :need-custom-columns="needCustomColumns" 
+      :columns="COLUMNS"
+      :real-time-key = "[{scKey:'update_time', dcKey:'last_updated'}]"
+      need-count rowKey="relayer_id">
       <template #relayer_name="{ record, column }">
         <NamePopover 
           :chain_a="record.chain_a"
@@ -37,7 +42,7 @@
           :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
       </template>
 
-      <template #update_time="{ record, column }">
+      <template #last_updated="{ record, column }">
         <div>{{ formatLastUpdated(record[column.key]) }}</div>
       </template>
 

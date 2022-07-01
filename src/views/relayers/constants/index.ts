@@ -28,8 +28,8 @@ export const COLUMNS: TableColumnsType= [
   },
   {
     title: 'Last Updated',
-    dataIndex: 'update_time',
-    key: 'update_time',
+    dataIndex: 'last_updated',
+    key: 'last_updated',
     align:'right',
     sorter: (a, b) => a.update_time - b.update_time,
     width: 70
