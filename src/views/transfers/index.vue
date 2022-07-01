@@ -782,7 +782,7 @@ onMounted(() => {
 <style lang="less" scoped>
 .transfer {
     flex: 1;
-    padding: 48px 32px 154px;
+    padding: 48px 32px 100px;
     width: 100%;
     text-align: left;
     background-color: #f5f7fc;
@@ -942,13 +942,21 @@ onMounted(() => {
             border-right: 1px solid var(--bj-border-color);
         }
     
-    &_default{
-        color:var(--bj-text-second);
+        &_default{
+            color:var(--bj-text-second);
+        }
+        .status_select_title{
+            color: var(--bj-primary-color);
+        }
     }
-    .status_select_title{
-        color: var(--bj-primary-color);
+    // ::v-deep .ant-select-focused {
+    //     .ant-select-selector {
+    //         }
+    // }
+    .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+        box-shadow: none;
     }
-}}
+}
 
 .date_range {
     margin-right: 8px;

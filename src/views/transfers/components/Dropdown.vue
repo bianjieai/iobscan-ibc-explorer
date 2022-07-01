@@ -181,6 +181,12 @@ const onClickAll = () => {
   font-weight: 400;
   height: 36px;
   border: 1px solid var(--bj-border-color);
+  &:focus {
+    box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
+  }
+  &:blur {
+    box-shadow: none;
+  }
   &_token_icon {
       flex: 1;
     .flex(row, wrap, center, center);
@@ -265,7 +271,7 @@ const onClickAll = () => {
         padding: 6px 6px;
         cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default  !important;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-        .flex(row, nowrap, center, center);
+        .flex(row, nowrap, flex-start, center);
           .content_item_title{
                 overflow: hidden;
                 text-overflow: ellipsis;

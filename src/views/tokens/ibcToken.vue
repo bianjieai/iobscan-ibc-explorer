@@ -1,11 +1,12 @@
 <template>
   <PageContainer>
-    <PageTitle :title="`${baseDenomInfo.symbol} IBC Tokens`" :subtitle="`${formatBigNumber(list.length, 0)} tokens found`" has-icon
+    <PageTitle :title="`${baseDenomInfo.symbol} IBC Tokens`" :subtitle="subtitle" has-icon
       :img-src="baseDenomInfo.imgSrc" />
     <div class="select flex items-center flex-wrap">
-      <ChainsDropdown :chain_id="chain_id" :dropdown-data="ibcChains?.all ?? []" @on-selected-chain="onSelectedChain"
-        ref="chainDropdown" />
-      <BaseDropdown :options="IBC_STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
+      <ChainsDropdown :chain_id="chainIdQuery" :dropdown-data="ibcChains?.all ?? []"
+        @on-selected-chain="onSelectedChain" ref="chainDropdown" />
+      <BaseDropdown :status="statusQuery" :options="IBC_STATUS_OPTIONS" ref="statusDropdown"
+        @on-selected-change="onSelectedStatus" />
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
@@ -31,14 +32,17 @@
       <template #amount="{ record, column }">
         <a-popover>
           <template #content>
-            <div class="popover-c">{{ `${formatAmount(record[column.key], base_denom, ibcBaseDenoms.value).popover}` }}</div>
+            <div class="popover-c">{{ `${formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms.value).popover}`
+            }}</div>
           </template>
-          <div>{{ `${formatAmount(record[column.key], base_denom, ibcBaseDenoms.value).title}` }}</div>
+          <div>{{ `${formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms.value).title}` }}</div>
         </a-popover>
       </template>
 
       <template #receive_txs="{ record, column }">
-        <div class="hover-cursor" @click="goTransfer(`${record.chain_id},allchain`)">{{ formatBigNumber(record[column.key], 0) }}
+        <div class="hover-cursor" @click="goTransfer(`${record.chain_id},allchain`)">{{
+            formatBigNumber(record[column.key], 0)
+        }}
         </div>
       </template>
     </BjTable>
@@ -56,12 +60,15 @@ import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
 import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
-import { useGetIbcTokenList } from '@/service/tokens';
+import { TIbcTokenType, useGetIbcTokenList } from '@/service/tokens';
 import { useGetIbcDenoms, useIbcChains } from '../home/composable';
 import { getRestString, formatBigNumber } from '@/helper/parseString'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { formatAmount } from '@/helper/tablecell-helper';
 import { isNullOrEmpty } from '@/helper/object-helper';
+import { urlHelper } from '@/helper/url-helper';
+
+let pageUrl = `/tokens/details`
 
 const router = useRouter()
 
@@ -69,13 +76,14 @@ const { ibcChains, getIbcChains } = useIbcChains();
 const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
 
 const route = useRoute()
-const base_denom = route.query.denom as string
-const chain_id = route.query.chain as string
+const baseDenomQuery = route.query.denom as string
+const chainIdQuery = route.query.chain as string
+const statusQuery = route.query.status as TIbcTokenType
 
-const { list, getList } = useGetIbcTokenList(base_denom)
+const { list, total, getList } = useGetIbcTokenList(baseDenomQuery)
 
 const baseDenomInfo = computed(() => {
-  const filterData = ibcBaseDenoms.value.filter((item: any) => item.denom === base_denom) as any // todo clippers => 补上类型
+  const filterData = ibcBaseDenoms.value.filter((item: any) => item.denom === baseDenomQuery) as any // todo clippers => 补上类型
   let symbol = ''
   const filterSymbol = filterData[0]?.symbol
 
@@ -105,9 +113,16 @@ const needCustomColumns = [
 const chainDropdown = ref()
 const statusDropdown = ref()
 
-const searchChain = ref<string | undefined>(chain_id ?? undefined)
-const searchStatus = ref()
+const searchChain = ref<string | undefined>(chainIdQuery ?? undefined)
+const searchStatus = ref<TIbcTokenType | undefined>(statusQuery)
 
+const subtitle = computed(() => {
+  if (!searchChain.value && !searchStatus.value) {
+    return `${formatBigNumber(total.value, 0)} tokens found`
+  } else {
+    return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} tokens found`
+  }
+})
 
 onMounted(() => {
   !sessionStorage.getItem('allChains') && getIbcChains();
@@ -126,22 +141,27 @@ const refreshList = () => {
 
 const onSelectedChain = (chain?: string | number) => {
   searchChain.value = chain as string
+  pageUrl = urlHelper(pageUrl, {
+    key: 'chain',
+    value: chain as string
+  })
+  history.pushState(null, '', pageUrl)
   refreshList()
 }
 
 const onSelectedStatus = (status?: string | number) => {
-  searchStatus.value = status
+  searchStatus.value = status as TIbcTokenType
+  console.log(status)
+  pageUrl = urlHelper(pageUrl, {
+    key: 'status',
+    value: status as TIbcTokenType
+  })
+  history.pushState(null, '', pageUrl)
   refreshList()
 }
 
 const resetSearchCondition = () => {
-  chainDropdown.value.selectedChain = []
-  statusDropdown.value.selectOption = []
-  chainDropdown.value.chainIdIput =  undefined
-  searchChain.value = undefined
-  searchStatus.value = undefined
-  // reset list
-  getList()
+  location.href = `/tokens/details?denom=${baseDenomQuery}`
 }
 
 const goChains = () => {

@@ -30,7 +30,7 @@ export const useIbcChains = () => {
     }
 }
 export const useIbcTxs = () => {
-    const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
+    const ibcTxs = computed(() => ibcStatisticsChainsStore.ibcTxs);
     const getIbcTxs = ibcStatisticsChainsStore[GET_IBCTXS];
     const setExpandByIndex = (idx)=>{
         ibcStatisticsChainsStore.ibcTxs.value.forEach((item, index) => {

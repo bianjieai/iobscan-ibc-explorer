@@ -2,9 +2,9 @@
   <PageContainer>
     <PageTitle title="IBC Channels" :subtitle="subtitle" />
     <div class="select flex items-center flex-wrap">
-      <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" :chain_id="chain_id" @on-selected-chain="onSelectedChain"
-        selected-double ref="chainDropdown" />
-      <BaseDropdown :status="status" :options="STATUS_OPTIONS" ref="statusDropdown"
+      <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" :chain_id="chainIdQuery"
+        @on-selected-chain="onSelectedChain" selected-double ref="chainDropdown" />
+      <BaseDropdown :status="statusQuery" :options="STATUS_OPTIONS" ref="statusDropdown"
         @on-selected-change="onSelectedStatus" />
 
       <ResetButton @on-reset="resetSearchCondition" />
@@ -63,12 +63,14 @@ import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useIbcChains } from '../home/composable';
 import { useRoute, useRouter } from 'vue-router';
 import { formatBigNumber } from '@/helper/parseString';
+import { urlHelper } from '@/helper/url-helper';
+
+let pageUrl = '/channels'
 
 const route = useRoute()
 const router = useRouter()
-const chain_id = route.query.chain as string
-const status = route.query.status as TChannelStatus
-
+const chainIdQuery = route.query.chain as string
+const statusQuery = route.query.status as TChannelStatus
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { list, total, getList } = useGetChannelsList()
@@ -85,8 +87,8 @@ const needCustomColumns = [
 const chainDropdown = ref()
 const statusDropdown = ref()
 
-const searchChain = ref(chain_id ? chain_id : undefined)
-const searchStatus = ref(status ? status : undefined)
+const searchChain = ref(chainIdQuery ? chainIdQuery : undefined)
+const searchStatus = ref(statusQuery ? statusQuery : undefined)
 
 onMounted(() => {
   !sessionStorage.getItem('allChains') && getIbcChains();
@@ -111,11 +113,21 @@ const refreshList = () => {
 
 const onSelectedChain = (chain_id?: string) => {
   searchChain.value = chain_id
+  pageUrl = urlHelper(pageUrl, {
+    key: 'chain',
+    value: chain_id as string
+  })
+  history.pushState(null, '', pageUrl)
   refreshList()
 }
 
 const onSelectedStatus = (value?: number | string) => {
   searchStatus.value = value as TChannelStatus
+  pageUrl = urlHelper(pageUrl, {
+    key: 'status',
+    value: value as TChannelStatus
+  })
+  history.pushState(null, '', pageUrl)
   refreshList()
 }
 
@@ -139,6 +151,7 @@ const goChains = () => {
     margin-right: 8px;
   }
 }
+
 // :deep(.ant-table-tbody .ant-table-cell) {
 //     &:nth-of-type(3) {
 //         padding-right: 16px;
