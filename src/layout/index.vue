@@ -128,10 +128,10 @@ a {
 }
 ::v-deep .ant-pagination-item {
   a{
-    cursor: url("src/assets/mouse/shiftlight_mouse.png"), default ;
+    cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;
   }
   &-link{
-    cursor: url("src/assets/mouse/shiftlight_mouse.png"), default ;   
+    cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;   
   }
 }
 .layout {
