@@ -4,9 +4,18 @@
     iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']" @click="avatarClick">
     <div class="flex flex-col justify-around"
       :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
-      <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ computedTitle }}
-      </div>
-      <div v-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">{{ formatChainID(chainInfo.subtitle) }}</div>
+      <a-popover>
+          <template #content>
+            <div class="popover-c" >{{computedTitle}}</div>
+          </template>
+          <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ computedTitle }}</div>
+      </a-popover>
+      <a-popover placement="bottom">
+          <template #content>
+            <div class="popover-c" >{{chainInfo.subtitle}}</div>
+          </template>
+          <div v-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">{{ formatChainID(chainInfo.subtitle) }}</div>
+      </a-popover>
     </div>
   </div>
 </template>
@@ -40,8 +49,7 @@ const computedTitle = computed(() => {
   } else {
     title = chainInfo.value.title
   }
-
-  return formatLongTitleString(title)
+  return title
 })
 
 const chainInfo = computed(() => {
@@ -94,9 +102,17 @@ const avatarClick = () => {
 
 .title {
   font-size: var(--bj-font-size-sub-title);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100px;
 }
 
 .subtitle {
   color: var(--bj-text-third);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100px;
 }
 </style>
