@@ -24,13 +24,13 @@ export const useGetChannelsList = () => {
       }
     })
     const { code, data, message } = result
-    
+
 
     if (code === 0) {
       const { items } = data
       if (!totalCount) {
         list.value = items;
-      }else{
+      } else {
         total.value = items.length
       }
     } else {

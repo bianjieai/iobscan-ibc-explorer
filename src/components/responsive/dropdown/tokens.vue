@@ -28,7 +28,7 @@
             <span v-for="item in dropdownData" @click="onSelected(item.symbol, item.denom)"
               :class="['chains-tag', 'mr-12', 'mt-16', isSelected(item.denom) ? 'visible_color visible_border' : '']"
               :key="item.denom">
-              <img :src="item.icon" width="24" height="24" class="mr-8" />{{ item.symbol }}
+              <img :src="iconSrc(item.icon)" width="24" height="24" class="mr-8" />{{ item.symbol }}
             </span>
           </div>
         </div>
@@ -63,8 +63,8 @@
 </template>
 
 <script lang="ts" setup>
-import { formatLongTitleString, getRestString } from '@/helper/parseString';
-import { computed, ref } from 'vue';
+import { getRestString } from '@/helper/parseString';
+import { computed, onMounted, ref } from 'vue';
 
 const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href
 
@@ -76,6 +76,7 @@ type TSelectToken = {
 }
 interface IProps {
   dropdownData: any[]
+  base_denom?: string
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -87,13 +88,41 @@ const selectToken = ref<TSelectToken[]>([])
 const tokenInput = ref<TDenom>(undefined)
 
 const isSelected = computed(() => (denom: TDenom) => selectToken.value.length > 0 && selectToken.value[0]?.denom === denom)
-const selectedText = computed(() => {  
-  
+const selectedText = computed(() => {
+
   if (selectToken.value.length > 0) {
-    return selectToken.value[0].symbol == tokenInput.value?getRestString(tokenInput.value, 4, 4) : selectToken.value[0].symbol;
-  } 
+    return selectToken.value[0].symbol == tokenInput.value ? getRestString(tokenInput.value, 4, 4) : selectToken.value[0].symbol;
+  }
   else {
     return 'All Tokens'
+  }
+})
+
+const iconSrc = (src:string) => {
+  if (src) return src
+  return imgSrc
+}
+
+onMounted(() => {
+  if (props.base_denom) {
+    const filterObj = props.dropdownData.find(item => item.denom === props.base_denom)
+    if (filterObj && filterObj.denom) {
+      selectToken.value = [{
+        denom: filterObj.denom,
+        symbol: filterObj.symbol
+      }]
+    } else if (props.base_denom === 'others') {
+      selectToken.value = [{
+        denom: 'others',
+        symbol: 'Others'
+      }]
+    } else {
+      tokenInput.value = props.base_denom
+      selectToken.value = [{
+        denom: props.base_denom,
+        symbol: props.base_denom
+      }]
+    }
   }
 })
 
