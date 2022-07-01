@@ -736,11 +736,11 @@ const onSelectedChain = (chain_id) => {
             url += `&startTime=&endTime=${endTime}`
         }
         if (queryParam?.date_range.length === 2) {
-            const startTimeStamp = queryParam.date_range[0]
-            const entTimeStamp = queryParam.date_range[1]
-            const startTime = dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
-            const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD')
-            url += `&startTime=${startTime}&endTime=${endTime}`
+            const startTimeStamp = queryParam.date_range[0];
+            const entTimeStamp = queryParam.date_range[1];
+            const startTime = startTimeStamp > 0 ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD') : '';
+            const endTime = entTimeStamp > 0 ? dayjs(entTimeStamp * 1000).format('YYYY-MM-DD') : '';
+            url += `&startTime=${startTime}&endTime=${endTime}`;
         }
     }
     history.pushState(null, null, url)
