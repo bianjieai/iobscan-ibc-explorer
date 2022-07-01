@@ -782,7 +782,7 @@ onMounted(() => {
 <style lang="less" scoped>
 .transfer {
     flex: 1;
-    padding: 48px 32px 154px;
+    padding: 48px 32px 100px;
     width: 100%;
     text-align: left;
     background-color: #f5f7fc;

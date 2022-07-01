@@ -6,7 +6,7 @@ export const COLUMNS: TableColumnsType= [
     title: 'Relayer Name',
     dataIndex: 'relayer_name',
     key: 'relayer_name',
-    width: 120
+    width: 110
   },
   {
     title: 'Connected Channel',
@@ -32,7 +32,7 @@ export const COLUMNS: TableColumnsType= [
     key: 'update_time',
     align:'right',
     sorter: (a, b) => a.update_time - b.update_time,
-    width: 80
+    width: 70
   },
   {
     title: 'Txs Success rate',

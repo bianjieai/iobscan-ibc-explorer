@@ -320,7 +320,7 @@ const confirmChains = () => {
 }
 
 .default_color {
-  color: var(--bj-text-third);
+  color: var(--bj-text-second);
 }
 
 .selected_color {

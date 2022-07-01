@@ -107,14 +107,21 @@ const isShowLink = (address, chainID) => {
             padding: 14px 0;
             width: 100%;
             &_adress_container {
+                flex: 1;
                 .flex(row, nowrap, space-between, center);
-                width: 100%;
             }
             &_title_container {
                 .flex(column, nowrap, space-between, flex-start);
                 width: 100%;
                 max-width: 150px;
-                margin: 8px;
+                &:hover {
+                    .list_subItem_value {
+                        color: var(--bj-primary-color);
+                    }
+                    .list_subItem_title {
+                        color: var(--bj-primary-color);
+                    }
+                }
             }
             &_value {
                 width: 100%;
@@ -165,13 +172,13 @@ const isShowLink = (address, chainID) => {
         margin: 0 0 0 8px;
     }
     &_link {
-        margin: 0 24px 0 18px;
+        // margin: 0 24px 0 18px;
         cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;
     }
     &_icon {
         width: 40px;
         border-radius: 50%;
-        margin: 0 24px 0 18px;
+        margin: 0 24px 0 12px;
     }
     & .out_hash_wrap {
         display: none;

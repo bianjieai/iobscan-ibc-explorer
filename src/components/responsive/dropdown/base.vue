@@ -3,7 +3,7 @@
     <div
       :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']">
       <div
-        :class="['flex-1', 'ml-8', 'mr-8', 'text-center', selectOption.length > 0 ? 'selected_color' : '', selectOption.length > 0 && visible ? 'visible_color' : '']">
+        :class="['flex-1', 'ml-8', 'mr-8', 'text-center', selectOption.length > 0 ? 'selected_color' : '', (selectedText === defaultTitle['defaultStatus'] || selectedText === options[0].key) ? 'selected_color_default' : '', selectOption.length > 0 && visible ? 'visible_color' : '']">
         {{ selectedText }}</div>
       <span class="button__icon flex justify-between items-center">
         <svg :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }" focusable="false" data-icon="down"
@@ -25,6 +25,7 @@
 </template>
 
 <script setup lang="ts">
+import {defaultTitle} from '../../../constants/index';
 // todo clippers => 向下箭头换个清晰的svg
 import { computed, onMounted, ref } from 'vue';
 type TKey = string
@@ -49,7 +50,7 @@ const selectedText = computed(() => {
   if (selectOption.value.length > 0) {
     return selectOption.value[0].key
   } else {
-    return props.options[0]?.key ?? 'All Status'
+    return props.options[0]?.key ?? defaultTitle['defaultStatus'];
   }
 })
 
@@ -134,11 +135,14 @@ const onSelect = (key: TKey, value: TValue) => {
 }
 
 .default_color {
-  color: var(--bj-text-third);
+  color: var(--bj-text-second);
 }
 
 .selected_color {
-  color: var(--bj-text-second);
+  color: var(--bj-primary-color);
+  &_default {
+    color: var(--bj-text-second);
+  }
 }
 
 .selected_option {

@@ -72,26 +72,11 @@ const props = defineProps<IProps>()
   }
 }
 
-// pc
-@media screen and (min-width: 768px) {
-  .page-title-container {
-    padding-top: 48px;
-  }
-}
-
-// tablet
-@media screen and (min-width: 414px) and (max-width: 768px) {
-  .page-title-container {
-    padding-top: 40px;
-  }
-}
-
 // mobile
 @media screen and (max-width: 414px) {
   .page-title-container {
     display: inline-flex;
     text-align: left;
-    padding-top: 24px;
 
     .flex {
       display: block;

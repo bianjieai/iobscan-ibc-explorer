@@ -3,7 +3,7 @@
     <div
       :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']">
       <div
-        :class="['flex-1', 'text-center', selectToken.length > 0 ? 'selected_color' : '', selectToken.length > 0 && visible ? 'visible_color' : '']">
+        :class="['flex-1', 'text-center', selectToken.length > 0 ? 'selected_color' : '', selectedText === defaultTitle['defaultTokens'] ? 'selected_color_default' : '', selectToken.length > 0 && visible ? 'visible_color' : '']">
         {{ selectedText }}</div>
       <span class="button__icon flex justify-between items-center">
         <svg :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }" focusable="false" data-icon="down"
@@ -65,7 +65,7 @@
 <script lang="ts" setup>
 import { formatLongTitleString, getRestString } from '@/helper/parseString';
 import { computed, ref } from 'vue';
-
+import {defaultTitle} from '../../../constants/index';
 const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href
 
 type TDenom = string | undefined
@@ -93,7 +93,7 @@ const selectedText = computed(() => {
     return selectToken.value[0].symbol == tokenInput.value?getRestString(tokenInput.value, 4, 4) : selectToken.value[0].symbol;
   } 
   else {
-    return 'All Tokens'
+    return defaultTitle['defaultTokens'];
   }
 })
 
@@ -161,11 +161,14 @@ const onSelected = (symbol: string, denom: TDenom) => {
 }
 
 .default_color {
-  color: var(--bj-text-third);
+  color: var(--bj-text-second);
 }
 
 .selected_color {
-  color: var(--bj-text-second)
+  color: var(--bj-primary-color);
+  &_default {
+    color: var(--bj-text-second);
+  }
 }
 
 .overlay {
