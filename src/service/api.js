@@ -69,7 +69,7 @@ function get(url, params) {
         } catch (err) {
 
             console.error(`error from ${url}:`, err.message);
-            if (url?.includes('/api/ibc/chains') || url?.includes('/api/ibc/txs')) {
+            if (url?.includes('/ibc/chains') || url?.includes('/ibc/txs')) {
                 if (!err?.message?.includes('code 200')) {
                     router.push('/500')
                 }
@@ -80,7 +80,7 @@ function get(url, params) {
 }
 
 function getIbcTxs(params) {
-    const url = '/api/ibc/txs';
+    const url = '/ibc/txs';
     const config = {
         params,
     };
@@ -88,32 +88,32 @@ function getIbcTxs(params) {
 }
 
 function getIbcChains() {
-    const url = '/api/ibc/chains';
+    const url = '/ibc/chains';
     return get(url);
 }
 
 function getIbcBaseDenoms() {
-    const url = '/api/ibc/baseDenoms';
+    const url = '/ibc/baseDenoms';
     return get(url);
 }
 
 function getIbcDenoms() {
-    const url = '/api/ibc/denoms';
+    const url = '/ibc/denoms';
     return get(url);
 }
 
 function getIbcStatistics() {
-    const url = '/api/ibc/statistics';
+    const url = '/ibc/statistics';
     return get(url);
 }
 
 function getIbcConfig() {
-    const url = '/api/ibc/config';
+    const url = '/ibc/config';
     return get(url);
 }
 
 function getTxDetailsByTxHash(txHash) {
-    const url = `/api/ibc/txs/${txHash}`
+    const url = `/ibc/txs/${txHash}`
     return get(url);
 }
 

@@ -1,5 +1,6 @@
 let fs = require('fs');
 
+console.log('process.argv:',process.argv);
 let arguments = process.argv.splice(2);
 let programs = (arguments[0] || '').split(',');
 console.log('programs:',programs);
