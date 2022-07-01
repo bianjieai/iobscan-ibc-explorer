@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center">
-    <img :src="tokenInfo.imgSrc" :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']">
+    <img :src="tokenInfo.imgSrc" :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']" @click="go">
     <div class="flex flex-col justify-around"
       :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
       <a-popover>
@@ -70,6 +70,7 @@ const go = () => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
+  cursor: url(/src/assets/mouse/shiftlight_mouse.png), default;
 }
 
 .small-icon {

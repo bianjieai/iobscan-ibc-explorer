@@ -114,7 +114,6 @@ const getImageUrl = (name) => {
         height: 24px;
         // margin: 0 10px;
         border-radius: 50%;
-        border: 1px solid rgba(0, 0, 0, 0.2);
     }
     &_container {
         .flex(column, nowrap, flex-start, flex-start);

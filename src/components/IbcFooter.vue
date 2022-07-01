@@ -33,13 +33,14 @@ const getImageUrl = (name:string) => {
   .flex(row, nowrap, space-between, center);
 
   &_left {
+    .flex(row, nowrap, flex-start, center);
     font-size: @font-size5;
     font-family: Montserrat-Regular, Montserrat;
     font-weight: 400;
     color: @font-color2;
 
     &_icon {
-      margin-left: 8px;
+      margin-right: 8px;
       width: 28px;
       height: 28px;
       padding: 6px;
