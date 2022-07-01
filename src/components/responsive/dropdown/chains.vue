@@ -298,6 +298,11 @@ const confirmChains = () => {
     border-color: #667aff;
   }
 }
+:deep(.ant-dropdown-open) {
+    &:focus {
+      box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
+    }
+}
 
 .button__icon {
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -312,6 +317,7 @@ const confirmChains = () => {
 
 .visible_border {
   border: 1px solid var(--bj-primary-color) !important;
+  box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
 }
 
 .visible_color {
@@ -320,7 +326,7 @@ const confirmChains = () => {
 }
 
 .default_color {
-  color: var(--bj-text-third);
+  color: var(--bj-text-second);
 }
 
 .selected_color {
@@ -345,7 +351,7 @@ const confirmChains = () => {
 .chains-tag {
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   white-space: nowrap;
   text-align: left;

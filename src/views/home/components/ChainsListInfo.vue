@@ -158,15 +158,16 @@ const formatChainID = (chainId)=>{
         margin-top: 6px;
         max-width: 152px;
         font-size: var(--bj-font-size-sub-title);
-        line-height: var(--bj-font-size-sub-title);
+        line-height: 20px;
         font-family: Montserrat-SemiBold, Montserrat;
         font-weight: 600;
         overflow:hidden;
         text-overflow:ellipsis;
         color: var(--bj-text-second);
+        vertical-align: middle;
     }
     .card_value {
-        margin: 6px 0;
+        margin: 4px 0 6px;
         font-size: var(--bj-font-size-normal);
         line-height: 16px;
         font-family: Montserrat-Regular, Montserrat;
