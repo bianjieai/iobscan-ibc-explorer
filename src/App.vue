@@ -3,15 +3,10 @@
 </template>
 
 <script setup>
-let a = import.meta.env.VITE_UMENG_ID;
-let b = import.meta.env.VITE_UMENG_WEB_ID;
 let script = document.createElement('script');
 script.src = `https://s4.cnzz.com/z_stat.php?id=${import.meta.env.VITE_UMENG_ID}&web_id=${import.meta.env.VITE_UMENG_WEB_ID}`;
 script.language = 'JavaScript';
 document.body.appendChild(script);
-
-console.log('a:',a, 'b:',b);
-console.log('src:',src);
 </script>
 
 <style>
