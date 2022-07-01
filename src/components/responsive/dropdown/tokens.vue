@@ -64,7 +64,7 @@
 
 <script lang="ts" setup>
 import { formatLongTitleString, getRestString } from '@/helper/parseString';
-import { computed, ref } from 'vue';
+import { onMounted, computed, ref } from 'vue';
 import {defaultTitle} from '../../../constants/index';
 
 const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href
