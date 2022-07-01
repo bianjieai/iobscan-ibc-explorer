@@ -90,6 +90,13 @@ const backUpData = () => {
     _count: index + 1,
     ...item
   }))
+  let defaultSort = props.columns.find((item)=>{
+    return item.defaultSortOrder != undefined;
+  });
+
+  if (defaultSort) {
+    onTableChange({},{},{ columnKey: defaultSort.key, order:defaultSort.defaultSortOrder });
+  }
   if (props.noPagination) {
       dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
     }
@@ -121,7 +128,7 @@ const onPageChange = (page: number, pageSize: number) => {
 // todo clippers => 后端分页序号处理
 const onTableChange = (pagination: any, filters: any, sorter: any) => {
   const { columnKey, order } = sorter
-  if (sorter.order) {
+  if (order) {
     backUpDataSource = backUpDataSource
       .sort(compareValues(columnKey, order))
       .map((item: any, index: number) => ({
