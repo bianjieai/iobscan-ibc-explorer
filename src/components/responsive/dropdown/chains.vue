@@ -351,7 +351,7 @@ const confirmChains = () => {
 .chains-tag {
   position: relative;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   white-space: nowrap;
   text-align: left;

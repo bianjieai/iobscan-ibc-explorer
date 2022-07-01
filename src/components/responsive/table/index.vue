@@ -213,6 +213,7 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
 }
 
 :deep(.ant-table-thead > tr > th) {
+    white-space: nowrap;
   border-bottom: none;
 }
 

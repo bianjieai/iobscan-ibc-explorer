@@ -112,10 +112,9 @@ const onSelect = (key: TKey, value: TValue) => {
   color: var(--bj-text-second);
   border: 1px solid var(--bj-border-color);
   border-radius: 4px;
-  text-align: center;
 
   .item {
-    padding: 9px 0;
+    padding: 9px 12px;
     cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
 
     &:hover {

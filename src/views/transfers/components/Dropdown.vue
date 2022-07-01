@@ -271,7 +271,7 @@ const onClickAll = () => {
         padding: 6px 6px;
         cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default  !important;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-        .flex(row, nowrap, center, center);
+        .flex(row, nowrap, flex-start, center);
           .content_item_title{
                 overflow: hidden;
                 text-overflow: ellipsis;
