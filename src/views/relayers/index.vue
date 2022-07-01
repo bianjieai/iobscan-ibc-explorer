@@ -2,9 +2,9 @@
   <PageContainer>
     <PageTitle title="IBC Relayers" :subtitle="subtitle" />
     <div class="select flex items-center flex-wrap">
-      <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" :chain_id="chain_id" @on-selected-chain="onSelectedChain"
-        selected-double ref="chainDropdown" />
-      <BaseDropdown :status="status" :options="STATUS_OPTIONS" ref="statusDropdown"
+      <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" :chain_id="chainIdQuery"
+        @on-selected-chain="onSelectedChain" selected-double ref="chainDropdown" />
+      <BaseDropdown :status="statusQuery" :options="STATUS_OPTIONS" ref="statusDropdown"
         @on-selected-change="onSelectedStatus" />
 
       <ResetButton @on-reset="resetSearchCondition" />
@@ -17,15 +17,9 @@
       :real-time-key = "[{scKey:'update_time', dcKey:'last_updated'}]"
       need-count rowKey="relayer_id">
       <template #relayer_name="{ record, column }">
-        <NamePopover 
-          :chain_a="record.chain_a"
-          :chain_b="record.chain_b"
-          :chain_a_address="record.chain_b_address"
-          :chain_b_address="record.chain_b_address"
-          :img-src="record.relayer_icon"
-          :relayer_name="record[column.key]"
-          :ibc-chains="ibcChains?.all"
-        />
+        <NamePopover :chain_a="record.chain_a" :chain_b="record.chain_b" :chain_a_address="record.chain_b_address"
+          :chain_b_address="record.chain_b_address" :img-src="record.relayer_icon" :relayer_name="record[column.key]"
+          :ibc-chains="ibcChains?.all" />
       </template>
 
       <template #chain_a="{ record, column }">
@@ -55,7 +49,7 @@
           :currency="record.currency" />
       </template>
 
-      <template #table_bottom_status v-if="list.length !== 0">
+      <template #table_bottom_status v-if="list?.length !== 0">
         <BottomStatus type="Relayer" />
       </template>
     </BjTable>
@@ -82,12 +76,15 @@ import { useRoute, useRouter } from 'vue-router';
 import { formatTransfer_success_txs } from '@/helper/tablecell-helper';
 import NamePopover from './components/namePopover.vue';
 import { formatBigNumber } from '@/helper/parseString';
+import { urlHelper } from '@/helper/url-helper';
+
+let pageUrl = '/relayers'
 
 const route = useRoute()
 const router = useRouter()
 
-const chain_id = route.query.chain as string
-const status = route.query.status as TRelayerStatus
+const chainIdQuery = route.query.chain as string
+const statusQuery = route.query.status as TRelayerStatus
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { list, getList, total } = useGetRelayersList()
@@ -105,8 +102,16 @@ const needCustomColumns = [
 const chainDropdown = ref()
 const statusDropdown = ref()
 
-const searchChain = ref(chain_id ? `${chain_id},allchain` : undefined)
-const searchStatus = ref(status ? status : undefined)
+const originalChainRef = () => {
+  if (!chainIdQuery) return
+  if (chainIdQuery.includes(',')) {
+    return `${chainIdQuery}`
+  } else {
+    return `${chainIdQuery},allchain`
+  }
+}
+const searchChain = ref(originalChainRef())
+const searchStatus = ref(statusQuery ? statusQuery : undefined)
 
 onMounted(() => {
   !sessionStorage.getItem('allChains') && getIbcChains();
@@ -116,9 +121,9 @@ onMounted(() => {
 
 const subtitle = computed(() => {
   if (!searchChain.value && !searchStatus.value) {
-    return `${formatBigNumber(total.value, 0)} ralyers found`
+    return `${formatBigNumber(total.value, 0)} relayers found`
   } else {
-    return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} ralyers found`
+    return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(total.value, 0)} relayers found`
   }
 })
 
@@ -131,11 +136,21 @@ const refreshList = () => {
 
 const onSelectedChain = (chain_id?: string) => {
   searchChain.value = chain_id
+  pageUrl = urlHelper(pageUrl, {
+    key: 'chain',
+    value: chain_id as string
+  })
+  history.pushState(null, '', pageUrl)
   refreshList()
 }
 
 const onSelectedStatus = (value?: number | string) => {
   searchStatus.value = value as TRelayerStatus
+  pageUrl = urlHelper(pageUrl, {
+    key: 'status',
+    value: value as TRelayerStatus
+  })
+  history.pushState(null, '', pageUrl)
   refreshList()
 }
 

@@ -97,7 +97,7 @@ type TSelectedChain = {
   chain_name: TChainName,
 }
 
-let backupDropdownData:TSelectedChain[] = []
+let backupDropdownData: TSelectedChain[] = []
 const handleDropdownData = ref<TChainData[]>()
 
 const setAllChains = (dropdownData: TChainData[] = props.dropdownData) => {
@@ -276,7 +276,7 @@ const confirmChains = () => {
         }]
       }
 
-      submitChain(`${chainIdIput.value},allchain`)
+      submitChain(`${chainIdIput.value ? chainIdIput.value : 'allchain'},allchain`)
     }
   } else {
     submitChain(chainIdIput.value ?? 'allchain')

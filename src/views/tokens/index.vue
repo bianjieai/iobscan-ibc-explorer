@@ -2,16 +2,17 @@
   <PageContainer>
     <PageTitle title="IBC Tokens" :subtitle="subtitle" />
     <div class="select flex items-center flex-wrap">
-      <TokensDropDown :dropdown-data="ibcBaseDenoms.value" @on-tokens-selected="onSelectedToken" ref="tokensDropdown" />
-      <ChainsDropdown :dropdown-data="ibcChains?.all" :chain_id="chain_id" @on-selected-chain="onSelectedChain"
+      <TokensDropDown :base_denom="denomQuery" :dropdown-data="ibcBaseDenoms.value" @on-tokens-selected="onSelectedToken" ref="tokensDropdown" />
+      <ChainsDropdown :dropdown-data="ibcChains?.all" :chain_id="chainIdQuery" @on-selected-chain="onSelectedChain"
         ref="chainDropdown" />
-      <BaseDropdown :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
+      <BaseDropdown :status="statusQuery" :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
     <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
       <template #base_denom="{ record, column }">
-        <TokenIcon base-page title-can-click @click-title="goIbcToken(record.base_denom)" :token_type="record.token_type" :denom="record[column.key]" :denoms-data="ibcBaseDenoms.value" />
+        <TokenIcon base-page title-can-click @click-title="goIbcToken(record.base_denom)"
+          :token_type="record.token_type" :denom="record[column.key]" :denoms-data="ibcBaseDenoms.value" />
       </template>
       <template #price="{ record, column }">
         <a-popover>
@@ -29,7 +30,9 @@
       <template #ibc_transfer_amount="{ record, column }">
         <a-popover>
           <template #content>
-            <div class="popover-c">{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value).popover}` }}
+            <div class="popover-c">{{ `${formatAmount(record[column.key], record.base_denom,
+                ibcBaseDenoms.value).popover}`
+            }}
             </div>
           </template>
           <div>{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value).title}` }}</div>
@@ -70,11 +73,15 @@ import { formatBigNumber } from '@/helper/parseString'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useGetTokenList } from '@/service/tokens';
 import { formatPrice, formatSupply, formatAmount } from '@/helper/tablecell-helper';
+import { urlHelper } from '@/helper/url-helper'
 
+let pageUrl = '/tokens'
 
 const router = useRouter()
 const route = useRoute()
-const chain_id = route.query.chain as string
+const chainIdQuery = route.query.chain as string
+const denomQuery = route.query.denom as string
+const statusQuery = route.query.status as 'Authed' | 'Other'
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
@@ -97,23 +104,9 @@ const statusDropdown = ref()
 const tokensDropdown = ref()
 
 // 缓存筛选条件
-const searchDenom = ref()
-const searchChain = ref<string | undefined>(chain_id)
-const searchStatus = ref<'Authed' | 'Other'>()
-
-// todo 逻辑需要重写
-// const subtitle = computed(() => {
-//   if (Array.isArray(ibcChains.value?.all)) {
-//     const chain_name = ibcChains.value?.all.filter((item: any) => item.chain_id === searchChain.value)[0]?.chain_name ?? 'Unknown'
-//     if (searchChain.value) {
-//       return `${formatBigNumber(list.value.length, 0)} tokens found in ${chain_name.length > 15 ? getRestString(chain_name, 3, 8) : chain_name}`
-//     } else {
-//       return `${formatBigNumber(list.value.length, 0)} tokens found`
-//     }
-//   } else {
-//     return ``
-//   }
-// })
+const searchDenom = ref(denomQuery)
+const searchChain = ref<string | undefined>(chainIdQuery)
+const searchStatus = ref<'Authed' | 'Other'>(statusQuery)
 
 const subtitle = computed(() => {
   if (!searchChain.value && !searchStatus.value && !searchDenom.value) {
@@ -139,17 +132,32 @@ const refreshList = () => {
 }
 
 const onSelectedToken = (denom?: string | number) => {
-  searchDenom.value = denom
+  searchDenom.value = denom as string
+  pageUrl = urlHelper(pageUrl, {
+    key: 'denom',
+    value: denom as string
+  })
+  history.pushState(null, '', pageUrl)
   refreshList()
 }
 
 const onSelectedChain = (chain?: string | number) => {
   searchChain.value = chain ? String(chain) : undefined;
+  pageUrl = urlHelper(pageUrl, {
+    key: 'chain',
+    value: chain as string
+  })
+  history.pushState(null, '', pageUrl)
   refreshList()
 }
 
 const onSelectedStatus = (status?: string | number) => {
   searchStatus.value = status as 'Authed' | 'Other'
+  pageUrl = urlHelper(pageUrl, {
+    key: 'status',
+    value: status as string
+  })
+  history.pushState(null, '', pageUrl)
   refreshList()
 }
 
