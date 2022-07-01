@@ -138,9 +138,6 @@ export default {
     }
     .ant-menu-item-active {
       background-image: none!important;
-      .header_menu_item_img{
-        visibility: visible;
-        }
     }
 }
 @media screen and (max-width: 768px){

@@ -126,6 +126,14 @@ a {
     }
   }
 }
+::v-deep .ant-pagination-item {
+  a{
+    cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;
+  }
+  &-link{
+    cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;   
+  }
+}
 .layout {
   width: 100%;
   background-image: url("../assets/Summer_bg.png");

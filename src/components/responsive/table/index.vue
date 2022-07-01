@@ -252,6 +252,10 @@ if (props.realTimeKey && props.realTimeKey.length) {
   margin-left: 8px;
 }
 
+:deep(.ant-table-column-has-sorters) {
+  cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default !important;
+}
+
 :deep(.ant-pagination) {
   // margin: 16px;
   text-align: right;
