@@ -28,7 +28,7 @@
             <span v-for="item in dropdownData" @click="onSelected(item.symbol, item.denom)"
               :class="['chains-tag', 'mr-12', 'mt-16', isSelected(item.denom) ? 'visible_color visible_border' : '']"
               :key="item.denom">
-              <img :src="item.icon" width="24" height="24" class="mr-8" />{{ item.symbol }}
+              <img :src="item.icon || imgSrc" width="24" height="24" class="mr-8" />{{ item.symbol }}
             </span>
           </div>
         </div>
@@ -154,6 +154,7 @@ const onSelected = (symbol: string, denom: TDenom) => {
 
 .visible_border {
   border: 1px solid var(--bj-primary-color) !important;
+  box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
 }
 
 .visible_color {

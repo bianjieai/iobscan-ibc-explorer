@@ -128,6 +128,7 @@ const onSelect = (key: TKey, value: TValue) => {
 
 .visible_border {
   border: 1px solid var(--bj-primary-color) !important;
+  box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
 }
 
 .visible_color {

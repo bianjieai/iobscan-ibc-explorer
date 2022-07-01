@@ -181,6 +181,12 @@ const onClickAll = () => {
   font-weight: 400;
   height: 36px;
   border: 1px solid var(--bj-border-color);
+  &:focus {
+    box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
+  }
+  &:blur {
+    box-shadow: none;
+  }
   &_token_icon {
       flex: 1;
     .flex(row, wrap, center, center);

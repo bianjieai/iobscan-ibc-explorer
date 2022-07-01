@@ -298,6 +298,11 @@ const confirmChains = () => {
     border-color: #667aff;
   }
 }
+:deep(.ant-dropdown-open) {
+    &:focus {
+      box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
+    }
+}
 
 .button__icon {
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
@@ -312,6 +317,7 @@ const confirmChains = () => {
 
 .visible_border {
   border: 1px solid var(--bj-primary-color) !important;
+  box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
 }
 
 .visible_color {
