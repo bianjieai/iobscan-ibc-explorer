@@ -88,7 +88,7 @@ const baseDenomInfo = computed(() => {
   const filterSymbol = filterData[0]?.symbol
 
   if (filterData.length === 0 || isNullOrEmpty(filterSymbol)) {
-    symbol = 'Unknown'
+    symbol = getRestString(baseDenomQuery, 3, 8)
   } else {
     if (filterSymbol.includes('ibc')) {
       symbol = getRestString(filterSymbol.replace(/ibc\//, ''), 3, 8)

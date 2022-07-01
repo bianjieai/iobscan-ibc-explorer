@@ -1,7 +1,8 @@
 <template>
   <a-dropdown v-model:visible="visible" :trigger="['click']" @visibleChange="visibleChange">
     <div
-      :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']">
+      :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']"
+      :style="{ minWidth: `${minWidth}px` }">
       <div
         :class="['mr-8', 'ml-8', selectedChain[0] ? 'selected_color' : '', chain_a === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color']"
         :style="{
@@ -78,6 +79,7 @@ interface IProps {
   needBadge?: false // 需要角标
   chain_id?: string // 回填
   dropdownData: TChainData[]
+  minWidth?: number
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -391,7 +393,7 @@ const confirmChains = () => {
   color: #fff;
   background-color: var(--bj-primary-color);
   right: 36px;
-  font-size: 12px; //  展示10px
+  font-size: 10px; //  展示10px
   padding: 1px 8px;
   white-space: nowrap;
   z-index: 1;
@@ -450,7 +452,8 @@ const confirmChains = () => {
 
   .dropdown-container {
     margin-top: 12px;
-    width: 210px;
+    // width: 220px;
+    // min-width: 210px;
   }
 }
 </style>
