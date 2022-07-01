@@ -2,10 +2,12 @@
   <PageContainer>
     <PageTitle title="IBC Tokens" :subtitle="subtitle" />
     <div class="select flex items-center flex-wrap">
-      <TokensDropDown :base_denom="denomQuery" :dropdown-data="ibcBaseDenoms.value" @on-tokens-selected="onSelectedToken" ref="tokensDropdown" />
+      <TokensDropDown :base_denom="denomQuery" :dropdown-data="ibcBaseDenoms.value"
+        @on-tokens-selected="onSelectedToken" ref="tokensDropdown" />
       <ChainsDropdown :dropdown-data="ibcChains?.all" :chain_id="chainIdQuery" @on-selected-chain="onSelectedChain"
         ref="chainDropdown" />
-      <BaseDropdown :status="statusQuery" :options="STATUS_OPTIONS" ref="statusDropdown" @on-selected-change="onSelectedStatus" />
+      <BaseDropdown :status="statusQuery" :options="STATUS_OPTIONS" ref="statusDropdown"
+        @on-selected-change="onSelectedStatus" />
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
@@ -15,12 +17,13 @@
           :token_type="record.token_type" :denom="record[column.key]" :denoms-data="ibcBaseDenoms.value" />
       </template>
       <template #price="{ record, column }">
-        <a-popover>
+        <a-popover v-if="+record[column.key] !== -1">
           <template #content>
             <div class="popover-c">{{ `${record.currency} ${record[column.key]}` }}</div>
           </template>
           <div>{{ `${record.currency} ${formatPrice(record[column.key])}` }}</div>
         </a-popover>
+        <div v-else>{{ `${record.currency} ${formatPrice(record[column.key])}` }}</div>
       </template>
 
       <template #supply="{ record, column }">
@@ -222,7 +225,6 @@ const goChains = () => {
       margin-top: 8px;
     }
 
-    margin-right: 150px;
     margin-top: 8px;
   }
 

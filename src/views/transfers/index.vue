@@ -34,12 +34,14 @@
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         ref="chainDropdown"
+                        :min-width="210"
                     />
                     <a-select
                         class="status_select"
                         defaultActiveFirstOption
                         :value="JSON.stringify(queryParam.status)"
                         @change="handleSelectChange"
+                        :getPopupContainer="triggerNode => triggerNode.parentNode"
                     >
                         <a-select-option
                             v-for="item of ibcTxStatusSelectOptions"
@@ -780,6 +782,9 @@ onMounted(() => {
 })
 </script>
 <style lang="less" scoped>
+:deep(.ant-select-item-option-content) {
+    text-align: center;
+}
 .transfer {
     flex: 1;
     padding: 48px 32px 100px;

@@ -188,12 +188,13 @@ const onClickAll = () => {
     box-shadow: none;
   }
   &_token_icon {
-      flex: 1;
-    .flex(row, wrap, center, center);
+    flex: 1;
+    .flex(row, nowrap, center, center);
+    overflow: hidden;
   }
   &_title {
-    max-width: 86px;
-    // text-overflow: ellipsis;
+    // max-width: 86px;
+    text-overflow: ellipsis;
     color: var(--bj-text-third);
     overflow: hidden;
     color: var(--bj-primary-color);
