@@ -39,7 +39,7 @@ export const COLUMNS: TableColumnsType = [{
   title: 'Chains Involved',
   sorter: (a, b) => a.chains_involved - b.chains_involved,
   align: 'right',
-  defaultSortOrder: CompareOrder.DESCEND
+  defaultSortOrder: CompareOrder.DESCEND 
 }, {
   dataIndex: 'chain_id',
   key: 'chain_id',
@@ -79,7 +79,8 @@ export const IBC_COLUMNS: TableColumnsType = [
     key: 'amount',
     title: 'Amount',
     sorter: (a, b) => a.amount - b.amount,
-    align: 'right'
+    align: 'right',
+    defaultSortOrder: CompareOrder.DESCEND 
   },
   {
     dataIndex: 'receive_txs',
