@@ -41,7 +41,7 @@
                     <span v-show="Array.isArray(item.value)">
                         <div v-if="item.value.length >= 1">
                             <span  v-for="(address, index) of item.value" :key="index">
-                                <router-link :to="`/relayers?chain=${chainId}`" class="value_style">{{ address || '--' }}</router-link>
+                                <router-link :to="`/relayers?chain=${scChainId},${dcChainId}`" class="value_style">{{ address || '--' }}</router-link>
                             </span>
                         </div>
                         <span v-else>--</span>
