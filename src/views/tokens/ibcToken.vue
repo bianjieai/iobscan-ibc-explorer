@@ -19,7 +19,7 @@
               <div>Token Hash: {{ record[column.key] }}</div>
             </div>
           </template>
-          <div>{{ getRestString(record[column.key], 3, 8) }}</div>
+          <div>{{ getRestString(rmIbcPrefix(record[column.key]), 3, 8) }}</div>
         </a-popover>
         <div v-else>{{ getRestString(record[column.key], 3, 8) }}</div>
       </template>
@@ -62,7 +62,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { TIbcTokenType, useGetIbcTokenList } from '@/service/tokens';
 import { useGetIbcDenoms, useIbcChains } from '../home/composable';
-import { getRestString, formatBigNumber } from '@/helper/parseString'
+import { getRestString, rmIbcPrefix, formatBigNumber } from '@/helper/parseString'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { formatAmount } from '@/helper/tablecell-helper';
 import { isNullOrEmpty } from '@/helper/object-helper';
