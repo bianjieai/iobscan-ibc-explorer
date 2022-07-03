@@ -101,7 +101,7 @@ export default {
 }
 @media screen and (max-width: 1030px) {
     .header_menu_hide{
-      display: none;
+      visibility: hidden;
     }
     .header_menu {
         position: absolute;
