@@ -68,20 +68,20 @@ const needCustomColumns = [
   'transfer_txs'
 ]
 
-const goChannels = (chain_id: string) => {
+const goChannels = (chain: string) => {
   router.push({
     path: '/channels',
     query: {
-      chain_id
+      chain
     }
   })
 }
 
-const goRelayers = (chain_id: string) => {
+const goRelayers = (chain: string) => {
   router.push({
     path: '/relayers',
     query: {
-      chain_id
+      chain
     }
   })
 }

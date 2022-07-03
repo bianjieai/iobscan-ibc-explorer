@@ -160,7 +160,7 @@
                                         formatNum(record.symbolNum)
                                     }}</span>
                                 <span class="token_denom hover">{{
-                                        getLasttyString(record.symbolDenom)
+                                        getRestString(record.symbolDenom, 6, 0)
                                     }}</span>
                             </router-link>
                         </a-popover>
