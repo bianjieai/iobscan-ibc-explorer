@@ -12,7 +12,7 @@
 
     <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
       <template #denom="{ record, column }">
-        <a-popover v-if="record.token_type !== 'Genesis'">
+        <a-popover v-if="record.token_type !== 'Genesis'" placement="topLeft">
           <template #content>
             <div class="notice-text">
               <div>Path: {{ record.denom_path }}</div>
@@ -21,14 +21,20 @@
           </template>
           <div>{{ getRestString(rmIbcPrefix(record[column.key]), 3, 8) }}</div>
         </a-popover>
-        <div v-else>{{ getRestString(record[column.key], 3, 8) }}</div>
+        <div v-else>
+          <a-popover placement="topLeft" v-if="record[column.key].length > 11">
+            <template #content >
+             <div class="popover-c">{{ record[column.key] }}</div>
+            </template>
+            <div>{{ getRestString(record[column.key], 3, 8) }}</div>
+          </a-popover>
+          <div v-else>{{ record[column.key] }}</div>
+        </div>
       </template>
-
       <template #chain_id="{ record, column }">
         <ChainIcon title-can-click @click-title="goChains" :chain_id="record[column.key]"
           :chains-data="ibcChains?.all ?? []" icon-size="small" />
       </template>
-
       <template #amount="{ record, column }">
         <a-popover>
           <template #content>
