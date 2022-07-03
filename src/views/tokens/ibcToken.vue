@@ -40,7 +40,7 @@
       </template>
 
       <template #receive_txs="{ record, column }">
-        <div class="hover-cursor" @click="goTransfer(`${record.chain_id},allchain`)">{{
+        <div class="hover-cursor" @click="goTransfer(`allchain,${record.chain_id}`)">{{
             formatBigNumber(record[column.key], 0)
         }}
         </div>
