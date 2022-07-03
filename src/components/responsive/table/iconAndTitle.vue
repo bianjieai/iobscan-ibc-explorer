@@ -6,7 +6,7 @@
       <div v-else>
         <img :src="relayerImageSrc" alt="" v-if="relayerImageSrc" class="icon mr-8 small-icon">
         <div v-else class="bg-text-c flex items-center justify-center mr-8">
-          <div class="bg-text leading-none">{{ title.substring(0, 1) }}</div>
+          <div class="bg-text leading-none">{{ (title.substring(0, 1)||'').toUpperCase() }}</div>
         </div>
       </div>
     </div>

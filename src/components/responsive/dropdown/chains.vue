@@ -89,7 +89,6 @@ const props = withDefaults(defineProps<IProps>(), {
 watch(() => props.dropdownData, (_new, _old) => {
   if (_new) setAllChains(_new)
 })
-
 type TChainName = string
 type TChainID = string | 'allchain' | undefined
 
@@ -131,13 +130,13 @@ onMounted(() => {
   if (props.chain_id) {
     const idArr = props.chain_id.split(',')
     for (let i = 0; i < idArr.length; i++) {
-      const filterData = props.dropdownData.filter((item: any) => item.chain_id === idArr[i])
-      if (filterData.length > 0) {
-        const chain_name = filterData[0].chain_name
-        selectedChain.value.push({
-          chain_id: idArr[i],
+      const filterData = props.dropdownData.find((item: any) => item.chain_id === idArr[i])
+      if (filterData) {
+        const chain_name = filterData.chain_name
+        selectedChain.value[i] = {
+          chain_id: filterData.chain_id,
           chain_name: formatLongTitleString(chain_name)
-        })
+        };
         backupDropdownData = selectedChain.value
       }
     }

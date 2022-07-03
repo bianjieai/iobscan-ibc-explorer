@@ -52,7 +52,7 @@
       </template>
 
       <template #chain_id="{ record, column }">
-        <ChainIcon titleCanClick @click-title="goChains" :chain_id="record[column.key]" :chains-data="ibcChains.all"
+        <ChainIcon titleCanClick avatarCanClick @click-avatar="goChains" @click-title="goChains" :chain_id="record[column.key]" :chains-data="ibcChains.all"
           icon-size="small" />
       </template>
     </BjTable>

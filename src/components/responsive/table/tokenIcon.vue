@@ -3,14 +3,14 @@
     <img :src="tokenInfo.imgSrc" :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']" @click="go">
     <div class="flex flex-col justify-around"
       :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
-      <a-popover>
-          <template #content>
-            <div class="popover-c" >{{tokenInfo.defaultTitle}}</div>
-          </template>
-          <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ tokenInfo.title }}
-      </div>
-        </a-popover>
-      
+      <a-popover v-if="titleCanPopover(tokenInfo.title)">
+        <template #content>
+          <div class="popover-c" >{{tokenInfo.defaultTitle}}</div>
+        </template>
+        <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ tokenInfo.title }}</div>
+      </a-popover>
+      <div v-else :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ tokenInfo.title }}</div>
+
       <div :class="['subtitle', 'leading-none', 'tag']">{{ token_type ? token_type : tokenInfo.subtitle }}</div>
     </div>
   </div>
@@ -54,6 +54,8 @@ const tokenInfo = computed(() => {
     }
   }
 })
+
+const titleCanPopover = (t:string)=> props.basePage ? t.length>6 : t.length > 11;
 
 const emit = defineEmits<{
   (e: 'clickTitle'): void

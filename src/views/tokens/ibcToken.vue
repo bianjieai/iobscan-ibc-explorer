@@ -12,23 +12,29 @@
 
     <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
       <template #denom="{ record, column }">
-        <a-popover v-if="record.token_type !== 'Genesis'">
+        <a-popover v-if="record.token_type !== 'Genesis'" placement="topLeft">
           <template #content>
             <div class="notice-text">
               <div>Path: {{ record.denom_path }}</div>
               <div>Token Hash: {{ record[column.key] }}</div>
             </div>
           </template>
-          <div>{{ getRestString(record[column.key], 3, 8) }}</div>
+          <div>{{ getRestString(rmIbcPrefix(record[column.key]), 3, 8) }}</div>
         </a-popover>
-        <div v-else>{{ getRestString(record[column.key], 3, 8) }}</div>
+        <div v-else>
+          <a-popover placement="topLeft" v-if="record[column.key].length > 11">
+            <template #content >
+             <div class="popover-c">{{ record[column.key] }}</div>
+            </template>
+            <div>{{ getRestString(record[column.key], 3, 8) }}</div>
+          </a-popover>
+          <div v-else>{{ record[column.key] }}</div>
+        </div>
       </template>
-
       <template #chain_id="{ record, column }">
         <ChainIcon title-can-click @click-title="goChains" :chain_id="record[column.key]"
           :chains-data="ibcChains?.all ?? []" icon-size="small" />
       </template>
-
       <template #amount="{ record, column }">
         <a-popover>
           <template #content>
@@ -40,7 +46,7 @@
       </template>
 
       <template #receive_txs="{ record, column }">
-        <div class="hover-cursor" @click="goTransfer(`${record.chain_id},allchain`)">{{
+        <div class="hover-cursor" @click="goTransfer(`allchain,${record.chain_id}`)">{{
             formatBigNumber(record[column.key], 0)
         }}
         </div>
@@ -62,7 +68,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { TIbcTokenType, useGetIbcTokenList } from '@/service/tokens';
 import { useGetIbcDenoms, useIbcChains } from '../home/composable';
-import { getRestString, formatBigNumber } from '@/helper/parseString'
+import { getRestString, rmIbcPrefix, formatBigNumber } from '@/helper/parseString'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { formatAmount } from '@/helper/tablecell-helper';
 import { isNullOrEmpty } from '@/helper/object-helper';
