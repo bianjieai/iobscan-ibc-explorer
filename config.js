@@ -6,6 +6,7 @@ let programs = (arguments[0] || '').split(',');
 console.log('programs:',programs);
 
 replaceEnv([
+        "./.env.development",
         "./.env.production",
     ],
     {

@@ -68,6 +68,8 @@ watch(() => props.data, (_new, _old) => {
   needPagination.value && onPageChange(1, 10)
   if (_new?.length === 0) {
     columnsSource.value = columnsSource.value.filter(item => item.key !== '_count')
+  }else{
+    columnsSource.value = columns;
   }
 })
 
@@ -90,6 +92,13 @@ const backUpData = () => {
     _count: index + 1,
     ...item
   }))
+  let defaultSort = props.columns.find((item)=>{
+    return item.defaultSortOrder != undefined;
+  });
+
+  if (defaultSort) {
+    onTableChange({},{},{ columnKey: defaultSort.key, order:defaultSort.defaultSortOrder });
+  }
   if (props.noPagination) {
       dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
     }
@@ -115,13 +124,13 @@ const onPageChange = (page: number, pageSize: number) => {
   pageInfo.pageSize = pageSize
   const p = (page - 1) * pageSize
   const pSize = page * pageSize
-  dataSource.value = formatDataSourceWithRealTime(backUpDataSource.slice(p,pSize));
+  dataSource.value = formatDataSourceWithRealTime(backUpDataSource.slice(p, pSize));
 }
 
 // todo clippers => 后端分页序号处理
 const onTableChange = (pagination: any, filters: any, sorter: any) => {
   const { columnKey, order } = sorter
-  if (sorter.order) {
+  if (order) {
     backUpDataSource = backUpDataSource
       .sort(compareValues(columnKey, order))
       .map((item: any, index: number) => ({

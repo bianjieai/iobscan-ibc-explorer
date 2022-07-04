@@ -64,12 +64,15 @@ onMounted(() => {
   // timer2 = setInterval(() => {
   //   setStar2()
   // }, 4200)
+
+  // currentMenu.value = [route.name];
+  currentMenu.value = getCurrentRouterNames(route);
    document.addEventListener("click", (e) => {
       if (e.target.className !== "header_btn_img" && e.target.className !== "ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light header_menu") {  //不是该选择器的class
         isShowNav.value = false
       }
     });
-
+  
 })
 
 const onClickLogo = () => {
@@ -79,7 +82,7 @@ const onClickLogo = () => {
 }
 
 const clickMenu = (val) => {
-  currentMenu.value = [val]
+  // currentMenu.value = [val]
   router.push({
     name: val
   })
@@ -89,14 +92,27 @@ const changeShowNav = () => {
   isShowNav.value = !isShowNav.value
 }
 
-watch(() => route.path, (newVal, oldVal) => {
-  // if (!oldVal) { // 页面刚加载
-  const temp = newVal.replace(/\//, '')
-  currentMenu.value = [temp[0].toUpperCase() + temp.substr(1)]
-  // }
-}, {
-  immediate: true
-})
+// watch(() => route.path, (newVal, oldVal) => {
+//   // if (!oldVal) { // 页面刚加载
+//   const temp = newVal.replace(/\//, '')
+//   currentMenu.value = [temp[0].toUpperCase() + temp.substr(1)]
+//   // }
+//   console.log('temptemp:',temp);
+// }, {
+//   immediate: true
+// })
+
+router.beforeEach((r)=>{
+    // currentMenu.value = [r.name];
+    currentMenu.value = getCurrentRouterNames(r);
+});
+
+const getCurrentRouterNames = (r)=>{
+  if (r) {
+    return r?.matched[0].children.map((item)=>item.name) || [];
+  }
+  return [];
+}
 
 onUnmounted(() => {
   if (timer1) clearInterval(timer1)
@@ -127,6 +143,7 @@ a {
   }
 }
 ::v-deep .ant-pagination-item {
+  cursor: url(/src/assets/mouse/shiftlight_mouse.png), default;
   a{
     cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;
   }

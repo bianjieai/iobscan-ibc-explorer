@@ -34,12 +34,14 @@
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         ref="chainDropdown"
+                        :min-width="210"
                     />
                     <a-select
                         class="status_select"
                         defaultActiveFirstOption
                         :value="JSON.stringify(queryParam.status)"
                         @change="handleSelectChange"
+                        :getPopupContainer="triggerNode => triggerNode.parentNode"
                     >
                         <a-select-option
                             v-for="item of ibcTxStatusSelectOptions"
@@ -158,7 +160,7 @@
                                         formatNum(record.symbolNum)
                                     }}</span>
                                 <span class="token_denom hover">{{
-                                        getRestString2(record.symbolDenom, 8)
+                                        getRestString(record.symbolDenom, 6, 0)
                                     }}</span>
                             </router-link>
                         </a-popover>
@@ -293,15 +295,12 @@
 </template>
 
 <script setup>
-import successImg from '../../assets/status1.png'
-import processingImg from '../../assets/status3.png'
-import failedImg from '../../assets/status2.png'
 import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
 import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus, ibcTxStatusDesc, defaultTitle, unknownSymbol } from '../../constants';
 import Tools from '../../utils/Tools';
 import tokenDefaultImg from '../../assets/token-default.png';
-import { JSONparse, getRestString, formatNum, getRestString2 } from '../../helper/parseString';
+import { JSONparse, getRestString, formatNum } from '../../helper/parseString';
 import * as djs from 'dayjs';
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute } from 'vue-router';
@@ -736,11 +735,11 @@ const onSelectedChain = (chain_id) => {
             url += `&startTime=&endTime=${endTime}`
         }
         if (queryParam?.date_range.length === 2) {
-            const startTimeStamp = queryParam.date_range[0]
-            const entTimeStamp = queryParam.date_range[1]
-            const startTime = dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
-            const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD')
-            url += `&startTime=${startTime}&endTime=${endTime}`
+            const startTimeStamp = queryParam.date_range[0];
+            const entTimeStamp = queryParam.date_range[1];
+            const startTime = startTimeStamp > 0 ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD') : '';
+            const endTime = entTimeStamp > 0 ? dayjs(entTimeStamp * 1000).format('YYYY-MM-DD') : '';
+            url += `&startTime=${startTime}&endTime=${endTime}`;
         }
     }
     history.pushState(null, null, url)
@@ -780,6 +779,9 @@ onMounted(() => {
 })
 </script>
 <style lang="less" scoped>
+:deep(.ant-select-item-option-content) {
+    text-align: center;
+}
 .transfer {
     flex: 1;
     padding: 48px 32px 100px;

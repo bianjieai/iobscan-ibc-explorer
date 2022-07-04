@@ -1,7 +1,8 @@
 <template>
   <a-dropdown v-model:visible="visible" :trigger="['click']" @visibleChange="visibleChange">
     <div
-      :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']">
+      :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']"
+      :style="{ minWidth: `${minWidth}px` }">
       <div
         :class="['mr-8', 'ml-8', selectedChain[0] ? 'selected_color' : '', chain_a === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color']"
         :style="{
@@ -53,8 +54,7 @@
         </div>
         <div class="flex items-center mt-24 flex-wrap">
           <a-input allowClear v-model:value="chainIdIput" class="chain-input"
-            :placeholder="`Search by Chain ID${selectedDouble ? ', Chain ID' : ''}`"
-            @input="() => selectedChain = []" />
+            :placeholder="`Search by Chain ID${selectedDouble ? ', Chain ID' : ''}`" @input="onInputChange" />
           <a-button @click="confirmChains" type="primary" class="confirm-button ml-12">Confirm</a-button>
         </div>
       </div>
@@ -78,6 +78,7 @@ interface IProps {
   needBadge?: false // 需要角标
   chain_id?: string // 回填
   dropdownData: TChainData[]
+  minWidth?: number
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -88,9 +89,8 @@ const props = withDefaults(defineProps<IProps>(), {
 watch(() => props.dropdownData, (_new, _old) => {
   if (_new) setAllChains(_new)
 })
-
 type TChainName = string
-type TChainID = string | 'allchain'
+type TChainID = string | 'allchain' | undefined
 
 type TSelectedChain = {
   chain_id: TChainID,
@@ -99,6 +99,7 @@ type TSelectedChain = {
 
 let backupDropdownData: TSelectedChain[] = []
 const handleDropdownData = ref<TChainData[]>()
+const confirmFlag = ref(false)
 
 const setAllChains = (dropdownData: TChainData[] = props.dropdownData) => {
   if (dropdownData?.length > 0) {
@@ -129,13 +130,14 @@ onMounted(() => {
   if (props.chain_id) {
     const idArr = props.chain_id.split(',')
     for (let i = 0; i < idArr.length; i++) {
-      const filterData = props.dropdownData.filter((item: any) => item.chain_id === idArr[i])
-      if (filterData.length > 0) {
-        const chain_name = filterData[0].chain_name
-        selectedChain.value.push({
-          chain_id: idArr[i],
+      const filterData = props.dropdownData.find((item: any) => item.chain_id === idArr[i])
+      if (filterData) {
+        const chain_name = filterData.chain_name
+        selectedChain.value[i] = {
+          chain_id: filterData.chain_id,
           chain_name: formatLongTitleString(chain_name)
-        })
+        };
+        backupDropdownData = selectedChain.value
       }
     }
   }
@@ -145,7 +147,7 @@ const visible = ref(false)
 const selectedChain = ref<TSelectedChain[]>([])
 const chainIdIput = ref<string | undefined>(undefined)
 const chain_a = computed(() => {
-  if (chainIdIput.value) {
+  if (chainIdIput.value && confirmFlag.value) {
     const chain_a_input = chainIdIput.value.split(',')[0]
     return formatLongTitleString(chain_a_input)
   } else {
@@ -155,7 +157,7 @@ const chain_a = computed(() => {
 
 const chain_b = computed(() => {
   const chain_b_input = chainIdIput.value?.split(',')[1]
-  if (chain_b_input) {
+  if (chain_b_input && confirmFlag.value) {
     return formatLongTitleString(chain_b_input)
   } else {
     return selectedChain.value[1]?.chain_name ?? 'All Chains'
@@ -197,10 +199,39 @@ const submitChain = (chain_id?: string) => {
   // chainIdIput.value = undefined // reset
 }
 
+const onInputChange = () => {
+  selectedChain.value = []
+  confirmFlag.value = false
+  if (!chainIdIput.value) return
+  if (chainIdIput.value?.includes(',')) {
+    const arr = chainIdIput.value?.split(',')
+    selectedChain.value = [{
+      chain_id: arr[0],
+      chain_name: arr[0]
+    }, {
+      chain_id: arr[1],
+      chain_name: arr[1]
+    }]
+  } else {
+    selectedChain.value = [{
+      chain_id: chainIdIput.value,
+      chain_name: chainIdIput.value
+    }]
+  }
+}
+
 const visibleChange = (visible: boolean) => {
-  if (!props.selectedDouble) return
-  if (!visible && selectedChain.value.length === 1) {
+  console.log(confirmFlag.value, backupDropdownData)
+  if (props.selectedDouble) {
+    if (!visible && (selectedChain.value.length === 1 || !confirmFlag.value)) {
     selectedChain.value = backupDropdownData
+    chainIdIput.value = undefined
+  }
+  } else {
+    if (!visible && !confirmFlag.value) {
+      selectedChain.value = backupDropdownData
+      chainIdIput.value = undefined
+    }
   }
 }
 
@@ -247,6 +278,10 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
         chain_name,
         chain_id
       })
+      backupDropdownData = [{
+        chain_name,
+        chain_id
+      }]
       if (selectedChain.value[0].chain_id === 'allchain') {
         submitChain(undefined)
       } else {
@@ -257,6 +292,7 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
 }
 
 const confirmChains = () => {
+  selectedChain.value = []
   if (props.selectedDouble) {
     if (chainIdIput.value?.includes(',')) {
       const chain = chainIdIput.value.split(',')
@@ -267,6 +303,7 @@ const confirmChains = () => {
         chain_name: chain[1],
         chain_id: chain[1]
       }]
+      backupDropdownData = selectedChain.value
       submitChain(chainIdIput.value.replace(/，/, ','))
     } else {
       if (chainIdIput.value) {
@@ -274,12 +311,21 @@ const confirmChains = () => {
           chain_name: chainIdIput.value,
           chain_id: chainIdIput.value
         }]
+        backupDropdownData = [{
+          chain_name: chainIdIput.value,
+          chain_id: chainIdIput.value
+        }, {
+          chain_name: 'All Chains',
+          chain_id: 'allchain'
+        }]
       }
+      confirmFlag.value = true
 
       submitChain(`${chainIdIput.value ? chainIdIput.value : 'allchain'},allchain`)
     }
   } else {
-    submitChain(chainIdIput.value ?? 'allchain')
+    confirmFlag.value = true
+    submitChain(chainIdIput.value)
   }
 }
 
@@ -298,10 +344,11 @@ const confirmChains = () => {
     border-color: #667aff;
   }
 }
+
 :deep(.ant-dropdown-open) {
-    &:focus {
-      box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
-    }
+  &:focus {
+    box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
+  }
 }
 
 .button__icon {
@@ -391,7 +438,7 @@ const confirmChains = () => {
   color: #fff;
   background-color: var(--bj-primary-color);
   right: 36px;
-  font-size: 12px; //  展示10px
+  font-size: 10px; //  展示10px
   padding: 1px 8px;
   white-space: nowrap;
   z-index: 1;
@@ -450,7 +497,8 @@ const confirmChains = () => {
 
   .dropdown-container {
     margin-top: 12px;
-    width: 210px;
+    // width: 220px;
+    // min-width: 210px;
   }
 }
 </style>

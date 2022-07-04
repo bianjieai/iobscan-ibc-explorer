@@ -11,6 +11,10 @@ function getRestString(string, left, right) {
   return string ? `${string.substr(0, left)}...${right > 0 ?string.substr(-right) : ''}` : '';
 }
 
+function rmIbcPrefix(ibcHash = ''){
+  return ibcHash.replace(/^ibc\/|IBC\//,'');
+}
+
 function getLasttyString(string) {
   return string && string.length > 20 ? `${string.substr(0, 10)}...` : string;
 }
@@ -87,6 +91,7 @@ function formatBigNumber(value, num) {
 
 export {
   getRestString,
+  rmIbcPrefix,
   prefixInteger,
   JSONparse,
   formatNum,
