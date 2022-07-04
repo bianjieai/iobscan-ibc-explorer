@@ -46,7 +46,7 @@
       </template>
 
       <template #receive_txs="{ record, column }">
-        <div class="hover-cursor" @click="goTransfer(`allchain,${record.chain_id}`)">{{
+        <div class="hover-cursor" @click="goTransfer(`allchain,${record.chain_id}`, record.denom)">{{
             formatBigNumber(record[column.key], 0)
         }}
         </div>
@@ -175,12 +175,12 @@ const goChains = () => {
 }
 
 
-const goTransfer = (chain_id: string) => {
+const goTransfer = (chain_id: string, denom: string) => {
   router.push({
     path: '/transfers',
     query: {
-      denom: baseDenomQuery,
-      chain: chain_id
+      chain: chain_id,
+      denom
     }
   })
 }
