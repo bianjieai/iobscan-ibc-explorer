@@ -22,7 +22,12 @@
             </div>
           </div>
         </div>
-
+        <ul class="header_content_mobile" v-if="isShowNav">
+            <li class="header_content_item" :class="currentIndex === index ? 'header_content_item_active': ''" v-for="(menuItem, index) in menus" @click="clickMenu(menuItem.value, index), changeShowNav()" :key="index">
+                <img :style="{visibility: currentIndex === index ? 'visible' : ' hidden'}" src="../assets/tips_icon.png" alt="" class="header_menu_item_img">
+                <span class="hader_content_item_label">{{menuItem.label}}</span>
+            </li>
+        </ul>
       </a-layout-header>
 
       <a-layout-content class="content" :class="isShowBackground ? 'show_background' : ''">
@@ -45,6 +50,7 @@ import IbcFooter from '../components/IbcFooter.vue';
 import { useStarAnimation, useOnPressEnter } from './hooks/useStarAnimation'
 
 const isShowNav = ref(false)
+const currentIndex = ref(0);
 let timer1, timer2
 
 const isShowBackground = ref(false)
@@ -65,13 +71,13 @@ onMounted(() => {
   //   setStar2()
   // }, 4200)
 
-  // currentMenu.value = [route.name];
-  currentMenu.value = getCurrentRouterNames(route);
-   document.addEventListener("click", (e) => {
-      if (e.target.className !== "header_btn_img" && e.target.className !== "ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light header_menu") {  //不是该选择器的class
-        isShowNav.value = false
-      }
-    });
+  currentMenu.value = [route.name];
+//   currentMenu.value = getCurrentRouterNames(route);
+//    document.addEventListener("click", (e) => {
+//       if (e.target.className !== "header_btn_img" && e.target.className !== "ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light header_menu") {  //不是该选择器的class
+//         isShowNav.value = false
+//       }
+//     });
   
 })
 
@@ -81,8 +87,9 @@ const onClickLogo = () => {
   });
 }
 
-const clickMenu = (val) => {
+const clickMenu = (val, index) => {
   // currentMenu.value = [val]
+    currentIndex.value = index;
   router.push({
     name: val
   })
@@ -118,6 +125,21 @@ onUnmounted(() => {
   if (timer1) clearInterval(timer1)
   if (timer2) clearInterval(timer2)
 })
+watch(() => route.path, (newPath, oldRoute) => {
+    if(newPath.includes('home')) {
+        currentIndex.value = 0;
+    } else if(newPath.includes('transfers')) {
+        currentIndex.value = 1;
+    } else if(newPath.includes('tokens')) {
+        currentIndex.value = 2;
+    } else if(newPath.includes('chains')) {
+        currentIndex.value = 3;
+    } else if(newPath.includes('channels')) {
+        currentIndex.value = 4;
+    } else if(newPath.includes('relayers')) {
+        currentIndex.value = 5;
+    }
+}, {immediate: true})
 </script>
 
 <style lang="less" scoped>
@@ -206,6 +228,16 @@ a {
             height: 32px;
         }
     }
+    // mobile
+    &_content_mobile {
+        display: none;
+    }
+    &_content_item {
+        .header_menu_item_img {
+        }
+    }
+    &_content_item_active {
+    }
   }
   & .content {
     box-sizing: border-box;
@@ -244,6 +276,30 @@ a {
             &_btn_mobile {
                 img {}
             }
+            // mobile
+            &_content_mobile {
+                display: block;
+                width: 100%;
+                height: 254px;
+                background-color:#0E1232;
+                border-top: 4px solid #3D50FF;
+                text-align: left;
+            }
+            &_content_item {
+                padding: 0 32px;
+                color: rgba(255, 255, 255, 0.65);
+                font-weight: 400;
+                line-height: 42px;
+                .header_menu_item_img {
+                    display: inline-block;
+                    margin-right: 6px;
+                    width: 8px;
+                    height: 8px;
+                }
+            }
+            &_content_item_active {
+                color: #fff;
+            }
         }
         & .content {}
         & .footer {}
@@ -267,6 +323,14 @@ a {
             &_btn_mobile {
                 display: inline-block;
                 img {}
+            }
+            &_content_mobile {
+            }
+            &_content_item {
+                .header_menu_item_img {
+                }
+            }
+            &_content_item_active {
             }
         }
         & .content {}
@@ -295,6 +359,15 @@ a {
             &_btn_mobile {
                 display: inline-block;
                 img {}
+            }
+            &_content_mobile {
+            }
+            &_content_item {
+                padding: 0 16px;
+                .header_menu_item_img {
+                }
+            }
+            &_content_item_active {
             }
         }
         & .content {}
