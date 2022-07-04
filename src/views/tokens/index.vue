@@ -19,7 +19,7 @@
           @click-title="goIbcToken(record.base_denom)"
           :token_type="record.token_type" 
           :denom="record[column.key]" 
-          :chain-Id="record.chain_id"
+          :chain-id="record.chain_id"
           :denoms-data="ibcBaseDenoms.value" />
       </template>
       <template #price="{ record, column }">

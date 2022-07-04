@@ -46,7 +46,7 @@
 
       <template #transfer_total_txs="{ record, column }">
         <TransferTxs :title="record[column.key]" :subtitle="record.transfer_total_txs_value"
-          :currency="record.currency" />
+          :currency="record.currency" no-link/>
       </template>
 
       <template #table_bottom_status v-if="list?.length !== 0">
