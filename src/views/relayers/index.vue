@@ -40,8 +40,8 @@
         <div>{{ formatLastUpdated(record[column.key]) }}</div>
       </template>
 
-      <template #transfer_success_txs="{ record, column }">
-        <div>{{ `${formatTransfer_success_txs(record[column.key], record.transfer_total_txs)}%` }}</div>
+      <template #txs_success_rate="{ record, column }">
+        <div>{{  `${record[column.key]}%` }}</div>
       </template>
 
       <template #transfer_total_txs="{ record, column }">
@@ -95,7 +95,7 @@ const needCustomColumns = [
   'status',
   'chain_b',
   'update_time',
-  'transfer_success_txs',
+  'txs_success_rate',
   'transfer_total_txs'
 ]
 

@@ -224,6 +224,9 @@ const onInputChange = () => {
     selectedChain.value = [{
       chain_id: chainIdIput.value,
       chain_name: chainIdIput.value
+    },{
+      chain_name: 'All Chains',
+      chain_id: 'allchain'
     }]
   }
 }
@@ -318,11 +321,14 @@ const confirmChains = () => {
         selectedChain.value = [{
           chain_name: chainIdIput.value,
           chain_id: chainIdIput.value
+        },{
+          chain_name: 'All Chains',
+          chain_id: 'allchain'
         }]
         backupDropdownData = [{
           chain_name: chainIdIput.value,
           chain_id: chainIdIput.value
-        }, {
+        },{
           chain_name: 'All Chains',
           chain_id: 'allchain'
         }]
