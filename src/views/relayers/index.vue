@@ -17,7 +17,7 @@
       :real-time-key = "[{scKey:'update_time', dcKey:'last_updated'}]"
       need-count rowKey="relayer_id">
       <template #relayer_name="{ record, column }">
-        <NamePopover :chain_a="record.chain_a" :chain_b="record.chain_b" :chain_a_address="record.chain_b_address"
+        <NamePopover :chain_a="record.chain_a" :chain_b="record.chain_b" :chain_a_address="record.chain_a_address"
           :chain_b_address="record.chain_b_address" :img-src="record.relayer_icon" :relayer_name="record[column.key]"
           :ibc-chains="ibcChains?.all" />
       </template>
