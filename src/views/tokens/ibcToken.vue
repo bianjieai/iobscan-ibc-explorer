@@ -28,7 +28,7 @@
             </template>
             <div>{{ getRestString(record[column.key], 3, 8) }}</div>
           </a-popover>
-          <div v-else>{{ record[column.key] }}</div>
+          <div v-else>{{ `${getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol || record[column.key]}` }}</div>
         </div>
       </template>
       <template #chain_id="{ record, column }">
@@ -79,7 +79,7 @@ let pageUrl = `/tokens/details`
 const router = useRouter()
 
 const { ibcChains, getIbcChains } = useIbcChains();
-const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
+const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms()
 
 const route = useRoute()
 const baseDenomQuery = route.query.denom as string
