@@ -28,7 +28,7 @@
             </template>
             <div>{{ getRestString(record[column.key], 3, 8) }}</div>
           </a-popover>
-          <div v-else>{{ `${getBaseDenomInfoByDenom(record[column.key])?.symbol || record[column.key]}` }}</div>
+          <div v-else>{{ `${getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol || record[column.key]}` }}</div>
         </div>
       </template>
       <template #chain_id="{ record, column }">
