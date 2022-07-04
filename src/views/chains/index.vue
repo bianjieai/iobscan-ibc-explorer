@@ -9,11 +9,11 @@
       </template>
 
       <template #channels="{ record, column }">
-        <div class="hover-cursor" @click="goChannels(record.chain_id)">{{ record[column.key] }}</div>
+        <div class="hover-cursor" @click="goChannels(`${record.chain_id},allchain`)">{{ record[column.key] }}</div>
       </template>
 
       <template #relayers="{ record, column }">
-        <div class="hover-cursor" @click="goRelayers(record.chain_id)">{{ record[column.key] }}</div>
+        <div class="hover-cursor" @click="goRelayers(`${record.chain_id},allchain`)">{{ record[column.key] }}</div>
       </template>
 
       <template #ibc_tokens="{ record, column }">

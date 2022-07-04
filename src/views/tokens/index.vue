@@ -87,9 +87,8 @@ const denomQuery = route.query.denom as string
 const statusQuery = route.query.status as 'Authed' | 'Other'
 
 const { ibcChains, getIbcChains } = useIbcChains();
-const { ibcBaseDenoms, getIbcBaseDenom } = useGetIbcDenoms()
+const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms()
 const { list, getList, total } = useGetTokenList()
-
 
 const needCustomColumns = [
   'base_denom',
@@ -180,11 +179,11 @@ const goIbcToken = (denom: string) => {
 
 
 const goTransfer = (denom: string) => {
+  let baseDenomInfo = getBaseDenomInfoByDenom(denom);
+  let query = baseDenomInfo? {symbol:baseDenomInfo.symbol} : {denom}
   router.push({
     path: '/transfers',
-    query: {
-      denom
-    }
+    query: query
   })
 }
 

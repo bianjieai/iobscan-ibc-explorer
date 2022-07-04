@@ -137,8 +137,15 @@ onMounted(() => {
           chain_id: filterData.chain_id,
           chain_name: formatLongTitleString(chain_name)
         };
-        backupDropdownData = selectedChain.value
+      }else{
+        if (idArr[i]) {
+          selectedChain.value[i] = {
+            chain_id: idArr[i],
+            chain_name: idArr[i]
+          };
+        }
       }
+      backupDropdownData = selectedChain.value
     }
   }
 })
@@ -151,7 +158,8 @@ const chain_a = computed(() => {
     const chain_a_input = chainIdIput.value.split(',')[0]
     return formatLongTitleString(chain_a_input)
   } else {
-    return selectedChain.value[0]?.chain_name ?? 'All Chains'
+    let chain_name = selectedChain.value[0]?.chain_name;
+    return  chain_name && chain_name != 'allchain'? chain_name: 'All Chains'
   }
 })
 
@@ -160,10 +168,10 @@ const chain_b = computed(() => {
   if (chain_b_input && confirmFlag.value) {
     return formatLongTitleString(chain_b_input)
   } else {
-    return selectedChain.value[1]?.chain_name ?? 'All Chains'
+    let chain_name = selectedChain.value[1]?.chain_name;
+    return  chain_name && chain_name != 'allchain'? chain_name: 'All Chains'
   }
 })
-
 const isSelected = computed(() => (chain_id: TChainID) => selectedChain.value.filter(item => item.chain_id === chain_id).length > 0)
 const badgeText = computed(() => (chain_id: TChainID) => {
   if (selectedChain.value[0]?.chain_id === 'allchain' && selectedChain.value[1]?.chain_id === 'allchain') {
