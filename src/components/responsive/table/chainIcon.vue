@@ -58,13 +58,13 @@ const chainInfo = computed(() => {
     return {
       title: filterData.chain_name,
       subtitle: filterData.chain_id,
-      imgSrc: filterData.icon ? filterData.icon : new URL('../../../assets/default.png', import.meta.url).href
+      imgSrc: filterData.icon ? filterData.icon : new URL('../../../assets/chain-default.png', import.meta.url).href
     }
   } else {
     return {
       title: 'Unknown',
       subtitle: '--',
-      imgSrc: new URL('../../../assets/default.png', import.meta.url).href
+      imgSrc: new URL('../../../assets/chain-default.png', import.meta.url).href
     }
   }
 })
