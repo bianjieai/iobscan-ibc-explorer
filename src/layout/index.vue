@@ -22,7 +22,6 @@
             </div>
           </div>
         </div>
-
       </a-layout-header>
 
       <a-layout-content class="content" :class="isShowBackground ? 'show_background' : ''">

@@ -137,7 +137,7 @@ export default {
         }
     }
     .ant-menu-item-active {
-      background-image: none!important;
+      background-image: none !important;
     }
 }
 @media screen and (max-width: 768px){
