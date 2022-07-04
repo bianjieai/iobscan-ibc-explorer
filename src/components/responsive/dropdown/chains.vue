@@ -137,8 +137,15 @@ onMounted(() => {
           chain_id: filterData.chain_id,
           chain_name: formatLongTitleString(chain_name)
         };
-        backupDropdownData = selectedChain.value
+      }else{
+        if (idArr[i] && idArr[i] != 'allchain') {
+          selectedChain.value[i] = {
+            chain_id: idArr[i],
+            chain_name: idArr[i]
+          };
+        }
       }
+      backupDropdownData = selectedChain.value
     }
   }
 })
