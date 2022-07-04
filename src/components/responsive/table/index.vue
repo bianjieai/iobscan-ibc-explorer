@@ -272,7 +272,7 @@ if (props.realTimeKey && props.realTimeKey.length) {
 }
 
 :deep(.ant-pagination li) {
-  width: 24px;
+  width: initial;
   height: 24px;
   min-width: 24px;
   line-height: 24px;
