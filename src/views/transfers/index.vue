@@ -300,7 +300,7 @@ import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
 import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus, ibcTxStatusDesc, defaultTitle, unknownSymbol } from '../../constants';
 import Tools from '../../utils/Tools';
 import chainDefaultImg from '../../assets/chain-default.png';
-import { JSONparse, getRestString, formatNum } from '../../helper/parseString';
+import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/parseString';
 import * as djs from 'dayjs';
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute } from 'vue-router';
@@ -349,8 +349,7 @@ const getImageUrl = (status) => {
 }
 
 let chainId = router?.query.chain;
-if (router?.query?.chain) {
-    chainId = router?.query.chain
+if (chainId) {
     url += `&chain=${chainId}`;
 }
 if (router?.query?.denom) {
@@ -370,6 +369,8 @@ if (router?.query?.symbol && router?.query?.symbol?.toLowerCase() !== unknownSym
             })
         }
     })
+}else if(paramsDenom && rmIbcPrefix(paramsDenom).length){
+    selectedSymbol.value = rmIbcPrefix(paramsDenom);
 }
 if (router?.query?.status) {
     const defaultOptions = transfersStatusOptions.DEFAULT_OPTIONS;
