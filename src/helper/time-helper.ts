@@ -28,7 +28,7 @@ export const formatLastUpdated = (time: string | number) => {
   } else if (seconds) {
     ago = `${seconds}s`
   } else {
-    ago = 'unknown time'
+    ago = '0s'
   }
 
   return `${ago} ago`
