@@ -25,6 +25,7 @@ import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
 interface IProps {
   iconSize?: TTableCellIconSize
   denom: string
+  chainId: string
   denomsData: TBaseDenoms[]
   titleCanClick?: boolean
   token_type?: string
@@ -36,8 +37,7 @@ const props = withDefaults(defineProps<IProps>(), {
 })
 
 const tokenInfo = computed(() => {
-  const filterData = props.denomsData.find(item => item.denom === props.denom)
- 
+  const filterData = props.denomsData.find(item => item.denom === props.denom && item.chain_id == props.chainId)
  if (filterData) {
     return {
       defaultTitle:filterData.symbol,
