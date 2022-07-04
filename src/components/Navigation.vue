@@ -1,12 +1,13 @@
 <template>
   <a-menu
     class="header_menu"
+    :class="isShowNav?'header_menu': 'header_menu_hide header_menu'"
     :selectedKeys="currentMenu"
     mode="horizontal"
     @click="clickMenuItem"
   >
-    <!-- :class="isShowNav?'header_menu': 'header_menu_hide header_menu'" -->
     <a-menu-item class="header_menu_item" v-for="item of menus" :key="item.value">
+        <img v-show="isShowNav" src="../assets/tips_icon.png" alt="" class="header_menu_item_img">
       {{ item.label }}
     </a-menu-item>
   </a-menu>
@@ -25,11 +26,6 @@ export default {
     const timeOuter = reactive({ value: null });
     const clickMenuItem = ({ key }) => {
       context.emit('clickMenu', key);
-    //   const el = document.getElementsByClassName('header_menu_item_img');
-    //     for(let i = 0; i < el.length; i++) {
-    //         console.log(el[i]);
-    //         el[i].style.visibility = 'hidden';
-    //     }
     };
     onBeforeUnmount(() => {
       clearTimeout(timeOuter.value);
@@ -105,22 +101,49 @@ export default {
     }
 }
 @media screen and (max-width: 1030px) {
-    .header_menu {
-        display: none;
+    .header_menu_hide{
+      visibility: hidden;
     }
-    // .ant-menu-item-selected{
-    //   background-image: none !important;
-    //   .header_menu_item_img{
-    //     visibility: visible;
-    //     }
-    // }
-    // .ant-menu-item-active {
-    //   background-image: none !important;
-    // }
+    .header_menu {
+        position: absolute;
+        top: 80px;
+        background-color:#0E1232;
+        width:100%;
+        height: 245px;
+        border-top: 4px solid #3D50FF;
+        flex-direction: column;
+        align-items: baseline;
+        justify-content: space-around;
+        padding: 20px 0 0 2px;
+        &_item {
+          margin-left: 32px;
+          width: 40px;
+          height: 15px;
+          line-height: 15px !important;
+          text-align: left;
+          margin-bottom: 24px !important;
+          &_img{
+            visibility: hidden;
+            height: 8px;
+          }
+        }
+        .header_menu_item_img{
+          display: inline-block;
+        }
+    }
+    .ant-menu-item-selected{
+      background-image: none !important;
+      .header_menu_item_img{
+        visibility: visible;
+        }
+    }
+    .ant-menu-item-active {
+      background-image: none !important;
+    }
 }
 @media screen and (max-width: 768px){
-//   .header_menu_item{
-//     margin-left: 16px;
-//   }
+  .header_menu_item{
+    margin-left: 16px;
+  }
 }
 </style>
