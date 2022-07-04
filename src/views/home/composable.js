@@ -62,10 +62,14 @@ export const useGetIbcDenoms = () => {
     const ibcBaseDenoms = ibcStatisticsChainsStore.ibcBaseDenoms;
     const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
     const getIbcBaseDenom = ibcStatisticsChainsStore[GET_IBCBASEDENOMS];
+    const getBaseDenomInfoByDenom = (denom)=>{
+        return (ibcBaseDenoms.value || []).find((item)=> item.denom == denom);
+    }
     return {
         ibcBaseDenoms,
         getIbcDenoms,
-        getIbcBaseDenom
+        getIbcBaseDenom,
+        getBaseDenomInfoByDenom
     }
 }
 export const useInterfaceActive = () => {

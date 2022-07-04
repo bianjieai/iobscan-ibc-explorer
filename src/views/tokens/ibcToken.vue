@@ -179,7 +179,7 @@ const goTransfer = (chain_id: string) => {
   router.push({
     path: '/transfers',
     query: {
-      symbol: baseDenomInfo.value.symbol,
+      denom: baseDenomQuery,
       chain: chain_id
     }
   })
