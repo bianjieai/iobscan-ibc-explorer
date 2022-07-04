@@ -34,7 +34,7 @@
 
       <template #ibc_transfer_txs="{ record, column }">
         <TransferTxs :title="record[column.key]" :subtitle="record.ibc_transfer_txs_value"
-          :currency="record.currency" />
+          :currency="record.currency" no-link/>
       </template>
 
       <template #table_bottom_status v-if="list.length !== 0">
