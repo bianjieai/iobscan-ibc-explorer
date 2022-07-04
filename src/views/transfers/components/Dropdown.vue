@@ -140,9 +140,11 @@ const emits = defineEmits(['clickItem','clickSearch']);
 const { findSymbolIcon, findChainIcon, isShowSymbol } = useFindIcon(props);
 const { isVisible, visibleChange } = useIsVisible();
 const inputValue = ref('');
-const content = computed(()=>props.type === selectedType.chain
+const content = computed(()=>{
+    return props.type === selectedType.chain
           ? getLasttyString(props.selectedChain?.chain_name) || defaultTitle.defaultChains
-          : isShowSymbol(props.selectedSymbol)?.symbolDenom)
+          : isShowSymbol(props.selectedSymbol)?.symbolDenom;
+  })
 
 watch(
     () => props.clearInput,
