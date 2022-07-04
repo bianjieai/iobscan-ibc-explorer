@@ -62,8 +62,8 @@ export const useGetIbcDenoms = () => {
     const ibcBaseDenoms = ibcStatisticsChainsStore.ibcBaseDenoms;
     const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
     const getIbcBaseDenom = ibcStatisticsChainsStore[GET_IBCBASEDENOMS];
-    const getBaseDenomInfoByDenom = (denom)=>{
-        return (ibcBaseDenoms.value || []).find((item)=> item.denom == denom);
+    const getBaseDenomInfoByDenom = (denom, chainId)=>{
+        return (ibcBaseDenoms.value || []).find((item)=> item.denom == denom && item.chain_id == chainId);
     }
     return {
         ibcBaseDenoms,

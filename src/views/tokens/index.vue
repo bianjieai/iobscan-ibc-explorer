@@ -13,8 +13,14 @@
 
     <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
       <template #base_denom="{ record, column }">
-        <TokenIcon base-page title-can-click @click-title="goIbcToken(record.base_denom)"
-          :token_type="record.token_type" :denom="record[column.key]" :denoms-data="ibcBaseDenoms.value" />
+        <TokenIcon 
+          base-page 
+          title-can-click 
+          @click-title="goIbcToken(record.base_denom)"
+          :token_type="record.token_type" 
+          :denom="record[column.key]" 
+          :chain-Id="record.chain_id"
+          :denoms-data="ibcBaseDenoms.value" />
       </template>
       <template #price="{ record, column }">
         <a-popover v-if="+record[column.key] !== -1">
@@ -43,7 +49,7 @@
       </template>
 
       <template #ibc_transfer_txs="{ record, column }">
-        <div class="hover-cursor" @click="goTransfer(record.base_denom)">{{ `${formatBigNumber(record[column.key], 0)}`
+        <div class="hover-cursor" @click="goTransfer(record.base_denom, record.chain_id)">{{ `${formatBigNumber(record[column.key], 0)}`
         }}</div>
       </template>
 
@@ -178,8 +184,8 @@ const goIbcToken = (denom: string) => {
 }
 
 
-const goTransfer = (denom: string) => {
-  let baseDenomInfo = getBaseDenomInfoByDenom(denom);
+const goTransfer = (denom: string, chainId: string) => {
+  let baseDenomInfo = getBaseDenomInfoByDenom(denom, chainId);
   let query = baseDenomInfo? {symbol:baseDenomInfo.symbol} : {denom}
   router.push({
     path: '/transfers',
