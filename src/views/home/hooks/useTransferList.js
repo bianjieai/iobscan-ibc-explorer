@@ -1,4 +1,4 @@
-import tokenDefaultImg from '../../../assets/token-default.png';
+import chainDefaultImg from '../../../assets/chain-default.png';
 import {  computed } from 'vue';
 export const useInterfaceActive = (emits) => {
     const onClickViewAll = () => {
@@ -30,10 +30,10 @@ export const useFindIbcChainIcon = (props) => {
         if (props.ibcChains && props.ibcChains.all) {
             const result = props.ibcChains.all.find((item) => item.chain_id === chainId);
             if (result) {
-                return result.icon || tokenDefaultImg;
+                return result.icon || chainDefaultImg;
             }
         }
-        return tokenDefaultImg;
+        return chainDefaultImg;
     };
     return {
         findIbcChainIcon

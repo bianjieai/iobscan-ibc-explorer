@@ -154,7 +154,7 @@
                             <router-link :to="record.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`">
                                 <img
                                     class="token_icon hover"
-                                    :src="record.symbolIcon || tokenDefaultImg"
+                                    :src="record.symbolIcon || chainDefaultImg"
                                 />
                                 <span class="token_num hover">{{
                                         formatNum(record.symbolNum)
@@ -299,7 +299,7 @@ import Dropdown from "./components/Dropdown.vue";
 import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
 import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus, ibcTxStatusDesc, defaultTitle, unknownSymbol } from '../../constants';
 import Tools from '../../utils/Tools';
-import tokenDefaultImg from '../../assets/token-default.png';
+import chainDefaultImg from '../../assets/chain-default.png';
 import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/parseString';
 import * as djs from 'dayjs';
 import { ref, reactive, computed, onMounted, watch } from "vue";
@@ -514,10 +514,10 @@ const findIbcChainIcon = (chainId) => {
     if (ibcChains && ibcChains.value.all) {
         const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
         if (result) {
-            return result.icon || tokenDefaultImg;
+            return result.icon || chainDefaultImg;
         }
     }
-    return tokenDefaultImg;
+    return chainDefaultImg;
 };
 const onClickDropdownItem = (type, item, custom) => {
     pagination.current = 1;

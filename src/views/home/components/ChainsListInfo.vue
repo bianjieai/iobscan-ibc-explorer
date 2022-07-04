@@ -24,7 +24,7 @@
                             <a-card class="menu_card">
                                 <img
                                     class="card_img"
-                                    :src="item.icon ? item.icon : tokenDefaultImg"
+                                    :src="item.icon ? item.icon : chainDefaultImg"
                                 />
                                 <p class="card_title">{{ item.chain_name }}</p>
                                 <p class="card_value">{{ formatChainID(item.chain_id) }}</p>
@@ -79,7 +79,7 @@
 import NoDatas from '../../../components/NoDatas.vue';
 import { useMenus, useInterfaceActive, useAnchors, useGetBindElement } from '../hooks/useChainsListInfo';
 import ChainHelper from '@/helper/chainHepler';
-const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
+const chainDefaultImg = new URL('../../../assets/chain-default.png', import.meta.url).href; 
 const props = defineProps({
     chainList: Object
 })
