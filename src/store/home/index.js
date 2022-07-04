@@ -110,7 +110,7 @@ export const useIbcStatisticsChains = defineStore('home', {
                                     symbol,
                                 );
                                 if (findSymbol) {
-                                    symbolNum = (item.sc_tx_info?.msg_amount?.amount || 0) * 10 ** - findSymbol.scale;
+                                    symbolNum = (item.sc_tx_info?.msg_amount?.amount || 0) / 10 **  findSymbol.scale;
                                     symbolDenom = findSymbol.symbol;
                                     symbolIcon = findSymbol.icon;
                                 }
