@@ -214,7 +214,7 @@ const isShowLink = (address, chainID) => {
                 }
                 &_title_container {
                     overflow: auto;
-                    text-overflow: e;
+                    text-overflow: ellipsis;
                 }
                 &_value {}
 

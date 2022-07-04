@@ -158,7 +158,7 @@
                                         formatNum(record.symbolNum)
                                     }}</span>
                                 <span class="token_denom hover">{{
-                                        getLasttyString(record.symbolDenom)
+                                        getRestString2(record.symbolDenom, 8)
                                     }}</span>
                             </router-link>
                         </a-popover>
@@ -301,7 +301,7 @@ import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
 import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus, ibcTxStatusDesc, defaultTitle, unknownSymbol } from '../../constants';
 import Tools from '../../utils/Tools';
 import tokenDefaultImg from '../../assets/token-default.png';
-import { JSONparse, getRestString, formatNum, getLasttyString } from '../../helper/parseString';
+import { JSONparse, getRestString, formatNum, getRestString2 } from '../../helper/parseString';
 import * as djs from 'dayjs';
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute } from 'vue-router';
@@ -932,7 +932,7 @@ onMounted(() => {
         color: rgba(164, 171, 192, 1);
     }
     ::v-deep .ant-select-selector{
-        height: 36px;
+        height: 36px !important;
         border: 1px solid var(--bj-border-color);
         .ant-select-selection-item{
             text-align: center;
@@ -949,10 +949,6 @@ onMounted(() => {
             color: var(--bj-primary-color);
         }
     }
-    // ::v-deep .ant-select-focused {
-    //     .ant-select-selector {
-    //         }
-    // }
     .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
         box-shadow: none;
     }

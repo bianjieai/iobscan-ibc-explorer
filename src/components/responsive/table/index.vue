@@ -242,6 +242,7 @@ if (props.realTimeKey && props.realTimeKey.length) {
 
 :deep(.ant-table-cell) {
   padding-left: 0;
+  white-space: nowrap;
 }
 
 :deep(.ant-table-thead > tr > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before) {
