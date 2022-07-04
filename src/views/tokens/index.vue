@@ -204,6 +204,25 @@ const goChains = () => {
   }
 }
 
+:deep(.ant-table-cell) {
+    &:nth-of-type(2) {
+        .ant-table-column-sorters {
+            justify-content: flex-start;
+            .ant-table-column-title {
+                flex: 0;
+            }
+        }
+    }
+    &:nth-of-type(8) {
+        .ant-table-column-sorters {
+            justify-content: flex-start;
+            .ant-table-column-title {
+                flex: 0;
+            }
+        }
+    }
+}
+
 // pc
 @media screen and (min-width: 768px) {}
 
