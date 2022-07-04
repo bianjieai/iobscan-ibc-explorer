@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import {findStatistics} from '../../helper/findStatistics';
 import Tools from '../../utils/Tools';
+import moveDecimal from 'move-decimal-point';
 import {
     ibcStatisticsChainsDefault,
     ibcStatisticsChannelsDefault,
@@ -110,7 +111,7 @@ export const useIbcStatisticsChains = defineStore('home', {
                                     symbol,
                                 );
                                 if (findSymbol) {
-                                    symbolNum = (item.sc_tx_info?.msg_amount?.amount || 0) * 10 ** - findSymbol.scale;
+                                    symbolNum = moveDecimal(item.sc_tx_info?.msg_amount?.amount || 0, 0 - findSymbol.scale);
                                     symbolDenom = findSymbol.symbol;
                                     symbolIcon = findSymbol.icon;
                                 }
