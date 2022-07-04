@@ -64,7 +64,7 @@ onMounted(() => {
   //   setStar2()
   // }, 4200)
 
-  currentMenu.value = [route.name];
+  // currentMenu.value = [route.name];
   currentMenu.value = getCurrentRouterNames(route);
    document.addEventListener("click", (e) => {
       if (e.target.className !== "header_btn_img" && e.target.className !== "ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light header_menu") {  //不是该选择器的class

@@ -1,6 +1,5 @@
 <template>
   <a-menu
-    class="header_menu"
     :class="isShowNav?'header_menu': 'header_menu_hide header_menu'"
     :selectedKeys="currentMenu"
     mode="horizontal"
