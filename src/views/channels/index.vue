@@ -152,12 +152,14 @@ const goChains = () => {
   }
 }
 
-// :deep(.ant-table-tbody .ant-table-cell) {
-//     &:nth-of-type(3) {
-//         padding-right: 16px;
-//     }
-// }
-
+:deep(.ant-table-cell) {
+    &:nth-of-type(3) {
+        padding-right: 26px;
+    }
+    &:nth-of-type(4) {
+        padding-left: 8px;
+    }
+}
 // pc
 @media screen and (min-width: 768px) {}
 

@@ -6,7 +6,7 @@
     @click="clickMenuItem"
   >
     <a-menu-item class="header_menu_item" v-for="item of menus" :key="item.value">
-      <img src="../assets/tips_icon.png" alt="" class="header_menu_item_img">
+        <img v-show="isShowNav" src="../assets/tips_icon.png" alt="" class="header_menu_item_img">
       {{ item.label }}
     </a-menu-item>
   </a-menu>
@@ -137,7 +137,7 @@ export default {
         }
     }
     .ant-menu-item-active {
-      background-image: none!important;
+      background-image: none !important;
     }
 }
 @media screen and (max-width: 768px){

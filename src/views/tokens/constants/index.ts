@@ -5,14 +5,14 @@ export const COLUMNS: TableColumnsType = [{
   dataIndex: 'base_denom',
   key: 'base_denom',
   title: 'Name',
-  sorter: (a, b) => a.base_denom - b.base_denom
+  sorter: (a, b) => a.base_denom - b.base_denom,
+  width: 100
 }, {
   dataIndex: 'price',
   key: 'price',
   title: 'Price',
   sorter: (a, b) => a.price - b.price,
   align: 'right',
-  width: 100
 }, {
   dataIndex: 'supply',
   key: 'supply',
