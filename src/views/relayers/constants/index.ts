@@ -35,7 +35,7 @@ export const COLUMNS: TableColumnsType= [
     width: 70
   },
   {
-    title: 'Txs Success rate',
+    title: 'Txs Success Rate',
     dataIndex: 'transfer_success_txs',
     key: 'transfer_success_txs',
     align:'right',
