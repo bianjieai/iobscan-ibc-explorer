@@ -35,11 +35,11 @@ export const COLUMNS: TableColumnsType= [
     width: 70
   },
   {
-    title: 'Txs Success rate',
-    dataIndex: 'transfer_success_txs',
-    key: 'transfer_success_txs',
+    title: 'Txs Success Rate',
+    dataIndex: 'txs_success_rate',
+    key: 'txs_success_rate',
     align:'right',
-    sorter: (a, b) => a.transfer_success_txs - b.transfer_success_txs,
+    sorter: (a, b) => a.txs_success_rate - b.txs_success_rate,
     width: 100
   },
   {
