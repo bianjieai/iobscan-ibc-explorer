@@ -174,6 +174,11 @@ const goChains = () => {
     margin-right: 8px;
   }
 }
+:deep(.ant-table-cell) {
+    &:nth-of-type(4) {
+        padding-right: 26px;
+    }
+}
 
 // pc
 @media screen and (min-width: 768px) {}

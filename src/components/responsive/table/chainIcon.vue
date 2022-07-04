@@ -3,7 +3,7 @@
     <img :src="chainInfo.imgSrc" :class="['icon', 'mr-8', avatarCanClick ? 'hover-cursor' : '',
     iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']" @click="avatarClick">
     <div class="flex flex-col justify-around"
-      :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }">
+      >
       <a-popover>
           <template #content>
             <div class="popover-c" >{{computedTitle}}</div>
@@ -101,6 +101,7 @@ const avatarClick = () => {
 }
 
 .title {
+    padding: 2px;
   font-size: var(--bj-font-size-sub-title);
   overflow: hidden;
   text-overflow: ellipsis;
@@ -109,6 +110,7 @@ const avatarClick = () => {
 }
 
 .subtitle {
+    padding: 2px;
   color: var(--bj-text-third);
   overflow: hidden;
   text-overflow: ellipsis;
