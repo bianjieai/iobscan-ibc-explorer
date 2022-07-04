@@ -22,13 +22,16 @@
           <div>{{ getRestString(rmIbcPrefix(record[column.key]), 3, 8) }}</div>
         </a-popover>
         <div v-else>
-          <a-popover placement="topLeft" v-if="record[column.key].length > 11">
-            <template #content >
-             <div class="popover-c">{{ record[column.key] }}</div>
-            </template>
-            <div>{{ getRestString(record[column.key], 3, 8) }}</div>
-          </a-popover>
-          <div v-else>{{ `${getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol || record[column.key]}` }}</div>
+            <div v-if="getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol">{{ getBaseDenomInfoByDenom(record[column.key], record.chain_id).symbol}}</div>
+            <div v-else>
+                <a-popover placement="topLeft" v-if="record[column.key].length > 11">
+                    <template #content >
+                    <div class="popover-c">{{ record[column.key] }}</div>
+                    </template>
+                    <div>{{ getRestString(record[column.key], 3, 8) }}</div>
+                </a-popover>
+                <div v-else>{{ record[column.key] }}</div>
+            </div>
         </div>
       </template>
       <template #chain_id="{ record, column }">
