@@ -1,5 +1,5 @@
 <template>
-  <a-dropdown v-model:visible="visible" :trigger="['click']" :overlayStyle="{ zIndex: 1020 }">
+  <a-dropdown v-model:visible="visible" :trigger="['click']" :overlayStyle="{ zIndex: 1020 }" @visibleChange="visibleChange">
     <div
       :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']">
       <div
@@ -53,7 +53,7 @@
           </div>
           <div class="flex items-center mt-12 flex-wrap">
             <a-input allowClear v-model:value="tokenInput" class="token-input" placeholder="Search by ibc/hash"
-              @input="() => selectToken = []" />
+              @input="onInputChange" />
             <a-button @click="confirmChains" type="primary" class="confirm-button ml-12">Confirm</a-button>
           </div>
         </div>
@@ -87,6 +87,8 @@ const props = withDefaults(defineProps<IProps>(), {
 const visible = ref(false)
 const selectToken = ref<TSelectToken[]>([])
 const tokenInput = ref<TDenom>(undefined)
+
+let backupDropdownData: TSelectToken[] | null;
 
 const isSelected = computed(() => (denom: TDenom) => selectToken.value.length > 0 && selectToken.value[0]?.denom === denom)
 const selectedText = computed(() => {
@@ -149,6 +151,27 @@ const confirmChains = () => {
     }]
   }
   sumbitTokens(tokenInput.value)
+}
+
+const onInputChange = () => {
+  if (!backupDropdownData && selectToken.value.length) {
+    backupDropdownData = selectToken.value;
+  }
+  
+  selectToken.value = []
+  if (!tokenInput.value) return
+  selectToken.value = [{
+    denom: tokenInput.value,
+    symbol: tokenInput.value
+  }]
+}
+
+const visibleChange = (visible: boolean) => {
+  if (!visible && backupDropdownData) {
+    selectToken.value = backupDropdownData;
+    tokenInput.value = undefined
+  }
+  backupDropdownData = null;
 }
 
 const onSelected = (symbol: string, denom: TDenom) => {
