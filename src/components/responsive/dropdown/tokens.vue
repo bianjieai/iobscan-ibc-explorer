@@ -26,7 +26,7 @@
           <div :style="{ marginBottom: '-2px' }" class="leading-none">Authed IBC Tokens</div>
           <div class="flex flex-wrap">
             <span v-for="item in dropdownData" @click="onSelected(item.symbol, item.denom)"
-              :class="['chains-tag', 'mr-12', 'mt-16', isSelected(item.denom) ? 'visible_color visible_border' : '']"
+              :class="['chains-tag', 'mr-12', 'mt-12', isSelected(item.denom) ? 'visible_color visible_border' : '']"
               :key="item.denom">
               <img :src="iconSrc(item.icon)" width="24" height="24" class="mr-8" />{{ item.symbol }}
             </span>
@@ -226,7 +226,7 @@ const onSelected = (symbol: string, denom: TDenom) => {
 }
 
 .overlay {
-  width: 814px;
+  width: 872px;
   background: #FFFFFF;
   box-shadow: 0px 2px 8px 0px #D9DEEC;
   border-radius: 4px;
@@ -252,7 +252,7 @@ const onSelected = (symbol: string, denom: TDenom) => {
   border-radius: 4px;
   color: var(--bj-text-second);
   background: var(--bj-background-color);
-  width: 120px;
+  width: 158px;
   box-sizing: border-box;
 
   &:hover {
@@ -292,14 +292,14 @@ const onSelected = (symbol: string, denom: TDenom) => {
 // tablet
 @media screen and (min-width: 414px) and (max-width: 768px) {
   .overlay {
-    width: 682px;
+    width: 532px;
   }
 }
 
 // mobile
 @media screen and (max-width: 414px) {
   .overlay {
-    width: 301px;
+    width: 284px;
     height: 450px;
     overflow-y: auto;
 

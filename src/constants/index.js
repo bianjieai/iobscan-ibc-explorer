@@ -369,6 +369,10 @@ const testChains = {
     IRISHUB: 'IRIS Hub'
   }
 
+  const SYMBOL = {
+    ATOM:'ATOM',
+    IRIS:'IRIS'
+  }
   export {
     testChains,
     ibcStatisticsTxsTest,
@@ -394,6 +398,7 @@ const testChains = {
     defaultTitle,
     selectedType,
     unknownSymbol,
-    CHAINID
+    CHAINID,
+    SYMBOL
   };
   

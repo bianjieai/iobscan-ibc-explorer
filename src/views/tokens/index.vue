@@ -2,7 +2,7 @@
   <PageContainer>
     <PageTitle title="IBC Tokens" :subtitle="subtitle" />
     <div class="select flex items-center flex-wrap">
-      <TokensDropDown :base_denom="denomQuery" :dropdown-data="ibcBaseDenoms.value"
+      <TokensDropDown :base_denom="denomQuery" :dropdown-data="ibcBaseDenomsSorted"
         @on-tokens-selected="onSelectedToken" ref="tokensDropdown" />
       <ChainsDropdown :dropdown-data="ibcChains?.all" :chain_id="chainIdQuery" @on-selected-chain="onSelectedChain"
         ref="chainDropdown" />
@@ -93,7 +93,7 @@ const denomQuery = route.query.denom as string
 const statusQuery = route.query.status as 'Authed' | 'Other'
 
 const { ibcChains, getIbcChains } = useIbcChains();
-const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms()
+const { ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms()
 const { list, getList, total } = useGetTokenList()
 
 const needCustomColumns = [
