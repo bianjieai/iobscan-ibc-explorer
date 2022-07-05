@@ -13,12 +13,12 @@ export function compareValues(key: string, order: CompareOrder = CompareOrder.AS
     const varB = ((typeof getKeyValue(key, b) === 'string') && isNaN(Number(getKeyValue(key, b))))
       ? getKeyValue(key, b).toUpperCase() : Number(getKeyValue(key, b));
 
-    let comparison = 0;
-    if (varA > varB) {
-      comparison = 1;
-    } else if (varA < varB) {
-      comparison = -1;
-    }
+    let comparison = String(varA).localeCompare(String(varB));
+    // if (varA > varB) {
+    //   comparison = 1;
+    // } else if (varA < varB) {
+    //   comparison = -1;
+    // }
     return (
       (order === CompareOrder.DESCEND) ? (comparison * -1) : comparison
     );

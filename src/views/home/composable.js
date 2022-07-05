@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { useIbcStatisticsChains } from '../../store/home/index';
 import { GET_IBCSTATISTICS, GET_IBCCHAINS, GET_IBCTXS, GET_IBCDENOMS, GET_IBCBASEDENOMS } from '../../store/action-types';
-import { ibcStatisticsChannelsDefault, ibcStatisticsDenomsDefault, channelsStatus } from '../../constants';
+import { ibcStatisticsChannelsDefault, ibcStatisticsDenomsDefault, channelsStatus, SYMBOL } from '../../constants';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
@@ -65,8 +65,22 @@ export const useGetIbcDenoms = () => {
     const getBaseDenomInfoByDenom = (denom, chainId)=>{
         return (ibcBaseDenoms.value || []).find((item)=> item.denom == denom && item.chain_id == chainId);
     }
+    const ibcBaseDenomsSorted = computed(()=>{
+        let tokens = [];
+        let customs = (ibcBaseDenoms.value || []).filter((item)=>{
+            return item.symbol == SYMBOL.ATOM || item.symbol ==  SYMBOL.IRIS;
+        });
+        customs.sort((a,b)=> a.symbol.localeCompare(b.symbol));
+        (ibcBaseDenoms.value || []).sort((a,b)=> a.symbol.localeCompare(b.symbol)).forEach((item)=>{
+            if (item.symbol !=  SYMBOL.ATOM && item.symbol !=  SYMBOL.IRIS) {
+                tokens.push(item);
+            }
+        });
+        return [...customs, ...tokens];
+    });
     return {
         ibcBaseDenoms,
+        ibcBaseDenomsSorted,
         getIbcDenoms,
         getIbcBaseDenom,
         getBaseDenomInfoByDenom

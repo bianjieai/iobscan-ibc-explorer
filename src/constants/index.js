@@ -370,6 +370,10 @@ const testChains = {
   }
   const thousandDecimal = 0.0001;
 
+  const SYMBOL = {
+    ATOM:'ATOM',
+    IRIS:'IRIS'
+  }
   export {
     testChains,
     ibcStatisticsTxsTest,
@@ -396,6 +400,7 @@ const testChains = {
     selectedType,
     unknownSymbol,
     CHAINID,
+    SYMBOL,
     thousandDecimal
   };
   
