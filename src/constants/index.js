@@ -368,6 +368,7 @@ const testChains = {
     COSMOSHUB: 'Cosmos Hub',
     IRISHUB: 'IRIS Hub'
   }
+  const thousandDecimal = 0.0001;
 
   export {
     testChains,
@@ -394,6 +395,7 @@ const testChains = {
     defaultTitle,
     selectedType,
     unknownSymbol,
-    CHAINID
+    CHAINID,
+    thousandDecimal
   };
   

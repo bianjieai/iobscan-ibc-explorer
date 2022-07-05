@@ -12,17 +12,24 @@ import { formatBigNumber, formatPriceNumber } from "./parseString"
  * @param numberOfDecimal 4位小数
  * @returns $ xxx
  */
-export const formatPrice = (price: number | string, numberOfDecimal: number = 4) => {
-  if (price === -1 || price === '-1') {
-    return `--`
-  }
+// export const formatPrice = (price: number | string, numberOfDecimal: number = 4) => {
+//   if (price === -1 || price === '-1') {
+//     return `--`
+//   }
 
-  const _formatNum = formatPriceNumber(price)
-  if (isString(_formatNum)) {
-    return `${_formatNum}`
-  } else {
-    return `${formatBigNumber(_formatNum, numberOfDecimal)}`
-  }
+//   const _formatNum = formatPriceNumber(price)
+//   if (isString(_formatNum)) {
+//     return `${_formatNum}`
+//   } else {
+//     return `${formatBigNumber(_formatNum, numberOfDecimal)}`
+//   }
+// }
+
+export const formatPrice = (price: number | string, numberOfDecimal: number = 4) => {
+    if (price === -1 || price === '-1') {
+        return `--`
+    }
+    return `${formatBigNumber(Number(price), numberOfDecimal)}`
 }
 
 const getScale = (denom?: string, baseDenomData?: TBaseDenoms[]) => {
