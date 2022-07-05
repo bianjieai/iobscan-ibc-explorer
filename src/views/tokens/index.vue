@@ -12,6 +12,7 @@
     </div>
 
     <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
+
       <template #base_denom="{ record, column }">
         <TokenIcon 
           base-page 
@@ -24,10 +25,15 @@
       </template>
       <template #price="{ record, column }">
         <a-popover v-if="+record[column.key] !== -1">
-          <template #content>
-            <div class="popover-c">{{ `${record.currency} ${record[column.key]}` }}</div>
-          </template>
-          <div>{{ `${record.currency} ${formatPrice(record[column.key])}` }}</div>
+            <template #content>
+                <div class="popover-c">{{ `${record.currency} ${record[column.key]}` }}</div>
+            </template>
+            <div v-if="record[column.key] < thousandDecimal">
+                {{`< ${record.currency} ${thousandDecimal}`}}
+            </div>
+            <div v-else>
+                {{`${record.currency} ${formatPrice(record[column.key])}`}}
+            </div>
         </a-popover>
         <div v-else>{{ `${record.currency} ${formatPrice(record[column.key])}` }}</div>
       </template>
@@ -70,6 +76,7 @@ import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
 import { COLUMNS, STATUS_OPTIONS } from './constants'
+import {thousandDecimal} from '../../constants';
 import TokensDropDown from '@/components/responsive/dropdown/tokens.vue';
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
@@ -208,7 +215,6 @@ const goChains = () => {
     margin-right: 8px;
   }
 }
-
 :deep(.ant-table-cell) {
     &:nth-of-type(2) {
         .ant-table-column-sorters {
@@ -219,6 +225,7 @@ const goChains = () => {
         }
     }
     &:nth-of-type(8) {
+        padding-left: 16px;
         .ant-table-column-sorters {
             justify-content: flex-start;
             .ant-table-column-title {
@@ -228,14 +235,27 @@ const goChains = () => {
     }
 }
 
-// pc
-@media screen and (min-width: 768px) {}
-
 // tablet
-@media screen and (min-width: 414px) and (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .select {
     margin-top: 24px;
   }
+}
+@media screen and (max-width: 510px) {
+    .select {
+        .ant-btn {
+            margin-top: 8px;
+        }
+    }
+}
+@media screen and (max-width: 478px) {
+    .select {
+        :deep(.ant-dropdown-trigger) {
+            &:nth-of-type(3) {
+                margin-top: 10px;
+            }
+        }
+    }
 }
 
 // mobile

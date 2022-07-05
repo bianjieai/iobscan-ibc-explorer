@@ -368,6 +368,7 @@ const testChains = {
     COSMOSHUB: 'Cosmos Hub',
     IRISHUB: 'IRIS Hub'
   }
+  const thousandDecimal = 0.0001;
 
   const SYMBOL = {
     ATOM:'ATOM',
@@ -399,6 +400,7 @@ const testChains = {
     selectedType,
     unknownSymbol,
     CHAINID,
-    SYMBOL
+    SYMBOL,
+    thousandDecimal
   };
   
