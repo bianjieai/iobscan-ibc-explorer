@@ -37,7 +37,7 @@
       </template>
 
       <template #last_updated="{ record, column }">
-        <div>{{ formatLastUpdated(record[column.key]) }}</div>
+        <div>{{ formatLastUpdated(record.last_updated) }}</div>
       </template>
 
       <template #txs_success_rate="{ record, column }">
