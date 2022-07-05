@@ -4,12 +4,8 @@
     iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']" @click="avatarClick">
     <div class="flex flex-col justify-around"
       >
-      <a-popover>
-          <template #content>
-            <div class="popover-c" >{{computedTitle}}</div>
-          </template>
-          <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ computedTitle }}</div>
-      </a-popover>
+        <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ computedTitle }}</div>
+
       <a-popover placement="bottom">
           <template #content>
             <div class="popover-c" >{{chainInfo.subtitle}}</div>
@@ -103,10 +99,7 @@ const avatarClick = () => {
 .title {
     padding: 2px;
   font-size: var(--bj-font-size-sub-title);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100px;
+  max-width: 150px;
 }
 
 .subtitle {
@@ -115,6 +108,6 @@ const avatarClick = () => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 100px;
+  max-width: 150px;
 }
 </style>

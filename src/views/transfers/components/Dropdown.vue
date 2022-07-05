@@ -117,7 +117,7 @@
 import { getLasttyString } from '../../../helper/parseString';
 import { useFindIcon, useIsVisible } from '../composable';
 import { computed, ref, watch } from 'vue';
-import {defaultTitle,selectedType} from '@/constants'
+import {defaultTitle,selectedType, unAuthed} from '@/constants'
 const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
 const props = defineProps({
     type: String,

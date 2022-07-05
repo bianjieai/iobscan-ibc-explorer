@@ -82,6 +82,14 @@
 .ant-table-column-title {
     white-space: nowrap;
 }
+
+.ant-dropdown-open .button_token_icon .button_title_default{
+    color: var(--bj-text-third);
+}
+.ant-dropdown-open .selected_color_default{
+    color: var(--bj-text-third) !important;
+}
+
 @media screen and (max-width: 630px) {
     .ant-picker-panels {
         flex-direction: column;
