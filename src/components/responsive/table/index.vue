@@ -24,9 +24,9 @@
 <script setup lang="ts">
 import { TableColumnsType } from 'ant-design-vue';
 import { computed, onMounted, reactive, ref, toRaw, watch } from 'vue';
-import { compareValues } from './utils'
 import { useTimeInterval } from '@/composables'
 import { formatLastUpdated } from '@/helper/time-helper';
+import { CompareOrder } from '../component.interface';
 
 interface IProps {
   columns: TableColumnsType
@@ -95,9 +95,8 @@ const backUpData = () => {
   let defaultSort = props.columns.find((item)=>{
     return item.defaultSortOrder != undefined;
   });
-
   if (defaultSort) {
-    onTableChange({},{},{ columnKey: defaultSort.key, order:defaultSort.defaultSortOrder });
+    onTableChange({},{},{ columnKey: defaultSort.key, column: defaultSort, order:defaultSort.defaultSortOrder });
   }
   if (props.noPagination) {
       dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
@@ -129,10 +128,12 @@ const onPageChange = (page: number, pageSize: number) => {
 
 // todo clippers => 后端分页序号处理
 const onTableChange = (pagination: any, filters: any, sorter: any) => {
-  const { columnKey, order } = sorter
+  const { columnKey, column, order } = sorter
   if (order) {
     backUpDataSource = backUpDataSource
-      .sort(compareValues(columnKey, order))
+      .sort((a,b)=>{
+        return column?.sorter(a,b) * (order === CompareOrder.DESCEND ?  -1: 1);
+      })
       .map((item: any, index: number) => ({
         ...item,
         _count: index + 1

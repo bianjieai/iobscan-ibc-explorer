@@ -31,7 +31,7 @@ export const COLUMNS: TableColumnsType= [
     dataIndex: 'last_updated',
     key: 'update_time',
     align:'right',
-    sorter: (a, b) => a.update_time - b.update_time,
+    sorter: (a, b) => b.update_time - a.update_time,
     width: 70
   },
   {

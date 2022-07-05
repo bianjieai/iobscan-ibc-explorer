@@ -1,11 +1,12 @@
 import { CompareOrder } from "@/components/responsive/component.interface";
 import { TableColumnsType } from "ant-design-vue";
+import BigNumber from "bignumber.js";
 
 export const COLUMNS: TableColumnsType = [{
   dataIndex: 'base_denom',
   key: 'base_denom',
   title: 'Name',
-  sorter: (a, b) => a.base_denom - b.base_denom,
+  sorter: (a, b) => a.base_denom.localeCompare(b.base_denom),
   width: 100
 }, {
   dataIndex: 'price',
@@ -17,14 +18,14 @@ export const COLUMNS: TableColumnsType = [{
   dataIndex: 'supply',
   key: 'supply',
   title: 'Supply',
-  sorter: (a, b) => a.supply - b.supply,
+  sorter: (a, b) => new BigNumber(a.supply).comparedTo(new BigNumber(b.supply)),
   align: 'right'
 
 }, {
   dataIndex: 'ibc_transfer_amount',
   key: 'ibc_transfer_amount',
   title: 'IBC Transfer Amount',
-  sorter: (a, b) => a.ibc_transfer_amount - b.ibc_transfer_amount,
+  sorter: (a, b) => new BigNumber(a.ibc_transfer_amount).comparedTo(new BigNumber(b.ibc_transfer_amount)),
   align: 'right'
 }, {
   dataIndex: 'ibc_transfer_txs',
@@ -44,7 +45,7 @@ export const COLUMNS: TableColumnsType = [{
   dataIndex: 'chain_id',
   key: 'chain_id',
   title: 'Origional Chain',
-  sorter: (a, b) => a.chain_id - b.chain_id
+  sorter: (a, b) => a.chain_id.localeCompare(b.chain_id)
 }
 ]
 
@@ -60,7 +61,7 @@ export const IBC_COLUMNS: TableColumnsType = [
     dataIndex: 'chain_id',
     key: 'chain_id',
     title: 'Current Chain',
-    sorter: (a, b) => a.chain_id - b.chain_id, 
+    sorter: (a, b) => a.chain_id.localeCompare(b.chain_id), 
   },
   {
     dataIndex: 'token_type',
