@@ -41,8 +41,12 @@ export const formatLastUpdated = (time: string | number) => {
  * @returns duration => xxx Days
  */
 export const formatOperatingPeriod = (time: number, status: TChannelStatus) => {
-  if (String(status) === ChannelStatus.CLOSED) return '--'
+  if (String(status) === ChannelStatus.CLOSED || time == 0) return '--'
   const obj = dayjs.duration(Number(time) * 1000) as any
   const { days, months, years } = obj.$d
-  return `${formatBigNumber(days + months * 30 + years * 365, 0)} Days`
+  let day = days;
+  if (!months && !years && time > 0) {
+    day = day || 1;
+  }
+  return `${formatBigNumber(day + months * 30 + years * 365, 0)} Days`
 }
