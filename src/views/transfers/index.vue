@@ -28,13 +28,13 @@
                         @clickSearch="(type, item) => onClickDropdownItem(type, item, 'customToken')"
                     />
                     <chains-dropdown 
+                        class="chains_dropdown"
                         :selectedDouble="selectedDouble"
                         :needBadge="needBadge"
                         @onSelectedChain="onSelectedChain"
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         ref="chainDropdown"
-                        :min-width="210"
                     />
                     <a-select
                         class="status_select"
@@ -370,7 +370,7 @@ if (router?.query?.symbol && router?.query?.symbol?.toLowerCase() !== unknownSym
         }
     })
 }else if(paramsDenom && rmIbcPrefix(paramsDenom).length){
-    selectedSymbol.value = rmIbcPrefix(paramsDenom);
+    selectedSymbol.value = getRestString(rmIbcPrefix(paramsDenom), 4, 4);
 }
 if (router?.query?.status) {
     const defaultOptions = transfersStatusOptions.DEFAULT_OPTIONS;
@@ -1324,6 +1324,19 @@ onMounted(() => {
             &_left {
                 .ant-select {
                     width: 210px;
+                }
+                ::v-deep .default_color {
+                    justify-content: center;
+                    margin-top: 12px;
+                    min-width: 210px;
+                    .chain_wrap {
+                        .selected_color {
+                            flex: 0 1 auto !important;
+                            max-width: 72px;
+                            text-align: center !important;
+                            white-space: nowrap;
+                        }
+                    }
                 }
             }
             &_right {

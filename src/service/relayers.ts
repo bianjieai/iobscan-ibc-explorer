@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelpers.js';
 import { baseParams } from './tokens';
 import { formatTransfer_success_txs } from '@/helper/tablecell-helper';
+import ChainHelper from '../helper/chainHepler';
 
 type TRelayersListParams = {
   chain?: string
@@ -29,9 +30,9 @@ export const useGetRelayersList = () => {
     if (code === 0) {
       const { items } = data
       if (!totalCount) {
-        list.value = (items ?? []).map((item:any)=>{
-          item.txs_success_rate = formatTransfer_success_txs(item.transfer_success_txs, item.transfer_total_txs);
-          return item;
+        list.value = ChainHelper.sortByChainName(items)?.map((item: any) => {
+            item.txs_success_rate = formatTransfer_success_txs(item.transfer_success_txs, item.transfer_total_txs);
+            return item;
         });
       } else {
         total.value = items.length

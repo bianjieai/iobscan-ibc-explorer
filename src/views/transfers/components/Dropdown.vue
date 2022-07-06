@@ -66,7 +66,7 @@
                       "
                     />
                     <span class="content_item_title">{{
-                      getLasttyString(item[titleKey]) || isShowSymbol(key)?.symbolDenom
+                      item[titleKey] || isShowSymbol(key)?.symbolDenom
                     }}</span>
                   </div>
                 </template>
@@ -142,7 +142,7 @@ const { isVisible, visibleChange } = useIsVisible();
 const inputValue = ref('');
 const content = computed(()=>{
     return props.type === selectedType.chain
-          ? getLasttyString(props.selectedChain?.chain_name) || defaultTitle.defaultChains
+          ? props.selectedChain?.chain_name || defaultTitle.defaultChains
           : isShowSymbol(props.selectedSymbol)?.symbolDenom;
   })
 

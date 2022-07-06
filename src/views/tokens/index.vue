@@ -268,6 +268,9 @@ const goChains = () => {
     &:first-of-type {
       margin-top: 8px;
     }
+    &:nth-of-type(2) {
+        margin-right: 0;
+    }
 
     margin-top: 8px;
   }

@@ -2,6 +2,7 @@ import { TChannelStatus } from '@/components/responsive/component.interface';
 import { ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelpers.js';
 import { baseParams } from './tokens';
+import ChainHelper from '../helper/chainHepler';
 
 export type TChannelsListParams = {
   chain?: string
@@ -24,12 +25,10 @@ export const useGetChannelsList = () => {
       }
     })
     const { code, data, message } = result
-
-
     if (code === 0) {
       const { items } = data
       if (!totalCount) {
-        list.value = items;
+        list.value = ChainHelper.sortByChainName(items);
       } else {
         total.value = items.length
       }

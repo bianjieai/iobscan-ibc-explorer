@@ -3,17 +3,19 @@
     <div
       :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']"
       :style="{ minWidth: `${minWidth}px` }">
-      <div
-        :class="['mr-8', 'ml-8', selectedChain[0] ? 'selected_color' : '', chain_a === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color']"
-        :style="{
-          flex: !selectedDouble ? '1' : 'auto',
-          textAlign: !selectedDouble ? 'center' : 'left'
-        }">{{ chain_a }}</div>
-      <template v-if="selectedDouble">
-        - <div
-          :class="['mr-8', 'ml-8', selectedChain[1] ? 'selected_color' : '', chain_b === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color']">
-          {{ chain_b }}</div>
-      </template>
+      <div class="chain_wrap">
+          <div
+            :class="['mr-8', 'ml-8', selectedChain[0] ? 'selected_color' : '', chain_a === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color']"
+            :style="{
+              flex: !selectedDouble ? '1' : 'auto',
+              textAlign: !selectedDouble ? 'center' : 'left'
+            }">{{ chain_a }}</div>
+          <template v-if="selectedDouble">
+            - <div
+              :class="['mr-8', 'ml-8', selectedChain[1] ? 'selected_color' : '', chain_b === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color']">
+              {{ chain_b }}</div>
+          </template>
+      </div>
       <span class="button__icon flex justify-between items-center">
         <svg :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }" focusable="false" data-icon="down"
           width="12px" height="12px" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"
@@ -42,12 +44,11 @@
               <span class="badge">{{ badgeText(item.chain_id) }}</span>
             </template>
 
-            <span @click="onSelected(formatLongTitleString(item.chain_name), item.chain_id)"
+            <span @click="onSelected(item.chain_name, item.chain_id)"
               :class="['chains-tag', isSelected(item.chain_id) ? 'visible_color visible_border' : '']"
               :key="item.chain_id">
-              <img :src="chainImg(item.icon)" width="24" height="24" class="mr-8" />{{
-                  formatLongTitleString(item.chain_name)
-              }}
+              <img :src="chainImg(item.icon)" width="24" height="24" class="mr-8" />
+              <span class="chain_name">{{ item.chain_name }}</span>
             </span>
           </a-badge>
 
@@ -135,7 +136,7 @@ onMounted(() => {
         const chain_name = filterData.chain_name
         selectedChain.value[i] = {
           chain_id: filterData.chain_id,
-          chain_name: formatLongTitleString(chain_name)
+          chain_name: chain_name
         };
       }else{
         if (idArr[i]) {
@@ -156,7 +157,7 @@ const chainIdIput = ref<string | undefined>(undefined)
 const chain_a = computed(() => {
   if (chainIdIput.value && confirmFlag.value) {
     const chain_a_input = chainIdIput.value.split(',')[0]
-    return formatLongTitleString(chain_a_input)
+    return chain_a_input;
   } else {
     let chain_name = selectedChain.value[0]?.chain_name;
     return  chain_name && chain_name != 'allchain'? chain_name: 'All Chains'
@@ -166,7 +167,7 @@ const chain_a = computed(() => {
 const chain_b = computed(() => {
   const chain_b_input = chainIdIput.value?.split(',')[1]
   if (chain_b_input && confirmFlag.value) {
-    return formatLongTitleString(chain_b_input)
+    return chain_b_input;
   } else {
     let chain_name = selectedChain.value[1]?.chain_name;
     return  chain_name && chain_name != 'allchain'? chain_name: 'All Chains'
@@ -357,6 +358,11 @@ const confirmChains = () => {
   &:hover {
     border-color: #667aff;
   }
+
+  .chain_wrap {
+    .flex(row, nowrap, center, center);
+    flex: 1;
+  }
 }
 
 :deep(.ant-dropdown-open) {
@@ -391,6 +397,10 @@ const confirmChains = () => {
 }
 
 .selected_color {
+    max-width: 118px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   color: var(--bj-primary-color);
 
   &_default {
@@ -427,7 +437,13 @@ const confirmChains = () => {
   color: var(--bj-text-second);
   background: var(--bj-background-color);
   width: 158px;
+  line-height: 16px;
   box-sizing: border-box;
+  .chain_name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+  }
 
   &:hover {
     border: 1px solid var(--bj-primary-color);
@@ -507,12 +523,6 @@ const confirmChains = () => {
 
   .chain-input {
     width: 245px;
-  }
-
-  .dropdown-container {
-    margin-top: 12px;
-    // width: 220px;
-    // min-width: 210px;
   }
 }
 </style>
