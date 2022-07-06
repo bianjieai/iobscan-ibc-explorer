@@ -18,14 +18,12 @@
                 <div class="transfer_middle_left">
                     <dropdown
                         class="dropdown_token"
-                        :type="'token'"
-                        :ibcBaseDenoms="ibcBaseDenoms"
-                        :options="tokens.value"
+                        :ibcBaseDenoms="ibcBaseDenomsSorted"
                         :selectedSymbol="selectedSymbol.value"
                         :showIcon="isShowSymbolIcon"
                         :clearInput="clearInput.value"
                         @clickItem="onClickDropdownItem"
-                        @clickSearch="(type, item) => onClickDropdownItem(type, item, 'customToken')"
+                        @clickSearch="(item) => onClickDropdownItem(item, 'customToken')"
                     />
                     <chains-dropdown 
                         :selectedDouble="selectedDouble"
@@ -304,12 +302,11 @@ import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/p
 import * as djs from 'dayjs';
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute } from 'vue-router';
-import { useClearInterval } from '../home/composable';
+import { useClearInterval, useGetIbcDenoms } from '../home/composable';
 
 import { 
     useIbcStatistics, 
     useIbcTxs, 
-    useGetIbcBaseDenoms,
     useGetTokens,
     useSelectedSymbol,
     usePagination,
@@ -318,9 +315,9 @@ import {
 } from "./composable";
 
 useClearInterval();
+const { getIbcDenoms, ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom } = useGetIbcDenoms()
 const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
 const { tableCount, getIbcTxs } = useIbcTxs();
-const { getIbcDenoms,ibcBaseDenoms, getIbcBaseDenom } = useGetIbcBaseDenoms();
 const { tokens, ibcDenoms } = useGetTokens();
 const { selectedSymbol, isShowSymbolIcon, clearInput, selectedChain, isShowChainIcon } = useSelectedSymbol();
 const { pagination } = usePagination();
@@ -519,29 +516,24 @@ const findIbcChainIcon = (chainId) => {
     }
     return chainDefaultImg;
 };
-const onClickDropdownItem = (type, item, custom) => {
+const onClickDropdownItem = (item, custom) => {
     pagination.current = 1;
-    switch (type) {
-        case 'token':
-            isShowSymbolIcon.value = !custom;
-            selectedSymbol.value = item || 'All Tokens';
-            if (item === 'All Tokens') {
-                queryParam.symbol = undefined;
-            } else if (custom) {
-                if (item && item.length && item.length > 8) {
-                    selectedSymbol.value = getRestString(item, 4, 4);
-                }
-                queryParam.symbol = undefined;
-                queryParam.denom = item ? `ibc/${item.toUpperCase()}` : undefined;
-            } else {
-                queryParam.symbol = item;
-                queryParam.denom = undefined;
-            }
-            queryDatas();
-            break;
-        default:
-            break;
+    isShowSymbolIcon.value = !custom;
+    selectedSymbol.value = item || 'All Tokens';
+    if (item === 'All Tokens') {
+        queryParam.symbol = undefined;
+    } else if (custom) {
+        if (item && item.length && item.length > 8) {
+            selectedSymbol.value = getRestString(item, 4, 4);
+        }
+        queryParam.symbol = undefined;
+        queryParam.denom = item ? `ibc/${item.toUpperCase()}` : undefined;
+    } else {
+        queryParam.symbol = item;
+        queryParam.denom = undefined;
     }
+    queryDatas();
+
     url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
     if (queryParam?.chain) {
         url += `&chain=${queryParam.chain}`

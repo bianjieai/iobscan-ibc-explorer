@@ -50,7 +50,7 @@ export default class Tools {
 
     static findSymbol(ibcBaseDenoms, symbol) {
         if (ibcBaseDenoms) {
-            const findBaseDenom = ibcBaseDenoms.find((baseDenom) => baseDenom.symbol === symbol);
+            const findBaseDenom = ibcBaseDenoms.find(baseDenom => baseDenom.symbol === symbol);
             if (findBaseDenom) {
                 return findBaseDenom;
             }
