@@ -5,7 +5,7 @@
 import { TBaseDenoms } from "@/hooks/chainAndDenom.interface"
 import { isString } from "./object-helper"
 import { formatBigNumber, formatPriceNumber } from "./parseString"
-
+import moveDecimal from 'move-decimal-point'
 /**
  * 
  * @param price 价格 不超过10w
@@ -45,20 +45,20 @@ const getScale = (denom?: string, baseDenomData?: TBaseDenoms[]) => {
   }
 }
 
-export const formatSupply = (supply: number | string, denom: string, baseDenomData: TBaseDenoms[], numberOfDecimal: number = 2) => {
-  if (supply === -1 || supply === '-1') {
+export const formatSupply = (supply: number | string, denom: string, baseDenomData: TBaseDenoms[], numberOfDecimal: number = 2,isformat: boolean = true) => {
+  if ((supply === -1 || supply === '-1') && isformat) {
     return `--`
   }
   const scale = getScale(denom, baseDenomData)
-  let result = 0
+  let result = "";
 
   if (scale > 0) {
-    result = Number(supply) / Math.pow(10, scale)
+    // result = Number(supply) / Math.pow(10, scale)
+    result = moveDecimal(supply.toString(),-scale);
   } else {
-    result = Number(supply)
+    result = supply.toString();
   }
-
-  return formatBigNumber(result, numberOfDecimal)
+  return isformat ? formatBigNumber(result, numberOfDecimal) : result;
 }
 
 
