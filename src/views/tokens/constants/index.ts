@@ -17,13 +17,13 @@ export const COLUMNS: TableColumnsType = [{
   dataIndex: 'supply',
   key: 'supply',
   title: 'Supply',
-  sorter: (a, b) => 0, // =>  new BigNumber(a.supply).comparedTo(new BigNumber(b.supply)),
+  sorter: true, // =>  new BigNumber(a.supply).comparedTo(new BigNumber(b.supply)),
   align: 'right'
 }, {
   dataIndex: 'ibc_transfer_amount',
   key: 'ibc_transfer_amount',
   title: 'IBC Transfer Amount',
-  sorter: (a, b) => 0, // (a, b) => new BigNumber(a.ibc_transfer_amount).comparedTo(new BigNumber(b.ibc_transfer_amount)),
+  sorter: true, // (a, b) => new BigNumber(a.ibc_transfer_amount).comparedTo(new BigNumber(b.ibc_transfer_amount)),
   align: 'right'
 }, {
   dataIndex: 'ibc_transfer_txs',
