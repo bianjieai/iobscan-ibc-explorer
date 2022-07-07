@@ -1,5 +1,8 @@
+// import { BaseDenom } from '@/types/baseDenom';
 import { ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelpers.js';
+import { getBaseDenomByKey } from "@/helper/baseDenomHelpers";
+import { getRestString2 } from '@/helper/parseString';
 
 export type TIbcTokenType = 'Authed' | 'Other' | 'Genesis'
 
@@ -40,11 +43,17 @@ export const useGetTokenList = () => {
     const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...(totalCount ? {} : params) } })
 
     const { code, data, message } = result
-
     if (code === 0) {
       const { items } = data
       if (!totalCount) {
-        list.value = items ?? [];
+        const temp:any = [];
+        for (let i = 0; i < (items ?? []).length; i++) {
+          const item:any = items[i];
+          const baseDenom = await getBaseDenomByKey(item.chain_id, item.base_denom);
+          item["name"] = baseDenom ? getRestString2(baseDenom.symbol, 6) : getRestString2(item.base_denom, 6);
+          temp.push(item);
+        }
+        list.value = temp;
       } else {
         total.value = items.length
       }

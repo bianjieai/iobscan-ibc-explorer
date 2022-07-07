@@ -5,7 +5,7 @@ export const COLUMNS: TableColumnsType = [{
   dataIndex: 'base_denom',
   key: 'base_denom',
   title: 'Name',
-  sorter: (a, b) => a.base_denom.localeCompare(b.base_denom),
+  sorter: (a, b) => a.name.localeCompare(b.name),
   width: 100
 }, {
   dataIndex: 'price',

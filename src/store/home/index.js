@@ -24,6 +24,7 @@ import {
     GET_IBCBASEDENOMS,
     GET_IBCCONFIGS,
 } from '../action-types';
+import { getBaseDenomKey } from '@/helper/baseDenomHelpers';
 
 export const useIbcStatisticsChains = defineStore('home', {
     state: () => {
@@ -70,8 +71,14 @@ export const useIbcStatisticsChains = defineStore('home', {
         async [GET_IBCBASEDENOMS]() {
             const res = await getIbcBaseDenoms();
             sessionStorage.setItem('ibcBaseDenoms', JSON.stringify({
-                value: res
+                value: res || []
             }));
+            const ibcBaseDenomsMap = {};
+            (res || []).forEach(token => {
+                const key = getBaseDenomKey(token.chain_id,token.denom);
+                ibcBaseDenomsMap[key] = token;
+            });
+            sessionStorage.setItem('ibcBaseDenomsMap', JSON.stringify(ibcBaseDenomsMap));
             this.ibcBaseDenoms.value = res;
         },
         async [GET_IBCTXS](queryParams) {

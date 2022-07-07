@@ -135,19 +135,24 @@ const formatDisplayAmount = (item: any,key:string) =>{
   return formatSupply(item[key], item.base_denom, ibcBaseDenoms.value, 2, false);
 }
 
+let tempColumn:any;
 // todo clippers => 后端分页序号处理
 const onTableChange = (pagination: any, filters: any, sorter: any) => {
-  const { columnKey, column, order } = sorter;
+  let { columnKey, column, order } = sorter;
+  column ? tempColumn = column : null;
+  order = order || 'ascend';
   // 修改默认排序规则，取消 不排序的状态
-  // columnsSource.value.forEach(item => {
-  //   if (item.key === columnKey) {
-  //     item.sortOrder = order || 'ascend';
-  //   } else {
-  //     item.sortOrder = null;
-  //   }
-  // });
+  columnsSource.value.forEach(item => {
+    if (item.key === columnKey) {
+      item.sortOrder = order || 'ascend';
+    } else {
+      item.sortOrder = null;
+    }
+  });
   // todo duanjie => 待优化
-  if (columnKey === "supply" || columnKey === "ibc_transfer_amount") {
+  switch (columnKey) {
+    case "supply":
+    case "ibc_transfer_amount":
       let authedTemp: any[] = [];
       let otherTemp: any[] = [];
       backUpDataSource.forEach(item => {
@@ -165,26 +170,31 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
         ...item,
         _count: index + 1
       }));
-    } else {
+      break;
+    default:
+      if (tempColumn.key !== columnKey) {
+        return;
+      }
       backUpDataSource = backUpDataSource
-        .sort((a,b)=>{
-          return column?.sorter(a,b) * (order === CompareOrder.DESCEND ?  -1: 1);
+        .sort((a, b) => {
+          return tempColumn?.sorter(a, b) * (order === CompareOrder.DESCEND ? -1 : 1);
         })
         .map((item: any, index: number) => ({
           ...item,
           _count: index + 1
         })) // reset backup
-    }
-    if (props.noPagination) {
-      dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
-    }else{
-      needPagination.value && onPageChange(1, 10) // reset去第一页
-    }
+      break;
+  }
+  if (props.noPagination) {
+    dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
+  }else{
+    needPagination.value && onPageChange(1, 10) // reset去第一页
+  }
 }
 
 if (props.realTimeKey && props.realTimeKey.length) {
   useTimeInterval(()=>{
-    dataSource.value =  formatDataSourceWithRealTime(dataSource.value);
+    dataSource.value = formatDataSourceWithRealTime(dataSource.value);
   });
 }
 
