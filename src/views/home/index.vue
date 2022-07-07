@@ -41,7 +41,6 @@ import StatisticList from './components/StatisticList.vue';
 import TransferList from './components/TransferList.vue';
 import { useIbcStatistics, useIbcChains, useIbcTxs, useInterfaceActive, useClearInterval, useGetIbcDenoms } from './composable';
 import { useOnPressEnter } from '../../layout/hooks/useStarAnimation';
-import { useIbcStatisticsChains } from '../../store/home/index';
 import { onMounted,onBeforeUnmount } from 'vue';
 const {
     ibcStatisticsChains,
