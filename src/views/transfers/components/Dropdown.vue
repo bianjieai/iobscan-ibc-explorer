@@ -81,7 +81,7 @@
                   <template #content>
                     <div>
                       <p class="tip_color">
-                        Hash (in hex format) of the denomination trace information.
+                        Hash (in hex format) of the <br> denomination trace information.
                       </p>
                     </div>
                   </template>
@@ -301,6 +301,7 @@ const onClickAll = () => {
   z-index: 1;
   &_color {
     color: var(--bj-font-color-65);
+    text-align: center;
   }
 }
 .hover {
@@ -454,7 +455,7 @@ const onClickAll = () => {
         }
     }
 }
-@media screen and (max-width: 574px) {
+@media screen and (max-width: 582px) {
     .button {
         &_title {
         }

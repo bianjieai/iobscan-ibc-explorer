@@ -5,7 +5,8 @@
       <div
         :class="['inline-flex', 'flex-1', 'text-center', 'mr-8', 'ml-8', 'justify-center', 'items-center', selectToken.length > 0 ? 'selected_color' : '', selectedInfo.title === defaultTitle['defaultTokens'] ? 'selected_color_default' : '', selectToken.length > 0 && visible ? 'visible_color' : '']">
         <img width="18" height="18"  class="mr-4" v-if="selectedInfo.icon.length" :src="selectedInfo.icon"/>
-        {{ selectedInfo.title }}</div>
+        <span class="selectedInfo_title">{{ selectedInfo.title }}</span>
+        </div>
       <span class="button__icon flex justify-between items-center">
         <svg :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }" focusable="false" data-icon="down"
           width="12px" height="12px" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"
@@ -29,7 +30,8 @@
             <span v-for="item in dropdownData" @click="onSelected(item.symbol, item.denom)"
               :class="['chains-tag', 'mr-12', 'mt-12', isSelected(item.denom) ? 'visible_color visible_border' : '']"
               :key="item.denom">
-              <img :src="iconSrc(item.icon)" width="24" height="24" class="mr-8" />{{ item.symbol }}
+              <img :src="iconSrc(item.icon)" width="24" height="24" class="mr-8" />
+              <span class="symbol">{{ item.symbol }}</span>
             </span>
           </div>
         </div>
@@ -236,13 +238,21 @@ const onSelected = (symbol: string, denom: TDenom) => {
 
 .selected_color {
   color: var(--bj-primary-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-left: 8px;
+  max-width: 118px;
   &_default {
     color: var(--bj-text-second);
   }
 }
-
+.selectedInfo_title {
+    max-width: 118px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .overlay {
-  width: 872px;
+  max-width: 872px;
   background: #FFFFFF;
   box-shadow: 0px 2px 8px 0px #D9DEEC;
   border-radius: 4px;
@@ -274,6 +284,10 @@ const onSelected = (symbol: string, denom: TDenom) => {
   &:hover {
     border: 1px solid var(--bj-primary-color);
   }
+  .symbol {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 
 .token-input {
@@ -302,23 +316,12 @@ const onSelected = (symbol: string, denom: TDenom) => {
   margin: -2px -2px;
 }
 
-// pc
-@media screen and (min-width: 768px) {}
-
 // tablet
-@media screen and (min-width: 414px) and (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .overlay {
-    width: 532px;
-  }
-}
-
-// mobile
-@media screen and (max-width: 414px) {
-  .overlay {
-    width: 284px;
+    max-width: 381px;
     height: 450px;
     overflow-y: auto;
-
     &::-webkit-scrollbar {
       width: 6px;
     }
@@ -339,6 +342,14 @@ const onSelected = (symbol: string, denom: TDenom) => {
     &::-webkit-scrollbar-thumb:window-inactive {
       background: rgba(61, 80, 255, 0.9);
     }
+  }
+}
+
+// mobile
+@media screen and (max-width: 414px) {
+  .overlay {
+    max-width: 284px;
+    height: 450px;
   }
 
   .confirm-button {
