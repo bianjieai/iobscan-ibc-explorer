@@ -37,7 +37,7 @@
           :currency="record.currency" no-link/>
       </template>
 
-      <template #table_bottom_status v-if="list?.length">
+      <template #table_bottom_status v-if="list.length !== 0">
         <BottomStatus type="Channel" />
       </template>
     </BjTable>

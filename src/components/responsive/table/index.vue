@@ -113,7 +113,7 @@ const emits = defineEmits<{
 }>()
 
 const formatDataSourceWithRealTime = (data:any[])=>{
-  if (data.length && props.realTimeKey?.length) {
+  if (data.length && props.realTimeKey && props.realTimeKey.length) {
     data.forEach((item:any)=>{
       props.realTimeKey?.forEach((key)=>{
         item[key.dcKey] = formatLastUpdated(item[key.scKey]);
@@ -167,7 +167,7 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
       }));
     } else {
       backUpDataSource = backUpDataSource
-      .sort((a,b)=>{
+    .sort((a,b)=>{
           return column?.sorter(a,b) * (order === CompareOrder.DESCEND ?  -1: 1);
         })
         .map((item: any, index: number) => ({
@@ -182,7 +182,7 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
     }
 }
 
-if (props.realTimeKey?.length) {
+if (props.realTimeKey && props.realTimeKey.length) {
   useTimeInterval(()=>{
     dataSource.value =  formatDataSourceWithRealTime(dataSource.value);
   });

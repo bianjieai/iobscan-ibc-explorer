@@ -147,9 +147,6 @@ const refreshList = () => {
 }
 
 const onSelectedToken = (denom?: string | number) => {
-    console.log(denom,'denom');
-    
-    
     if(denom) {
         searchDenom.value = denom as string
     } else {

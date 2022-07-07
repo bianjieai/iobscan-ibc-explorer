@@ -49,7 +49,7 @@
           :currency="record.currency" no-link/>
       </template>
 
-      <template #table_bottom_status v-if="list?.length">
+      <template #table_bottom_status v-if="list.length !== 0">
         <BottomStatus type="Relayer" />
       </template>
     </BjTable>
@@ -123,7 +123,7 @@ const subtitle = computed(() => {
   if (!searchChain.value && !searchStatus.value) {
     return `${formatBigNumber(total.value, 0)} relayers found`
   } else {
-    return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} relayers found`
+    return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(total.value, 0)} relayers found`
   }
 })
 
