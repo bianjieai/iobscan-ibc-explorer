@@ -138,9 +138,16 @@ const formatDisplayAmount = (item: any,key:string) =>{
 // todo clippers => 后端分页序号处理
 const onTableChange = (pagination: any, filters: any, sorter: any) => {
   const { columnKey, column, order } = sorter;
-  if (order) {
-    // todo duanjie => 待优化
-    if (columnKey === "supply" || columnKey === "ibc_transfer_amount") {
+  // 修改默认排序规则，取消 不排序的状态
+  columnsSource.value.forEach(item => {
+    if (item.key === columnKey) {
+      item.sortOrder = order || 'ascend';
+    } else {
+      item.sortOrder = null;
+    }
+  });
+  // todo duanjie => 待优化
+  if (columnKey === "supply" || columnKey === "ibc_transfer_amount") {
       let authedTemp: any[] = [];
       let otherTemp: any[] = [];
       backUpDataSource.forEach(item => {
@@ -171,7 +178,6 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
     }else{
       needPagination.value && onPageChange(1, 10) // reset去第一页
     }
-  }
 }
 
 if (props?.realTimeKey?.length) {
