@@ -139,13 +139,13 @@ const formatDisplayAmount = (item: any,key:string) =>{
 const onTableChange = (pagination: any, filters: any, sorter: any) => {
   const { columnKey, column, order } = sorter;
   // 修改默认排序规则，取消 不排序的状态
-  columnsSource.value.forEach(item => {
-    if (item.key === columnKey) {
-      item.sortOrder = order || 'ascend';
-    } else {
-      item.sortOrder = null;
-    }
-  });
+  // columnsSource.value.forEach(item => {
+  //   if (item.key === columnKey) {
+  //     item.sortOrder = order || 'ascend';
+  //   } else {
+  //     item.sortOrder = null;
+  //   }
+  // });
   // todo duanjie => 待优化
   if (columnKey === "supply" || columnKey === "ibc_transfer_amount") {
       let authedTemp: any[] = [];
