@@ -154,7 +154,7 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
         .sort((a, b) => {
           return (new BigNumber(a[columnKey]).comparedTo(new BigNumber(b[columnKey]))) * (order === CompareOrder.DESCEND ? -1 : 1);
         });
-      backUpDataSource = (order === CompareOrder.DESCEND ? [ ...authedTemp, ...otherTemp] : [ ...otherTemp,...authedTemp]).map((item: any, index: number) => ({
+      backUpDataSource = [...authedTemp, ...otherTemp].map((item: any, index: number) => ({
         ...item,
         _count: index + 1
       }));
