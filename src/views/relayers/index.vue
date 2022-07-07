@@ -140,7 +140,7 @@ const onSelectedChain = (chain_id?: string) => {
     key: 'chain',
     value: chain_id as string
   })
-  history.pushState(null, '', pageUrl)
+  router.replace(pageUrl);
   refreshList()
 }
 
@@ -150,7 +150,7 @@ const onSelectedStatus = (value?: number | string) => {
     key: 'status',
     value: value as TRelayerStatus
   })
-  history.pushState(null, '', pageUrl)
+  router.replace(pageUrl);
   refreshList()
 }
 

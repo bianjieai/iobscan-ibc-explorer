@@ -154,7 +154,7 @@ const onSelectedChain = (chain?: string | number) => {
     key: 'chain',
     value: chain as string
   })
-  history.pushState(null, '', pageUrl)
+  router.replace(pageUrl);
   refreshList()
 }
 
@@ -165,7 +165,7 @@ const onSelectedStatus = (status?: string | number) => {
     key: 'status',
     value: status as TIbcTokenType
   })
-  history.pushState(null, '', pageUrl)
+  router.replace(pageUrl);
   refreshList()
 }
 

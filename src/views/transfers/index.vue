@@ -303,7 +303,7 @@ import chainDefaultImg from '../../assets/chain-default.png';
 import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/parseString';
 import * as djs from 'dayjs';
 import { ref, reactive, computed, onMounted, watch } from "vue";
-import { useRoute } from 'vue-router';
+import { useRoute,useRouter } from 'vue-router';
 import { useClearInterval } from '../home/composable';
 
 import { 
@@ -337,7 +337,8 @@ let isHashFilterParams = ref(false);
 let ibcTxTotalMoreThan500k = ref(true);
 let pageNum = 1, pageSize = 10;
 let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
-const router = useRoute();
+const route = useRoute();
+const router = useRouter();
 
 const dayjs = (djs?.default || djs);
 
@@ -348,17 +349,17 @@ const getImageUrl = (status) => {
     return new URL(`../../assets/status${status}.png`, import.meta.url).href;
 }
 
-let chainId = router?.query.chain;
+let chainId = route?.query.chain;
 if (chainId) {
     url += `&chain=${chainId}`;
 }
-if (router?.query?.denom) {
-    url += `&denom=${router.query.denom}`
-    paramsDenom = router?.query.denom
+if (route?.query?.denom) {
+    url += `&denom=${route.query.denom}`
+    paramsDenom = route?.query.denom
 }
-if (router?.query?.symbol && router?.query?.symbol?.toLowerCase() !== unknownSymbol) {
-    url += `&symbol=${router.query.symbol}`
-    paramsSymbol = router?.query.symbol
+if (route?.query?.symbol && route?.query?.symbol?.toLowerCase() !== unknownSymbol) {
+    url += `&symbol=${route.query.symbol}`
+    paramsSymbol = route?.query.symbol
     watch(ibcDenoms, (newValue, oldValue) => {
         if (newValue?.value?.length) {
             newValue?.value.forEach(item => {
@@ -372,12 +373,12 @@ if (router?.query?.symbol && router?.query?.symbol?.toLowerCase() !== unknownSym
 }else if(paramsDenom && rmIbcPrefix(paramsDenom).length){
     selectedSymbol.value = rmIbcPrefix(paramsDenom);
 }
-if (router?.query?.status) {
+if (route?.query?.status) {
     const defaultOptions = transfersStatusOptions.DEFAULT_OPTIONS;
     const successOptions = transfersStatusOptions.SUCCESS_OPTIONS;
     const failedOptions = transfersStatusOptions.FAILED_OPTIONS;
     const processingOptions = transfersStatusOptions.PROCESSING_OPTIONS;
-    paramsStatus = router?.query?.status.split(',')
+    paramsStatus = route?.query?.status.split(',')
     //todo  Optimize the writing
     if(JSON.stringify(paramsStatus) == JSON.stringify(successOptions)){
         paramsStatus =  successOptions
@@ -391,14 +392,14 @@ if (router?.query?.status) {
     url += `&status=${paramsStatus}`
 }
 
-if (router?.query?.startTime) {
-    url += `&startTime=${router.query.startTime}`
-    startTimestamp = dayjs(router.query.startTime).unix()
+if (route?.query?.startTime) {
+    url += `&startTime=${route.query.startTime}`
+    startTimestamp = dayjs(route.query.startTime).unix()
 }
 
-if (router?.query?.endTime) {
-    url += `&endTime=${router.query.endTime}`
-    endTimestamp = dayjs(router.query.endTime).endOf('day').unix()
+if (route?.query?.endTime) {
+    url += `&endTime=${route.query.endTime}`
+    endTimestamp = dayjs(route.query.endTime).endOf('day').unix()
 }
 
 if (startTimestamp && endTimestamp) {
@@ -571,7 +572,7 @@ const onClickDropdownItem = (type, item, custom) => {
             url += `&startTime=${startTime}&endTime=${endTime}`
         }
     }
-    history.pushState(null, null, url)
+    router.replace(url);
 };
 const handleSelectChange = (item) => {
     pagination.current = 1;
@@ -605,7 +606,7 @@ const handleSelectChange = (item) => {
             url += `&startTime=${startTime}&endTime=${endTime}`
         }
     }
-    history.pushState(null, null, url)
+    router.replace(url);
     queryDatas();
 };
 
@@ -643,7 +644,7 @@ const onChangeRangePicker = (dates) => {
             url += `&startTime=${startTime}&endTime=${endTime}`
         }
     }
-    history.pushState(null, null, url)
+    router.replace(url);
     queryDatas();
 };
 const onPaginationChange = (page) => {
@@ -670,8 +671,7 @@ const onPaginationChange = (page) => {
     if (params?.endTime || params.endTime === '') {
         url += `&endTime=${params.endTime}`
     }
-
-    history.pushState(null, null, url);
+    router.replace(url);;
     isShowTransferLoading.value = true;
     getIbcTxs({
         page_num: pagination.current,
@@ -700,7 +700,7 @@ const onClickReset = () => {
     queryParam.denom = undefined;
     pagination.current = 1;
     url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
-    history.pushState(null, null, url)
+    router.replace(url);
     queryDatas();
 };
 const getAddressPrefix = (address) => {
@@ -743,7 +743,7 @@ const onSelectedChain = (chain_id) => {
             url += `&startTime=${startTime}&endTime=${endTime}`;
         }
     }
-    history.pushState(null, null, url)
+    router.replace(url);
     queryDatas();
 }
 const isShowLink = (address, chainID) => {
