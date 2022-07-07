@@ -123,7 +123,7 @@ const subtitle = computed(() => {
   if (!searchChain.value && !searchStatus.value) {
     return `${formatBigNumber(total.value, 0)} relayers found`
   } else {
-    return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(total.value, 0)} relayers found`
+    return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} relayers found`
   }
 })
 
