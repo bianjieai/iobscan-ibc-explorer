@@ -910,10 +910,35 @@ onMounted(() => {
                 margin: 0 16px;
             }
         }
-        & .table_pagination {
+        & :deep(.table_pagination) {
+            text-align: right;
+            li {
+                width: initial;
+                height: 24px;
+                min-width: 24px;
+                line-height: 24px;
+                box-sizing: border-box;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+            }
 
-            ::v-deep .ant-pagination-options {
-                display: none;
+            li button {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .ant-pagination-item {
+                border: none;
+            }
+
+            .ant-pagination-item-active {
+                border: 1px solid var(--bj-primary-color);
+            }
+
+            .ant-pagination-options {
+                display: none !important;
             }
         }
     }
@@ -1270,7 +1295,7 @@ onMounted(() => {
             }
         }
         &_bottom {
-            padding: 8px 8px 0 8px;
+            padding: 8px;
             & .status_tips {
                 width: 100%;
                 .status_log {
@@ -1280,7 +1305,7 @@ onMounted(() => {
                     margin-bottom: 8px;
                 }
             }
-            & .table_pagination {
+            & .table_pagination { 
                 ::v-deep .ant-pagination-options {
                 }
             }

@@ -23,7 +23,7 @@
       "~/*": ["node_modules/*"]
     },
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/store/action-types.js", "src/store/mutation-types.js", "src/layout/hooks/useStarAnimation.js"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/store/action-types.js", "src/store/mutation-types.js", "src/layout/hooks/useStarAnimation.js","types"],
   "exclude": [
     "node_modules"
   ],
