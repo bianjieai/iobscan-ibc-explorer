@@ -47,5 +47,6 @@ export default class ChainHelper {
             })
             return updateList;
         }
+        return [];
     }
 }

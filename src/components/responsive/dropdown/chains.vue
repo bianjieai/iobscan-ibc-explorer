@@ -233,7 +233,6 @@ const onInputChange = () => {
 }
 
 const visibleChange = (visible: boolean) => {
-  console.log(confirmFlag.value, backupDropdownData)
   if (props.selectedDouble) {
     if (!visible && (selectedChain.value.length === 1 || !confirmFlag.value)) {
     selectedChain.value = backupDropdownData

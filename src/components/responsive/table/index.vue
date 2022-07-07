@@ -167,7 +167,7 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
       }));
     } else {
       backUpDataSource = backUpDataSource
-        .sort((a,b)=>{
+    .sort((a,b)=>{
           return column?.sorter(a,b) * (order === CompareOrder.DESCEND ?  -1: 1);
         })
         .map((item: any, index: number) => ({
