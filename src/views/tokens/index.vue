@@ -154,7 +154,7 @@ const onSelectedToken = (denom?: string | number) => {
     key: 'denom',
     value: denom as string
   })
-  history.pushState(null, '', pageUrl)
+  router.replace(pageUrl);
   refreshList()
 }
 
@@ -164,7 +164,7 @@ const onSelectedChain = (chain?: string | number) => {
     key: 'chain',
     value: chain as string
   })
-  history.pushState(null, '', pageUrl)
+  router.replace(pageUrl);
   refreshList()
 }
 
@@ -174,7 +174,7 @@ const onSelectedStatus = (status?: string | number) => {
     key: 'status',
     value: status as string
   })
-  history.pushState(null, '', pageUrl)
+  router.replace(pageUrl);
   refreshList()
 }
 

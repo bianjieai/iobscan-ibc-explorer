@@ -57,7 +57,7 @@ import BottomStatus from '@/components/responsive/table/bottomStatus.vue';
 import { formatLastUpdated, formatOperatingPeriod } from '@/helper/time-helper';
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
 import StatusImg from '@/components/responsive/table/statusImg.vue';
-import { ChannelStatus, TChannelStatus } from '@/components/responsive/component.interface';
+import { TChannelStatus } from '@/components/responsive/component.interface';
 import { useGetChannelsList } from '@/service/channels'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useIbcChains } from '../home/composable';
@@ -117,7 +117,7 @@ const onSelectedChain = (chain_id?: string) => {
     key: 'chain',
     value: chain_id as string
   })
-  history.pushState(null, '', pageUrl)
+  router.replace(pageUrl);
   refreshList()
 }
 
@@ -127,7 +127,7 @@ const onSelectedStatus = (value?: number | string) => {
     key: 'status',
     value: value as TChannelStatus
   })
-  history.pushState(null, '', pageUrl)
+  router.replace(pageUrl);
   refreshList()
 }
 
