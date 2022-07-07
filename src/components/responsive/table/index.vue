@@ -113,7 +113,7 @@ const emits = defineEmits<{
 }>()
 
 const formatDataSourceWithRealTime = (data:any[])=>{
-  if (data.length && props.realTimeKey && props.realTimeKey.length) {
+  if (data?.length && props.realTimeKey && props.realTimeKey?.length) {
     data.forEach((item:any)=>{
       props.realTimeKey?.forEach((key)=>{
         item[key.dcKey] = formatLastUpdated(item[key.scKey]);
@@ -128,7 +128,7 @@ const onPageChange = (page: number, pageSize: number) => {
   pageInfo.pageSize = pageSize
   const p = (page - 1) * pageSize
   const pSize = page * pageSize
-  dataSource.value = formatDataSourceWithRealTime(backUpDataSource.slice(p, pSize));
+  dataSource.value = formatDataSourceWithRealTime(backUpDataSource?.slice(p, pSize));
 }
 
 const formatDisplayAmount = (item: any,key:string) =>{
@@ -159,11 +159,9 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
         _count: index + 1
       }));
     } else {
-      backUpDataSource = backUpDataSource
-        .sort((a,b)=>{
+      backUpDataSource = backUpDataSource?.sort((a,b)=>{
           return column?.sorter(a,b) * (order === CompareOrder.DESCEND ?  -1: 1);
-        })
-        .map((item: any, index: number) => ({
+        })?.map((item: any, index: number) => ({
           ...item,
           _count: index + 1
         })) // reset backup
@@ -176,7 +174,7 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
   }
 }
 
-if (props.realTimeKey && props.realTimeKey.length) {
+if (props?.realTimeKey?.length) {
   useTimeInterval(()=>{
     dataSource.value =  formatDataSourceWithRealTime(dataSource.value);
   });

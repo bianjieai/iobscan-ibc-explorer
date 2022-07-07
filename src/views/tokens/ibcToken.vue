@@ -165,7 +165,6 @@ const onSelectedChain = (chain?: string | number) => {
 
 const onSelectedStatus = (status?: string | number) => {
   searchStatus.value = status as TIbcTokenType
-  console.log(status)
   pageUrl = urlHelper(pageUrl, {
     key: 'status',
     value: status as TIbcTokenType

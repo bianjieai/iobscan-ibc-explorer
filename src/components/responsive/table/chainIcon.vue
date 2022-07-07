@@ -100,6 +100,9 @@ const avatarClick = () => {
     padding: 2px;
   font-size: var(--bj-font-size-sub-title);
   max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .subtitle {
