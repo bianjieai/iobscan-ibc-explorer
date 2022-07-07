@@ -6,6 +6,7 @@ import { getIbcDenoms, getTxDetailsByTxHash } from '../../service/api';
 import { groupBy } from 'lodash-es';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { transferTableColumn } from '../../constants';
+import Tools from '../../utils/Tools';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
@@ -113,7 +114,7 @@ export const usePagination = () => {
 
 export const useFindIcon = (props) => {
     const findSymbolIcon = () => {
-        const findSymbolConfig = props.ibcBaseDenoms.value?.find(
+        const findSymbolConfig = props.ibcBaseDenoms?.find(
             (baseDenom) => baseDenom.symbol === props.selectedSymbol,
         );
         if (findSymbolConfig) {
@@ -135,8 +136,8 @@ export const useFindIcon = (props) => {
             symbolDenom: '',
             symbolIcon: '',
         };
-        if (props.type === 'token' && Array.isArray(props.ibcBaseDenoms.value)) {
-            const findSymbol = props.ibcBaseDenoms.value?.find((baseDenom) => baseDenom.symbol === key);
+        if (Array.isArray(props.ibcBaseDenoms)) {
+            const findSymbol = Tools.findSymbol(props.ibcBaseDenoms, key);
             result.symbolDenom = findSymbol ? findSymbol.symbol : key;
             result.symbolIcon = findSymbol ? findSymbol.icon : '';
         }

@@ -24,29 +24,31 @@
       <no-datas class="transfer_list" v-if="!transferList || !transferList.length" />
     </div>
     <div class="list_bottom" >
-      <span class="status_tips" v-if="transferList && transferList.length">
-        <span class="status_log">Status:</span>
-        <img class="status_img" :src="successImg" alt=""> Success
-        <img class="status_img" :src="processingImg" alt=""> Processing
-        <img class="status_img" :src="failedImg" alt=""> Failed
-      </span>
+        <span class="status_tips">
+            <span class="status_log">Status:</span>
+            <span class="status_tip" v-for="(item, index) in ibcTxStatusDesc" :key="index">
+                <img :src="getImageUrl(item.status)" alt="">
+                <span>{{item.label}}</span>
+            </span>
+        </span>
     </div>
   </div>
 </template>
 
 <script setup>
-import successImg from '../../../assets/status1.png'
-import processingImg from '../../../assets/status3.png'
-import failedImg from '../../../assets/status2.png'
 import TransferListItem from './TransferListItem.vue';
 import NoDatas from '../../../components/NoDatas.vue';
 import { useInterfaceActive } from '../hooks/useTransferList';
+import {ibcTxStatusDesc} from '../../../constants';
 const props = defineProps({
     transferList: Array,
     ibcChains: Object
 })
 const emits = defineEmits(['clickViewAll', 'clickItem', 'itemDidExpand'])
 const { onClickViewAll, clickListItem, itemDidExpand } = useInterfaceActive(emits);
+const getImageUrl = (status) => {
+    return new URL(`../../../assets/status${status}.png`, import.meta.url).href;
+}
 
 </script>
 
@@ -79,38 +81,33 @@ const { onClickViewAll, clickListItem, itemDidExpand } = useInterfaceActive(emit
     height: 473px;
   }
   &_bottom {
-    width: 100%;
-    height: 55px;
-    .flex(row, nowrap, flex-start, center);
-    .status_tips {
-      margin: 15px 24px;
-      padding: 0 24px;
-      background-color: #f8f9fc;
-      border-radius: 8px;
-      font-size: var(--bj-font-size-normal);
-      font-family: Montserrat-Regular, Montserrat;
-      font-weight: 400;
-      color: var(--bj-text-third);
-      .status_tip {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        margin: 0 16px 0 32px;
-      }
-      .status_tip_success {
-        background-color: var(--bj-success);
-      }
-      .status_tip_warning {
-        background-color: var(--bj-processing);
-      }
-      .status_tip_error {
-        background-color: var(--bj-failed);
-      }
-    }
-    .status_img{
-      width: 22px;
-      margin: 0 16px;
+    .flex(row, nowrap, space-between, center);
+    margin: 0 auto;
+    padding: 16px 24px;
+    max-width: 1200px;
+    background: #FFFFFF;
+    border-radius: var(--border-radius-normal);
+    & .status_tips {
+        .flex(row, nowrap, space-between, center);
+        padding: 5px 9px;
+        width: 396px;
+        font-size: 14px;
+        font-weight: 400;
+        color: var(--bj-text-third);
+        line-height: 14px;
+        background: #F8F9FC;
+        border-radius: 8px;
+        .status_tip {
+            .flex(row, wrap, flex-start, center);
+            img {
+                margin-right: 8px;
+                height: 8px;
+            }
+        }
+        .status_img{
+            width: 22px;
+            margin: 0 16px;
+        }
     }
   }
 }
@@ -133,22 +130,18 @@ const { onClickViewAll, clickListItem, itemDidExpand } = useInterfaceActive(emit
         &_middle {
         }
         &_bottom {
-            .status_tips {
-                padding: 0 4px;
+            & .status_tips {
                 .status_tip {
-                    margin: 0 4px 0 8px;
+                    img {
+                    }
                 }
-                .status_tip_success {
-                }
-                .status_tip_warning {
-                }
-                .status_tip_error {
+                .status_img{
                 }
             }
         }
     }
 }
-@media screen and (max-width:414px) {
+@media screen and (max-width: 530px) {
     .list {
         &_top {
             &_name {
@@ -159,24 +152,70 @@ const { onClickViewAll, clickListItem, itemDidExpand } = useInterfaceActive(emit
         &_middle {
         }
         &_bottom {
-            .status_tips {
+            & .status_tips {
                 width: 100%;
-                .status_log {
-                    display: block;
-                    margin-left: 8px;
-                    width: 100%;
-                    text-align: left;
-                }
                 .status_tip {
-                    &:first-child {
-                        margin-left: 0;
+                    img {
                     }
                 }
-                .status_tip_success {
+                .status_img{
                 }
-                .status_tip_warning {
+            }
+        }
+    }
+}
+@media screen and (max-width:420px) {
+    .list {
+        &_top {
+            &_name {
+            }
+            &_button {
+            }
+        }
+        &_middle {
+        }
+        &_bottom {
+            & .status_tips {
+                flex-wrap: wrap;
+                text-align: left;
+                .status_log {
+                    margin-bottom: 8px;
+                    width: 100%;
                 }
-                .status_tip_error {
+                .status_tip {
+                    img {
+                    }
+                }
+                .status_img{
+                }
+            }
+        }
+    }
+}
+@media screen and (max-width:360px) {
+    .list {
+        &_top {
+            &_name {
+            }
+            &_button {
+            }
+        }
+        &_middle {
+        }
+        &_bottom {
+            & .status_tips {
+                .status_log {
+                }
+                .status_tip {
+                    margin-bottom: 8px;
+                    width: 50%;
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                    img {
+                    }
+                }
+                .status_img{
                 }
             }
         }

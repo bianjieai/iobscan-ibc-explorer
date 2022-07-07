@@ -316,7 +316,7 @@ const confirmChains = () => {
         chain_id: chain[1]
       }]
       backupDropdownData = selectedChain.value
-      submitChain(chainIdIput.value.replace(/，/, ','))
+      submitChain(selectedChain.value.map(item=>item.chain_id).join(','))
     } else {
       if (chainIdIput.value) {
         selectedChain.value = [{
