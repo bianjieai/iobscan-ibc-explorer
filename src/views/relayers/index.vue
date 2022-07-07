@@ -49,7 +49,7 @@
           :currency="record.currency" no-link/>
       </template>
 
-      <template #table_bottom_status v-if="list.length !== 0">
+      <template #table_bottom_status v-if="list?.length !== 0">
         <BottomStatus type="Relayer" />
       </template>
     </BjTable>
