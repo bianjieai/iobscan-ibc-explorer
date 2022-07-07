@@ -147,8 +147,13 @@ const refreshList = () => {
 }
 
 const onSelectedToken = (denom?: string | number) => {
+    console.log(denom,'denom');
+    
+    
     if(denom) {
         searchDenom.value = denom as string
+    } else {
+        searchDenom.value = denomQuery;
     }
   pageUrl = urlHelper(pageUrl, {
     key: 'denom',
