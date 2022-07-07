@@ -35,9 +35,13 @@
         </div>
       </template>
       <template #chain_id="{ record, column }">
-        <ChainIcon title-can-click @click-title="goChains" :chain_id="record[column.key]"
+        <ChainIcon avatarCanClick @click-avatar="goChains" title-can-click @click-title="goChains" :chain_id="record[column.key]"
           :chains-data="ibcChains?.all ?? []" icon-size="small" />
       </template>
+      <template #ibc_hops="{ record, column }">
+        <span>{{formatBigNumber(record[column.key], 0)}}</span>
+      </template>
+
       <template #amount="{ record, column }">
         <a-popover>
           <template #content>
@@ -115,6 +119,7 @@ const baseDenomInfo = computed(() => {
 const needCustomColumns = [
   'denom',
   'chain_id',
+  'ibc_hops',
   'amount',
   'receive_txs'
 ]

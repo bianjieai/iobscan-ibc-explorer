@@ -147,7 +147,9 @@ const refreshList = () => {
 }
 
 const onSelectedToken = (denom?: string | number) => {
-  searchDenom.value = denom as string
+    if(denom) {
+        searchDenom.value = denom as string
+    }
   pageUrl = urlHelper(pageUrl, {
     key: 'denom',
     value: denom as string
@@ -267,6 +269,9 @@ const goChains = () => {
   :deep(.ant-dropdown-trigger) {
     &:first-of-type {
       margin-top: 8px;
+    }
+    &:nth-of-type(2) {
+        margin-right: 0;
     }
 
     margin-top: 8px;

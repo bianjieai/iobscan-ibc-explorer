@@ -197,10 +197,6 @@ const goChains = () => {
   }
 
   :deep(.ant-dropdown-trigger) {
-    &:first-of-type {
-      margin-right: 50px;
-    }
-
     &:last-of-type {
       margin-top: 8px;
     }

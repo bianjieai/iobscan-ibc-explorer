@@ -160,11 +160,8 @@ const goChains = () => {
         padding-left: 8px;
     }
 }
-// pc
-@media screen and (min-width: 768px) {}
-
 // tablet
-@media screen and (min-width: 414px) and (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .select {
     margin-top: 24px;
   }
@@ -175,12 +172,11 @@ const goChains = () => {
   .select {
     margin-top: 16px;
   }
+  .selected_color {
+    max-width: 72px !important;
+  }
 
   :deep(.ant-dropdown-trigger) {
-    &:first-of-type {
-      margin-right: 50px;
-    }
-
     &:last-of-type {
       margin-top: 8px;
     }

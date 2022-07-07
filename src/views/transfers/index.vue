@@ -18,14 +18,12 @@
                 <div class="transfer_middle_left">
                     <dropdown
                         class="dropdown_token"
-                        :type="'token'"
-                        :ibcBaseDenoms="ibcBaseDenoms"
-                        :options="tokens.value"
+                        :ibcBaseDenoms="ibcBaseDenomsSorted"
                         :selectedSymbol="selectedSymbol.value"
                         :showIcon="isShowSymbolIcon"
                         :clearInput="clearInput.value"
                         @clickItem="onClickDropdownItem"
-                        @clickSearch="(type, item) => onClickDropdownItem(type, item, 'customToken')"
+                        @clickSearch="(item) => onClickDropdownItem(item, 'customToken')"
                     />
                     <chains-dropdown 
                         :selectedDouble="selectedDouble"
@@ -34,7 +32,6 @@
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         ref="chainDropdown"
-                        :min-width="210"
                     />
                     <a-select
                         class="status_select"
@@ -304,12 +301,11 @@ import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/p
 import * as djs from 'dayjs';
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute,useRouter } from 'vue-router';
-import { useClearInterval } from '../home/composable';
+import { useClearInterval, useGetIbcDenoms } from '../home/composable';
 
 import { 
     useIbcStatistics, 
     useIbcTxs, 
-    useGetIbcBaseDenoms,
     useGetTokens,
     useSelectedSymbol,
     usePagination,
@@ -318,9 +314,9 @@ import {
 } from "./composable";
 
 useClearInterval();
+const { getIbcDenoms, ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom } = useGetIbcDenoms()
 const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
 const { tableCount, getIbcTxs } = useIbcTxs();
-const { getIbcDenoms,ibcBaseDenoms, getIbcBaseDenom } = useGetIbcBaseDenoms();
 const { tokens, ibcDenoms } = useGetTokens();
 const { selectedSymbol, isShowSymbolIcon, clearInput, selectedChain, isShowChainIcon } = useSelectedSymbol();
 const { pagination } = usePagination();
@@ -371,7 +367,7 @@ if (route?.query?.symbol && route?.query?.symbol?.toLowerCase() !== unknownSymbo
         }
     })
 }else if(paramsDenom && rmIbcPrefix(paramsDenom).length){
-    selectedSymbol.value = rmIbcPrefix(paramsDenom);
+    selectedSymbol.value = getRestString(rmIbcPrefix(paramsDenom), 4, 4);
 }
 if (route?.query?.status) {
     const defaultOptions = transfersStatusOptions.DEFAULT_OPTIONS;
@@ -520,29 +516,24 @@ const findIbcChainIcon = (chainId) => {
     }
     return chainDefaultImg;
 };
-const onClickDropdownItem = (type, item, custom) => {
+const onClickDropdownItem = (item, custom) => {
     pagination.current = 1;
-    switch (type) {
-        case 'token':
-            isShowSymbolIcon.value = !custom;
-            selectedSymbol.value = item || 'All Tokens';
-            if (item === 'All Tokens') {
-                queryParam.symbol = undefined;
-            } else if (custom) {
-                if (item && item.length && item.length > 8) {
-                    selectedSymbol.value = getRestString(item, 4, 4);
-                }
-                queryParam.symbol = undefined;
-                queryParam.denom = item ? `ibc/${item.toUpperCase()}` : undefined;
-            } else {
-                queryParam.symbol = item;
-                queryParam.denom = undefined;
-            }
-            queryDatas();
-            break;
-        default:
-            break;
+    isShowSymbolIcon.value = !custom;
+    selectedSymbol.value = item || 'All Tokens';
+    if (item === 'All Tokens') {
+        queryParam.symbol = undefined;
+    } else if (custom) {
+        if (item && item.length && item.length > 8) {
+            selectedSymbol.value = getRestString(item, 4, 4);
+        }
+        queryParam.symbol = undefined;
+        queryParam.denom = item ? `ibc/${item.toUpperCase()}` : undefined;
+    } else {
+        queryParam.symbol = item;
+        queryParam.denom = undefined;
     }
+    queryDatas();
+
     url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
     if (queryParam?.chain) {
         url += `&chain=${queryParam.chain}`
@@ -1253,7 +1244,7 @@ onMounted(() => {
         }
     }
 }
-@media screen and (max-width: 574px) {
+@media screen and (max-width: 582px) {
     .transfer {
         &_header {
             &_container {
@@ -1273,6 +1264,13 @@ onMounted(() => {
                 .ant-select {
                     margin-left: 0;
                     margin-top: 12px;
+                }
+                ::v-deep .default_color {
+                    .chain_wrap {
+                        .selected_color {
+                            white-space: nowrap;
+                        }
+                    }
                 }
             }
             &_right {
@@ -1306,11 +1304,12 @@ onMounted(() => {
             padding: 8px;
             & .status_tips {
                 width: 100%;
+                justify-content: flex-start;
                 .status_log {
                 }
 
                 .status_tip {
-                    margin-bottom: 8px;
+                    margin-left: 8px;
                 }
             }
             & .table_pagination { 
@@ -1350,6 +1349,18 @@ onMounted(() => {
                 .ant-select {
                     width: 210px;
                 }
+                ::v-deep .default_color {
+                    justify-content: center;
+                    margin-top: 12px;
+                    min-width: 210px;
+                    .chain_wrap {
+                        .selected_color {
+                            flex: 0 1 auto !important;
+                            max-width: 72px;
+                            text-align: center !important;
+                        }
+                    }
+                }
             }
             &_right {
                 & .tip {
@@ -1381,6 +1392,7 @@ onMounted(() => {
         &_bottom {
             & .status_tips {
                 flex-wrap: wrap;
+                justify-content: space-between;
                 .status_log {
                     width: 100%;
                     margin-bottom: 8px;
@@ -1388,6 +1400,7 @@ onMounted(() => {
 
                 .status_tip {
                     margin-left: 0;
+                    margin-bottom: 8px;
                 }
             }
             & .table_pagination {
@@ -1408,6 +1421,86 @@ onMounted(() => {
     }
     .date_range {
         width: 210px;
+    }
+}
+@media screen and (max-width: 340px) {
+    .transfer {
+        &_header {
+            &_container {
+            }
+            &_line {
+            }
+            &_title {
+            }
+            &_num {
+            }
+        }
+        &_middle {
+            &_top {
+            }
+            &_left {
+                .ant-select {
+                }
+                ::v-deep .default_color {
+                    .chain_wrap {
+                        .selected_color {
+                        }
+                    }
+                }
+            }
+            &_right {
+                & .tip {
+                }
+                & button {
+                }
+            }
+            &_bottom {
+            }
+        }
+        &_table {
+            ::v-deep .ant-table-placeholder {
+            }
+            ::v-deep a, span {
+            }
+            .token {
+                &_icon {
+                }
+
+                &_num {
+                }
+
+                &_denom {
+                }
+            }
+            .status_icon {
+            }
+        }
+        &_bottom {
+            & .status_tips {
+                .status_log {
+                }
+
+                .status_tip {
+                    width: 50%;
+                }
+            }
+            & .table_pagination {
+                ::v-deep .ant-pagination-options {
+                }
+            }
+        }
+    }
+    .status_select {
+        ::v-deep .ant-select-selector {
+        }
+        ::v-deep .ant-select-selection-item {
+        }
+        ::v-deep .ant-select-selection-search {
+        }
+        ::v-deep .ant-select-arrow {
+        }
+    }
+    .date_range {
     }
 }
 

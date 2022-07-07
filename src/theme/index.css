@@ -76,8 +76,8 @@
 .ant-table-thead th.ant-table-column-has-sorters:hover {
     background: #fff !important;
 }
-.ant-table-tbody>tr:hover:not(.ant-table-expanded-row):not(.ant-table-row-selected)>td {
-    background: #f0f4ff;
+.ant-table-tbody > tr.ant-table-row:hover > td {
+    background: #f0f4ff !important;
 }
 .ant-table-column-title {
     white-space: nowrap;

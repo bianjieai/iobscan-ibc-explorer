@@ -10,10 +10,10 @@
             <img
                 class="button_pre_icon"
                 :style="{ display: showIcon ? 'block' : 'none' }"
-                :src="type === 'chain' ? findChainIcon() : findSymbolIcon()"
+                :src="findSymbolIcon()"
             />
-            <span :class="content===defaultTitle.defaultTokens?'button_title_default':'button_title'">{{
-                content
+            <span :class="selectedSymbol === defaultTitle.defaultTokens?'button_title_default':'button_title'">{{
+                selectedSymbol
             }}</span>
         </div>
       <span class="button_icon">
@@ -37,46 +37,37 @@
       <div class="overlay">
         <div class="overlay_wrap">
             <div class="overlay_title" @click="onClickAll">
-              {{ type === "token" ? "All Tokens" : "All Chains" }}
+              {{ "All Tokens"}}
             </div>
             <div class="overlay_item">
-              <h2 class="overlay_item_title" v-if="type === 'token'">Authed IBC Tokens</h2>
+              <h2 class="overlay_item_title">Authed IBC Tokens</h2>
               <div class="overlay_item_content">
-                <template v-for="(item, key) of options" :key="type === 'chain' ? item.chain_id : key">
+                <template v-for="(item) in ibcBaseDenoms" :key="item.denom">
                   <div
                     class="content_item"
-                    v-if="key !== ''"
-                    :title="type === 'chain' ? item[titleKey] : key"
-                    :class="
-                      type === 'chain'
-                        ? selectedChain &&
-                          selectedChain.chain_id &&
-                          selectedChain.chain_id === item.chain_id &&
-                          'content_item_selected'
-                        : selectedSymbol && selectedSymbol === key && 'content_item_selected'
-                    "
-                    @click="onClickItem(item, key)"
+                    :title="item.symbol"
+                    :class="selectedSymbol && selectedSymbol === item.symbol && 'content_item_selected'"
+                    @click="onClickItem(item.symbol)"
                   >
                     <img
                       class="content_item_icon"
                       :src="
-                        item[iconKey] ||
-                          isShowSymbol(key)?.symbolIcon ||
+                          item.icon ||
                           tokenDefaultImg
                       "
                     />
                     <span class="content_item_title">{{
-                      getLasttyString(item[titleKey]) || isShowSymbol(key)?.symbolDenom
+                      item?.symbol
                     }}</span>
                   </div>
                 </template>
               </div>
             </div>
     
-            <div class="overlay_item" v-if="type === 'token'">
+            <div class="overlay_item">
               <h2 class="overlay_item_title">Other IBC Tokens</h2>
               <div class="overlay_item_content">
-                <div class="content_item" @click="onClickItem(undefined, unAuthed)">
+                <div class="content_item" @click="onClickItem(unAuthed)">
                   <img class="content_item_icon" :src="tokenDefaultImg" />
                   <span class="content_item_title">Others</span>
                 </div>
@@ -84,13 +75,13 @@
             </div>
     
             <div class="overlay_item">
-              <h2 class="overlay_item_title" v-if="type === 'token'">
+              <h2 class="overlay_item_title">
                 Custom IBC Tokens
                 <a-popover destroyTooltipOnHide>
                   <template #content>
                     <div>
                       <p class="tip_color">
-                        Hash (in hex format) of the denomination trace information.
+                        Hash (in hex format) of the <br> denomination trace information.
                       </p>
                     </div>
                   </template>
@@ -102,7 +93,7 @@
                   class="overlay_item_input"
                   v-model:value="inputValue"
                   allowClear
-                  :placeholder="type === 'token' ? 'Search by ibc/hash' : 'Search by Chain ID'"
+                  :placeholder="'Search by ibc/hash'"
                 />
                 <a-button type="primary" @click="onClickSearch">Confirm</a-button>
               </div>
@@ -114,37 +105,28 @@
 </template>
 
 <script setup>
-import { getLasttyString } from '../../../helper/parseString';
+import { getLasttyString, rmIbcPrefix } from '../../../helper/parseString';
 import { useFindIcon, useIsVisible } from '../composable';
 import { computed, ref, watch } from 'vue';
-import {defaultTitle,selectedType, unAuthed} from '@/constants'
+import {defaultTitle, selectedType, unAuthed} from '@/constants'
 const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
 const props = defineProps({
-    type: String,
     options: {
       default: () => [],
     },
     ibcBaseDenoms: {
       default: () => [],
     },
-    selectedChain: Object,
     selectedSymbol: {
       default: () => '',
     },
     clearInput: Number,
     showIcon: Boolean,
-    iconKey: String,
-    titleKey: String,
 })
 const emits = defineEmits(['clickItem','clickSearch']);
-const { findSymbolIcon, findChainIcon, isShowSymbol } = useFindIcon(props);
+const { findSymbolIcon } = useFindIcon(props);
 const { isVisible, visibleChange } = useIsVisible();
 const inputValue = ref('');
-const content = computed(()=>{
-    return props.type === selectedType.chain
-          ? getLasttyString(props.selectedChain?.chain_name) || defaultTitle.defaultChains
-          : isShowSymbol(props.selectedSymbol)?.symbolDenom;
-  })
 
 watch(
     () => props.clearInput,
@@ -152,22 +134,17 @@ watch(
         inputValue.value = '';
     },
 );
-const onClickItem = (item, key) => {
+const onClickItem = (key) => {
     inputValue.value = '';
-    const selected = props.type === 'chain' ? item : key;
-    emits('clickItem', props.type, selected);
+    emits('clickItem', key);
     isVisible.value = false;
 };
 const onClickSearch = () => {
-    emits('clickSearch', props.type, props.type === 'chain' ? { chain_id: inputValue.value } : inputValue.value.toLowerCase().replace('ibc/', '').replace('IBC/', ''));
+    emits('clickSearch', rmIbcPrefix(inputValue.value.toLowerCase()));
     isVisible.value = false;
 }
 const onClickAll = () => {
-    emits(
-    'clickSearch',
-    props.type,
-    props.type === 'chain' ? { chain_id: undefined } : undefined,
-    );
+    emits( 'clickSearch', undefined);
     isVisible.value = false;
 };
 
@@ -324,6 +301,7 @@ const onClickAll = () => {
   z-index: 1;
   &_color {
     color: var(--bj-font-color-65);
+    text-align: center;
   }
 }
 .hover {
@@ -477,7 +455,7 @@ const onClickAll = () => {
         }
     }
 }
-@media screen and (max-width: 574px) {
+@media screen and (max-width: 582px) {
     .button {
         &_title {
         }
