@@ -41,10 +41,14 @@ export const useIbcTxs = () => {
             }
         });
     }
+    const limitIbcTxs = (limitNumber = 10) => {
+        ibcStatisticsChainsStore.ibcTxs.value = ibcStatisticsChainsStore.ibcTxs.value.slice(0, limitNumber);
+    }
     return {
         ibcTxs,
         getIbcTxs,
-        setExpandByIndex
+        setExpandByIndex,
+        limitIbcTxs
     }
 }
 export const useClearInterval = () => {
