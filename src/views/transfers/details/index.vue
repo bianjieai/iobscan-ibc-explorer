@@ -73,7 +73,7 @@
                     </transfer-details-card>
                 </div>
                 <div class="transfer_in_content">
-                    <transfer-details-card :title="'IBC In Details'" :details="transferInDetails"
+                    <transfer-details-card :title="'IBC In Details'" :details="transferInDetails" :ibcDenoms="ibcDenoms"
                         :expand-details="transferInExpandDetails" :base-denom="baseDenom" :chainId="dcChainId" :scChainId="scChainId" :dcChainId="dcChainId"></transfer-details-card>
                 </div>
             </div>
