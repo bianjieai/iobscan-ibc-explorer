@@ -127,7 +127,7 @@ const subtitle = computed(() => {
   if (!searchChain.value && !searchStatus.value && !searchDenom.value) {
     return `${formatBigNumber(total.value, 0)} tokens found`
   } else {
-    return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(total.value, 0)} tokens found`
+    return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} tokens found`
   }
 })
 
