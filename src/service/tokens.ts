@@ -44,8 +44,8 @@ export const useGetTokenList = () => {
 
     const { code, data, message } = result
     if (code === 0) {
-      const { items } = data
       if (!totalCount) {
+        const { items } = data;
         const temp:any = [];
         for (let i = 0; i < (items ?? []).length; i++) {
           const item:any = items[i];
@@ -55,7 +55,7 @@ export const useGetTokenList = () => {
         }
         list.value = temp;
       } else {
-        total.value = items.length
+        total.value = data;
       }
     } else {
       console.error(message)

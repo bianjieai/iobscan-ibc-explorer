@@ -26,11 +26,11 @@ export const useGetChannelsList = () => {
     })
     const { code, data, message } = result
     if (code === 0) {
-      const { items } = data
       if (!totalCount) {
+        const { items } = data;
         list.value = ChainHelper.sortByChainName(items);
       } else {
-        total.value = items.length
+        total.value = data;
       }
     } else {
       console.error(message)

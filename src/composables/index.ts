@@ -1,4 +1,4 @@
-import { onBeforeMount,onMounted, onBeforeUnmount } from 'vue';
+import { onBeforeMount,onMounted, onBeforeUnmount,ref } from 'vue';
 import { ageTimerInterval } from '@/constants';
 export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerInterval) => {
     let timer:number|null = null;
@@ -14,4 +14,15 @@ export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerI
         }
     },);
     return timer;
+}
+
+export const useLoading = () => {
+    const loading = ref(false);
+    const changeLoading = (flag:boolean) =>{
+        loading.value = flag;
+    }
+    return {
+        loading,
+        changeLoading
+    }
 }

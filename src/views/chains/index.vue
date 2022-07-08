@@ -2,7 +2,7 @@
   <PageContainer>
     <PageTitle title="IBC Chains" :subtitle="`${formatBigNumber(list?.length, 0)} chains supported`" />
 
-    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count no-pagination
+    <BjTable :loading="loading" :change-loading="changeLoading" :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count no-pagination
       :scroll="{ y: 610 }">
       <template #chain_id="{ record, column }">
         <ChainIcon :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
@@ -46,6 +46,8 @@ import { useGetChainsList } from '@/service/chains'
 import { useRouter } from 'vue-router';
 import { formatAmount } from '@/helper/tablecell-helper'; 
 import { formatBigNumber } from '@/helper/parseString';
+import { useLoading } from "@/composables/index";
+const { loading, changeLoading } = useLoading();
 
 const router = useRouter()
 
@@ -53,9 +55,13 @@ const { ibcChains, getIbcChains } = useIbcChains();
 const { list, getList } = useGetChainsList()
 
 onMounted(() => {
+  changeLoading(true);
   !sessionStorage.getItem('allChains') && getIbcChains();
-
-  getList()
+  getList().then(() => {
+      changeLoading(false);
+  }).catch(error => {
+      changeLoading(false);
+  })
 })
 
 

@@ -28,14 +28,14 @@ export const useGetRelayersList = () => {
     const { code, data, message } = result
 
     if (code === 0) {
-      const { items } = data
       if (!totalCount) {
+        const { items } = data
         list.value = ChainHelper.sortByChainName(items)?.map((item: any) => {
             item.txs_success_rate = formatTransfer_success_txs(item.transfer_success_txs, item.transfer_total_txs);
             return item;
         });
       } else {
-        total.value = items.length
+        total.value = data;
       }
     } else {
       console.error(message)

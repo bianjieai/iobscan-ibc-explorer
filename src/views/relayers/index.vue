@@ -11,6 +11,8 @@
     </div>
 
     <BjTable 
+      :loading="loading" 
+      :change-loading="changeLoading"
       :data="list" 
       :need-custom-columns="needCustomColumns" 
       :columns="COLUMNS"
@@ -77,6 +79,8 @@ import { formatTransfer_success_txs } from '@/helper/tablecell-helper';
 import NamePopover from './components/namePopover.vue';
 import { formatBigNumber } from '@/helper/parseString';
 import { urlHelper } from '@/helper/url-helper';
+import { useLoading } from "@/composables/index";
+const { loading, changeLoading } = useLoading();
 
 let pageUrl = '/relayers'
 
@@ -128,9 +132,14 @@ const subtitle = computed(() => {
 })
 
 const refreshList = () => {
+  changeLoading(true);
   getList({
     chain: searchChain.value,
     status: searchStatus.value
+  }).then(() => {
+      changeLoading(false);
+  }).catch(error => {
+      changeLoading(false);
   })
 }
 

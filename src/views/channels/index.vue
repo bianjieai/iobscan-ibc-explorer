@@ -9,7 +9,7 @@
 
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
-    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
+    <BjTable :loading="loading" :change-loading="changeLoading" :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
       <template #chain_a="{ record, column }">
         <ChainIcon avatar-can-click @click-avatar="goChains" :title="record.channel_a" no-subtitle
           :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
@@ -64,6 +64,8 @@ import { useIbcChains } from '../home/composable';
 import { useRoute, useRouter } from 'vue-router';
 import { formatBigNumber } from '@/helper/parseString';
 import { urlHelper } from '@/helper/url-helper';
+import { useLoading } from "@/composables/index";
+const { loading, changeLoading } = useLoading();
 
 let pageUrl = '/channels'
 
@@ -105,9 +107,14 @@ const subtitle = computed(() => {
 })
 
 const refreshList = () => {
+  changeLoading(true);
   getList({
     chain: searchChain.value,
     status: searchStatus.value
+  }).then(() => {
+      changeLoading(false);
+  }).catch(error => {
+      changeLoading(false);
   })
 }
 

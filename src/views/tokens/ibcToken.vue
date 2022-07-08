@@ -10,7 +10,7 @@
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
-    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
+    <BjTable :loading="loading" :change-loading="changeLoading" :data="list" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
       <template #denom="{ record, column }">
         <a-popover v-if="record.token_type !== 'Genesis'" placement="topLeft">
           <template #content>
@@ -80,6 +80,9 @@ import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { formatAmount } from '@/helper/tablecell-helper';
 import { isNullOrEmpty } from '@/helper/object-helper';
 import { urlHelper } from '@/helper/url-helper';
+import { useLoading } from "@/composables/index";
+
+const { loading, changeLoading } = useLoading();
 
 let pageUrl = `/tokens/details`
 
@@ -146,9 +149,14 @@ onMounted(() => {
 })
 
 const refreshList = () => {
+  changeLoading(true);
   getList({
     chain: searchChain.value,
     token_type: searchStatus.value
+  }).then(() => {
+      changeLoading(false);
+  }).catch(error => {
+      changeLoading(false);
   })
 }
 

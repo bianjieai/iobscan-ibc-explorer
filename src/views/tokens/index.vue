@@ -11,7 +11,7 @@
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
-    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
+    <BjTable :loading="loading" :change-loading="changeLoading" :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
 
       <template #base_denom="{ record, column }">
         <TokenIcon 
@@ -81,7 +81,7 @@ import TokensDropDown from '@/components/responsive/dropdown/tokens.vue';
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, toRefs } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import TokenIcon from '@/components/responsive/table/tokenIcon.vue';
 import { useGetIbcDenoms, useIbcChains } from '../home/composable';
@@ -89,7 +89,8 @@ import { formatBigNumber } from '@/helper/parseString'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useGetTokenList } from '@/service/tokens';
 import { formatPrice, formatSupply, formatAmount } from '@/helper/tablecell-helper';
-import { urlHelper } from '@/helper/url-helper'
+import { urlHelper } from '@/helper/url-helper';
+import { useLoading } from "@/composables/index";
 
 let pageUrl = '/tokens'
 
@@ -138,11 +139,18 @@ onMounted(() => {
   refreshList()
 })
 
+const { loading, changeLoading } = useLoading();
+
 const refreshList = () => {
+  changeLoading(true);
   getList({
     base_denom: searchDenom.value,
     chain: searchChain.value,
     token_type: searchStatus.value
+  }).then(() => {
+      changeLoading(false);
+  }).catch(error => {
+      changeLoading(false);
   })
 }
 
@@ -150,7 +158,7 @@ const onSelectedToken = (denom?: string | number) => {
     if(denom) {
         searchDenom.value = denom as string
     } else {
-        searchDenom.value = denomQuery;
+        searchDenom.value = "";
     }
   pageUrl = urlHelper(pageUrl, {
     key: 'denom',
