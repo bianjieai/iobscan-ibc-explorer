@@ -1,4 +1,4 @@
-import { onBeforeMount,onMounted, onBeforeUnmount,ref } from 'vue';
+import { onBeforeMount,onMounted, onBeforeUnmount } from 'vue';
 import { ageTimerInterval } from '@/constants';
 export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerInterval) => {
     let timer:number|null = null;
