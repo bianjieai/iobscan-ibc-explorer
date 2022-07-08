@@ -233,11 +233,6 @@ const onInputChange = () => {
 }
 
 const visibleChange = (visible: boolean) => {
-  // console.log(visible,"选择框出现","chain_a:", chain_a.value,"chain_b:", chain_b.value, "backupDropdownData[0]:",backupDropdownData[0]?.chain_id,"backupDropdownData[1]:", backupDropdownData[1]?.chain_id);
-  if(chain_a.value !== "All Chains" && backupDropdownData[1]?.chain_id === "allchain") {
-    // console.log('改变input', chain_a.value, backupDropdownData[0]?.chain_id);
-    chainIdIput.value = backupDropdownData[0]?.chain_id;
-  }
   if (props.selectedDouble) {
     if (!visible && (selectedChain.value.length === 1 || !confirmFlag.value)) {
     selectedChain.value = backupDropdownData
