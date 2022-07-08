@@ -56,7 +56,6 @@ export const useGetTokenList = () => {
         }
         list.value = temp;
       } else {
-        debugger
         total.value = data;
       }
     } else {
