@@ -283,8 +283,10 @@
             </span>
             <a-pagination
                 class="table_pagination"
+                :class="{'disable_table_pagination': isShowTransferLoading}"
                 v-model:current="pagination.current"
                 :total="pagination.total"
+                :disabled=isShowTransferLoading
                 @change="onPaginationChange"
             />
         </div>
@@ -639,7 +641,6 @@ const onChangeRangePicker = (dates) => {
     queryDatas();
 };
 const onPaginationChange = (page) => {
-    if (isShowTransferLoading.value) return;
     pagination.current = page;
     const params = Tools.urlParser(url);
     url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
@@ -938,6 +939,11 @@ onMounted(() => {
 
             .ant-pagination-options {
                 display: none !important;
+            }
+        }
+        & :deep(.disable_table_pagination) {
+            .ant-pagination-item-active {
+                border: none;
             }
         }
     }
