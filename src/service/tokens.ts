@@ -56,6 +56,7 @@ export const useGetTokenList = () => {
         }
         list.value = temp;
       } else {
+        debugger
         total.value = data;
       }
     } else {
@@ -83,7 +84,7 @@ export const useGetIbcTokenList = (base_denom: string) => {
       if (!params.use_count) {
         list.value = items ?? [];
       } else {
-        total.value = items.length
+        total.value = data;
       }
     } else {
       console.error(message)
