@@ -7,6 +7,7 @@ import ChainHelper from '../helper/chainHepler';
 export type TChannelsListParams = {
   chain?: string
   status?: TChannelStatus
+  use_count?: boolean
 }
 
 const urlPrefix = import.meta.env.VITE_BASE_GO_API
@@ -17,16 +18,16 @@ export const useGetChannelsList = () => {
   const list = ref([])
   const total = ref(0)
 
-  const getList = async (params: TChannelsListParams = {}, totalCount: boolean = false) => {
+  const getList = async (params: TChannelsListParams = {}) => {
     const result = await HttpHelper.get(getChannelsListUrl, {
       params: {
         ...baseParams,
-        ...(totalCount ? {} : params)
+        ...params
       }
     })
     const { code, data, message } = result
     if (code === 0) {
-      if (!totalCount) {
+      if (!params.use_count) {
         const { items } = data;
         list.value = ChainHelper.sortByChainName(items);
       } else {
@@ -36,7 +37,7 @@ export const useGetChannelsList = () => {
       console.error(message)
     }
   }
-  getList({}, true); // todo taishan 为了获取 total, 后期优化
+  getList({use_count: true}); // todo taishan 为了获取 total, 后期优化
   return {
     list,
     total,

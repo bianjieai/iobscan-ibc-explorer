@@ -72,7 +72,7 @@ onMounted(() => {
 watch(() => props.data, (_new, _old) => {
   backUpData()
   pageInfo.total = _new?.length
-  needPagination.value && onPageChange(1, 10,false)
+  needPagination.value && onPageChange(1, 10)
   if (_new?.length === 0) {
     columnsSource.value = columnsSource.value.filter(item => item.key !== '_count')
   }else{
@@ -126,15 +126,12 @@ const formatDataSourceWithRealTime = (data:any[])=>{
   return data;
 }
 
-const onPageChange = (page: number, pageSize: number, isUserTurnPage: boolean = true) => {
-  if (isUserTurnPage && props.loading) return;
-  props.changeLoading(true);
+const onPageChange = (page: number, pageSize: number) => {
   pageInfo.current = page
   pageInfo.pageSize = pageSize
   const p = (page - 1) * pageSize
   const pSize = page * pageSize
   dataSource.value = formatDataSourceWithRealTime(backUpDataSource.slice(p, pSize));
-  props.changeLoading(false);
 }
 
 const formatDisplayAmount = (item: any,key:string) =>{
@@ -194,7 +191,7 @@ const onTableChange = (pagination: any, filters: any, sorter: any) => {
   if (props.noPagination) {
     dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
   }else{
-    needPagination.value && onPageChange(1, 10,false) // reset去第一页
+    needPagination.value && onPageChange(1, 10) // reset去第一页
   }
 }
 

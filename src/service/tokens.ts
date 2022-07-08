@@ -10,11 +10,12 @@ export type TTokenListParams = {
   base_denom?: string
   chain?: string
   token_type?: 'Authed' | 'Other'
-
+  use_count?: boolean
 }
 export type TIbcTokenListParams = {
   chain?: string
   token_type?: TIbcTokenType
+  use_count?: boolean
 }
 
 export type TBaseParams = {
@@ -39,12 +40,12 @@ export const useGetTokenList = () => {
   const list = ref([])
   const total = ref(0)
 
-  const getList = async (params: TTokenListParams = {}, totalCount: boolean = false) => {
-    const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...(totalCount ? {} : params) } })
+  const getList = async (params: TTokenListParams = {}) => {
+    const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...params } })
 
     const { code, data, message } = result
     if (code === 0) {
-      if (!totalCount) {
+      if (!params.use_count) {
         const { items } = data;
         const temp:any = [];
         for (let i = 0; i < (items ?? []).length; i++) {
@@ -61,7 +62,7 @@ export const useGetTokenList = () => {
       console.error(message)
     }
   }
-  getList({}, true); // todo taishan 为了获取 total, 后期优化
+  getList({use_count: true}); // todo taishan 为了获取 total, 后期优化
   return {
     list,
     total,
@@ -73,13 +74,13 @@ export const useGetIbcTokenList = (base_denom: string) => {
   const list = ref([])
   const total = ref(0)
 
-  const getList = async (params: TIbcTokenListParams = {}, totalCount: boolean = false) => {
-    const result = await HttpHelper.get(getIbcTokenListUrl(base_denom), { params: { ...baseParams, ...(totalCount ? {} : params) } })
+  const getList = async (params: TIbcTokenListParams = {}) => {
+    const result = await HttpHelper.get(getIbcTokenListUrl(base_denom), { params: { ...baseParams, ...params } })
 
     const { code, data, message } = result
     if (code === 0) {
       const { items } = data
-      if (!totalCount) {
+      if (!params.use_count) {
         list.value = items ?? [];
       } else {
         total.value = items.length
@@ -88,7 +89,7 @@ export const useGetIbcTokenList = (base_denom: string) => {
       console.error(message)
     }
   }
-  getList({}, true); // todo taishan 为了获取 total, 后期优化
+  getList({use_count: true}); // todo taishan 为了获取 total, 后期优化
   return {
     list,
     total,
