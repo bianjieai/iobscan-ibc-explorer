@@ -81,7 +81,7 @@ import TokensDropDown from '@/components/responsive/dropdown/tokens.vue';
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
-import { computed, onMounted, ref, toRefs } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import TokenIcon from '@/components/responsive/table/tokenIcon.vue';
 import { useGetIbcDenoms, useIbcChains } from '../home/composable';
