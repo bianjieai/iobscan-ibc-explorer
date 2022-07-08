@@ -42,7 +42,7 @@ export const useGetRelayersList = () => {
       console.error(message)
     }
   }
-  getList({use_count: true}); // todo taishan 为了获取 total, 后期优化
+  getList({use_count: true});
 
   return {
     list,

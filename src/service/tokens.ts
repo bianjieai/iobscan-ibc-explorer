@@ -62,7 +62,7 @@ export const useGetTokenList = () => {
       console.error(message)
     }
   }
-  getList({use_count: true}); // todo taishan 为了获取 total, 后期优化
+  getList({use_count: true});
   return {
     list,
     total,
@@ -89,7 +89,7 @@ export const useGetIbcTokenList = (base_denom: string) => {
       console.error(message)
     }
   }
-  getList({use_count: true}); // todo taishan 为了获取 total, 后期优化
+  getList({use_count: true});
   return {
     list,
     total,
