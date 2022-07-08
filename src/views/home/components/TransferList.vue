@@ -89,14 +89,14 @@ const getImageUrl = (status) => {
     border-radius: var(--border-radius-normal);
     & .status_tips {
         .flex(row, nowrap, space-between, center);
-        padding: 5px 9px;
+        padding: 7px 9px;
         width: 396px;
         font-size: 14px;
         font-weight: 400;
         color: var(--bj-text-third);
         line-height: 14px;
         background: #F8F9FC;
-        border-radius: 8px;
+        border-radius: 14px;
         .status_tip {
             .flex(row, wrap, flex-start, center);
             img {
