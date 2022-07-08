@@ -79,8 +79,8 @@ export const useGetIbcTokenList = (base_denom: string) => {
 
     const { code, data, message } = result
     if (code === 0) {
-      const { items } = data
       if (!params.use_count) {
+        const { items } = data
         list.value = items ?? [];
       } else {
         total.value = data;
