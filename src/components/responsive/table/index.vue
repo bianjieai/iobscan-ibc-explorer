@@ -1,6 +1,7 @@
 <template>
   <div class="table-warpper">
     <a-table :rowKey="rowKey" :columns="columnsSource" :data-source="dataSource" :pagination="false"
+      :loading="props.loading"
       :showSorterTooltip="false"  @change="onTableChange" :scroll="scroll">
       <template #bodyCell="{ column, record, index, text }">
         <template v-if="isKeyInNeedCustomColumns(column.key)">
@@ -42,7 +43,8 @@ interface IProps {
   noPagination?: boolean
   scroll?: { x?: number, y?: number }
   rowKey?: string,
-  realTimeKey?:{scKey:string, dcKey:string}[]
+  realTimeKey?: { scKey: string, dcKey: string }[]
+  loading: boolean
 }
 
 let backUpDataSource: any[] = []
@@ -57,7 +59,7 @@ const pageInfo = reactive({
   total: props.data?.length
 })
 
-const { data, columns } = props
+const { data, columns } = props;
 
 const columnsSource = ref(columns)
 const dataSource = ref<any[]>(data)

@@ -10,7 +10,7 @@
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
-    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
+    <BjTable :loading="loading" :data="list" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
       <template #denom="{ record, column }">
         <a-popover v-if="record.token_type !== 'Genesis'" placement="topLeft">
           <template #content>
@@ -145,11 +145,13 @@ onMounted(() => {
   refreshList()
 })
 
+const loading = ref(false);
 const refreshList = () => {
   getList({
     chain: searchChain.value,
-    token_type: searchStatus.value
-  })
+    token_type: searchStatus.value,
+    loading: loading
+  });
 }
 
 

@@ -9,7 +9,7 @@
 
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
-    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
+    <BjTable :loading="loading" :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
       <template #chain_a="{ record, column }">
         <ChainIcon avatar-can-click @click-avatar="goChains" :title="record.channel_a" no-subtitle
           :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
@@ -103,12 +103,13 @@ const subtitle = computed(() => {
     return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} channels found`
   }
 })
-
+const loading = ref(false);
 const refreshList = () => {
   getList({
     chain: searchChain.value,
-    status: searchStatus.value
-  })
+    status: searchStatus.value,
+    loading: loading
+  });
 }
 
 const onSelectedChain = (chain_id?: string) => {

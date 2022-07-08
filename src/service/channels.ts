@@ -1,5 +1,5 @@
 import { TChannelStatus } from '@/components/responsive/component.interface';
-import { ref } from 'vue';
+import { ref,Ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelpers.js';
 import { baseParams } from './tokens';
 import ChainHelper from '../helper/chainHepler';
@@ -7,6 +7,8 @@ import ChainHelper from '../helper/chainHepler';
 export type TChannelsListParams = {
   chain?: string
   status?: TChannelStatus
+  use_count?: boolean
+  loading?: Ref<boolean>
 }
 
 const urlPrefix = import.meta.env.VITE_BASE_GO_API
@@ -17,26 +19,31 @@ export const useGetChannelsList = () => {
   const list = ref([])
   const total = ref(0)
 
-  const getList = async (params: TChannelsListParams = {}, totalCount: boolean = false) => {
+  const getList = async (params: TChannelsListParams = {}) => {
+    const { loading } = params;
+    loading && (loading.value = true);
     const result = await HttpHelper.get(getChannelsListUrl, {
       params: {
         ...baseParams,
-        ...(totalCount ? {} : params)
+        ...params
       }
+    }).catch(() => {
+      loading && (loading.value = false);
     })
+    loading && (loading.value = false);
     const { code, data, message } = result
     if (code === 0) {
-      const { items } = data
-      if (!totalCount) {
+      if (!params.use_count) {
+        const { items } = data;
         list.value = ChainHelper.sortByChainName(items);
       } else {
-        total.value = items.length
+        total.value = data;
       }
     } else {
       console.error(message)
     }
   }
-  getList({}, true); // todo taishan 为了获取 total, 后期优化
+  getList({use_count: true});
   return {
     list,
     total,

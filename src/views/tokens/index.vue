@@ -11,7 +11,7 @@
       <ResetButton @on-reset="resetSearchCondition" />
     </div>
 
-    <BjTable :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
+    <BjTable :loading="loading" :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
 
       <template #base_denom="{ record, column }">
         <TokenIcon 
@@ -89,7 +89,7 @@ import { formatBigNumber } from '@/helper/parseString'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useGetTokenList } from '@/service/tokens';
 import { formatPrice, formatSupply, formatAmount } from '@/helper/tablecell-helper';
-import { urlHelper } from '@/helper/url-helper'
+import { urlHelper } from '@/helper/url-helper';
 
 let pageUrl = '/tokens'
 
@@ -138,19 +138,22 @@ onMounted(() => {
   refreshList()
 })
 
+const loading = ref(false);
+
 const refreshList = () => {
   getList({
     base_denom: searchDenom.value,
     chain: searchChain.value,
-    token_type: searchStatus.value
-  })
+    token_type: searchStatus.value,
+    loading: loading
+  });
 }
 
 const onSelectedToken = (denom?: string | number) => {
     if(denom) {
         searchDenom.value = denom as string
     } else {
-        searchDenom.value = denomQuery;
+        searchDenom.value = "";
     }
   pageUrl = urlHelper(pageUrl, {
     key: 'denom',

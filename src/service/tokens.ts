@@ -1,5 +1,5 @@
 // import { BaseDenom } from '@/types/baseDenom';
-import { ref } from 'vue';
+import { ref,Ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelpers.js';
 import { getBaseDenomByKey } from "@/helper/baseDenomHelpers";
 import { getRestString2 } from '@/helper/parseString';
@@ -10,11 +10,14 @@ export type TTokenListParams = {
   base_denom?: string
   chain?: string
   token_type?: 'Authed' | 'Other'
-
+  use_count?: boolean
+  loading?: Ref<boolean>
 }
 export type TIbcTokenListParams = {
   chain?: string
   token_type?: TIbcTokenType
+  use_count?: boolean
+  loading?: Ref<boolean>
 }
 
 export type TBaseParams = {
@@ -39,13 +42,17 @@ export const useGetTokenList = () => {
   const list = ref([])
   const total = ref(0)
 
-  const getList = async (params: TTokenListParams = {}, totalCount: boolean = false) => {
-    const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...(totalCount ? {} : params) } })
-
+  const getList = async (params: TTokenListParams = {}) => {
+    const { loading } = params;
+    loading && (loading.value = true);
+    const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...params } }).catch(() => {
+      loading && (loading.value = false);
+    })
+    loading && (loading.value = false);
     const { code, data, message } = result
     if (code === 0) {
-      const { items } = data
-      if (!totalCount) {
+      if (!params.use_count) {
+        const { items } = data;
         const temp:any = [];
         for (let i = 0; i < (items ?? []).length; i++) {
           const item:any = items[i];
@@ -55,13 +62,13 @@ export const useGetTokenList = () => {
         }
         list.value = temp;
       } else {
-        total.value = items.length
+        total.value = data;
       }
     } else {
       console.error(message)
     }
   }
-  getList({}, true); // todo taishan 为了获取 total, 后期优化
+  getList({use_count: true});
   return {
     list,
     total,
@@ -73,22 +80,26 @@ export const useGetIbcTokenList = (base_denom: string) => {
   const list = ref([])
   const total = ref(0)
 
-  const getList = async (params: TIbcTokenListParams = {}, totalCount: boolean = false) => {
-    const result = await HttpHelper.get(getIbcTokenListUrl(base_denom), { params: { ...baseParams, ...(totalCount ? {} : params) } })
-
+  const getList = async (params: TIbcTokenListParams = {}) => {
+    const { loading } = params;
+    loading && (loading.value = true);
+    const result = await HttpHelper.get(getIbcTokenListUrl(base_denom), { params: { ...baseParams, ...params } }).catch(() => {
+      loading && (loading.value = false);
+    })
+    loading && (loading.value = false);
     const { code, data, message } = result
     if (code === 0) {
-      const { items } = data
-      if (!totalCount) {
+      if (!params.use_count) {
+        const { items } = data
         list.value = items ?? [];
       } else {
-        total.value = items.length
+        total.value = data;
       }
     } else {
       console.error(message)
     }
   }
-  getList({}, true); // todo taishan 为了获取 total, 后期优化
+  getList({use_count: true});
   return {
     list,
     total,

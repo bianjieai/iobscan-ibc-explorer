@@ -11,6 +11,7 @@
     </div>
 
     <BjTable 
+      :loading="loading" 
       :data="list" 
       :need-custom-columns="needCustomColumns" 
       :columns="COLUMNS"
@@ -78,6 +79,7 @@ import NamePopover from './components/namePopover.vue';
 import { formatBigNumber } from '@/helper/parseString';
 import { urlHelper } from '@/helper/url-helper';
 
+const loading = ref(false);
 let pageUrl = '/relayers'
 
 const route = useRoute()
@@ -130,8 +132,9 @@ const subtitle = computed(() => {
 const refreshList = () => {
   getList({
     chain: searchChain.value,
-    status: searchStatus.value
-  })
+    status: searchStatus.value,
+    loading: loading
+  });
 }
 
 const onSelectedChain = (chain_id?: string) => {
