@@ -19,10 +19,13 @@
                 <span class="details_item_value" v-else-if="item.isFormatHeight">{{ formatHeight(item.value) }}</span>
                 <span class="details_item_value" v-else-if="item.isFormatStatus">{{ formatStatus(item.value) }}</span>
                 <span class="details_item_value" v-else-if="item.isFormatFee">
-                    <span class="details_item_amount">{{ formatToken(formatFee(item.value), details).symbolNum ||
-                            '--'
-                    }}</span>
-                    <span>{{ formatDenom(formatToken(formatFee(item.value), details).symbol) }}</span>
+                    <span class="details_item_amount">{{ formatToken(formatFee(item.value), details).symbolNum ||'--'}}</span>
+                    <a-tooltip>
+                        <template #title>
+                            {{formatToken(formatFee(item.value),details).denom}}
+                        </template>
+                        <span>{{ formatDenom(formatToken(formatFee(item.value), details).symbol) }}</span>
+                    </a-tooltip>
                 </span>
                 <router-link :to="`/chains`" class="details_item_value" v-else-if="item.isFormatChainID">{{ formatChainID(item.value) }}</router-link>
                 <span class="details_item_value" v-else-if="item.isAck">{{ formatAck(item.value) }}</span>
