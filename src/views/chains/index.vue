@@ -2,7 +2,7 @@
   <PageContainer>
     <PageTitle title="IBC Chains" :subtitle="`${formatBigNumber(list?.length, 0)} chains supported`" />
 
-    <BjTable :loading="loading" :change-loading="changeLoading" :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count no-pagination
+    <BjTable :loading="loading" :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count no-pagination
       :scroll="{ y: 610 }">
       <template #chain_id="{ record, column }">
         <ChainIcon :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
@@ -41,27 +41,21 @@ import { COLUMNS } from './constants'
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useIbcChains } from '../home/composable';
-import { onMounted } from 'vue';
+import { onMounted,ref } from 'vue';
 import { useGetChainsList } from '@/service/chains'
 import { useRouter } from 'vue-router';
 import { formatAmount } from '@/helper/tablecell-helper'; 
 import { formatBigNumber } from '@/helper/parseString';
-import { useLoading } from "@/composables/index";
-const { loading, changeLoading } = useLoading();
 
 const router = useRouter()
 
 const { ibcChains, getIbcChains } = useIbcChains();
 const { list, getList } = useGetChainsList()
+const loading = ref(false);
 
 onMounted(() => {
-  changeLoading(true);
   !sessionStorage.getItem('allChains') && getIbcChains();
-  getList().then(() => {
-      changeLoading(false);
-  }).catch(error => {
-      changeLoading(false);
-  })
+  getList(loading);
 })
 
 

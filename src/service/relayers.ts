@@ -1,5 +1,5 @@
 import { TRelayerStatus } from '@/components/responsive/component.interface.js';
-import { ref } from 'vue';
+import { ref,Ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelpers.js';
 import { baseParams } from './tokens';
 import { formatTransfer_success_txs } from '@/helper/tablecell-helper';
@@ -9,6 +9,7 @@ type TRelayersListParams = {
   chain?: string
   status?: TRelayerStatus
   use_count?: boolean
+  loading?: Ref<boolean>
 }
 
 const urlPrefix = import.meta.env.VITE_BASE_GO_API
@@ -20,12 +21,17 @@ export const useGetRelayersList = () => {
   const total = ref(0)
 
   const getList = async (params: TRelayersListParams = {}) => {
+    const { loading } = params;
+    loading && (loading.value = true);
     const result = await HttpHelper.get(getRelayersListUrl, {
       params: {
         ...baseParams,
         ...params
       }
+    }).catch(() => {
+      loading && (loading.value = false);
     })
+    loading && (loading.value = false);
     const { code, data, message } = result
 
     if (code === 0) {

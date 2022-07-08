@@ -15,14 +15,3 @@ export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerI
     },);
     return timer;
 }
-
-export const useLoading = () => {
-    const loading = ref(false);
-    const changeLoading = (flag:boolean) =>{
-        loading.value = flag;
-    }
-    return {
-        loading,
-        changeLoading
-    }
-}

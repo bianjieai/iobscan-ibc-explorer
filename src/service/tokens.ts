@@ -1,5 +1,5 @@
 // import { BaseDenom } from '@/types/baseDenom';
-import { ref } from 'vue';
+import { ref,Ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelpers.js';
 import { getBaseDenomByKey } from "@/helper/baseDenomHelpers";
 import { getRestString2 } from '@/helper/parseString';
@@ -11,11 +11,13 @@ export type TTokenListParams = {
   chain?: string
   token_type?: 'Authed' | 'Other'
   use_count?: boolean
+  loading?: Ref<boolean>
 }
 export type TIbcTokenListParams = {
   chain?: string
   token_type?: TIbcTokenType
   use_count?: boolean
+  loading?: Ref<boolean>
 }
 
 export type TBaseParams = {
@@ -41,8 +43,12 @@ export const useGetTokenList = () => {
   const total = ref(0)
 
   const getList = async (params: TTokenListParams = {}) => {
-    const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...params } })
-
+    const { loading } = params;
+    loading && (loading.value = true);
+    const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...params } }).catch(() => {
+      loading && (loading.value = false);
+    })
+    loading && (loading.value = false);
     const { code, data, message } = result
     if (code === 0) {
       if (!params.use_count) {
@@ -75,8 +81,12 @@ export const useGetIbcTokenList = (base_denom: string) => {
   const total = ref(0)
 
   const getList = async (params: TIbcTokenListParams = {}) => {
-    const result = await HttpHelper.get(getIbcTokenListUrl(base_denom), { params: { ...baseParams, ...params } })
-
+    const { loading } = params;
+    loading && (loading.value = true);
+    const result = await HttpHelper.get(getIbcTokenListUrl(base_denom), { params: { ...baseParams, ...params } }).catch(() => {
+      loading && (loading.value = false);
+    })
+    loading && (loading.value = false);
     const { code, data, message } = result
     if (code === 0) {
       if (!params.use_count) {

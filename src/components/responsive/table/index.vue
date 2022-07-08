@@ -45,7 +45,6 @@ interface IProps {
   rowKey?: string,
   realTimeKey?: { scKey: string, dcKey: string }[]
   loading: boolean
-  changeLoading: Function
 }
 
 let backUpDataSource: any[] = []
