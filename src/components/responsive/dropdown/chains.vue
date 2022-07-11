@@ -269,10 +269,8 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
             let saveSelectedChain = selectedChain.value[0];
             selectedChain.value[0] = selectedChain.value[1];
             selectedChain.value[1] = saveSelectedChain;
-            backupDropdownData = selectedChain.value;
-          } else {
-            backupDropdownData = selectedChain.value // backup
           }
+          backupDropdownData = selectedChain.value // backup
           submitChain(`${selectedChain.value[0].chain_id},${selectedChain.value[1].chain_id}`)
         }
         break

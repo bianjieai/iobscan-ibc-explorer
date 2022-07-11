@@ -524,7 +524,7 @@ const onClickAll = () => {
         }
     }
     .overlay {
-        max-width: 290px;
+        max-width: 288px;
         &_wrap {
 
         }
@@ -533,7 +533,7 @@ const onClickAll = () => {
             }
         }
         &_item {
-            &:nth-of-type(1) {
+            &:last-of-type {
                 .overlay_item_content {
                     .flex(column, wrap, flex-start, flex-start);
                     ::v-deep .ant-btn {
@@ -544,6 +544,7 @@ const onClickAll = () => {
             &_title {
             }
             &_content {
+                width: 100%;
                 
             .content_item {
                 .content_item_title{
