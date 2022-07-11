@@ -6,7 +6,8 @@ export const COLUMNS:TableColumnsType = [
     dataIndex: 'chain_id',
     key: 'chain_id',
     title: 'Chain', // todo clippers => 确认字段
-    width: 180
+    width: 180,
+    sorter: (a, b) => a.chainName.localeCompare(b.chainName)
   },
   {
     dataIndex: 'connected_chains',
