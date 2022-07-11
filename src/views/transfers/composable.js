@@ -267,7 +267,8 @@ export const useTransfersDetailsInfo = () => {
             label: 'Signer:',
             value: '--',
             dataKey: 'sc_signers',
-            isAddress: true
+            isAddress: true,
+            isNotLink: true
         },
 
     ])
