@@ -13,7 +13,7 @@
       </template>
 
       <template #relayers="{ record, column }">
-        <div class="hover-cursor" @click="goRelayers(`${record.chain_id},allchain`)">{{ record[column.key] }}</div>
+        <div class="hover-cursor" @click="goRelayers(`${record.chain_id},allchain`, 1)">{{ record[column.key] }}</div>
       </template>
 
       <template #ibc_tokens="{ record, column }">
@@ -77,11 +77,12 @@ const goChannels = (chain: string) => {
   })
 }
 
-const goRelayers = (chain: string) => {
+const goRelayers = (chain: string, status: number) => {
   router.push({
     path: '/relayers',
     query: {
-      chain
+      chain,
+      status
     }
   })
 }
