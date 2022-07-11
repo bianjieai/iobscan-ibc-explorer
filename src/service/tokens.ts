@@ -29,7 +29,7 @@ export type TBaseParams = {
 export const baseParams: TBaseParams = {
   use_count: false,
   page_num: 1,
-  page_size: 1000
+  page_size: 3000
 }
 
 
