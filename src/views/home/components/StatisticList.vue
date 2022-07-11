@@ -9,7 +9,7 @@
                 :key="item.statistics_name"
                 @click="clickListItem(item.statistics_name)"
             >
-            <div class="list_item_info">
+            <div class="list_item_info" :style="item.statistics_name === ibcStatisticsDenomsDefault['denom_all'].statistics_name ? 'cursor: text;' : ''">
                 <span class="list_item_name"
                 >{{
                         statisticsName[item.statistics_name]
@@ -32,7 +32,7 @@
                 @click="clickListItem(item.statistics_name)"
             >
                 <div class="list_item">
-                    <div class="list_item_info">
+                    <div class="list_item_info" :style="item.statistics_name === ibcStatisticsDenomsDefault['denom_all'].statistics_name ? 'cursor: text;' : ''">
                         <span class="list_item_name"
                         >{{
                                 statisticsName[item.statistics_name]
@@ -40,7 +40,7 @@
                             >24hr</span
                             ></span
                         >
-                                  <span class="list_item_value" :style="item.statistics_name === ibcStatisticsDenomsDefault['denom_all'].statistics_name ? 'cursor: text;' : ''">{{ `${formatBigNumber(item.count)}` }}</span>
+                                  <span class="list_item_value" :style="item.statistics_name === ibcStatisticsDenomsDefault['denom_all'].statistics_name ? 'color: var(--bj-text-normal);cursor: text;' : ''">{{ `${formatBigNumber(item.count)}` }}</span>
                     </div>
                 </div>
                 <a-divider
