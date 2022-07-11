@@ -83,9 +83,8 @@ export const formatAmount = (amount: number | string, denom?: string, baseDenomD
   } else {
     result = Number(amount)
   }
-
   return {
-    popover: result,
+    popover: formatBigNumber(result, null),
     title: formatBigNumber(result, numberOfDecimal)
   }
 

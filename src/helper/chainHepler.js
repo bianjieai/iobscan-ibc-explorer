@@ -13,13 +13,16 @@ export default class ChainHelper {
     // chain_name sort
     static sortByChainName(sourceList) {
         function changeChainsSort(item) {
-            let saveChain, saveChannel;
+            let saveChain, saveChannel,saveAddress;
             saveChain = item.chain_a;
             item.chain_a = item.chain_b;
             item.chain_b = saveChain;
             saveChannel = item.channel_a;
             item.channel_a = item.channel_b;
             item.channel_b = saveChannel;
+            saveAddress = item.chain_a_address;
+            item.chain_a_address= item.chain_b_address;
+            item.chain_b_address = saveAddress;
         }
         if(isArray(sourceList) && sourceList?.length) {
             const updateList = sourceList?.map((item, index) => {
