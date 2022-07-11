@@ -537,9 +537,7 @@ const onClickDropdownItem = (item, custom) => {
     queryDatas();
 
     url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`
-    if (queryParam?.chain) {
-        url += `&chain=${queryParam.chain}`
-    } else if (queryParam?.chain_id) {
+    if (queryParam?.chain_id) {
         url += `&chain=${queryParam.chain_id}`
     }
     if (queryParam?.denom) {
@@ -571,9 +569,7 @@ const handleSelectChange = (item) => {
     pagination.current = 1;
     queryParam.status = JSONparse(item);
     url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`
-    if (queryParam?.chain) {
-        url += `&chain=${queryParam.chain}`
-    } else if (queryParam?.chain_id) {
+    if (queryParam?.chain_id) {
         url += `&chain=${queryParam.chain_id}`
     }
     if (queryParam?.denom) {
@@ -611,8 +607,9 @@ const onChangeRangePicker = (dates) => {
         startTime(dayjs(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1,
     );
     url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`
-    if (queryParam?.chain) {
-        url += `&chain=${queryParam.chain}`
+
+    if (queryParam?.chain_id) {
+        url += `&chain=${queryParam.chain_id}`
     }
     if (queryParam?.denom) {
         url += `&denom=${queryParam.denom}`
@@ -688,7 +685,6 @@ const onClickReset = () => {
     queryParam.status = transfersStatusOptions.DEFAULT_OPTIONS;
     queryParam.chain_id = undefined;
     queryParam.symbol = undefined;
-    queryParam.chain = undefined;
     queryParam.denom = undefined;
     pagination.current = 1;
     url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
@@ -703,13 +699,11 @@ const getAddressPrefix = (address) => {
 }
 
 const onSelectedChain = (chain_id) => {
-    queryParam.chain = chain_id;
-    queryParam.chain_id = chain_id;
+    queryParam.chain_id = chain_id !==  "allchain,allchain" ? chain_id : "";
     pagination.current = 1;
     url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`
-    if(queryParam?.chain) {
-        url += `&chain=${queryParam.chain_id}`
-    } else if (queryParam?.chain_id) {
+
+    if (queryParam?.chain_id) {
         url += `&chain=${queryParam.chain_id}`
     }
     if (queryParam?.denom) {
