@@ -1,6 +1,6 @@
 <template>
   <PageContainer>
-    <PageTitle :title="`${baseDenomInfo.symbol} IBC Tokens`" :subtitle="subtitle" has-icon
+    <PageTitle :title="`${baseDenomInfo.symbol} IBC Token`" :subtitle="subtitle" has-icon
       :img-src="baseDenomInfo.imgSrc" />
     <div class="select flex items-center flex-wrap">
       <ChainsDropdown :chain_id="chainIdQuery" :dropdown-data="ibcChains?.all ?? []"
@@ -224,12 +224,15 @@ const goTransfer = (chain_id: string, denom: string) => {
   .select {
     margin-top: 16px;
   }
+}
+@media screen and (max-width: 353px) {
+  .select {
+  }
 
   :deep(.ant-dropdown-trigger) {
     &:first-of-type {
-      margin-right: 50px;
+        margin-right: 50px;
     }
-
     &:last-of-type {
       margin-top: 8px;
     }

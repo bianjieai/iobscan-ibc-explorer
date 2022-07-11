@@ -38,7 +38,7 @@ export const useGetChannelsList = () => {
     if (code === 0) {
       if (!params.use_count) {
         const { items } = data;
-        list.value = ChainHelper.sortByChainName(items);
+        list.value = ChainHelper.sortByChainName(items, params.chain);
       } else {
         total.value = data;
       }

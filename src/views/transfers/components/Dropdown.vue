@@ -201,12 +201,12 @@ const onClickAll = () => {
   }
 }
 .overlay {
-  max-width: 870px;
+  max-width: 854px;
   background-color: #fff;
   box-shadow: 0px 2px 8px 0px #d9deec;
   border-radius: 4px;
   border: 1px solid #d9dfee;
-  padding: 16px;
+  padding: 16px 4px 24px 16px;
   &_wrap {
 
   }
@@ -409,7 +409,6 @@ const onClickAll = () => {
         }
     }
     .overlay {
-        padding: 16px;
         &_wrap {
 
         }
@@ -525,7 +524,7 @@ const onClickAll = () => {
         }
     }
     .overlay {
-        max-width: 310px;
+        max-width: 290px;
         &_wrap {
 
         }
@@ -534,9 +533,18 @@ const onClickAll = () => {
             }
         }
         &_item {
+            &:nth-of-type(1) {
+                .overlay_item_content {
+                    .flex(column, wrap, flex-start, flex-start);
+                    ::v-deep .ant-btn {
+                        margin-top: 12px;
+                    }
+                }
+            }
             &_title {
             }
             &_content {
+                
             .content_item {
                 .content_item_title{
                 }

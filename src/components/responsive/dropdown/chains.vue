@@ -86,7 +86,6 @@ const props = withDefaults(defineProps<IProps>(), {
   dropdownData: (sessionStorage.getItem('allChains') && JSON.parse(sessionStorage.getItem('allChains')!))?.all ?? []
 })
 
-
 watch(() => props.dropdownData, (_new, _old) => {
   if (_new) setAllChains(_new)
 })
@@ -266,7 +265,14 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
             chain_name,
             chain_id
           })
-          backupDropdownData = selectedChain.value // backup
+          if(!props.needBadge && selectedChain.value[0].chain_id === 'allchain') {
+            let saveSelectedChain = selectedChain.value[0];
+            selectedChain.value[0] = selectedChain.value[1];
+            selectedChain.value[1] = saveSelectedChain;
+            backupDropdownData = selectedChain.value;
+          } else {
+            backupDropdownData = selectedChain.value // backup
+          }
           submitChain(`${selectedChain.value[0].chain_id},${selectedChain.value[1].chain_id}`)
         }
         break
@@ -307,12 +313,17 @@ const confirmChains = () => {
   if (props.selectedDouble) {
     if (chainIdIput.value?.includes(',')) {
       const chain = chainIdIput.value.split(',')
+      if(!props.needBadge && chain[0] === 'allchain') {
+        let saveChain = chain[0];
+        chain[0] = chain[1];
+        chain[1] = saveChain;
+      }
       selectedChain.value = [{
-        chain_name: chain[0],
-        chain_id: chain[0]
+        chain_name: chain[0].trim(),
+        chain_id: chain[0].trim()
       }, {
-        chain_name: chain[1],
-        chain_id: chain[1]
+        chain_name: chain[1].trim(),
+        chain_id: chain[1].trim()
       }]
       backupDropdownData = selectedChain.value
       submitChain(selectedChain.value.map(item=>item.chain_id).join(','))
@@ -334,12 +345,11 @@ const confirmChains = () => {
         }]
       }
       confirmFlag.value = true
-
-      submitChain(`${chainIdIput.value ? chainIdIput.value : 'allchain'},allchain`)
+      submitChain(`${chainIdIput.value ? chainIdIput.value.trim() : 'allchain'},allchain`)
     }
   } else {
     confirmFlag.value = true
-    submitChain(chainIdIput.value)
+    submitChain(chainIdIput.value?.trim())
   }
 }
 

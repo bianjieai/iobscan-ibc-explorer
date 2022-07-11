@@ -36,11 +36,10 @@ export const useGetRelayersList = () => {
     })
     loading && (loading.value = false);
     const { code, data, message } = result
-
     if (code === 0) {
       if (!params.use_count) {
         const { items } = data
-        list.value = ChainHelper.sortByChainName(items)?.map((item: any) => {
+        list.value = ChainHelper.sortByChainName(items, params.chain)?.map((item: any) => {
             item.txs_success_rate = formatTransfer_success_txs(item.transfer_success_txs, item.transfer_total_txs);
             return item;
         });

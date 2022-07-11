@@ -772,9 +772,6 @@ onMounted(() => {
 })
 </script>
 <style lang="less" scoped>
-:deep(.ant-select-item-option-content) {
-    text-align: center;
-}
 .transfer {
     flex: 1;
     padding: 48px 32px 100px;

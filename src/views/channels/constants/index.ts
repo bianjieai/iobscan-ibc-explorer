@@ -56,7 +56,7 @@ export const STATUS_OPTIONS = [
   },
   {
     value: 1,
-    key: 'Opened'
+    key: 'Open'
   },
   {
     value: 2,
