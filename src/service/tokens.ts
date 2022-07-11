@@ -29,7 +29,7 @@ export type TBaseParams = {
 export const baseParams: TBaseParams = {
   use_count: false,
   page_num: 1,
-  page_size: 1000
+  page_size: 3000
 }
 
 
@@ -44,7 +44,10 @@ export const useGetTokenList = () => {
 
   const getList = async (params: TTokenListParams = {}) => {
     const { loading } = params;
-    loading && (loading.value = true);
+    if (loading) {
+      loading.value = true;
+      delete params.loading;
+    }
     const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...params } }).catch(() => {
       loading && (loading.value = false);
     })
@@ -82,7 +85,10 @@ export const useGetIbcTokenList = (base_denom: string) => {
 
   const getList = async (params: TIbcTokenListParams = {}) => {
     const { loading } = params;
-    loading && (loading.value = true);
+    if (loading) {
+      loading.value = true;
+      delete params.loading;
+    }
     const result = await HttpHelper.get(getIbcTokenListUrl(base_denom), { params: { ...baseParams, ...params } }).catch(() => {
       loading && (loading.value = false);
     })

@@ -22,7 +22,10 @@ export const useGetRelayersList = () => {
 
   const getList = async (params: TRelayersListParams = {}) => {
     const { loading } = params;
-    loading && (loading.value = true);
+    if (loading) {
+      loading.value = true;
+      delete params.loading;
+    }
     const result = await HttpHelper.get(getRelayersListUrl, {
       params: {
         ...baseParams,

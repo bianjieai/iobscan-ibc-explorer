@@ -9,7 +9,9 @@ export const useGetChainsList = () => {
   const list = ref([])
 
   const getList = async (loading?: Ref<boolean>) => {
-    loading && (loading.value = true);
+    if (loading) {
+      loading.value = true;
+    }
     const result = await HttpHelper.get(getChainListUrl, {
       params: baseParams
     }).catch(() => {
