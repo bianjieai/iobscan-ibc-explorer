@@ -138,10 +138,10 @@ const refreshList = () => {
 }
 
 const onSelectedChain = (chain_id?: string) => {
-  searchChain.value = chain_id
+  searchChain.value = chain_id !== "allchain,allchain" ? chain_id : "";
   pageUrl = urlHelper(pageUrl, {
     key: 'chain',
-    value: chain_id as string
+    value: searchChain.value as string
   })
   router.replace(pageUrl);
   refreshList()

@@ -36,8 +36,9 @@
                 <span class="details_item_value" v-else-if="item.isAddress">
                     <span v-show="Array.isArray(item.value)">
                         <div v-if="item.value.length >= 1">
-                            <span  v-for="(address, index) of item.value" :key="index">
-                                <router-link :to="`/relayers?chain=${scChainId},${dcChainId}`" class="value_style">{{ address || '--' }}</router-link>
+                            <span v-for="(address, index) of item.value" :key="index">
+                                <span v-if="item.isNotLink" class="value_style">{{ address || '--' }}</span>
+                                <router-link v-else :to="`/relayers?chain=${scChainId},${dcChainId}`" class="value_style">{{ address || '--' }}</router-link>
                             </span>
                         </div>
                         <span v-else>--</span>

@@ -99,7 +99,7 @@ const goTransfer = (chain_id: string) => {
   router.push({
     path: '/transfers',
     query: {
-      chain: chain_id
+      chain: chain_id + ",allchain"
     }
   })
 }
