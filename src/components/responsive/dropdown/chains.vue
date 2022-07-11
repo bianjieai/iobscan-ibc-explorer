@@ -65,9 +65,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { CHAINID, defaultTitle } from '@/constants'
-import { formatLongTitleString, getRestString } from '@/helper/parseString';
-
+import { CHAINID, defaultTitle } from '@/constants';
 type TChainData = {
   chain_id: string
   chain_name: string
@@ -80,6 +78,7 @@ interface IProps {
   chain_id?: string // 回填
   dropdownData: TChainData[]
   minWidth?: number
+  witchPage?: string
 }
 
 const props = withDefaults(defineProps<IProps>(), {
@@ -265,7 +264,7 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
             chain_name,
             chain_id
           })
-          if(!props.needBadge && selectedChain.value[0].chain_id === 'allchain') {
+          if(props.witchPage !== 'transfers' && selectedChain.value[0].chain_id === 'allchain') {
             let saveSelectedChain = selectedChain.value[0];
             selectedChain.value[0] = selectedChain.value[1];
             selectedChain.value[1] = saveSelectedChain;
@@ -311,7 +310,7 @@ const confirmChains = () => {
   if (props.selectedDouble) {
     if (chainIdIput.value?.includes(',')) {
       const chain = chainIdIput.value.split(',')
-      if(!props.needBadge && chain[0] === 'allchain') {
+      if(props.witchPage !== 'transfers' && chain[0] === 'allchain') {
         let saveChain = chain[0];
         chain[0] = chain[1];
         chain[1] = saveChain;

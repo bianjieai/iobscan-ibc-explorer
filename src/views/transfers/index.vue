@@ -32,6 +32,7 @@
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         ref="chainDropdown"
+                        witchPage="transfers"
                     />
                     <a-select
                         class="status_select"
