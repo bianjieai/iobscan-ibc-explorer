@@ -26,7 +26,7 @@
       <template #price="{ record, column }">
         <a-popover v-if="+record[column.key] !== -1">
             <template #content>
-                <div class="popover-c">{{ `${record.currency} ${record[column.key]}` }}</div>
+                <div class="popover-c">{{ `${record.currency} ${formatPrice(record[column.key],null)}` }}</div>
             </template>
             <div v-if="record[column.key] < thousandDecimal">
                 {{`< ${record.currency} ${thousandDecimal}`}}
@@ -162,7 +162,6 @@ const onSelectedToken = (denom?: string | number) => {
   router.replace(pageUrl);
   refreshList()
 }
-
 const onSelectedChain = (chain?: string | number) => {
   searchChain.value = chain ? String(chain) : undefined;
   pageUrl = urlHelper(pageUrl, {
