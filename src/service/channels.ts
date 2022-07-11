@@ -21,7 +21,10 @@ export const useGetChannelsList = () => {
 
   const getList = async (params: TChannelsListParams = {}) => {
     const { loading } = params;
-    loading && (loading.value = true);
+    if (loading) {
+      loading.value = true;
+      delete params.loading;
+    }
     const result = await HttpHelper.get(getChannelsListUrl, {
       params: {
         ...baseParams,
