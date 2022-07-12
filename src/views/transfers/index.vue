@@ -56,6 +56,7 @@
                         class="date_range hover"
                         :allowClear="false"
                         @change="onChangeRangePicker"
+                        @openChange="onOpenChangeRangePicker"
                         format="YYYY-MM-DD"
                         separator="-"
                     >
@@ -328,6 +329,8 @@ const chainDropdown = ref()
 const selectedDouble = ref(true);
 const needBadge = ref(true);
 
+const pickerPlaceholderColor = ref('rgba(0, 0, 0, 0.75)');
+
 let paramsStatus = null, paramsSymbol = null, paramsDenom = null, startTimestamp = 0, endTimestamp = 0;
 const dateRange = reactive({value: []});
 const maxTableLength = ref(500000);
@@ -598,6 +601,10 @@ const handleSelectChange = (item) => {
     router.replace(url);
     queryDatas();
 };
+
+const onOpenChangeRangePicker = (open)=>{
+    pickerPlaceholderColor.value = open? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.75)';
+}
 
 const onChangeRangePicker = (dates) => {
     pagination.current = 1;
@@ -981,7 +988,8 @@ onMounted(() => {
         color: var(--bj-primary-color);
         text-align: center;
         &::placeholder{
-            color: var(--bj-text-second);
+            // color: var(--bj-text-second);
+            color: v-bind(pickerPlaceholderColor);
         }
     }
     border: 1px solid var(--bj-border-color);
