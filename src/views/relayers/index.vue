@@ -179,7 +179,7 @@ const goChains = () => {
 }
 :deep(.ant-table-cell) {
     &:nth-of-type(4) {
-        padding-right: 26px;
+        padding-right: 26px !important;
     }
 }
 
