@@ -25,7 +25,7 @@ import moveDecimal from 'move-decimal-point'
 //   }
 // }
 
-export const formatPrice = (price: number | string, numberOfDecimal: number = 4) => {
+export const formatPrice = (price: number | string, numberOfDecimal: number | null = 4) => {
     if (price === -1 || price === '-1') {
         return `--`
     }
