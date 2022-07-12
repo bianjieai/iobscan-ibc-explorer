@@ -1,7 +1,7 @@
 <template>
     <div class="nodatas">
-        <img class="nodatas__icon" src="../assets/noDatas.png" />
-        <p class="nodatas__title">No Data</p>
+        <img class="nodatas_icon" src="../assets/noDatas.png" />
+        <p class="nodatas_title">No Data</p>
     </div>
 </template>
 
@@ -13,21 +13,20 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-@import "../style/mixin.scss";
-@import "../style/variable.scss";
+<style lang="less" scoped>
 
 .nodatas {
-    @include flex(column, nowrap, center, center);
-    &__icon {
+    .flex(column, nowrap, center, center);
+    min-height: 210px; // 适应table min-height: 300px
+    &_icon {
         width: 120px;
     }
-    &__title {
+    &_title {
         margin-top: 16px;
-        font-size: 14px;
+        font-size: var(--bj-font-size-normal);
         font-family: Montserrat-Regular, Montserrat;
         font-weight: 400;
-        color: $font-color2;
+        color: @font-color2;
     }
 }
 </style>

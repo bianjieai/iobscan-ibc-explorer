@@ -1,55 +1,48 @@
 <template>
   <div class="block">
-    <div class="block__header">
-      <div :class="type === 'dark' ? 'block__header__line__dark' : 'block__header__line'">
-        <p class="block__header__title" :style="{ color: type === 'dark' ? '#ffffff' : '#000000' }">
+    <div class="block_header">
+      <div :class="type === 'dark' ? 'block_header_line_dark' : 'block_header_line'">
+        <p class="block_header_title" :style="{ color: type === 'dark' ? '#ffffff' : '#000000' }">
           {{ title }}
         </p>
       </div>
       <a-tooltip>
         <template #title>{{ tipMsg }}</template>
-        <img class="tip__icon" v-if="showTip" src="../assets/tip.png" />
+        <img class="tip_icon" v-if="showTip" src="../assets/tip.png" />
       </a-tooltip>
     </div>
-    <div class="block__content">
+    <div class="block_content">
       <slot></slot>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  props: {
-    type: String,
-    title: String,
-    showTip: Boolean,
-    tipMsg: String,
-  },
-  setup() {
-    return {};
-  },
-};
+<script setup lang="ts">
+const props = defineProps({
+  type: String,
+  title: String,
+  showTip: Boolean,
+  tipMsg: String,
+})
 </script>
 
-<style lang="scss">
-@import "../style/variable.scss";
-@import "../style/mixin.scss";
+<style lang="less" scoped>
 
 .block {
-  @include flex(column, nowrap, flex-start, flex-start);
-  &__header {
+  .flex(column, nowrap, flex-start, flex-start);
+  &_header {
     display: inline-block;
-    &__title {
+    &_title {
       display: inline-block;
-      font-size: $font-size3;
+      font-size: @font-size3;
       font-family: Montserrat-Regular, Montserrat;
-      font-weight: $nav-font-weight;
+      font-weight: @nav-font-weight;
       margin-right: 10px;
       position: relative;
       top: -16px;
       z-index: 5;
     }
-    &__line__dark {
+    &_line_dark {
       top: -16px;
       left: 5px;
       display: inline-block;
@@ -60,7 +53,7 @@ export default {
       position: relative;
       z-index: 1;
     }
-    &__line {
+    &_line {
       left: 5px;
       display: inline-block;
       width: 100%;
@@ -70,12 +63,12 @@ export default {
       position: relative;
     }
   }
-  &__content {
+  &_content {
     width: 100%;
     background-color: #ffffff;
-    border-radius: $card-radio;
+    border-radius: @card-radio;
   }
-  .tip__icon {
+  .tip_icon {
     width: 24px;
     position: absolute;
     margin-left: 16px;

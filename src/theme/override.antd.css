@@ -1,0 +1,145 @@
+.ant-anchor-link::before {
+    width: 0px !important;
+}
+
+.ant-message-notice-content {
+    background-color: rgba(0, 0, 0, 0.35);
+    border-width: 1px 4px 1px 1px;
+    border-style: solid;
+    border-color: #3d50ff;
+    color: white;
+}
+
+.ant-anchor-link-title-active {
+    width: 30px !important;
+}
+
+.ibc_selected_border:hover .ant-card-bordered {
+    border: 1px solid #3d50ff;
+    cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+}
+
+.ibc_selected_title:hover {
+    cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+}
+
+.ibc_selected_title:hover .list_item_value {
+    color: #3d50ff;
+}
+
+.ibc_selected_title:hover .card_content_value {
+    color: #3d50ff;
+}
+
+.ibc_scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.ibc_scrollbar::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: #3d50ff;
+}
+
+.ibc_scrollbar::-webkit-scrollbar-track {
+    background-color: #F2F2F2;
+}
+
+.ant-anchor-link-title {
+    width: 26px;
+    font-family: Montserrat-Regular, Montserrat;
+    text-align: justify;
+    font-size: var(--bj-font-size-normal);
+    font-family: Montserrat-Regular, Montserrat;
+    font-weight: 400;
+    color: var(--bj-text-third);
+}
+
+.ant-anchor-link-active .ant-anchor-link-title {
+    color: #ffffff;
+    width: 32px;
+    background-color: #3d50ff;
+    border-radius: var(--border-radius-normal);
+    padding: 2px;
+}
+.ant-anchor-link-active .ant-anchor-link-title-active .custom_title {
+    color: #fff;
+}
+
+.transfer_table .ant-table-thead tr th {
+    font-size: var(--bj-font-size-sub-title);
+    font-family: Montserrat-Regular, Montserrat;
+    background-color: #ffffff;
+}
+
+.transfer_table .ant-table-column-title {
+    font-size: 16px;
+    font-family: Montserrat-Regular, Montserrat;
+    font-weight: 400;
+    color: #000000;
+}
+
+.ant-select-item-option {
+    font-family: Montserrat-Regular, Montserrat;
+}
+
+.ant-select-item-option-selected {
+    background-color: rgba(61, 80, 255, 0.04);
+}
+
+.ant-select-item-option-selected .ant-select-item-option-content {
+    color: #3D50FF;
+}
+
+.ant-select-item-option:hover {
+    color: #3D50FF;
+}
+
+.ant-popover {
+    z-index: 1051 !important;
+}
+
+.ant-select-open .ant-select-arrow {
+    color: var(--bj-primary-color);
+    transform: rotate(180deg);
+}
+
+.ant-calendar-date:hover {
+    background-color: #3D50FF;
+    color: #ffffff;
+}
+
+.ant-calendar-input-wrap {
+    display: none;
+}
+
+.ant-calendar-time-picker-btn {
+    display: none !important;
+}
+
+.ant-btn {
+    cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+}
+
+.ant-select {
+    cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+}
+
+.ant-select-item {
+    cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+}
+
+.ant-calendar-date {
+    cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+}
+
+.ant-dropdown {
+    z-index: 1020;
+}
+.ant-tooltip-inner {
+    color: var(--bj-font-color-65);
+    background: #fff;
+}
+.ant-tooltip-arrow-content {
+    background: #fff;
+}

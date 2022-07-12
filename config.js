@@ -1,20 +1,17 @@
 let fs = require('fs');
-let program = require('commander');
 
-function list (val) {
-    return val.split(',')
-}
-program.option("-p, <items>","config list" ,list).parse(process.argv);
+console.log('process.argv:',process.argv);
+let arguments = process.argv.splice(2);
+let programs = (arguments[0] || '').split(',');
+console.log('programs:',programs);
 
 replaceEnv([
-        "./config/config.json",
+        "./.env.development",
+        "./.env.production",
     ],
     {
-        "umeng_id": program.P[0],
-        "umeng_web_id": program.P[1],
-        "date_picker_start_time": program.P[2],
-        "irishub_iobcan_link": program.P[3],
-        "cosmoshub_iobcan_link": program.P[4],
+        "umeng_id": programs[0] ,
+        "umeng_web_id": programs[1],
     }
 );
 

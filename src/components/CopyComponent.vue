@@ -47,10 +47,10 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
     .copy_component_content{
         margin-left: 7px;
-        display: flex;
+        display: inline-block;
         align-items: center;
         cursor: url("../assets/mouse/shiftlight_mouse.png"),default;
         user-select: none;

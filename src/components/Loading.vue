@@ -4,13 +4,10 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: "Loading"
-}
+<script setup>
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="less">
     .loading_container{
         flex: 1;
         width: 100%;
