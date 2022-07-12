@@ -20,32 +20,32 @@ step3 preview
 ## qa
 step1 安装依赖
 ```
- 	npm install
+ 	yarn install
 ```
 
 step2 build
 ```
-  npm run build:qa
+  yarn build:qa
 ```
 
 ## staging
 step1 安装依赖
 ```
- 	npm install
+ 	yarn install
 ```
 
 step2 build
 ```
-  npm run build:staging
+  yarn build:staging
 ```
 
 ## production
 step1 安装依赖
 ```
- 	npm install
+ 	yarn install
 ```
 
 step2 build
 ```
-  npm run build
+  yarn build
 ```
