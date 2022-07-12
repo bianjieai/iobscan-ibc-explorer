@@ -329,7 +329,7 @@ const chainDropdown = ref()
 const selectedDouble = ref(true);
 const needBadge = ref(true);
 
-const pickerPlaceholderColor = ref('rgba(0, 0, 0, 0.75)');
+const pickerPlaceholderColor = ref('var(--bj-text-second)');
 
 let paramsStatus = null, paramsSymbol = null, paramsDenom = null, startTimestamp = 0, endTimestamp = 0;
 const dateRange = reactive({value: []});
@@ -603,7 +603,7 @@ const handleSelectChange = (item) => {
 };
 
 const onOpenChangeRangePicker = (open)=>{
-    pickerPlaceholderColor.value = open? 'rgba(0, 0, 0, 0.3)' : 'rgba(0, 0, 0, 0.75)';
+    pickerPlaceholderColor.value = open? 'var(--bj-text-third)' : 'var(--bj-text-second)';
 }
 
 const onChangeRangePicker = (dates) => {
