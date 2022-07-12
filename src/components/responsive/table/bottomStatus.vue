@@ -5,7 +5,7 @@
       <div class="flex">
         <div class="flex items-center ml-16">
           <img :src="activeImgInfo.src" :width="activeImgInfo.width" :height="activeImgInfo.height" class="mr-4"/>
-          <div>{{ type === BottomStatusType.CHANNEL ? 'Opened' : 'Running' }}</div>
+          <div>{{ type === BottomStatusType.CHANNEL ? 'Open' : 'Running' }}</div>
         </div>
         <div class="flex items-center ml-24">
           <img :src="inActiveImgInfo.src" :width="inActiveImgInfo.width" :height="inActiveImgInfo.height" class="mr-4"/>

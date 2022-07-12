@@ -182,7 +182,7 @@ const testChains = {
     chain_all: 'All IBC Chains',
     channels_24hr: 'Active',
     channel_all: 'All',
-    channel_opened: 'Opened',
+    channel_opened: 'Open',
     channel_closed: 'Closed',
     denom_all: 'Tokens by Denom',
     base_denom_all: 'Tokens by Base Denom',
@@ -267,12 +267,12 @@ const testChains = {
         status: 1
     },
     {
-        label: 'Failed',
-        status: 2
-    },
-    {
         label: 'Processing',
         status: 3
+    },
+    {
+        label: 'Failed',
+        status: 2
     }
   ]
   const channelsStatus = {

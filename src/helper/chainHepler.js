@@ -11,7 +11,7 @@ export default class ChainHelper {
     }
     
     // chain_name sort
-    static sortByChainName(sourceList) {
+    static sortByChainName(sourceList, chain) {
         function changeChainsSort(item) {
             let saveChain, saveChannel,saveAddress;
             saveChain = item.chain_a;
@@ -28,25 +28,33 @@ export default class ChainHelper {
             const updateList = sourceList?.map((item, index) => {
                 const matchChainA = allChains?.value?.all?.find((chain) => chain.chain_id === item.chain_a);
                 const matchChainB = allChains?.value?.all?.find((chain) => chain.chain_id === item.chain_b);
-                if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('Cosmos Hub') !== -1) {
-                    if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('Cosmos Hub') === 1) {
+                // 满足单选情况
+                if(chain?.split(',')[0] !== 'allchain' && chain?.split(',')[1] === 'allchain') {
+                    if(matchChainB?.chain_id === chain?.split(',')[0]) {
                         changeChainsSort(item);
                     }
-                } else if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('IRIS Hub') !== -1) {
-                    if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('IRIS Hub') === 1) {
-                        changeChainsSort(item);
-                    }
+                    return item;
                 } else {
-                    /**
-                     * -1 -- need not
-                     *  0 -- same
-                     *  1 -- need
-                     */
-                    if(matchChainA?.chain_name.localeCompare(matchChainB?.chain_name) === 1) {
-                        changeChainsSort(item);
+                    if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('Cosmos Hub') !== -1) {
+                        if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('Cosmos Hub') === 1) {
+                            changeChainsSort(item);
+                        }
+                    } else if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('IRIS Hub') !== -1) {
+                        if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('IRIS Hub') === 1) {
+                            changeChainsSort(item);
+                        }
+                    } else {
+                        /**
+                         * -1 -- need not
+                         *  0 -- same
+                         *  1 -- need
+                         */
+                        if(matchChainA?.chain_name.localeCompare(matchChainB?.chain_name) === 1) {
+                            changeChainsSort(item);
+                        }
                     }
+                    return item;
                 }
-                return item;
             })
             return updateList;
         }

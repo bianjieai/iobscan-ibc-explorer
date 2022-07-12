@@ -32,6 +32,7 @@
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         ref="chainDropdown"
+                        witchPage="transfers"
                     />
                     <a-select
                         class="status_select"
@@ -773,9 +774,6 @@ onMounted(() => {
 })
 </script>
 <style lang="less" scoped>
-:deep(.ant-select-item-option-content) {
-    text-align: center;
-}
 .transfer {
     flex: 1;
     padding: 48px 32px 100px;
