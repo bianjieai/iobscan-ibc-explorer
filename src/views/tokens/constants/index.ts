@@ -93,7 +93,7 @@ export const IBC_COLUMNS: TableColumnsType = [
 export const STATUS_OPTIONS = [
   {
     value: undefined,
-    key: 'All Token Type'
+    key: 'All Token Types'
   },
   {
     value: 'Authed',
@@ -108,7 +108,7 @@ export const STATUS_OPTIONS = [
 export const IBC_STATUS_OPTIONS = [
   {
     value: undefined,
-    key: 'All Token Type'
+    key: 'All Token Types'
   },
   {
     value: 'Authed',

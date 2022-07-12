@@ -174,9 +174,9 @@ a {
         max-width: 1200px;
         height: 100%;
         .logo {
-            width: 144px;
             .logo_icon {
-                width: 100%;
+                width: 144px;
+                height: 34px;
                 cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
             }
         }

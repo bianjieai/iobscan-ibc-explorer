@@ -65,9 +65,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { CHAINID, defaultTitle } from '@/constants'
-import { formatLongTitleString, getRestString } from '@/helper/parseString';
-
+import { CHAINID, defaultTitle } from '@/constants';
 type TChainData = {
   chain_id: string
   chain_name: string
@@ -80,12 +78,12 @@ interface IProps {
   chain_id?: string // 回填
   dropdownData: TChainData[]
   minWidth?: number
+  witchPage?: string
 }
 
 const props = withDefaults(defineProps<IProps>(), {
   dropdownData: (sessionStorage.getItem('allChains') && JSON.parse(sessionStorage.getItem('allChains')!))?.all ?? []
 })
-
 
 watch(() => props.dropdownData, (_new, _old) => {
   if (_new) setAllChains(_new)
@@ -266,6 +264,11 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
             chain_name,
             chain_id
           })
+          if(props.witchPage !== 'transfers' && selectedChain.value[0].chain_id === 'allchain') {
+            let saveSelectedChain = selectedChain.value[0];
+            selectedChain.value[0] = selectedChain.value[1];
+            selectedChain.value[1] = saveSelectedChain;
+          }
           backupDropdownData = selectedChain.value // backup
           submitChain(`${selectedChain.value[0].chain_id},${selectedChain.value[1].chain_id}`)
         }
@@ -307,12 +310,17 @@ const confirmChains = () => {
   if (props.selectedDouble) {
     if (chainIdIput.value?.includes(',')) {
       const chain = chainIdIput.value.split(',')
+      if(props.witchPage !== 'transfers' && chain[0] === 'allchain') {
+        let saveChain = chain[0];
+        chain[0] = chain[1];
+        chain[1] = saveChain;
+      }
       selectedChain.value = [{
-        chain_name: chain[0],
-        chain_id: chain[0]
+        chain_name: chain[0].trim(),
+        chain_id: chain[0].trim()
       }, {
-        chain_name: chain[1],
-        chain_id: chain[1]
+        chain_name: chain[1].trim(),
+        chain_id: chain[1].trim()
       }]
       backupDropdownData = selectedChain.value
       submitChain(selectedChain.value.map(item=>item.chain_id).join(','))
@@ -334,12 +342,11 @@ const confirmChains = () => {
         }]
       }
       confirmFlag.value = true
-
-      submitChain(`${chainIdIput.value ? chainIdIput.value : 'allchain'},allchain`)
+      submitChain(`${chainIdIput.value ? chainIdIput.value.trim() : 'allchain'},allchain`)
     }
   } else {
     confirmFlag.value = true
-    submitChain(chainIdIput.value)
+    submitChain(chainIdIput.value?.trim())
   }
 }
 
