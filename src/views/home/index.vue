@@ -133,60 +133,6 @@ onBeforeUnmount(() => {
             width: 100%;
             &_left {
                 width: 100%;
-                & .block {
-                    width: 100%;
-                    &_content {
-                        width: 100%;
-                        .statistic_list {
-                            width: 100%;
-                            .vertical_container {
-                                display: grid;
-                                grid-template-columns: repeat(2, 1fr);
-                                width: 100%;
-                                .list_item {
-                                    &:nth-of-type(2n+1) {
-                                        .list_item_info {
-                                            border-right: 1px solid rgba(151, 151, 151, 0.2);
-                                        }
-                                    }
-                                    &:nth-of-type(2n){
-                                        .list_item_info {
-                                            padding-left: 24px;
-                                        }
-                                    }
-                                    &:nth-of-type(3) {
-                                        .list_item_divider {
-                                            display: none;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    &:nth-of-type(2) {
-                        .block_content {
-                            .statistic_list {
-                                .vertical_container {
-                                    .list_item {
-                                        &:nth-of-type(2n+1) {
-                                            .list_item_info {
-                                            }
-                                        }
-                                        &:nth-of-type(2n){
-                                            .list_item_info {
-                                            }
-                                        }
-                                        &:nth-of-type(1) {
-                                            .list_item_divider {
-                                                display: none;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
             &_right {
                 margin-top: 24px;
@@ -214,49 +160,7 @@ onBeforeUnmount(() => {
         }
         &_bottom {
             &_left {}
-            &_right {
-                & .block {
-                    &_content {
-                        .statistic_list {
-                            .horizontal_container {
-                                display: grid;
-                                grid-template-columns: repeat(2, 1fr);
-                                width: 100%;
-                                .list_item_horizontal {
-                                    padding: 24px 0;
-                                    width: 100%;
-                                    border-bottom: 1px solid rgba(151, 151, 151, 0.2);
-                                    &:nth-of-type(2n) {
-                                        .list_item_divider_vertical {
-                                            display: none;
-                                        }
-                                    }
-                                    &:nth-of-type(1) {
-                                        padding-top: 0;
-                                    }
-                                    &:nth-of-type(2) {
-                                        padding-top: 0;
-                                    }
-                                    &:nth-of-type(3) {
-                                        padding-bottom: 0;
-                                        border-bottom: 0;
-                                    }
-                                    &:nth-of-type(4) {
-                                        padding-bottom: 0;
-                                        border-bottom: 0;
-                                    }
-                                }
-                            }
-                        }
-                        & .list_top{
-                            .flex(column, nowrap, flex-start, flex-start);
-                            &_name{
-                                margin-bottom: 0;
-                            }
-                        }
-                    }
-                }
-            }
+            &_right {}
         }
     }
 }
@@ -269,95 +173,15 @@ onBeforeUnmount(() => {
         }
         &_top {
             margin-top: 48px;
-            &_slot {
-            }
+            &_slot {}
             &_left {
                 .ibc_selected_title {}
             }
-            &_right {
-            }
+            &_right {}
         }
         &_bottom {
-            &_left {
-                & .block {
-                    &_content {
-                        .statistic_list {
-                            .vertical_container {
-                                grid-template-columns: repeat(1, 1fr);
-                                .list_item {
-                                    &:nth-of-type(2n+1) {
-                                        .list_item_info {
-                                            border-right: 0;
-                                        }
-                                    }
-                                    &:nth-of-type(2n) {
-                                        .list_item_info {
-                                            padding-left: 0;
-                                        }
-                                    }
-                                    &:nth-of-type(3) {
-                                        .list_item_divider {
-                                            display: block;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    &:nth-of-type(2) {
-                        .block_content {
-                            .statistic_list {
-                                .vertical_container {
-                                    .list_item {
-                                        &:nth-of-type(1) {
-                                            .list_item_divider {
-                                                display: block;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            &_right {
-                .block_content {
-                    .statistic_list {
-                        .horizontal_container {
-                            grid-template-columns: repeat(1, 1fr);
-                            width: 100%;
-                            .list_item_horizontal {
-                                padding: 24px 0;
-                                width: 100%;
-                                border-bottom: 1px solid rgba(151, 151, 151, 0.2);
-                                .list_item_divider_vertical {
-                                    display: none;
-                                }
-                                &:nth-of-type(1) {
-                                    padding-top: 0;
-                                }
-                                &:nth-of-type(2) {
-                                    padding-top: 24px;
-                                }
-                                &:nth-of-type(3) {
-                                    padding-bottom: 24px;
-                                    border-bottom: 1px solid rgba(151, 151, 151, 0.2);
-                                }
-                                &:nth-of-type(4) {
-                                    border-bottom: 0;
-                                }
-                            }
-                        }
-                    }
-                    & .list_top{
-                        .flex(column, nowrap, flex-start, flex-start);
-                        &_name{
-                            margin-bottom: 0;
-                        }
-                    }
-                }
-            }
+            &_left {}
+            &_right {}
         }
     }
 }

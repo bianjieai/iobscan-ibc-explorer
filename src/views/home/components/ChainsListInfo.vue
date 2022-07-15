@@ -127,6 +127,9 @@ const formatChainID = (chainId)=>{
         margin-top: 8px;
         width: 100%;
         .flex(row, nowrap, flex-start, flex-start);
+        ::v-deep .ant-anchor-wrapper {
+            overflow: visible;
+        }
     }
     &_item {
         font-size: var(--bj-font-size-normal);
@@ -135,7 +138,8 @@ const formatChainID = (chainId)=>{
         color: var(--bj-text-third);
     }
     .card_list {
-        width: calc(100% - 50px);
+        width: 100%;
+        // width: calc(100% - 50px);
         height: 182px;
         padding-right: 20px;
         overflow-y: auto;
