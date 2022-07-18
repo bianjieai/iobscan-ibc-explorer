@@ -293,11 +293,11 @@ const testChains = {
     }
   ]
   const transfersDetailStatus = {
-    '0': {
+    FAILED: {
         value: 0,
         label: 'Failed'
     },
-    '1': {
+    SUCCESS: {
         value: 1,
         label: 'Success'
     }

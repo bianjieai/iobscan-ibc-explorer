@@ -184,10 +184,10 @@ const formatHeight = (heightObj) => {
 
 }
 const formatStatus = (status) => {
-    if (status == transfersDetailStatus['1'].value) {
-        return transfersDetailStatus['1'].label
-    } else if (status === transfersDetailStatus['0'].value) {
-        return transfersDetailStatus['0'].label
+    if (status == transfersDetailStatus.SUCCESS.value) {
+        return transfersDetailStatus.SUCCESS.label
+    } else if (status === transfersDetailStatus.FAILED.value) {
+        return transfersDetailStatus.FAILED.label
     }
     return '--'
 }
