@@ -1,4 +1,5 @@
 import {isArray} from './object-helper';
+import { CHAINNAME } from '../constants'
 import {useIbcChains} from '../views/home/composable';
 const { ibcChains } = useIbcChains();
 const allChains = ibcChains;
@@ -35,12 +36,12 @@ export default class ChainHelper {
                     }
                     return item;
                 } else {
-                    if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('Cosmos Hub') !== -1) {
-                        if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('Cosmos Hub') === 1) {
+                    if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf(CHAINNAME['COSMOSHUB']) !== -1) {
+                        if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf(CHAINNAME['COSMOSHUB']) === 1) {
                             changeChainsSort(item);
                         }
-                    } else if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('IRIS Hub') !== -1) {
-                        if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf('IRIS Hub') === 1) {
+                    } else if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf(CHAINNAME['IRISHUB']) !== -1) {
+                        if([matchChainA?.chain_name, matchChainB?.chain_name].indexOf(CHAINNAME['IRISHUB']) === 1) {
                             changeChainsSort(item);
                         }
                     } else {
