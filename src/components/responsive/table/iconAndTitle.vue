@@ -26,6 +26,7 @@
 import { getRestString } from '@/helper/parseString';
 import { computed } from 'vue';
 import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
+import { UNKNOWN } from '../../../constants';
 
 // 说明 现已将 token chain 拆除。 仅剩relayer
 interface IProps {
@@ -45,12 +46,12 @@ const props = withDefaults(defineProps<IProps>(), {
 
 
 // relayer 处理
-const relayerName = computed(() => props.title ? props.title : 'Unknown')
+const relayerName = computed(() => props.title ? props.title : UNKNOWN)
 
 const relayerImageSrc = computed(() => {
   if (props.imgSrc) {
     return props.imgSrc
-  } else if (relayerName.value === 'Unknown') {
+  } else if (relayerName.value === UNKNOWN) {
     return new URL('../../../assets/default.png', import.meta.url).href
   } else {
     return ''

@@ -4,9 +4,9 @@
         <layer-block class="home_top" title="Chains" type="dark">
             <div class="home_top_slot">
                 <div class="home_top_left">
-                    <chains-info :msg="ibcStatisticsChains.chains_24hr" @click="onClickViewAll('chains')" />
+                    <chains-info :msg="ibcStatisticsChains.chains_24hr" @click="onClickViewAll(pageParameters.chains)" />
                     <chains-info :msg="ibcStatisticsChains.chain_all" style="margin-top: 18px;"
-                        @click="onClickViewAll('chains')" />
+                        @click="onClickViewAll(pageParameters.chains)" />
                 </div>
                 <div class="home_top_right">
                     <chains-list-info :chainList="ibcChains" @onMenuSelected="onMenuSelected" @clickItem="onClickViewAll" />
@@ -15,7 +15,7 @@
         </layer-block>
         <div class="home_bottom">
             <div class="home_bottom_left">
-                <layer-block title="Channels">
+                <layer-block title="Channel Pairs">
                     <statistic-list type="vertical" :msg="ibcStatisticsChannels" @clickItem="onClickViewAll" />
                 </layer-block>
 
@@ -25,7 +25,7 @@
             </div>
             <layer-block class="home_bottom_right" title="IBC Token Transfer">
                 <statistic-list type="horizontal" :msg="ibcStatisticsTxs" @clickItem="onClickViewAll" />
-                <transfer-list :ibcChains="ibcChains" :transferList="ibcTxs.value" @clickViewAll="onClickViewAll('tx_all')"
+                <transfer-list :ibcChains="ibcChains" :transferList="ibcTxs.value" @clickViewAll="onClickViewAll(ibcStatisticsTxsDefault.tx_all.statistics_name)"
                     @clickItem="onClickViewAll" @itemDidExpand="setExpandByIndex"/>
             </layer-block>
         </div>
@@ -42,6 +42,7 @@ import TransferList from './components/TransferList.vue';
 import { useIbcStatistics, useIbcChains, useIbcTxs, useInterfaceActive, useClearInterval, useGetIbcDenoms } from './composable';
 import { useOnPressEnter } from '../../layout/hooks/useStarAnimation';
 import { onMounted,onBeforeUnmount } from 'vue';
+import { pageParameters, ibcStatisticsTxsDefault } from '../../constants';
 const {
     ibcStatisticsChains,
     ibcStatisticsChannels,
@@ -133,60 +134,6 @@ onBeforeUnmount(() => {
             width: 100%;
             &_left {
                 width: 100%;
-                & .block {
-                    width: 100%;
-                    &_content {
-                        width: 100%;
-                        .statistic_list {
-                            width: 100%;
-                            .vertical_container {
-                                display: grid;
-                                grid-template-columns: repeat(2, 1fr);
-                                width: 100%;
-                                .list_item {
-                                    &:nth-of-type(2n+1) {
-                                        .list_item_info {
-                                            border-right: 1px solid rgba(151, 151, 151, 0.2);
-                                        }
-                                    }
-                                    &:nth-of-type(2n){
-                                        .list_item_info {
-                                            padding-left: 24px;
-                                        }
-                                    }
-                                    &:nth-of-type(3) {
-                                        .list_item_divider {
-                                            display: none;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    &:nth-of-type(2) {
-                        .block_content {
-                            .statistic_list {
-                                .vertical_container {
-                                    .list_item {
-                                        &:nth-of-type(2n+1) {
-                                            .list_item_info {
-                                            }
-                                        }
-                                        &:nth-of-type(2n){
-                                            .list_item_info {
-                                            }
-                                        }
-                                        &:nth-of-type(1) {
-                                            .list_item_divider {
-                                                display: none;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
             }
             &_right {
                 margin-top: 24px;
@@ -214,49 +161,7 @@ onBeforeUnmount(() => {
         }
         &_bottom {
             &_left {}
-            &_right {
-                & .block {
-                    &_content {
-                        .statistic_list {
-                            .horizontal_container {
-                                display: grid;
-                                grid-template-columns: repeat(2, 1fr);
-                                width: 100%;
-                                .list_item_horizontal {
-                                    padding: 24px 0;
-                                    width: 100%;
-                                    border-bottom: 1px solid rgba(151, 151, 151, 0.2);
-                                    &:nth-of-type(2n) {
-                                        .list_item_divider_vertical {
-                                            display: none;
-                                        }
-                                    }
-                                    &:nth-of-type(1) {
-                                        padding-top: 0;
-                                    }
-                                    &:nth-of-type(2) {
-                                        padding-top: 0;
-                                    }
-                                    &:nth-of-type(3) {
-                                        padding-bottom: 0;
-                                        border-bottom: 0;
-                                    }
-                                    &:nth-of-type(4) {
-                                        padding-bottom: 0;
-                                        border-bottom: 0;
-                                    }
-                                }
-                            }
-                        }
-                        & .list_top{
-                            .flex(column, nowrap, flex-start, flex-start);
-                            &_name{
-                                margin-bottom: 0;
-                            }
-                        }
-                    }
-                }
-            }
+            &_right {}
         }
     }
 }
@@ -269,95 +174,15 @@ onBeforeUnmount(() => {
         }
         &_top {
             margin-top: 48px;
-            &_slot {
-            }
+            &_slot {}
             &_left {
                 .ibc_selected_title {}
             }
-            &_right {
-            }
+            &_right {}
         }
         &_bottom {
-            &_left {
-                & .block {
-                    &_content {
-                        .statistic_list {
-                            .vertical_container {
-                                grid-template-columns: repeat(1, 1fr);
-                                .list_item {
-                                    &:nth-of-type(2n+1) {
-                                        .list_item_info {
-                                            border-right: 0;
-                                        }
-                                    }
-                                    &:nth-of-type(2n) {
-                                        .list_item_info {
-                                            padding-left: 0;
-                                        }
-                                    }
-                                    &:nth-of-type(3) {
-                                        .list_item_divider {
-                                            display: block;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    &:nth-of-type(2) {
-                        .block_content {
-                            .statistic_list {
-                                .vertical_container {
-                                    .list_item {
-                                        &:nth-of-type(1) {
-                                            .list_item_divider {
-                                                display: block;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            &_right {
-                .block_content {
-                    .statistic_list {
-                        .horizontal_container {
-                            grid-template-columns: repeat(1, 1fr);
-                            width: 100%;
-                            .list_item_horizontal {
-                                padding: 24px 0;
-                                width: 100%;
-                                border-bottom: 1px solid rgba(151, 151, 151, 0.2);
-                                .list_item_divider_vertical {
-                                    display: none;
-                                }
-                                &:nth-of-type(1) {
-                                    padding-top: 0;
-                                }
-                                &:nth-of-type(2) {
-                                    padding-top: 24px;
-                                }
-                                &:nth-of-type(3) {
-                                    padding-bottom: 24px;
-                                    border-bottom: 1px solid rgba(151, 151, 151, 0.2);
-                                }
-                                &:nth-of-type(4) {
-                                    border-bottom: 0;
-                                }
-                            }
-                        }
-                    }
-                    & .list_top{
-                        .flex(column, nowrap, flex-start, flex-start);
-                        &_name{
-                            margin-bottom: 0;
-                        }
-                    }
-                }
-            }
+            &_left {}
+            &_right {}
         }
     }
 }

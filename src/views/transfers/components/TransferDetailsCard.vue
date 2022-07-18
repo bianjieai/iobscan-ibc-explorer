@@ -89,7 +89,7 @@
 <script setup>
 import Tools from "../../../utils/Tools";
 import moveDecimal from 'move-decimal-point';
-import { chainAddressPrefix, tableChainIDs } from "../../../constants";
+import { chainAddressPrefix, tableChainIDs, transfersDetailStatus, ackConnectStatus } from "../../../constants";
 import { ref } from 'vue'
 import * as djs from 'dayjs'
 import { getRestString } from "../../../helper/parseString";
@@ -184,10 +184,10 @@ const formatHeight = (heightObj) => {
 
 }
 const formatStatus = (status) => {
-    if (status == 1) {
-        return 'Success'
-    } else if (status === 0) {
-        return 'Failed'
+    if (status == transfersDetailStatus.SUCCESS.value) {
+        return transfersDetailStatus.SUCCESS.label
+    } else if (status === transfersDetailStatus.FAILED.value) {
+        return transfersDetailStatus.FAILED.label
     }
     return '--'
 }
@@ -261,9 +261,9 @@ const formatDate = (timestamp) => {
 const formatAck = (ack) => {
     if (ack && ack !== '--') {
         if (ack.includes('result:"\\001"')) {
-            return 'correct'
-        } else if (ack.includes('error')) {
-            return 'error'
+            return ackConnectStatus.CORRECT
+        } else if (ack.includes(ackConnectStatus.ERROR)) {
+            return ackConnectStatus.ERROR
         }
     } else {
         return '--'

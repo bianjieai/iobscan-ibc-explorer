@@ -16,7 +16,7 @@
               {{ chain_b }}</div>
           </template>
       </div>
-      <span class="button__icon flex justify-between items-center">
+      <span class="button_icon flex justify-between items-center">
         <svg :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }" focusable="false" data-icon="down"
           width="12px" height="12px" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"
           :class="[visible ? 'visible_color' : '']">
@@ -65,7 +65,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { CHAINID, defaultTitle } from '@/constants';
+import { CHAINNAME, defaultTitle } from '@/constants';
 type TChainData = {
   chain_id: string
   chain_name: string
@@ -102,11 +102,11 @@ const confirmFlag = ref(false)
 
 const setAllChains = (dropdownData: TChainData[] = props.dropdownData) => {
   if (dropdownData?.length > 0) {
-    const cosmosChain = dropdownData.filter(item => item.chain_name === CHAINID.COSMOSHUB)
-    const irishubChain = dropdownData.filter(item => item.chain_name === CHAINID.IRISHUB)
+    const cosmosChain = dropdownData.filter(item => item.chain_name === CHAINNAME.COSMOSHUB)
+    const irishubChain = dropdownData.filter(item => item.chain_name === CHAINNAME.IRISHUB)
     let notIncludesIrisAndCosmosChains: TChainData[] = []
     dropdownData.forEach(item => {
-      if (item.chain_name !== CHAINID.COSMOSHUB && item.chain_name !== CHAINID.IRISHUB) {
+      if (item.chain_name !== CHAINNAME.COSMOSHUB && item.chain_name !== CHAINNAME.IRISHUB) {
         notIncludesIrisAndCosmosChains.push(item)
       }
     })
@@ -377,7 +377,7 @@ const confirmChains = () => {
   }
 }
 
-.button__icon {
+.button_icon {
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   padding: 0 6px;
   border-left: 1px solid var(--bj-border-color);

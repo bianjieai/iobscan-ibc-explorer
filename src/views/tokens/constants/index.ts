@@ -123,3 +123,7 @@ export const IBC_STATUS_OPTIONS = [
     key: 'Genesis'
   }
 ]
+
+export const SPECIAL_TOKEN_TYPE = {
+    GENESIS: 'Genesis'
+}

@@ -31,6 +31,10 @@
     color: #3d50ff;
 }
 
+.ibc_scrollbar {
+    scrollbar-color: #3d50ff #F2F2F2;
+    scrollbar-width: thin;
+}
 .ibc_scrollbar::-webkit-scrollbar {
     width: 4px;
 }

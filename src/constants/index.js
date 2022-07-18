@@ -123,6 +123,23 @@ const testChains = {
       value: 'Relayers',
     },
   ];
+
+  const pageParameters = {
+    tx: 'tx',
+    chains: 'chains',
+    transfers: 'transfers',
+    tokens: 'tokens',
+    channel: 'channel',
+    relayers: 'relayers',
+    denom: 'denom'
+  }
+
+  const txStatusNumber = {
+    defaultStatus: '1,2,3,4',
+    successStatus: '1',
+    failedStatus: '2,4'
+  }
+  const dayTime = '24';
   
   const chainMenus = [
     {
@@ -275,6 +292,20 @@ const testChains = {
         status: 2
     }
   ]
+  const transfersDetailStatus = {
+    FAILED: {
+        value: 0,
+        label: 'Failed'
+    },
+    SUCCESS: {
+        value: 1,
+        label: 'Success'
+    }
+  }
+  const ackConnectStatus = {
+    CORRECT: 'correct',
+    ERROR: 'error'
+  }
   const channelsStatus = {
     channelOpenedStatus: '1',
     channelClosedStatus: '2',
@@ -313,13 +344,13 @@ const testChains = {
       // ellipsis: true,
     },
     {
-      title: 'IBC Out TxHash',
+      title: 'From TxHash',
       dataIndex: 'hashOut',
       slots: { customRender: 'hashOut' },
       ellipsis: true,
     },
     {
-      title: 'IBC Out',
+      title: 'From',
       dataIndex: 'out',
       slots: { customRender: 'out' },
       ellipsis: true,
@@ -332,13 +363,13 @@ const testChains = {
       align: 'center',
     },
     {
-      title: 'IBC In TxHash',
+      title: 'To TxHash',
       dataIndex: 'hashIn',
       slots: { customRender: 'hashIn' },
       ellipsis: true,
     },
     {
-      title: 'IBC In',
+      title: 'To',
       dataIndex: 'in',
       slots: { customRender: 'in' },
       ellipsis: true,
@@ -364,10 +395,11 @@ const testChains = {
   }
   const unknownSymbol = 'unknown';
 
-  const CHAINID = {
+  const CHAINNAME = {
     COSMOSHUB: 'Cosmos Hub',
     IRISHUB: 'IRIS Hub'
   }
+  const UNKNOWN = 'Unknown'
   const thousandDecimal = 0.0001;
 
   const SYMBOL = {
@@ -378,6 +410,9 @@ const testChains = {
     testChains,
     ibcStatisticsTxsTest,
     menus,
+    pageParameters,
+    txStatusNumber,
+    dayTime,
     chainMenus,
     anchorsDatas,
     statisticsName,
@@ -388,6 +423,8 @@ const testChains = {
     ibcStatisticsTxsDefault,
     ibcTxStatus,
     ibcTxStatusDesc,
+    transfersDetailStatus,
+    ackConnectStatus,
     channelsStatus,
     ibcTxStatusSelectOptions,
     transfersStatusOptions,
@@ -399,7 +436,8 @@ const testChains = {
     defaultTitle,
     selectedType,
     unknownSymbol,
-    CHAINID,
+    CHAINNAME,
+    UNKNOWN,
     SYMBOL,
     thousandDecimal
   };

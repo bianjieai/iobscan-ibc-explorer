@@ -3,11 +3,11 @@
     <div
       :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']">
       <div
-        :class="['inline-flex', 'flex-1', 'text-center', 'mr-8', 'ml-8', 'justify-center', 'items-center', selectToken.length > 0 ? 'selected_color' : '', selectedInfo.title === defaultTitle['defaultTokens'] ? 'selected_color_default' : '', selectToken.length > 0 && visible ? 'visible_color' : '']">
+        :class="['inline-flex', 'flex-1', 'text-center', 'mr-8', 'ml-8', 'justify-center', 'items-center', selectToken.length > 0 ? 'selected_color' : '', selectedInfo.title === defaultTitle.defaultTokens ? 'selected_color_default' : '', selectToken.length > 0 && visible ? 'visible_color' : '']">
         <img width="18" height="18"  class="mr-4" v-if="selectedInfo.icon.length" :src="selectedInfo.icon"/>
         <span class="selectedInfo_title">{{ selectedInfo.title }}</span>
         </div>
-      <span class="button__icon flex justify-between items-center">
+      <span class="button_icon flex justify-between items-center">
         <svg :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }" focusable="false" data-icon="down"
           width="12px" height="12px" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"
           :class="[visible ? 'visible_color' : '']">
@@ -21,7 +21,7 @@
     <template #overlay>
       <div class="overlay">
         <div>
-          <span @click="onSelected('All Tokens', undefined)"
+          <span @click="onSelected(defaultTitle.defaultTokens, undefined)"
             :class="['chains-tag', isSelected(undefined) ? 'visible_color visible_border' : '']">All Tokens</span>
         </div>
         <div class="mt-24">
@@ -95,7 +95,7 @@ let backupDropdownData: TSelectToken[] | null;
 
 const isSelected = computed(() => (denom: TDenom) => selectToken.value.length > 0 && selectToken.value[0]?.denom === denom)
 const selectedInfo = computed(() => {
-  let title = defaultTitle['defaultTokens'];
+  let title = defaultTitle.defaultTokens;
   let icon = '';
   if (selectToken.value.length > 0) {
     title = selectToken.value[0].symbol == tokenInput.value ? getRestString(tokenInput.value, 4, 4) : selectToken.value[0].symbol;
@@ -212,7 +212,7 @@ const onSelected = (symbol: string, denom: TDenom) => {
   min-width: 124px;
 }
 
-.button__icon {
+.button_icon {
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   padding: 0 6px;
   border-left: 1px solid var(--bj-border-color);

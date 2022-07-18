@@ -45,7 +45,7 @@
                 <template v-for="(item) in ibcBaseDenoms" :key="item.denom">
                   <div
                     class="content_item"
-                    :title="item.symbol"
+                    :title="item.symbol.length > 9 ? item.symbol : ''"
                     :class="selectedSymbol && selectedSymbol === item.symbol && 'content_item_selected'"
                     @click="onClickItem(item.symbol)"
                   >

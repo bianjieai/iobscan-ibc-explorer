@@ -3,9 +3,9 @@
     <div
       :class="['inline-flex', 'items-center', 'default_color', 'dropdown-container', visible ? 'visible_border' : '']">
       <div
-        :class="['flex-1', 'ml-8', 'mr-8', 'text-center', selectOption.length > 0 ? 'selected_color' : '', (selectedText === defaultTitle['defaultStatus'] || selectedText === options[0].key) ? 'selected_color_default' : '', selectOption.length > 0 && visible ? 'visible_color' : '']">
+        :class="['flex-1', 'ml-8', 'mr-8', 'text-center', selectOption.length > 0 ? 'selected_color' : '', (selectedText === defaultTitle.defaultStatus || selectedText === options[0].key) ? 'selected_color_default' : '', selectOption.length > 0 && visible ? 'visible_color' : '']">
         {{ selectedText }}</div>
-      <span class="button__icon flex justify-between items-center">
+      <span class="button_icon flex justify-between items-center">
         <svg :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }" focusable="false" data-icon="down"
           width="12px" height="12px" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"
           :class="[visible ? 'visible_color' : '']">
@@ -50,7 +50,7 @@ const selectedText = computed(() => {
   if (selectOption.value.length > 0) {
     return selectOption.value[0].key
   } else {
-    return props.options[0]?.key ?? defaultTitle['defaultStatus'];
+    return props.options[0]?.key ?? defaultTitle.defaultStatus;
   }
 })
 
@@ -96,7 +96,7 @@ const onSelect = (key: TKey, value: TValue) => {
   min-width: 126px;
 }
 
-.button__icon {
+.button_icon {
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   padding: 0 6px;
   border-left: 1px solid var(--bj-border-color);
