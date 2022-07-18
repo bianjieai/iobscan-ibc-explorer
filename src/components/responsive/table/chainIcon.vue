@@ -22,6 +22,7 @@ import { TBaseChains } from '@/hooks/chainAndDenom.interface';
 import { computed } from 'vue';
 import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
 import ChainHelper from '@/helper/chainHepler';
+import { UNKNOWN } from '../../../constants';
 
 interface IProps {
   iconSize?: TTableCellIconSize
@@ -58,7 +59,7 @@ const chainInfo = computed(() => {
     }
   } else {
     return {
-      title: 'Unknown',
+      title: UNKNOWN,
       subtitle: '--',
       imgSrc: new URL('../../../assets/chain-default.png', import.meta.url).href
     }

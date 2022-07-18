@@ -94,19 +94,19 @@ export const useInterfaceActive = () => {
     const router = useRouter();
     const tipMsg = 'Denom is the token denomination to be transferred, base denomination of the relayed fungible token.';
     const onClickViewAll = (msg) => {
-        if (msg?.includes && msg.includes(pageParameters['chains'])) {
+        if (msg?.includes && msg.includes(pageParameters.chains)) {
             router.push({
                 name: 'Chains'
             })
-        } else if (msg?.includes && msg.includes(pageParameters['channel'])) {
-            if(msg === ibcStatisticsChannelsDefault['channel_opened'].statistics_name) {
+        } else if (msg?.includes && msg.includes(pageParameters.channel)) {
+            if(msg === ibcStatisticsChannelsDefault.channel_opened.statistics_name) {
                 router.push({
                     name: 'Channels',
                     query: {
                         status: channelsStatus.channelOpenedStatus
                     }
                 })
-            } else if(msg === ibcStatisticsChannelsDefault['channel_closed'].statistics_name) {
+            } else if(msg === ibcStatisticsChannelsDefault.channel_closed.statistics_name) {
                 router.push({
                     name: 'Channels',
                     query: {
@@ -118,38 +118,38 @@ export const useInterfaceActive = () => {
                     name: 'Channels'
                 })
             }
-        } else if (msg?.includes && msg.includes(pageParameters['tx'])) {
-            if (msg === ibcStatisticsTxsDefault['tx_all'].statistics_name) {
+        } else if (msg?.includes && msg.includes(pageParameters.tx)) {
+            if (msg === ibcStatisticsTxsDefault.tx_all.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber['defaultStatus']
+                        status: txStatusNumber.defaultStatus
                     }
                 });
-            } else if (msg === ibcStatisticsTxsDefault['tx_24hr_all'].statistics_name) {
+            } else if (msg === ibcStatisticsTxsDefault.tx_24hr_all.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber['defaultStatus']
+                        status: txStatusNumber.defaultStatus
                     }
                 });
-            } else if (msg === ibcStatisticsTxsDefault['tx_success'].statistics_names) {
+            } else if (msg === ibcStatisticsTxsDefault.tx_success.statistics_names) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber['successStatus']
+                        status: txStatusNumber.successStatus
                     }
                 });
-            } else if (msg === ibcStatisticsTxsDefault['tx_failed'].statistics_name) {
+            } else if (msg === ibcStatisticsTxsDefault.tx_failed.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber['failedStatus']
+                        status: txStatusNumber.failedStatus
                     }
                 });
             }
-        } else if (msg?.includes && msg.includes(pageParameters['denom'])) {
-            if(msg !== ibcStatisticsDenomsDefault['denom_all'].statistics_name) {
+        } else if (msg?.includes && msg.includes(pageParameters.denom)) {
+            if(msg !== ibcStatisticsDenomsDefault.denom_all.statistics_name) {
                 router.push({
                     name: 'Tokens',
                 });

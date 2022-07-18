@@ -12,7 +12,7 @@
 
     <BjTable :loading="loading" :data="list" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
       <template #denom="{ record, column }">
-        <a-popover v-if="record.token_type !== SPECIAL_TOKEN_TYPE['GENESIS']" placement="topLeft">
+        <a-popover v-if="record.token_type !== SPECIAL_TOKEN_TYPE.GENESIS" placement="topLeft">
           <template #content>
             <div class="notice-text">
               <div>Path: {{ record.denom_path }}</div>

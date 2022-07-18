@@ -29,7 +29,7 @@
       </template>
 
       <template #status="{ record, column }">
-        <StatusImg :type="BottomStatusType['RELAYER']" :status="(String(record[column.key]) as TRelayerStatus)" :height="26" :width="26" />
+        <StatusImg :type="BottomStatusType.RELAYER" :status="(String(record[column.key]) as TRelayerStatus)" :height="26" :width="26" />
       </template>
 
       <template #chain_b="{ record, column }">
@@ -51,7 +51,7 @@
       </template>
 
       <template #table_bottom_status v-if="list?.length !== 0">
-        <BottomStatus :type="BottomStatusType['RELAYER']" />
+        <BottomStatus :type="BottomStatusType.RELAYER" />
       </template>
     </BjTable>
   </PageContainer>

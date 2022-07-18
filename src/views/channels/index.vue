@@ -16,7 +16,7 @@
       </template>
 
       <template #status="{ record, column }">
-        <StatusImg :type="BottomStatusType['CHANNEL']" :status="(String(record[column.key]) as TChannelStatus)" :height="16" :width="46" />
+        <StatusImg :type="BottomStatusType.CHANNEL" :status="(String(record[column.key]) as TChannelStatus)" :height="16" :width="46" />
       </template>
 
       <template #chain_b="{ record, column }">
@@ -38,7 +38,7 @@
       </template>
 
       <template #table_bottom_status v-if="list.length !== 0">
-        <BottomStatus :type="BottomStatusType['CHANNEL']" />
+        <BottomStatus :type="BottomStatusType.CHANNEL" />
       </template>
     </BjTable>
   </PageContainer>

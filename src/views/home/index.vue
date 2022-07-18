@@ -4,9 +4,9 @@
         <layer-block class="home_top" title="Chains" type="dark">
             <div class="home_top_slot">
                 <div class="home_top_left">
-                    <chains-info :msg="ibcStatisticsChains.chains_24hr" @click="onClickViewAll(pageParameters['chains'])" />
+                    <chains-info :msg="ibcStatisticsChains.chains_24hr" @click="onClickViewAll(pageParameters.chains)" />
                     <chains-info :msg="ibcStatisticsChains.chain_all" style="margin-top: 18px;"
-                        @click="onClickViewAll(pageParameters['chains'])" />
+                        @click="onClickViewAll(pageParameters.chains)" />
                 </div>
                 <div class="home_top_right">
                     <chains-list-info :chainList="ibcChains" @onMenuSelected="onMenuSelected" @clickItem="onClickViewAll" />
@@ -25,7 +25,7 @@
             </div>
             <layer-block class="home_bottom_right" title="IBC Token Transfer">
                 <statistic-list type="horizontal" :msg="ibcStatisticsTxs" @clickItem="onClickViewAll" />
-                <transfer-list :ibcChains="ibcChains" :transferList="ibcTxs.value" @clickViewAll="onClickViewAll(ibcStatisticsTxsDefault['tx_all'].statistics_name)"
+                <transfer-list :ibcChains="ibcChains" :transferList="ibcTxs.value" @clickViewAll="onClickViewAll(ibcStatisticsTxsDefault.tx_all.statistics_name)"
                     @clickItem="onClickViewAll" @itemDidExpand="setExpandByIndex"/>
             </layer-block>
         </div>

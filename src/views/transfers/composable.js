@@ -83,7 +83,7 @@ export const useGetTokens = () => {
 }
 
 export const useSelectedSymbol = () => {
-    const selectedSymbol = reactive({ value: defaultTitle['defaultTokens'] });
+    const selectedSymbol = reactive({ value: defaultTitle.defaultTokens });
     const isShowSymbolIcon = ref(false);
     const clearInput = { value: 0 };
     const selectedChain = reactive({

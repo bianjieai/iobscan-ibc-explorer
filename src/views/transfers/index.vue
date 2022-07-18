@@ -32,7 +32,7 @@
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         ref="chainDropdown"
-                        :witchPage="pageParameters['transfers']"
+                        :witchPage="pageParameters.transfers"
                     />
                     <a-select
                         class="status_select"
@@ -150,7 +150,7 @@
                                     <p class="tip_color">Received Token: {{ record.denoms.dc_denom || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="record.status === ibcTxStatus['SUCCESS'] ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`">
+                            <router-link :to="record.status === ibcTxStatus.SUCCESS ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`">
                                 <img
                                     class="token_icon hover"
                                     :src="record.symbolIcon || chainDefaultImg"
@@ -434,7 +434,7 @@ const queryDatas = () => {
         denom: queryParam.denom,
     }
     isHashFilterParams.value = false
-    if(!params.chain_id && !params.denom && !params.symbol && params.status === txStatusNumber['defaultStatus'] && isDateDefaultValue){
+    if(!params.chain_id && !params.denom && !params.symbol && params.status === txStatusNumber.defaultStatus && isDateDefaultValue){
         isHashFilterParams.value = true
     }
 
@@ -483,11 +483,11 @@ const isIbcTxTotalAndHashFilter = computed(() => {
 })
 const setAllChains = (allChains) => {
     if (allChains?.value?.all) {
-        const cosmosChain = allChains.value.all.filter(item => item.chain_name === CHAINNAME['COSMOSHUB'])
-        const irishubChain = allChains.value.all.filter(item => item.chain_name === CHAINNAME['IRISHUB'])
+        const cosmosChain = allChains.value.all.filter(item => item.chain_name === CHAINNAME.COSMOSHUB)
+        const irishubChain = allChains.value.all.filter(item => item.chain_name === CHAINNAME.IRISHUB)
         let notIncludesIrisAndCosmosChains = []
         allChains.value.all.forEach(item => {
-            if (item.chain_name !== CHAINNAME['COSMOSHUB'] && item.chain_name !== CHAINNAME['IRISHUB']) {
+            if (item.chain_name !== CHAINNAME.COSMOSHUB && item.chain_name !== CHAINNAME.IRISHUB) {
                 notIncludesIrisAndCosmosChains.push(item)
             }
         })
@@ -525,8 +525,8 @@ const findIbcChainIcon = (chainId) => {
 const onClickDropdownItem = (item, custom) => {
     pagination.current = 1;
     isShowSymbolIcon.value = !custom;
-    selectedSymbol.value = item || defaultTitle['defaultTokens'];
-    if (item === defaultTitle['defaultTokens']) {
+    selectedSymbol.value = item || defaultTitle.defaultTokens;
+    if (item === defaultTitle.defaultTokens) {
         queryParam.symbol = undefined;
     } else if (custom) {
         if (item && item.length && item.length > 8) {
@@ -687,7 +687,7 @@ const onClickReset = () => {
     isShowSymbolIcon.value = false;
     clearInput.value += 1;
     chainDropdown.value.selectedChain = [];
-    selectedSymbol.value = defaultTitle['defaultTokens'];
+    selectedSymbol.value = defaultTitle.defaultTokens;
     dateRange.value = [];
     queryParam.date_range = [];
     queryParam.status = transfersStatusOptions.DEFAULT_OPTIONS;

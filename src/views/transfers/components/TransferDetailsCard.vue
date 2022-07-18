@@ -261,9 +261,9 @@ const formatDate = (timestamp) => {
 const formatAck = (ack) => {
     if (ack && ack !== '--') {
         if (ack.includes('result:"\\001"')) {
-            return ackConnectStatus['CORRECT']
-        } else if (ack.includes(ackConnectStatus['ERROR'])) {
-            return ackConnectStatus['ERROR']
+            return ackConnectStatus.CORRECT
+        } else if (ack.includes(ackConnectStatus.ERROR)) {
+            return ackConnectStatus.ERROR
         }
     } else {
         return '--'

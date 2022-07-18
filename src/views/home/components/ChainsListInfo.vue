@@ -8,7 +8,7 @@
         <div class="chainlist_bottom">
             <a-list
                 class="card_list ibc_scrollbar"
-                id="card__list"
+                id="card_list"
                 v-show="chainList[currentMenu] && chainList[currentMenu].length"
                 :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }"
                 :data-source="chainList[currentMenu]"
@@ -129,6 +129,11 @@ const formatChainID = (chainId)=>{
         .flex(row, nowrap, flex-start, flex-start);
         ::v-deep .ant-anchor-wrapper {
             overflow: visible;
+            .ant-anchor {
+                .ant-anchor-ink::before {
+                    width: 0;
+                }
+            }
         }
     }
     &_item {
