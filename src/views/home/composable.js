@@ -3,7 +3,7 @@ import { useRouter } from 'vue-router';
 import { message } from 'ant-design-vue';
 import { useIbcStatisticsChains } from '../../store/home/index';
 import { GET_IBCSTATISTICS, GET_IBCCHAINS, GET_IBCTXS, GET_IBCDENOMS, GET_IBCBASEDENOMS } from '../../store/action-types';
-import { ibcStatisticsChannelsDefault, ibcStatisticsDenomsDefault, channelsStatus, SYMBOL } from '../../constants';
+import { ibcStatisticsChannelsDefault, ibcStatisticsDenomsDefault, channelsStatus, SYMBOL, pageParameters, ibcStatisticsTxsDefault, txStatusNumber } from '../../constants';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
@@ -94,11 +94,11 @@ export const useInterfaceActive = () => {
     const router = useRouter();
     const tipMsg = 'Denom is the token denomination to be transferred, base denomination of the relayed fungible token.';
     const onClickViewAll = (msg) => {
-        if (msg?.includes && msg.includes('chains')) {
+        if (msg?.includes && msg.includes(pageParameters['chains'])) {
             router.push({
                 name: 'Chains'
             })
-        } else if (msg?.includes && msg.includes('channel')) {
+        } else if (msg?.includes && msg.includes(pageParameters['channel'])) {
             if(msg === ibcStatisticsChannelsDefault['channel_opened'].statistics_name) {
                 router.push({
                     name: 'Channels',
@@ -118,37 +118,37 @@ export const useInterfaceActive = () => {
                     name: 'Channels'
                 })
             }
-        } else if (msg?.includes && msg.includes('tx')) {
-            if (msg === 'tx_all') {
+        } else if (msg?.includes && msg.includes(pageParameters['tx'])) {
+            if (msg === ibcStatisticsTxsDefault['tx_all'].statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: '1,2,3,4'
+                        status: txStatusNumber['defaultStatus']
                     }
                 });
-            } else if (msg === 'tx_24hr_all') {
+            } else if (msg === ibcStatisticsTxsDefault['tx_24hr_all'].statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: '1,2,3,4'
+                        status: txStatusNumber['defaultStatus']
                     }
                 });
-            } else if (msg === 'tx_success') {
+            } else if (msg === ibcStatisticsTxsDefault['tx_success'].statistics_names) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: '1'
+                        status: txStatusNumber['successStatus']
                     }
                 });
-            } else if (msg === 'tx_failed') {
+            } else if (msg === ibcStatisticsTxsDefault['tx_failed'].statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: '2,4'
+                        status: txStatusNumber['failedStatus']
                     }
                 });
             }
-        } else if (msg?.includes && msg.includes('denom')) {
+        } else if (msg?.includes && msg.includes(pageParameters['denom'])) {
             if(msg !== ibcStatisticsDenomsDefault['denom_all'].statistics_name) {
                 router.push({
                     name: 'Tokens',

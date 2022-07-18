@@ -1,12 +1,12 @@
 <template>
     <div class="card ibc_selected_title">
-        <img class="card_img" :src="msg.statistics_name.indexOf('24') !== -1
+        <img class="card_img" :src="msg.statistics_name.indexOf(dayTime) !== -1
           ? chains24hrImg
           : chainsAllImg" alt="chains_all">
         <div class="card_content">
             <span class="card_content_name">
                 {{statisticsName[msg.statistics_name]}}
-                <span v-if="msg.statistics_name.indexOf('24') !== -1" class="card_content_tip">24hr</span>
+                <span v-if="msg.statistics_name.indexOf(dayTime) !== -1" class="card_content_tip">24hr</span>
             </span>
             <span class="card_content_value">{{ `${formatBigNumber(msg.count)}` }}</span>
         </div>
@@ -18,6 +18,7 @@ import chains24hrImg from '../../../assets/chains_24hr.png';
 import chainsAllImg from '../../../assets/chains_all.png';
 import {statisticsName} from '../../../constants/index';
 import {formatBigNumber} from '../../../helper/parseString';
+import {dayTime} from '../../../constants';
 
 const props = defineProps({
     msg: Object

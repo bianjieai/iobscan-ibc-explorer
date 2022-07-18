@@ -21,7 +21,7 @@
     <template #overlay>
       <div class="overlay">
         <div>
-          <span @click="onSelected('All Tokens', undefined)"
+          <span @click="onSelected(defaultTitle['defaultTokens'], undefined)"
             :class="['chains-tag', isSelected(undefined) ? 'visible_color visible_border' : '']">All Tokens</span>
         </div>
         <div class="mt-24">

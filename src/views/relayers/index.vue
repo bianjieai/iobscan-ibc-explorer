@@ -29,7 +29,7 @@
       </template>
 
       <template #status="{ record, column }">
-        <StatusImg type="Relayer" :status="(String(record[column.key]) as TRelayerStatus)" :height="26" :width="26" />
+        <StatusImg :type="BottomStatusType['RELAYER']" :status="(String(record[column.key]) as TRelayerStatus)" :height="26" :width="26" />
       </template>
 
       <template #chain_b="{ record, column }">
@@ -51,7 +51,7 @@
       </template>
 
       <template #table_bottom_status v-if="list?.length !== 0">
-        <BottomStatus type="Relayer" />
+        <BottomStatus :type="BottomStatusType['RELAYER']" />
       </template>
     </BjTable>
   </PageContainer>
@@ -69,7 +69,7 @@ import { computed, onMounted, ref } from 'vue';
 import { formatLastUpdated } from '@/helper/time-helper';
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
 import StatusImg from '@/components/responsive/table/statusImg.vue';
-import { TRelayerStatus } from '@/components/responsive/component.interface';
+import { TRelayerStatus, BottomStatusType } from '@/components/responsive/component.interface';
 import { useIbcChains } from '../home/composable';
 import { useGetRelayersList } from '@/service/relayers';
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';

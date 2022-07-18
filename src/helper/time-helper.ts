@@ -20,7 +20,7 @@ export const formatLastUpdated = (time: string | number) => {
 
   let ago = ''
   if (days) {
-    ago = `${formatBigNumber(days + months * 30 + years * 365, 0)} days`
+    ago = days === 1 ? ago = `${formatBigNumber(days + months * 30 + years * 365, 0)} day` : `${formatBigNumber(days + months * 30 + years * 365, 0)} days`
   } else if (hours) {
     ago = `${hours}h`
   } else if (minutes) {
@@ -48,5 +48,5 @@ export const formatOperatingPeriod = (time: number, status: TChannelStatus) => {
   if (!months && !years && time > 0) {
     day = day || 1;
   }
-  return `${formatBigNumber(day + months * 30 + years * 365, 0)} Days`
+  return `${formatBigNumber(day + months * 30 + years * 365, 0)} days`
 }

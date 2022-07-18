@@ -4,9 +4,9 @@
         <layer-block class="home_top" title="Chains" type="dark">
             <div class="home_top_slot">
                 <div class="home_top_left">
-                    <chains-info :msg="ibcStatisticsChains.chains_24hr" @click="onClickViewAll('chains')" />
+                    <chains-info :msg="ibcStatisticsChains.chains_24hr" @click="onClickViewAll(pageParameters['chains'])" />
                     <chains-info :msg="ibcStatisticsChains.chain_all" style="margin-top: 18px;"
-                        @click="onClickViewAll('chains')" />
+                        @click="onClickViewAll(pageParameters['chains'])" />
                 </div>
                 <div class="home_top_right">
                     <chains-list-info :chainList="ibcChains" @onMenuSelected="onMenuSelected" @clickItem="onClickViewAll" />
@@ -15,7 +15,7 @@
         </layer-block>
         <div class="home_bottom">
             <div class="home_bottom_left">
-                <layer-block title="Channels">
+                <layer-block title="Channel Pairs">
                     <statistic-list type="vertical" :msg="ibcStatisticsChannels" @clickItem="onClickViewAll" />
                 </layer-block>
 
@@ -25,7 +25,7 @@
             </div>
             <layer-block class="home_bottom_right" title="IBC Token Transfer">
                 <statistic-list type="horizontal" :msg="ibcStatisticsTxs" @clickItem="onClickViewAll" />
-                <transfer-list :ibcChains="ibcChains" :transferList="ibcTxs.value" @clickViewAll="onClickViewAll('tx_all')"
+                <transfer-list :ibcChains="ibcChains" :transferList="ibcTxs.value" @clickViewAll="onClickViewAll(ibcStatisticsTxsDefault['tx_all'].statistics_name)"
                     @clickItem="onClickViewAll" @itemDidExpand="setExpandByIndex"/>
             </layer-block>
         </div>
@@ -42,6 +42,7 @@ import TransferList from './components/TransferList.vue';
 import { useIbcStatistics, useIbcChains, useIbcTxs, useInterfaceActive, useClearInterval, useGetIbcDenoms } from './composable';
 import { useOnPressEnter } from '../../layout/hooks/useStarAnimation';
 import { onMounted,onBeforeUnmount } from 'vue';
+import { pageParameters, ibcStatisticsTxsDefault } from '../../constants';
 const {
     ibcStatisticsChains,
     ibcStatisticsChannels,

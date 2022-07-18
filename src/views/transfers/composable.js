@@ -5,7 +5,7 @@ import { GET_IBCSTATISTICS, GET_IBCTXS, GET_IBCBASEDENOMS, GET_IBCCHAINS, GET_IB
 import { getIbcDenoms, getTxDetailsByTxHash } from '../../service/api';
 import { groupBy } from 'lodash-es';
 import tokenDefaultImg from '../../assets/token-default.png';
-import { transferTableColumn } from '../../constants';
+import { transferTableColumn, defaultTitle } from '../../constants';
 import Tools from '../../utils/Tools';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -83,7 +83,7 @@ export const useGetTokens = () => {
 }
 
 export const useSelectedSymbol = () => {
-    const selectedSymbol = reactive({ value: 'All Tokens' });
+    const selectedSymbol = reactive({ value: defaultTitle['defaultTokens'] });
     const isShowSymbolIcon = ref(false);
     const clearInput = { value: 0 };
     const selectedChain = reactive({
@@ -235,7 +235,7 @@ export const useTransfersDetailsInfo = () => {
             isFormatToken: true
         },
         {
-            label: 'IBC Out Address:',
+            label: 'From Address:',
             value: '--',
             dataKey: 'sc_tx_info.msg.msg.sender',
             isAddress: true
@@ -322,7 +322,7 @@ export const useTransfersDetailsInfo = () => {
             isFormatToken: true
         },
         {
-            label: 'IBC In Address:',
+            label: 'To Address:',
             value: '--',
             dataKey: 'sc_tx_info.msg.msg.receiver',
             isAddress: true

@@ -13,7 +13,7 @@
                 <span class="list_item_name"
                 >{{
                         statisticsName[item.statistics_name]
-                    }}<span v-if="item.statistics_name.indexOf('24') !== -1" class="list_item_tip"
+                    }}<span v-if="item.statistics_name.indexOf(dayTime) !== -1" class="list_item_tip"
                     >24hr</span
                     ></span
                 >
@@ -35,7 +35,7 @@
                         <span class="list_item_name"
                         >{{
                                 statisticsName[item.statistics_name]
-                            }}<span v-if="item.statistics_name.indexOf('24') !== -1" class="list_item_tip"
+                            }}<span v-if="item.statistics_name.indexOf(dayTime) !== -1" class="list_item_tip"
                             >24hr</span
                             ></span
                         >
@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import {statisticsName, ibcStatisticsDenomsDefault} from '../../../constants/index';
+import {statisticsName, ibcStatisticsDenomsDefault, dayTime} from '../../../constants/index';
 import {formatBigNumber} from '../../../helper/parseString';
 const props = defineProps({
     type: String,

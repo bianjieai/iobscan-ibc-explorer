@@ -63,3 +63,8 @@ export const STATUS_OPTIONS = [
     key: 'Closed'
   }
 ]
+
+export const CHANNEL_STATUS = {
+    OPEN: 'Open',
+    CLOSED: 'Closed'
+}
