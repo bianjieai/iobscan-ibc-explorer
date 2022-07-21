@@ -227,17 +227,17 @@
                         </a-popover>
                     </template>
                     <template #hashIn="{ record }">
-                        <a-popover destroyTooltipOnHide>
+                        <a-popover v-if="record.dc_tx_info.hash" destroyTooltipOnHide>
                             <template #content>
                                 <div>
                                     <p class="tip_color">{{ record.dc_tx_info.hash || "--" }}</p>
                                 </div>
                             </template>
-                            <span v-if="record.dc_tx_info.hash" class="hover">{{
+                            <span class="hover">{{
                                     getRestString(record.dc_tx_info.hash, 4, 4) || "--"
                                 }}</span>
-                            <span v-else>{{ '--' }}</span>
                         </a-popover>
+                        <span v-else>--</span>
                     </template>
                     <template #in="{ record }">
                         <a-popover destroyTooltipOnHide>
