@@ -13,5 +13,16 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+    <script type="module" setup>
+        if(import.meta.env.MODE === 'staging') {
+            let link = document.querySelector("link[rel *= 'icon']") || document.createElement("link");
+            let title = document.querySelector("title") || document.createElement("title");
+            link.rel = "icon";
+            link.href = import.meta.env.VITE_FAVICON;
+            title.innerHTML = import.meta.env.VITE_TITLE;
+            document.getElementsByTagName("head")[0].appendChild(link);
+            document.getElementsByTagName("head")[0].appendChild(title);
+        }
+    </script>
   </body>
 </html>
