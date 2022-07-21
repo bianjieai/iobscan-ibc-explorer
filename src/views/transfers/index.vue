@@ -128,6 +128,7 @@
                     :loading="isShowTransferLoading"
                     :data-source="tableDatas.value"
                     :pagination="false"
+                    :customRow="handleClickRow"
                 >
                     <template #customTitle>
                         <p>
@@ -150,17 +151,19 @@
                                     <p class="tip_color">Received Token: {{ record.denoms.dc_denom || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="record.status === ibcTxStatus.SUCCESS ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`">
+                            <router-link class="token_link" :to="record.status === ibcTxStatus.SUCCESS ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`" @click.stop="">
                                 <img
                                     class="token_icon hover"
                                     :src="record.symbolIcon || chainDefaultImg"
                                 />
-                                <span class="token_num hover">{{
-                                        formatNum(record.symbolNum)
-                                    }}</span>
-                                <span class="token_denom hover">{{
-                                        getRestString(record.symbolDenom, 6, 0)
-                                    }}</span>
+                                <span class="token_info">
+                                    <span class="token_num">{{
+                                            formatNum(record.symbolNum)
+                                        }}</span>
+                                    <span class="token_denom">{{
+                                            getRestString(record.symbolDenom, 6, 0)
+                                        }}</span>
+                                </span>
                             </router-link>
                         </a-popover>
                     </template>
@@ -171,11 +174,9 @@
                                     <p class="tip_color">{{ record.sc_tx_info.hash }}</p>
                                 </div>
                             </template>
-                            <router-link :to="`/transfers/details?hash=${record.sc_tx_info.hash}`">
                             <span class="hover">{{
                                     getRestString(record.sc_tx_info.hash, 4, 4)
                                 }}</span>
-                            </router-link>
                         </a-popover>
                     </template>
                     <template #out="{ record }">
@@ -197,23 +198,16 @@
                                     <p class="tip_color">Sequence: {{ record.sequence || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="`/chains`">
+                            <router-link :to="`/chains`" @click.stop="">
                                 <img
                                     class="status_icon hover"
                                     :src="findIbcChainIcon(record.sc_chain_id)"
                                 />
                             </router-link>
-                            <!-- <router-link :to="`/chains/details?chain_id=${record.dc_chain_id}`">
-                                <img
-                                    class="status_icon hover"
-                                    :src="findIbcChainIcon(record.sc_chain_id)"
-                                />
-                            </router-link> -->
-
                         </a-popover>
                         <img
                             class="status_icon"
-                            style="margin: 0 24px;"
+                            style="margin: 0 20px;"
                             :src="getImageUrl(record.status)"
                         />
                         <a-popover placement="right" destroyTooltipOnHide>
@@ -224,19 +218,12 @@
                                     <p class="tip_color">Sequence: {{ record.sequence || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="`/chains`">
+                            <router-link :to="`/chains`" @click.stop="">
                                 <img
                                     class="status_icon hover"
                                     :src="findIbcChainIcon(record.dc_chain_id)"
                                 />
                             </router-link>
-                            <!-- <router-link :to="`/chains/details?chain_id=${record.dc_chain_id}`">
-                                <img
-                                    class="status_icon hover"
-                                    :src="findIbcChainIcon(record.dc_chain_id)"
-                                />
-                            </router-link> -->
-
                         </a-popover>
                     </template>
                     <template #hashIn="{ record }">
@@ -246,11 +233,9 @@
                                     <p class="tip_color">{{ record.dc_tx_info.hash || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link v-if="record.dc_tx_info.hash" :to="`/transfers/details?hash=${record.dc_tx_info.hash}`">
-                                <span class="hover">{{
-                                        getRestString(record.dc_tx_info.hash, 4, 4) || "--"
-                                    }}</span>
-                            </router-link>
+                            <span v-if="record.dc_tx_info.hash" class="hover">{{
+                                    getRestString(record.dc_tx_info.hash, 4, 4) || "--"
+                                }}</span>
                             <span v-else>{{ '--' }}</span>
                         </a-popover>
                     </template>
@@ -261,16 +246,15 @@
                                     <p class="tip_color">{{ record.dc_addr || "--" }}</p>
                                 </div>
                             </template>
-                            <!--        <router-link :to="`/address/details?address=${record.dc_addr}`">
-                                        <span class="hover">{{
-                                                getRestString(record.dc_addr, 3, 8) || "&#45;&#45;"
-                                            }}</span>
-                                    </router-link>-->
                             <span>{{ getRestString(record.dc_addr, 3, 8) || "--" }}</span>
                         </a-popover>
                     </template>
                     <template #time="{ record }">
                         <span>{{ formatDate(record.tx_time * 1000) }}</span>
+                    </template>
+                    <template #endTime="{ record }">
+                        <span>--</span>
+                        <!-- <span>{{ formatDate(record.end_time * 1000) }}</span> -->
                     </template>
                 </a-table>
             </div>
@@ -345,7 +329,7 @@ const router = useRouter();
 const dayjs = (djs?.default || djs);
 
 const formatDate = (time)=>{
-    return dayjs(time).format("YYYY-MM-DD HH:mm:ss")
+    return dayjs(time).format("MM-DD HH:mm:ss")
 }
 const getImageUrl = (status) => {
     return new URL(`../../assets/status${status}.png`, import.meta.url).href;
@@ -759,6 +743,13 @@ const isShowLink = (address, chainID) => {
     return isShowLink
 
 }
+const handleClickRow = (record, index) => {
+    return {
+        onClick: (event) => {
+            router.push(`/transfers/details?hash=${record.sc_tx_info.hash}`)
+        }
+    }
+}
 
 watch(ibcStatisticsTxs,(newValue,oldValue) => {
     if(newValue?.tx_all?.count < maxTableLength){
@@ -854,23 +845,35 @@ onMounted(() => {
             line-height: 14px;
         }
         .token {
+            background: red;
+            &_link {
+                .flex(row, nowrap, flex-start, center);
+                cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
+            }
             &_icon {
                 width: 32px;
                 height: 32px;
                 border-radius: 50%;
                 margin-right: 8px;
-                cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
             }
-
+            &_info {
+                .flex(column, nowrap, center, flex-start);
+                &:hover {
+                    .token_num {
+                        color: var(--bj-primary-color);
+                    }
+                    .token_denom {
+                        color: var(--bj-primary-color);
+                    }
+                }
+            }
             &_num {
-                cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
                 font-size: var(--bj-font-size-normal);
                 color: var(--bj-text-second);
-                margin-right: 4px;
             }
 
             &_denom {
-                cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
+                margin-top: 4px;
                 font-size: var(--bj-font-size-normal);
                 font-family: Montserrat-Regular, Montserrat;
                 color: var(--bj-text-third);
@@ -1001,9 +1004,19 @@ onMounted(() => {
 }
 .hover {
     cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
+    // &:hover {
+    //     color: var(--bj-primary-color);
+    // }
+}
+:deep(.ant-table-row) {
     &:hover {
-        color: var(--bj-primary-color);
+        cursor: url("../../assets/mouse/shiftlight_mouse.png"), default;
     }
+}
+:deep(.ant-table-cell) {
+    // display: flex;
+    // align-items: center;
+    // width: 100%;
 }
 @media screen and (max-width: 1200px) {
     .transfer {

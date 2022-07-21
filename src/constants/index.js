@@ -347,13 +347,12 @@ const testChains = {
       title: 'From TxHash',
       dataIndex: 'hashOut',
       slots: { customRender: 'hashOut' },
-      ellipsis: true,
+      width: 160
     },
     {
       title: 'From',
       dataIndex: 'out',
       slots: { customRender: 'out' },
-      ellipsis: true,
     },
     {
       title: 'Status',
@@ -363,21 +362,26 @@ const testChains = {
       align: 'center',
     },
     {
+        title: 'To',
+        dataIndex: 'in',
+        slots: { customRender: 'in' },
+    },
+    {
       title: 'To TxHash',
       dataIndex: 'hashIn',
       slots: { customRender: 'hashIn' },
-      ellipsis: true,
-    },
-    {
-      title: 'To',
-      dataIndex: 'in',
-      slots: { customRender: 'in' },
-      ellipsis: true,
+      width: 160
     },
     {
       title: 'Create Time',
       dataIndex: 'time',
       slots: { customRender: 'time' },
+      width: 180,
+    },
+    {
+      title: 'End Time',
+      dataIndex: 'endTime',
+      slots: { customRender: 'endTime' },
       width: 180,
     },
   ];
