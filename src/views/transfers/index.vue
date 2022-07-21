@@ -246,15 +246,14 @@
                                     <p class="tip_color">{{ record.dc_addr || "--" }}</p>
                                 </div>
                             </template>
-                            <span>{{ getRestString(record.dc_addr, 3, 8) || "--" }}</span>
+                            <span class="hover">{{ getRestString(record.dc_addr, 3, 8) || "--" }}</span>
                         </a-popover>
                     </template>
                     <template #time="{ record }">
                         <span>{{ formatDate(record.tx_time * 1000) }}</span>
                     </template>
                     <template #endTime="{ record }">
-                        <span>--</span>
-                        <!-- <span>{{ formatDate(record.end_time * 1000) }}</span> -->
+                        <span>{{ record.end_time ? formatDate(record.end_time * 1000) : '--' }}</span>
                     </template>
                 </a-table>
             </div>
@@ -1013,10 +1012,10 @@ onMounted(() => {
         cursor: url("../../assets/mouse/shiftlight_mouse.png"), default;
     }
 }
-:deep(.ant-table-cell) {
-    // display: flex;
-    // align-items: center;
-    // width: 100%;
+:deep(tbody) {
+    .ant-table-cell {
+        vertical-align: middle;
+    }
 }
 @media screen and (max-width: 1200px) {
     .transfer {
