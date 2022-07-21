@@ -17,7 +17,7 @@ export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerI
 }
 
 export const useChangeTitleAndIcon = () => {
-    if(import.meta.env.MODE === 'development') {
+    if(import.meta.env.MODE === 'staging') {
         let link: any = document.querySelector("link[rel *= 'icon']") || document.createElement("link");
         let title: any = document.querySelector("title") || document.createElement("title");
         link.rel = "icon";
