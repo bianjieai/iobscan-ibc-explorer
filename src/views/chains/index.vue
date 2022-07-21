@@ -112,6 +112,14 @@ const goTransfer = (chain_id: string) => {
   margin-top: 32px;
 }
 :deep(.ant-table-cell) {
+    &:nth-of-type(2) {
+        .ant-table-column-sorters {
+            justify-content: flex-start;
+            .ant-table-column-title {
+                flex: 0;
+            }
+        }
+    }
     &:nth-of-type(4) {
         padding-right: 26px;
     }

@@ -11,7 +11,7 @@
             <div class="out_hash_container">
                 <span class="out_hash_value">
                     <img class="out_hash_icon" src="../../../assets/tx.png" alt="icon" />
-                    <a-popover destroyTooltipOnHide>
+                    <a-popover v-if="item.sc_tx_info.hash" destroyTooltipOnHide>
                         <template #content>
                             <div>
                                 <p class="tip_color">{{ item.sc_tx_info.hash }}</p>
@@ -19,6 +19,7 @@
                         </template>
                         <span class="hover">{{ getRestString(item.sc_tx_info.hash, 6, 5) }}</span>
                     </a-popover>
+                    <span v-else>--</span>
                 </span>
                 <span class="out_hash_value" style="margin-top: 14px;">
                     <img class="out_hash_icon" src="../../../assets/address.png" alt="icon" />
@@ -43,15 +44,15 @@
             <div class="out_hash_container">
                 <span class="out_hash_value">
                     <img class="out_hash_icon" src="../../../assets/tx.png" alt="icon" />
-                    <a-popover destroyTooltipOnHide>
+                    <a-popover v-if="item?.dc_tx_info?.hash" destroyTooltipOnHide>
                         <template #content>
                             <div>
                                 <p class="tip_color">{{ item?.dc_tx_info?.hash || "" }}</p>
                             </div>
                         </template>
-                        <span v-if="item?.dc_tx_info?.hash" class="hover">{{ getRestString(item?.dc_tx_info?.hash || "", 6, 6) }}</span>
-                        <span v-else></span>
+                        <span class="hover">{{ getRestString(item?.dc_tx_info?.hash || "", 6, 6) }}</span>
                     </a-popover>
+                    <span v-else>--</span>
                 </span>
                 <span class="out_hash_value" style="margin-top: 14px;">
                     <img class="out_hash_icon" src="../../../assets/address.png" alt="icon" />
