@@ -60,6 +60,7 @@
                         @openChange="onOpenChangeRangePicker"
                         format="YYYY-MM-DD"
                         separator="-"
+                        :placeholder="['Start Date','End Date']"
                     >
                         <template #suffixIcon>
                             <svg
@@ -151,9 +152,9 @@
                                     <p class="tip_color">Received Token: {{ record.denoms.dc_denom || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link class="token_link" :to="record.status === ibcTxStatus.SUCCESS ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`" @click.stop="">
+                            <router-link class="token_link hover" :to="record.status === ibcTxStatus.SUCCESS ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`" @click.stop="">
                                 <img
-                                    class="token_icon hover"
+                                    class="token_icon"
                                     :src="record.symbolIcon || chainDefaultImg"
                                 />
                                 <span class="token_info">
@@ -193,7 +194,7 @@
                         <a-popover placement="right" destroyTooltipOnHide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">Chain ID：{{ record.sc_chain_id || "--" }}</p>
+                                    <p class="tip_color">Chain ID：{{ ChainHelper.formatChainId(record.sc_chain_id) }}</p>
                                     <p class="tip_color">Channel ID: {{ record.sc_channel || "--" }}</p>
                                     <p class="tip_color">Sequence: {{ record.sequence || "--" }}</p>
                                 </div>
@@ -213,7 +214,7 @@
                         <a-popover placement="right" destroyTooltipOnHide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">Chain ID：{{ record.dc_chain_id || "--" }}</p>
+                                    <p class="tip_color">Chain ID：{{ ChainHelper.formatChainId(record.dc_chain_id) }}</p>
                                     <p class="tip_color">Channel ID: {{ record.dc_channel || "--" }}</p>
                                     <p class="tip_color">Sequence: {{ record.sequence || "--" }}</p>
                                 </div>
@@ -285,6 +286,7 @@ import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainA
 import Tools from '../../utils/Tools';
 import chainDefaultImg from '../../assets/chain-default.png';
 import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/parseString';
+import ChainHelper from '../../helper/chainHepler';
 import * as djs from 'dayjs';
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute,useRouter } from 'vue-router';
@@ -832,11 +834,11 @@ onMounted(() => {
         font-size: 14px;
         font-family: Montserrat-Regular, Montserrat;
         font-weight: 400;
-        ::v-deep .ant-table-placeholder {
+        :deep(.ant-table-placeholder) {
             // .flex(column, nowrap, center, center);
             min-height: 500px;
         }
-        ::v-deep a, span {
+        :deep(a, span) {
             font-size: var(--bj-font-size-normal);
             font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
@@ -848,6 +850,16 @@ onMounted(() => {
             &_link {
                 .flex(row, nowrap, flex-start, center);
                 cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
+                &:hover {
+                    .token_info {
+                        .token_num {
+                            color: var(--bj-primary-color);
+                        }
+                        .token_denom {
+                            color: var(--bj-primary-color);
+                        }
+                    }
+                }
             }
             &_icon {
                 width: 32px;
@@ -857,14 +869,6 @@ onMounted(() => {
             }
             &_info {
                 .flex(column, nowrap, center, flex-start);
-                &:hover {
-                    .token_num {
-                        color: var(--bj-primary-color);
-                    }
-                    .token_denom {
-                        color: var(--bj-primary-color);
-                    }
-                }
             }
             &_num {
                 font-size: var(--bj-font-size-normal);
@@ -953,11 +957,11 @@ onMounted(() => {
     width: 146px;
     margin: 0 8px;
     color: var(--bj-text-second);
-    ::v-deep .ant-select-arrow {
+    :deep(.ant-select-arrow) {
         right: 8px;
         color: rgba(164, 171, 192, 1);
     }
-    ::v-deep .ant-select-selector{
+    :deep(.ant-select-selector){
         height: 36px !important;
         border: 1px solid var(--bj-border-color);
         .ant-select-selection-item{
@@ -984,7 +988,7 @@ onMounted(() => {
     margin-right: 8px;
     width: 250px;
     height: 36px;
-    ::v-deep .ant-picker-input > input{
+    :deep(.ant-picker-input > input){
         color: var(--bj-primary-color);
         text-align: center;
         &::placeholder{
@@ -1048,11 +1052,11 @@ onMounted(() => {
         &_table {
             width: 100%;
             overflow-x: auto;
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
-            ::v-deep table {
+            :deep(table) {
                 width: 1200px;
                 background-color: #fff;
             }
@@ -1095,19 +1099,19 @@ onMounted(() => {
                 }
             }
             & .table_pagination {
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options) {
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
 }
@@ -1142,11 +1146,11 @@ onMounted(() => {
             }
         }
         &_table {
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
-            ::v-deep table {
+            :deep(table) {
             }
             .token {
                 &_icon {
@@ -1169,19 +1173,19 @@ onMounted(() => {
             }
             & .table_pagination {
                 margin-top: 16px;
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options) {
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
 }
@@ -1218,9 +1222,9 @@ onMounted(() => {
             }
         }
         &_table {
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
             .token {
                 &_icon {
@@ -1246,19 +1250,19 @@ onMounted(() => {
                 }
             }
             & .table_pagination {
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options) {
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
 }
@@ -1283,7 +1287,7 @@ onMounted(() => {
                     margin-left: 0;
                     margin-top: 12px;
                 }
-                ::v-deep .default_color {
+                :deep(.default_color) {
                     .chain_wrap {
                         .selected_color {
                             white-space: nowrap;
@@ -1301,9 +1305,9 @@ onMounted(() => {
             }
         }
         &_table {
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
             .token {
                 &_icon {
@@ -1331,19 +1335,19 @@ onMounted(() => {
                 }
             }
             & .table_pagination { 
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options) {
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
 }
@@ -1367,7 +1371,7 @@ onMounted(() => {
                 .ant-select {
                     width: 210px;
                 }
-                ::v-deep .default_color {
+                :deep(.default_color) {
                     justify-content: center;
                     margin-top: 12px;
                     min-width: 210px;
@@ -1390,9 +1394,9 @@ onMounted(() => {
             }
         }
         &_table {
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
             .token {
                 &_icon {
@@ -1422,19 +1426,19 @@ onMounted(() => {
                 }
             }
             & .table_pagination {
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options ){
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
     .date_range {
@@ -1459,7 +1463,7 @@ onMounted(() => {
             &_left {
                 .ant-select {
                 }
-                ::v-deep .default_color {
+                :deep(.default_color) {
                     .chain_wrap {
                         .selected_color {
                         }
@@ -1476,9 +1480,9 @@ onMounted(() => {
             }
         }
         &_table {
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
             .token {
                 &_icon {
@@ -1503,19 +1507,19 @@ onMounted(() => {
                 }
             }
             & .table_pagination {
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options) {
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
     .date_range {
