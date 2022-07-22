@@ -4,10 +4,6 @@
             <div class="out_hash_address_link">
                 <img class="out_hash_address_icon" :src="findIbcChainIcon(item.sc_chain_id)" />
             </div>
-            <!-- <router-link :to="`/chains/details?chain_id=${item.sc_chain_id}`">
-                <img class="out_hash_address_icon" :src="findIbcChainIcon(item.sc_chain_id)" />
-            </router-link> -->
-    
             <div class="out_hash_container">
                 <span class="out_hash_value">
                     <img class="out_hash_icon" src="../../../assets/tx.png" alt="icon" />
@@ -37,9 +33,9 @@
 
         <img class="status_icon" :src="getImageUrl(item.status)" alt="status" />
         <div class="out_hash_address_wrap">
-            <router-link :to="`/chains`" class="out_hash_address_link">
+            <div class="out_hash_address_link">
                 <img class="out_hash_address_icon" :src="findIbcChainIcon(item.dc_chain_id)" />
-            </router-link>
+            </div>
     
             <div class="out_hash_container">
                 <span class="out_hash_value">
@@ -111,12 +107,8 @@ const getImageUrl = (name) => {
         font-weight: 400;
         color: var(--bj-font-color-65);
         line-height: var(--bj-font-size-normal);
-        cursor: text;
         & .hover {
             color: var(--bj-font-color-65);
-            // &:hover {
-            //     color: var(--bj-primary-color);
-            // }
         }
     }
     &_icon {

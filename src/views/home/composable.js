@@ -133,7 +133,7 @@ export const useInterfaceActive = () => {
                         status: txStatusNumber.defaultStatus
                     }
                 });
-            } else if (msg === ibcStatisticsTxsDefault.tx_success.statistics_names) {
+            } else if (msg === ibcStatisticsTxsDefault.tx_success.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {

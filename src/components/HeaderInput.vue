@@ -70,7 +70,7 @@ export default {
 .default_input_style{
 
 }
-::v-deep.header_input {
+:deep.header_input {
     height: 40px;
     background-color: rgba(#ffffff, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.08);
