@@ -30,16 +30,6 @@
                                 <p class="card_value">{{ formatChainID(item.chain_id) }}</p>
                             </a-card>
                         </router-link>
-                        <!-- <router-link :to="`/chains/details?chain_id=${item.chain_id}`">
-                            <a-card class="menu_card">
-                                <img
-                                    class="card_img"
-                                    :src="item.icon ? item.icon : tokenDefaultImg"
-                                />
-                                <p class="card_title">{{ item.chain_name }}</p>
-                                <p class="card_value">{{ item.chain_id }}</p>
-                            </a-card>
-                        </router-link> -->
                     </a-list-item>
                 </template>
             </a-list>
@@ -100,7 +90,7 @@ const formatChainID = (chainId)=>{
     &_menu {
         width: 100%;
         border: 0;
-        ::v-deep.ant-menu-overflow{
+        :deep.ant-menu-overflow{
             .ant-menu-overflow-item{
                 &:hover{
                     cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default !important;
