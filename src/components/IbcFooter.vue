@@ -46,7 +46,7 @@ const getImageUrl = (name:string) => {
       padding: 6px;
       background-color: rgba(61, 80, 255, 0.1);
       border-radius: @card-radio;
-      cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+      cursor: pointer;;
     }
   }
 

@@ -850,7 +850,6 @@ onMounted(() => {
             background: red;
             &_link {
                 .flex(row, nowrap, flex-start, center);
-                cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
                 &:hover {
                     .token_info {
                         .token_num {
@@ -1007,14 +1006,14 @@ onMounted(() => {
     }
 }
 .hover {
-    cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
+    cursor: pointer;
     // &:hover {
     //     color: var(--bj-primary-color);
     // }
 }
 :deep(.ant-table-row) {
     &:hover {
-        cursor: url("../../assets/mouse/shiftlight_mouse.png"), default;
+        cursor: pointer;
     }
 }
 :deep(tbody) {

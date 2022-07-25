@@ -312,7 +312,7 @@ if (props.realTimeKey && props.realTimeKey.length) {
 }
 
 :deep(.ant-table-column-has-sorters) {
-  cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default !important;
+  cursor: pointer;
 }
 
 :deep(.ant-pagination) {

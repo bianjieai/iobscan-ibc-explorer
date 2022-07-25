@@ -222,7 +222,7 @@ const onClickAll = () => {
     color: var(--bj-font-color-65);
     margin-bottom: 16px;
     width: 140px;
-    cursor:url("../../../assets/mouse/shiftlight_mouse.png"),default !important;
+    cursor: pointer;
     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
     &:hover {
       border: 1px solid var(--bj-primary-color);
@@ -249,7 +249,7 @@ const onClickAll = () => {
         border: 1px solid transparent;
         margin: 0 8px 12px 0;
         padding: 6px 6px;
-        cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default  !important;
+        cursor: pointer;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         .flex(row, nowrap, flex-start, center);
           .content_item_title{
@@ -305,7 +305,7 @@ const onClickAll = () => {
   }
 }
 .hover {
-  cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default  !important;
+  cursor: pointer;
 }
 .ant-dropdown-open {
     border-color: var(--bj-primary-color);

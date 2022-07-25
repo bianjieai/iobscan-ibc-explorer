@@ -92,7 +92,7 @@ const onSelect = (key: TKey, value: TValue) => {
   border: 1px solid var(--bj-border-color);
   border-radius: 4px;
   background-color: #fff;
-  cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
+  cursor: pointer;
   min-width: 126px;
 }
 
@@ -115,7 +115,7 @@ const onSelect = (key: TKey, value: TValue) => {
 
   .item {
     padding: 9px 12px;
-    cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
+    cursor: pointer;
 
     &:hover {
       color: var(--bj-primary-color);

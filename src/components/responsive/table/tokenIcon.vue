@@ -72,7 +72,7 @@ const go = () => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  cursor: url(/src/assets/mouse/shiftlight_mouse.png), default;
+  cursor: pointer;
 }
 
 .small-icon {

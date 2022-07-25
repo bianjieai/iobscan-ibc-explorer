@@ -343,7 +343,6 @@ const formatDenom = (denom) => {
             }
             a {
                 color: var(--bj-text-normal);
-                cursor: url(../../../assets/mouse/shiftlight_mouse.png),default;
                 &:hover {
                     color: var(--bj-primary-color);
                 }
@@ -353,7 +352,7 @@ const formatDenom = (denom) => {
         .see_more_button {
             padding: 14px 0;
             display: flex;
-            cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default;
+            cursor: pointer;
 
             .see_more_label {
                 color: rgba(61, 80, 255, 1);
