@@ -1,6 +1,6 @@
 html {
-  -ms-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
 }
 
 html,
@@ -54,16 +54,16 @@ mark,
 audio,
 video,
 progress {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  vertical-align: baseline;
-  font-family: Montserrat-Regular, Montserrat;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    font-family: Montserrat-Regular, Montserrat;
 }
 
 body {
-  background-color: var(--bj-background-color);
-  font-size: var(--bj-font-size-normal) !important;
-  color: var(--bj-text-normal);
-  font-family: Montserrat-Regular, Montserrat;
+    background-color: var(--bj-background-color);
+    font-size: var(--bj-font-size-normal) !important;
+    color: var(--bj-text-normal);
+    font-family: Montserrat-Regular, Montserrat;
 }

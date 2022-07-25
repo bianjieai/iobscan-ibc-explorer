@@ -25,7 +25,7 @@ module.exports = {
         'scope-empty': [0, 'never'],
         // <scope> 范围格式
         'scope-case': [0],
-        // <subject> 主要 message 不能为空
+        // <subject> 主要 message 可以为空
         'subject-empty': [0, 'never'],
         // <subject> 以什么为结束标志，禁用
         'subject-full-stop': [0, 'never'],
