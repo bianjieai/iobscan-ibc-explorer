@@ -5,7 +5,7 @@ import { isNumber, isString } from './object-helper';
 
 function getRestString(string, left, right) {
   if (!isString(string)) return
-  if (string.length < Number(left) + Number(right)) {
+  if (string.length <= Number(left) + Number(right)) {
     return string
   }
   return string ? `${string.substr(0, left)}...${right > 0 ?string.substr(-right) : ''}` : '';

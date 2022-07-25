@@ -16,7 +16,7 @@
         <div></div>
       </slot>
       <a-pagination v-if="hasData && !noPagination" v-model:current="pageInfo.current" :pageSize="pageInfo.pageSize"
-        :total="pageInfo.total" @change="onPageChange" />
+        :total="pageInfo.total" @change="onPageChange" :showTitle="false" />
     </div>
   </div>
 

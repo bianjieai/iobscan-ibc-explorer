@@ -51,8 +51,6 @@
             <li class="details_item" v-for="(item, index) in expandDetails" :key="index" v-show="isExpand">
                 <span class="details_item_label">{{ item.label }}</span>
                 <span class="details_item_value" v-if="item.isFormatToken">
-
-                    <!--                    {{formatToken(item.value)}}-->
                     <span class="details_item_amount">{{ formatToken(item.value, expandDetails).symbolNum ||
                             '--'
                     }}{{ formatToken(item.value, expandDetails).denom }}</span>

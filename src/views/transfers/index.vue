@@ -274,6 +274,7 @@
                 :total="pagination.total"
                 :disabled=isShowTransferLoading
                 @change="onPaginationChange"
+                :showTitle="false"
             />
         </div>
     </div>
