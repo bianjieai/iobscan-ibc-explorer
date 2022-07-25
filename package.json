@@ -22,6 +22,7 @@
     "lint-staged": {
         "*.{js,ts}": [
             "pnpm run eslint",
+            "pnpm run build",
             "pnpm run prettier"
         ]
     },
