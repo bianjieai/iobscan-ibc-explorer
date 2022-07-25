@@ -49,6 +49,7 @@
 
 <script setup>
     import HeaderInput from '../../components/HeaderInput.vue';
+    import LayerBlock from './components/LayerBlock.vue';
     import ChainsInfo from './components/ChainsInfo.vue';
     import ChainsListInfo from './components/ChainsListInfo.vue';
     import StatisticList from './components/StatisticList.vue';

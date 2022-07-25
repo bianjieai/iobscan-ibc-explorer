@@ -19,7 +19,7 @@
             <div class="transfer_middle_top">
                 <div class="transfer_middle_left">
                     <!-- todo duanjie 看能否使用 TokensDropDown 复用 -->
-                    <dropdown
+                    <drop-down
                         class="dropdown_token"
                         :ibc-base-denoms="ibcBaseDenomsSorted"
                         :selected-symbol="selectedSymbol.value"
@@ -154,31 +154,29 @@
                         </p>
                     </template>
                     <template #token="{ record }">
-                        <div class="token">
-                            <a-popover placement="right" destroy-tooltip-on-hide>
-                                <template #content>
-                                    <div>
-                                        <p class="tip_color">Sent Token: {{ record.denoms.sc_denom || '--' }}</p>
-                                        <p class="tip_color">Received Token: {{ record.denoms.dc_denom || '--' }}</p>
-                                    </div>
-                                </template>
-                                <router-link
-                                    class="token_link hover"
-                                    :to="
-                                        record.status === ibcTxStatus.SUCCESS
-                                            ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}`
-                                            : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`
-                                    "
-                                    @click.stop=""
-                                >
-                                    <img class="token_icon" :src="record.symbolIcon || chainDefaultImg" />
-                                    <span class="token_info">
-                                        <span class="token_num">{{ formatNum(record.symbolNum) }}</span>
-                                        <span class="token_denom">{{ getRestString(record.symbolDenom, 6, 0) }}</span>
-                                    </span>
-                                </router-link>
-                            </a-popover>
-                        </div>
+                        <a-popover placement="right" destroy-tooltip-on-hide>
+                            <template #content>
+                                <div>
+                                    <p class="tip_color">Sent Token: {{ record.denoms.sc_denom || '--' }}</p>
+                                    <p class="tip_color">Received Token: {{ record.denoms.dc_denom || '--' }}</p>
+                                </div>
+                            </template>
+                            <router-link
+                                class="token_link hover"
+                                :to="
+                                    record.status === ibcTxStatus.SUCCESS
+                                        ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}`
+                                        : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`
+                                "
+                                @click.stop=""
+                            >
+                                <img class="token_icon" :src="record.symbolIcon || chainDefaultImg" />
+                                <span class="token_info">
+                                    <span class="token_num">{{ formatNum(record.symbolNum) }}</span>
+                                    <span class="token_denom">{{ getRestString(record.symbolDenom, 6, 0) }}</span>
+                                </span>
+                            </router-link>
+                        </a-popover>
                     </template>
                     <template #hashOut="{ record }">
                         <a-popover destroy-tooltip-on-hide>
@@ -283,7 +281,7 @@
 </template>
 
 <script setup>
-    import Dropdown from './components/DropDown.vue';
+    import DropDown from './components/DropDown.vue';
     import ChainsDropdown from '../../components/responsive/dropdown/DropDownChains.vue';
     import {
         ibcTxStatusSelectOptions,

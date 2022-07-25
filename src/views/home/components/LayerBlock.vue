@@ -8,7 +8,7 @@
             </div>
             <a-tooltip>
                 <template #title>{{ tipMsg }}</template>
-                <img v-if="showTip" class="tip_icon" src="../assets/tip.png" />
+                <img v-if="showTip" class="tip_icon" src="@/assets/tip.png" />
             </a-tooltip>
         </div>
         <div class="block_content">
@@ -21,7 +21,7 @@
     defineProps({
         type: {
             type: String,
-            required: true
+            default: ''
         },
         title: {
             type: String,
@@ -29,11 +29,11 @@
         },
         showTip: {
             type: Boolean,
-            required: true
+            default: false
         },
         tipMsg: {
             type: String,
-            required: true
+            default: ''
         }
     });
 </script>

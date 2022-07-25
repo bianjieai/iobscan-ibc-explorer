@@ -37,13 +37,13 @@ export const useAnchors = () => {
                 }
             });
         } catch (e) {
-            console.log(e.message);
+            // console.log(e.message);
         }
         return className;
     };
 
     const onChangeAnchor = (title) => {
-        const findItem = document.getElementsByClassName(title.replace('#list', ''))[0];
+        const findItem = document.getElementsByClassName(title.replace('#', ''))[0];
         if (findItem) {
             listRef.value.$el.scrollTop = findItem.parentElement.offsetTop;
         }

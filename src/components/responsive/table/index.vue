@@ -29,6 +29,7 @@
                 v-model:current="pageInfo.current"
                 :page-size="pageInfo.pageSize"
                 :total="pageInfo.total"
+                :show-title="false"
                 @change="onPageChange"
             />
         </div>
@@ -37,59 +38,45 @@
 
 <script setup lang="ts">
     import { TableColumnsType } from 'ant-design-vue';
-    import { computed, onMounted, reactive, ref, toRefs, watch } from 'vue';
+    import { computed, onMounted, reactive, ref, watch } from 'vue';
     import { useTimeInterval } from '@/composables';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { CompareOrder } from '../component.interface';
     import BigNumber from 'bignumber.js';
     import { useGetIbcDenoms } from '@/views/home/composable';
     import { formatSupply } from '@/helper/tableCellHelper';
-
     const { ibcBaseDenoms } = useGetIbcDenoms();
     interface IProps {
         columns: TableColumnsType;
         data: any[];
         needCustomColumns: string[];
         needCount?: boolean;
-        pageSize?: number;
-        current?: number;
+        pageSize?: number | null;
+        current?: number | null;
         noPagination?: boolean;
-        scroll?: { x?: number; y?: number };
+        scroll?: { x?: number; y?: number } | null;
         rowKey?: string;
-        realTimeKey?: { scKey: string; dcKey: string }[];
+        realTimeKey?: { scKey: string; dcKey: string }[] | null;
         loading: boolean;
     }
-
     let backUpDataSource: any[] = [];
-
     const props = withDefaults(defineProps<IProps>(), {
-        pageSize: 10,
-        current: 1,
-        scroll: () => {
-            return {
-                x: 0,
-                y: 0
-            };
-        },
-        realTimeKey: () => [],
+        pageSize: null,
+        current: null,
+        scroll: null,
+        realTimeKey: null,
         rowKey: 'record_id'
     });
-
     const pageInfo = reactive({
-        pageSize: props.pageSize,
-        current: props.current,
+        pageSize: props.pageSize || 10,
+        current: props.current || 1,
         total: props.data?.length
     });
-
-    const { data, columns } = toRefs(props);
-
-    const columnsSource = ref(columns);
-    const dataSource = ref(data);
-
+    const columnsSource = ref(props.columns);
+    const dataSource = ref(props.data);
     onMounted(() => {
         backUpData();
     });
-
     watch(
         () => props.data,
         (_new) => {
@@ -98,19 +85,14 @@
             needPagination.value && onPageChange(1, 10);
             if (_new?.length === 0) {
                 columnsSource.value = columnsSource.value.filter((item) => item.key !== '_count');
-            } else {
-                columnsSource.value = columns.value;
             }
         }
     );
-
     const needPagination = computed(() => !props.noPagination && !(props.current && props.pageSize)); // 需要前端分页
     const isKeyInNeedCustomColumns = computed(() => (key: string) => props.needCustomColumns.includes(key)); // 判断key
     const hasData = computed(() => props.data?.length > 0);
-
     const backUpData = () => {
         const { columns, data, needCount } = props;
-
         if (needCount && columns.filter((item) => item.key === '_count').length === 0) {
             columns.unshift({
                 dataIndex: '_count',
@@ -137,11 +119,9 @@
             dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
         }
     };
-
     defineEmits<{
         (e: 'onPageChange', current: number, pageSize: number): void;
     }>();
-
     const formatDataSourceWithRealTime = (data: any[]) => {
         if (data.length && props.realTimeKey && props.realTimeKey.length) {
             data.forEach((item: any) => {
@@ -152,7 +132,6 @@
         }
         return data;
     };
-
     const onPageChange = (page: number, pageSize: number) => {
         pageInfo.current = page;
         pageInfo.pageSize = pageSize;
@@ -160,11 +139,9 @@
         const pSize = page * pageSize;
         dataSource.value = formatDataSourceWithRealTime(backUpDataSource.slice(p, pSize));
     };
-
     const formatDisplayAmount = (item: any, key: string) => {
         return formatSupply(item[key], item.base_denom, ibcBaseDenoms.value, 2, false);
     };
-
     let tempColumn: any;
     // todo clippers => 后端分页序号处理
     const onTableChange = (pagination: any, filters: any, sorter: any) => {
@@ -226,7 +203,6 @@
             needPagination.value && onPageChange(1, 10); // reset去第一页
         }
     };
-
     if (props.realTimeKey && props.realTimeKey.length) {
         useTimeInterval(() => {
             dataSource.value = formatDataSourceWithRealTime(dataSource.value);
@@ -238,12 +214,10 @@
     :deep(.ant-table) {
         overflow-x: auto;
         font-size: 14px;
-
         /* 设置滚动条的样式 */
         &::-webkit-scrollbar {
             height: 4px;
         }
-
         /* 滚动槽 */
         &::-webkit-scrollbar-track {
             box-shadow: inset006pxrgba(0, 0, 0, 0.3);
@@ -251,50 +225,41 @@
             height: 6px;
             background: rgba(61, 80, 255, 0.1);
         }
-
         /* 滚动条滑块 */
         &::-webkit-scrollbar-thumb {
             border-radius: 4px;
             box-shadow: inset006pxrgba(0, 0, 0, 0.5);
             background: rgba(61, 80, 255, 0.5);
         }
-
         &::-webkit-scrollbar-thumb:window-inactive {
             background: rgba(61, 80, 255, 0.9);
         }
     }
-
     :deep(.ant-table-container) {
         width: 1150px; // TODO clippers => 宽度待定
         min-height: 300px;
     }
-
     :deep(div.ant-table-body) {
         overflow-y: auto !important;
         max-height: 690px !important;
-
         &::-webkit-scrollbar {
             width: 6px;
         }
-
         &::-webkit-scrollbar-track {
             box-shadow: inset006pxrgba(0, 0, 0, 0.3);
             border-radius: 2px;
             width: 8px;
             background: rgba(61, 80, 255, 0.1);
         }
-
         &::-webkit-scrollbar-thumb {
             border-radius: 4px;
             box-shadow: inset006pxrgba(0, 0, 0, 0.5);
             background: rgba(61, 80, 255, 0.5);
         }
-
         &::-webkit-scrollbar-thumb:window-inactive {
             background: rgba(61, 80, 255, 0.9);
         }
     }
-
     :deep(.ant-table-thead .ant-table-cell) {
         font-size: var(--bj-font-size-sub-title);
         padding: 14px 16px 14px 0;
@@ -302,7 +267,6 @@
         line-height: 1;
         background-color: #fff;
     }
-
     :deep(.ant-table-tbody .ant-table-cell) {
         padding-right: 35px;
         color: var(--bj-text-second);
@@ -314,46 +278,37 @@
             text-align: left;
         }
     }
-
     :deep(.ant-table-thead > tr > th) {
         white-space: nowrap;
         border-bottom: none;
     }
-
     :deep(.ant-table-tbody > tr > td) {
         border-bottom: 1px solid var(--bj-border-color);
         padding: 15px 16px;
         padding-left: 0;
-
         &:only-child {
             border-bottom: none;
         }
     }
-
     :deep(.ant-table-cell) {
         padding-left: 0;
         white-space: nowrap;
     }
-
     :deep(.ant-table-thead
             > tr
             > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before) {
         width: 0;
     }
-
     :deep(.ant-table-column-sorter) {
         margin-left: 8px;
     }
-
     :deep(.ant-table-column-has-sorters) {
-        cursor: url('/src/assets/mouse/shiftlight_mouse.png'), default !important;
+        cursor: pointer;
     }
-
     :deep(.ant-pagination) {
         // margin: 16px;
         text-align: right;
     }
-
     :deep(.ant-pagination li) {
         width: initial;
         height: 24px;
@@ -364,40 +319,32 @@
         align-items: center;
         justify-content: center;
     }
-
     :deep(.ant-pagination li button) {
         display: flex;
         align-items: center;
         justify-content: center;
     }
-
     :deep(.ant-pagination-item) {
         border: none;
     }
-
     :deep(.ant-pagination-item-active) {
         border: 1px solid var(--bj-primary-color);
     }
-
     :deep(.ant-pagination-options) {
         display: none !important;
     }
-
     :deep(.ant-pagination-item-container > span > svg) {
         // margin-bottom: 6px;
     }
-
     :deep(td.ant-table-column-sort) {
         background: transparent;
     }
-
     .table-warpper {
         padding: 0 24px;
         background-color: #fff;
         border-radius: 4px;
         position: relative;
     }
-
     .thead-border-bottom {
         position: absolute;
         top: 48px;
@@ -407,33 +354,27 @@
         height: 1px;
         z-index: 1;
     }
-
     // pc
     @media screen and (min-width: 768px) {
     }
-
     // tablet
     @media screen and (min-width: 414px) and (max-width: 768px) {
         .bottom {
             display: block;
         }
-
         :deep(.ant-pagination) {
             margin: 8px 0;
             text-align: left;
         }
     }
-
     // mobile
     @media screen and (max-width: 414px) {
         .table-warpper {
             padding: 0 16px;
         }
-
         .bottom {
             display: block;
         }
-
         :deep(.ant-pagination) {
             margin-top: 8px;
             text-align: left;
