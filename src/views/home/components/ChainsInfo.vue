@@ -34,7 +34,7 @@ const props = defineProps({
   background-position: center;
   background-size: cover;
   border-radius: 4px;
-  cursor:url("../../../assets/mouse/shiftlight_mouse.png"),default !important;
+  cursor: pointer;
   &_img {
     margin: 23px 29px;
     width: 60px;

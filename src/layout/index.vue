@@ -131,7 +131,7 @@ onUnmounted(() => {
   display: flex;
 }
 a {
-  cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+  cursor: pointer;
 }
 .ant-tooltip {
   max-width: 400px !important;
@@ -148,17 +148,17 @@ a {
   }
 }
 :deep(.ant-pagination-item) {
-  cursor: url(/src/assets/mouse/shiftlight_mouse.png), default;
+  cursor: pointer;
   a{
-    cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;
+    cursor: pointer;
   }
   &-link{
-    cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;   
+    cursor: pointer;   
   }
 }
 .layout {
   width: 100%;
-  background-image: url("../assets/Summer_bg.png");
+  background-image: url("../assets/iobscan_home_bg.png");
   background-repeat: no-repeat;
   background-size: 1920px 396px;
   background-position: top center;
@@ -181,7 +181,7 @@ a {
         height: 100%;
         .logo {
             .flex(row, nowrap, center, center);
-            cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+            cursor: pointer;
             .logo_icon {
                 width: 32px;
                 height: 34px;
@@ -216,7 +216,7 @@ a {
     &_btn_mobile {
         .flex(row, nowrap, center, center);
         margin-left: 12px;
-        cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+        cursor: pointer;
         display: none;
         img {
             width: 32px;

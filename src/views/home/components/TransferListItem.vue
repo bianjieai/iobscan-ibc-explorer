@@ -98,12 +98,11 @@ const isShowLink = (address, chainID) => {
         }
     &_expand_btn {
         display: none;
-        cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
+        cursor: pointer;
     }
     &_info{
         .flex(row, nowrap, space-between, center);
         height: 100%;
-        cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
         .list_subItem {
             .flex(row, nowrap, space-between, center);
             padding: 14px 0;
@@ -152,9 +151,7 @@ const isShowLink = (address, chainID) => {
     }
     &_line{
         a {
-            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
         }
-        
     }
     &_ago {
         width: 150px;
@@ -180,7 +177,6 @@ const isShowLink = (address, chainID) => {
     }
     & .out_hash_wrap {
         display: none;
-        cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
     }
 
 }

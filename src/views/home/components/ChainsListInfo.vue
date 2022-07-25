@@ -90,13 +90,6 @@ const formatChainID = (chainId)=>{
     &_menu {
         width: 100%;
         border: 0;
-        :deep.ant-menu-overflow{
-            .ant-menu-overflow-item{
-                &:hover{
-                    cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default !important;
-                }
-            }
-        }
         :deep(.ant-menu-title-content) {
             font-size: var(--bj-font-size-normal);
             font-family: Montserrat-Regular, Montserrat;
@@ -178,9 +171,6 @@ const formatChainID = (chainId)=>{
 
         &_item {
             width: 100%;
-            :deep(.ant-anchor-link-title) {
-                cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default;
-            }
         }
     }
     .nodatas_icon {
