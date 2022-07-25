@@ -16,6 +16,7 @@
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     ibcStatisticsChainsStore[GET_IBCBASEDENOMS]();
     useChangeTitleAndIcon();
+    console.log(32);
 </script>
 
 <style>
