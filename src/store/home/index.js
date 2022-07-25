@@ -26,20 +26,33 @@ import {
 } from '../action-types';
 import { getBaseDenomKey } from '@/helper/baseDenomHelpers';
 
+// todo duanjie store 待处理
 export const useIbcStatisticsChains = defineStore('home', {
     state: () => {
         return {
+            // 页面级别 home  chains 卡片
             ibcStatisticsChains: ibcStatisticsChainsDefault,
+            // 全局共享数据,所有的chain 信息（chain_id、chain_name、icon）
             ibcChains: JSON.parse(sessionStorage.getItem('allChains')?.length ? sessionStorage.getItem('allChains') : '{}'),
+            // 页面级别 home  Channel Pairs 卡片
             ibcStatisticsChannels: ibcStatisticsChannelsDefault,
+            // 页面级别 home   IBC Tokens 卡片
             ibcStatisticsDenoms: ibcStatisticsDenomsDefault,
+            // 页面级别 home  IBC Token Transfer 卡片
             ibcStatisticsTxs: ibcStatisticsTxsDefault,
-            ibcTxs: {value: []},
-            ibcTxsCount: {value: ''},
-            ibcTxsStartTime: {value: 0},
-            ibcTxTimer: {value: {}},
-            ibcDenoms: {value: []},
+            // 全局共享数据 home
+            ibcTxs: { value: [] },
+            // 页面级别 home
+            ibcTxsCount: { value: '' },
+            // 页面级别 home
+            ibcTxsStartTime: { value: 0 },
+            // 页面级别 home
+            ibcTxTimer: { value: {} },
+            // 页面级别 transfers details
+            ibcDenoms: { value: [] },
+            // 全局共享数据，denoms 币种配置信息
             ibcBaseDenoms: JSON.parse(sessionStorage.getItem('ibcBaseDenoms')?.length ? sessionStorage.getItem('ibcBaseDenoms') : '{"value":[]}'),
+            // 页面级别 transfers details  当前是页面级别控制 交易详情页面是否展示loading
             isShowTransferLoading: false
         }
     },

@@ -1,3 +1,4 @@
+<!-- todo duanjie 此组件目前只在home 页面中使用，是否更换位置，调整为home模块的组件 -->
 <template>
   <div class="block">
     <div class="block_header">

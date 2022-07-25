@@ -1,5 +1,6 @@
 <template>
     <div class="transfer">
+        <!-- todo duanjie loading 只用在了详情页面是否合适 -->
         <loading v-show="isShowLoading.value"></loading>
         <div class="transfer_detail">
             <div class="transfer_detail_top_content">

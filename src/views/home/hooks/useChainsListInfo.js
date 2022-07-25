@@ -24,6 +24,7 @@ export const useInterfaceActive = (emits) => {
 
 export const useAnchors = () => {
     const anchors = reactive(anchorsDatas);
+    // todo duanjie 逻辑错误，listRef未导出,未使用
     const listRef = ref(null);
     const findClassName = (chainName) => {
         const chainQuery = chainName.substr(0, 1).toUpperCase();
@@ -43,7 +44,9 @@ export const useAnchors = () => {
         return className;
     };
     
+    // todo duanjie 代码冗余 没使用上，不适用此函数也可以跳转，当前由于使用错误，其实并未使用上此函数
     const onChangeAnchor = (title) => {
+        // todo duanjie 逻辑错误，title.replace('#', '') ===> title.replace('#list', '');
         const findItem = document.getElementsByClassName(title.replace('#', ''))[0];
         if (findItem) {
             // todo shan => listRef.value.$el 中没有 scrollTop 属性，需考虑换个方式

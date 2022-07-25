@@ -1,6 +1,8 @@
 <template>
+    <!-- todo duanjie class="transfer"  设置了样式，看能不能复用 pageContainer 保持统一 -->
     <div class="transfer">
         <div class="transfer_header">
+            <!-- todo duanjie 看能不能复用 pageTitle -->
             <div class="transfer_header_container">
                 <div class="transfer_header_line">
                     <p class="transfer_header_title">
@@ -16,6 +18,7 @@
         <div class="transfer_middle">
             <div class="transfer_middle_top">
                 <div class="transfer_middle_left">
+                    <!-- todo duanjie 看能否使用 TokensDropDown 复用 -->
                     <dropdown
                         class="dropdown_token"
                         :ibcBaseDenoms="ibcBaseDenomsSorted"
@@ -34,6 +37,7 @@
                         ref="chainDropdown"
                         :witchPage="pageParameters.transfers"
                     />
+                    <!-- todo duanjie 看能否使用 BaseDropdown 复用  -->
                     <a-select
                         class="status_select"
                         defaultActiveFirstOption
@@ -96,6 +100,7 @@
                         </template>
                         <img class="tip hover" src="../../assets/tip.png"/>
                     </a-popover>
+                    <!-- todo duanjie 看能不能复用 ResetButton -->
                     <a-button type="primary" @click="onClickReset">
                         <template #icon>
                             <svg
@@ -120,6 +125,7 @@
                 </div>
             </div>
             <div class="transfer_middle_bottom">
+                <!-- todo duanjie 表格看能否复用  -->
                 <a-table
                     class="transfer_table"
                     style="width: 100%"
@@ -275,6 +281,7 @@
                 </a-table>
             </div>
         </div>
+        <!-- todo duanjie 状态和分页看能否复用  -->
         <div class="transfer_bottom" v-if="tableCount.value">
             <span class="status_tips">
                 <span class="status_log">Status:</span>
@@ -466,9 +473,10 @@ const startTime = (time) => {
 };
 
 const disabledDate = (current) => current
-    && (current > dayjs().endOf('day')
-    || current
-    < dayjs(1617007625 * 1000));
+    &&
+    (current > dayjs().endOf('day')
+        || current
+        < dayjs(1617007625 * 1000));
 
 const isIbcTxTotalAndHashFilter = computed(() => {
     if(!ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {

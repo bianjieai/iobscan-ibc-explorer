@@ -9,6 +9,7 @@
                         @click="onClickViewAll(pageParameters.chains)" />
                 </div>
                 <div class="home_top_right">
+                    <!-- todo duanjie 事件传参，可优化，未细看 -->
                     <chains-list-info :chainList="ibcChains" @onMenuSelected="onMenuSelected" @clickItem="onClickViewAll" />
                 </div>
             </div>
@@ -33,15 +34,15 @@
 </template>
 
 <script setup>
-import HeaderInput from '../../components/HeaderInput.vue';
-import LayerBlock from '../../components/LayerBlock.vue';
-import ChainsInfo from './components/ChainsInfo.vue';
-import ChainsListInfo from './components/ChainsListInfo.vue';
-import StatisticList from './components/StatisticList.vue';
-import TransferList from './components/TransferList.vue';
+// import HeaderInput from '../../components/HeaderInput.vue';
+// import LayerBlock from '../../components/LayerBlock.vue';
+// import ChainsInfo from './components/ChainsInfo.vue';
+// import ChainsListInfo from './components/ChainsListInfo.vue';
+// import StatisticList from './components/StatisticList.vue';
+// import TransferList from './components/TransferList.vue';
+import { onMounted,onBeforeUnmount } from 'vue';
 import { useIbcStatistics, useIbcChains, useIbcTxs, useInterfaceActive, useClearInterval, useGetIbcDenoms } from './composable';
 import { useOnPressEnter } from '../../layout/hooks/useStarAnimation';
-import { onMounted,onBeforeUnmount } from 'vue';
 import { pageParameters, ibcStatisticsTxsDefault } from '../../constants';
 const {
     ibcStatisticsChains,

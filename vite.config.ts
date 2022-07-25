@@ -36,7 +36,8 @@ export default ({ mode }) => {
       vue(),
       vueJsx(),
       Components({
-        dts: true,
+        dts: "src/components/components.d.ts",
+        dirs: ['src/components','src/views'], // 按需加载的文件夹
         resolvers: [
           AntDesignVueResolver({ importStyle: 'less' }),
         ],
@@ -54,6 +55,8 @@ export default ({ mode }) => {
       },
       host: '0.0.0.0',
       port: 3000,
+      open: "http://localhost:3000",
+      
     },
     build: {
       terserOptions: {

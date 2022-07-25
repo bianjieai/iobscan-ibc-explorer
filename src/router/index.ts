@@ -19,7 +19,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/home',
-        redirect: '/home',
+        // redirect: '/home',
         component: Layout,
         meta: {},
         children: [
@@ -33,7 +33,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/transfers',
-        redirect: '/transfers',
+        // redirect: '/transfers',
         component: Layout,
         meta: {},
         children: [
@@ -66,7 +66,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/tokens',
-        redirect: '/tokens',
+        // redirect: '/tokens',
         component: Layout,
         meta: {},
         children: [
@@ -85,7 +85,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/chains',
-        redirect: '/chains',
+        // redirect: '/chains',
         component: Layout,
         meta: {},
         children: [
@@ -105,7 +105,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/channels',
-        redirect: '/channels',
+        // redirect: '/channels',
         component: Layout,
         meta: {},
         children: [
@@ -119,7 +119,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/relayers',
-        redirect: '/relayers',
+        // redirect: '/relayers',
         component: Layout,
         meta: {},
         children: [

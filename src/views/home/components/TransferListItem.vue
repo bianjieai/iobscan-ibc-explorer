@@ -56,13 +56,14 @@ const clickListItem = () => {
     emits('clickItem', props.item);
 };
 
-
+// todo duanjie 这个方法工程中写了3次，需抽离
 const getAddressPrefix = (address) => {
     if (address) {
         return address?.toString().substr(0, 3)
     }
     return '--'
 }
+// todo duanjie 这个方法工程中写了3次，需抽离
 const isShowLink = (address, chainID) => {
     let isShowLink = false
     if (address && chainID) {
