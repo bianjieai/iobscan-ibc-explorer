@@ -536,7 +536,7 @@ const onClickAll = () => {
             &:last-of-type {
                 .overlay_item_content {
                     .flex(column, wrap, flex-start, flex-start);
-                    ::v-deep .ant-btn {
+                    :deep(.ant-btn) {
                         margin-top: 12px;
                     }
                 }

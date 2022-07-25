@@ -6,12 +6,16 @@
       >
         <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{ computedTitle }}</div>
 
-      <a-popover placement="bottom">
-          <template #content>
-            <div class="popover-c" >{{chainInfo.subtitle}}</div>
-          </template>
-          <div v-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">{{ formatChainID(chainInfo.subtitle) }}</div>
-      </a-popover>
+        <div v-if="chainInfo.subtitle !== '--'">
+            <a-popover v-if="formatChainID(chainInfo.subtitle)?.length >= 18" placement="bottom">
+                <template #content>
+                  <div class="popover-c" >{{ formatChainID(chainInfo.subtitle)}}</div>
+                </template>
+                <div v-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">{{ formatChainID(chainInfo.subtitle) }}</div>
+            </a-popover>
+            <div v-else-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">{{ formatChainID(chainInfo.subtitle) }}</div>
+        </div>
+      <div v-else-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">--</div>
     </div>
   </div>
 </template>

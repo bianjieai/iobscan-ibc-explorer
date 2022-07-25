@@ -4,7 +4,7 @@
 
 import { TBaseDenoms } from "@/hooks/chainAndDenom.interface"
 import { isString } from "./object-helper"
-import { formatBigNumber, formatPriceNumber } from "./parseString"
+import { formatBigNumber } from "./parseString"
 import moveDecimal from 'move-decimal-point'
 /**
  * 
@@ -12,18 +12,7 @@ import moveDecimal from 'move-decimal-point'
  * @param numberOfDecimal 4位小数
  * @returns $ xxx
  */
-// export const formatPrice = (price: number | string, numberOfDecimal: number = 4) => {
-//   if (price === -1 || price === '-1') {
-//     return `--`
-//   }
 
-//   const _formatNum = formatPriceNumber(price)
-//   if (isString(_formatNum)) {
-//     return `${_formatNum}`
-//   } else {
-//     return `${formatBigNumber(_formatNum, numberOfDecimal)}`
-//   }
-// }
 
 export const formatPrice = (price: number | string, numberOfDecimal: number | null = 4) => {
     if (price === -1 || price === '-1') {

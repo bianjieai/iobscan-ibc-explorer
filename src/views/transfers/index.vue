@@ -64,6 +64,7 @@
                         @openChange="onOpenChangeRangePicker"
                         format="YYYY-MM-DD"
                         separator="-"
+                        :placeholder="['Start Date','End Date']"
                     >
                         <template #suffixIcon>
                             <svg
@@ -134,6 +135,7 @@
                     :loading="isShowTransferLoading"
                     :data-source="tableDatas.value"
                     :pagination="false"
+                    :customRow="handleClickRow"
                 >
                     <template #customTitle>
                         <p>
@@ -156,17 +158,19 @@
                                     <p class="tip_color">Received Token: {{ record.denoms.dc_denom || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="record.status === ibcTxStatus.SUCCESS ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`">
+                            <router-link class="token_link hover" :to="record.status === ibcTxStatus.SUCCESS ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`" @click.stop="">
                                 <img
-                                    class="token_icon hover"
+                                    class="token_icon"
                                     :src="record.symbolIcon || chainDefaultImg"
                                 />
-                                <span class="token_num hover">{{
-                                        formatNum(record.symbolNum)
-                                    }}</span>
-                                <span class="token_denom hover">{{
-                                        getRestString(record.symbolDenom, 6, 0)
-                                    }}</span>
+                                <span class="token_info">
+                                    <span class="token_num">{{
+                                            formatNum(record.symbolNum)
+                                        }}</span>
+                                    <span class="token_denom">{{
+                                            getRestString(record.symbolDenom, 6, 0)
+                                        }}</span>
+                                </span>
                             </router-link>
                         </a-popover>
                     </template>
@@ -177,11 +181,9 @@
                                     <p class="tip_color">{{ record.sc_tx_info.hash }}</p>
                                 </div>
                             </template>
-                            <router-link :to="`/transfers/details?hash=${record.sc_tx_info.hash}`">
                             <span class="hover">{{
                                     getRestString(record.sc_tx_info.hash, 4, 4)
                                 }}</span>
-                            </router-link>
                         </a-popover>
                     </template>
                     <template #out="{ record }">
@@ -198,67 +200,51 @@
                         <a-popover placement="right" destroyTooltipOnHide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">Chain ID：{{ record.sc_chain_id || "--" }}</p>
+                                    <p class="tip_color">Chain ID：{{ ChainHelper.formatChainId(record.sc_chain_id) }}</p>
                                     <p class="tip_color">Channel ID: {{ record.sc_channel || "--" }}</p>
                                     <p class="tip_color">Sequence: {{ record.sequence || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="`/chains`">
+                            <router-link :to="`/chains`" @click.stop="">
                                 <img
                                     class="status_icon hover"
                                     :src="findIbcChainIcon(record.sc_chain_id)"
                                 />
                             </router-link>
-                            <!-- <router-link :to="`/chains/details?chain_id=${record.dc_chain_id}`">
-                                <img
-                                    class="status_icon hover"
-                                    :src="findIbcChainIcon(record.sc_chain_id)"
-                                />
-                            </router-link> -->
-
                         </a-popover>
                         <img
                             class="status_icon"
-                            style="margin: 0 24px;"
+                            style="margin: 0 20px;"
                             :src="getImageUrl(record.status)"
                         />
                         <a-popover placement="right" destroyTooltipOnHide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">Chain ID：{{ record.dc_chain_id || "--" }}</p>
+                                    <p class="tip_color">Chain ID：{{ ChainHelper.formatChainId(record.dc_chain_id) }}</p>
                                     <p class="tip_color">Channel ID: {{ record.dc_channel || "--" }}</p>
                                     <p class="tip_color">Sequence: {{ record.sequence || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link :to="`/chains`">
+                            <router-link :to="`/chains`" @click.stop="">
                                 <img
                                     class="status_icon hover"
                                     :src="findIbcChainIcon(record.dc_chain_id)"
                                 />
                             </router-link>
-                            <!-- <router-link :to="`/chains/details?chain_id=${record.dc_chain_id}`">
-                                <img
-                                    class="status_icon hover"
-                                    :src="findIbcChainIcon(record.dc_chain_id)"
-                                />
-                            </router-link> -->
-
                         </a-popover>
                     </template>
                     <template #hashIn="{ record }">
-                        <a-popover destroyTooltipOnHide>
+                        <a-popover v-if="record.dc_tx_info.hash" destroyTooltipOnHide>
                             <template #content>
                                 <div>
                                     <p class="tip_color">{{ record.dc_tx_info.hash || "--" }}</p>
                                 </div>
                             </template>
-                            <router-link v-if="record.dc_tx_info.hash" :to="`/transfers/details?hash=${record.dc_tx_info.hash}`">
-                                <span class="hover">{{
-                                        getRestString(record.dc_tx_info.hash, 4, 4) || "--"
-                                    }}</span>
-                            </router-link>
-                            <span v-else>{{ '--' }}</span>
+                            <span class="hover">{{
+                                    getRestString(record.dc_tx_info.hash, 4, 4) || "--"
+                                }}</span>
                         </a-popover>
+                        <span v-else>--</span>
                     </template>
                     <template #in="{ record }">
                         <a-popover destroyTooltipOnHide>
@@ -267,16 +253,14 @@
                                     <p class="tip_color">{{ record.dc_addr || "--" }}</p>
                                 </div>
                             </template>
-                            <!--        <router-link :to="`/address/details?address=${record.dc_addr}`">
-                                        <span class="hover">{{
-                                                getRestString(record.dc_addr, 3, 8) || "&#45;&#45;"
-                                            }}</span>
-                                    </router-link>-->
-                            <span>{{ getRestString(record.dc_addr, 3, 8) || "--" }}</span>
+                            <span class="hover">{{ getRestString(record.dc_addr, 3, 8) || "--" }}</span>
                         </a-popover>
                     </template>
                     <template #time="{ record }">
                         <span>{{ formatDate(record.tx_time * 1000) }}</span>
+                    </template>
+                    <template #endTime="{ record }">
+                        <span>{{ record.end_time ? formatDate(record.end_time * 1000) : '--' }}</span>
                     </template>
                 </a-table>
             </div>
@@ -309,6 +293,7 @@ import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainA
 import Tools from '../../utils/Tools';
 import chainDefaultImg from '../../assets/chain-default.png';
 import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/parseString';
+import ChainHelper from '../../helper/chainHepler';
 import * as djs from 'dayjs';
 import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRoute,useRouter } from 'vue-router';
@@ -352,7 +337,7 @@ const router = useRouter();
 const dayjs = (djs?.default || djs);
 
 const formatDate = (time)=>{
-    return dayjs(time).format("YYYY-MM-DD HH:mm:ss")
+    return dayjs(time).format("MM-DD HH:mm:ss")
 }
 const getImageUrl = (status) => {
     return new URL(`../../assets/status${status}.png`, import.meta.url).href;
@@ -767,6 +752,13 @@ const isShowLink = (address, chainID) => {
     return isShowLink
 
 }
+const handleClickRow = (record, index) => {
+    return {
+        onClick: (event) => {
+            router.push(`/transfers/details?hash=${record.sc_tx_info.hash}`)
+        }
+    }
+}
 
 watch(ibcStatisticsTxs,(newValue,oldValue) => {
     if(newValue?.tx_all?.count < maxTableLength){
@@ -850,11 +842,11 @@ onMounted(() => {
         font-size: 14px;
         font-family: Montserrat-Regular, Montserrat;
         font-weight: 400;
-        ::v-deep .ant-table-placeholder {
+        :deep(.ant-table-placeholder) {
             // .flex(column, nowrap, center, center);
             min-height: 500px;
         }
-        ::v-deep a, span {
+        :deep(a, span) {
             font-size: var(--bj-font-size-normal);
             font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
@@ -862,23 +854,37 @@ onMounted(() => {
             line-height: 14px;
         }
         .token {
+            background: red;
+            &_link {
+                .flex(row, nowrap, flex-start, center);
+                cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
+                &:hover {
+                    .token_info {
+                        .token_num {
+                            color: var(--bj-primary-color);
+                        }
+                        .token_denom {
+                            color: var(--bj-primary-color);
+                        }
+                    }
+                }
+            }
             &_icon {
                 width: 32px;
                 height: 32px;
                 border-radius: 50%;
                 margin-right: 8px;
-                cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
             }
-
+            &_info {
+                .flex(column, nowrap, center, flex-start);
+            }
             &_num {
-                cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
                 font-size: var(--bj-font-size-normal);
                 color: var(--bj-text-second);
-                margin-right: 4px;
             }
 
             &_denom {
-                cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
+                margin-top: 4px;
                 font-size: var(--bj-font-size-normal);
                 font-family: Montserrat-Regular, Montserrat;
                 color: var(--bj-text-third);
@@ -959,11 +965,11 @@ onMounted(() => {
     width: 146px;
     margin: 0 8px;
     color: var(--bj-text-second);
-    ::v-deep .ant-select-arrow {
+    :deep(.ant-select-arrow) {
         right: 8px;
         color: rgba(164, 171, 192, 1);
     }
-    ::v-deep .ant-select-selector{
+    :deep(.ant-select-selector){
         height: 36px !important;
         border: 1px solid var(--bj-border-color);
         .ant-select-selection-item{
@@ -990,7 +996,7 @@ onMounted(() => {
     margin-right: 8px;
     width: 250px;
     height: 36px;
-    ::v-deep .ant-picker-input > input{
+    :deep(.ant-picker-input > input){
         color: var(--bj-primary-color);
         text-align: center;
         &::placeholder{
@@ -1009,8 +1015,18 @@ onMounted(() => {
 }
 .hover {
     cursor: url("../../assets/mouse/shiftlight_mouse.png"),default !important;
+    // &:hover {
+    //     color: var(--bj-primary-color);
+    // }
+}
+:deep(.ant-table-row) {
     &:hover {
-        color: var(--bj-primary-color);
+        cursor: url("../../assets/mouse/shiftlight_mouse.png"), default;
+    }
+}
+:deep(tbody) {
+    .ant-table-cell {
+        vertical-align: middle;
     }
 }
 @media screen and (max-width: 1200px) {
@@ -1044,11 +1060,11 @@ onMounted(() => {
         &_table {
             width: 100%;
             overflow-x: auto;
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
-            ::v-deep table {
+            :deep(table) {
                 width: 1200px;
                 background-color: #fff;
             }
@@ -1091,19 +1107,19 @@ onMounted(() => {
                 }
             }
             & .table_pagination {
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options) {
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
 }
@@ -1138,11 +1154,11 @@ onMounted(() => {
             }
         }
         &_table {
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
-            ::v-deep table {
+            :deep(table) {
             }
             .token {
                 &_icon {
@@ -1165,19 +1181,19 @@ onMounted(() => {
             }
             & .table_pagination {
                 margin-top: 16px;
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options) {
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
 }
@@ -1214,9 +1230,9 @@ onMounted(() => {
             }
         }
         &_table {
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
             .token {
                 &_icon {
@@ -1242,19 +1258,19 @@ onMounted(() => {
                 }
             }
             & .table_pagination {
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options) {
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
 }
@@ -1279,7 +1295,7 @@ onMounted(() => {
                     margin-left: 0;
                     margin-top: 12px;
                 }
-                ::v-deep .default_color {
+                :deep(.default_color) {
                     .chain_wrap {
                         .selected_color {
                             white-space: nowrap;
@@ -1297,9 +1313,9 @@ onMounted(() => {
             }
         }
         &_table {
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
             .token {
                 &_icon {
@@ -1327,19 +1343,19 @@ onMounted(() => {
                 }
             }
             & .table_pagination { 
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options) {
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
 }
@@ -1363,7 +1379,7 @@ onMounted(() => {
                 .ant-select {
                     width: 210px;
                 }
-                ::v-deep .default_color {
+                :deep(.default_color) {
                     justify-content: center;
                     margin-top: 12px;
                     min-width: 210px;
@@ -1386,9 +1402,9 @@ onMounted(() => {
             }
         }
         &_table {
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
             .token {
                 &_icon {
@@ -1418,19 +1434,19 @@ onMounted(() => {
                 }
             }
             & .table_pagination {
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options ){
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
     .date_range {
@@ -1455,7 +1471,7 @@ onMounted(() => {
             &_left {
                 .ant-select {
                 }
-                ::v-deep .default_color {
+                :deep(.default_color) {
                     .chain_wrap {
                         .selected_color {
                         }
@@ -1472,9 +1488,9 @@ onMounted(() => {
             }
         }
         &_table {
-            ::v-deep .ant-table-placeholder {
+            :deep(.ant-table-placeholder) {
             }
-            ::v-deep a, span {
+            :deep(a, span) {
             }
             .token {
                 &_icon {
@@ -1499,19 +1515,19 @@ onMounted(() => {
                 }
             }
             & .table_pagination {
-                ::v-deep .ant-pagination-options {
+                :deep(.ant-pagination-options) {
                 }
             }
         }
     }
     .status_select {
-        ::v-deep .ant-select-selector {
+        :deep(.ant-select-selector) {
         }
-        ::v-deep .ant-select-selection-item {
+        :deep(.ant-select-selection-item) {
         }
-        ::v-deep .ant-select-selection-search {
+        :deep(.ant-select-selection-search) {
         }
-        ::v-deep .ant-select-arrow {
+        :deep(.ant-select-arrow) {
         }
     }
     .date_range {

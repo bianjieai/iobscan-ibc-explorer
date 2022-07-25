@@ -4,30 +4,30 @@
             <div class="list_item_expand_btn" @click="onClickExpandBtn">
                 <img :src="!item.expanded ? expandImg : packUpImg " alt="">
             </div>
-            <div class="list_item_info" :class="!item.expanded? 'list_item_line': ''">
+            <router-link class="list_item_info" :class="!item.expanded? 'list_item_line': ''" :to="`/transfers/details?hash=${item.sc_tx_info.hash}`">
                 <span class="list_item_number">{{ prefixInteger(index + 1, 3) }}</span>
-                <router-link class="list_item_link" :to="item.status === ibcTxStatus.SUCCESS ? `/tokens/details?denom=${item.base_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.base_denom}&chain=${item.sc_chain_id}`">
+                <div class="list_item_link">
                     <img class="list_item_icon" :src="item.symbolIcon || tokenDefaultImg" alt="icon" />
-                </router-link>
+                </div>
                 <div class="list_subItem" :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }">
-                    <router-link :to="item.status === ibcTxStatus.SUCCESS ? `/tokens/details?denom=${item.base_denom}&chain=${item.dc_chain_id}` : `/tokens/details?denom=${item.base_denom}&chain=${item.sc_chain_id}`" class="list_subItem_title_container">
+                    <div class="list_subItem_title_container">
                         <span class="list_subItem_value">{{ formatNum(item.symbolNum) || 0 }}</span>
                         <a-tooltip placement="topLeft">
                             <template #title>{{ item.symbolDenom || "" }}</template>
                             <span class="list_subItem_title">{{ item.symbolDenom || "" }}</span>
                         </a-tooltip>
-                    </router-link>
+                    </div>
         
                     <div class="list_subItem_adress_container">
                         <hash-addr-icon :item="item" :ibcChains="ibcChains"></hash-addr-icon>
                         <p class="list_item_ago">{{ item.parseTime }} ago</p>
                     </div>
                 </div>
-            </div>
+            </router-link>
         </div>
-        <div class="out_hash_wrap" v-if="item.expanded">
+        <router-link class="out_hash_wrap" v-if="item.expanded" :to="`/transfers/details?hash=${item.sc_tx_info.hash}`">
             <hash-addr-icon :item="item" :ibcChains="ibcChains"></hash-addr-icon>
-        </div>
+        </router-link>
     </div>
 </template>
 
@@ -99,10 +99,12 @@ const isShowLink = (address, chainID) => {
         }
     &_expand_btn {
         display: none;
+        cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
     }
     &_info{
         .flex(row, nowrap, space-between, center);
         height: 100%;
+        cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
         .list_subItem {
             .flex(row, nowrap, space-between, center);
             padding: 14px 0;
@@ -115,14 +117,14 @@ const isShowLink = (address, chainID) => {
                 .flex(column, nowrap, space-between, flex-start);
                 width: 100%;
                 max-width: 150px;
-                &:hover {
-                    .list_subItem_value {
-                        color: var(--bj-primary-color);
-                    }
-                    .list_subItem_title {
-                        color: var(--bj-primary-color);
-                    }
-                }
+                // &:hover {
+                //     .list_subItem_value {
+                //         color: var(--bj-primary-color);
+                //     }
+                //     .list_subItem_title {
+                //         color: var(--bj-primary-color);
+                //     }
+                // }
             }
             &_value {
                 width: 100%;
@@ -141,7 +143,7 @@ const isShowLink = (address, chainID) => {
                 font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
                 color: var(--bj-text-third);
-                line-height: var(--bj-font-size-normal);
+                line-height: 18px;
                 width: 150px;
                 white-space: nowrap;
                 overflow: hidden;
@@ -172,10 +174,6 @@ const isShowLink = (address, chainID) => {
         line-height: var(--bj-font-size-normal);
         margin: 0 0 0 8px;
     }
-    &_link {
-        // margin: 0 24px 0 18px;
-        cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;
-    }
     &_icon {
         width: 40px;
         border-radius: 50%;
@@ -183,6 +181,7 @@ const isShowLink = (address, chainID) => {
     }
     & .out_hash_wrap {
         display: none;
+        cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
     }
 
 }

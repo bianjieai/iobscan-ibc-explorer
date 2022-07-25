@@ -107,7 +107,7 @@ const formatChainID = (chainId)=>{
                 }
             }
         }
-        ::v-deep .ant-menu-title-content {
+        :deep(.ant-menu-title-content) {
             font-size: var(--bj-font-size-normal);
             font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
@@ -127,7 +127,7 @@ const formatChainID = (chainId)=>{
         margin-top: 8px;
         width: 100%;
         .flex(row, nowrap, flex-start, flex-start);
-        ::v-deep .ant-anchor-wrapper {
+        :deep(.ant-anchor-wrapper) {
             overflow: visible;
             .ant-anchor {
                 .ant-anchor-ink::before {
@@ -152,7 +152,7 @@ const formatChainID = (chainId)=>{
     }
     .menu_card {
         border-radius: var(--border-radius-normal);
-        ::v-deep .ant-card-body {
+        :deep(.ant-card-body) {
             padding: 12px;
             height: 126px;
         }
@@ -188,7 +188,7 @@ const formatChainID = (chainId)=>{
 
         &_item {
             width: 100%;
-            ::v-deep .ant-anchor-link-title {
+            :deep(.ant-anchor-link-title) {
                 cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default;
             }
         }

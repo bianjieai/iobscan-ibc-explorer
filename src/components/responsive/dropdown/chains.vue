@@ -65,7 +65,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { CHAINNAME, defaultTitle } from '@/constants';
+import { CHAINNAME, defaultTitle, pageParameters } from '@/constants';
 type TChainData = {
   chain_id: string
   chain_name: string
@@ -264,7 +264,7 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
             chain_name,
             chain_id
           })
-          if(props.witchPage !== 'transfers' && selectedChain.value[0].chain_id === 'allchain') {
+          if(isNeedSort(selectedChain.value[0].chain_id, selectedChain.value[1].chain_id)) {
             let saveSelectedChain = selectedChain.value[0];
             selectedChain.value[0] = selectedChain.value[1];
             selectedChain.value[1] = saveSelectedChain;
@@ -310,7 +310,7 @@ const confirmChains = () => {
   if (props.selectedDouble) {
     if (chainIdIput.value?.includes(',')) {
       const chain = chainIdIput.value.split(',')
-      if(props.witchPage !== 'transfers' && chain[0] === 'allchain') {
+      if(isNeedSort(chain[0], chain[1])) {
         let saveChain = chain[0];
         chain[0] = chain[1];
         chain[1] = saveChain;
@@ -349,7 +349,27 @@ const confirmChains = () => {
     submitChain(chainIdIput.value?.trim())
   }
 }
-
+const isNeedSort = (chainA: TChainID, chainB: TChainID) => {
+    /**
+     * 需要 sort 情况
+     * 1、transfers 页左右不用 sort，
+     * 2、选择 All Chains + Other Chain => 选择了一条链，第一个选择的是 All Chains 的需要 sort
+     * 3、选择了两个都不是 All Chains 的 chain，
+     *    a、判断选中两条链是否包含 Cosmosis Hub 或 IRIS Hub，[a,b].indexOf(COSMOSHUB) === 1 || [a,b].indexOf(IRISHUB) === 1，需要 sort
+     *    b、根据首字母（或依次）判断是否需要 sort
+     */
+    const isLocalCompare = ref(false);
+    const chainAName = props.dropdownData?.find(item => item.chain_id === chainA)?.chain_name;
+    const chainBName = props.dropdownData?.find(item => item.chain_id === chainB)?.chain_name;
+        if([chainAName, chainBName].indexOf(CHAINNAME.COSMOSHUB) === 1 || [chainAName, chainBName].indexOf(CHAINNAME.IRISHUB) === 1) {
+            isLocalCompare.value = true;
+        } else if(chainBName) {
+            if(chainAName?.localeCompare(chainBName) === 1) {
+                isLocalCompare.value = true;
+            }
+        }
+    return props.witchPage !== pageParameters.transfers && (chainA === 'allchain' || (![chainA, chainB].includes('allchain') && isLocalCompare.value));
+}
 </script>
 
 <style lang="less" scoped>

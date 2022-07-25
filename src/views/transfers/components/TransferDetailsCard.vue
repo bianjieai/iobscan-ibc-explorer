@@ -92,7 +92,7 @@ import moveDecimal from 'move-decimal-point';
 import { chainAddressPrefix, tableChainIDs, transfersDetailStatus, ackConnectStatus } from "../../../constants";
 import { ref } from 'vue'
 import * as djs from 'dayjs'
-import { getRestString } from "../../../helper/parseString";
+import { getRestString, formatBigNumber } from "../../../helper/parseString";
 import { useGetIbcBaseDenoms } from '../composable';
 import ChainHelper from '@/helper/chainHepler';
 const { ibcBaseDenoms } = useGetIbcBaseDenoms();
@@ -164,7 +164,7 @@ const formatToken = (token, details) => {
             );
             if (findSymbol) {
                 // (token.amount || 0) * 10 ** -findSymbol.scale;
-                symbolNum = moveDecimal(token.amount, 0 - findSymbol.scale)
+                symbolNum = formatBigNumber(moveDecimal(token.amount, 0 - findSymbol.scale))
                 symbolDenom = findSymbol.symbol;
             }
         }
