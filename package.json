@@ -7,6 +7,7 @@
         "qa": "vite --mode qa",
         "stage": "vite --mode staging",
         "prod": "vite --mode production",
+        "vue-tsc": "vue-tsc --noEmit",
         "build:qa": "vue-tsc --noEmit && vite build --mode qa",
         "build:staging": "vue-tsc --noEmit && vite build --mode staging",
         "build": "vue-tsc --noEmit && vite build --mode production",
@@ -20,10 +21,12 @@
         "commit": "git-cz"
     },
     "lint-staged": {
-        "*.{js,ts}": [
+        "*.{js,ts,vue}": [
             "pnpm run eslint",
-            "pnpm run build",
             "pnpm run prettier"
+        ],
+        "*.{vue}": [
+            "pnpm run vue-tsc"
         ]
     },
     "config": {
