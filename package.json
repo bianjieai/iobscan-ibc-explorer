@@ -21,8 +21,9 @@
         "commit": "git-cz"
     },
     "lint-staged": {
-        "*.{vue}": [
-            "pnpm run vue-tsc"
+        "*.{js,ts,vue}": [
+            "pnpm run eslint",
+            "pnpm run prettier"
         ]
     },
     "config": {
