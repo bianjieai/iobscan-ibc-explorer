@@ -71,7 +71,7 @@
 
 <script setup>
     import NoDatas from '../../../components/NoDatas.vue';
-    import { useMenus, useInterfaceActive, useAnchors, useGetBindElement } from '../hooks/useChainsListInfo';
+    import { useMenus, useInterfaceActive, useAnchors, useGetBindElement } from '../composable/useChainsListInfo';
     import ChainHelper from '@/helper/chainHelper';
     const chainDefaultImg = new URL('../../../assets/chain-default.png', import.meta.url).href;
     defineProps({

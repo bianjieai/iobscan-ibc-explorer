@@ -41,7 +41,7 @@
     import tokenDefaultImg from '../../../assets/token-default.png';
     import expandImg from '../../../assets/expand.png';
     import packUpImg from '../../../assets/pack_up.png';
-    import { useIsExpand } from '../hooks/useTransferList';
+    import { useIsExpand } from '../composable/useTransferList';
 
     const props = defineProps({
         isFinal: Boolean,

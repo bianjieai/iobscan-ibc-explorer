@@ -48,6 +48,11 @@
 </template>
 
 <script setup>
+    import HeaderInput from '../../components/HeaderInput.vue';
+    import ChainsInfo from './components/ChainsInfo.vue';
+    import ChainsListInfo from './components/ChainsListInfo.vue';
+    import StatisticList from './components/StatisticList.vue';
+    import TransferList from './components/TransferList.vue';
     import { onMounted, onBeforeUnmount } from 'vue';
     import {
         useIbcStatistics,
