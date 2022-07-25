@@ -6,27 +6,24 @@
 </template>
 
 <script>
-export default {
-  setup() {
-
-  },
-};
+    export default {
+        setup() {}
+    };
 </script>
 
 <style lang="less" scoped>
-
-.nodatas {
-    .flex(column, nowrap, center, center);
-    min-height: 210px; // 适应table min-height: 300px
-    &_icon {
-        width: 120px;
+    .nodatas {
+        .flex(column, nowrap, center, center);
+        min-height: 210px; // 适应table min-height: 300px
+        &_icon {
+            width: 120px;
+        }
+        &_title {
+            margin-top: 16px;
+            font-size: var(--bj-font-size-normal);
+            font-family: Montserrat-Regular, Montserrat;
+            font-weight: 400;
+            color: @font-color2;
+        }
     }
-    &_title {
-        margin-top: 16px;
-        font-size: var(--bj-font-size-normal);
-        font-family: Montserrat-Regular, Montserrat;
-        font-weight: 400;
-        color: @font-color2;
-    }
-}
 </style>

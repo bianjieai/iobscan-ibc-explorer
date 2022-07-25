@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "forceConsistentCasingInFileNames":true,
     "allowJs": true,
     "target": "esnext",
     "useDefineForClassFields": true,
@@ -22,10 +23,9 @@
       ],
       "~/*": ["node_modules/*"]
     },
+    "outDir": "./"
   },
-  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/store/action-types.js", "src/store/mutation-types.js", "src/layout/hooks/useStarAnimation.js","types","./components.d.ts"],
-  "exclude": [
-    "node_modules"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue","src/assets/icon/iconfont.js"],
+  "exclude": ["node_modules", "dist"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

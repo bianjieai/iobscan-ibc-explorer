@@ -1,7 +1,13 @@
 import { ref, reactive, computed, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { useIbcStatisticsChains } from '../../store/home/index';
-import { GET_IBCSTATISTICS, GET_IBCTXS, GET_IBCBASEDENOMS, GET_IBCCHAINS, GET_IBCDENOMS } from '../../store/action-types';
+import { useIbcStatisticsChains } from '../../store/index';
+import {
+    GET_IBCSTATISTICS,
+    GET_IBCTXS,
+    GET_IBCBASEDENOMS,
+    GET_IBCCHAINS,
+    GET_IBCDENOMS
+} from '../../constants/actionTypes';
 import { getIbcDenoms, getTxDetailsByTxHash } from '../../service/api';
 import { groupBy } from 'lodash-es';
 import tokenDefaultImg from '../../assets/token-default.png';
@@ -16,8 +22,8 @@ export const useIbcStatistics = () => {
     return {
         ibcStatisticsTxs,
         getIbcStatistics
-    }
-}
+    };
+};
 
 export const useIbcTxs = () => {
     const tableCount = ibcStatisticsChainsStore.ibcTxsCount;
@@ -25,8 +31,8 @@ export const useIbcTxs = () => {
     return {
         tableCount,
         getIbcTxs
-    }
-}
+    };
+};
 
 export const useIbcChains = () => {
     const ibcChains = computed(() => ibcStatisticsChainsStore.ibcChains);
@@ -34,8 +40,8 @@ export const useIbcChains = () => {
     return {
         ibcChains,
         getIbcChains
-    }
-}
+    };
+};
 
 export const useGetIbcBaseDenoms = () => {
     const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
@@ -45,42 +51,44 @@ export const useGetIbcBaseDenoms = () => {
         getIbcDenoms,
         ibcBaseDenoms,
         getIbcBaseDenom
-    }
-}
+    };
+};
 
 export const useGetTokens = () => {
     const tokens = reactive({ value: [] });
-    let ibcDenoms = reactive({value: []});
-    getIbcDenoms().then((res) => {
-        ibcDenoms.value = res;
-        let tokensObj = groupBy(res, 'symbol');
-        const atomObj = {
-            'ATOM': tokensObj['ATOM']
-        }
-        const irisObj = {
-            'IRIS': tokensObj['IRIS']
-        }
-        delete tokensObj['ATOM']
-        delete tokensObj['IRIS']
+    let ibcDenoms = reactive({ value: [] });
+    getIbcDenoms()
+        .then((res) => {
+            ibcDenoms.value = res;
+            let tokensObj = groupBy(res, 'symbol');
+            const atomObj = {
+                ATOM: tokensObj['ATOM']
+            };
+            const irisObj = {
+                IRIS: tokensObj['IRIS']
+            };
+            delete tokensObj['ATOM'];
+            delete tokensObj['IRIS'];
 
-        let newkey = Object?.keys(tokensObj).sort();
-        let newObj = {}
-        for (let i = 0; i < newkey.length; i++) {
-            newObj[newkey[i]] = tokensObj[newkey[i]];
-        }
-        tokens.value = {
-            ...atomObj,
-            ...irisObj,
-            ...newObj
-        }
-    }).catch(error => {
-        console.log(error)
-    });
+            let newkey = Object?.keys(tokensObj).sort();
+            let newObj = {};
+            for (let i = 0; i < newkey.length; i++) {
+                newObj[newkey[i]] = tokensObj[newkey[i]];
+            }
+            tokens.value = {
+                ...atomObj,
+                ...irisObj,
+                ...newObj
+            };
+        })
+        .catch((error) => {
+            console.log(error);
+        });
     return {
         tokens,
         ibcDenoms
-    }
-}
+    };
+};
 
 export const useSelectedSymbol = () => {
     const selectedSymbol = reactive({ value: defaultTitle.defaultTokens });
@@ -88,8 +96,8 @@ export const useSelectedSymbol = () => {
     const clearInput = { value: 0 };
     const selectedChain = reactive({
         value: {
-            chain_name: undefined,
-        },
+            chain_name: undefined
+        }
     });
     const isShowChainIcon = ref(false);
     return {
@@ -98,34 +106,30 @@ export const useSelectedSymbol = () => {
         clearInput,
         selectedChain,
         isShowChainIcon
-    }
-}
+    };
+};
 
 export const usePagination = () => {
     const pagination = reactive({
         total: 0,
         current: 1,
-        pageSize: 10,
+        pageSize: 10
     });
     return {
         pagination
-    }
-}
+    };
+};
 
 export const useFindIcon = (props) => {
     const findSymbolIcon = () => {
-        const findSymbolConfig = props.ibcBaseDenoms?.find(
-            (baseDenom) => baseDenom.symbol === props.selectedSymbol,
-        );
+        const findSymbolConfig = props.ibcBaseDenoms?.find((baseDenom) => baseDenom.symbol === props.selectedSymbol);
         if (findSymbolConfig) {
             return findSymbolConfig.icon || tokenDefaultImg;
         }
         return tokenDefaultImg;
     };
     const findChainIcon = () => {
-        const findChainConfig = props?.options?.find(
-            (item) => item.chain_id === props.selectedChain.chain_id,
-        );
+        const findChainConfig = props?.options?.find((item) => item.chain_id === props.selectedChain.chain_id);
         if (findChainConfig) {
             return findChainConfig.icon || tokenDefaultImg;
         }
@@ -134,7 +138,7 @@ export const useFindIcon = (props) => {
     const isShowSymbol = (key) => {
         const result = {
             symbolDenom: '',
-            symbolIcon: '',
+            symbolIcon: ''
         };
         if (Array.isArray(props.ibcBaseDenoms)) {
             const findSymbol = Tools.findSymbol(props.ibcBaseDenoms, key);
@@ -146,9 +150,9 @@ export const useFindIcon = (props) => {
     return {
         findSymbolIcon,
         findChainIcon,
-        isShowSymbol,
-    }
-}
+        isShowSymbol
+    };
+};
 
 export const useFindIbcChainIcon = () => {
     const findIbcChainIcon = (chainId) => {
@@ -162,8 +166,8 @@ export const useFindIbcChainIcon = () => {
     };
     return {
         findIbcChainIcon
-    }
-}
+    };
+};
 
 export const useGetTableColumns = () => {
     const tableColumns = reactive(transferTableColumn);
@@ -174,14 +178,14 @@ export const useGetTableColumns = () => {
         set(newValue) {
             ibcStatisticsChainsStore.isShowTransferLoading = newValue;
         }
-    })
+    });
     const tableDatas = ibcStatisticsChainsStore.ibcTxs;
     return {
         tableColumns,
         isShowTransferLoading,
         tableDatas
-    }
-}
+    };
+};
 export const useIsVisible = () => {
     const isVisible = ref(false);
     const visibleChange = (visible) => {
@@ -190,8 +194,8 @@ export const useIsVisible = () => {
     return {
         isVisible,
         visibleChange
-    }
-}
+    };
+};
 
 // transfers details
 export const useTransfersDetailsInfo = () => {
@@ -209,7 +213,7 @@ export const useTransfersDetailsInfo = () => {
     const transferOutDetails = reactive([
         {
             label: 'MsgType:',
-            value: 'IBC Transfer Out',
+            value: 'IBC Transfer Out'
         },
         {
             label: 'Chain ID:',
@@ -220,7 +224,7 @@ export const useTransfersDetailsInfo = () => {
         {
             label: 'Port:',
             value: '--',
-            dataKey: 'sc_port',
+            dataKey: 'sc_port'
         },
         {
             label: 'Channel ID:',
@@ -243,7 +247,7 @@ export const useTransfersDetailsInfo = () => {
         {
             label: 'Block:',
             value: '--',
-            dataKey: 'sc_tx_info.height',
+            dataKey: 'sc_tx_info.height'
         },
         {
             label: 'Status:',
@@ -269,34 +273,33 @@ export const useTransfersDetailsInfo = () => {
             dataKey: 'sc_signers',
             isAddress: true,
             isNotLink: true
-        },
-
-    ])
+        }
+    ]);
     const transferOutExpandDetails = reactive([
         {
             label: 'Connection:',
             value: '--',
             dataKey: 'sc_connect',
-            isExpand: false,
+            isExpand: false
         },
         {
             label: 'Time Out Height:',
             value: '--',
             dataKey: 'sc_tx_info.msg.msg.timeout_height',
             isExpand: false,
-            isFormatHeight: true,
+            isFormatHeight: true
         },
         {
             label: 'Time Out Timestamp:',
             value: '--',
             dataKey: 'sc_tx_info.msg.msg.timeout_timestamp',
-            isExpand: false,
+            isExpand: false
         }
-    ])
+    ]);
     const transferInDetails = reactive([
         {
             label: 'MsgType:',
-            value: 'IBC Transfer In',
+            value: 'IBC Transfer In'
         },
         {
             label: 'Chain ID:',
@@ -307,7 +310,7 @@ export const useTransfersDetailsInfo = () => {
         {
             label: 'Port:',
             value: '--',
-            dataKey: 'dc_port',
+            dataKey: 'dc_port'
         },
         {
             label: 'Channel ID:',
@@ -330,7 +333,7 @@ export const useTransfersDetailsInfo = () => {
         {
             label: 'Block:',
             value: '--',
-            dataKey: 'dc_tx_info.height',
+            dataKey: 'dc_tx_info.height'
         },
         {
             label: 'Status:',
@@ -354,16 +357,15 @@ export const useTransfersDetailsInfo = () => {
             label: 'Signer:',
             value: '--',
             dataKey: 'dc_signers',
-            isAddress: true,
-        },
-
-    ])
+            isAddress: true
+        }
+    ]);
     const transferInExpandDetails = [
         {
             label: 'Connection:',
             value: '--',
             dataKey: 'dc_connect',
-            isExpand: true,
+            isExpand: true
         },
         {
             label: 'Packet Ack:',
@@ -377,135 +379,130 @@ export const useTransfersDetailsInfo = () => {
             value: '--',
             dataKey: 'dc_tx_info.msg.msg.proof_height',
             isExpand: true,
-            isFormatHeight: true,
+            isFormatHeight: true
         }
-    ]
+    ];
 
     const isShowLoading = reactive({
         value: true
-    })
-    watch(route, (newValue, oldValue) => {
+    });
+    watch(route, (newValue) => {
         if (newValue?.query?.hash) {
-            getTxDetails(newValue.query.hash)
+            getTxDetails(newValue.query.hash);
         }
-    })
-    const getTxDetails = (txHash) => {
-        isShowLoading.value = true
-        getTxDetailsByTxHash(route.query.hash).then(result => {
-            isShowLoading.value = false
-            if (result?.length === 1) {
-                const res = result[0]
-                scChainId.value = res?.sc_chain_id;
-                dcChainId.value = res?.dc_chain_id;
-                if (res?.sc_tx_info?.hash) {
-                    ibcTransferOutTxHash.value = res.sc_tx_info.hash
-
-                }
-                if (res?.sc_tx_info?.status >= 0) {
-                    outTxStatus.value = res.sc_tx_info.status
-                }
-                if (res?.dc_tx_info?.hash) {
-                    ibcTransferInTxHash.value = res.dc_tx_info.hash
-                }
-                if (res?.dc_tx_info?.status >= 0) {
-                    inTxStatus.value = res.dc_tx_info.status
-                }
-                if (res?.sequence) {
-                    sequence.value = res.sequence
-                }
-                if (res?.status) {
-                    ibcTxStatus.value = res.status
-                }
-                if (res?.base_denom) {
-                    baseDenom.value = res.base_denom
-                }
-                transferOutDetails.forEach(item => {
-                    if (item?.dataKey?.includes('.')) {
-                        const keys = item.dataKey.split('.')
-                        if (keys?.length) {
-                            let result = res
-                            keys.forEach(key => {
-                                result = result[key] || result[key] === 0 ? result[key] : ''
-                                item.value = result
-
-                            })
-                        }
-                    } else {
-                        if (item.dataKey) {
-                            item.value = res[item.dataKey]
-                        }
+    });
+    const getTxDetails = () => {
+        isShowLoading.value = true;
+        getTxDetailsByTxHash(route.query.hash)
+            .then((result) => {
+                isShowLoading.value = false;
+                if (result?.length === 1) {
+                    const res = result[0];
+                    scChainId.value = res?.sc_chain_id;
+                    dcChainId.value = res?.dc_chain_id;
+                    if (res?.sc_tx_info?.hash) {
+                        ibcTransferOutTxHash.value = res.sc_tx_info.hash;
                     }
-                })
-                transferOutExpandDetails.forEach(item => {
-                    if (item?.dataKey?.includes('.')) {
-                        const keys = item.dataKey.split('.')
-                        if (keys?.length) {
-                            let result = res
-                            keys.forEach(key => {
-                                result = result[key] || result[key] === 0 ? result[key] : ''
-                                item.value = result
-
-                            })
-                        }
-                    } else {
-                        if (item.dataKey) {
-                            item.value = res[item.dataKey]
-                        }
+                    if (res?.sc_tx_info?.status >= 0) {
+                        outTxStatus.value = res.sc_tx_info.status;
                     }
-                })
-                transferInDetails.forEach(item => {
-                    if (item?.dataKey?.includes('.')) {
-
-                        const keys = item.dataKey.split('.')
-                        if (keys?.length) {
-                            let result = res
-                            keys.forEach(key => {
-                                result = result[key] || result[key] === 0 ? result[key] : ''
-                                item.value = result
-
-                            })
-                        }
-                        if (item.label === 'Received Token:' && res?.denoms?.dc_denom) {
-                            item.value.denom = res.denoms.dc_denom
-                        }
-                    } else {
-                        if (item.dataKey) {
-                            item.value = res[item.dataKey]
-                        }
+                    if (res?.dc_tx_info?.hash) {
+                        ibcTransferInTxHash.value = res.dc_tx_info.hash;
                     }
-                })
-                transferInExpandDetails.forEach(item => {
-                    if (item?.dataKey?.includes('.')) {
-                        const keys = item.dataKey.split('.')
-                        if (keys?.length) {
-                            let result = res
-                            keys.forEach(key => {
-                                result = result[key] || result[key] === 0 ? result[key] : ''
-                                item.value = result
-
-                            })
-                        }
-                    } else {
-                        if (item.dataKey) {
-                            item.value = res[item.dataKey]
-                        }
+                    if (res?.dc_tx_info?.status >= 0) {
+                        inTxStatus.value = res.dc_tx_info.status;
                     }
-                })
-            } else {
-                router.push(`/searchResult?${route.query.hash}`)
-            }
-
-        }).catch(error => {
-            isShowLoading.value = false
-            console.error(error)
-        })
-    }
+                    if (res?.sequence) {
+                        sequence.value = res.sequence;
+                    }
+                    if (res?.status) {
+                        ibcTxStatus.value = res.status;
+                    }
+                    if (res?.base_denom) {
+                        baseDenom.value = res.base_denom;
+                    }
+                    transferOutDetails.forEach((item) => {
+                        if (item?.dataKey?.includes('.')) {
+                            const keys = item.dataKey.split('.');
+                            if (keys?.length) {
+                                let result = res;
+                                keys.forEach((key) => {
+                                    result = result[key] || result[key] === 0 ? result[key] : '';
+                                    item.value = result;
+                                });
+                            }
+                        } else {
+                            if (item.dataKey) {
+                                item.value = res[item.dataKey];
+                            }
+                        }
+                    });
+                    transferOutExpandDetails.forEach((item) => {
+                        if (item?.dataKey?.includes('.')) {
+                            const keys = item.dataKey.split('.');
+                            if (keys?.length) {
+                                let result = res;
+                                keys.forEach((key) => {
+                                    result = result[key] || result[key] === 0 ? result[key] : '';
+                                    item.value = result;
+                                });
+                            }
+                        } else {
+                            if (item.dataKey) {
+                                item.value = res[item.dataKey];
+                            }
+                        }
+                    });
+                    transferInDetails.forEach((item) => {
+                        if (item?.dataKey?.includes('.')) {
+                            const keys = item.dataKey.split('.');
+                            if (keys?.length) {
+                                let result = res;
+                                keys.forEach((key) => {
+                                    result = result[key] || result[key] === 0 ? result[key] : '';
+                                    item.value = result;
+                                });
+                            }
+                            if (item.label === 'Received Token:' && res?.denoms?.dc_denom) {
+                                item.value.denom = res.denoms.dc_denom;
+                            }
+                        } else {
+                            if (item.dataKey) {
+                                item.value = res[item.dataKey];
+                            }
+                        }
+                    });
+                    transferInExpandDetails.forEach((item) => {
+                        if (item?.dataKey?.includes('.')) {
+                            const keys = item.dataKey.split('.');
+                            if (keys?.length) {
+                                let result = res;
+                                keys.forEach((key) => {
+                                    result = result[key] || result[key] === 0 ? result[key] : '';
+                                    item.value = result;
+                                });
+                            }
+                        } else {
+                            if (item.dataKey) {
+                                item.value = res[item.dataKey];
+                            }
+                        }
+                    });
+                } else {
+                    router.push(`/searchResult?${route.query.hash}`);
+                }
+            })
+            .catch((error) => {
+                isShowLoading.value = false;
+                console.error(error);
+            });
+    };
     if (route?.query?.hash) {
-        getTxDetails(route?.query?.hash)
+        getTxDetails(route?.query?.hash);
     }
     onMounted(() => {
         ibcStatisticsChainsStore[GET_IBCDENOMS];
-    })
+    });
     return {
         ibcTransferOutTxHash,
         ibcTransferInTxHash,
@@ -521,38 +518,38 @@ export const useTransfersDetailsInfo = () => {
         isShowLoading,
         scChainId,
         dcChainId
-    }
-}
+    };
+};
 
 // noresult
 export const useNoResult = () => {
     const route = useRoute();
-    const router = useRouter()
-    watch(route, (newValue, oldValue) => {
+    const router = useRouter();
+    watch(route, (newValue) => {
         if (newValue?.query) {
-            searchInputValue.value = Object.keys(route.query)
+            searchInputValue.value = Object.keys(route.query);
         }
-    })
+    });
     let searchInputValue = reactive({
         value: ['']
-    })
+    });
     if (route?.query) {
         if (/^[A-F0-9]{64}$/.test(Object.keys(route.query))) {
-            getTxDetailsByTxHash(Object.keys(route.query)).then(result => {
+            getTxDetailsByTxHash(Object.keys(route.query)).then((result) => {
                 if (result.length === 1) {
-                    router.push(`/transfers/details?hash=${Object.keys(route.query)}`)
+                    router.push(`/transfers/details?hash=${Object.keys(route.query)}`);
                 }
-            })
+            });
         } else {
-            router.push(`/searchResult?${Object.keys(route.query)}`)
+            router.push(`/searchResult?${Object.keys(route.query)}`);
         }
-        searchInputValue.value = Object.keys(route.query)
+        searchInputValue.value = Object.keys(route.query);
     }
     const toHome = () => {
-        router.push(`/home`)
-    }
+        router.push('/home');
+    };
     return {
         searchInputValue,
         toHome
-    }
-}
+    };
+};
