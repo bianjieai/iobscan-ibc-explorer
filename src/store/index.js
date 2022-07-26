@@ -17,7 +17,7 @@ import {
     GET_IBCDENOMS,
     GET_IBCBASEDENOMS
 } from '../constants/actionTypes';
-import { getBaseDenomKey } from '@/helper/baseDenomHelpers';
+import { getBaseDenomKey } from '@/helper/baseDenomHelper';
 
 export const useIbcStatisticsChains = defineStore('global', {
     state: () => {

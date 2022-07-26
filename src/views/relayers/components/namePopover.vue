@@ -15,7 +15,7 @@
     import { TBaseChains } from '@/types/interface/chainAndDenom.interface';
     import { computed } from 'vue';
     import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
-    import { formatLongTitleString } from '@/helper/parseStringHelpers';
+    import { formatLongTitleString } from '@/helper/parseStringHelper';
     import { RELAYER_STATUS } from '../constants';
     import { UNKNOWN } from '../../../constants';
     interface IProps {

@@ -94,7 +94,7 @@
 </template>
 
 <script setup>
-    import { rmIbcPrefix } from '../../../helper/parseStringHelpers';
+    import { rmIbcPrefix } from '../../../helper/parseStringHelper';
     import { useFindIcon, useIsVisible } from '../composable';
     import { ref, watch } from 'vue';
     import { defaultTitle, unAuthed } from '@/constants';

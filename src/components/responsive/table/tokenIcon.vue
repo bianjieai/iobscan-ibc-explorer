@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-    import { getRestString, getRestString2 } from '@/helper/parseStringHelpers';
+    import { getRestString, getRestString2 } from '@/helper/parseStringHelper';
     import { TBaseDenoms } from '@/types/interface/chainAndDenom.interface';
     import { computed } from 'vue';
     import { TableCellIconSize, TTableCellIconSize } from '../component.interface';

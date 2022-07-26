@@ -3,7 +3,7 @@
  */
 
 import { TBaseDenoms } from '@/types/interface/chainAndDenom.interface';
-import { formatBigNumber } from './parseStringHelpers';
+import { formatBigNumber } from './parseStringHelper';
 import moveDecimal from 'move-decimal-point';
 /**
  *

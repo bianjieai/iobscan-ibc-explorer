@@ -94,7 +94,7 @@
     import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useIbcChains } from '../home/composable';
     import { useRoute, useRouter } from 'vue-router';
-    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
     import { urlHelper } from '@/utils/urlTools';
 
     let pageUrl = '/channels';

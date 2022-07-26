@@ -115,7 +115,7 @@
     import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useRoute, useRouter } from 'vue-router';
     import NamePopover from './components/namePopover.vue';
-    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
     import { urlHelper } from '@/utils/urlTools';
 
     const loading = ref(false);

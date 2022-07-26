@@ -122,7 +122,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { getRestString } from '@/helper/parseStringHelpers';
+    import { getRestString } from '@/helper/parseStringHelper';
     import { onMounted, computed, ref } from 'vue';
     import { defaultTitle } from '../../../constants/index';
     import Tools from '@/utils/Tools';

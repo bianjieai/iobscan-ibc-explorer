@@ -1,5 +1,5 @@
 import { Ref, ref } from 'vue';
-import { HttpHelper } from '../helper/httpHelpers.js';
+import { HttpHelper } from '../helper/httpHelper.js';
 import { baseParams } from './tokens';
 import { useIbcStatisticsChains } from '@/store/index';
 import { GET_IBCCHAINS } from '@/constants/actionTypes';

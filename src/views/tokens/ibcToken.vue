@@ -102,7 +102,7 @@
     import { useRoute, useRouter } from 'vue-router';
     import { TIbcTokenType, useGetIbcTokenList } from '@/service/tokens';
     import { useGetIbcDenoms, useIbcChains } from '../home/composable';
-    import { getRestString, rmIbcPrefix, formatBigNumber } from '@/helper/parseStringHelpers';
+    import { getRestString, rmIbcPrefix, formatBigNumber } from '@/helper/parseStringHelper';
     import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { isNullOrEmpty } from '@/utils/objectTools';

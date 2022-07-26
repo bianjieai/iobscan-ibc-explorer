@@ -1,6 +1,6 @@
 import { TRelayerStatus } from '@/components/responsive/component.interface.js';
 import { ref, Ref } from 'vue';
-import { HttpHelper } from '../helper/httpHelpers.js';
+import { HttpHelper } from '../helper/httpHelper.js';
 import { baseParams } from './tokens';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import ChainHelper from '../helper/chainHelper';

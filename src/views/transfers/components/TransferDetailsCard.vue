@@ -111,7 +111,7 @@
     import { transfersDetailStatus, ackConnectStatus } from '../../../constants';
     import { ref } from 'vue';
     import * as djs from 'dayjs';
-    import { getRestString, formatBigNumber } from '../../../helper/parseStringHelpers';
+    import { getRestString, formatBigNumber } from '../../../helper/parseStringHelper';
     import { useGetIbcBaseDenoms } from '../composable';
     import ChainHelper from '@/helper/chainHelper';
     const { ibcBaseDenoms } = useGetIbcBaseDenoms();

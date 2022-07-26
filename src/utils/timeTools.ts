@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
-import { formatBigNumber } from '../helper/parseStringHelpers';
+import { formatBigNumber } from '../helper/parseStringHelper';
 import { ChannelStatus, TChannelStatus } from '@/components/responsive/component.interface.js';
 
 dayjs.extend(duration);

@@ -1,6 +1,6 @@
 import { TChannelStatus } from '@/components/responsive/component.interface';
 import { ref, Ref } from 'vue';
-import { HttpHelper } from '../helper/httpHelpers.js';
+import { HttpHelper } from '../helper/httpHelper.js';
 import { baseParams } from './tokens';
 import ChainHelper from '../helper/chainHelper';
 

@@ -77,7 +77,7 @@
 
 <script setup>
     import { statisticsName, ibcStatisticsDenomsDefault, dayTime } from '../../../constants/index';
-    import { formatBigNumber } from '../../../helper/parseStringHelpers';
+    import { formatBigNumber } from '../../../helper/parseStringHelper';
     defineProps({
         type: {
             type: String,

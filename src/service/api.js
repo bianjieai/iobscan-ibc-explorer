@@ -1,6 +1,6 @@
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable no-param-reassign */
-import { HttpHelper } from '../helper/httpHelpers.js';
+import { HttpHelper } from '../helper/httpHelper.js';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();

@@ -19,7 +19,7 @@
     import chains24hrImg from '../../../assets/chains_24hr.png';
     import chainsAllImg from '../../../assets/chains_all.png';
     import { statisticsName } from '../../../constants/index';
-    import { formatBigNumber } from '../../../helper/parseStringHelpers';
+    import { formatBigNumber } from '../../../helper/parseStringHelper';
     import { dayTime } from '../../../constants';
 
     defineProps({

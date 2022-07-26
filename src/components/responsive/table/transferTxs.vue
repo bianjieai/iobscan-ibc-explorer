@@ -8,7 +8,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
 
     interface IProps {
         title?: string | number;

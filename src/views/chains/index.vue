@@ -59,7 +59,7 @@
     import { useGetChainsList } from '@/service/chains';
     import { useRouter } from 'vue-router';
     import { formatAmount } from '@/helper/tableCellHelper';
-    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
 
     const router = useRouter();
 

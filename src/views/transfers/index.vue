@@ -296,7 +296,7 @@
     } from '../../constants';
     import Tools from '../../utils/Tools';
     import chainDefaultImg from '../../assets/chain-default.png';
-    import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/parseStringHelpers';
+    import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/parseStringHelper';
     import ChainHelper from '../../helper/chainHelper';
     import * as djs from 'dayjs';
     import { ref, reactive, computed, onMounted, watch } from 'vue';

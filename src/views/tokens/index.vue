@@ -104,7 +104,7 @@
     import { useRoute, useRouter } from 'vue-router';
     import TokenIcon from '@/components/responsive/table/tokenIcon.vue';
     import { useGetIbcDenoms, useIbcChains } from '../home/composable';
-    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
     import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useGetTokenList } from '@/service/tokens';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';

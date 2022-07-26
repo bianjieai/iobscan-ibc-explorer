@@ -1,8 +1,8 @@
 // import { BaseDenom } from '@/types/baseDenom';
 import { ref, Ref } from 'vue';
-import { HttpHelper } from '../helper/httpHelpers.js';
-import { getBaseDenomByKey } from '@/helper/baseDenomHelpers';
-import { getRestString2 } from '@/helper/parseStringHelpers';
+import { HttpHelper } from '../helper/httpHelper.js';
+import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
+import { getRestString2 } from '@/helper/parseStringHelper';
 
 export type TIbcTokenType = 'Authed' | 'Other' | 'Genesis';
 
