@@ -26,15 +26,27 @@
         <div class="home_bottom">
             <div class="home_bottom_left">
                 <layer-block title="Channel Pairs">
-                    <statistic-list type="vertical" :msg="ibcStatisticsChannels" @click-item="onClickViewAll" />
+                    <statistic-list
+                        type="vertical"
+                        :msg="ibcStatisticsChannels"
+                        @click-item="onClickViewAll"
+                    />
                 </layer-block>
 
                 <layer-block title="IBC Tokens" style="margin-top: 47px" show-tip :tip-msg="tipMsg">
-                    <statistic-list type="vertical" :msg="ibcStatisticsDenoms" @click-item="onClickViewAll" />
+                    <statistic-list
+                        type="vertical"
+                        :msg="ibcStatisticsDenoms"
+                        @click-item="onClickViewAll"
+                    />
                 </layer-block>
             </div>
             <layer-block class="home_bottom_right" title="IBC Token Transfer">
-                <statistic-list type="horizontal" :msg="ibcStatisticsTxs" @click-item="onClickViewAll" />
+                <statistic-list
+                    type="horizontal"
+                    :msg="ibcStatisticsTxs"
+                    @click-item="onClickViewAll"
+                />
                 <transfer-list
                     :ibc-chains="ibcChains"
                     :transfer-list="ibcTxs.value"
@@ -63,8 +75,13 @@
     } from './composable';
     import { useOnPressEnter } from '@/composables/useStarAnimation';
     import { pageParameters, ibcStatisticsTxsDefault } from '@/constants/index';
-    const { ibcStatisticsChains, ibcStatisticsChannels, ibcStatisticsDenoms, ibcStatisticsTxs, getIbcStatistics } =
-        useIbcStatistics();
+    const {
+        ibcStatisticsChains,
+        ibcStatisticsChannels,
+        ibcStatisticsDenoms,
+        ibcStatisticsTxs,
+        getIbcStatistics
+    } = useIbcStatistics();
     const { ibcChains, getIbcChains } = useIbcChains();
     const { limitIbcTxs, ibcTxs, getIbcTxs, setExpandByIndex } = useIbcTxs();
     const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();

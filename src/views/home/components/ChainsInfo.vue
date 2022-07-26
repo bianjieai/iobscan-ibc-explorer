@@ -8,7 +8,9 @@
         <div class="card_content">
             <span class="card_content_name">
                 {{ statisticsName[msg.statistics_name] }}
-                <span v-if="msg.statistics_name.indexOf(dayTime) !== -1" class="card_content_tip">24hr</span>
+                <span v-if="msg.statistics_name.indexOf(dayTime) !== -1" class="card_content_tip"
+                    >24hr</span
+                >
             </span>
             <span class="card_content_value">{{ `${formatBigNumber(msg.count)}` }}</span>
         </div>

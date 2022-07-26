@@ -12,21 +12,25 @@
                 <div
                     class="list_item_info"
                     :style="
-                        item.statistics_name === ibcStatisticsDenomsDefault.denom_all.statistics_name
+                        item.statistics_name ===
+                        ibcStatisticsDenomsDefault.denom_all.statistics_name
                             ? 'cursor: text;'
                             : ''
                     "
                 >
                     <span class="list_item_name"
                         >{{ statisticsName[item.statistics_name]
-                        }}<span v-if="item.statistics_name.indexOf(dayTime) !== -1" class="list_item_tip"
+                        }}<span
+                            v-if="item.statistics_name.indexOf(dayTime) !== -1"
+                            class="list_item_tip"
                             >24hr</span
                         ></span
                     >
                     <span
                         class="list_item_value"
                         :style="
-                            item.statistics_name === ibcStatisticsDenomsDefault.denom_all.statistics_name
+                            item.statistics_name ===
+                            ibcStatisticsDenomsDefault.denom_all.statistics_name
                                 ? 'color: var(--bj-text-normal); cursor: text;'
                                 : ''
                         "
@@ -48,21 +52,25 @@
                     <div
                         class="list_item_info"
                         :style="
-                            item.statistics_name === ibcStatisticsDenomsDefault.denom_all.statistics_name
+                            item.statistics_name ===
+                            ibcStatisticsDenomsDefault.denom_all.statistics_name
                                 ? 'cursor: text;'
                                 : ''
                         "
                     >
                         <span class="list_item_name"
                             >{{ statisticsName[item.statistics_name]
-                            }}<span v-if="item.statistics_name.indexOf(dayTime) !== -1" class="list_item_tip"
+                            }}<span
+                                v-if="item.statistics_name.indexOf(dayTime) !== -1"
+                                class="list_item_tip"
                                 >24hr</span
                             ></span
                         >
                         <span
                             class="list_item_value"
                             :style="
-                                item.statistics_name === ibcStatisticsDenomsDefault.denom_all.statistics_name
+                                item.statistics_name ===
+                                ibcStatisticsDenomsDefault.denom_all.statistics_name
                                     ? 'color: var(--bj-text-normal);cursor: text;'
                                     : ''
                             "

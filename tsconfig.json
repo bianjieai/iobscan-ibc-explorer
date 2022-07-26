@@ -23,7 +23,13 @@
         },
         "outDir": "./"
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/assets/icon/iconfont.js"],
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.d.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
+        "src/assets/icon/iconfont.js"
+    ],
     "exclude": ["node_modules", "dist"],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

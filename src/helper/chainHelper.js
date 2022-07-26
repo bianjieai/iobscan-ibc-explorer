@@ -26,8 +26,12 @@ export default class ChainHelper {
         }
         if (isArray(sourceList) && sourceList?.length) {
             const updateList = sourceList?.map((item) => {
-                const matchChainA = ibcChains?.value?.all?.find((chain) => chain.chain_id === item.chain_a);
-                const matchChainB = ibcChains?.value?.all?.find((chain) => chain.chain_id === item.chain_b);
+                const matchChainA = ibcChains?.value?.all?.find(
+                    (chain) => chain.chain_id === item.chain_a
+                );
+                const matchChainB = ibcChains?.value?.all?.find(
+                    (chain) => chain.chain_id === item.chain_b
+                );
                 // 满足单选情况
                 if (chain?.split(',')[0] !== 'allchain' && chain?.split(',')[1] === 'allchain') {
                     if (matchChainB?.chain_id === chain?.split(',')[0]) {
@@ -35,12 +39,28 @@ export default class ChainHelper {
                     }
                     return item;
                 } else {
-                    if ([matchChainA?.chain_name, matchChainB?.chain_name].indexOf(CHAINNAME.COSMOSHUB) !== -1) {
-                        if ([matchChainA?.chain_name, matchChainB?.chain_name].indexOf(CHAINNAME.COSMOSHUB) === 1) {
+                    if (
+                        [matchChainA?.chain_name, matchChainB?.chain_name].indexOf(
+                            CHAINNAME.COSMOSHUB
+                        ) !== -1
+                    ) {
+                        if (
+                            [matchChainA?.chain_name, matchChainB?.chain_name].indexOf(
+                                CHAINNAME.COSMOSHUB
+                            ) === 1
+                        ) {
                             changeChainsSort(item);
                         }
-                    } else if ([matchChainA?.chain_name, matchChainB?.chain_name].indexOf(CHAINNAME.IRISHUB) !== -1) {
-                        if ([matchChainA?.chain_name, matchChainB?.chain_name].indexOf(CHAINNAME.IRISHUB) === 1) {
+                    } else if (
+                        [matchChainA?.chain_name, matchChainB?.chain_name].indexOf(
+                            CHAINNAME.IRISHUB
+                        ) !== -1
+                    ) {
+                        if (
+                            [matchChainA?.chain_name, matchChainB?.chain_name].indexOf(
+                                CHAINNAME.IRISHUB
+                            ) === 1
+                        ) {
                             changeChainsSort(item);
                         }
                     } else {

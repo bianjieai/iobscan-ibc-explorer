@@ -30,7 +30,10 @@
             need-count
         >
             <template #denom="{ record, column }">
-                <a-popover v-if="record.token_type !== SPECIAL_TOKEN_TYPE.GENESIS" placement="topLeft">
+                <a-popover
+                    v-if="record.token_type !== SPECIAL_TOKEN_TYPE.GENESIS"
+                    placement="topLeft"
+                >
                     <template #content>
                         <div class="notice-text">
                             <div>Path: {{ record.denom_path }}</div>
@@ -40,9 +43,12 @@
                     <div>{{ getRestString(rmIbcPrefix(record[column.key]), 3, 8) }}</div>
                 </a-popover>
                 <div v-else>
-                    <div v-if="getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol">{{
-                        getBaseDenomInfoByDenom(record[column.key], record.chain_id).symbol
-                    }}</div>
+                    <div
+                        v-if="getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol"
+                        >{{
+                            getBaseDenomInfoByDenom(record[column.key], record.chain_id).symbol
+                        }}</div
+                    >
                     <div v-else>
                         <a-popover v-if="record[column.key].length > 11" placement="topLeft">
                             <template #content>
@@ -73,15 +79,28 @@
                 <a-popover>
                     <template #content>
                         <div class="popover-c">{{
-                            `${formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms.value).popover}`
+                            `${
+                                formatAmount(
+                                    record[column.key],
+                                    baseDenomQuery,
+                                    ibcBaseDenoms.value
+                                ).popover
+                            }`
                         }}</div>
                     </template>
-                    <div>{{ `${formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms.value).title}` }}</div>
+                    <div>{{
+                        `${
+                            formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms.value)
+                                .title
+                        }`
+                    }}</div>
                 </a-popover>
             </template>
 
             <template #receive_txs="{ record, column }">
-                <div class="hover-cursor" @click="goTransfer(`allchain,${record.chain_id}`, record.denom)"
+                <div
+                    class="hover-cursor"
+                    @click="goTransfer(`allchain,${record.chain_id}`, record.denom)"
                     >{{ formatBigNumber(record[column.key], 0) }}
                 </div>
             </template>
@@ -123,7 +142,9 @@
     const { list, total, getList } = useGetIbcTokenList(baseDenomQuery);
 
     const baseDenomInfo = computed(() => {
-        const filterData = ibcBaseDenoms.value.filter((item: any) => item.denom === baseDenomQuery) as any; // todo clippers => 补上类型
+        const filterData = ibcBaseDenoms.value.filter(
+            (item: any) => item.denom === baseDenomQuery
+        ) as any; // todo clippers => 补上类型
         let symbol = '';
         const filterSymbol = filterData[0]?.symbol;
 
@@ -139,7 +160,9 @@
 
         return {
             symbol,
-            imgSrc: filterData[0]?.icon ?? new URL('../../assets/token-default.png', import.meta.url).href
+            imgSrc:
+                filterData[0]?.icon ??
+                new URL('../../assets/token-default.png', import.meta.url).href
         };
     });
 
@@ -155,7 +178,10 @@
         if (!searchChain.value && !searchStatus.value) {
             return `${formatBigNumber(total.value, 0)} tokens found`;
         } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} tokens found`;
+            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
+                total.value,
+                0
+            )} tokens found`;
         }
     });
 

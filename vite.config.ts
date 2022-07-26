@@ -16,7 +16,10 @@ export default ({ mode }: { mode: string }) => {
         css: {
             preprocessorOptions: {
                 less: {
-                    additionalData: `@import "${path.resolve(__dirname, './src/theme/variable/variable.less')}";`,
+                    additionalData: `@import "${path.resolve(
+                        __dirname,
+                        './src/theme/variable/variable.less'
+                    )}";`,
                     modifyVars: {
                         'primary-color': '#3D50FF',
                         'border-radius-base': '4px'

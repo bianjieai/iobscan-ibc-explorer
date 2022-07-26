@@ -46,7 +46,9 @@
                                 <p class="tip_color">{{ item?.dc_tx_info?.hash || '' }}</p>
                             </div>
                         </template>
-                        <span class="hover">{{ getRestString(item?.dc_tx_info?.hash || '', 6, 6) }}</span>
+                        <span class="hover">{{
+                            getRestString(item?.dc_tx_info?.hash || '', 6, 6)
+                        }}</span>
                     </a-popover>
                     <span v-else>--</span>
                 </span>

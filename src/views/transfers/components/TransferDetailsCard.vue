@@ -5,7 +5,10 @@
             <li v-for="(item, index) in details" :key="index" class="details_item">
                 <span class="details_item_label">{{ item.label }}</span>
                 <span v-if="item.isFormatToken" class="details_item_value">
-                    <router-link v-if="item.value" :to="`/tokens/details?denom=${baseDenom}&chain=${chainId}`">
+                    <router-link
+                        v-if="item.value"
+                        :to="`/tokens/details?denom=${baseDenom}&chain=${chainId}`"
+                    >
                         <span class="details_item_amount">{{
                             formatToken(item.value, details).symbolNum || '--'
                         }}</span>
@@ -18,8 +21,12 @@
                     </router-link>
                     <span v-else>--</span>
                 </span>
-                <span v-else-if="item.isFormatHeight" class="details_item_value">{{ formatHeight(item.value) }}</span>
-                <span v-else-if="item.isFormatStatus" class="details_item_value">{{ formatStatus(item.value) }}</span>
+                <span v-else-if="item.isFormatHeight" class="details_item_value">{{
+                    formatHeight(item.value)
+                }}</span>
+                <span v-else-if="item.isFormatStatus" class="details_item_value">{{
+                    formatStatus(item.value)
+                }}</span>
                 <span v-else-if="item.isFormatFee" class="details_item_value">
                     <span class="details_item_amount">{{
                         formatToken(formatFee(item.value), details).symbolNum || '--'
@@ -28,13 +35,20 @@
                         <template #title>
                             {{ formatToken(formatFee(item.value), details).denom }}
                         </template>
-                        <span>{{ formatDenom(formatToken(formatFee(item.value), details).symbol) }}</span>
+                        <span>{{
+                            formatDenom(formatToken(formatFee(item.value), details).symbol)
+                        }}</span>
                     </a-tooltip>
                 </span>
-                <router-link v-else-if="item.isFormatChainID" :to="`/chains`" class="details_item_value">{{
-                    formatChainID(item.value)
-                }}</router-link>
-                <span v-else-if="item.isAck" class="details_item_value">{{ formatAck(item.value) }}</span>
+                <router-link
+                    v-else-if="item.isFormatChainID"
+                    :to="`/chains`"
+                    class="details_item_value"
+                    >{{ formatChainID(item.value) }}</router-link
+                >
+                <span v-else-if="item.isAck" class="details_item_value">{{
+                    formatAck(item.value)
+                }}</span>
                 <span v-else-if="item.isFormatDate" class="details_item_value">
                     <span style="display: none">{{ formatDate(item.value) }}</span>
                     <span>{{ date }}</span>
@@ -43,7 +57,9 @@
                     <span v-show="Array.isArray(item.value)">
                         <div v-if="item.value.length >= 1">
                             <span v-for="(address, addressIndex) of item.value" :key="addressIndex">
-                                <span v-if="item.isNotLink" class="value_style">{{ address || '--' }}</span>
+                                <span v-if="item.isNotLink" class="value_style">{{
+                                    address || '--'
+                                }}</span>
                                 <router-link
                                     v-else
                                     :to="`/relayers?chain=${scChainId},${dcChainId}`"
@@ -54,7 +70,9 @@
                         </div>
                         <span v-else>--</span>
                     </span>
-                    <span v-if="!Array.isArray(item.value)" class="value_style">{{ item.value || '--' }}</span>
+                    <span v-if="!Array.isArray(item.value)" class="value_style">{{
+                        item.value || '--'
+                    }}</span>
                 </span>
                 <router-link
                     v-else-if="item.isChannelID"
@@ -64,7 +82,12 @@
                 >
                 <span v-else class="details_item_value">{{ item.value ? item.value : '--' }}</span>
             </li>
-            <li v-for="(item, index) in expandDetails" v-show="isExpand" :key="index" class="details_item">
+            <li
+                v-for="(item, index) in expandDetails"
+                v-show="isExpand"
+                :key="index"
+                class="details_item"
+            >
                 <span class="details_item_label">{{ item.label }}</span>
                 <span v-if="item.isFormatToken" class="details_item_value">
                     <!--                    {{formatToken(item.value)}}-->
@@ -76,16 +99,29 @@
                         <template #title>
                             {{ formatToken(item.value, expandDetails).denom }}
                         </template>
-                        <span>{{ formatDenom(formatToken(item.value, expandDetails).symbol) }}</span>
+                        <span>{{
+                            formatDenom(formatToken(item.value, expandDetails).symbol)
+                        }}</span>
                     </a-tooltip>
                 </span>
-                <span v-if="item.isFormatHeight" class="details_item_value">{{ formatHeight(item.value) }}</span>
-                <span v-else-if="item.isFormatStatus" class="details_item_value">{{ formatStatus(item.value) }}</span>
-                <span v-else-if="item.isFormatFee" class="details_item_value">{{ formatFee(item.value) }}</span>
-                <router-link v-else-if="item.isFormatChainID" :to="`/chains`" class="details_item_value">{{
-                    formatChainID(item.value)
-                }}</router-link>
-                <span v-else-if="item.isAck" class="details_item_value">{{ formatAck(item.value) }}</span>
+                <span v-if="item.isFormatHeight" class="details_item_value">{{
+                    formatHeight(item.value)
+                }}</span>
+                <span v-else-if="item.isFormatStatus" class="details_item_value">{{
+                    formatStatus(item.value)
+                }}</span>
+                <span v-else-if="item.isFormatFee" class="details_item_value">{{
+                    formatFee(item.value)
+                }}</span>
+                <router-link
+                    v-else-if="item.isFormatChainID"
+                    :to="`/chains`"
+                    class="details_item_value"
+                    >{{ formatChainID(item.value) }}</router-link
+                >
+                <span v-else-if="item.isAck" class="details_item_value">{{
+                    formatAck(item.value)
+                }}</span>
                 <span v-else-if="item.isFormatDate" class="details_item_value">
                     <span style="display: none">{{ formatDate(item.value) }}</span>
                     <span>{{ date }}</span>
@@ -99,7 +135,10 @@
             </li>
             <li class="see_more_button" @click="expandInfo">
                 <span class="see_more_label">Click to see More</span>
-                <span class="see_more_icon iconfont icon-shouqi" :class="isExpand ? 'less_style' : 'more_style'"></span>
+                <span
+                    class="see_more_icon iconfont icon-shouqi"
+                    :class="isExpand ? 'less_style' : 'more_style'"
+                ></span>
             </li>
         </ul>
     </div>
@@ -238,19 +277,13 @@
 
     const formatDate = (timestamp) => {
         if (timestamp > 0) {
-            date.value = `${dayjs(timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')} (${Tools.formatAge(
-                Tools.getTimestamp(),
-                timestamp * 1000,
-                'ago',
-                '>'
-            )})`;
+            date.value = `${dayjs(timestamp * 1000).format(
+                'YYYY-MM-DD HH:mm:ss'
+            )} (${Tools.formatAge(Tools.getTimestamp(), timestamp * 1000, 'ago', '>')})`;
             setTimeout(() => {
-                date.value = `${dayjs(timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')} (${Tools.formatAge(
-                    Tools.getTimestamp(),
-                    timestamp * 1000,
-                    'ago',
-                    '>'
-                )})`;
+                date.value = `${dayjs(timestamp * 1000).format(
+                    'YYYY-MM-DD HH:mm:ss'
+                )} (${Tools.formatAge(Tools.getTimestamp(), timestamp * 1000, 'ago', '>')})`;
             }, 1000);
         } else {
             date.value = '--';

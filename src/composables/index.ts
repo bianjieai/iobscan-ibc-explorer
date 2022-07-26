@@ -18,7 +18,8 @@ export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerI
 
 export const useChangeTitleAndIcon = () => {
     if (import.meta.env.MODE === 'staging') {
-        const link: any = document.querySelector('link[rel *= "icon"]') || document.createElement('link');
+        const link: any =
+            document.querySelector('link[rel *= "icon"]') || document.createElement('link');
         const title: any = document.querySelector('title') || document.createElement('title');
         link.rel = 'icon';
         link.href = import.meta.env.VITE_FAVICON;

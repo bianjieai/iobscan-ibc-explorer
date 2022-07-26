@@ -2,7 +2,10 @@
     <div class="block">
         <div class="block_header">
             <div :class="type === 'dark' ? 'block_header_line_dark' : 'block_header_line'">
-                <p class="block_header_title" :style="{ color: type === 'dark' ? '#ffffff' : '#000000' }">
+                <p
+                    class="block_header_title"
+                    :style="{ color: type === 'dark' ? '#ffffff' : '#000000' }"
+                >
                     {{ title }}
                 </p>
             </div>
@@ -69,7 +72,11 @@
                 display: inline-block;
                 width: 100%;
                 height: 12px;
-                background: linear-gradient(90deg, rgba(112, 136, 255, 0) 0%, rgba(61, 80, 255, 0.15) 100%);
+                background: linear-gradient(
+                    90deg,
+                    rgba(112, 136, 255, 0) 0%,
+                    rgba(61, 80, 255, 0.15) 100%
+                );
                 border-radius: 5px;
                 position: relative;
             }

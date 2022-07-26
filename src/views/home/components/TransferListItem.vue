@@ -11,9 +11,16 @@
             >
                 <span class="list_item_number">{{ prefixInteger(index + 1, 3) }}</span>
                 <div class="list_item_link">
-                    <img class="list_item_icon" :src="item.symbolIcon || tokenDefaultImg" alt="icon" />
+                    <img
+                        class="list_item_icon"
+                        :src="item.symbolIcon || tokenDefaultImg"
+                        alt="icon"
+                    />
                 </div>
-                <div class="list_subItem" :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }">
+                <div
+                    class="list_subItem"
+                    :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }"
+                >
                     <div class="list_subItem_title_container">
                         <span class="list_subItem_value">{{ formatNum(item.symbolNum) || 0 }}</span>
                         <a-tooltip placement="topLeft">
@@ -29,7 +36,11 @@
                 </div>
             </router-link>
         </div>
-        <router-link v-if="item.expanded" class="out_hash_wrap" :to="`/transfers/details?hash=${item.sc_tx_info.hash}`">
+        <router-link
+            v-if="item.expanded"
+            class="out_hash_wrap"
+            :to="`/transfers/details?hash=${item.sc_tx_info.hash}`"
+        >
             <hash-addr-icon :item="item" :ibc-chains="ibcChains"></hash-addr-icon>
         </router-link>
     </div>

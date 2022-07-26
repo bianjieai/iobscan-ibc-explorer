@@ -24,11 +24,19 @@
                     'justify-center',
                     'items-center',
                     selectToken.length > 0 ? 'selected_color' : '',
-                    selectedInfo.title === defaultTitle.defaultTokens ? 'selected_color_default' : '',
+                    selectedInfo.title === defaultTitle.defaultTokens
+                        ? 'selected_color_default'
+                        : '',
                     selectToken.length > 0 && visible ? 'visible_color' : ''
                 ]"
             >
-                <img v-if="selectedInfo.icon.length" width="18" height="18" class="mr-4" :src="selectedInfo.icon" />
+                <img
+                    v-if="selectedInfo.icon.length"
+                    width="18"
+                    height="18"
+                    class="mr-4"
+                    :src="selectedInfo.icon"
+                />
                 <span class="selectedInfo_title">{{ selectedInfo.title }}</span>
             </div>
             <span class="button_icon flex justify-between items-center">
@@ -54,13 +62,18 @@
             <div class="overlay">
                 <div>
                     <span
-                        :class="['chains-tag', isSelected(undefined) ? 'visible_color visible_border' : '']"
+                        :class="[
+                            'chains-tag',
+                            isSelected(undefined) ? 'visible_color visible_border' : ''
+                        ]"
                         @click="onSelected(defaultTitle.defaultTokens, undefined)"
                         >All Tokens</span
                     >
                 </div>
                 <div class="mt-24">
-                    <div :style="{ marginBottom: '-2px' }" class="leading-none">Authed IBC Tokens</div>
+                    <div :style="{ marginBottom: '-2px' }" class="leading-none"
+                        >Authed IBC Tokens</div
+                    >
                     <div class="flex flex-wrap">
                         <span
                             v-for="item in dropdownData"
@@ -102,7 +115,11 @@
                                     denomination trace information.
                                 </p>
                             </template>
-                            <img class="tip hover" style="margin-left: 8px" src="/src/assets/tip.png" />
+                            <img
+                                class="tip hover"
+                                style="margin-left: 8px"
+                                src="/src/assets/tip.png"
+                            />
                         </a-popover>
                     </div>
                     <div class="flex items-center mt-12 flex-wrap">
@@ -113,7 +130,9 @@
                             placeholder="Search by ibc/hash"
                             @input="onInputChange"
                         />
-                        <a-button type="primary" class="confirm-button ml-12" @click="confirmChains">Confirm</a-button>
+                        <a-button type="primary" class="confirm-button ml-12" @click="confirmChains"
+                            >Confirm</a-button
+                        >
                     </div>
                 </div>
             </div>
@@ -141,7 +160,10 @@
 
     const props = withDefaults(defineProps<IProps>(), {
         baseDenom: '',
-        dropdownData: (sessionStorage.getItem('baseDenoms') && JSON.parse(sessionStorage.getItem('baseDenoms')!)) || []
+        dropdownData:
+            (sessionStorage.getItem('baseDenoms') &&
+                JSON.parse(sessionStorage.getItem('baseDenoms')!)) ||
+            []
     });
 
     const visible = ref(false);
@@ -151,7 +173,8 @@
     let backupDropdownData: TSelectToken[] | null;
 
     const isSelected = computed(
-        () => (denom: TDenom) => selectToken.value.length > 0 && selectToken.value[0]?.denom === denom
+        () => (denom: TDenom) =>
+            selectToken.value.length > 0 && selectToken.value[0]?.denom === denom
     );
     const selectedInfo = computed(() => {
         let title = defaultTitle.defaultTokens;

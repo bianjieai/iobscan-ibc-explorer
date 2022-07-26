@@ -1,6 +1,11 @@
 <template>
     <div class="chainlist">
-        <a-menu v-model:selectedKeys="currentMenu" class="chainlist_menu" mode="horizontal" @select="onSelectedMenu">
+        <a-menu
+            v-model:selectedKeys="currentMenu"
+            class="chainlist_menu"
+            mode="horizontal"
+            @select="onSelectedMenu"
+        >
             <a-menu-item v-for="item of menus" :key="item.value" class="chainlist_item">
                 {{ item.label }}
             </a-menu-item>
@@ -22,7 +27,10 @@
                     >
                         <router-link :to="`/chains`">
                             <a-card class="menu_card">
-                                <img class="card_img" :src="item.icon ? item.icon : chainDefaultImg" />
+                                <img
+                                    class="card_img"
+                                    :src="item.icon ? item.icon : chainDefaultImg"
+                                />
                                 <p class="card_title">{{ item.chain_name }}</p>
                                 <p class="card_value">{{ formatChainID(item.chain_id) }}</p>
                             </a-card>
@@ -64,13 +72,21 @@
                 </a-anchor-link>
             </a-anchor>
 
-            <no-datas v-if="!chainList[currentMenu] || !chainList[currentMenu].length" class="card_list" />
+            <no-datas
+                v-if="!chainList[currentMenu] || !chainList[currentMenu].length"
+                class="card_list"
+            />
         </div>
     </div>
 </template>
 
 <script setup>
-    import { useMenus, useInterfaceActive, useAnchors, useGetBindElement } from '../composable/useChainsListInfo';
+    import {
+        useMenus,
+        useInterfaceActive,
+        useAnchors,
+        useGetBindElement
+    } from '../composable/useChainsListInfo';
     import ChainHelper from '@/helper/chainHelper';
     const chainDefaultImg = new URL('../../../assets/chain-default.png', import.meta.url).href;
     defineProps({
