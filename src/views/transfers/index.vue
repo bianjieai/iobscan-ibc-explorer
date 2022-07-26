@@ -155,7 +155,7 @@
                             <router-link class="token_link hover" :to="record.status === ibcTxStatus.SUCCESS ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}` : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`" @click.stop="">
                                 <img
                                     class="token_icon"
-                                    :src="record.symbolIcon || chainDefaultImg"
+                                    :src="record.symbolIcon || tokenDefaultImg"
                                 />
                                 <span class="token_info">
                                     <span class="token_num">{{
@@ -286,6 +286,7 @@ import ChainsDropdown from '../../components/responsive/dropdown/chains.vue';
 import { ibcTxStatusSelectOptions, transfersStatusOptions, tableChainIDs, chainAddressPrefix, ibcTxStatus, ibcTxStatusDesc, defaultTitle, unknownSymbol, pageParameters, txStatusNumber, CHAINNAME } from '../../constants';
 import Tools from '../../utils/Tools';
 import chainDefaultImg from '../../assets/chain-default.png';
+import tokenDefaultImg from '../../assets/token-default.png';
 import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/parseString';
 import ChainHelper from '../../helper/chainHepler';
 import * as djs from 'dayjs';
