@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-    import { TBaseChains } from '@/types/interface/chainAndDenom.interface';
+    import { IIbcchain } from '@/types/interface/baseApi.interface';
     import { computed } from 'vue';
     import {
         TableCellIconSize,
@@ -51,7 +51,7 @@
     interface IProps {
         iconSize?: TTableCellIconSize;
         chainId: string;
-        chainsData: TBaseChains[];
+        chainsData: IIbcchain[];
         titleCanClick?: boolean;
         title?: string;
         noSubtitle?: boolean;

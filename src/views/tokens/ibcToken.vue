@@ -80,19 +80,13 @@
                     <template #content>
                         <div class="popover-c">{{
                             `${
-                                formatAmount(
-                                    record[column.key],
-                                    baseDenomQuery,
-                                    ibcBaseDenoms.value
-                                ).popover
+                                formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms)
+                                    .popover
                             }`
                         }}</div>
                     </template>
                     <div>{{
-                        `${
-                            formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms.value)
-                                .title
-                        }`
+                        `${formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms).title}`
                     }}</div>
                 </a-popover>
             </template>
@@ -142,7 +136,7 @@
     const { list, total, getList } = useGetIbcTokenList(baseDenomQuery);
 
     const baseDenomInfo = computed(() => {
-        const filterData = ibcBaseDenoms.value.filter(
+        const filterData = ibcBaseDenoms.filter(
             (item: any) => item.denom === baseDenomQuery
         ) as any; // todo clippers => 补上类型
         let symbol = '';

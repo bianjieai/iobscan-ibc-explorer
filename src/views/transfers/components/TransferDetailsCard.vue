@@ -218,7 +218,7 @@
             let symbolDenom = token?.denom || '';
             let denom = token?.denom || '';
             if (symbol) {
-                const findSymbol = Tools.findSymbol(ibcBaseDenoms.value, symbol);
+                const findSymbol = Tools.findSymbol(ibcBaseDenoms, symbol);
                 if (findSymbol) {
                     // (token.amount || 0) * 10 ** -findSymbol.scale;
                     symbolNum = formatBigNumber(moveDecimal(token.amount, 0 - findSymbol.scale));
@@ -257,7 +257,7 @@
             return amountObj;
             /*let displayAmountNum = '',displayAmountDenom = ''
         if(amountObj?.denom && amountObj?.amount){
-            const tokenInfo = Tools.findDenom(store.state.ibcBaseDenoms.value,amountObj.denom)
+            const tokenInfo = Tools.findDenom(store.state.ibcBaseDenoms,amountObj.denom)
             if(tokenInfo?.scale){
                 displayAmountNum =  moveDecimal(amountObj.amount,0 - tokenInfo.scale)
                 displayAmountDenom = tokenInfo.symbol

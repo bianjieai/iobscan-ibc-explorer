@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-    import { TBaseChains } from '@/types/interface/chainAndDenom.interface';
+    import { IIbcchain } from '@/types/interface/baseApi.interface';
     import { computed } from 'vue';
     import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
     import { formatLongTitleString } from '@/helper/parseStringHelper';
@@ -25,7 +25,7 @@
         chainBAddress: string;
         chainA: string; // chain id
         chainB: string;
-        ibcChains: TBaseChains[];
+        ibcChains?: IIbcchain[];
     }
 
     const props = defineProps<IProps>();

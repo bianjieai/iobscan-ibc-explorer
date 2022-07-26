@@ -75,17 +75,17 @@ export const useGetIbcDenoms = () => {
     const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenoms;
     const getBaseDenomInfoByDenom = (denom, chainId) => {
-        return (ibcBaseDenoms.value || []).find(
+        return (ibcBaseDenoms || []).find(
             (item) => item.denom == denom && item.chain_id == chainId
         );
     };
     const ibcBaseDenomsSorted = computed(() => {
         let tokens = [];
-        let customs = (ibcBaseDenoms.value || []).filter((item) => {
+        let customs = (ibcBaseDenoms || []).filter((item) => {
             return item.symbol == SYMBOL.ATOM || item.symbol == SYMBOL.IRIS;
         });
         customs.sort((a, b) => a.symbol.localeCompare(b.symbol));
-        (ibcBaseDenoms.value || [])
+        (ibcBaseDenoms || [])
             .sort((a, b) => a.symbol.localeCompare(b.symbol))
             .forEach((item) => {
                 if (item.symbol != SYMBOL.ATOM && item.symbol != SYMBOL.IRIS) {
