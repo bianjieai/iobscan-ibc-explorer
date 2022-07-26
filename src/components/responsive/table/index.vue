@@ -12,14 +12,27 @@
         >
             <template #bodyCell="{ column, record, index, text }">
                 <template v-if="isKeyInNeedCustomColumns(column.key)">
-                    <slot :name="column.key" :column="column" :record="record" :text="text" :index="index"></slot>
+                    <slot
+                        :name="column.key"
+                        :column="column"
+                        :record="record"
+                        :text="text"
+                        :index="index"
+                    ></slot>
                 </template>
             </template>
         </a-table>
         <div class="thead-border-bottom"></div>
         <div
             v-if="hasData || $slots.table_bottom_status"
-            :class="['flex', 'justify-between', 'pt-16', !noPagination ? 'pb-16' : '', 'items-center', 'bottom']"
+            :class="[
+                'flex',
+                'justify-between',
+                'pt-16',
+                !noPagination ? 'pb-16' : '',
+                'items-center',
+                'bottom'
+            ]"
         >
             <slot name="table_bottom_status">
                 <div></div>
@@ -41,7 +54,7 @@
     import { computed, onMounted, reactive, ref, watch } from 'vue';
     import { useTimeInterval } from '@/composables';
     import { formatLastUpdated } from '@/utils/timeTools';
-    import { CompareOrder } from '../component.interface';
+    import { CompareOrder } from '../../../types/interface/component.interface';
     import BigNumber from 'bignumber.js';
     import { useGetIbcDenoms } from '@/views/home/composable';
     import { formatSupply } from '@/helper/tableCellHelper';
@@ -88,8 +101,12 @@
             }
         }
     );
-    const needPagination = computed(() => !props.noPagination && !(props.current && props.pageSize)); // 需要前端分页
-    const isKeyInNeedCustomColumns = computed(() => (key: string) => props.needCustomColumns.includes(key)); // 判断key
+    const needPagination = computed(
+        () => !props.noPagination && !(props.current && props.pageSize)
+    ); // 需要前端分页
+    const isKeyInNeedCustomColumns = computed(
+        () => (key: string) => props.needCustomColumns.includes(key)
+    ); // 判断key
     const hasData = computed(() => props.data?.length > 0);
     const backUpData = () => {
         const { columns, data, needCount } = props;
@@ -112,7 +129,11 @@
             onTableChange(
                 {},
                 {},
-                { columnKey: defaultSort.key, column: defaultSort, order: defaultSort.defaultSortOrder }
+                {
+                    columnKey: defaultSort.key,
+                    column: defaultSort,
+                    order: defaultSort.defaultSortOrder
+                }
             );
         }
         if (props.noPagination) {
@@ -178,10 +199,12 @@
                         (order === CompareOrder.DESCEND ? -1 : 1)
                     );
                 });
-                backUpDataSource = [...authedTemp, ...otherTemp].map((item: any, index: number) => ({
-                    ...item,
-                    _count: index + 1
-                }));
+                backUpDataSource = [...authedTemp, ...otherTemp].map(
+                    (item: any, index: number) => ({
+                        ...item,
+                        _count: index + 1
+                    })
+                );
                 break;
             default: // reset backup
                 if (tempColumn.key !== columnKey) {

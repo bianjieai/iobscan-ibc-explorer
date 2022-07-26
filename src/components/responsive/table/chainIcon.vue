@@ -11,12 +11,17 @@
             @click="avatarClick"
         />
         <div class="flex flex-col justify-around">
-            <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{
-                computedTitle
-            }}</div>
+            <div
+                :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']"
+                @click="go"
+                >{{ computedTitle }}</div
+            >
 
             <div v-if="chainInfo.subtitle !== '--'">
-                <a-popover v-if="formatChainID(chainInfo.subtitle)?.length >= 18" placement="bottom">
+                <a-popover
+                    v-if="formatChainID(chainInfo.subtitle)?.length >= 18"
+                    placement="bottom"
+                >
                     <template #content>
                         <div class="popover-c">{{ formatChainID(chainInfo.subtitle) }}</div>
                     </template>
@@ -36,7 +41,10 @@
 <script setup lang="ts">
     import { TBaseChains } from '@/types/interface/chainAndDenom.interface';
     import { computed } from 'vue';
-    import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
+    import {
+        TableCellIconSize,
+        TTableCellIconSize
+    } from '../../../types/interface/component.interface';
     import ChainHelper from '@/helper/chainHelper';
     import { UNKNOWN } from '../../../constants';
 

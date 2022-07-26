@@ -1,11 +1,5 @@
 import { useIbcStatisticsChains } from '@/store/index';
-import {
-    GET_IBCSTATISTICS,
-    GET_IBCCHAINS,
-    GET_IBCTXS,
-    GET_IBCDENOMS,
-    GET_IBCBASEDENOMS
-} from '@/constants/actionTypes';
+import { GET_IBCSTATISTICS, GET_IBCTXS, GET_IBCDENOMS } from '@/constants/actionTypes';
 import {
     ibcStatisticsChannelsDefault,
     ibcStatisticsDenomsDefault,
@@ -34,7 +28,7 @@ export const useIbcStatistics = () => {
 };
 export const useIbcChains = () => {
     const ibcChains = computed(() => ibcStatisticsChainsStore.ibcChains);
-    const getIbcChains = ibcStatisticsChainsStore[GET_IBCCHAINS];
+    const getIbcChains = ibcStatisticsChainsStore.getIbcChains;
     return {
         ibcChains,
         getIbcChains
@@ -53,7 +47,10 @@ export const useIbcTxs = () => {
         });
     };
     const limitIbcTxs = (limitNumber = 10) => {
-        ibcStatisticsChainsStore.ibcTxs.value = ibcStatisticsChainsStore.ibcTxs.value.slice(0, limitNumber);
+        ibcStatisticsChainsStore.ibcTxs.value = ibcStatisticsChainsStore.ibcTxs.value.slice(
+            0,
+            limitNumber
+        );
     };
     return {
         ibcTxs,
@@ -76,9 +73,11 @@ export const useClearInterval = () => {
 export const useGetIbcDenoms = () => {
     const ibcBaseDenoms = ibcStatisticsChainsStore.ibcBaseDenoms;
     const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
-    const getIbcBaseDenom = ibcStatisticsChainsStore[GET_IBCBASEDENOMS];
+    const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenoms;
     const getBaseDenomInfoByDenom = (denom, chainId) => {
-        return (ibcBaseDenoms.value || []).find((item) => item.denom == denom && item.chain_id == chainId);
+        return (ibcBaseDenoms.value || []).find(
+            (item) => item.denom == denom && item.chain_id == chainId
+        );
     };
     const ibcBaseDenomsSorted = computed(() => {
         let tokens = [];

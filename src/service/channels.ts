@@ -1,4 +1,4 @@
-import { TChannelStatus } from '@/components/responsive/component.interface';
+import { TChannelStatus } from '@/types/interface/component.interface';
 import { ref, Ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelper.js';
 import { baseParams } from './tokens';
@@ -35,6 +35,7 @@ export const useGetChannelsList = () => {
         });
         loading && (loading.value = false);
         const { code, data, message } = result;
+        debugger;
         if (code === 0) {
             if (!params.use_count) {
                 const { items } = data;

@@ -2,7 +2,7 @@
  * @description format tableCell
  */
 
-import { TBaseDenoms } from '@/types/interface/chainAndDenom.interface';
+import { IBaseDenoms } from '@/types/interface/baseApi.interface';
 import { formatBigNumber } from './parseStringHelper';
 import moveDecimal from 'move-decimal-point';
 /**
@@ -19,7 +19,7 @@ export const formatPrice = (price: number | string, numberOfDecimal: number | nu
     return `${formatBigNumber(Number(price), numberOfDecimal)}`;
 };
 
-const getScale = (denom?: string, baseDenomData?: TBaseDenoms[]) => {
+const getScale = (denom?: string, baseDenomData?: IBaseDenoms[]) => {
     if (Array.isArray(baseDenomData) && denom) {
         const filterData = baseDenomData.filter((item) => item.denom === denom);
         if (filterData.length > 0) {
@@ -35,7 +35,7 @@ const getScale = (denom?: string, baseDenomData?: TBaseDenoms[]) => {
 export const formatSupply = (
     supply: number | string,
     denom: string,
-    baseDenomData: TBaseDenoms[],
+    baseDenomData: IBaseDenoms[],
     numberOfDecimal = 2,
     isformat = true
 ) => {
@@ -57,7 +57,7 @@ export const formatSupply = (
 export const formatAmount = (
     amount: number | string,
     denom?: string,
-    baseDenomData?: TBaseDenoms[],
+    baseDenomData?: IBaseDenoms[],
     numberOfDecimal = 2
 ) => {
     if (amount === -1 || amount === '-1' || amount === '') {
@@ -86,7 +86,10 @@ export const formatAmount = (
     };
 };
 
-export const formatTransfer_success_txs = (transfer_success_txs: number, transfer_total_txs: number) => {
+export const formatTransfer_success_txs = (
+    transfer_success_txs: number,
+    transfer_total_txs: number
+) => {
     if (transfer_total_txs === 0) return 0;
     return ((transfer_success_txs / transfer_total_txs) * 100).toFixed(0);
 };

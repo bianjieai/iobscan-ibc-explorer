@@ -4,8 +4,7 @@
 
 <script setup>
     import { useIbcStatisticsChains } from '@/store/index';
-    import { GET_IBCBASEDENOMS } from '@/constants/actionTypes';
-    import { useChangeTitleAndIcon } from './composables/index';
+    import { useChangeTitleAndIcon } from '@/composables/index';
     let script = document.createElement('script');
     script.src = `https://s4.cnzz.com/z_stat.php?id=${import.meta.env.VITE_UMENG_ID}&web_id=${
         import.meta.env.VITE_UMENG_WEB_ID
@@ -14,7 +13,7 @@
     document.body.appendChild(script);
 
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    ibcStatisticsChainsStore[GET_IBCBASEDENOMS]();
+    ibcStatisticsChainsStore.initState();
     useChangeTitleAndIcon();
 </script>
 

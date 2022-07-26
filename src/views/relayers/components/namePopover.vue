@@ -16,7 +16,7 @@
     import { computed } from 'vue';
     import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
     import { formatLongTitleString } from '@/helper/parseStringHelper';
-    import { RELAYER_STATUS } from '../constants';
+    import { RELAYER_STATUS } from '@/constants/relayers';
     import { UNKNOWN } from '../../../constants';
     interface IProps {
         relayerName: string;

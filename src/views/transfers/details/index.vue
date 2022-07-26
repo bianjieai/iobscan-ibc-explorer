@@ -1,7 +1,5 @@
 <template>
     <div class="transfer">
-        <!-- todo duanjie loading 只用在了详情页面是否合适 -->
-        <loading v-show="isShowLoading.value"></loading>
         <div class="transfer_detail">
             <div class="transfer_detail_top_content">
                 <div class="transfer_detail_title">
@@ -36,7 +34,10 @@
                     </span>
                     <span class="transfer_ibc_out_tx_hash_value">
                         <span>{{ ibcTransferOutTxHash }} </span>
-                        <copy-component v-show="ibcTransferOutTxHash !== '--'" :copy-text="ibcTransferOutTxHash">
+                        <copy-component
+                            v-show="ibcTransferOutTxHash !== '--'"
+                            :copy-text="ibcTransferOutTxHash"
+                        >
                         </copy-component>
                     </span>
                 </div>
@@ -79,7 +80,10 @@
                     </span>
                     <span class="transfer_ibc_in_tx_hash_value">
                         <span>{{ ibcTransferInTxHash }}</span>
-                        <copy-component v-show="ibcTransferInTxHash !== '--'" :copy-text="ibcTransferInTxHash">
+                        <copy-component
+                            v-show="ibcTransferInTxHash !== '--'"
+                            :copy-text="ibcTransferInTxHash"
+                        >
                         </copy-component>
                     </span>
                 </div>
@@ -139,7 +143,6 @@
         transferOutExpandDetails,
         transferInDetails,
         transferInExpandDetails,
-        isShowLoading,
         scChainId,
         dcChainId
     } = useTransfersDetailsInfo();
@@ -174,7 +177,11 @@
 
                     &:after {
                         content: '';
-                        background: linear-gradient(90deg, rgba(112, 136, 255, 0) 0%, rgba(61, 80, 255, 0.15) 100%);
+                        background: linear-gradient(
+                            90deg,
+                            rgba(112, 136, 255, 0) 0%,
+                            rgba(61, 80, 255, 0.15) 100%
+                        );
                         width: 100%;
                         height: 12px;
                         border-radius: 6px;

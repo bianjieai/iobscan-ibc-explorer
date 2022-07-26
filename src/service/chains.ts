@@ -2,7 +2,6 @@ import { Ref, ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelper.js';
 import { baseParams } from './tokens';
 import { useIbcStatisticsChains } from '@/store/index';
-import { GET_IBCCHAINS } from '@/constants/actionTypes';
 import { UNKNOWN } from '../constants';
 const urlPrefix = import.meta.env.VITE_BASE_GO_API;
 
@@ -31,7 +30,7 @@ export const useGetChainsList = () => {
                 ibcChains = JSON.parse(ibcChainsStr);
             } else {
                 const ibcStatisticsChainsStore = useIbcStatisticsChains();
-                const getIbcChains = ibcStatisticsChainsStore[GET_IBCCHAINS];
+                const getIbcChains = ibcStatisticsChainsStore.getIbcChains;
                 try {
                     await getIbcChains();
                     ibcChains = ibcStatisticsChainsStore.ibcChains;

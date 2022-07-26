@@ -18,7 +18,13 @@
 
             <ResetButton @on-reset="resetSearchCondition" />
         </div>
-        <BjTable :loading="loading" :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
+        <BjTable
+            :loading="loading"
+            :data="list"
+            :need-custom-columns="needCustomColumns"
+            :columns="COLUMNS"
+            need-count
+        >
             <template #chain_a="{ record, column }">
                 <ChainIcon
                     avatar-can-click
@@ -89,7 +95,7 @@
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
     import TransferTxs from '@/components/responsive/table/transferTxs.vue';
     import StatusImg from '@/components/responsive/table/statusImg.vue';
-    import { TChannelStatus, BottomStatusType } from '@/components/responsive/component.interface';
+    import { TChannelStatus, BottomStatusType } from '@/types/interface/component.interface';
     import { useGetChannelsList } from '@/service/channels';
     import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useIbcChains } from '../home/composable';
@@ -107,7 +113,14 @@
     const { ibcChains, getIbcChains } = useIbcChains();
     const { list, total, getList } = useGetChannelsList();
 
-    const needCustomColumns = ['chain_a', 'status', 'chain_b', 'operating_period', 'last_updated', 'ibc_transfer_txs'];
+    const needCustomColumns = [
+        'chain_a',
+        'status',
+        'chain_b',
+        'operating_period',
+        'last_updated',
+        'ibc_transfer_txs'
+    ];
 
     const chainDropdown = ref();
     const statusDropdown = ref();
@@ -125,7 +138,10 @@
         if (!searchChain.value && !searchStatus.value) {
             return `${formatBigNumber(total.value, 0)} channels found`;
         } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} channels found`;
+            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
+                total.value,
+                0
+            )} channels found`;
         }
     });
     const loading = ref(false);

@@ -11,7 +11,7 @@
         TRelayerStatus,
         TChannelStatus,
         ChannelStatus
-    } from '../component.interface';
+    } from '../../../types/interface/component.interface';
 
     interface IProps {
         status: TRelayerStatus | TChannelStatus;

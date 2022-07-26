@@ -29,8 +29,10 @@ declare module '@vue/runtime-core' {
         ARangePicker: typeof import('ant-design-vue/es')['RangePicker'];
         ASelect: typeof import('ant-design-vue/es')['Select'];
         ASelectOption: typeof import('ant-design-vue/es')['SelectOption'];
+        ASpin: typeof import('ant-design-vue/es')['Spin'];
         ATable: typeof import('ant-design-vue/es')['Table'];
         ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
+        ATypographyText: typeof import('ant-design-vue/es')['TypographyText'];
         BottomStatus: typeof import('./../components/responsive/table/bottomStatus.vue')['default'];
         ChainIcon: typeof import('./../components/responsive/table/chainIcon.vue')['default'];
         ComingSoon: typeof import('./../components/ComingSoon.vue')['default'];

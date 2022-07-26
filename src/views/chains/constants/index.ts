@@ -1,6 +1,6 @@
-import { CompareOrder } from '@/components/responsive/component.interface';
+import { CompareOrder } from '@/types/interface/component.interface';
 import { TableColumnsType } from 'ant-design-vue';
-console.log(1);
+
 export const COLUMNS: TableColumnsType = [
     {
         dataIndex: 'chain_id',
