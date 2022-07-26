@@ -1,4 +1,5 @@
-import chainDefaultImg from '../../../assets/chain-default.png';
+import chainDefaultImg from '@/assets/chain-default.png';
+
 export const useInterfaceActive = (emits) => {
     const onClickViewAll = () => {
         emits('clickViewAll');

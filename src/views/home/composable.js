@@ -1,13 +1,11 @@
-import { computed, onBeforeUnmount } from 'vue';
-import { useRouter } from 'vue-router';
-import { useIbcStatisticsChains } from '../../store/index';
+import { useIbcStatisticsChains } from '@/store/index';
 import {
     GET_IBCSTATISTICS,
     GET_IBCCHAINS,
     GET_IBCTXS,
     GET_IBCDENOMS,
     GET_IBCBASEDENOMS
-} from '../../constants/actionTypes';
+} from '@/constants/actionTypes';
 import {
     ibcStatisticsChannelsDefault,
     ibcStatisticsDenomsDefault,
@@ -16,7 +14,7 @@ import {
     pageParameters,
     ibcStatisticsTxsDefault,
     txStatusNumber
-} from '../../constants';
+} from '@/constants';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 

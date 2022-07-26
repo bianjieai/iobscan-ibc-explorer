@@ -48,13 +48,11 @@
 </template>
 
 <script setup>
-    import HeaderInput from '../../components/HeaderInput.vue';
     import LayerBlock from './components/LayerBlock.vue';
     import ChainsInfo from './components/ChainsInfo.vue';
     import ChainsListInfo from './components/ChainsListInfo.vue';
     import StatisticList from './components/StatisticList.vue';
     import TransferList from './components/TransferList.vue';
-    import { onMounted, onBeforeUnmount } from 'vue';
     import {
         useIbcStatistics,
         useIbcChains,
@@ -63,8 +61,8 @@
         useClearInterval,
         useGetIbcDenoms
     } from './composable';
-    import { useOnPressEnter } from '../../composables/useStarAnimation';
-    import { pageParameters, ibcStatisticsTxsDefault } from '../../constants';
+    import { useOnPressEnter } from '@/composables/useStarAnimation';
+    import { pageParameters, ibcStatisticsTxsDefault } from '@/constants/index';
     const { ibcStatisticsChains, ibcStatisticsChannels, ibcStatisticsDenoms, ibcStatisticsTxs, getIbcStatistics } =
         useIbcStatistics();
     const { ibcChains, getIbcChains } = useIbcChains();

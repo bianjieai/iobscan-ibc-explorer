@@ -67,7 +67,7 @@
 </template>
 
 <script setup>
-    import { getRestString } from '../../../helper/parseStringHelper';
+    import { getRestString } from '@/helper/parseStringHelper';
     import { useFindIbcChainIcon } from '../composable/useTransferList';
     const props = defineProps({
         item: {

@@ -37,10 +37,10 @@
 
 <script setup>
     import HashAddrIcon from './HashAddrIcon.vue';
-    import { prefixInteger, formatNum } from '../../../helper/parseStringHelper';
-    import tokenDefaultImg from '../../../assets/token-default.png';
-    import expandImg from '../../../assets/expand.png';
-    import packUpImg from '../../../assets/pack_up.png';
+    import { prefixInteger, formatNum } from '@/helper/parseStringHelper';
+    import tokenDefaultImg from '@/assets/token-default.png';
+    import expandImg from '@/assets/expand.png';
+    import packUpImg from '@/assets/pack_up.png';
     import { useIsExpand } from '../composable/useTransferList';
 
     const props = defineProps({

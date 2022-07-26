@@ -1,5 +1,4 @@
-import { chainMenus, anchorsDatas } from '../../../constants';
-import { ref, reactive, onMounted } from 'vue';
+import { chainMenus, anchorsDatas } from '@/constants';
 
 export const useMenus = () => {
     const menus = reactive(chainMenus);

@@ -37,9 +37,8 @@
 
 <script setup>
     import TransferListItem from './TransferListItem.vue';
-    import NoDatas from '../../../components/NoDatas.vue';
     import { useInterfaceActive } from '../composable/useTransferList';
-    import { ibcTxStatusDesc } from '../../../constants';
+    import { ibcTxStatusDesc } from '@/constants';
     defineProps({
         transferList: {
             type: Array,
