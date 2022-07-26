@@ -1,17 +1,17 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Layout from '../layout/index.vue'
-import { createInterceptor } from './interceptor'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import Layout from '../layout/index.vue';
+import { createInterceptor } from './interceptor';
 
 const routes: Array<RouteRecordRaw> = [
     {
         path: '/500',
         name: '500',
-        component: () => import('../components/errorpage/500.vue'),
+        component: () => import('../components/errorpage/500.vue')
     },
     {
         path: '/404',
         name: '404',
-        component: () => import('../components/errorpage/404.vue'),
+        component: () => import('../components/errorpage/404.vue')
     },
     {
         path: '/',
@@ -19,7 +19,6 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/home',
-        redirect: '/home',
         component: Layout,
         meta: {},
         children: [
@@ -28,27 +27,26 @@ const routes: Array<RouteRecordRaw> = [
                 name: 'Home',
                 component: () => import('../views/home/index.vue'),
                 meta: {}
-            },
+            }
         ]
     },
     {
         path: '/transfers',
-        redirect: '/transfers',
         component: Layout,
         meta: {},
         children: [
             {
                 path: '',
                 name: 'Transfers',
-                component: ()=> import('../views/transfers/index.vue'),
+                component: () => import('../views/transfers/index.vue'),
                 meta: {}
             },
             {
                 path: 'details',
                 name: 'Transfers Details',
-                component: ()=> import('../views/transfers/details/index.vue'),
+                component: () => import('../views/transfers/details/index.vue'),
                 meta: {}
-            },
+            }
         ]
     },
     {
@@ -59,14 +57,13 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: '',
                 name: 'Search Result',
-                component: ()=> import('../views/transfers/components/NoResult.vue'),
+                component: () => import('../views/transfers/components/NoResult.vue'),
                 meta: {}
             }
         ]
     },
     {
         path: '/tokens',
-        redirect: '/tokens',
         component: Layout,
         meta: {},
         children: [
@@ -85,7 +82,6 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/chains',
-        redirect: '/chains',
         component: Layout,
         meta: {},
         children: [
@@ -105,7 +101,6 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/channels',
-        redirect: '/channels',
         component: Layout,
         meta: {},
         children: [
@@ -119,7 +114,6 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/relayers',
-        redirect: '/relayers',
         component: Layout,
         meta: {},
         children: [
@@ -133,18 +127,15 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/:pathMatch(.*)*',
-        redirect: '/404',
+        redirect: '/404'
     }
-]
-
-
+];
 
 const router = createRouter({
     history: createWebHistory('/'),
     routes
-})
+});
 
-createInterceptor(router)
+createInterceptor(router);
 
-export default router
-
+export default router;

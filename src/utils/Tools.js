@@ -38,9 +38,7 @@ export default class Tools {
 
     static findDenomSymbol(ibcDenoms, denomStr, chainId) {
         if (ibcDenoms) {
-            const findDenom = ibcDenoms?.find(
-                (denom) => denom.denom === denomStr && denom.chain_id === chainId,
-            );
+            const findDenom = ibcDenoms?.find((denom) => denom.denom === denomStr && denom.chain_id === chainId);
             if (findDenom) {
                 return findDenom.symbol;
             }
@@ -50,7 +48,7 @@ export default class Tools {
 
     static findSymbol(ibcBaseDenoms, symbol) {
         if (ibcBaseDenoms) {
-            const findBaseDenom = ibcBaseDenoms.find(baseDenom => baseDenom.symbol === symbol);
+            const findBaseDenom = ibcBaseDenoms.find((baseDenom) => baseDenom.symbol === symbol);
             if (findBaseDenom) {
                 return findBaseDenom;
             }
@@ -75,22 +73,22 @@ export default class Tools {
 
     static urlParser(url = document.location.toString()) {
         if (url.includes('?')) {
-            const searchStr = url.split('?')[1]
-            let searchInstance = new URLSearchParams(searchStr)
-            let params = {}
+            const searchStr = url.split('?')[1];
+            let searchInstance = new URLSearchParams(searchStr);
+            let params = {};
             for (let entries of searchInstance.entries()) {
-                params[entries[0]] = entries[1]
+                params[entries[0]] = entries[1];
             }
-            return params
+            return params;
         } else if (url.includes('&')) {
-            let searchInstance = new URLSearchParams(url)
-            let params = {}
+            let searchInstance = new URLSearchParams(url);
+            let params = {};
             for (let entries of searchInstance.entries()) {
-                params[entries[0]] = entries[1]
+                params[entries[0]] = entries[1];
             }
-            return params
+            return params;
         } else {
-            return {}
+            return {};
         }
     }
 }

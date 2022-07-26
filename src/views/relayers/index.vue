@@ -1,212 +1,251 @@
 <template>
-  <PageContainer>
-    <PageTitle title="IBC Relayers" :subtitle="subtitle" />
-    <div class="select flex items-center flex-wrap">
-      <ChainsDropdown :dropdown-data="ibcChains?.all ?? []" :chain_id="chainIdQuery"
-        @on-selected-chain="onSelectedChain" selected-double ref="chainDropdown" />
-      <BaseDropdown :status="statusQuery" :options="STATUS_OPTIONS" ref="statusDropdown"
-        @on-selected-change="onSelectedStatus" />
+    <PageContainer>
+        <PageTitle title="IBC Relayers" :subtitle="subtitle" />
+        <div class="select flex items-center flex-wrap">
+            <ChainsDropdown
+                ref="chainDropdown"
+                :dropdown-data="ibcChains?.all ?? []"
+                :chain-id="chainIdQuery"
+                selected-double
+                @on-selected-chain="onSelectedChain"
+            />
+            <BaseDropdown
+                ref="statusDropdown"
+                :status="statusQuery"
+                :options="STATUS_OPTIONS"
+                @on-selected-change="onSelectedStatus"
+            />
 
-      <ResetButton @on-reset="resetSearchCondition" />
-    </div>
+            <ResetButton @on-reset="resetSearchCondition" />
+        </div>
 
-    <BjTable 
-      :loading="loading" 
-      :data="list" 
-      :need-custom-columns="needCustomColumns" 
-      :columns="COLUMNS"
-      :real-time-key = "[{scKey:'update_time', dcKey:'last_updated'}]"
-      need-count rowKey="relayer_id">
-      <template #relayer_name="{ record, column }">
-        <NamePopover :chain_a="record.chain_a" :chain_b="record.chain_b" :chain_a_address="record.chain_a_address"
-          :chain_b_address="record.chain_b_address" :img-src="record.relayer_icon" :relayer_name="record[column.key]"
-          :ibc-chains="ibcChains?.all" />
-      </template>
+        <BjTable
+            :loading="loading"
+            :data="list"
+            :need-custom-columns="needCustomColumns"
+            :columns="COLUMNS"
+            :real-time-key="[{ scKey: 'update_time', dcKey: 'last_updated' }]"
+            need-count
+            row-key="relayer_id"
+        >
+            <template #relayer_name="{ record, column }">
+                <NamePopover
+                    :chain-a="record.chain_a"
+                    :chain-b="record.chain_b"
+                    :chain-a-address="record.chain_a_address"
+                    :chain-b-address="record.chain_b_address"
+                    :img-src="record.relayer_icon"
+                    :relayer-name="record[column.key]"
+                    :ibc-chains="ibcChains?.all"
+                />
+            </template>
 
-      <template #chain_a="{ record, column }">
-        <ChainIcon avatar-can-click @click-avatar="goChains" :title="record.channel_a" no-subtitle
-          :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
-      </template>
+            <template #chain_a="{ record, column }">
+                <ChainIcon
+                    avatar-can-click
+                    :title="record.channel_a"
+                    no-subtitle
+                    :chain-id="record[column.key]"
+                    :chains-data="ibcChains?.all ?? []"
+                    icon-size="small"
+                    @click-avatar="goChains"
+                />
+            </template>
 
-      <template #status="{ record, column }">
-        <StatusImg :type="BottomStatusType.RELAYER" :status="(String(record[column.key]) as TRelayerStatus)" :height="26" :width="26" />
-      </template>
+            <template #status="{ record, column }">
+                <StatusImg
+                    :type="BottomStatusType.RELAYER"
+                    :status="(String(record[column.key]) as TRelayerStatus)"
+                    :height="26"
+                    :width="26"
+                />
+            </template>
 
-      <template #chain_b="{ record, column }">
-        <ChainIcon avatar-can-click @click-avatar="goChains" :title="record.channel_b" no-subtitle
-          :chain_id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
-      </template>
+            <template #chain_b="{ record, column }">
+                <ChainIcon
+                    avatar-can-click
+                    :title="record.channel_b"
+                    no-subtitle
+                    :chain-id="record[column.key]"
+                    :chains-data="ibcChains?.all ?? []"
+                    icon-size="small"
+                    @click-avatar="goChains"
+                />
+            </template>
 
-      <template #last_updated="{ record, column }">
-        <div>{{ formatLastUpdated(record.last_updated) }}</div>
-      </template>
+            <template #last_updated="{ record }">
+                <div>{{ formatLastUpdated(record.last_updated) }}</div>
+            </template>
 
-      <template #txs_success_rate="{ record, column }">
-        <div>{{  `${record[column.key]}%` }}</div>
-      </template>
+            <template #txs_success_rate="{ record, column }">
+                <div>{{ `${record[column.key]}%` }}</div>
+            </template>
 
-      <template #transfer_total_txs="{ record, column }">
-        <TransferTxs :title="record[column.key]" :subtitle="record.transfer_total_txs_value"
-          :currency="record.currency" no-link/>
-      </template>
+            <template #transfer_total_txs="{ record, column }">
+                <TransferTxs
+                    :title="record[column.key]"
+                    :subtitle="record.transfer_total_txs_value"
+                    :currency="record.currency"
+                    no-link
+                />
+            </template>
 
-      <template #table_bottom_status v-if="list?.length !== 0">
-        <BottomStatus :type="BottomStatusType.RELAYER" />
-      </template>
-    </BjTable>
-  </PageContainer>
+            <template v-if="list?.length !== 0" #table_bottom_status>
+                <BottomStatus :type="BottomStatusType.RELAYER" />
+            </template>
+        </BjTable>
+    </PageContainer>
 </template>
 
 <script setup lang="ts">
-import PageContainer from '@/components/responsive/pageContainer.vue';
-import PageTitle from '@/components/responsive/pageTitle.vue';
-import BjTable from '@/components/responsive/table/index.vue'
-import { COLUMNS, STATUS_OPTIONS } from './constants'
-import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
-import BaseDropdown from '@/components/responsive/dropdown/base.vue';
-import ResetButton from '@/components/responsive/resetButton.vue';
-import { computed, onMounted, ref } from 'vue';
-import { formatLastUpdated } from '@/helper/time-helper';
-import TransferTxs from '@/components/responsive/table/transferTxs.vue';
-import StatusImg from '@/components/responsive/table/statusImg.vue';
-import { TRelayerStatus, BottomStatusType } from '@/components/responsive/component.interface';
-import { useIbcChains } from '../home/composable';
-import { useGetRelayersList } from '@/service/relayers';
-import ChainIcon from '@/components/responsive/table/chainIcon.vue';
-import { useRoute, useRouter } from 'vue-router';
-import { formatTransfer_success_txs } from '@/helper/tablecell-helper';
-import NamePopover from './components/namePopover.vue';
-import { formatBigNumber } from '@/helper/parseString';
-import { urlHelper } from '@/helper/url-helper';
+    import PageContainer from '@/components/responsive/pageContainer.vue';
+    import PageTitle from '@/components/responsive/pageTitle.vue';
+    import BjTable from '@/components/responsive/table/index.vue';
+    import { COLUMNS, STATUS_OPTIONS } from './constants';
+    import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
+    import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
+    import ResetButton from '@/components/responsive/resetButton.vue';
+    import { computed, onMounted, ref } from 'vue';
+    import { formatLastUpdated } from '@/utils/timeTools';
+    import TransferTxs from '@/components/responsive/table/transferTxs.vue';
+    import StatusImg from '@/components/responsive/table/statusImg.vue';
+    import { TRelayerStatus, BottomStatusType } from '@/components/responsive/component.interface';
+    import { useIbcChains } from '../home/composable';
+    import { useGetRelayersList } from '@/service/relayers';
+    import ChainIcon from '@/components/responsive/table/chainIcon.vue';
+    import { useRoute, useRouter } from 'vue-router';
+    import NamePopover from './components/namePopover.vue';
+    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { urlHelper } from '@/utils/urlTools';
 
-const loading = ref(false);
-let pageUrl = '/relayers'
+    const loading = ref(false);
+    let pageUrl = '/relayers';
 
-const route = useRoute()
-const router = useRouter()
+    const route = useRoute();
+    const router = useRouter();
 
-const chainIdQuery = route.query.chain as string
-const statusQuery = route.query.status as TRelayerStatus
+    const chainIdQuery = route.query.chain as string;
+    const statusQuery = route.query.status as TRelayerStatus;
 
-const { ibcChains, getIbcChains } = useIbcChains();
-const { list, getList, total } = useGetRelayersList()
+    const { ibcChains, getIbcChains } = useIbcChains();
+    const { list, getList, total } = useGetRelayersList();
 
-const needCustomColumns = [
-  'relayer_name',
-  'chain_a',
-  'status',
-  'chain_b',
-  'update_time',
-  'txs_success_rate',
-  'transfer_total_txs'
-]
+    const needCustomColumns = [
+        'relayer_name',
+        'chain_a',
+        'status',
+        'chain_b',
+        'update_time',
+        'txs_success_rate',
+        'transfer_total_txs'
+    ];
 
-const chainDropdown = ref()
-const statusDropdown = ref()
+    const chainDropdown = ref();
+    const statusDropdown = ref();
 
-const originalChainRef = () => {
-  if (!chainIdQuery) return
-  if (chainIdQuery.includes(',')) {
-    return `${chainIdQuery}`
-  } else {
-    return `${chainIdQuery},allchain`
-  }
-}
-const searchChain = ref(originalChainRef())
-const searchStatus = ref(statusQuery ? statusQuery : undefined)
+    const originalChainRef = () => {
+        if (!chainIdQuery) return;
+        if (chainIdQuery.includes(',')) {
+            return `${chainIdQuery}`;
+        } else {
+            return `${chainIdQuery},allchain`;
+        }
+    };
+    const searchChain = ref(originalChainRef());
+    const searchStatus = ref(statusQuery ? statusQuery : undefined);
 
-onMounted(() => {
-  !sessionStorage.getItem('allChains') && getIbcChains();
+    onMounted(() => {
+        !sessionStorage.getItem('allChains') && getIbcChains();
 
-  refreshList()
-})
+        refreshList();
+    });
 
-const subtitle = computed(() => {
-  if (!searchChain.value && !searchStatus.value) {
-    return `${formatBigNumber(total.value, 0)} relayers found`
-  } else {
-    return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(total.value, 0)} relayers found`
-  }
-})
+    const subtitle = computed(() => {
+        if (!searchChain.value && !searchStatus.value) {
+            return `${formatBigNumber(total.value, 0)} relayers found`;
+        } else {
+            return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(total.value, 0)} relayers found`;
+        }
+    });
 
-const refreshList = () => {
-  getList({
-    chain: searchChain.value,
-    status: searchStatus.value,
-    loading: loading
-  });
-}
+    const refreshList = () => {
+        getList({
+            chain: searchChain.value,
+            status: searchStatus.value,
+            loading: loading
+        });
+    };
 
-const onSelectedChain = (chain_id?: string) => {
-  searchChain.value = chain_id !== "allchain,allchain" ? chain_id : "";
-  pageUrl = urlHelper(pageUrl, {
-    key: 'chain',
-    value: searchChain.value as string
-  })
-  router.replace(pageUrl);
-  refreshList()
-}
+    const onSelectedChain = (chain_id?: string) => {
+        searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
+        pageUrl = urlHelper(pageUrl, {
+            key: 'chain',
+            value: searchChain.value as string
+        });
+        router.replace(pageUrl);
+        refreshList();
+    };
 
-const onSelectedStatus = (value?: number | string) => {
-  searchStatus.value = value as TRelayerStatus
-  pageUrl = urlHelper(pageUrl, {
-    key: 'status',
-    value: value as TRelayerStatus
-  })
-  router.replace(pageUrl);
-  refreshList()
-}
+    const onSelectedStatus = (value?: number | string) => {
+        searchStatus.value = value as TRelayerStatus;
+        pageUrl = urlHelper(pageUrl, {
+            key: 'status',
+            value: value as TRelayerStatus
+        });
+        router.replace(pageUrl);
+        refreshList();
+    };
 
-// reset
-const resetSearchCondition = () => {
-  location.href = '/relayers'
-}
+    // reset
+    const resetSearchCondition = () => {
+        location.href = '/relayers';
+    };
 
-const goChains = () => {
-  router.push('/chains')
-}
-
+    const goChains = () => {
+        router.push('/chains');
+    };
 </script>
 
 <style lang="less" scoped>
-.select {
-  margin-top: 32px;
-  margin-bottom: 16px;
+    .select {
+        margin-top: 32px;
+        margin-bottom: 16px;
 
-  :deep(.ant-dropdown-trigger) {
-    margin-right: 8px;
-  }
-}
-:deep(.ant-table-cell) {
-    &:nth-of-type(4) {
-        padding-right: 26px !important;
+        :deep(.ant-dropdown-trigger) {
+            margin-right: 8px;
+        }
     }
-}
-
-// pc
-@media screen and (min-width: 768px) {}
-
-// tablet
-@media screen and (min-width: 414px) and (max-width: 768px) {
-  .select {
-    margin-top: 24px;
-  }
-}
-
-// mobile
-@media screen and (max-width: 414px) {
-  .select {
-    margin-top: 16px;
-  }
-
-  :deep(.ant-dropdown-trigger) {
-    &:last-of-type {
-      margin-top: 8px;
+    :deep(.ant-table-cell) {
+        &:nth-of-type(4) {
+            padding-right: 26px !important;
+        }
     }
-  }
 
-  :deep(.ant-btn-icon-only) {
-    margin-top: 8px;
-  }
-}
+    // pc
+    @media screen and (min-width: 768px) {
+    }
+
+    // tablet
+    @media screen and (min-width: 414px) and (max-width: 768px) {
+        .select {
+            margin-top: 24px;
+        }
+    }
+
+    // mobile
+    @media screen and (max-width: 414px) {
+        .select {
+            margin-top: 16px;
+        }
+
+        :deep(.ant-dropdown-trigger) {
+            &:last-of-type {
+                margin-top: 8px;
+            }
+        }
+
+        :deep(.ant-btn-icon-only) {
+            margin-top: 8px;
+        }
+    }
 </style>
