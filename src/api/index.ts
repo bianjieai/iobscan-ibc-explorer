@@ -14,3 +14,11 @@ export const getIbcBaseDenomsAPI = () => {
         method: 'get'
     });
 };
+
+export const getIbcTxsAPI = (params: any) => {
+    return request<IResponse<IBaseDenoms[]>>({
+        url: '/ibc/txs',
+        method: 'get',
+        params: params
+    });
+};

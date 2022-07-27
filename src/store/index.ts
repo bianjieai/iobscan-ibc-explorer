@@ -164,6 +164,7 @@ export const useIbcStatisticsChains = defineStore('global', {
                     };
                     clearInterval(this.ibcTxTimer.value as any);
                     this.ibcTxs.value = getSymbolInfo();
+                    console.log(this.ibcTxs.value);
                     this.ibcTxTimer.value = setInterval(() => {
                         this.ibcTxs.value = getSymbolInfo(this.ibcTxs.value);
                     }, ageTimerInterval);

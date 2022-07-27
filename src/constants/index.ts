@@ -1,4 +1,4 @@
-const testChains = {
+export const testChains = {
     active: [
         {
             chain_id: 'a1',
@@ -88,14 +88,14 @@ const testChains = {
     ]
 };
 
-const ibcStatisticsTxsTest = {
+export const ibcStatisticsTxsTest = {
     tx_all: { statistics_name: 'tx_all', count: 114 },
     tx_success: { statistics_name: 'tx_success', count: 74 },
     tx_process: { statistics_name: 'tx_process', count: 74 },
     tx_failed: { statistics_name: 'tx_failed', count: 12 }
 };
 
-const menus = [
+export const menus = [
     {
         label: 'Home',
         value: 'Home'
@@ -122,7 +122,7 @@ const menus = [
     }
 ];
 
-const pageParameters = {
+export const pageParameters = {
     tx: 'tx',
     chains: 'chains',
     transfers: 'transfers',
@@ -132,14 +132,14 @@ const pageParameters = {
     denom: 'denom'
 };
 
-const txStatusNumber = {
+export const txStatusNumber = {
     defaultStatus: '1,2,3,4',
     successStatus: '1',
     failedStatus: '2,4'
 };
-const dayTime = '24';
+export const dayTime = '24';
 
-const chainMenus = [
+export const chainMenus = [
     {
         label: 'Active',
         value: 'active'
@@ -154,7 +154,7 @@ const chainMenus = [
     }
 ];
 
-const anchorsDatas = [
+export const anchorsDatas = [
     {
         title: 'A-E',
         collection: ['A', 'B', 'C', 'D', 'E']
@@ -180,19 +180,19 @@ const anchorsDatas = [
         collection: ['#']
     }
 ];
-const chainIDs = {
+export const chainIDs = {
     irishub: 'irishub_1',
     cosmoshub: 'cosmoshub_4'
 };
-const tableChainIDs = {
+export const tableChainIDs = {
     irishub: 'irishub-1',
     cosmoshub: 'cosmoshub-4'
 };
-const chainAddressPrefix = {
+export const chainAddressPrefix = {
     irishubPrefix: 'iaa',
     cosmoshubPrefix: 'cos'
 };
-const statisticsName = {
+export const statisticsName = {
     chains_24hr: 'Active IBC Chains',
     chain_all: 'All IBC Chains',
     channels_24hr: 'Active',
@@ -207,7 +207,7 @@ const statisticsName = {
     tx_failed: 'Failed'
 };
 
-const ibcStatisticsChainsDefault = {
+export const ibcStatisticsChainsDefault = {
     chains_24hr: {
         statistics_name: 'chains_24hr',
         count: 0
@@ -218,7 +218,7 @@ const ibcStatisticsChainsDefault = {
     }
 };
 
-const ibcStatisticsChannelsDefault = {
+export const ibcStatisticsChannelsDefault = {
     channels_24hr: {
         statistics_name: 'channels_24hr',
         count: 0
@@ -237,7 +237,7 @@ const ibcStatisticsChannelsDefault = {
     }
 };
 
-const ibcStatisticsDenomsDefault = {
+export const ibcStatisticsDenomsDefault = {
     denom_all: {
         statistics_name: 'denom_all',
         count: 0
@@ -248,7 +248,7 @@ const ibcStatisticsDenomsDefault = {
     }
 };
 
-const ibcStatisticsTxsDefault = {
+export const ibcStatisticsTxsDefault = {
     tx_24hr_all: {
         statistics_name: 'tx_24hr_all',
         count: 0
@@ -267,16 +267,9 @@ const ibcStatisticsTxsDefault = {
     }
 };
 
-const ageTimerInterval = 1000;
+export const ageTimerInterval = 1000;
 
-const ibcTxStatus = {
-    SUCCESS: 1,
-    FAILED: 2,
-    PROCESSING: 3,
-    REFUNDED: 4,
-    SETTING: 5
-};
-const ibcTxStatusDesc = [
+export const ibcTxStatusDesc = [
     {
         label: 'Success',
         status: 1
@@ -290,7 +283,7 @@ const ibcTxStatusDesc = [
         status: 2
     }
 ];
-const transfersDetailStatus = {
+export const transfersDetailStatus = {
     FAILED: {
         value: 0,
         label: 'Failed'
@@ -300,16 +293,16 @@ const transfersDetailStatus = {
         label: 'Success'
     }
 };
-const ackConnectStatus = {
+export const ackConnectStatus = {
     CORRECT: 'correct',
     ERROR: 'error'
 };
-const channelsStatus = {
+export const channelsStatus = {
     channelOpenedStatus: '1',
     channelClosedStatus: '2'
 };
 
-const ibcTxStatusSelectOptions = [
+export const ibcTxStatusSelectOptions = [
     {
         title: 'All Status',
         value: JSON.stringify(['1', '2', '3', '4'])
@@ -327,14 +320,14 @@ const ibcTxStatusSelectOptions = [
         value: JSON.stringify(['2', '4'])
     }
 ];
-const transfersStatusOptions = {
+export const transfersStatusOptions = {
     DEFAULT_OPTIONS: ['1', '2', '3', '4'],
     SUCCESS_OPTIONS: ['1'],
     FAILED_OPTIONS: ['2', '4'],
     PROCESSING_OPTIONS: ['3']
 };
 
-const transferTableColumn = [
+export const transferTableColumn = [
     {
         dataIndex: 'token',
         slots: { customRender: 'token', title: 'customTitle' },
@@ -384,62 +377,28 @@ const transferTableColumn = [
     }
 ];
 
-const unAuthed = 'Others';
+export const unAuthed = 'Others';
 
-const defaultTitle = {
+export const defaultTitle = {
     defaultStatus: 'All Status',
     defaultChains: 'All Chains',
     defaultTokens: 'All Tokens'
 };
 
-const selectedType = {
+export const selectedType = {
     chain: 'chain'
 };
-const unknownSymbol = 'unknown';
+export const unknownSymbol = 'unknown';
 
-const CHAINNAME = {
+export const CHAINNAME = {
     COSMOSHUB: 'Cosmos Hub',
     IRISHUB: 'IRIS Hub'
 };
-const UNKNOWN = 'Unknown';
-const thousandDecimal = 0.0001;
 
-const SYMBOL = {
+export const UNKNOWN = 'Unknown';
+export const thousandDecimal = 0.0001;
+
+export const SYMBOL = {
     ATOM: 'ATOM',
     IRIS: 'IRIS'
-};
-export {
-    testChains,
-    ibcStatisticsTxsTest,
-    menus,
-    pageParameters,
-    txStatusNumber,
-    dayTime,
-    chainMenus,
-    anchorsDatas,
-    statisticsName,
-    ageTimerInterval,
-    ibcStatisticsChainsDefault,
-    ibcStatisticsChannelsDefault,
-    ibcStatisticsDenomsDefault,
-    ibcStatisticsTxsDefault,
-    ibcTxStatus,
-    ibcTxStatusDesc,
-    transfersDetailStatus,
-    ackConnectStatus,
-    channelsStatus,
-    ibcTxStatusSelectOptions,
-    transfersStatusOptions,
-    transferTableColumn,
-    unAuthed,
-    chainIDs,
-    tableChainIDs,
-    chainAddressPrefix,
-    defaultTitle,
-    selectedType,
-    unknownSymbol,
-    CHAINNAME,
-    UNKNOWN,
-    SYMBOL,
-    thousandDecimal
 };

@@ -1,4 +1,4 @@
-import { IRequestPagination, IRequestPageInfo } from '@/types/interface/baseApi.interface';
+import { IRequestPagination, IResponsePageInfo } from '@/types/interface/baseApi.interface';
 import { TRelayerStatus } from '@/types/interface/component.interface.js';
 import { Ref } from 'vue';
 
@@ -26,7 +26,7 @@ export interface IResponseRelayerListItem {
 
 export interface IResponseRelayerList {
     items: IResponseRelayerListItem;
-    page_info: IRequestPageInfo;
+    page_info: IResponsePageInfo;
 }
 
 export interface TRelayersListParams {
