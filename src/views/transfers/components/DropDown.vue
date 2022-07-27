@@ -42,7 +42,7 @@
                                 <div
                                     class="content_item cursor"
                                     :title="item.symbol.length > 9 ? item.symbol : ''"
-                                    :class="{content_item_selected: selectedSymbol && selectedSymbol === item.symbol}"
+                                    :class="{ content_item_selected: selectedSymbol && selectedSymbol === item.symbol }"
                                     @click="onClickItem(item.symbol)"
                                 >
                                     <img class="content_item_icon" :src="item.icon || tokenDefaultImg" />

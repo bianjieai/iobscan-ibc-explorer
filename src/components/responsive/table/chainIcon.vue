@@ -10,7 +10,7 @@
             @click="avatarClick"
         />
         <div class="flex flex-col justify-around">
-            <div class="title leading_none" :class="{hover_cursor: titleCanClick}" @click="go">{{
+            <div class="title leading_none" :class="{ hover_cursor: titleCanClick }" @click="go">{{
                 computedTitle
             }}</div>
 

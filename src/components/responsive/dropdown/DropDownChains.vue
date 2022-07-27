@@ -2,7 +2,7 @@
     <a-dropdown v-model:visible="visible" :trigger="['click']" @visible-change="visibleChange">
         <div
             class="dropdown_container cursor inline-flex items-center default_color"
-            :class="{visible_border: visible}"
+            :class="{ visible_border: visible }"
             :style="{ minWidth: `${minWidth}px` }"
         >
             <div class="chain_wrap">
@@ -41,7 +41,7 @@
                     fill="currentColor"
                     aria-hidden="true"
                     viewBox="64 64 896 896"
-                    :class="{visible_color: visible}"
+                    :class="{ visible_color: visible }"
                 >
                     <path
                         d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
@@ -59,7 +59,7 @@
                         </template>
                         <span
                             class="chains_tag cursor"
-                            :class="{'visible_color visible_border': isSelected('allchain')}"
+                            :class="{ 'visible_color visible_border': isSelected('allchain') }"
                             :style="{ lineHeight: '24px' }"
                             @click="onSelected('All Chains', 'allchain')"
                             >All Chains</span
@@ -75,7 +75,7 @@
                         <span
                             :key="item.chain_id"
                             class="chains_tag cursor"
-                            :class="{'visible_color visible_border': isSelected(item.chain_id)}"
+                            :class="{ 'visible_color visible_border': isSelected(item.chain_id) }"
                             @click="onSelected(item.chain_name, item.chain_id)"
                         >
                             <img :src="chainImg(item.icon)" width="24" height="24" class="mr-8" />

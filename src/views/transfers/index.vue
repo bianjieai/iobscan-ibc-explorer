@@ -274,8 +274,8 @@
                 :class="{ disable_table_pagination: isShowTransferLoading }"
                 :total="pagination.total"
                 :disabled="isShowTransferLoading"
-                @change="onPaginationChange"
                 :show-title="false"
+                @change="onPaginationChange"
             />
         </div>
     </div>

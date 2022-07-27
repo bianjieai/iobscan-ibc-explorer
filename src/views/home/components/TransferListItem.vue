@@ -1,12 +1,12 @@
 <template>
     <div class="list_item">
-        <div class="list_item_wrap" :class="{list_item_line_hidden: item.expanded}">
+        <div class="list_item_wrap" :class="{ list_item_line_hidden: item.expanded }">
             <div class="list_item_expand_btn cursor" @click="onClickExpandBtn">
                 <img :src="!item.expanded ? expandImg : packUpImg" alt="" />
             </div>
             <router-link
                 class="list_item_info"
-                :class="{list_item_line: !item.expanded}"
+                :class="{ list_item_line: !item.expanded }"
                 :to="`/transfers/details?hash=${item.sc_tx_info.hash}`"
             >
                 <span class="list_item_number">{{ prefixInteger(index + 1, 3) }}</span>
@@ -92,14 +92,6 @@
                     .flex(column, nowrap, space-between, flex-start);
                     width: 100%;
                     max-width: 150px;
-                    // &:hover {
-                    //     .list_subItem_value {
-                    //         color: var(--bj-primary-color);
-                    //     }
-                    //     .list_subItem_title {
-                    //         color: var(--bj-primary-color);
-                    //     }
-                    // }
                 }
                 &_value {
                     width: 100%;
@@ -126,7 +118,8 @@
                 }
             }
         }
-        &_line {}
+        &_line {
+        }
         &_ago {
             width: 150px;
             text-align: right;

@@ -1,8 +1,12 @@
 <template>
     <div class="footer_content">
         <div class="footer_content_left">
-            <span class="footer_content_left_icon cursor" v-for="(item, index) in iconLinks" :key="index"
-                @click="onClickIcon(item.iconLink)">
+            <span
+                v-for="(item, index) in iconLinks"
+                :key="index"
+                class="footer_content_left_icon cursor"
+                @click="onClickIcon(item.iconLink)"
+            >
                 <i class="iconfont" :class="item.iconName"></i>
             </span>
             Contact us !
@@ -32,8 +36,8 @@
         {
             iconName: 'icon-tweeter',
             iconLink: 'https://twitter.com/irisnetwork'
-        },
-    ]
+        }
+    ];
     const onClickIcon = (item: string) => {
         window.open(item);
     };
@@ -103,10 +107,12 @@
             padding: 16px 32px;
 
             &_left {
-                &_icon {}
+                &_icon {
+                }
             }
 
-            &_right {}
+            &_right {
+            }
         }
     }
 
@@ -115,7 +121,8 @@
             .flex(column, nowrap, center, center);
 
             &_left {
-                &_icon {}
+                &_icon {
+                }
             }
 
             &_right {

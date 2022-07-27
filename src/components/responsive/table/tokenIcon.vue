@@ -3,7 +3,7 @@
         <img
             :src="tokenInfo.imgSrc"
             class="icon cursor mr-8"
-            :class="{small_icon: iconSize === TableCellIconSize.SMALL}"
+            :class="{ small_icon: iconSize === TableCellIconSize.SMALL }"
             @click="go"
         />
         <div
@@ -14,11 +14,11 @@
                 <template #content>
                     <div class="popover-c">{{ tokenInfo.defaultTitle }}</div>
                 </template>
-                <div class="title leading_none" :class="{hover_cursor: titleCanClick}" @click="go">{{
+                <div class="title leading_none" :class="{ hover_cursor: titleCanClick }" @click="go">{{
                     tokenInfo.title
                 }}</div>
             </a-popover>
-            <div v-else class="title leading_none" :class="{hover_cursor: titleCanClick}" @click="go">{{
+            <div v-else class="title leading_none" :class="{ hover_cursor: titleCanClick }" @click="go">{{
                 tokenInfo.title
             }}</div>
 
