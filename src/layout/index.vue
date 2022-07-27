@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-    import { menus } from '@/constants/index.js';
+    import { menus } from '@/constants/index';
     import { useOnPressEnter } from '../composables/useStarAnimation';
     import { useIbcStatisticsChains } from '@/store/index';
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;

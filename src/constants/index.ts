@@ -269,6 +269,14 @@ export const ibcStatisticsTxsDefault = {
 
 export const ageTimerInterval = 1000;
 
+export const ibcTxStatus = {
+    SUCCESS: 1,
+    FAILED: 2,
+    PROCESSING: 3,
+    REFUNDED: 4,
+    SETTING: 5
+};
+
 export const ibcTxStatusDesc = [
     {
         label: 'Success',
