@@ -1,17 +1,4 @@
 /*************** req ***********************/
-export interface IRequestPageInfo {
-    page_num: boolean;
-    page_size: number;
-    total_item: number;
-    total_page: number;
-}
-
-export interface IRequestPagination {
-    use_count?: boolean;
-    page_num: number;
-    page_size: number;
-}
-
 export interface IRequestPagination {
     use_count?: boolean;
     page_num: number;
@@ -23,6 +10,13 @@ export interface IResponse<P = {}> {
     code: number;
     message?: string;
     data: P;
+}
+
+export interface IResponsePageInfo {
+    page_num: boolean;
+    page_size: number;
+    total_item: number;
+    total_page: number;
 }
 
 export interface IIbcchain {

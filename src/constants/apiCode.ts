@@ -1,3 +1,3 @@
-export const API_CODE = {
-    success: 0
-};
+export enum API_CODE {
+    success = 0
+}
