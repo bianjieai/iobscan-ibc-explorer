@@ -1,20 +1,14 @@
 <template>
     <a-dropdown v-model:visible="visible" :trigger="['click']" @visible-change="visibleChange">
         <div
-            :class="[
-                'inline-flex',
-                'items-center',
-                'default_color',
-                'dropdown-container',
-                visible ? 'visible_border' : ''
-            ]"
+            class="dropdown_container cursor inline-flex items-center default_color"
+            :class="{visible_border: visible}"
             :style="{ minWidth: `${minWidth}px` }"
         >
             <div class="chain_wrap">
                 <div
+                    class="mr-8 ml-8"
                     :class="[
-                        'mr-8',
-                        'ml-8',
                         selectedChain[0] ? 'selected_color' : '',
                         chain_a === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color'
                     ]"
@@ -27,9 +21,8 @@
                 <template v-if="selectedDouble">
                     -
                     <div
+                        class="mr-8 ml-8"
                         :class="[
-                            'mr-8',
-                            'ml-8',
                             selectedChain[1] ? 'selected_color' : '',
                             chain_b === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color'
                         ]"
@@ -48,7 +41,7 @@
                     fill="currentColor"
                     aria-hidden="true"
                     viewBox="64 64 896 896"
-                    :class="[visible ? 'visible_color' : '']"
+                    :class="{visible_color: visible}"
                 >
                     <path
                         d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
@@ -65,7 +58,8 @@
                             <span class="badge">{{ badgeText('allchain') }}</span>
                         </template>
                         <span
-                            :class="['chains-tag', isSelected('allchain') ? 'visible_color visible_border' : '']"
+                            class="chains_tag cursor"
+                            :class="{'visible_color visible_border': isSelected('allchain')}"
                             :style="{ lineHeight: '24px' }"
                             @click="onSelected('All Chains', 'allchain')"
                             >All Chains</span
@@ -80,7 +74,8 @@
 
                         <span
                             :key="item.chain_id"
-                            :class="['chains-tag', isSelected(item.chain_id) ? 'visible_color visible_border' : '']"
+                            class="chains_tag cursor"
+                            :class="{'visible_color visible_border': isSelected(item.chain_id)}"
                             @click="onSelected(item.chain_name, item.chain_id)"
                         >
                             <img :src="chainImg(item.icon)" width="24" height="24" class="mr-8" />
@@ -447,12 +442,11 @@
 </script>
 
 <style lang="less" scoped>
-    .dropdown-container {
+    .dropdown_container {
         height: 36px;
         border: 1px solid var(--bj-border-color);
         border-radius: 4px;
         background-color: #fff;
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
         min-width: 124px;
 
         &:hover {
@@ -519,7 +513,7 @@
         transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
 
-    .chains-tag {
+    .chains_tag {
         position: relative;
         display: flex;
         justify-content: flex-start;
@@ -529,7 +523,6 @@
         background-image: none;
         border: 1px solid transparent;
         box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         user-select: none;
         padding: 5px 8px 5px 8px;

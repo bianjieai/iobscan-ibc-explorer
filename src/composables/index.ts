@@ -17,13 +17,11 @@ export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerI
 };
 
 export const useChangeTitleAndIcon = () => {
-    if (import.meta.env.MODE === 'staging') {
-        const link: any = document.querySelector('link[rel *= "icon"]') || document.createElement('link');
-        const title: any = document.querySelector('title') || document.createElement('title');
-        link.rel = 'icon';
-        link.href = import.meta.env.VITE_FAVICON;
-        title.innerHTML = import.meta.env.VITE_TITLE;
-        document.getElementsByTagName('head')[0].appendChild(link);
-        document.getElementsByTagName('head')[0].appendChild(title);
-    }
+    const link: any = document.querySelector('link[rel *= "icon"]') || document.createElement('link');
+    const title: any = document.querySelector('title') || document.createElement('title');
+    link.rel = 'icon';
+    link.href = import.meta.env.VITE_FAVICON;
+    title.innerHTML = import.meta.env.VITE_TITLE;
+    document.getElementsByTagName('head')[0].appendChild(link);
+    document.getElementsByTagName('head')[0].appendChild(title);
 };

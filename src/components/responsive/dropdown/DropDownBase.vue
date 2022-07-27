@@ -1,26 +1,16 @@
 <template>
     <a-dropdown v-model:visible="visible" :trigger="['click']">
         <div
-            :class="[
-                'inline-flex',
-                'items-center',
-                'default_color',
-                'dropdown-container',
-                visible ? 'visible_border' : ''
-            ]"
+            class="dropdown_container cursor inline-flex items-center default_color"
+            :class="{visible_border: visible}"
         >
             <div
-                :class="[
-                    'flex-1',
-                    'ml-8',
-                    'mr-8',
-                    'text-center',
-                    selectOption.length > 0 ? 'selected_color' : '',
-                    selectedText === defaultTitle.defaultStatus || selectedText === options[0].key
-                        ? 'selected_color_default'
-                        : '',
-                    selectOption.length > 0 && visible ? 'visible_color' : ''
-                ]"
+                class="flex-1 ml-8 mr-8 text-center"
+                :class="{
+                    selected_color: selectOption.length > 0,
+                    selected_color_default: selectedText === defaultTitle.defaultStatus || selectedText === options[0].key,
+                    visible_color: selectOption.length > 0 && visible
+                }"
             >
                 {{ selectedText }}</div
             >
@@ -34,7 +24,7 @@
                     fill="currentColor"
                     aria-hidden="true"
                     viewBox="64 64 896 896"
-                    :class="[visible ? 'visible_color' : '']"
+                    :class="{visible_color: visible}"
                 >
                     <path
                         d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
@@ -45,9 +35,10 @@
         <template #overlay>
             <div class="overlay-container">
                 <div
+                    class="item cursor"
                     v-for="item in options"
                     :key="item.value"
-                    :class="['item', item.key === selectOption[0]?.key ? 'selected_option' : '']"
+                    :class="{selected_option: item.key === selectOption[0]?.key}"
                     @click="onSelect(item.key, item.value)"
                     >{{ item.key }}</div
                 >
@@ -117,12 +108,11 @@
 </script>
 
 <style lang="less" scoped>
-    .dropdown-container {
+    .dropdown_container {
         height: 36px;
         border: 1px solid var(--bj-border-color);
         border-radius: 4px;
         background-color: #fff;
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
         min-width: 126px;
     }
 
@@ -145,7 +135,6 @@
 
         .item {
             padding: 9px 12px;
-            cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
 
             &:hover {
                 color: var(--bj-primary-color);

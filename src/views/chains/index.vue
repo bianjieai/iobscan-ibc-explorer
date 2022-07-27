@@ -16,13 +16,13 @@
             </template>
 
             <template #channels="{ record, column }">
-                <div class="hover-cursor" @click="goChannels(`${record.chain_id},allchain`)">{{
+                <div class="hover_cursor" @click="goChannels(`${record.chain_id},allchain`)">{{
                     record[column.key]
                 }}</div>
             </template>
 
             <template #relayers="{ record, column }">
-                <div class="hover-cursor" @click="goRelayers(`${record.chain_id},allchain`, 1)">{{
+                <div class="hover_cursor" @click="goRelayers(`${record.chain_id},allchain`, 1)">{{
                     record[column.key]
                 }}</div>
             </template>

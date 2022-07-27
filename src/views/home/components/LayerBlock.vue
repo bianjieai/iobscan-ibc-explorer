@@ -8,7 +8,7 @@
             </div>
             <a-tooltip>
                 <template #title>{{ tipMsg }}</template>
-                <img v-if="showTip" class="tip_icon" src="@/assets/tip.png" />
+                <img v-if="showTip" class="tip_icon cursor" src="@/assets/tip.png" />
             </a-tooltip>
         </div>
         <div class="block_content">
@@ -84,7 +84,6 @@
             position: absolute;
             margin-left: 16px;
             margin-top: -10px;
-            cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
         }
     }
 </style>

@@ -119,7 +119,7 @@
     .transfer_list {
         width: calc(100% - 48px);
         height: 100%;
-        border-bottom: 1px solid rgba(#979797, 0.2);
+        border-bottom: 1px solid var(--bj-border-color);
         overflow-y: auto;
         overflow-x: hidden;
         margin: 0 24px;

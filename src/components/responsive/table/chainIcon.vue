@@ -2,16 +2,15 @@
     <div class="flex items-center">
         <img
             :src="chainInfo.imgSrc"
-            :class="[
-                'icon',
-                'mr-8',
-                avatarCanClick ? 'hover-cursor' : '',
-                iconSize === TableCellIconSize.SMALL ? 'small-icon' : ''
-            ]"
+            class="icon mr-8"
+            :class="{
+                hover_cursor: avatarCanClick,
+                small_icon: iconSize === TableCellIconSize.SMALL
+            }"
             @click="avatarClick"
         />
         <div class="flex flex-col justify-around">
-            <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{
+            <div class="title leading_none" :class="{hover_cursor: titleCanClick}" @click="go">{{
                 computedTitle
             }}</div>
 
@@ -20,15 +19,15 @@
                     <template #content>
                         <div class="popover-c">{{ formatChainID(chainInfo.subtitle) }}</div>
                     </template>
-                    <div v-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">{{
+                    <div v-if="!noSubtitle" class="subtitle leading_none tag">{{
                         formatChainID(chainInfo.subtitle)
                     }}</div>
                 </a-popover>
-                <div v-else-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">{{
+                <div v-else-if="!noSubtitle" class="subtitle leading_none tag">{{
                     formatChainID(chainInfo.subtitle)
                 }}</div>
             </div>
-            <div v-else-if="!noSubtitle" :class="['subtitle', 'leading-none', 'tag']">--</div>
+            <div v-else-if="!noSubtitle" class="subtitle leading_none tag">--</div>
         </div>
     </div>
 </template>
@@ -110,7 +109,7 @@
         border-radius: 50%;
     }
 
-    .small-icon {
+    .small_icon {
         width: 32px;
         height: 32px;
     }

@@ -81,7 +81,7 @@
             </template>
 
             <template #receive_txs="{ record, column }">
-                <div class="hover-cursor" @click="goTransfer(`allchain,${record.chain_id}`, record.denom)"
+                <div class="hover_cursor" @click="goTransfer(`allchain,${record.chain_id}`, record.denom)"
                     >{{ formatBigNumber(record[column.key], 0) }}
                 </div>
             </template>

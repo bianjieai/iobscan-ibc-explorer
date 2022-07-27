@@ -4,12 +4,13 @@
             <img
                 v-if="!relayer"
                 :src="imgSrc"
-                :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']"
+                class="icon mr-8"
+                :class="{small_icon: iconSize === TableCellIconSize.SMALL}"
             />
             <div v-else>
-                <img v-if="relayerImageSrc" :src="relayerImageSrc" alt="" class="icon mr-8 small-icon" />
+                <img v-if="relayerImageSrc" :src="relayerImageSrc" alt="" class="icon mr-8 small_icon" />
                 <div v-else class="bg-text-c flex items-center justify-center mr-8">
-                    <div class="bg-text leading-none">{{ (title.substring(0, 1) || '').toUpperCase() }}</div>
+                    <div class="bg-text leading_none">{{ (title.substring(0, 1) || '').toUpperCase() }}</div>
                 </div>
             </div>
         </div>
@@ -17,10 +18,10 @@
             class="flex flex-col justify-around"
             :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }"
         >
-            <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{
+            <div class="title leading_none" :class="{hover_cursor: titleCanClick}" @click="go">{{
                 relayer ? relayerName : title
             }}</div>
-            <div v-if="subtitle" :class="['subtitle', 'leading-none', subtitleIsTag ? 'tag' : '']">{{ subtitle }}</div>
+            <div v-if="subtitle" class="subtitle leading_none" :class="{tag: subtitleIsTag}">{{ subtitle }}</div>
         </div>
     </div>
 </template>
@@ -76,7 +77,7 @@
         border-radius: 50%;
     }
 
-    .small-icon {
+    .small_icon {
         width: 32px;
         height: 32px;
     }

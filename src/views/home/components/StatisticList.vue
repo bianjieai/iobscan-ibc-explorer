@@ -5,7 +5,7 @@
             <div
                 v-for="item of msg"
                 :key="item.statistics_name"
-                class="list_item ibc_selected_title"
+                class="list_item ibc_selected_title cursor"
                 style="width: 100%"
                 @click="clickListItem(item.statistics_name)"
             >
@@ -41,7 +41,7 @@
             <div
                 v-for="item of msg"
                 :key="item.statistics_name"
-                class="list_item_horizontal ibc_selected_title"
+                class="list_item_horizontal ibc_selected_title cursor"
                 @click="clickListItem(item.statistics_name)"
             >
                 <div class="list_item">

@@ -1,19 +1,19 @@
 <template>
     <div class="list_item">
-        <div class="list_item_wrap" :class="!item.expanded ? '' : 'list_item_line_hidden'">
-            <div class="list_item_expand_btn" @click="onClickExpandBtn">
+        <div class="list_item_wrap" :class="{list_item_line_hidden: item.expanded}">
+            <div class="list_item_expand_btn cursor" @click="onClickExpandBtn">
                 <img :src="!item.expanded ? expandImg : packUpImg" alt="" />
             </div>
             <router-link
                 class="list_item_info"
-                :class="!item.expanded ? 'list_item_line' : ''"
+                :class="{list_item_line: !item.expanded}"
                 :to="`/transfers/details?hash=${item.sc_tx_info.hash}`"
             >
                 <span class="list_item_number">{{ prefixInteger(index + 1, 3) }}</span>
                 <div class="list_item_link">
                     <img class="list_item_icon" :src="item.symbolIcon || tokenDefaultImg" alt="icon" />
                 </div>
-                <div class="list_subItem" :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }">
+                <div class="list_subItem" :style="{ borderBottom: isFinal ? '' : '1px solid var(--bj-border-color)' }">
                     <div class="list_subItem_title_container">
                         <span class="list_subItem_value">{{ formatNum(item.symbolNum) || 0 }}</span>
                         <a-tooltip placement="topLeft">
@@ -76,12 +76,10 @@
         }
         &_expand_btn {
             display: none;
-            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
         }
         &_info {
             .flex(row, nowrap, space-between, center);
             height: 100%;
-            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
             .list_subItem {
                 .flex(row, nowrap, space-between, center);
                 padding: 14px 0;
@@ -128,11 +126,7 @@
                 }
             }
         }
-        &_line {
-            a {
-                cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
-            }
-        }
+        &_line {}
         &_ago {
             width: 150px;
             text-align: right;
@@ -157,7 +151,6 @@
         }
         & .out_hash_wrap {
             display: none;
-            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
         }
     }
     @media screen and (max-width: 970px) {
@@ -200,7 +193,7 @@
                 }
             }
             &_line {
-                border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+                border-bottom: 1px solid var(--bj-border-color);
             }
             &_ago {
             }
@@ -221,7 +214,7 @@
         .list_item {
             width: 100%;
             &_wrap {
-                border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+                border-bottom: 1px solid var(--bj-border-color);
             }
             &_line_hidden {
                 border-bottom: none;

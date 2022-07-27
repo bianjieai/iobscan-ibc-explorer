@@ -16,11 +16,6 @@
 
 .ibc_selected_border:hover .ant-card-bordered {
     border: 1px solid #3d50ff;
-    cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
-}
-
-.ibc_selected_title:hover {
-    cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
 }
 
 .ibc_selected_title:hover .list_item_value {
@@ -119,22 +114,6 @@
 
 .ant-calendar-time-picker-btn {
     display: none !important;
-}
-
-.ant-btn {
-    cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
-}
-
-.ant-select {
-    cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
-}
-
-.ant-select-item {
-    cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
-}
-
-.ant-calendar-date {
-    cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
 }
 
 .ant-dropdown {

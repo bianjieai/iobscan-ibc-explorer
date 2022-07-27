@@ -66,13 +66,13 @@
             </template>
 
             <template #ibc_transfer_txs="{ record, column }">
-                <div class="hover-cursor" @click="goTransfer(record.base_denom, record.chain_id)">{{
+                <div class="hover_cursor" @click="goTransfer(record.base_denom, record.chain_id)">{{
                     `${formatBigNumber(record[column.key], 0)}`
                 }}</div>
             </template>
 
             <template #chains_involved="{ record, column }">
-                <div class="hover-cursor" @click="goIbcToken(record.base_denom)">{{ record[column.key] }}</div>
+                <div class="hover_cursor" @click="goIbcToken(record.base_denom)">{{ record[column.key] }}</div>
             </template>
 
             <template #chain_id="{ record, column }">

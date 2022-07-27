@@ -97,7 +97,7 @@
                     item.value === 0 ? 0 : item.value ? item.value : '--'
                 }}</span>
             </li>
-            <li class="see_more_button" @click="expandInfo">
+            <li class="see_more_button cursor" @click="expandInfo">
                 <span class="see_more_label">Click to see More</span>
                 <span class="see_more_icon iconfont icon-shouqi" :class="isExpand ? 'less_style' : 'more_style'"></span>
             </li>
@@ -284,7 +284,7 @@
         border-radius: 4px;
 
         .details_title {
-            border-bottom: 1px solid rgba(151, 151, 151, 0.2);
+            border-bottom: 1px solid var(--bj-border-color);
             padding: 16px 0 16px 24px;
             font-size: 16px;
             line-height: 16px;
@@ -345,7 +345,6 @@
                 }
                 a {
                     color: var(--bj-text-normal);
-                    cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
                     &:hover {
                         color: var(--bj-primary-color);
                     }
@@ -355,7 +354,6 @@
             .see_more_button {
                 padding: 14px 0;
                 display: flex;
-                cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default;
 
                 .see_more_label {
                     color: rgba(61, 80, 255, 1);

@@ -10,7 +10,7 @@
         @press-enter="searchInput"
     >
         <template #suffix>
-            <div class="input_prefix" @click="searchInput">
+            <div class="input_prefix cursor" @click="searchInput">
                 <span class="input_prefix_icon iconfont icon-search"></span>
             </div>
         </template>
@@ -70,7 +70,7 @@
     }
     .default_input_style {
     }
-    :deep.header_input {
+    .header_input {
         height: 40px;
         background-color: rgba(#ffffff, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.08);
@@ -82,11 +82,11 @@
                 color: rgba(255, 255, 255, 1);
             }
         }
-        .ant-input {
+        :deep(.ant-input) {
             background-color: transparent;
             color: #ffffff;
         }
-        .anticon {
+        :deep(.anticon) {
             color: #fff;
         }
         .input_prefix {
@@ -97,7 +97,6 @@
             display: flex;
             align-items: center;
             justify-items: center;
-            cursor: url('../assets/mouse/shiftlight_mouse.png'), default;
             .input_prefix_icon {
                 font-size: var(--bj-font-size-home-number);
                 color: rgba(255, 255, 255, 0.7);

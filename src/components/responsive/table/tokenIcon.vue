@@ -2,7 +2,8 @@
     <div class="flex items-center">
         <img
             :src="tokenInfo.imgSrc"
-            :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']"
+            class="icon cursor mr-8"
+            :class="{small_icon: iconSize === TableCellIconSize.SMALL}"
             @click="go"
         />
         <div
@@ -13,15 +14,15 @@
                 <template #content>
                     <div class="popover-c">{{ tokenInfo.defaultTitle }}</div>
                 </template>
-                <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{
+                <div class="title leading_none" :class="{hover_cursor: titleCanClick}" @click="go">{{
                     tokenInfo.title
                 }}</div>
             </a-popover>
-            <div v-else :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{
+            <div v-else class="title leading_none" :class="{hover_cursor: titleCanClick}" @click="go">{{
                 tokenInfo.title
             }}</div>
 
-            <div :class="['subtitle', 'leading-none', 'tag']">{{ tokenType ? tokenType : tokenInfo.subtitle }}</div>
+            <div class="subtitle leading_none tag">{{ tokenType ? tokenType : tokenInfo.subtitle }}</div>
         </div>
     </div>
 </template>
@@ -86,10 +87,9 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        cursor: url(/src/assets/mouse/shiftlight_mouse.png), default;
     }
 
-    .small-icon {
+    .small_icon {
         width: 32px;
         height: 32px;
     }

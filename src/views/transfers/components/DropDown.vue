@@ -32,7 +32,7 @@
         <template #overlay>
             <div class="overlay">
                 <div class="overlay_wrap">
-                    <div class="overlay_title" @click="onClickAll">
+                    <div class="overlay_title cursor" @click="onClickAll">
                         {{ 'All Tokens' }}
                     </div>
                     <div class="overlay_item">
@@ -40,9 +40,9 @@
                         <div class="overlay_item_content">
                             <template v-for="item in ibcBaseDenoms" :key="item.denom">
                                 <div
-                                    class="content_item"
+                                    class="content_item cursor"
                                     :title="item.symbol.length > 9 ? item.symbol : ''"
-                                    :class="selectedSymbol && selectedSymbol === item.symbol && 'content_item_selected'"
+                                    :class="{content_item_selected: selectedSymbol && selectedSymbol === item.symbol}"
                                     @click="onClickItem(item.symbol)"
                                 >
                                     <img class="content_item_icon" :src="item.icon || tokenDefaultImg" />
@@ -55,7 +55,7 @@
                     <div class="overlay_item">
                         <h2 class="overlay_item_title">Other IBC Tokens</h2>
                         <div class="overlay_item_content">
-                            <div class="content_item" @click="onClickItem(unAuthed)">
+                            <div class="content_item cursor" @click="onClickItem(unAuthed)">
                                 <img class="content_item_icon" :src="tokenDefaultImg" />
                                 <span class="content_item_title">Others</span>
                             </div>
@@ -74,7 +74,7 @@
                                         </p>
                                     </div>
                                 </template>
-                                <img class="tip hover" style="margin-left: 8px" src="/src/assets/tip.png" />
+                                <img class="tip cursor" style="margin-left: 8px" src="/src/assets/tip.png" />
                             </a-popover>
                         </h2>
                         <div class="overlay_item_content flex-c">
@@ -215,7 +215,6 @@
             color: var(--bj-font-color-65);
             margin-bottom: 16px;
             width: 140px;
-            cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
             transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
             &:hover {
                 border: 1px solid var(--bj-primary-color);
@@ -242,7 +241,6 @@
                     border: 1px solid transparent;
                     margin: 0 8px 12px 0;
                     padding: 6px 6px;
-                    cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
                     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
                     .flex(row, nowrap, flex-start, center);
                     .content_item_title {
@@ -296,9 +294,6 @@
             color: var(--bj-font-color-65);
             text-align: center;
         }
-    }
-    .hover {
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
     }
     .ant-dropdown-open {
         border-color: var(--bj-primary-color);
@@ -381,8 +376,6 @@
             &_color {
             }
         }
-        .hover {
-        }
         .ant-dropdown-open {
             .button_icon {
             }
@@ -439,8 +432,6 @@
             &_color {
             }
         }
-        .hover {
-        }
         .ant-dropdown-open {
             .button_icon {
             }
@@ -493,8 +484,6 @@
         .tip {
             &_color {
             }
-        }
-        .hover {
         }
         .ant-dropdown-open {
             .button_icon {
@@ -558,8 +547,6 @@
         .tip {
             &_color {
             }
-        }
-        .hover {
         }
         .ant-dropdown-open {
             .button_icon {

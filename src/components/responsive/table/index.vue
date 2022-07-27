@@ -19,7 +19,8 @@
         <div class="thead-border-bottom"></div>
         <div
             v-if="hasData || $slots.table_bottom_status"
-            :class="['flex', 'justify-between', 'pt-16', !noPagination ? 'pb-16' : '', 'items-center', 'bottom']"
+            class="flex justify-between pt-16 items-center bottom"
+            :class="{'pb-16': !noPagination}"
         >
             <slot name="table_bottom_status">
                 <div></div>
