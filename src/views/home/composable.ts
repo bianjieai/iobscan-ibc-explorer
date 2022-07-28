@@ -17,10 +17,8 @@ const ibcStatisticsChainsStore = useIbcStatisticsChains();
 export const initHome = (
     getIbcStatistics: Function,
     getIbcTxs: Function,
-    useTxListInterval: Function,
     limitIbcTxs: Function
 ) => {
-    useTxListInterval();
     onMounted(() => {
         getIbcStatistics();
         getIbcTxs({ page_num: 1, page_size: 100, use_count: false });
@@ -54,18 +52,15 @@ export const useIbcTxs = () => {
     const limitIbcTxs = (limitNumber = 10) => {
         ibcStatisticsChainsStore.ibcTxs = ibcStatisticsChainsStore.ibcTxs.slice(0, limitNumber);
     };
-    const useTxListInterval = () => {
-        useTimeInterval(() => {
-            ibcTxs.value = ibcTxs.value.map((item: any) => {
-                item.parseTime = Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', '');
-                return item;
-            });
+    useTimeInterval(() => {
+        ibcTxs.value = ibcTxs.value.map((item: any) => {
+            item.parseTime = Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', '');
+            return item;
         });
-    };
+    });
     return {
         ibcTxs,
         getIbcTxs,
-        useTxListInterval,
         setExpandByIndex,
         limitIbcTxs
     };

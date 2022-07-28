@@ -77,10 +77,10 @@
         getIbcStatistics
     } = useIbcStatistics();
     const { ibcChains } = useIbcChains();
-    const { limitIbcTxs, ibcTxs, getIbcTxs, setExpandByIndex, useTxListInterval } = useIbcTxs();
+    const { limitIbcTxs, ibcTxs, getIbcTxs, setExpandByIndex } = useIbcTxs();
     const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
     const { onPressEnter } = useOnPressEnter();
-    initHome(getIbcStatistics, getIbcTxs, useTxListInterval, limitIbcTxs);
+    initHome(getIbcStatistics, getIbcTxs, limitIbcTxs);
 </script>
 
 <style lang="less">
