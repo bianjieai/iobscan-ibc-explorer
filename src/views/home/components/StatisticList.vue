@@ -10,27 +10,31 @@
                 @click="clickListItem(item.statistics_name)"
             >
                 <div
-                    class="list_item_info"
+                    class="list_item__info"
                     :style="
-                        item.statistics_name === ibcStatisticsDenomsDefault.denom_all.statistics_name
+                        item.statistics_name ===
+                        ibcStatisticsDenomsDefault.denom_all.statistics_name
                             ? 'cursor: text;'
                             : ''
                     "
                 >
                     <span class="list_item_name"
-                        >{{ statisticsName[item.statistics_name]
-                        }}<span v-if="item.statistics_name.indexOf(dayTime) !== -1" class="list_item_tip"
+                        >{{ (statisticsName as any)[item.statistics_name]
+                        }}<span
+                            v-if="item.statistics_name.indexOf(dayTime) !== -1"
+                            class="list_item_tip"
                             >24hr</span
                         ></span
                     >
                     <span
                         class="list_item_value"
                         :style="
-                            item.statistics_name === ibcStatisticsDenomsDefault.denom_all.statistics_name
+                            item.statistics_name ===
+                            ibcStatisticsDenomsDefault.denom_all.statistics_name
                                 ? 'color: var(--bj-text-normal); cursor: text;'
                                 : ''
                         "
-                        >{{ `${formatBigNumber(item.count)}` }}</span
+                        >{{ `${formatBigNumber(item.count, undefined)}` }}</span
                     >
                 </div>
             </div>
@@ -41,32 +45,36 @@
             <div
                 v-for="item of msg"
                 :key="item.statistics_name"
-                class="list_item_horizontal ibc_selected_title"
+                class="list_item__horizontal ibc_selected_title"
                 @click="clickListItem(item.statistics_name)"
             >
                 <div class="list_item">
                     <div
-                        class="list_item_info"
+                        class="list_item__info"
                         :style="
-                            item.statistics_name === ibcStatisticsDenomsDefault.denom_all.statistics_name
+                            item.statistics_name ===
+                            ibcStatisticsDenomsDefault.denom_all.statistics_name
                                 ? 'cursor: text;'
                                 : ''
                         "
                     >
-                        <span class="list_item_name"
-                            >{{ statisticsName[item.statistics_name]
-                            }}<span v-if="item.statistics_name.indexOf(dayTime) !== -1" class="list_item_tip"
+                        <span class="list_item__name"
+                            >{{ (statisticsName as any)[item.statistics_name]
+                            }}<span
+                                v-if="item.statistics_name.indexOf(dayTime) !== -1"
+                                class="list_item__tip"
                                 >24hr</span
                             ></span
                         >
                         <span
-                            class="list_item_value"
+                            class="list_item__value"
                             :style="
-                                item.statistics_name === ibcStatisticsDenomsDefault.denom_all.statistics_name
+                                item.statistics_name ===
+                                ibcStatisticsDenomsDefault.denom_all.statistics_name
                                     ? 'color: var(--bj-text-normal);cursor: text;'
                                     : ''
                             "
-                            >{{ `${formatBigNumber(item.count)}` }}</span
+                            >{{ `${formatBigNumber(item.count, undefined)}` }}</span
                         >
                     </div>
                 </div>
@@ -75,9 +83,9 @@
     </div>
 </template>
 
-<script setup>
-    import { statisticsName, ibcStatisticsDenomsDefault, dayTime } from '../../../constants/index';
-    import { formatBigNumber } from '../../../helper/parseStringHelpers';
+<script setup lang="ts">
+    import { statisticsName, ibcStatisticsDenomsDefault, dayTime } from '@/constants/index';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
     defineProps({
         type: {
             type: String,
@@ -89,7 +97,7 @@
         }
     });
     const emits = defineEmits(['clickItem']);
-    const clickListItem = (value) => {
+    const clickListItem = (value: any) => {
         emits('clickItem', value);
     };
 </script>
@@ -119,7 +127,7 @@
             border-bottom: 0;
         }
 
-        &_horizontal {
+        &__horizontal {
             padding-left: 24px;
             width: 25%;
             .flex(row, nowrap, space-between, flex-start);
@@ -131,11 +139,11 @@
                 border-right: 0;
             }
         }
-        &_info {
+        &__info {
             .flex(column, nowrap, flex-start, flex-start);
         }
 
-        &_name {
+        &__name {
             font-size: var(--bj-font-size-sub-title);
             font-family: Montserrat-Regular, Montserrat;
             color: var(--bj-font-color-65);
@@ -143,7 +151,7 @@
             margin-bottom: 16px;
         }
 
-        &_value {
+        &__value {
             transition: color 0.3s;
             transition-timing-function: ease;
             font-size: var(--bj-font-size-home-number);
@@ -152,7 +160,7 @@
             line-height: var(--bj-font-size-home-number);
         }
 
-        &_tip {
+        &__tip {
             margin-left: 8px;
             padding: 0 4px;
             font-size: var(--bj-font-size-small);
@@ -161,15 +169,6 @@
             line-height: var(--bj-font-size-small);
             background: rgba(61, 80, 255, 0.15);
             border-radius: 7px;
-        }
-
-        &_divider {
-            width: 226px;
-        }
-
-        &_divider_vertical {
-            height: 56px;
-            margin-right: 24px;
         }
     }
 
@@ -195,7 +194,7 @@
                     padding-bottom: 0;
                     border-bottom: 0;
                 }
-                &_info {
+                &__info {
                     border-right: 1px solid var(--bj-border-color);
                 }
             }
@@ -252,7 +251,7 @@
                     padding-bottom: 24px;
                     border-bottom: 1px solid var(--bj-border-color);
                 }
-                &_info {
+                &__info {
                     border-right: 0;
                 }
             }

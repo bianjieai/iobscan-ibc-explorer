@@ -1,6 +1,7 @@
-import { TChannelStatus } from '@/components/responsive/component.interface';
+import { API_CODE } from '@/constants/apiCode';
+import { TChannelStatus } from '@/types/interface/component.interface';
 import { ref, Ref } from 'vue';
-import { HttpHelper } from '../helper/httpHelpers.js';
+import { HttpHelper } from '../helper/httpHelper.js';
 import { baseParams } from './tokens';
 import ChainHelper from '../helper/chainHelper';
 
@@ -35,7 +36,7 @@ export const useGetChannelsList = () => {
         });
         loading && (loading.value = false);
         const { code, data, message } = result;
-        if (code === 0) {
+        if (code === API_CODE.success) {
             if (!params.use_count) {
                 const { items } = data;
                 list.value = ChainHelper.sortByChainName(items, params.chain);

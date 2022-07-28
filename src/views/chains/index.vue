@@ -1,6 +1,9 @@
 <template>
     <PageContainer>
-        <PageTitle title="IBC Chains" :subtitle="`${formatBigNumber(list?.length, 0)} chains supported`" />
+        <PageTitle
+            title="IBC Chains"
+            :subtitle="`${formatBigNumber(list?.length, 0)} chains supported`"
+        />
 
         <BjTable
             :loading="loading"
@@ -12,7 +15,11 @@
             :scroll="{ y: 610 }"
         >
             <template #chain_id="{ record, column }">
-                <ChainIcon :chain-id="record[column.key]" :chains-data="ibcChains?.all ?? []" icon-size="small" />
+                <ChainIcon
+                    :chain-id="record[column.key]"
+                    :chains-data="ibcChains?.all ?? []"
+                    icon-size="small"
+                />
             </template>
 
             <template #channels="{ record, column }">
@@ -59,7 +66,7 @@
     import { useGetChainsList } from '@/service/chains';
     import { useRouter } from 'vue-router';
     import { formatAmount } from '@/helper/tableCellHelper';
-    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
 
     const router = useRouter();
 
@@ -72,7 +79,14 @@
         getList(loading);
     });
 
-    const needCustomColumns = ['chain_id', 'channels', 'relayers', 'ibc_tokens', 'ibc_tokens_value', 'transfer_txs'];
+    const needCustomColumns = [
+        'chain_id',
+        'channels',
+        'relayers',
+        'ibc_tokens',
+        'ibc_tokens_value',
+        'transfer_txs'
+    ];
 
     const goChannels = (chain: string) => {
         router.push({

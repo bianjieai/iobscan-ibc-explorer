@@ -30,7 +30,8 @@ export const isPlainObject = (obj: any) => obj && isObject(obj) && 'isPrototypeO
  * @param {any} arg
  */
 export const isNullOrEmpty = (arg: any) =>
-    (typeof arg === 'string' && (arg.toLowerCase() == 'null' || arg.toLowerCase() == 'undefined')) ||
+    (typeof arg === 'string' &&
+        (arg.toLowerCase() == 'null' || arg.toLowerCase() == 'undefined')) ||
     (!arg && arg !== 0 && typeof arg != 'boolean' ? true : false);
 
 /**
@@ -43,7 +44,8 @@ export const isArryOrObjEmpty = (arg: any) => {
         isEmpty = arg.length > 0 ? false : true;
     } else {
         isEmpty =
-            (typeof arg === 'string' && (arg.toLowerCase() == 'null' || arg.toLowerCase() == 'undefined')) ||
+            (typeof arg === 'string' &&
+                (arg.toLowerCase() == 'null' || arg.toLowerCase() == 'undefined')) ||
             (!arg && arg !== 0 && typeof arg != 'boolean' ? true : false);
     }
     return isEmpty;

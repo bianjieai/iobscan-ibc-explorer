@@ -1,6 +1,10 @@
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 
-const service = axios.create();
+const router = useRouter();
+
+const service = axios.create({
+    baseURL: import.meta.env.VITE_BASE_API
+});
 
 // Request interceptors
 service.interceptors.request.use(
@@ -17,10 +21,16 @@ service.interceptors.request.use(
 service.interceptors.response.use(
     async (response: AxiosResponse) => {
         // do something
-        console.log(response);
+        return response.data;
     },
     (error: any) => {
         // do something
+        const url = error?.config?.url;
+        if (url?.includes('/ibc/chains') || url?.includes('/ibc/txs')) {
+            if (!error?.message?.includes('code 200')) {
+                router.push('/500');
+            }
+        }
         return Promise.reject(error);
     }
 );

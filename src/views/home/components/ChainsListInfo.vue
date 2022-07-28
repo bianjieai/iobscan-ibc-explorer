@@ -1,18 +1,23 @@
 <template>
     <div class="chainlist">
-        <a-menu v-model:selectedKeys="currentMenu" class="chainlist_menu" mode="horizontal" @select="onSelectedMenu">
-            <a-menu-item v-for="item of menus" :key="item.value" class="chainlist_item">
+        <a-menu
+            v-model:selectedKeys="currentMenu"
+            class="chainlist__menu"
+            mode="horizontal"
+            @select="onSelectedMenu"
+        >
+            <a-menu-item v-for="item of menus" :key="item.value" class="chainlist__item">
                 {{ item.label }}
             </a-menu-item>
         </a-menu>
-        <div class="chainlist_bottom">
+        <div class="chainlist__bottom">
             <a-list
-                v-show="chainList[currentMenu] && chainList[currentMenu].length"
+                v-show="chainList[currentMenu as any] && chainList[currentMenu as any].length"
                 id="card_list"
                 ref="listRef"
                 class="card_list ibc_scrollbar"
                 :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }"
-                :data-source="chainList[currentMenu]"
+                :data-source="chainList[currentMenu as any]"
             >
                 <template #renderItem="{ item }">
                     <a-list-item
@@ -22,7 +27,10 @@
                     >
                         <router-link :to="`/chains`">
                             <a-card class="menu_card">
-                                <img class="card_img" :src="item.icon ? item.icon : chainDefaultImg" />
+                                <img
+                                    class="card_img"
+                                    :src="item.icon ? item.icon : chainDefaultImg"
+                                />
                                 <p class="card_title">{{ item.chain_name }}</p>
                                 <p class="card_value">{{ formatChainID(item.chain_id) }}</p>
                             </a-card>
@@ -41,7 +49,7 @@
                 </template>
             </a-list>
             <a-anchor
-                v-show="chainList[currentMenu] && chainList[currentMenu].length"
+                v-show="chainList[currentMenu as any] && chainList[currentMenu as any].length"
                 class="list_anchor"
                 :affix="false"
                 :get-container="getBindElement"
@@ -64,16 +72,23 @@
                 </a-anchor-link>
             </a-anchor>
 
-            <no-datas v-if="!chainList[currentMenu] || !chainList[currentMenu].length" class="card_list" />
+            <no-datas
+                v-if="!chainList[currentMenu as any] || !chainList[currentMenu as any].length"
+                class="card_list"
+            />
         </div>
     </div>
 </template>
 
-<script setup>
-    import NoDatas from '../../../components/NoDatas.vue';
-    import { useMenus, useInterfaceActive, useAnchors, useGetBindElement } from '../composable/useChainsListInfo';
+<script setup lang="ts">
+    import {
+        useMenus,
+        useInterfaceActive,
+        useAnchors,
+        useGetBindElement
+    } from '../composable/useChainsListInfo';
     import ChainHelper from '@/helper/chainHelper';
-    const chainDefaultImg = new URL('../../../assets/chain-default.png', import.meta.url).href;
+    const chainDefaultImg = new URL('../../../assets/home/chain-default.png', import.meta.url).href;
     defineProps({
         chainList: {
             type: Object,
@@ -86,7 +101,7 @@
     const { anchors, listRef, findClassName, onChangeAnchor } = useAnchors();
     const { getBindElement } = useGetBindElement();
 
-    const formatChainID = (chainId) => {
+    const formatChainID = (chainId: string) => {
         return ChainHelper.formatChainId(chainId);
     };
 </script>
@@ -94,10 +109,10 @@
 <style lang="less" scoped>
     .chainlist {
         width: 100%;
-        &_menu {
+        &__menu {
             width: 100%;
             border: 0;
-            ::v-deep.ant-menu-overflow {
+            :deep(.ant-menu-overflow) {
                 .ant-menu-overflow-item {
                     &:hover {
                         cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
@@ -120,7 +135,7 @@
                 }
             }
         }
-        &_bottom {
+        &__bottom {
             margin-top: 8px;
             width: 100%;
             .flex(row, nowrap, flex-start, flex-start);
@@ -133,7 +148,7 @@
                 }
             }
         }
-        &_item {
+        &__item {
             font-size: var(--bj-font-size-normal);
             font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;

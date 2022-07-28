@@ -1,27 +1,18 @@
+import { API_URL } from '@/constants/apiUrl';
 import request from '@/utils/axios';
+import { IResponse } from '@/types/interface/index.interface';
+import { IRequestIbcDenom, IRequestIbcStatistics } from '@/types/interface/home.interface';
 
-// 仅做示例，待调整
-/**
- * 登录
- */
-interface IResponseType<P = {}> {
-    code?: number;
-    status: number;
-    msg: string;
-    data: P;
-}
-interface ILogin {
-    token: string;
-    expires: number;
-}
+export const getIbcDenomsAPI = () => {
+    return request<IResponse<IRequestIbcDenom[]>>({
+        url: API_URL.ibcDenomsUrl,
+        method: 'get'
+    });
+};
 
-export const login = (username: string, password: string) => {
-    return request<IResponseType<ILogin>>({
-        url: '/api/auth/login',
-        method: 'post',
-        data: {
-            username,
-            password
-        }
+export const getIbcStatisticsAPI = () => {
+    return request<IResponse<IRequestIbcStatistics[]>>({
+        url: API_URL.ibcStatisticsUrl,
+        method: 'get'
     });
 };

@@ -1,6 +1,6 @@
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable no-param-reassign */
-import { HttpHelper } from '../helper/httpHelpers.js';
+import { HttpHelper } from '../helper/httpHelper.js';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -14,53 +14,6 @@ function get(url, params) {
         try {
             const data = await HttpHelper.get(url, params);
             if (data) {
-                // if (data?.data?.data?.length) {
-                //     data.data.data.forEach(item => {
-                //         if (item?.sc_chain_id) {
-                //             item.sc_chain_id = item.sc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.sc_chain_id
-                //         }
-                //         if (item?.sc_chain_id) {
-                //             item.dc_chain_id = item.dc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.dc_chain_id
-                //         }
-                //         if (item?.chain_id) {
-                //             item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
-                //         }
-                //     })
-                // }
-                // if (data?.data?.length) {
-                //     data.data.forEach(item => {
-                //         if (item?.sc_chain_id) {
-                //             item.sc_chain_id = item.sc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.sc_chain_id
-                //         }
-                //         if (item?.sc_chain_id) {
-                //             item.dc_chain_id = item.dc_chain_id?.replace(new RegExp("\_", "g"), "-") || item.dc_chain_id
-                //         }
-                //         if (item?.chain_id) {
-                //             item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
-                //         }
-                //     })
-                // }
-                // if (data?.data?.active?.length) {
-                //     data.data.active.forEach(item => {
-                //         if (item?.chain_id) {
-                //             item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
-                //         }
-                //     })
-                // }
-                // if (data?.data?.all?.length) {
-                //     data.data.all.forEach(item => {
-                //         if (item?.chain_id) {
-                //             item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
-                //         }
-                //     })
-                // }
-                // if (data?.data?.inactive?.length) {
-                //     data.data.inactive.forEach(item => {
-                //         if (item?.chain_id) {
-                //             item.chain_id = item.chain_id?.replace(new RegExp("\_", "g"), "-") || item.chain_id
-                //         }
-                //     })
-                // }
                 res(data.data || data);
             } else {
                 console.error(`error from ${url}:`, JSON.stringify(data));
@@ -78,23 +31,13 @@ function get(url, params) {
     });
 }
 
-function getIbcTxs(params) {
-    const url = '/ibc/txs';
-    const config = {
-        params
-    };
-    return get(url, config);
-}
-
-function getIbcChains() {
-    const url = '/ibc/chains';
-    return get(url);
-}
-
-function getIbcBaseDenoms() {
-    const url = '/ibc/baseDenoms';
-    return get(url);
-}
+// function getIbcTxs(params) {
+//     const url = '/ibc/txs';
+//     const config = {
+//         params
+//     };
+//     return get(url, config);
+// }
 
 function getIbcDenoms() {
     const url = '/ibc/denoms';
@@ -116,12 +59,4 @@ function getTxDetailsByTxHash(txHash) {
     return get(url);
 }
 
-export {
-    getIbcTxs,
-    getIbcChains,
-    getIbcBaseDenoms,
-    getIbcDenoms,
-    getIbcStatistics,
-    getIbcConfig,
-    getTxDetailsByTxHash
-};
+export { getIbcStatistics, getIbcConfig, getTxDetailsByTxHash, getIbcDenoms };

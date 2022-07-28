@@ -7,7 +7,7 @@
         "qa": "vite --mode qa",
         "stage": "vite --mode staging",
         "prod": "vite --mode production",
-        "vue-tsc": "vue-tsc --noEmit",
+        "vue:tsc": "vue-tsc --noEmit",
         "build:qa": "vue-tsc --noEmit && vite build --mode qa",
         "build:staging": "vue-tsc --noEmit && vite build --mode staging",
         "build": "vue-tsc --noEmit && vite build --mode production",
@@ -18,12 +18,13 @@
         "prettier:comment": "自动格式化当前目录下的所有文件",
         "prettier": "prettier .  --write",
         "commit:comment": "引导设置规范化的提交信息",
-        "commit": "git-cz"
+        "commit": "git-cz",
+        "prepare": "husky install"
     },
     "lint-staged": {
         "*.{js,ts,vue}": [
-            "pnpm run eslint",
-            "pnpm run prettier"
+            "npm run eslint",
+            "npm run prettier"
         ]
     },
     "config": {

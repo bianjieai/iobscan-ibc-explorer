@@ -4,7 +4,7 @@
     </div>
 </template>
 
-<script setup></script>
+<script setup lang="ts"></script>
 
 <style scoped lang="less">
     .loading_container {

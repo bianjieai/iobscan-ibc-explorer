@@ -1,3 +1,35 @@
+.ant-table-cell::before {
+    width: 0 !important;
+}
+.ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+    font-weight: 400 !important;
+}
+.ant-picker-focused {
+    border-color: var(--bj-primary-color) !important;
+}
+.ant-table-thead th.ant-table-column-has-sorters:hover {
+    background: #fff !important;
+}
+.ant-table-tbody > tr.ant-table-row:hover > td {
+    background: #f0f4ff !important;
+}
+.ant-table-column-title {
+    white-space: nowrap;
+}
+
+.ant-dropdown-open .button_token_icon .button_title_default {
+    color: var(--bj-text-third);
+}
+.ant-dropdown-open .selected_color_default {
+    color: var(--bj-text-third) !important;
+}
+
+@media screen and (max-width: 630px) {
+    .ant-picker-panels {
+        flex-direction: column;
+    }
+}
+
 .ant-anchor-link::before {
     width: 0px !important;
 }

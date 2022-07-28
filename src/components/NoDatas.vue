@@ -5,11 +5,7 @@
     </div>
 </template>
 
-<script>
-    export default {
-        setup() {}
-    };
-</script>
+<script setup lang="ts"></script>
 
 <style lang="less" scoped>
     .nodatas {

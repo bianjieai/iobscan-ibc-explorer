@@ -7,9 +7,16 @@
                 :class="['icon', 'mr-8', iconSize === TableCellIconSize.SMALL ? 'small-icon' : '']"
             />
             <div v-else>
-                <img v-if="relayerImageSrc" :src="relayerImageSrc" alt="" class="icon mr-8 small-icon" />
+                <img
+                    v-if="relayerImageSrc"
+                    :src="relayerImageSrc"
+                    alt=""
+                    class="icon mr-8 small-icon"
+                />
                 <div v-else class="bg-text-c flex items-center justify-center mr-8">
-                    <div class="bg-text leading-none">{{ (title.substring(0, 1) || '').toUpperCase() }}</div>
+                    <div class="bg-text leading-none">{{
+                        (title.substring(0, 1) || '').toUpperCase()
+                    }}</div>
                 </div>
             </div>
         </div>
@@ -17,17 +24,26 @@
             class="flex flex-col justify-around"
             :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }"
         >
-            <div :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']" @click="go">{{
-                relayer ? relayerName : title
-            }}</div>
-            <div v-if="subtitle" :class="['subtitle', 'leading-none', subtitleIsTag ? 'tag' : '']">{{ subtitle }}</div>
+            <div
+                :class="['title', 'leading-none', titleCanClick ? 'hover-cursor' : '']"
+                @click="go"
+                >{{ relayer ? relayerName : title }}</div
+            >
+            <div
+                v-if="subtitle"
+                :class="['subtitle', 'leading-none', subtitleIsTag ? 'tag' : '']"
+                >{{ subtitle }}</div
+            >
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
+    import {
+        TableCellIconSize,
+        TTableCellIconSize
+    } from '../../../types/interface/component.interface';
     import { UNKNOWN } from '../../../constants';
 
     // 说明 现已将 token chain 拆除。 仅剩relayer

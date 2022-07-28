@@ -65,7 +65,11 @@
             right: -8px;
             height: 12px;
             bottom: 3px;
-            background: linear-gradient(90deg, rgba(112, 136, 255, 0) 0%, rgba(61, 80, 255, 0.15) 100%);
+            background: linear-gradient(
+                90deg,
+                rgba(112, 136, 255, 0) 0%,
+                rgba(61, 80, 255, 0.15) 100%
+            );
             border-radius: 5px;
             box-sizing: border-box;
         }

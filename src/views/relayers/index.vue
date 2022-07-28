@@ -101,7 +101,7 @@
     import PageContainer from '@/components/responsive/pageContainer.vue';
     import PageTitle from '@/components/responsive/pageTitle.vue';
     import BjTable from '@/components/responsive/table/index.vue';
-    import { COLUMNS, STATUS_OPTIONS } from './constants';
+    import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
     import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
     import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
     import ResetButton from '@/components/responsive/resetButton.vue';
@@ -109,13 +109,13 @@
     import { formatLastUpdated } from '@/utils/timeTools';
     import TransferTxs from '@/components/responsive/table/transferTxs.vue';
     import StatusImg from '@/components/responsive/table/statusImg.vue';
-    import { TRelayerStatus, BottomStatusType } from '@/components/responsive/component.interface';
+    import { TRelayerStatus, BottomStatusType } from '@/types/interface/component.interface';
     import { useIbcChains } from '../home/composable';
-    import { useGetRelayersList } from '@/service/relayers';
+    import { useGetRelayersList } from './composable';
     import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useRoute, useRouter } from 'vue-router';
     import NamePopover from './components/namePopover.vue';
-    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
     import { urlHelper } from '@/utils/urlTools';
 
     const loading = ref(false);
@@ -164,7 +164,10 @@
         if (!searchChain.value && !searchStatus.value) {
             return `${formatBigNumber(total.value, 0)} relayers found`;
         } else {
-            return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(total.value, 0)} relayers found`;
+            return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(
+                total.value,
+                0
+            )} relayers found`;
         }
     });
 

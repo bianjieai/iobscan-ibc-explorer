@@ -1,7 +1,29 @@
 @import './reset.css';
-@import './index.css';
 @import './override.antd.css';
 @import './override.tailwind.css';
+
+:root {
+    --bj-primary-color: #3d50ff;
+    --bj-background-color: #f5f7fc;
+    --bj-background-color-second: #eaecf3;
+    --bj-background-color-third: #eaeaea;
+    --bj-border-color: rgba(151, 151, 151, 0.2);
+    --bj-text-normal: #000;
+    --bj-text-second: rgba(0, 0, 0, 0.75);
+    --bj-text-third: rgba(0, 0, 0, 0.35);
+    --bj-font-color-65: rgba(0, 0, 0, 0.65);
+    --bj-success: #00c853;
+    --bj-processing: #ffc400;
+    --bj-failed: #ff5a5a;
+    --bj-font-size-home-title: 40px;
+    --bj-font-size-home-number: 24px;
+    --bj-font-size-title: 20px;
+    --bj-font-size-sub-title: 16px;
+    --bj-font-size-normal: 14px;
+    --bj-font-size-small: 12px;
+    /* border-radius */
+    --border-radius-normal: 4px;
+}
 
 html {
     width: 100%;
@@ -9,6 +31,44 @@ html {
     body {
         width: 100%;
         height: auto;
+    }
+}
+
+@font-face {
+    font-family: 'DroidSansMono';
+    src: url('../assets/font/DroidSansMono-enMp.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Verdana';
+    src: url('../assets/font/Verdana.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Montserrat';
+    src: url('../assets/font/Montserrat-Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@keyframes flicker {
+    0% {
+        opacity: 0;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(2);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(1);
     }
 }
 
