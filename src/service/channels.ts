@@ -1,4 +1,4 @@
-import { TChannelStatus } from '@/components/responsive/component.interface';
+import { TChannelStatus } from '@/types/interface/table.interface';
 import { ref, Ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelpers.js';
 import { baseParams } from './tokens';

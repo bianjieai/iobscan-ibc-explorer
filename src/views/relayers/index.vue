@@ -107,14 +107,14 @@
     import TransferTxs from '@/components/responsive/table/TransferTxs.vue';
     import StatusImg from '@/components/responsive/table/StatusImg.vue';
     import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
+    import NamePopover from './components/NamePopover.vue';
     import { COLUMNS, STATUS_OPTIONS } from './constants';
     import { computed, onMounted, ref } from 'vue';
     import { formatLastUpdated } from '@/utils/timeTools';
-    import { TRelayerStatus, BottomStatusType } from '@/components/responsive/component.interface';
+    import { TRelayerStatus, BottomStatusType } from '@/types/interface/table.interface';
     import { useIbcChains } from '../home/composable';
     import { useGetRelayersList } from '@/service/relayers';
     import { useRoute, useRouter } from 'vue-router';
-    import NamePopover from './components/namePopover.vue';
     import { formatBigNumber } from '@/helper/parseStringHelpers';
     import { urlHelper } from '@/utils/urlTools';
 

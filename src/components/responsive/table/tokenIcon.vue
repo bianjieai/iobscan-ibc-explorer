@@ -31,7 +31,7 @@
     import { getRestString, getRestString2 } from '@/helper/parseStringHelpers';
     import { TBaseDenoms } from '@/types/interface/chainAndDenom.interface';
     import { computed } from 'vue';
-    import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
+    import { TableCellIconSize, TTableCellIconSize } from '../../../types/interface/table.interface';
 
     interface IProps {
         iconSize?: TTableCellIconSize;

@@ -96,7 +96,7 @@
     import { COLUMNS, STATUS_OPTIONS } from './constants';
     import { computed, onMounted, ref } from 'vue';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
-    import { TChannelStatus, BottomStatusType } from '@/components/responsive/component.interface';
+    import { TChannelStatus, BottomStatusType } from '@/types/interface/table.interface';
     import { useGetChannelsList } from '@/service/channels';
     import { useIbcChains } from '../home/composable';
     import { useRoute, useRouter } from 'vue-router';

@@ -1,4 +1,4 @@
-import { TRelayerStatus } from '@/components/responsive/component.interface.js';
+import { TRelayerStatus } from '@/types/interface/table.interface.js';
 import { ref, Ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelpers.js';
 import { baseParams } from './tokens';

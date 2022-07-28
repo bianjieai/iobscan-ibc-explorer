@@ -24,11 +24,11 @@
                         <header-input class="header_input_layout" disabled @pressed-enter="onPressEnter" />
                         <div class="header_input_icon_wrapper">
                             <a href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
-                                <img class="header_input_icon" src="/src/assets/ioblink.png" alt="icon" />
+                                <img class="header_input_icon" src="/src/assets/nav/iob_link.png" alt="icon" />
                             </a>
                             <div class="header_btn_mobile cursor">
                                 <img
-                                    src="../assets/menu_mobile.png"
+                                    src="../assets/nav/menu_mobile.png"
                                     alt="menu icon"
                                     class="header_btn_img"
                                     @click="changeShowNav"

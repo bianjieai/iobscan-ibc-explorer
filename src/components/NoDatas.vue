@@ -1,6 +1,6 @@
 <template>
     <div class="nodatas">
-        <img class="nodatas_icon" src="../assets/noDatas.png" />
+        <img class="nodatas_icon" src="../assets/no_datas.png" />
         <p class="nodatas_title">No Data</p>
     </div>
 </template>

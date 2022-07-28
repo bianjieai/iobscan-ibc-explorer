@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { BottomStatusType, TBottomStatus } from '../component.interface';
+    import { BottomStatusType, TBottomStatus } from '../../../types/interface/table.interface';
     import { RELAYER_STATUS } from '../../../views/relayers/constants';
     import { CHANNEL_STATUS } from '../../../views/channels/constants';
 
@@ -41,13 +41,13 @@
     const activeImgInfo = computed(() => {
         if (props.type === BottomStatusType.CHANNEL) {
             return {
-                src: new URL('../../../assets/channel-open.png', import.meta.url).href,
+                src: new URL('../../../assets/channels/open.png', import.meta.url).href,
                 height: 16,
                 width: 46
             };
         } else {
             return {
-                src: new URL('../../../assets/relayer-running.png', import.meta.url).href,
+                src: new URL('../../../assets/relayers/running.png', import.meta.url).href,
                 height: 18.5,
                 width: 18.5
             };
@@ -57,13 +57,13 @@
     const inActiveImgInfo = computed(() => {
         if (props.type === BottomStatusType.CHANNEL) {
             return {
-                src: new URL('../../../assets/channel-closed.png', import.meta.url).href,
+                src: new URL('../../../assets/channels/closed.png', import.meta.url).href,
                 height: 16,
                 width: 46
             };
         } else {
             return {
-                src: new URL('../../../assets/relayer-stopped.png', import.meta.url).href,
+                src: new URL('../../../assets/relayers/stopped.png', import.meta.url).href,
                 height: 18.5,
                 width: 18.5
             };

@@ -9,8 +9,8 @@
             />
             <div v-else>
                 <img v-if="relayerImageSrc" :src="relayerImageSrc" alt="" class="icon mr-8 small_icon" />
-                <div v-else class="bg-text-c flex items-center justify-center mr-8">
-                    <div class="bg-text leading_none">{{ (title.substring(0, 1) || '').toUpperCase() }}</div>
+                <div v-else class="bg_text_c flex items-center justify-center mr-8">
+                    <div class="bg_text leading_none">{{ (title.substring(0, 1) || '').toUpperCase() }}</div>
                 </div>
             </div>
         </div>
@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
+    import { TableCellIconSize, TTableCellIconSize } from '../../../types/interface/table.interface';
     import { UNKNOWN } from '../../../constants';
 
     // 说明 现已将 token chain 拆除。 仅剩relayer
@@ -55,7 +55,7 @@
         if (props.imgSrc) {
             return props.imgSrc;
         } else if (relayerName.value === UNKNOWN) {
-            return new URL('../../../assets/default.png', import.meta.url).href;
+            return new URL('../../../assets/relayers/default.png', import.meta.url).href;
         } else {
             return '';
         }
@@ -106,14 +106,14 @@
         align-items: center;
     }
 
-    .bg-text-c {
+    .bg_text_c {
         width: 32px;
         height: 32px;
-        background: url('../../../assets/relayer-default.png') no-repeat center center;
+        background: url('../../../assets/relayers/default_bg.png') no-repeat center center;
         border-radius: 50%;
     }
 
-    .bg-text {
+    .bg_text {
         font-size: 22px;
         background: linear-gradient(to right, #b3bbff, #8594ff);
         background-size: cover;

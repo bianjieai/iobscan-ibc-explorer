@@ -35,7 +35,7 @@
 <script setup lang="ts">
     import { TBaseChains } from '@/types/interface/chainAndDenom.interface';
     import { computed } from 'vue';
-    import { TableCellIconSize, TTableCellIconSize } from '../component.interface';
+    import { TableCellIconSize, TTableCellIconSize } from '../../../types/interface/table.interface';
     import ChainHelper from '@/helper/chainHelper';
     import { UNKNOWN } from '../../../constants';
 

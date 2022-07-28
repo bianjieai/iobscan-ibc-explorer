@@ -2,7 +2,7 @@
     <div class="error_page_container">
         <div class="error_page_content_wrap">
             <div class="error_img_content">
-                <img class="error_img" src="/src/assets/404.png" alt="" />
+                <img class="error_img" src="/src/assets/error/404.png" alt="" />
             </div>
             <p class="error_img_title">Oops!</p>
             <p class="error_content_description">The planet you are looking for doesn’t exist.</p>
@@ -24,9 +24,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: url('../../assets/bg_default.png') no-repeat center center;
+        background: url('../../assets/error/default_bg.png') no-repeat center center;
         background-size: cover;
-        cursor: url('../../assets/errpr_mouse_tree.png'), default !important;
+        cursor: url('../../assets/error/mouse_tree.png'), default !important;
         .error_page_content_wrap {
             max-width: 550px;
             .error_img_content {
