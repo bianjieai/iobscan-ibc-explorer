@@ -30,7 +30,7 @@ export const useGetChainsList = () => {
                 ibcChains = JSON.parse(ibcChainsStr);
             } else {
                 const ibcStatisticsChainsStore = useIbcStatisticsChains();
-                const getIbcChains = ibcStatisticsChainsStore.getIbcChains;
+                const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
                 try {
                     await getIbcChains();
                     ibcChains = ibcStatisticsChainsStore.ibcChains;

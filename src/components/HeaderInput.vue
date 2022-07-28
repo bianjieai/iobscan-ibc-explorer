@@ -70,7 +70,7 @@
     }
     .default_input_style {
     }
-    :deep.header_input {
+    .header_input {
         height: 40px;
         background-color: rgba(#ffffff, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.08);
@@ -82,11 +82,11 @@
                 color: rgba(255, 255, 255, 1);
             }
         }
-        .ant-input {
+        :deep(.ant-input) {
             background-color: transparent;
             color: #ffffff;
         }
-        .anticon {
+        :deep(.anticon) {
             color: #fff;
         }
         .input_prefix {

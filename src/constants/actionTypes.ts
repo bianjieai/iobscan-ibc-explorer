@@ -1,4 +1,3 @@
 export const GET_IBCSTATISTICS = 'GET_IBCSTATISTICS';
 export const GET_IBCDENOMS = 'GET_IBCDENOMS';
 export const GET_IBCCONFIGS = 'GET_IBCCONFIGS';
-export const GET_IBCTXS = 'GET_IBCTXS';

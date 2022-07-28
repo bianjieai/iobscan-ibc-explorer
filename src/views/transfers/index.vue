@@ -146,7 +146,7 @@
                     :row-key="(record) => record.record_id"
                     :columns="tableColumns"
                     :loading="showTransferLoading"
-                    :data-source="tableDatas.value"
+                    :data-source="tableDatas"
                     :pagination="false"
                     :custom-row="handleClickRow"
                 >
@@ -344,7 +344,7 @@
         CHAINNAME
     } from '../../constants';
     import Tools from '../../utils/Tools';
-    import chainDefaultImg from '../../assets/chain-default.png';
+    import chainDefaultImg from '../../assets/home/chain-default.png';
     import {
         JSONparse,
         getRestString,
@@ -366,15 +366,14 @@
         useIbcChains,
         useGetTableColumns
     } from './composable';
-
     useClearInterval();
-    const { getIbcDenoms, ibcBaseDenomsSorted, getIbcBaseDenom } = useGetIbcDenoms();
+    const { getIbcDenoms, ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
     const { tableCount, getIbcTxs } = useIbcTxs();
     const { ibcDenoms } = useGetTokens();
     const { selectedSymbol, isShowSymbolIcon, clearInput, isShowChainIcon } = useSelectedSymbol();
     const { pagination } = usePagination();
-    const { ibcChains, getIbcChains } = useIbcChains();
+    const { ibcChains } = useIbcChains();
     const { tableColumns, showTransferLoading, tableDatas } = useGetTableColumns();
     const chainDropdown = ref();
     const selectedDouble = ref(true);
@@ -507,7 +506,7 @@
             ...params
         })
             .then(() => {
-                pagination.total = tableCount?.value;
+                pagination.total = tableCount.value;
             })
             .catch((error) => {
                 console.log(error);
@@ -538,13 +537,13 @@
 
     const isIbcTxTotalAndHashFilter = computed(() => {
         if (!ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
-            return `A total of ${ibcStatisticsTxs.value.tx_all.count} transfers found`;
+            return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
         } else if (!ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
-            return `${tableCount.value} of the ${ibcStatisticsTxs.value.tx_all.count} transfers found`;
+            return `${tableCount} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
         } else if (ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
             return 'Last 500k transfers found';
         } else if (ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
-            return `${tableCount.value} of the last 500k transfers found`;
+            return `${tableCount} of the last 500k transfers found`;
         } else {
             return '';
         }
@@ -843,8 +842,6 @@
     onMounted(() => {
         getIbcStatistics();
         getIbcDenoms();
-        !sessionStorage.getItem('ibcBaseDenoms') && getIbcBaseDenom();
-        !sessionStorage.getItem('allChains') && getIbcChains();
     });
 </script>
 <style lang="less" scoped>

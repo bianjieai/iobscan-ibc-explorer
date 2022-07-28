@@ -2,7 +2,7 @@
  * @description format tableCell
  */
 
-import { IBaseDenoms } from '@/types/interface/baseApi.interface';
+import { IBaseDenoms } from '@/types/interface/index.interface';
 import { formatBigNumber } from './parseStringHelper';
 import moveDecimal from 'move-decimal-point';
 /**
@@ -12,7 +12,7 @@ import moveDecimal from 'move-decimal-point';
  * @returns $ xxx
  */
 
-export const formatPrice = (price: number | string, numberOfDecimal: number | null = 4) => {
+export const formatPrice = (price: number | string, numberOfDecimal: number | undefined = 4) => {
     if (price === -1 || price === '-1') {
         return '--';
     }
@@ -81,7 +81,7 @@ export const formatAmount = (
         result = Number(amount);
     }
     return {
-        popover: formatBigNumber(result, null),
+        popover: formatBigNumber(result, undefined),
         title: formatBigNumber(result, numberOfDecimal)
     };
 };

@@ -1,17 +1,18 @@
-import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { ref, reactive, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useIbcStatisticsChains } from '../../store/index';
-import { GET_IBCSTATISTICS, GET_IBCTXS, GET_IBCDENOMS } from '../../constants/actionTypes';
-import { getIbcDenoms, getTxDetailsByTxHash } from '../../service/api';
+import { GET_IBCSTATISTICS, GET_IBCDENOMS } from '../../constants/actionTypes';
+import { getTxDetailsByTxHash, getIbcDenoms } from '@/service/api';
 import { groupBy } from 'lodash-es';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { transferTableColumn, defaultTitle } from '../../constants';
 import Tools from '../../utils/Tools';
+import { storeToRefs } from 'pinia';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
 export const useIbcStatistics = () => {
-    const ibcStatisticsTxs = ibcStatisticsChainsStore.ibcStatisticsTxs;
+    const { ibcStatisticsTxs } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcStatistics = ibcStatisticsChainsStore[GET_IBCSTATISTICS];
     return {
         ibcStatisticsTxs,
@@ -20,8 +21,8 @@ export const useIbcStatistics = () => {
 };
 
 export const useIbcTxs = () => {
-    const tableCount = ibcStatisticsChainsStore.ibcTxsCount;
-    const getIbcTxs = ibcStatisticsChainsStore[GET_IBCTXS];
+    const { ibcTxsCount: tableCount } = storeToRefs(ibcStatisticsChainsStore);
+    const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
     return {
         tableCount,
         getIbcTxs
@@ -29,8 +30,8 @@ export const useIbcTxs = () => {
 };
 
 export const useIbcChains = () => {
-    const ibcChains = computed(() => ibcStatisticsChainsStore.ibcChains);
-    const getIbcChains = ibcStatisticsChainsStore.getIbcChains;
+    const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
+    const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
     return {
         ibcChains,
         getIbcChains
@@ -39,8 +40,8 @@ export const useIbcChains = () => {
 
 export const useGetIbcBaseDenoms = () => {
     const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
-    const ibcBaseDenoms = ibcStatisticsChainsStore.ibcBaseDenoms;
-    const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenoms;
+    const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
+    const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
     return {
         getIbcDenoms,
         ibcBaseDenoms,
@@ -49,11 +50,11 @@ export const useGetIbcBaseDenoms = () => {
 };
 
 export const useGetTokens = () => {
-    const tokens = reactive({ value: [] });
-    let ibcDenoms = reactive({ value: [] });
+    let tokens = ref([]);
+    let ibcDenoms = ref([]);
     getIbcDenoms()
         .then((res) => {
-            ibcDenoms.value = res;
+            ibcDenoms = res;
             let tokensObj = groupBy(res, 'symbol');
             const atomObj = {
                 ATOM: tokensObj['ATOM']
@@ -69,7 +70,7 @@ export const useGetTokens = () => {
             for (let i = 0; i < newkey.length; i++) {
                 newObj[newkey[i]] = tokensObj[newkey[i]];
             }
-            tokens.value = {
+            tokens = {
                 ...atomObj,
                 ...irisObj,
                 ...newObj

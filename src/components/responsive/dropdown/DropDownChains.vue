@@ -268,7 +268,7 @@
 
     const chainImg = (imgsrc: string) => {
         if (imgsrc) return imgsrc;
-        return new URL('../../../assets/chain-default.png', import.meta.url).href;
+        return new URL('../../../assets/home/chain-default.png', import.meta.url).href;
     };
 
     defineExpose({

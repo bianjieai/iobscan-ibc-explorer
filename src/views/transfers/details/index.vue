@@ -100,7 +100,7 @@
                     <transfer-details-card
                         :title="'IBC Out Details'"
                         :details="transferOutDetails"
-                        :ibc-denoms="ibcDenoms"
+                        :ibc-denoms="ibcDenoms.value"
                         :expand-details="transferOutExpandDetails"
                         :base-denom="baseDenom"
                         :chain-id="scChainId"
@@ -113,7 +113,7 @@
                     <transfer-details-card
                         :title="'IBC In Details'"
                         :details="transferInDetails"
-                        :ibc-denoms="ibcDenoms"
+                        :ibc-denoms="ibcDenoms.value"
                         :expand-details="transferInExpandDetails"
                         :base-denom="baseDenom"
                         :chain-id="dcChainId"

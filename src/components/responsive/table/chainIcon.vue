@@ -39,7 +39,7 @@
 </template>
 
 <script setup lang="ts">
-    import { IIbcchain } from '@/types/interface/baseApi.interface';
+    import { IIbcchain } from '@/types/interface/index.interface';
     import { computed } from 'vue';
     import {
         TableCellIconSize,
@@ -82,13 +82,13 @@
                 subtitle: filterData.chain_id,
                 imgSrc: filterData.icon
                     ? filterData.icon
-                    : new URL('../../../assets/chain-default.png', import.meta.url).href
+                    : new URL('../../../assets/home/chain-default.png', import.meta.url).href
             };
         } else {
             return {
                 title: UNKNOWN,
                 subtitle: '--',
-                imgSrc: new URL('../../../assets/chain-default.png', import.meta.url).href
+                imgSrc: new URL('../../../assets/home/chain-default.png', import.meta.url).href
             };
         }
     });

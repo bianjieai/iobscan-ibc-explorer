@@ -8,11 +8,11 @@ export const useMenus = () => {
         currentMenu
     };
 };
-export const useInterfaceActive = (emits) => {
-    const onSelectedMenu = ({ key }) => {
+export const useInterfaceActive = (emits: any) => {
+    const onSelectedMenu = ({ key }: { key: any }) => {
         emits('onMenuSelected', key);
     };
-    const clickListItem = ({ type, value }) => {
+    const clickListItem = ({ type, value }: { type: any; value: any }) => {
         emits('clickItem', { type, value });
     };
     return {
@@ -23,9 +23,9 @@ export const useInterfaceActive = (emits) => {
 
 export const useAnchors = () => {
     const anchors = reactive(anchorsDatas);
-    const listRef = ref(null);
-    const findClassName = (chainName) => {
-        const chainQuery = chainName.substr(0, 1).toUpperCase();
+    const listRef = ref();
+    const findClassName = (chainName: string) => {
+        const chainQuery = chainName[0].toUpperCase();
         let className = '';
         try {
             anchors.forEach((anchor) => {
@@ -36,15 +36,15 @@ export const useAnchors = () => {
                 }
             });
         } catch (e) {
-            // console.log(e.message);
+            // console.log(e);
         }
         return className;
     };
 
-    const onChangeAnchor = (title) => {
+    const onChangeAnchor = (title: string) => {
         const findItem = document.getElementsByClassName(title.replace('#', ''))[0];
         if (findItem) {
-            listRef.value.$el.scrollTop = findItem.parentElement.offsetTop;
+            listRef.value.$el.scrollTop = (findItem as any).parentElement.offsetTop;
         }
     };
     return {
@@ -56,7 +56,7 @@ export const useAnchors = () => {
 };
 
 export const useGetBindElement = () => {
-    const getBindElement = ref(null);
+    const getBindElement = ref<Function>();
     onMounted(() => {
         getBindElement.value = () => document.querySelector('#card_list');
     });

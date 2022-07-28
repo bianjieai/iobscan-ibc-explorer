@@ -3,7 +3,7 @@ import { CHAINNAME } from '../constants';
 import { useIbcChains } from '../views/home/composable';
 const { ibcChains } = useIbcChains();
 export default class ChainHelper {
-    static formatChainId(chainId) {
+    static formatChainId(chainId: any) {
         if (chainId && chainId !== '--') {
             return chainId.replace(new RegExp('_', 'g'), '-');
         }
@@ -11,21 +11,20 @@ export default class ChainHelper {
     }
 
     // chain_name sort
-    static sortByChainName(sourceList, chain) {
-        function changeChainsSort(item) {
-            let saveChain, saveChannel, saveAddress;
-            saveChain = item.chain_a;
+    static sortByChainName(sourceList: any, chain: any) {
+        function changeChainsSort(item: any) {
+            const saveChain = item.chain_a;
             item.chain_a = item.chain_b;
             item.chain_b = saveChain;
-            saveChannel = item.channel_a;
+            const saveChannel = item.channel_a;
             item.channel_a = item.channel_b;
             item.channel_b = saveChannel;
-            saveAddress = item.chain_a_address;
+            const saveAddress = item.chain_a_address;
             item.chain_a_address = item.chain_b_address;
             item.chain_b_address = saveAddress;
         }
         if (isArray(sourceList) && sourceList?.length) {
-            const updateList = sourceList?.map((item) => {
+            const updateList = sourceList?.map((item: any) => {
                 const matchChainA = ibcChains?.value?.all?.find(
                     (chain) => chain.chain_id === item.chain_a
                 );
@@ -69,7 +68,11 @@ export default class ChainHelper {
                          *  0 -- same
                          *  1 -- need
                          */
-                        if (matchChainA?.chain_name.localeCompare(matchChainB?.chain_name) === 1) {
+                        if (
+                            matchChainA?.chain_name.localeCompare(
+                                (matchChainB as any)?.chain_name
+                            ) === 1
+                        ) {
                             changeChainsSort(item);
                         }
                     }

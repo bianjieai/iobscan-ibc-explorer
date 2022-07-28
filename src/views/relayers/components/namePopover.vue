@@ -12,7 +12,7 @@
 </template>
 
 <script setup lang="ts">
-    import { IIbcchain } from '@/types/interface/baseApi.interface';
+    import { IIbcchain } from '@/types/interface/index.interface';
     import { computed } from 'vue';
     import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
     import { formatLongTitleString } from '@/helper/parseStringHelper';

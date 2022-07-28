@@ -9,12 +9,16 @@ import {
     ibcStatisticsTxsDefault,
     ageTimerInterval
 } from '@/constants/index';
-import { getIbcStatistics, getIbcTxs, getIbcDenoms } from '@/service/api';
-import { GET_IBCSTATISTICS, GET_IBCTXS, GET_IBCDENOMS } from '@/constants/actionTypes';
+import { getIbcStatistics } from '@/service/api';
+import { GET_IBCSTATISTICS, GET_IBCDENOMS } from '@/constants/actionTypes';
 import { getBaseDenomKey } from '@/helper/baseDenomHelper';
 import { getIbcChainsAPI, getIbcBaseDenomsAPI } from '@/api/index';
 import { API_CODE } from '@/constants/apiCode';
-import { IIbcChains, IBaseDenoms } from '@/types/interface/baseApi.interface';
+import { getIbcTxsAPI } from '@/api/transfers';
+import { IIbcChains, IBaseDenoms } from '@/types/interface/index.interface';
+import { IResponseIbcTxc, IIbcTxc } from '@/types/interface/transfers.interface';
+import { getIbcDenomsAPI } from '@/api/home';
+import { IRequestIbcDenom } from '@/types/interface/home.interface';
 
 export const useIbcStatisticsChains = defineStore('global', {
     state: () => {
@@ -25,8 +29,13 @@ export const useIbcStatisticsChains = defineStore('global', {
             ibcBaseDenoms: [] as IBaseDenoms[],
             // 全局状态
             isShowLoading: false,
-            // 全局状态
-            ibcTxs: { value: [] },
+            // 页面级别 home transfer
+            ibcTxs: [] as IIbcTxc[],
+            // 页面级别 home transfer
+            ibcTxTimer: undefined as number | undefined,
+            // 页面级别 home transfer
+            ibcTxsCount: undefined as number | undefined,
+
             // 页面级别 home  chains 卡片
             ibcStatisticsChains: ibcStatisticsChainsDefault,
             // 页面级别 home  Channel Pairs 卡片
@@ -35,14 +44,8 @@ export const useIbcStatisticsChains = defineStore('global', {
             ibcStatisticsDenoms: ibcStatisticsDenomsDefault,
             // 页面级别 home  IBC Token Transfer 卡片
             ibcStatisticsTxs: ibcStatisticsTxsDefault,
-            // 页面级别 home
-            ibcTxsCount: { value: '' },
-            // 页面级别 home
-            ibcTxsStartTime: { value: 0 },
-            // 页面级别 home
-            ibcTxTimer: { value: {} },
             // 页面级别 transfers details
-            ibcDenoms: { value: [] }
+            ibcDenoms: [] as IRequestIbcDenom[]
         };
     },
     actions: {
@@ -52,13 +55,13 @@ export const useIbcStatisticsChains = defineStore('global', {
             const promiseArray = [];
             ibcBaseDenomsStr
                 ? (this.ibcBaseDenoms = JSON.parse(ibcBaseDenomsStr))
-                : promiseArray.push(this.getIbcBaseDenoms);
+                : promiseArray.push(this.getIbcBaseDenomsAction);
             allChainsStr
                 ? (this.ibcChains = JSON.parse(allChainsStr))
-                : promiseArray.push(this.getIbcChains);
+                : promiseArray.push(this.getIbcChainsAction);
             await Promise.all(promiseArray.map((item) => item()));
         },
-        async getIbcBaseDenoms() {
+        async getIbcBaseDenomsAction() {
             try {
                 const { code, data } = await getIbcBaseDenomsAPI();
                 if (code == API_CODE.success && data.length > 0) {
@@ -72,10 +75,10 @@ export const useIbcStatisticsChains = defineStore('global', {
                     this.ibcBaseDenoms = data;
                 }
             } catch (error) {
-                console.log('getIbcBaseDenoms', error);
+                console.log('getIbcBaseDenomsAction', error);
             }
         },
-        async getIbcChains() {
+        async getIbcChainsAction() {
             try {
                 const { code, data } = await getIbcChainsAPI();
                 if (code == API_CODE.success && data) {
@@ -84,6 +87,69 @@ export const useIbcStatisticsChains = defineStore('global', {
                 }
             } catch (error) {
                 console.log('getIbcChains', error);
+            }
+        },
+        async getIbcTxsAction(queryParams: any) {
+            if (queryParams?.date_range) {
+                queryParams.date_range = queryParams.date_range?.toString();
+            }
+            if (queryParams?.status) {
+                queryParams.status = queryParams.status?.toString();
+            }
+            const { use_count } = queryParams;
+            try {
+                const { code, data } = await getIbcTxsAPI(queryParams);
+                if (code === API_CODE.success) {
+                    if (use_count) {
+                        this.ibcTxsCount = data as number;
+                    } else {
+                        const txList: IIbcTxc[] = (data as IResponseIbcTxc).data;
+                        const getSymbolInfo = (oldData?: any) => {
+                            // oldData 中保留有 列表项展开收起的自定义数据
+                            return txList.map((item: any, index: number) => {
+                                const symbol = Tools.findDenomSymbol(
+                                    this.ibcDenoms,
+                                    item.denoms.sc_denom,
+                                    item.sc_chain_id
+                                );
+                                let symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
+                                let symbolDenom = item.base_denom || '';
+                                let symbolIcon = '';
+                                if (symbol) {
+                                    const findSymbol = Tools.findSymbol(this.ibcBaseDenoms, symbol);
+                                    if (findSymbol) {
+                                        symbolNum = moveDecimal(
+                                            item.sc_tx_info?.msg_amount?.amount || 0,
+                                            0 - findSymbol.scale
+                                        );
+                                        symbolDenom = findSymbol.symbol;
+                                        symbolIcon = findSymbol.icon;
+                                    }
+                                }
+                                return {
+                                    ...item,
+                                    expanded: oldData?.[index]?.expanded ?? false,
+                                    symbolNum,
+                                    symbolDenom,
+                                    symbolIcon,
+                                    parseTime: Tools.formatAge(
+                                        Tools.getTimestamp(),
+                                        item.tx_time * 1000,
+                                        '',
+                                        ''
+                                    )
+                                };
+                            });
+                        };
+                        this.ibcTxTimer && clearInterval(this.ibcTxTimer);
+                        this.ibcTxs = getSymbolInfo();
+                        this.ibcTxTimer = setInterval(() => {
+                            this.ibcTxs = getSymbolInfo(this.ibcTxs);
+                        }, ageTimerInterval);
+                    }
+                }
+            } catch (error) {
+                console.log('getIbcTxsAPI', error);
             }
         },
         async [GET_IBCSTATISTICS]() {
@@ -102,73 +168,13 @@ export const useIbcStatisticsChains = defineStore('global', {
             this.ibcStatisticsTxs.tx_failed = findStatistics(res, 'tx_failed');
         },
         async [GET_IBCDENOMS]() {
-            const res = await getIbcDenoms();
-            this.ibcDenoms.value = res;
-        },
-        async [GET_IBCTXS](queryParams: any) {
-            if (queryParams?.date_range) {
-                queryParams.date_range = queryParams.date_range?.toString();
-            }
-            if (queryParams?.status) {
-                queryParams.status = queryParams.status?.toString();
-            }
-            const { use_count, start_time } = queryParams;
-            const res = await getIbcTxs(queryParams);
-            if (res) {
-                const result = res.data;
-                if (use_count) {
-                    if (typeof res !== 'number') {
-                        this.ibcTxsCount.value = res.data;
-                    } else if (typeof res == 'string') {
-                        this.ibcTxsCount.value = res;
-                    }
-                } else if (start_time) {
-                    this.ibcTxsStartTime.value = res;
-                } else {
-                    const getSymbolInfo = (oldData?: any) => {
-                        // oldData 中保留有 列表项展开收起的自定义数据
-                        return result.map((item: any, index: number) => {
-                            const symbol = Tools.findDenomSymbol(
-                                this.ibcDenoms.value,
-                                item.denoms.sc_denom,
-                                item.sc_chain_id
-                            );
-                            let symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
-                            let symbolDenom = item.base_denom || '';
-                            let symbolIcon = '';
-                            if (symbol) {
-                                const findSymbol = Tools.findSymbol(this.ibcBaseDenoms, symbol);
-                                if (findSymbol) {
-                                    symbolNum = moveDecimal(
-                                        item.sc_tx_info?.msg_amount?.amount || 0,
-                                        0 - findSymbol.scale
-                                    );
-                                    symbolDenom = findSymbol.symbol;
-                                    symbolIcon = findSymbol.icon;
-                                }
-                            }
-                            return {
-                                ...item,
-                                expanded: oldData?.[index]?.expanded ?? false,
-                                symbolNum,
-                                symbolDenom,
-                                symbolIcon,
-                                parseTime: Tools.formatAge(
-                                    Tools.getTimestamp(),
-                                    item.tx_time * 1000,
-                                    '',
-                                    ''
-                                )
-                            };
-                        });
-                    };
-                    clearInterval(this.ibcTxTimer.value as any);
-                    this.ibcTxs.value = getSymbolInfo();
-                    console.log(this.ibcTxs.value);
-                    this.ibcTxTimer.value = setInterval(() => {
-                        this.ibcTxs.value = getSymbolInfo(this.ibcTxs.value);
-                    }, ageTimerInterval);
+            try {
+                const { code, data } = await getIbcDenomsAPI();
+                if (code === API_CODE.success) {
+                    this.ibcDenoms = data;
                 }
+            } catch (error) {
+                console.log('getIbcDenomsAPI', error);
             }
         }
     }

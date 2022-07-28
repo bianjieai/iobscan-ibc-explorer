@@ -31,13 +31,13 @@ function get(url, params) {
     });
 }
 
-function getIbcTxs(params) {
-    const url = '/ibc/txs';
-    const config = {
-        params
-    };
-    return get(url, config);
-}
+// function getIbcTxs(params) {
+//     const url = '/ibc/txs';
+//     const config = {
+//         params
+//     };
+//     return get(url, config);
+// }
 
 function getIbcDenoms() {
     const url = '/ibc/denoms';
@@ -59,4 +59,4 @@ function getTxDetailsByTxHash(txHash) {
     return get(url);
 }
 
-export { getIbcTxs, getIbcDenoms, getIbcStatistics, getIbcConfig, getTxDetailsByTxHash };
+export { getIbcStatistics, getIbcConfig, getTxDetailsByTxHash, getIbcDenoms };

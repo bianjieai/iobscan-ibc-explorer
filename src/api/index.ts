@@ -1,24 +1,17 @@
+import { API_URL } from '@/constants/apiUrl';
 import request from '@/utils/axios';
-import { IResponse, IIbcChains, IBaseDenoms } from '@/types/interface/baseApi.interface';
+import { IResponse, IIbcChains, IBaseDenoms } from '@/types/interface/index.interface';
 
 export const getIbcChainsAPI = () => {
     return request<IResponse<IIbcChains>>({
-        url: '/ibc/chains',
+        url: API_URL.ibcChainsUrl,
         method: 'get'
     });
 };
 
 export const getIbcBaseDenomsAPI = () => {
     return request<IResponse<IBaseDenoms[]>>({
-        url: '/ibc/baseDenoms',
+        url: API_URL.ibcBaseDenomsUrl,
         method: 'get'
-    });
-};
-
-export const getIbcTxsAPI = (params: any) => {
-    return request<IResponse<IBaseDenoms[]>>({
-        url: '/ibc/txs',
-        method: 'get',
-        params: params
     });
 };

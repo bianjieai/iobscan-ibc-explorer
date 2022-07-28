@@ -35,7 +35,7 @@
 
 <script setup lang="ts">
     import { getRestString, getRestString2 } from '@/helper/parseStringHelper';
-    import { IBaseDenoms } from '@/types/interface/baseApi.interface';
+    import { IBaseDenoms } from '@/types/interface/index.interface';
     import { computed } from 'vue';
     import {
         TableCellIconSize,

@@ -67,7 +67,7 @@
         pageSize?: number | null;
         current?: number | null;
         noPagination?: boolean;
-        scroll?: { x?: number; y?: number } | null;
+        scroll?: { x?: number; y?: number } | undefined;
         rowKey?: string;
         realTimeKey?: { scKey: string; dcKey: string }[] | null;
         loading: boolean;
@@ -76,7 +76,7 @@
     const props = withDefaults(defineProps<IProps>(), {
         pageSize: null,
         current: null,
-        scroll: null,
+        scroll: undefined,
         realTimeKey: null,
         rowKey: 'record_id'
     });

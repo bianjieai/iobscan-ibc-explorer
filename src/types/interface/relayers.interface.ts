@@ -1,4 +1,4 @@
-import { IRequestPagination, IResponsePageInfo } from '@/types/interface/baseApi.interface';
+import { IRequestPagination, IResponsePageInfo } from '@/types/interface/index.interface';
 import { TRelayerStatus } from '@/types/interface/component.interface.js';
 import { Ref } from 'vue';
 

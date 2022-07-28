@@ -45,7 +45,7 @@
                 <a-popover v-if="+record[column.key] !== -1">
                     <template #content>
                         <div class="popover-c">{{
-                            `${record.currency} ${formatPrice(record[column.key], null)}`
+                            `${record.currency} ${formatPrice(record[column.key], undefined)}`
                         }}</div>
                     </template>
                     <div v-if="record[column.key] < thousandDecimal">

@@ -1,9 +1,9 @@
 <template>
     <div class="block">
-        <div class="block_header">
-            <div :class="type === 'dark' ? 'block_header_line_dark' : 'block_header_line'">
+        <div class="block__header">
+            <div :class="type === 'dark' ? 'block__header__line_dark' : 'block__header_line'">
                 <p
-                    class="block_header_title"
+                    class="block__header__title"
                     :style="{ color: type === 'dark' ? '#ffffff' : '#000000' }"
                 >
                     {{ title }}
@@ -14,7 +14,7 @@
                 <img v-if="showTip" class="tip_icon" src="@/assets/tip.png" />
             </a-tooltip>
         </div>
-        <div class="block_content">
+        <div class="block__content">
             <slot></slot>
         </div>
     </div>
@@ -44,9 +44,9 @@
 <style lang="less" scoped>
     .block {
         .flex(column, nowrap, flex-start, flex-start);
-        &_header {
+        &__header {
             display: inline-block;
-            &_title {
+            &__title {
                 display: inline-block;
                 font-size: @font-size3;
                 font-family: Montserrat-Regular, Montserrat;
@@ -56,7 +56,7 @@
                 top: -16px;
                 z-index: 5;
             }
-            &_line_dark {
+            &__line_dark {
                 top: -16px;
                 left: 5px;
                 display: inline-block;
@@ -67,7 +67,7 @@
                 position: relative;
                 z-index: 1;
             }
-            &_line {
+            &__line {
                 left: 5px;
                 display: inline-block;
                 width: 100%;
@@ -81,7 +81,7 @@
                 position: relative;
             }
         }
-        &_content {
+        &__content {
             width: 100%;
             background-color: #ffffff;
             border-radius: @card-radio;

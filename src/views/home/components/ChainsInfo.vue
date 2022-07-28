@@ -1,25 +1,27 @@
 <template>
     <div class="card ibc_selected_title">
         <img
-            class="card_img"
+            class="card__img"
             :src="msg.statistics_name.indexOf(dayTime) !== -1 ? chains24hrImg : chainsAllImg"
             alt="chains_all"
         />
-        <div class="card_content">
-            <span class="card_content_name">
-                {{ statisticsName[msg.statistics_name] }}
-                <span v-if="msg.statistics_name.indexOf(dayTime) !== -1" class="card_content_tip"
+        <div class="card__content">
+            <span class="card__content__name">
+                {{ (statisticsName as any)[msg.statistics_name] }}
+                <span v-if="msg.statistics_name.indexOf(dayTime) !== -1" class="card__content__tip"
                     >24hr</span
                 >
             </span>
-            <span class="card_content_value">{{ `${formatBigNumber(msg.count)}` }}</span>
+            <span class="card__content__value">{{
+                `${formatBigNumber(msg.count, undefined)}`
+            }}</span>
         </div>
     </div>
 </template>
 
-<script setup>
-    import chains24hrImg from '@/assets/chains_24hr.png';
-    import chainsAllImg from '@/assets/chains_all.png';
+<script setup lang="ts">
+    import chains24hrImg from '@/assets/home/chains_24hr.png';
+    import chainsAllImg from '@/assets/home/chains_all.png';
     import { statisticsName } from '@/constants/index';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { dayTime } from '@/constants';
@@ -37,32 +39,32 @@
         .flex(row, nowrap, flex-start, center);
         width: 360px;
         height: 108px;
-        background-image: url('../../../assets/card.png');
+        background-image: url('../../../assets/home/card.png');
         background-position: center;
         background-size: cover;
         border-radius: 4px;
         cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
-        &_img {
+        &__img {
             margin: 23px 29px;
             width: 60px;
         }
-        &_content {
+        &__content {
             .flex(column, nowrap, flex-start, flex-start);
-            &_name {
+            &__name {
                 font-size: @font-size4;
                 font-family: Montserrat-Regular, Montserrat;
                 color: @font-color2;
                 line-height: @font-size4;
                 margin-bottom: 16px;
             }
-            &_value {
+            &__value {
                 font-size: @font-size2;
                 font-family: Montserrat-Regular, Montserrat;
                 color: @font-color1;
                 line-height: @font-size2;
                 transition: color 0.3s ease;
             }
-            &_tip {
+            &__tip {
                 margin-left: 8px;
                 padding: 0 4px;
                 font-size: @font-size6;

@@ -5,6 +5,12 @@ export interface IRequestPagination {
     page_size: number;
 }
 
+export interface IRequestPagination2 {
+    use_count: boolean;
+    page_num: number;
+    page_size: number;
+}
+
 /*************** res *************************/
 export interface IResponse<P = {}> {
     code: number;
