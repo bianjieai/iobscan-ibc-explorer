@@ -22,8 +22,8 @@ declare module '@vue/runtime-core' {
         APopover: typeof import('ant-design-vue/es')['Popover'];
         ATable: typeof import('ant-design-vue/es')['Table'];
         ATypographyText: typeof import('ant-design-vue/es')['TypographyText'];
-        BottomStatus: typeof import('./../components/responsive/table/bottomStatus.vue')['default'];
-        ChainIcon: typeof import('./../components/responsive/table/chainIcon.vue')['default'];
+        BottomStatus: typeof import('./../components/responsive/table/BottomStatus.vue')['default'];
+        ChainIcon: typeof import('./../components/responsive/table/ChainIcon.vue')['default'];
         ComingSoon: typeof import('./../components/ComingSoon.vue')['default'];
         CopyComponent: typeof import('./../components/CopyComponent.vue')['default'];
         DropDownBase: typeof import('./../components/responsive/dropdown/DropDownBase.vue')['default'];
@@ -31,7 +31,7 @@ declare module '@vue/runtime-core' {
         DropDownTokens: typeof import('./../components/responsive/dropdown/DropDownTokens.vue')['default'];
         HeaderInput: typeof import('./../components/HeaderInput.vue')['default'];
         IbcFooter: typeof import('./../components/IbcFooter.vue')['default'];
-        IconAndTitle: typeof import('./../components/responsive/table/iconAndTitle.vue')['default'];
+        IconAndTitle: typeof import('./../components/responsive/table/IconAndTitle.vue')['default'];
         Loading: typeof import('./../components/Loading.vue')['default'];
         Navigation: typeof import('./../components/Navigation.vue')['default'];
         NoDatas: typeof import('./../components/NoDatas.vue')['default'];
@@ -40,9 +40,9 @@ declare module '@vue/runtime-core' {
         ResetButton: typeof import('./../components/responsive/ResetButton.vue')['default'];
         RouterLink: typeof import('vue-router')['RouterLink'];
         RouterView: typeof import('vue-router')['RouterView'];
-        StatusImg: typeof import('./../components/responsive/table/statusImg.vue')['default'];
+        StatusImg: typeof import('./../components/responsive/table/StatusImg.vue')['default'];
         TableCommon: typeof import('./../components/responsive/table/TableCommon.vue')['default'];
-        TokenIcon: typeof import('./../components/responsive/table/tokenIcon.vue')['default'];
+        TokenIcon: typeof import('./../components/responsive/table/TokenIcon.vue')['default'];
         TransferTxs: typeof import('./../components/responsive/table/TransferTxs.vue')['default'];
     }
 }
