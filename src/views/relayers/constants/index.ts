@@ -67,3 +67,7 @@ export const STATUS_OPTIONS = [
     key: 'Unknown'
   }
 ]
+export const RELAYER_STATUS = {
+    RUNNING: 'Running',
+    UNKNOWN: 'Unknown'
+}

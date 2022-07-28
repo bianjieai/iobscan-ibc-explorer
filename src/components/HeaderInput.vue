@@ -70,7 +70,7 @@ export default {
 .default_input_style{
 
 }
-::v-deep.header_input {
+:deep.header_input {
     height: 40px;
     background-color: rgba(#ffffff, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.08);
@@ -98,7 +98,7 @@ export default {
         display: flex;
         align-items: center;
         justify-items: center;
-        cursor: url("../assets/mouse/shiftlight_mouse.png"),default;
+        cursor: pointer;
         .input_prefix_icon{
             font-size: var(--bj-font-size-home-number);
             color: rgba(255,255,255,0.7);

@@ -7,7 +7,12 @@
       <a-layout-header class="header">
         <div class="header_content">
           <div class="logo" @click="onClickLogo">
-            <img class="logo_icon" src="../assets/iobscan_logo.png" alt="logo" />
+            <div class="logo_icon_wrap">
+                <img class="logo_icon" :src="logoIcon" alt="logo" />
+            </div>
+            <div class="logo_text_wrap">
+                <img class="logo_text" :src="logoName" alt="">
+            </div>
           </div>
           <navigation :menus="headerMenus" @clickMenu="clickMenu" :currentMenu="currentMenu" :isShowNav="isShowNav" />
           <div class="header_input_wrapper">
@@ -42,7 +47,8 @@ import Navigation from '../components/Navigation.vue';
 import HeaderInput from '../components/HeaderInput.vue';
 import IbcFooter from '../components/IbcFooter.vue';
 import { useStarAnimation, useOnPressEnter } from './hooks/useStarAnimation'
-
+const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
+const logoName = new URL(import.meta.env.VITE_LOGO_NAME, import.meta.url).href;
 const isShowNav = ref(false)
 let timer1, timer2
 
@@ -125,7 +131,7 @@ onUnmounted(() => {
   display: flex;
 }
 a {
-  cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+  cursor: pointer;
 }
 .ant-tooltip {
   max-width: 400px !important;
@@ -141,18 +147,18 @@ a {
     }
   }
 }
-::v-deep .ant-pagination-item {
-  cursor: url(/src/assets/mouse/shiftlight_mouse.png), default;
+:deep(.ant-pagination-item) {
+  cursor: pointer;
   a{
-    cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;
+    cursor: pointer;
   }
   &-link{
-    cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default ;   
+    cursor: pointer;   
   }
 }
 .layout {
   width: 100%;
-  background-image: url("../assets/Summer_bg.png");
+  background-image: url("../assets/iobscan_home_bg.png");
   background-repeat: no-repeat;
   background-size: 1920px 396px;
   background-position: top center;
@@ -174,10 +180,22 @@ a {
         max-width: 1200px;
         height: 100%;
         .logo {
+            .flex(row, nowrap, center, center);
+            cursor: pointer;
             .logo_icon {
-                width: 144px;
+                width: 32px;
                 height: 34px;
-                cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+                img {
+                    height: 100%;
+                }
+            }
+            .logo_text {
+                margin-left: 9px;
+                width: 100px;
+                height: 34px;
+                img {
+                    height: 100%;
+                }
             }
         }
     }
@@ -198,7 +216,7 @@ a {
     &_btn_mobile {
         .flex(row, nowrap, center, center);
         margin-left: 12px;
-        cursor: url("../assets/mouse/shiftlight_mouse.png"), default !important;
+        cursor: pointer;
         display: none;
         img {
             width: 32px;

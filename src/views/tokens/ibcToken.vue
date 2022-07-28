@@ -12,7 +12,7 @@
 
     <BjTable :loading="loading" :data="list" :need-custom-columns="needCustomColumns" :columns="IBC_COLUMNS" need-count>
       <template #denom="{ record, column }">
-        <a-popover v-if="record.token_type !== 'Genesis'" placement="topLeft">
+        <a-popover v-if="record.token_type !== SPECIAL_TOKEN_TYPE.GENESIS" placement="topLeft">
           <template #content>
             <div class="notice-text">
               <div>Path: {{ record.denom_path }}</div>
@@ -67,7 +67,7 @@
 import PageContainer from '@/components/responsive/pageContainer.vue';
 import PageTitle from '@/components/responsive/pageTitle.vue';
 import BjTable from '@/components/responsive/table/index.vue'
-import { IBC_COLUMNS, IBC_STATUS_OPTIONS } from './constants'
+import { IBC_COLUMNS, IBC_STATUS_OPTIONS, SPECIAL_TOKEN_TYPE } from './constants'
 import ChainsDropdown from '@/components/responsive/dropdown/chains.vue';
 import BaseDropdown from '@/components/responsive/dropdown/base.vue';
 import ResetButton from '@/components/responsive/resetButton.vue';
@@ -109,10 +109,9 @@ const baseDenomInfo = computed(() => {
       symbol = filterSymbol
     }
   }
-
   return {
     symbol,
-    imgSrc: filterData[0]?.icon ?? new URL('../../assets/token-default.png', import.meta.url).href
+    imgSrc: filterData[0]?.icon ? filterData[0]?.icon : new URL('../../assets/token-default.png', import.meta.url).href
   }
 })
 

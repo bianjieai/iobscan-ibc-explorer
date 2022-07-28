@@ -51,8 +51,6 @@
             <li class="details_item" v-for="(item, index) in expandDetails" :key="index" v-show="isExpand">
                 <span class="details_item_label">{{ item.label }}</span>
                 <span class="details_item_value" v-if="item.isFormatToken">
-
-                    <!--                    {{formatToken(item.value)}}-->
                     <span class="details_item_amount">{{ formatToken(item.value, expandDetails).symbolNum ||
                             '--'
                     }}{{ formatToken(item.value, expandDetails).denom }}</span>
@@ -89,10 +87,10 @@
 <script setup>
 import Tools from "../../../utils/Tools";
 import moveDecimal from 'move-decimal-point';
-import { chainAddressPrefix, tableChainIDs } from "../../../constants";
+import { chainAddressPrefix, tableChainIDs, transfersDetailStatus, ackConnectStatus } from "../../../constants";
 import { ref } from 'vue'
 import * as djs from 'dayjs'
-import { getRestString } from "../../../helper/parseString";
+import { getRestString, formatBigNumber } from "../../../helper/parseString";
 import { useGetIbcBaseDenoms } from '../composable';
 import ChainHelper from '@/helper/chainHepler';
 const { ibcBaseDenoms } = useGetIbcBaseDenoms();
@@ -164,7 +162,7 @@ const formatToken = (token, details) => {
             );
             if (findSymbol) {
                 // (token.amount || 0) * 10 ** -findSymbol.scale;
-                symbolNum = moveDecimal(token.amount, 0 - findSymbol.scale)
+                symbolNum = formatBigNumber(moveDecimal(token.amount, 0 - findSymbol.scale))
                 symbolDenom = findSymbol.symbol;
             }
         }
@@ -184,10 +182,10 @@ const formatHeight = (heightObj) => {
 
 }
 const formatStatus = (status) => {
-    if (status == 1) {
-        return 'Success'
-    } else if (status === 0) {
-        return 'Failed'
+    if (status == transfersDetailStatus.SUCCESS.value) {
+        return transfersDetailStatus.SUCCESS.label
+    } else if (status === transfersDetailStatus.FAILED.value) {
+        return transfersDetailStatus.FAILED.label
     }
     return '--'
 }
@@ -261,9 +259,9 @@ const formatDate = (timestamp) => {
 const formatAck = (ack) => {
     if (ack && ack !== '--') {
         if (ack.includes('result:"\\001"')) {
-            return 'correct'
-        } else if (ack.includes('error')) {
-            return 'error'
+            return ackConnectStatus.CORRECT
+        } else if (ack.includes(ackConnectStatus.ERROR)) {
+            return ackConnectStatus.ERROR
         }
     } else {
         return '--'
@@ -345,7 +343,6 @@ const formatDenom = (denom) => {
             }
             a {
                 color: var(--bj-text-normal);
-                cursor: url(../../../assets/mouse/shiftlight_mouse.png),default;
                 &:hover {
                     color: var(--bj-primary-color);
                 }
@@ -355,7 +352,7 @@ const formatDenom = (denom) => {
         .see_more_button {
             padding: 14px 0;
             display: flex;
-            cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default;
+            cursor: pointer;
 
             .see_more_label {
                 color: rgba(61, 80, 255, 1);

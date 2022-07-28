@@ -73,7 +73,7 @@ const props = defineProps({
     position: absolute;
     margin-left: 16px;
     margin-top: -10px;
-    cursor: url("../assets/mouse/shiftlight_mouse.png"),default !important;
+    cursor: pointer;
   }
 }
 </style>

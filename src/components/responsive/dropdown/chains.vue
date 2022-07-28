@@ -16,7 +16,7 @@
               {{ chain_b }}</div>
           </template>
       </div>
-      <span class="button__icon flex justify-between items-center">
+      <span class="button_icon flex justify-between items-center">
         <svg :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }" focusable="false" data-icon="down"
           width="12px" height="12px" fill="currentColor" aria-hidden="true" viewBox="64 64 896 896"
           :class="[visible ? 'visible_color' : '']">
@@ -65,7 +65,7 @@
 
 <script lang="ts" setup>
 import { computed, onMounted, ref, watch } from 'vue';
-import { CHAINID, defaultTitle } from '@/constants';
+import { CHAINNAME, defaultTitle, pageParameters } from '@/constants';
 type TChainData = {
   chain_id: string
   chain_name: string
@@ -102,11 +102,11 @@ const confirmFlag = ref(false)
 
 const setAllChains = (dropdownData: TChainData[] = props.dropdownData) => {
   if (dropdownData?.length > 0) {
-    const cosmosChain = dropdownData.filter(item => item.chain_name === CHAINID.COSMOSHUB)
-    const irishubChain = dropdownData.filter(item => item.chain_name === CHAINID.IRISHUB)
+    const cosmosChain = dropdownData.filter(item => item.chain_name === CHAINNAME.COSMOSHUB)
+    const irishubChain = dropdownData.filter(item => item.chain_name === CHAINNAME.IRISHUB)
     let notIncludesIrisAndCosmosChains: TChainData[] = []
     dropdownData.forEach(item => {
-      if (item.chain_name !== CHAINID.COSMOSHUB && item.chain_name !== CHAINID.IRISHUB) {
+      if (item.chain_name !== CHAINNAME.COSMOSHUB && item.chain_name !== CHAINNAME.IRISHUB) {
         notIncludesIrisAndCosmosChains.push(item)
       }
     })
@@ -264,7 +264,7 @@ const onSelected = (chain_name: TChainName, chain_id: TChainID) => {
             chain_name,
             chain_id
           })
-          if(props.witchPage !== 'transfers' && selectedChain.value[0].chain_id === 'allchain') {
+          if(isNeedSort(selectedChain.value[0].chain_id, selectedChain.value[1].chain_id)) {
             let saveSelectedChain = selectedChain.value[0];
             selectedChain.value[0] = selectedChain.value[1];
             selectedChain.value[1] = saveSelectedChain;
@@ -310,7 +310,7 @@ const confirmChains = () => {
   if (props.selectedDouble) {
     if (chainIdIput.value?.includes(',')) {
       const chain = chainIdIput.value.split(',')
-      if(props.witchPage !== 'transfers' && chain[0] === 'allchain') {
+      if(isNeedSort(chain[0], chain[1])) {
         let saveChain = chain[0];
         chain[0] = chain[1];
         chain[1] = saveChain;
@@ -349,7 +349,27 @@ const confirmChains = () => {
     submitChain(chainIdIput.value?.trim())
   }
 }
-
+const isNeedSort = (chainA: TChainID, chainB: TChainID) => {
+    /**
+     * 需要 sort 情况
+     * 1、transfers 页左右不用 sort，
+     * 2、选择 All Chains + Other Chain => 选择了一条链，第一个选择的是 All Chains 的需要 sort
+     * 3、选择了两个都不是 All Chains 的 chain，
+     *    a、判断选中两条链是否包含 Cosmosis Hub 或 IRIS Hub，[a,b].indexOf(COSMOSHUB) === 1 || [a,b].indexOf(IRISHUB) === 1，需要 sort
+     *    b、根据首字母（或依次）判断是否需要 sort
+     */
+    const isLocalCompare = ref(false);
+    const chainAName = props.dropdownData?.find(item => item.chain_id === chainA)?.chain_name;
+    const chainBName = props.dropdownData?.find(item => item.chain_id === chainB)?.chain_name;
+        if([chainAName, chainBName].indexOf(CHAINNAME.COSMOSHUB) === 1 || [chainAName, chainBName].indexOf(CHAINNAME.IRISHUB) === 1) {
+            isLocalCompare.value = true;
+        } else if(chainBName) {
+            if(chainAName?.localeCompare(chainBName) === 1) {
+                isLocalCompare.value = true;
+            }
+        }
+    return props.witchPage !== pageParameters.transfers && (chainA === 'allchain' || (![chainA, chainB].includes('allchain') && isLocalCompare.value));
+}
 </script>
 
 <style lang="less" scoped>
@@ -358,7 +378,7 @@ const confirmChains = () => {
   border: 1px solid var(--bj-border-color);
   border-radius: 4px;
   background-color: #fff;
-  cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
+  cursor: pointer;
   min-width: 124px;
 
   &:hover {
@@ -377,7 +397,7 @@ const confirmChains = () => {
   }
 }
 
-.button__icon {
+.button_icon {
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   padding: 0 6px;
   border-left: 1px solid var(--bj-border-color);
@@ -435,7 +455,7 @@ const confirmChains = () => {
   background-image: none;
   border: 1px solid transparent;
   box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
-  cursor: url("../../../assets/mouse/shiftlight_mouse.png"), default !important;
+  cursor: pointer;
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   user-select: none;
   padding: 5px 8px 5px 8px;

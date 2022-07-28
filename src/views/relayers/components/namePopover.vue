@@ -2,7 +2,7 @@
   <a-popover placement="topLeft">
     <template #content>
       <div class="popover-c">
-        <div>Relayer Name: {{ relayer_name ? relayer_name : 'Unknown' }}</div>
+        <div>Relayer Name: {{ relayer_name ? relayer_name : UNKNOWN }}</div>
         <div>{{ `${chain_a_name} Address` }}: {{ chain_a_address }}</div>
         <div>{{ `${chain_b_name} Address` }}: {{ chain_b_address }}</div>
       </div>
@@ -16,6 +16,8 @@ import { TBaseChains } from '@/hooks/chainAndDenom.interface';
 import { computed } from 'vue';
 import IconAndTitle from '@/components/responsive/table/iconAndTitle.vue';
 import { formatLongTitleString, getRestString } from '@/helper/parseString';
+import { RELAYER_STATUS } from '../constants';
+import { UNKNOWN } from '../../../constants';
 interface IProps {
   relayer_name: string
   imgSrc: string
@@ -35,10 +37,10 @@ const findChainName = (chainId: string) => {
     if (ibcChain) {
       return formatLongTitleString(ibcChain.chain_name)
     } else {
-      return 'Unknown'
+      return RELAYER_STATUS.UNKNOWN
     }
   } else {
-    return 'Unknown'
+    return RELAYER_STATUS.UNKNOWN
   }
 }
 

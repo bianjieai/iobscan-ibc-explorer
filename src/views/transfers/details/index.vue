@@ -25,7 +25,7 @@
                             class="iconfont icon-address1"></i>
                         <i v-show="outTxStatus === 0" style="color:rgba(255, 90, 90, 1);"
                             class="iconfont icon-address1"></i>
-                        IBC Out TxHash:
+                        From TxHash:
                     </span>
                     <span class="transfer_ibc_out_tx_hash_value">
                         <span>{{ ibcTransferOutTxHash }} </span>
@@ -50,7 +50,7 @@
                             class="iconfont icon-address1"></i>
                         <i v-show="inTxStatus === 0" style="color:rgba(255, 90, 90, 1);"
                             class="iconfont icon-address1"></i>
-                        IBC In TxHash:
+                        To TxHash:
                     </span>
                     <span class="transfer_ibc_in_tx_hash_value">
                         <span>{{ ibcTransferInTxHash }}</span>

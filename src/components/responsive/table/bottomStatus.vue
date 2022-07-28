@@ -5,11 +5,11 @@
       <div class="flex">
         <div class="flex items-center ml-16">
           <img :src="activeImgInfo.src" :width="activeImgInfo.width" :height="activeImgInfo.height" class="mr-4"/>
-          <div>{{ type === BottomStatusType.CHANNEL ? 'Open' : 'Running' }}</div>
+          <div>{{ type === BottomStatusType.CHANNEL ? CHANNEL_STATUS.OPEN : RELAYER_STATUS.RUNNING }}</div>
         </div>
         <div class="flex items-center ml-24">
           <img :src="inActiveImgInfo.src" :width="inActiveImgInfo.width" :height="inActiveImgInfo.height" class="mr-4"/>
-          <div>{{ type === BottomStatusType.CHANNEL ? 'Closed' : 'Unknown' }}</div>
+          <div>{{ type === BottomStatusType.CHANNEL ? CHANNEL_STATUS.CLOSED : RELAYER_STATUS.UNKNOWN }}</div>
         </div>
       </div>
     </div>
@@ -19,6 +19,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { BottomStatusType, TBottomStatus } from '../component.interface';
+import { RELAYER_STATUS } from '../../../views/relayers/constants';
+import { CHANNEL_STATUS } from '../../../views/channels/constants';
 
 interface IProps {
   type: TBottomStatus // 目前支持 channels 和 relayers

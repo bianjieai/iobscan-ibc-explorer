@@ -3,6 +3,7 @@ import { HttpHelper } from '../helper/httpHelpers.js';
 import { baseParams } from './tokens';
 import { useIbcStatisticsChains } from '@/store/home/index';
 import { GET_IBCCHAINS } from '@/store/action-types';
+import { UNKNOWN } from '../constants';
 const urlPrefix = import.meta.env.VITE_BASE_GO_API
 
 const getChainListUrl = `${urlPrefix}/ibc/chainList`
@@ -44,7 +45,7 @@ export const useGetChainsList = () => {
       });
       list.value = items.map((item:any) => {
         const chainName = ibcChainsAllMap[item.chain_id];
-        item.chainName = chainName ? chainName : 'Unknown';
+        item.chainName = chainName ? chainName : UNKNOWN;
         return item;
       })
     } else {

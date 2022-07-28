@@ -16,7 +16,7 @@
         <div></div>
       </slot>
       <a-pagination v-if="hasData && !noPagination" v-model:current="pageInfo.current" :pageSize="pageInfo.pageSize"
-        :total="pageInfo.total" @change="onPageChange" />
+        :total="pageInfo.total" @change="onPageChange" :showTitle="false" />
     </div>
   </div>
 
@@ -312,7 +312,7 @@ if (props.realTimeKey && props.realTimeKey.length) {
 }
 
 :deep(.ant-table-column-has-sorters) {
-  cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default !important;
+  cursor: pointer;
 }
 
 :deep(.ant-pagination) {

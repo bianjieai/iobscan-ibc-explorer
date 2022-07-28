@@ -8,7 +8,7 @@
         <div class="chainlist_bottom">
             <a-list
                 class="card_list ibc_scrollbar"
-                id="card__list"
+                id="card_list"
                 v-show="chainList[currentMenu] && chainList[currentMenu].length"
                 :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }"
                 :data-source="chainList[currentMenu]"
@@ -30,16 +30,6 @@
                                 <p class="card_value">{{ formatChainID(item.chain_id) }}</p>
                             </a-card>
                         </router-link>
-                        <!-- <router-link :to="`/chains/details?chain_id=${item.chain_id}`">
-                            <a-card class="menu_card">
-                                <img
-                                    class="card_img"
-                                    :src="item.icon ? item.icon : tokenDefaultImg"
-                                />
-                                <p class="card_title">{{ item.chain_name }}</p>
-                                <p class="card_value">{{ item.chain_id }}</p>
-                            </a-card>
-                        </router-link> -->
                     </a-list-item>
                 </template>
             </a-list>
@@ -100,14 +90,7 @@ const formatChainID = (chainId)=>{
     &_menu {
         width: 100%;
         border: 0;
-        ::v-deep.ant-menu-overflow{
-            .ant-menu-overflow-item{
-                &:hover{
-                    cursor: url("../../../assets/mouse/shiftlight_mouse.png"),default !important;
-                }
-            }
-        }
-        ::v-deep .ant-menu-title-content {
+        :deep(.ant-menu-title-content) {
             font-size: var(--bj-font-size-normal);
             font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
@@ -127,6 +110,14 @@ const formatChainID = (chainId)=>{
         margin-top: 8px;
         width: 100%;
         .flex(row, nowrap, flex-start, flex-start);
+        :deep(.ant-anchor-wrapper) {
+            overflow: visible;
+            .ant-anchor {
+                .ant-anchor-ink::before {
+                    width: 0;
+                }
+            }
+        }
     }
     &_item {
         font-size: var(--bj-font-size-normal);
@@ -135,7 +126,8 @@ const formatChainID = (chainId)=>{
         color: var(--bj-text-third);
     }
     .card_list {
-        width: calc(100% - 50px);
+        width: 100%;
+        // width: calc(100% - 50px);
         height: 182px;
         padding-right: 20px;
         overflow-y: auto;
@@ -143,7 +135,7 @@ const formatChainID = (chainId)=>{
     }
     .menu_card {
         border-radius: var(--border-radius-normal);
-        ::v-deep .ant-card-body {
+        :deep(.ant-card-body) {
             padding: 12px;
             height: 126px;
         }
@@ -179,9 +171,6 @@ const formatChainID = (chainId)=>{
 
         &_item {
             width: 100%;
-            ::v-deep .ant-anchor-link-title {
-                cursor: url("/src/assets/mouse/shiftlight_mouse.png"), default;
-            }
         }
     }
     .nodatas_icon {

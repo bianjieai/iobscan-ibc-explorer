@@ -16,7 +16,7 @@
       </template>
 
       <template #status="{ record, column }">
-        <StatusImg type="Channel" :status="(String(record[column.key]) as TChannelStatus)" :height="16" :width="46" />
+        <StatusImg :type="BottomStatusType.CHANNEL" :status="(String(record[column.key]) as TChannelStatus)" :height="16" :width="46" />
       </template>
 
       <template #chain_b="{ record, column }">
@@ -38,7 +38,7 @@
       </template>
 
       <template #table_bottom_status v-if="list.length !== 0">
-        <BottomStatus type="Channel" />
+        <BottomStatus :type="BottomStatusType.CHANNEL" />
       </template>
     </BjTable>
   </PageContainer>
@@ -57,7 +57,7 @@ import BottomStatus from '@/components/responsive/table/bottomStatus.vue';
 import { formatLastUpdated, formatOperatingPeriod } from '@/helper/time-helper';
 import TransferTxs from '@/components/responsive/table/transferTxs.vue';
 import StatusImg from '@/components/responsive/table/statusImg.vue';
-import { TChannelStatus } from '@/components/responsive/component.interface';
+import { TChannelStatus, BottomStatusType } from '@/components/responsive/component.interface';
 import { useGetChannelsList } from '@/service/channels'
 import ChainIcon from '@/components/responsive/table/chainIcon.vue';
 import { useIbcChains } from '../home/composable';
