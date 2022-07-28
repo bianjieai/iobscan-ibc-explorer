@@ -65,22 +65,16 @@
     import ChainsListInfo from './components/ChainsListInfo.vue';
     import StatisticList from './components/StatisticList.vue';
     import TransferList from './components/TransferList.vue';
-    import { useIbcChains, useIbcTxs, useInterfaceActive, initHome } from './composable';
+    import { useIbcChains, useIbcTxs, useInterfaceActive } from './composable';
     import { useOnPressEnter } from '@/composables/useStarAnimation';
     import { pageParameters, ibcStatisticsTxsDefault } from '@/constants/index';
     import { useIbcStatistics } from '@/composables/home';
-    const {
-        ibcStatisticsChains,
-        ibcStatisticsChannels,
-        ibcStatisticsDenoms,
-        ibcStatisticsTxs,
-        getIbcStatistics
-    } = useIbcStatistics();
+    const { ibcStatisticsChains, ibcStatisticsChannels, ibcStatisticsDenoms, ibcStatisticsTxs } =
+        useIbcStatistics();
     const { ibcChains } = useIbcChains();
-    const { limitIbcTxs, ibcTxs, getIbcTxs, setExpandByIndex } = useIbcTxs();
+    const { ibcTxs, setExpandByIndex } = useIbcTxs();
     const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
     const { onPressEnter } = useOnPressEnter();
-    initHome(getIbcStatistics, getIbcTxs, limitIbcTxs);
 </script>
 
 <style lang="less">

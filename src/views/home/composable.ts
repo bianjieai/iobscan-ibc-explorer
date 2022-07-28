@@ -14,20 +14,6 @@ import { useTimeInterval } from '@/composables';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
-export const initHome = (
-    getIbcStatistics: Function,
-    getIbcTxs: Function,
-    limitIbcTxs: Function
-) => {
-    onMounted(() => {
-        getIbcStatistics();
-        getIbcTxs({ page_num: 1, page_size: 100, use_count: false });
-    });
-    onBeforeUnmount(() => {
-        limitIbcTxs();
-    });
-};
-
 export const useIbcChains = () => {
     const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
@@ -57,6 +43,12 @@ export const useIbcTxs = () => {
             item.parseTime = Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', '');
             return item;
         });
+    });
+    onMounted(() => {
+        getIbcTxs({ page_num: 1, page_size: 100, use_count: false });
+    });
+    onBeforeUnmount(() => {
+        limitIbcTxs();
     });
     return {
         ibcTxs,

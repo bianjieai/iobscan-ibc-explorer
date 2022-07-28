@@ -34,6 +34,9 @@ export const useIbcStatistics = () => {
             console.log('getIbcStatisticsAPI', error);
         }
     };
+    onMounted(() => {
+        getIbcStatistics();
+    });
     return {
         ibcStatisticsChains,
         ibcStatisticsChannels,
