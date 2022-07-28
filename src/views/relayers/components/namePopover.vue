@@ -13,10 +13,10 @@
 
 <script setup lang="ts">
     import IconAndTitle from '@/components/responsive/table/IconAndTitle.vue';
-    import { TBaseChains } from '@/types/interface/chainAndDenom.interface';
+    import { IIbcchain } from '@/types/interface/index.interface';
     import { computed } from 'vue';
-    import { formatLongTitleString } from '@/helper/parseStringHelpers';
-    import { RELAYER_STATUS } from '../constants';
+    import { formatLongTitleString } from '@/helper/parseStringHelper';
+    import { RELAYER_STATUS } from '@/constants/relayers';
     import { UNKNOWN } from '../../../constants';
     interface IProps {
         relayerName: string;
@@ -25,7 +25,7 @@
         chainBAddress: string;
         chainA: string; // chain id
         chainB: string;
-        ibcChains: TBaseChains[];
+        ibcChains?: IIbcchain[];
     }
 
     const props = defineProps<IProps>();

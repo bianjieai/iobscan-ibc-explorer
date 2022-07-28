@@ -12,7 +12,13 @@
         >
             <template #bodyCell="{ column, record, index, text }">
                 <template v-if="isKeyInNeedCustomColumns(column.key)">
-                    <slot :name="column.key" :column="column" :record="record" :text="text" :index="index"></slot>
+                    <slot
+                        :name="column.key"
+                        :column="column"
+                        :record="record"
+                        :text="text"
+                        :index="index"
+                    ></slot>
                 </template>
             </template>
         </a-table>
@@ -89,8 +95,12 @@
             }
         }
     );
-    const needPagination = computed(() => !props.noPagination && !(props.current && props.pageSize)); // 需要前端分页
-    const isKeyInNeedCustomColumns = computed(() => (key: string) => props.needCustomColumns.includes(key)); // 判断key
+    const needPagination = computed(
+        () => !props.noPagination && !(props.current && props.pageSize)
+    ); // 需要前端分页
+    const isKeyInNeedCustomColumns = computed(
+        () => (key: string) => props.needCustomColumns.includes(key)
+    ); // 判断key
     const hasData = computed(() => props.data?.length > 0);
     const backUpData = () => {
         const { columns, data, needCount } = props;
@@ -113,7 +123,11 @@
             onTableChange(
                 {},
                 {},
-                { columnKey: defaultSort.key, column: defaultSort, order: defaultSort.defaultSortOrder }
+                {
+                    columnKey: defaultSort.key,
+                    column: defaultSort,
+                    order: defaultSort.defaultSortOrder
+                }
             );
         }
         if (props.noPagination) {
@@ -141,7 +155,7 @@
         dataSource.value = formatDataSourceWithRealTime(backUpDataSource.slice(p, pSize));
     };
     const formatDisplayAmount = (item: any, key: string) => {
-        return formatSupply(item[key], item.base_denom, ibcBaseDenoms.value, 2, false);
+        return formatSupply(item[key], item.base_denom, ibcBaseDenoms, 2, false);
     };
     let tempColumn: any;
     // todo clippers => 后端分页序号处理
@@ -179,10 +193,12 @@
                         (order === CompareOrder.DESCEND ? -1 : 1)
                     );
                 });
-                backUpDataSource = [...authedTemp, ...otherTemp].map((item: any, index: number) => ({
-                    ...item,
-                    _count: index + 1
-                }));
+                backUpDataSource = [...authedTemp, ...otherTemp].map(
+                    (item: any, index: number) => ({
+                        ...item,
+                        _count: index + 1
+                    })
+                );
                 break;
             default: // reset backup
                 if (tempColumn.key !== columnKey) {

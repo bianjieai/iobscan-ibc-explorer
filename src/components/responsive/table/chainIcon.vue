@@ -15,7 +15,10 @@
             }}</div>
 
             <div v-if="chainInfo.subtitle !== '--'">
-                <a-popover v-if="formatChainID(chainInfo.subtitle)?.length >= 18" placement="bottom">
+                <a-popover
+                    v-if="formatChainID(chainInfo.subtitle)?.length >= 18"
+                    placement="bottom"
+                >
                     <template #content>
                         <div class="popover-c">{{ formatChainID(chainInfo.subtitle) }}</div>
                     </template>
@@ -33,16 +36,19 @@
 </template>
 
 <script setup lang="ts">
-    import { TBaseChains } from '@/types/interface/chainAndDenom.interface';
+    import { IIbcchain } from '@/types/interface/index.interface';
     import { computed } from 'vue';
-    import { TableCellIconSize, TTableCellIconSize } from '../../../types/interface/table.interface';
+    import {
+        TableCellIconSize,
+        TTableCellIconSize
+    } from '../../../types/interface/table.interface';
     import ChainHelper from '@/helper/chainHelper';
     import { UNKNOWN } from '../../../constants';
 
     interface IProps {
         iconSize?: TTableCellIconSize;
         chainId: string;
-        chainsData: TBaseChains[];
+        chainsData: IIbcchain[];
         titleCanClick?: boolean;
         title?: string;
         noSubtitle?: boolean;
@@ -73,13 +79,13 @@
                 subtitle: filterData.chain_id,
                 imgSrc: filterData.icon
                     ? filterData.icon
-                    : new URL('../../../assets/chain-default.png', import.meta.url).href
+                    : new URL('../../../assets/home/chain-default.png', import.meta.url).href
             };
         } else {
             return {
                 title: UNKNOWN,
                 subtitle: '--',
-                imgSrc: new URL('../../../assets/chain-default.png', import.meta.url).href
+                imgSrc: new URL('../../../assets/home/chain-default.png', import.meta.url).href
             };
         }
     });

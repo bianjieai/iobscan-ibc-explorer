@@ -20,7 +20,13 @@ export default class Tools {
         const str = `${dayDiff ? (dayDiff < 2 ? `${dayDiff} day` : `${dayDiff} days`) : ''} ${
             hours ? (hours < 2 ? `${hours} hr` : `${hours} hrs`) : ''
         } ${dayDiff ? '' : minutes ? (minutes < 2 ? `${minutes} min` : `${minutes} mins`) : ''} ${
-            dayDiff || hours ? '' : seconds ? (seconds < 2 ? `${seconds} sec` : `${seconds} secs`) : ''
+            dayDiff || hours
+                ? ''
+                : seconds
+                ? seconds < 2
+                    ? `${seconds} sec`
+                    : `${seconds} secs`
+                : ''
         }`;
 
         if (prefix && suffix) {
@@ -38,7 +44,9 @@ export default class Tools {
 
     static findDenomSymbol(ibcDenoms, denomStr, chainId) {
         if (ibcDenoms) {
-            const findDenom = ibcDenoms?.find((denom) => denom.denom === denomStr && denom.chain_id === chainId);
+            const findDenom = ibcDenoms?.find(
+                (denom) => denom.denom === denomStr && denom.chain_id === chainId
+            );
             if (findDenom) {
                 return findDenom.symbol;
             }

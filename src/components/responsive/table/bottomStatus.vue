@@ -10,7 +10,11 @@
                         :height="activeImgInfo.height"
                         class="mr-4"
                     />
-                    <div>{{ type === BottomStatusType.CHANNEL ? CHANNEL_STATUS.OPEN : RELAYER_STATUS.RUNNING }}</div>
+                    <div>{{
+                        type === BottomStatusType.CHANNEL
+                            ? CHANNEL_STATUS.OPEN
+                            : RELAYER_STATUS.RUNNING
+                    }}</div>
                 </div>
                 <div class="flex items-center ml-24">
                     <img
@@ -19,7 +23,11 @@
                         :height="inActiveImgInfo.height"
                         class="mr-4"
                     />
-                    <div>{{ type === BottomStatusType.CHANNEL ? CHANNEL_STATUS.CLOSED : RELAYER_STATUS.UNKNOWN }}</div>
+                    <div>{{
+                        type === BottomStatusType.CHANNEL
+                            ? CHANNEL_STATUS.CLOSED
+                            : RELAYER_STATUS.UNKNOWN
+                    }}</div>
                 </div>
             </div>
         </div>
@@ -29,7 +37,7 @@
 <script setup lang="ts">
     import { computed } from 'vue';
     import { BottomStatusType, TBottomStatus } from '../../../types/interface/table.interface';
-    import { RELAYER_STATUS } from '../../../views/relayers/constants';
+    import { RELAYER_STATUS } from '@/constants/relayers';
     import { CHANNEL_STATUS } from '../../../views/channels/constants';
 
     interface IProps {

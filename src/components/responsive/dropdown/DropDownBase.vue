@@ -9,7 +9,8 @@
                 :class="{
                     selected_color: selectOption.length > 0,
                     selected_color_default:
-                        selectedText === defaultTitle.defaultStatus || selectedText === options[0].key,
+                        selectedText === defaultTitle.defaultStatus ||
+                        selectedText === options[0].key,
                     visible_color: selectOption.length > 0 && visible
                 }"
             >

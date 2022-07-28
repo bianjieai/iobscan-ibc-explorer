@@ -17,7 +17,13 @@
                     visible_color: selectToken.length > 0 && visible
                 }"
             >
-                <img v-if="selectedInfo.icon.length" width="18" height="18" class="mr-4" :src="selectedInfo.icon" />
+                <img
+                    v-if="selectedInfo.icon.length"
+                    width="18"
+                    height="18"
+                    class="mr-4"
+                    :src="selectedInfo.icon"
+                />
                 <span class="selectedInfo_title">{{ selectedInfo.title }}</span>
             </div>
             <span class="button_icon flex justify-between items-center">
@@ -50,7 +56,9 @@
                     >
                 </div>
                 <div class="mt-24">
-                    <div :style="{ marginBottom: '-2px' }" class="leading_none">Authed IBC Tokens</div>
+                    <div :style="{ marginBottom: '-2px' }" class="leading_none"
+                        >Authed IBC Tokens</div
+                    >
                     <div class="flex flex-wrap">
                         <span
                             v-for="item in dropdownData"
@@ -84,7 +92,11 @@
                                     denomination trace information.
                                 </p>
                             </template>
-                            <img class="tip cursor" style="margin-left: 8px" src="/src/assets/tip.png" />
+                            <img
+                                class="tip cursor"
+                                style="margin-left: 8px"
+                                src="/src/assets/tip.png"
+                            />
                         </a-popover>
                     </div>
                     <div class="flex items-center mt-12 flex-wrap">
@@ -95,7 +107,9 @@
                             placeholder="Search by ibc/hash"
                             @input="onInputChange"
                         />
-                        <a-button type="primary" class="confirm-button ml-12" @click="confirmChains">Confirm</a-button>
+                        <a-button type="primary" class="confirm-button ml-12" @click="confirmChains"
+                            >Confirm</a-button
+                        >
                     </div>
                 </div>
             </div>
@@ -104,7 +118,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { getRestString } from '@/helper/parseStringHelpers';
+    import { getRestString } from '@/helper/parseStringHelper';
     import { onMounted, computed, ref } from 'vue';
     import { defaultTitle } from '../../../constants/index';
     import Tools from '@/utils/Tools';
@@ -123,7 +137,10 @@
 
     const props = withDefaults(defineProps<IProps>(), {
         baseDenom: '',
-        dropdownData: (sessionStorage.getItem('baseDenoms') && JSON.parse(sessionStorage.getItem('baseDenoms')!)) || []
+        dropdownData:
+            (sessionStorage.getItem('baseDenoms') &&
+                JSON.parse(sessionStorage.getItem('baseDenoms')!)) ||
+            []
     });
 
     const visible = ref(false);
@@ -133,7 +150,8 @@
     let backupDropdownData: TSelectToken[] | null;
 
     const isSelected = computed(
-        () => (denom: TDenom) => selectToken.value.length > 0 && selectToken.value[0]?.denom === denom
+        () => (denom: TDenom) =>
+            selectToken.value.length > 0 && selectToken.value[0]?.denom === denom
     );
     const selectedInfo = computed(() => {
         let title = defaultTitle.defaultTokens;

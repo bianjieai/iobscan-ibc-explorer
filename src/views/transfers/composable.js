@@ -1,23 +1,18 @@
-import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { ref, reactive, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useIbcStatisticsChains } from '../../store/index';
-import {
-    GET_IBCSTATISTICS,
-    GET_IBCTXS,
-    GET_IBCBASEDENOMS,
-    GET_IBCCHAINS,
-    GET_IBCDENOMS
-} from '../../constants/actionTypes';
-import { getIbcDenoms, getTxDetailsByTxHash } from '../../service/api';
+import { GET_IBCSTATISTICS, GET_IBCDENOMS } from '../../constants/actionTypes';
+import { getTxDetailsByTxHash, getIbcDenoms } from '@/service/api';
 import { groupBy } from 'lodash-es';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { transferTableColumn, defaultTitle } from '../../constants';
 import Tools from '../../utils/Tools';
+import { storeToRefs } from 'pinia';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
 export const useIbcStatistics = () => {
-    const ibcStatisticsTxs = ibcStatisticsChainsStore.ibcStatisticsTxs;
+    const { ibcStatisticsTxs } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcStatistics = ibcStatisticsChainsStore[GET_IBCSTATISTICS];
     return {
         ibcStatisticsTxs,
@@ -26,8 +21,8 @@ export const useIbcStatistics = () => {
 };
 
 export const useIbcTxs = () => {
-    const tableCount = ibcStatisticsChainsStore.ibcTxsCount;
-    const getIbcTxs = ibcStatisticsChainsStore[GET_IBCTXS];
+    const { ibcTxsCount: tableCount } = storeToRefs(ibcStatisticsChainsStore);
+    const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
     return {
         tableCount,
         getIbcTxs
@@ -35,8 +30,8 @@ export const useIbcTxs = () => {
 };
 
 export const useIbcChains = () => {
-    const ibcChains = computed(() => ibcStatisticsChainsStore.ibcChains);
-    const getIbcChains = ibcStatisticsChainsStore[GET_IBCCHAINS];
+    const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
+    const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
     return {
         ibcChains,
         getIbcChains
@@ -45,8 +40,8 @@ export const useIbcChains = () => {
 
 export const useGetIbcBaseDenoms = () => {
     const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
-    const ibcBaseDenoms = ibcStatisticsChainsStore.ibcBaseDenoms;
-    const getIbcBaseDenom = ibcStatisticsChainsStore[GET_IBCBASEDENOMS];
+    const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
+    const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
     return {
         getIbcDenoms,
         ibcBaseDenoms,
@@ -55,11 +50,11 @@ export const useGetIbcBaseDenoms = () => {
 };
 
 export const useGetTokens = () => {
-    const tokens = reactive({ value: [] });
-    let ibcDenoms = reactive({ value: [] });
+    let tokens = ref([]);
+    let ibcDenoms = ref([]);
     getIbcDenoms()
         .then((res) => {
-            ibcDenoms.value = res;
+            ibcDenoms = res;
             let tokensObj = groupBy(res, 'symbol');
             const atomObj = {
                 ATOM: tokensObj['ATOM']
@@ -75,7 +70,7 @@ export const useGetTokens = () => {
             for (let i = 0; i < newkey.length; i++) {
                 newObj[newkey[i]] = tokensObj[newkey[i]];
             }
-            tokens.value = {
+            tokens = {
                 ...atomObj,
                 ...irisObj,
                 ...newObj
@@ -122,14 +117,18 @@ export const usePagination = () => {
 
 export const useFindIcon = (props) => {
     const findSymbolIcon = () => {
-        const findSymbolConfig = props.ibcBaseDenoms?.find((baseDenom) => baseDenom.symbol === props.selectedSymbol);
+        const findSymbolConfig = props.ibcBaseDenoms?.find(
+            (baseDenom) => baseDenom.symbol === props.selectedSymbol
+        );
         if (findSymbolConfig) {
             return findSymbolConfig.icon || tokenDefaultImg;
         }
         return tokenDefaultImg;
     };
     const findChainIcon = () => {
-        const findChainConfig = props?.options?.find((item) => item.chain_id === props.selectedChain.chain_id);
+        const findChainConfig = props?.options?.find(
+            (item) => item.chain_id === props.selectedChain.chain_id
+        );
         if (findChainConfig) {
             return findChainConfig.icon || tokenDefaultImg;
         }
@@ -171,18 +170,11 @@ export const useFindIbcChainIcon = () => {
 
 export const useGetTableColumns = () => {
     const tableColumns = reactive(transferTableColumn);
-    const isShowTransferLoading = computed({
-        get() {
-            return ibcStatisticsChainsStore.isShowTransferLoading;
-        },
-        set(newValue) {
-            ibcStatisticsChainsStore.isShowTransferLoading = newValue;
-        }
-    });
+    const showTransferLoading = ref(true);
     const tableDatas = ibcStatisticsChainsStore.ibcTxs;
     return {
         tableColumns,
-        isShowTransferLoading,
+        showTransferLoading,
         tableDatas
     };
 };
@@ -383,19 +375,16 @@ export const useTransfersDetailsInfo = () => {
         }
     ];
 
-    const isShowLoading = reactive({
-        value: true
-    });
     watch(route, (newValue) => {
         if (newValue?.query?.hash) {
             getTxDetails(newValue.query.hash);
         }
     });
     const getTxDetails = () => {
-        isShowLoading.value = true;
+        ibcStatisticsChainsStore.isShowLoading = true;
         getTxDetailsByTxHash(route.query.hash)
             .then((result) => {
-                isShowLoading.value = false;
+                ibcStatisticsChainsStore.isShowLoading = false;
                 if (result?.length === 1) {
                     const res = result[0];
                     scChainId.value = res?.sc_chain_id;
@@ -493,7 +482,7 @@ export const useTransfersDetailsInfo = () => {
                 }
             })
             .catch((error) => {
-                isShowLoading.value = false;
+                ibcStatisticsChainsStore.isShowLoading = false;
                 console.error(error);
             });
     };
@@ -515,7 +504,6 @@ export const useTransfersDetailsInfo = () => {
         transferOutExpandDetails,
         transferInDetails,
         transferInExpandDetails,
-        isShowLoading,
         scChainId,
         dcChainId
     };

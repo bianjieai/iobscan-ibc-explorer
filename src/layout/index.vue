@@ -1,4 +1,5 @@
 <template>
+    <loading v-show="ibcStatisticsChainsStore.isShowLoading"></loading>
     <a-config-provider class="bj-root">
         <template #renderEmpty>
             <no-datas />
@@ -21,10 +22,22 @@
                         @click-menu="clickMenu"
                     />
                     <div class="header_input_wrapper">
-                        <header-input class="header_input_layout" disabled @pressed-enter="onPressEnter" />
+                        <header-input
+                            class="header_input_layout"
+                            disabled
+                            @pressed-enter="onPressEnter"
+                        />
                         <div class="header_input_icon_wrapper">
-                            <a href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
-                                <img class="header_input_icon" src="/src/assets/nav/iob_link.png" alt="icon" />
+                            <a
+                                href="https://www.iobscan.io/#/"
+                                target="_blank"
+                                rel="noreferrer noopener"
+                            >
+                                <img
+                                    class="header_input_icon"
+                                    src="/src/assets/nav/iob_link.png"
+                                    alt="icon"
+                                />
                             </a>
                             <div class="header_btn_mobile cursor">
                                 <img
@@ -52,11 +65,12 @@
 <script setup>
     import { onMounted, onUnmounted, reactive, ref } from 'vue';
     import { useRouter, useRoute } from 'vue-router';
-    import { menus } from '../constants/index.js';
     import Navigation from '../components/Navigation.vue';
     // import HeaderInput from '../components/HeaderInput.vue';
     import IbcFooter from '../components/IbcFooter.vue';
+    import { menus } from '@/constants/index';
     import { useOnPressEnter } from '../composables/useStarAnimation';
+    import { useIbcStatisticsChains } from '@/store/index';
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
     const logoName = new URL(import.meta.env.VITE_LOGO_NAME, import.meta.url).href;
     const isShowNav = ref(false);
@@ -70,6 +84,7 @@
 
     // const { setStar1, setStar2 } = useStarAnimation(layout);
     const { onPressEnter } = useOnPressEnter(layout);
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
     onMounted(() => {
         // timer1 = setInterval(() => {

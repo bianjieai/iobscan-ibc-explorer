@@ -8,9 +8,16 @@
                 :class="{ small_icon: iconSize === TableCellIconSize.SMALL }"
             />
             <div v-else>
-                <img v-if="relayerImageSrc" :src="relayerImageSrc" alt="" class="icon mr-8 small_icon" />
+                <img
+                    v-if="relayerImageSrc"
+                    :src="relayerImageSrc"
+                    alt=""
+                    class="icon mr-8 small_icon"
+                />
                 <div v-else class="bg_text_c flex items-center justify-center mr-8">
-                    <div class="bg_text leading_none">{{ (title.substring(0, 1) || '').toUpperCase() }}</div>
+                    <div class="bg_text leading_none">{{
+                        (title.substring(0, 1) || '').toUpperCase()
+                    }}</div>
                 </div>
             </div>
         </div>
@@ -21,14 +28,19 @@
             <div class="title leading_none" :class="{ hover_cursor: titleCanClick }" @click="go">{{
                 relayer ? relayerName : title
             }}</div>
-            <div v-if="subtitle" class="subtitle leading_none" :class="{ tag: subtitleIsTag }">{{ subtitle }}</div>
+            <div v-if="subtitle" class="subtitle leading_none" :class="{ tag: subtitleIsTag }">{{
+                subtitle
+            }}</div>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { TableCellIconSize, TTableCellIconSize } from '../../../types/interface/table.interface';
+    import {
+        TableCellIconSize,
+        TTableCellIconSize
+    } from '../../../types/interface/table.interface';
     import { UNKNOWN } from '../../../constants';
 
     // 说明 现已将 token chain 拆除。 仅剩relayer

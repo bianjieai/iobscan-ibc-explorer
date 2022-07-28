@@ -100,7 +100,7 @@
     import { useGetChannelsList } from '@/service/channels';
     import { useIbcChains } from '../home/composable';
     import { useRoute, useRouter } from 'vue-router';
-    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
     import { urlHelper } from '@/utils/urlTools';
 
     let pageUrl = '/channels';
@@ -113,7 +113,14 @@
     const { ibcChains, getIbcChains } = useIbcChains();
     const { list, total, getList } = useGetChannelsList();
 
-    const needCustomColumns = ['chain_a', 'status', 'chain_b', 'operating_period', 'last_updated', 'ibc_transfer_txs'];
+    const needCustomColumns = [
+        'chain_a',
+        'status',
+        'chain_b',
+        'operating_period',
+        'last_updated',
+        'ibc_transfer_txs'
+    ];
 
     const chainDropdown = ref();
     const statusDropdown = ref();
@@ -131,7 +138,10 @@
         if (!searchChain.value && !searchStatus.value) {
             return `${formatBigNumber(total.value, 0)} channels found`;
         } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} channels found`;
+            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
+                total.value,
+                0
+            )} channels found`;
         }
     });
     const loading = ref(false);

@@ -12,7 +12,9 @@
                     </div>
                     <p class="result_tip_text">There is no valid result.</p>
                     <p class="result_description">Try to search with Transaction.</p>
-                    <a-button class="back_home_button" type="primary" @click="toHome">Back Home</a-button>
+                    <a-button class="back_home_button" type="primary" @click="toHome"
+                        >Back Home</a-button
+                    >
                 </div>
             </div>
         </div>

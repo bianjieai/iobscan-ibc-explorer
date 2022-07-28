@@ -108,14 +108,14 @@
     import StatusImg from '@/components/responsive/table/StatusImg.vue';
     import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
     import NamePopover from './components/NamePopover.vue';
-    import { COLUMNS, STATUS_OPTIONS } from './constants';
+    import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
     import { computed, onMounted, ref } from 'vue';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/table.interface';
     import { useIbcChains } from '../home/composable';
-    import { useGetRelayersList } from '@/service/relayers';
+    import { useGetRelayersList } from './composable';
     import { useRoute, useRouter } from 'vue-router';
-    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
     import { urlHelper } from '@/utils/urlTools';
 
     const loading = ref(false);
@@ -164,7 +164,10 @@
         if (!searchChain.value && !searchStatus.value) {
             return `${formatBigNumber(total.value, 0)} relayers found`;
         } else {
-            return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(total.value, 0)} relayers found`;
+            return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(
+                total.value,
+                0
+            )} relayers found`;
         }
     });
 

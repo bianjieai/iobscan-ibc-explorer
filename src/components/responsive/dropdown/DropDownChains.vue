@@ -10,7 +10,9 @@
                     class="mr-8 ml-8"
                     :class="[
                         selectedChain[0] ? 'selected_color' : '',
-                        chain_a === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color'
+                        chain_a === defaultTitle.defaultChains
+                            ? 'selected_color_default'
+                            : 'selected_color'
                     ]"
                     :style="{
                         flex: !selectedDouble ? '1' : 'auto',
@@ -24,7 +26,9 @@
                         class="mr-8 ml-8"
                         :class="[
                             selectedChain[1] ? 'selected_color' : '',
-                            chain_b === defaultTitle.defaultChains ? 'selected_color_default' : 'selected_color'
+                            chain_b === defaultTitle.defaultChains
+                                ? 'selected_color_default'
+                                : 'selected_color'
                         ]"
                     >
                         {{ chain_b }}</div
@@ -91,7 +95,9 @@
                         :placeholder="`Search by Chain ID${selectedDouble ? ', Chain ID' : ''}`"
                         @input="onInputChange"
                     />
-                    <a-button type="primary" class="confirm-button ml-12" @click="confirmChains">Confirm</a-button>
+                    <a-button type="primary" class="confirm-button ml-12" @click="confirmChains"
+                        >Confirm</a-button
+                    >
                 </div>
             </div>
         </template>
@@ -121,7 +127,10 @@
         minWidth: 10,
         witchPage: '',
         dropdownData:
-            (sessionStorage.getItem('allChains') && JSON.parse(sessionStorage.getItem('allChains')!))?.all ?? []
+            (
+                sessionStorage.getItem('allChains') &&
+                JSON.parse(sessionStorage.getItem('allChains')!)
+            )?.all ?? []
     });
 
     watch(
@@ -144,11 +153,18 @@
 
     const setAllChains = (dropdownData: TChainData[] = props.dropdownData) => {
         if (dropdownData?.length > 0) {
-            const cosmosChain = dropdownData.filter((item) => item.chain_name === CHAINNAME.COSMOSHUB);
-            const irishubChain = dropdownData.filter((item) => item.chain_name === CHAINNAME.IRISHUB);
+            const cosmosChain = dropdownData.filter(
+                (item) => item.chain_name === CHAINNAME.COSMOSHUB
+            );
+            const irishubChain = dropdownData.filter(
+                (item) => item.chain_name === CHAINNAME.IRISHUB
+            );
             let notIncludesIrisAndCosmosChains: TChainData[] = [];
             dropdownData.forEach((item) => {
-                if (item.chain_name !== CHAINNAME.COSMOSHUB && item.chain_name !== CHAINNAME.IRISHUB) {
+                if (
+                    item.chain_name !== CHAINNAME.COSMOSHUB &&
+                    item.chain_name !== CHAINNAME.IRISHUB
+                ) {
                     notIncludesIrisAndCosmosChains.push(item);
                 }
             });
@@ -161,7 +177,11 @@
                         : 0;
                 });
             }
-            handleDropdownData.value = [...cosmosChain, ...irishubChain, ...notIncludesIrisAndCosmosChains];
+            handleDropdownData.value = [
+                ...cosmosChain,
+                ...irishubChain,
+                ...notIncludesIrisAndCosmosChains
+            ];
         }
     };
 
@@ -170,7 +190,9 @@
         if (props.chainId) {
             const idArr = props.chainId.split(',');
             for (let i = 0; i < idArr.length; i++) {
-                const filterData = props.dropdownData.find((item: any) => item.chain_id === idArr[i]);
+                const filterData = props.dropdownData.find(
+                    (item: any) => item.chain_id === idArr[i]
+                );
                 if (filterData) {
                     const chain_name = filterData.chain_name;
                     selectedChain.value[i] = {
@@ -213,10 +235,14 @@
         }
     });
     const isSelected = computed(
-        () => (chain_id: TChainID) => selectedChain.value.filter((item) => item.chain_id === chain_id).length > 0
+        () => (chain_id: TChainID) =>
+            selectedChain.value.filter((item) => item.chain_id === chain_id).length > 0
     );
     const badgeText = computed(() => (chain_id: TChainID) => {
-        if (selectedChain.value[0]?.chain_id === 'allchain' && selectedChain.value[1]?.chain_id === 'allchain') {
+        if (
+            selectedChain.value[0]?.chain_id === 'allchain' &&
+            selectedChain.value[1]?.chain_id === 'allchain'
+        ) {
             return 'Transfer - Receive';
         } else {
             if (selectedChain.value[0]?.chain_id === chain_id) {
@@ -231,7 +257,7 @@
 
     const chainImg = (imgsrc: string) => {
         if (imgsrc) return imgsrc;
-        return new URL('../../../assets/chain-default.png', import.meta.url).href;
+        return new URL('../../../assets/home/chain-default.png', import.meta.url).href;
     };
 
     defineExpose({
@@ -314,13 +340,20 @@
                             chain_name,
                             chain_id
                         });
-                        if (isNeedSort(selectedChain.value[0].chain_id, selectedChain.value[1].chain_id)) {
+                        if (
+                            isNeedSort(
+                                selectedChain.value[0].chain_id,
+                                selectedChain.value[1].chain_id
+                            )
+                        ) {
                             let saveSelectedChain = selectedChain.value[0];
                             selectedChain.value[0] = selectedChain.value[1];
                             selectedChain.value[1] = saveSelectedChain;
                         }
                         backupDropdownData = selectedChain.value; // backup
-                        submitChain(`${selectedChain.value[0].chain_id},${selectedChain.value[1].chain_id}`);
+                        submitChain(
+                            `${selectedChain.value[0].chain_id},${selectedChain.value[1].chain_id}`
+                        );
                     }
                     break;
                 case 2:
@@ -405,7 +438,9 @@
                     ];
                 }
                 confirmFlag.value = true;
-                submitChain(`${chainIdIput.value ? chainIdIput.value.trim() : 'allchain'},allchain`);
+                submitChain(
+                    `${chainIdIput.value ? chainIdIput.value.trim() : 'allchain'},allchain`
+                );
             }
         } else {
             confirmFlag.value = true;
@@ -436,7 +471,8 @@
         }
         return (
             props.witchPage !== pageParameters.transfers &&
-            (chainA === 'allchain' || (![chainA, chainB].includes('allchain') && isLocalCompare.value))
+            (chainA === 'allchain' ||
+                (![chainA, chainB].includes('allchain') && isLocalCompare.value))
         );
     };
 </script>

@@ -37,14 +37,16 @@
                     :token-type="record.token_type"
                     :denom="record[column.key]"
                     :chain-id="record.chain_id"
-                    :denoms-data="ibcBaseDenoms.value"
+                    :denoms-data="ibcBaseDenoms"
                     @click-title="goIbcToken(record.base_denom)"
                 />
             </template>
             <template #price="{ record, column }">
                 <a-popover v-if="+record[column.key] !== -1">
                     <template #content>
-                        <div class="popover-c">{{ `${record.currency} ${formatPrice(record[column.key], null)}` }}</div>
+                        <div class="popover-c">{{
+                            `${record.currency} ${formatPrice(record[column.key], undefined)}`
+                        }}</div>
                     </template>
                     <div v-if="record[column.key] < thousandDecimal">
                         {{ `< ${record.currency} ${thousandDecimal}` }}
@@ -57,17 +59,31 @@
             </template>
 
             <template #supply="{ record, column }">
-                <div>{{ `${formatSupply(record[column.key], record.base_denom, ibcBaseDenoms.value)}` }}</div>
+                <div>{{
+                    `${formatSupply(record[column.key], record.base_denom, ibcBaseDenoms)}`
+                }}</div>
             </template>
 
             <template #ibc_transfer_amount="{ record, column }">
                 <a-popover>
                     <template #content>
                         <div class="popover-c"
-                            >{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value).popover}` }}
+                            >{{
+                                `${
+                                    formatAmount(
+                                        record[column.key],
+                                        record.base_denom,
+                                        ibcBaseDenoms
+                                    ).popover
+                                }`
+                            }}
                         </div>
                     </template>
-                    <div>{{ `${formatAmount(record[column.key], record.base_denom, ibcBaseDenoms.value).title}` }}</div>
+                    <div>{{
+                        `${
+                            formatAmount(record[column.key], record.base_denom, ibcBaseDenoms).title
+                        }`
+                    }}</div>
                 </a-popover>
             </template>
 
@@ -78,7 +94,9 @@
             </template>
 
             <template #chains_involved="{ record, column }">
-                <div class="hover_cursor" @click="goIbcToken(record.base_denom)">{{ record[column.key] }}</div>
+                <div class="hover_cursor" @click="goIbcToken(record.base_denom)">{{
+                    record[column.key]
+                }}</div>
             </template>
 
             <template #chain_id="{ record, column }">
@@ -111,7 +129,7 @@
     import { computed, onMounted, ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { useGetIbcDenoms, useIbcChains } from '../home/composable';
-    import { formatBigNumber } from '@/helper/parseStringHelpers';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
     import { useGetTokenList } from '@/service/tokens';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
     import { urlHelper } from '@/utils/urlTools';
@@ -125,7 +143,8 @@
     const statusQuery = route.query.status as 'Authed' | 'Other';
 
     const { ibcChains, getIbcChains } = useIbcChains();
-    const { ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
+    const { ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom, getBaseDenomInfoByDenom } =
+        useGetIbcDenoms();
     const { list, getList, total } = useGetTokenList();
 
     const needCustomColumns = [
@@ -151,7 +170,10 @@
         if (!searchChain.value && !searchStatus.value && !searchDenom.value) {
             return `${formatBigNumber(total.value, 0)} tokens found`;
         } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(total.value, 0)} tokens found`;
+            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
+                total.value,
+                0
+            )} tokens found`;
         }
     });
 

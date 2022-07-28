@@ -42,7 +42,9 @@ export const useStarAnimation = (layout: any) => {
             createDom.style.animation =
                 count === 1 ? 'flicker 3s ease-in-out infinite' : 'flicker 4s ease-in-out infinite';
 
-            const appendChildStartContainerDom = document.getElementsByClassName(`star_container_${count}`);
+            const appendChildStartContainerDom = document.getElementsByClassName(
+                `star_container_${count}`
+            );
             appendChildStartContainerDom[0].appendChild(createDom);
         }
     };

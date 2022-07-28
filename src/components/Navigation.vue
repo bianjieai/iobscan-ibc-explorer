@@ -6,7 +6,12 @@
         @click="clickMenuItem"
     >
         <a-menu-item v-for="item of menus" :key="item.value" class="header_menu_item">
-            <img v-show="isShowNav" src="../assets/nav/tips_icon.png" alt="" class="header_menu_item_img" />
+            <img
+                v-show="isShowNav"
+                src="../assets/nav/tips_icon.png"
+                alt=""
+                class="header_menu_item_img"
+            />
             {{ item.label }}
         </a-menu-item>
     </a-menu>

@@ -1,5 +1,10 @@
 <template>
-    <a-dropdown :trigger="['click']" :placement="'bottomLeft'" :visible="isVisible" @visible-change="visibleChange">
+    <a-dropdown
+        :trigger="['click']"
+        :placement="'bottomLeft'"
+        :visible="isVisible"
+        @visible-change="visibleChange"
+    >
         <a-button class="button">
             <div class="button_token_icon">
                 <img
@@ -8,7 +13,11 @@
                     :src="findSymbolIcon()"
                 />
                 <span
-                    :class="selectedSymbol === defaultTitle.defaultTokens ? 'button_title_default' : 'button_title'"
+                    :class="
+                        selectedSymbol === defaultTitle.defaultTokens
+                            ? 'button_title_default'
+                            : 'button_title'
+                    "
                     >{{ selectedSymbol }}</span
                 >
             </div>
@@ -42,10 +51,16 @@
                                 <div
                                     class="content_item cursor"
                                     :title="item.symbol.length > 9 ? item.symbol : ''"
-                                    :class="{ content_item_selected: selectedSymbol && selectedSymbol === item.symbol }"
+                                    :class="{
+                                        content_item_selected:
+                                            selectedSymbol && selectedSymbol === item.symbol
+                                    }"
                                     @click="onClickItem(item.symbol)"
                                 >
-                                    <img class="content_item_icon" :src="item.icon || tokenDefaultImg" />
+                                    <img
+                                        class="content_item_icon"
+                                        :src="item.icon || tokenDefaultImg"
+                                    />
                                     <span class="content_item_title">{{ item?.symbol }}</span>
                                 </div>
                             </template>
@@ -74,7 +89,11 @@
                                         </p>
                                     </div>
                                 </template>
-                                <img class="tip cursor" style="margin-left: 8px" src="/src/assets/tip.png" />
+                                <img
+                                    class="tip cursor"
+                                    style="margin-left: 8px"
+                                    src="/src/assets/tip.png"
+                                />
                             </a-popover>
                         </h2>
                         <div class="overlay_item_content flex-c">
@@ -94,7 +113,7 @@
 </template>
 
 <script setup>
-    import { rmIbcPrefix } from '../../../helper/parseStringHelpers';
+    import { rmIbcPrefix } from '../../../helper/parseStringHelper';
     import { useFindIcon, useIsVisible } from '../composable';
     import { ref, watch } from 'vue';
     import { defaultTitle, unAuthed } from '@/constants';

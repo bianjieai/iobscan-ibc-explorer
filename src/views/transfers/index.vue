@@ -45,7 +45,10 @@
                         :get-popup-container="(triggerNode) => triggerNode.parentNode"
                         @change="handleSelectChange"
                     >
-                        <a-select-option v-for="item of ibcTxStatusSelectOptions" :key="item.title" :value="item.value"
+                        <a-select-option
+                            v-for="item of ibcTxStatusSelectOptions"
+                            :key="item.title"
+                            :value="item.value"
                             ><span
                                 :class="
                                     item.title === defaultTitle.defaultStatus
@@ -71,7 +74,13 @@
                     >
                         <template #suffixIcon>
                             <svg
-                                style="positon: absolute; left: 10px; top: 13px; width: 18px; height: 18px"
+                                style="
+                                    positon: absolute;
+                                    left: 10px;
+                                    top: 13px;
+                                    width: 18px;
+                                    height: 18px;
+                                "
                                 t="1635216291915"
                                 class="icon"
                                 viewBox="0 0 1024 1024"
@@ -98,7 +107,8 @@
                         <template #content>
                             <div>
                                 <p class="tip_color">
-                                    Date selection range from the first IBC Transfer to the latest IBC Transfer
+                                    Date selection range from the first IBC Transfer to the latest
+                                    IBC Transfer
                                 </p>
                             </div>
                         </template>
@@ -135,8 +145,8 @@
                     style="width: 100%"
                     :row-key="(record) => record.record_id"
                     :columns="tableColumns"
-                    :loading="isShowTransferLoading"
-                    :data-source="tableDatas.value"
+                    :loading="showTransferLoading"
+                    :data-source="tableDatas"
                     :pagination="false"
                     :custom-row="handleClickRow"
                 >
@@ -149,7 +159,11 @@
                                         <p class="tip_color">Sent Token</p>
                                     </div>
                                 </template>
-                                <img class="tip cursor" style="margin-left: 8px" src="../../assets/tip.png" />
+                                <img
+                                    class="tip cursor"
+                                    style="margin-left: 8px"
+                                    src="../../assets/tip.png"
+                                />
                             </a-popover>
                         </p>
                     </template>
@@ -157,8 +171,12 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">Sent Token: {{ record.denoms.sc_denom || '--' }}</p>
-                                    <p class="tip_color">Received Token: {{ record.denoms.dc_denom || '--' }}</p>
+                                    <p class="tip_color"
+                                        >Sent Token: {{ record.denoms.sc_denom || '--' }}</p
+                                    >
+                                    <p class="tip_color"
+                                        >Received Token: {{ record.denoms.dc_denom || '--' }}</p
+                                    >
                                 </div>
                             </template>
                             <router-link
@@ -170,10 +188,15 @@
                                 "
                                 @click.stop=""
                             >
-                                <img class="token_icon" :src="record.symbolIcon || tokenDefaultImg" />
+                                <img
+                                    class="token_icon"
+                                    :src="record.symbolIcon || tokenDefaultImg"
+                                />
                                 <span class="token_info">
                                     <span class="token_num">{{ formatNum(record.symbolNum) }}</span>
-                                    <span class="token_denom">{{ getRestString(record.symbolDenom, 6, 0) }}</span>
+                                    <span class="token_denom">{{
+                                        getRestString(record.symbolDenom, 6, 0)
+                                    }}</span>
                                 </span>
                             </router-link>
                         </a-popover>
@@ -185,7 +208,9 @@
                                     <p class="tip_color">{{ record.sc_tx_info.hash }}</p>
                                 </div>
                             </template>
-                            <span class="cursor">{{ getRestString(record.sc_tx_info.hash, 4, 4) }}</span>
+                            <span class="cursor">{{
+                                getRestString(record.sc_tx_info.hash, 4, 4)
+                            }}</span>
                         </a-popover>
                     </template>
                     <template #out="{ record }">
@@ -203,29 +228,47 @@
                             <template #content>
                                 <div>
                                     <p class="tip_color"
-                                        >Chain ID：{{ ChainHelper.formatChainId(record.sc_chain_id) }}</p
+                                        >Chain ID：{{
+                                            ChainHelper.formatChainId(record.sc_chain_id)
+                                        }}</p
                                     >
-                                    <p class="tip_color">Channel ID: {{ record.sc_channel || '--' }}</p>
+                                    <p class="tip_color"
+                                        >Channel ID: {{ record.sc_channel || '--' }}</p
+                                    >
                                     <p class="tip_color">Sequence: {{ record.sequence || '--' }}</p>
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
-                                <img class="status_icon" :src="findIbcChainIcon(record.sc_chain_id)" />
+                                <img
+                                    class="status_icon"
+                                    :src="findIbcChainIcon(record.sc_chain_id)"
+                                />
                             </router-link>
                         </a-popover>
-                        <img class="status_icon" style="margin: 0 20px" :src="getImageUrl(record.status)" />
+                        <img
+                            class="status_icon"
+                            style="margin: 0 20px"
+                            :src="getImageUrl(record.status)"
+                        />
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
                                     <p class="tip_color"
-                                        >Chain ID：{{ ChainHelper.formatChainId(record.dc_chain_id) }}</p
+                                        >Chain ID：{{
+                                            ChainHelper.formatChainId(record.dc_chain_id)
+                                        }}</p
                                     >
-                                    <p class="tip_color">Channel ID: {{ record.dc_channel || '--' }}</p>
+                                    <p class="tip_color"
+                                        >Channel ID: {{ record.dc_channel || '--' }}</p
+                                    >
                                     <p class="tip_color">Sequence: {{ record.sequence || '--' }}</p>
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
-                                <img class="status_icon" :src="findIbcChainIcon(record.dc_chain_id)" />
+                                <img
+                                    class="status_icon"
+                                    :src="findIbcChainIcon(record.dc_chain_id)"
+                                />
                             </router-link>
                         </a-popover>
                     </template>
@@ -236,7 +279,9 @@
                                     <p class="tip_color">{{ record.dc_tx_info.hash || '--' }}</p>
                                 </div>
                             </template>
-                            <span class="cursor">{{ getRestString(record.dc_tx_info.hash, 4, 4) || '--' }}</span>
+                            <span class="cursor">{{
+                                getRestString(record.dc_tx_info.hash, 4, 4) || '--'
+                            }}</span>
                         </a-popover>
                         <span v-else>--</span>
                     </template>
@@ -247,14 +292,18 @@
                                     <p class="tip_color">{{ record.dc_addr || '--' }}</p>
                                 </div>
                             </template>
-                            <span class="cursor">{{ getRestString(record.dc_addr, 3, 8) || '--' }}</span>
+                            <span class="cursor">{{
+                                getRestString(record.dc_addr, 3, 8) || '--'
+                            }}</span>
                         </a-popover>
                     </template>
                     <template #time="{ record }">
                         <span>{{ formatDate(record.tx_time * 1000) }}</span>
                     </template>
                     <template #endTime="{ record }">
-                        <span>{{ record.end_time ? formatDate(record.end_time * 1000) : '--' }}</span>
+                        <span>{{
+                            record.end_time ? formatDate(record.end_time * 1000) : '--'
+                        }}</span>
                     </template>
                 </a-table>
             </div>
@@ -271,10 +320,10 @@
             <a-pagination
                 v-model:current="pagination.current"
                 class="table_pagination"
-                :class="{ disable_table_pagination: isShowTransferLoading }"
+                :class="{ disable_table_pagination: showTransferLoading }"
                 :total="pagination.total"
-                :disabled="isShowTransferLoading"
                 :show-title="false"
+                :disabled="showTransferLoading"
                 @change="onPaginationChange"
             />
         </div>
@@ -296,9 +345,14 @@
         CHAINNAME
     } from '../../constants';
     import Tools from '../../utils/Tools';
-    import chainDefaultImg from '../../assets/chain-default.png';
+    import chainDefaultImg from '../../assets/home/chain-default.png';
     import tokenDefaultImg from '../../assets/token-default.png';
-    import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '../../helper/parseStringHelpers';
+    import {
+        JSONparse,
+        getRestString,
+        formatNum,
+        rmIbcPrefix
+    } from '../../helper/parseStringHelper';
     import ChainHelper from '../../helper/chainHelper';
     import * as djs from 'dayjs';
     import { ref, reactive, computed, onMounted, watch } from 'vue';
@@ -314,16 +368,15 @@
         useIbcChains,
         useGetTableColumns
     } from './composable';
-
     useClearInterval();
-    const { getIbcDenoms, ibcBaseDenomsSorted, getIbcBaseDenom } = useGetIbcDenoms();
+    const { getIbcDenoms, ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
     const { tableCount, getIbcTxs } = useIbcTxs();
     const { ibcDenoms } = useGetTokens();
     const { selectedSymbol, isShowSymbolIcon, clearInput, isShowChainIcon } = useSelectedSymbol();
     const { pagination } = usePagination();
-    const { ibcChains, getIbcChains } = useIbcChains();
-    const { tableColumns, isShowTransferLoading, tableDatas } = useGetTableColumns();
+    const { ibcChains } = useIbcChains();
+    const { tableColumns, showTransferLoading, tableDatas } = useGetTableColumns();
     const chainDropdown = ref();
     const selectedDouble = ref(true);
     const needBadge = ref(true);
@@ -422,7 +475,7 @@
     });
 
     const queryDatas = () => {
-        isShowTransferLoading.value = true;
+        showTransferLoading.value = true;
         let isDateDefaultValue = false;
         if (queryParam.date_range?.length === 2) {
             const startTime = queryParam.date_range[0];
@@ -455,7 +508,7 @@
             ...params
         })
             .then(() => {
-                pagination.total = tableCount?.value;
+                pagination.total = tableCount.value;
             })
             .catch((error) => {
                 console.log(error);
@@ -468,10 +521,10 @@
             ...params
         })
             .then(() => {
-                isShowTransferLoading.value = false;
+                showTransferLoading.value = false;
             })
             .catch((error) => {
-                isShowTransferLoading.value = false;
+                showTransferLoading.value = false;
                 console.log(error);
             });
     };
@@ -481,28 +534,36 @@
         return nowTimeDate.setHours(0, 0, 0, 0);
     };
 
-    const disabledDate = (current) => current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
+    const disabledDate = (current) =>
+        current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
 
     const isIbcTxTotalAndHashFilter = computed(() => {
         if (!ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
-            return `A total of ${ibcStatisticsTxs.value.tx_all.count} transfers found`;
+            return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
         } else if (!ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
-            return `${tableCount.value} of the ${ibcStatisticsTxs.value.tx_all.count} transfers found`;
+            return `${tableCount} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
         } else if (ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
             return 'Last 500k transfers found';
         } else if (ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
-            return `${tableCount.value} of the last 500k transfers found`;
+            return `${tableCount} of the last 500k transfers found`;
         } else {
             return '';
         }
     });
     const setAllChains = (allChains) => {
         if (allChains?.value?.all) {
-            const cosmosChain = allChains.value.all.filter((item) => item.chain_name === CHAINNAME.COSMOSHUB);
-            const irishubChain = allChains.value.all.filter((item) => item.chain_name === CHAINNAME.IRISHUB);
+            const cosmosChain = allChains.value.all.filter(
+                (item) => item.chain_name === CHAINNAME.COSMOSHUB
+            );
+            const irishubChain = allChains.value.all.filter(
+                (item) => item.chain_name === CHAINNAME.IRISHUB
+            );
             let notIncludesIrisAndCosmosChains = [];
             allChains.value.all.forEach((item) => {
-                if (item.chain_name !== CHAINNAME.COSMOSHUB && item.chain_name !== CHAINNAME.IRISHUB) {
+                if (
+                    item.chain_name !== CHAINNAME.COSMOSHUB &&
+                    item.chain_name !== CHAINNAME.IRISHUB
+                ) {
                     notIncludesIrisAndCosmosChains.push(item);
                 }
             });
@@ -515,12 +576,18 @@
                         : 0;
                 });
             }
-            ibcChains.value.all = [...cosmosChain, ...irishubChain, ...notIncludesIrisAndCosmosChains];
+            ibcChains.value.all = [
+                ...cosmosChain,
+                ...irishubChain,
+                ...notIncludesIrisAndCosmosChains
+            ];
         }
     };
     let allChains = ibcChains;
     if (!Object?.keys(allChains).length) {
-        allChains = sessionStorage.getItem('allChains') ? JSON.parse(sessionStorage.getItem('allChains')) : {};
+        allChains = sessionStorage.getItem('allChains')
+            ? JSON.parse(sessionStorage.getItem('allChains'))
+            : {};
     }
     setAllChains(allChains);
     watch(
@@ -580,7 +647,9 @@
             if (queryParam?.date_range.length === 2) {
                 const startTimeStamp = queryParam.date_range[0];
                 const entTimeStamp = queryParam.date_range[1];
-                const startTime = startTimeStamp ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD') : '';
+                const startTime = startTimeStamp
+                    ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
+                    : '';
                 const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
                 url += `&startTime=${startTime}&endTime=${endTime}`;
             }
@@ -612,7 +681,9 @@
             if (queryParam?.date_range.length === 2) {
                 const startTimeStamp = queryParam.date_range[0];
                 const entTimeStamp = queryParam.date_range[1];
-                const startTime = startTimeStamp ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD') : '';
+                const startTime = startTimeStamp
+                    ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
+                    : '';
                 const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
                 url += `&startTime=${startTime}&endTime=${endTime}`;
             }
@@ -629,7 +700,9 @@
         pagination.current = 1;
         dateRange.value = dates;
         queryParam.date_range[0] = Math.floor(startTime(dayjs(dates[0]).valueOf()) / 1000);
-        queryParam.date_range[1] = Math.floor(startTime(dayjs(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1);
+        queryParam.date_range[1] = Math.floor(
+            startTime(dayjs(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1
+        );
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
 
         if (queryParam?.chain_id) {
@@ -685,7 +758,7 @@
             url += `&endTime=${params.endTime}`;
         }
         router.replace(url);
-        isShowTransferLoading.value = true;
+        showTransferLoading.value = true;
         getIbcTxs({
             page_num: pagination.current,
             page_size: pagination.pageSize,
@@ -693,10 +766,10 @@
             ...queryParam
         })
             .then(() => {
-                isShowTransferLoading.value = false;
+                showTransferLoading.value = false;
             })
             .catch((error) => {
-                isShowTransferLoading.value = false;
+                showTransferLoading.value = false;
                 console.log(error);
             });
     };
@@ -743,8 +816,10 @@
             if (queryParam?.date_range.length === 2) {
                 const startTimeStamp = queryParam.date_range[0];
                 const entTimeStamp = queryParam.date_range[1];
-                const startTime = startTimeStamp > 0 ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD') : '';
-                const endTime = entTimeStamp > 0 ? dayjs(entTimeStamp * 1000).format('YYYY-MM-DD') : '';
+                const startTime =
+                    startTimeStamp > 0 ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD') : '';
+                const endTime =
+                    entTimeStamp > 0 ? dayjs(entTimeStamp * 1000).format('YYYY-MM-DD') : '';
                 url += `&startTime=${startTime}&endTime=${endTime}`;
             }
         }
@@ -769,8 +844,6 @@
     onMounted(() => {
         getIbcStatistics();
         getIbcDenoms();
-        !sessionStorage.getItem('ibcBaseDenoms') && getIbcBaseDenom();
-        !sessionStorage.getItem('allChains') && getIbcChains();
     });
 </script>
 <style lang="less" scoped>
@@ -793,7 +866,11 @@
                 top: 11px;
                 display: inline-block;
                 height: 12px;
-                background: linear-gradient(90deg, rgba(112, 136, 255, 0) 0%, rgba(61, 80, 255, 0.15) 100%);
+                background: linear-gradient(
+                    90deg,
+                    rgba(112, 136, 255, 0) 0%,
+                    rgba(61, 80, 255, 0.15) 100%
+                );
                 border-radius: 5px;
             }
             &_title {
@@ -986,7 +1063,8 @@
                 color: var(--bj-primary-color);
             }
         }
-        .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input) .ant-select-selector {
+        .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
+            .ant-select-selector {
             box-shadow: none;
         }
     }

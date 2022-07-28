@@ -1,8 +1,8 @@
 // import { BaseDenom } from '@/types/baseDenom';
 import { ref, Ref } from 'vue';
-import { HttpHelper } from '../helper/httpHelpers.js';
-import { getBaseDenomByKey } from '@/helper/baseDenomHelpers';
-import { getRestString2 } from '@/helper/parseStringHelpers';
+import { HttpHelper } from '../helper/httpHelper.js';
+import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
+import { getRestString2 } from '@/helper/parseStringHelper';
 
 export type TIbcTokenType = 'Authed' | 'Other' | 'Genesis';
 
@@ -21,7 +21,7 @@ export type TIbcTokenListParams = {
 };
 
 export type TBaseParams = {
-    use_count: boolean;
+    use_count?: boolean;
     page_num: number;
     page_size: number;
 };
@@ -35,7 +35,8 @@ export const baseParams: TBaseParams = {
 const urlPrefix = import.meta.env.VITE_BASE_GO_API;
 
 const getTokenListUrl = `${urlPrefix}/ibc/tokenList`;
-const getIbcTokenListUrl = (base_denom: string) => `${urlPrefix}/ibc/${base_denom.replace('ibc/', '')}/ibcTokenList`;
+const getIbcTokenListUrl = (base_denom: string) =>
+    `${urlPrefix}/ibc/${base_denom.replace('ibc/', '')}/ibcTokenList`;
 
 export const useGetTokenList = () => {
     const list = ref([]);
@@ -47,7 +48,9 @@ export const useGetTokenList = () => {
             loading.value = true;
             delete params.loading;
         }
-        const result = await HttpHelper.get(getTokenListUrl, { params: { ...baseParams, ...params } }).catch(() => {
+        const result = await HttpHelper.get(getTokenListUrl, {
+            params: { ...baseParams, ...params }
+        }).catch(() => {
             loading && (loading.value = false);
         });
         loading && (loading.value = false);
@@ -59,7 +62,9 @@ export const useGetTokenList = () => {
                 for (let i = 0; i < (items ?? []).length; i++) {
                     const item: any = items[i];
                     const baseDenom = await getBaseDenomByKey(item.chain_id, item.base_denom);
-                    item['name'] = baseDenom ? getRestString2(baseDenom.symbol, 6) : getRestString2(item.base_denom, 6);
+                    item['name'] = baseDenom
+                        ? getRestString2(baseDenom.symbol, 6)
+                        : getRestString2(item.base_denom, 6);
                     temp.push(item);
                 }
                 list.value = temp;

@@ -1,18 +1,18 @@
 <template>
     <div class="list">
         <a-divider style="margin: 0px; margin-bottom: 0" />
-        <div class="list_top">
-            <span class="list_top_name">Latest 100 IBC Token Transfer List</span>
+        <div class="list__top">
+            <span class="list__top__name">Latest 100 IBC Token Transfer List</span>
             <router-link :to="'/transfers'">
-                <a-button class="list_top_button">View All</a-button>
+                <a-button class="list__top__button">View All</a-button>
             </router-link>
         </div>
-        <div class="list_middle">
+        <div class="list__middle">
             <div v-if="transferList && transferList.length" class="transfer_list ibc_scrollbar">
                 <transfer-list-item
                     v-for="(item, index) of transferList"
-                    :key="item.record_id"
-                    :item="item"
+                    :key="(item as any).record_id"
+                    :item="(item as any)"
                     :index="index"
                     :is-final="index >= transferList.length - 1"
                     :ibc-chains="ibcChains"
@@ -23,8 +23,8 @@
 
             <no-datas v-if="!transferList || !transferList.length" class="transfer_list" />
         </div>
-        <div class="list_bottom">
-            <span class="status_tips">
+        <div class="list__bottom">
+            <span class="list__bottom__status_tips">
                 <span class="status_log">Status:</span>
                 <span v-for="(item, index) in ibcTxStatusDesc" :key="index" class="status_tip">
                     <img :src="getImageUrl(item.status)" alt="" />
@@ -35,11 +35,10 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import TransferListItem from './TransferListItem.vue';
-    import NoDatas from '../../../components/NoDatas.vue';
     import { useInterfaceActive } from '../composable/useTransferList';
-    import { ibcTxStatusDesc } from '../../../constants';
+    import { ibcTxStatusDesc } from '@/constants';
     defineProps({
         transferList: {
             type: Array,
@@ -52,24 +51,24 @@
     });
     const emits = defineEmits(['clickViewAll', 'clickItem', 'itemDidExpand']);
     const { clickListItem, itemDidExpand } = useInterfaceActive(emits);
-    const getImageUrl = (status) => {
-        return new URL(`../../../assets/status${status}.png`, import.meta.url).href;
+    const getImageUrl = (status: string | number) => {
+        return new URL(`../../../assets/home/status${status}.png`, import.meta.url).href;
     };
 </script>
 
 <style lang="less" scoped>
     .list {
-        &_top {
+        &__top {
             width: 100%;
             .flex(row, nowrap, space-between, center);
-            &_name {
+            &__name {
                 font-size: var(--bj-font-size-normal);
                 font-family: Montserrat-Regular, Montserrat;
                 color: var(--bj-font-color-65);
                 line-height: var(--bj-font-size-normal);
                 margin: 24px;
             }
-            &_button {
+            &__button {
                 margin: 24px;
                 height: 24px;
                 line-height: 24px;
@@ -81,18 +80,18 @@
                 .flex(row, nowrap, center, center);
             }
         }
-        &_middle {
+        &__middle {
             width: 100%;
             height: 473px;
         }
-        &_bottom {
+        &__bottom {
             .flex(row, nowrap, space-between, center);
             margin: 0 auto;
             padding: 16px 24px;
             max-width: 1200px;
             background: #ffffff;
             border-radius: var(--border-radius-normal);
-            & .status_tips {
+            &__status_tips {
                 .flex(row, nowrap, space-between, center);
                 padding: 7px 9px;
                 width: 396px;
@@ -126,16 +125,16 @@
     }
     @media screen and (max-width: 768px) {
         .list {
-            &_top {
-                &_name {
+            &__top {
+                &__name {
                 }
-                &_button {
+                &__button {
                 }
             }
-            &_middle {
+            &__middle {
             }
-            &_bottom {
-                & .status_tips {
+            &__bottom {
+                &__status_tips {
                     .status_tip {
                         img {
                         }
@@ -148,16 +147,18 @@
     }
     @media screen and (max-width: 530px) {
         .list {
-            &_top {
-                &_name {
+            &__top {
+                .flex(column, nowrap, flex-start, flex-start);
+                &__name {
+                    margin-bottom: 0;
                 }
-                &_button {
+                &__button {
                 }
             }
-            &_middle {
+            &__middle {
             }
-            &_bottom {
-                & .status_tips {
+            &__bottom {
+                &__status_tips {
                     width: 100%;
                     .status_tip {
                         img {
@@ -171,16 +172,16 @@
     }
     @media screen and (max-width: 420px) {
         .list {
-            &_top {
-                &_name {
+            &__top {
+                &__name {
                 }
-                &_button {
+                &__button {
                 }
             }
-            &_middle {
+            &__middle {
             }
-            &_bottom {
-                & .status_tips {
+            &__bottom {
+                &__status_tips {
                     flex-wrap: wrap;
                     text-align: left;
                     .status_log {
@@ -199,16 +200,16 @@
     }
     @media screen and (max-width: 360px) {
         .list {
-            &_top {
-                &_name {
+            &__top {
+                &__name {
                 }
-                &_button {
+                &__button {
                 }
             }
-            &_middle {
+            &__middle {
             }
-            &_bottom {
-                & .status_tips {
+            &__bottom {
+                &__status_tips {
                     .status_log {
                     }
                     .status_tip {
