@@ -65,17 +65,10 @@
     import ChainsListInfo from './components/ChainsListInfo.vue';
     import StatisticList from './components/StatisticList.vue';
     import TransferList from './components/TransferList.vue';
-    import {
-        useIbcStatistics,
-        useIbcChains,
-        useIbcTxs,
-        useInterfaceActive,
-        useClearInterval,
-        useGetIbcDenoms,
-        initHome
-    } from './composable';
+    import { useIbcChains, useIbcTxs, useInterfaceActive, initHome } from './composable';
     import { useOnPressEnter } from '@/composables/useStarAnimation';
     import { pageParameters, ibcStatisticsTxsDefault } from '@/constants/index';
+    import { useIbcStatistics } from '@/composables/home';
     const {
         ibcStatisticsChains,
         ibcStatisticsChannels,
@@ -84,12 +77,10 @@
         getIbcStatistics
     } = useIbcStatistics();
     const { ibcChains } = useIbcChains();
-    const { limitIbcTxs, ibcTxs, getIbcTxs, setExpandByIndex } = useIbcTxs();
+    const { limitIbcTxs, ibcTxs, getIbcTxs, setExpandByIndex, useTxListInterval } = useIbcTxs();
     const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
-    const { getIbcDenoms } = useGetIbcDenoms();
-    useClearInterval();
     const { onPressEnter } = useOnPressEnter();
-    initHome(getIbcStatistics, getIbcTxs, getIbcDenoms, limitIbcTxs);
+    initHome(getIbcStatistics, getIbcTxs, useTxListInterval, limitIbcTxs);
 </script>
 
 <style lang="less">
