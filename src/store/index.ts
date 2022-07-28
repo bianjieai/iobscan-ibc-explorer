@@ -31,6 +31,7 @@ export const useIbcStatisticsChains = defineStore('global', {
             isShowLoading: false,
             // 页面级别 home transfer
             ibcTxs: [] as IIbcTxc[],
+            // todo duanjie 状态待抽离
             // 页面级别 home transfer
             ibcTxTimer: undefined as number | undefined,
             // 页面级别 home transfer
