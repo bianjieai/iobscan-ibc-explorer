@@ -1,7 +1,7 @@
 import { useIbcStatisticsChains } from '@/store/index';
 import { IBaseDenoms } from '@/types/interface/index.interface';
 
-export const getBaseDenomKey = (chainID: string, denom: string): string => {
+export const getDenomKey = (chainID: string, denom: string): string => {
     return chainID + '-' + denom;
 };
 
@@ -16,6 +16,6 @@ export const getBaseDenomByKey = async (
     }
     ibcBaseDenomsMapStr = sessionStorage.getItem('ibcBaseDenomsMap');
     const ibcBaseDenomsMap = JSON.parse(ibcBaseDenomsMapStr ?? '{}');
-    const key = getBaseDenomKey(chainID, denom);
+    const key = getDenomKey(chainID, denom);
     return ibcBaseDenomsMap[key];
 };
