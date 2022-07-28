@@ -23,7 +23,13 @@
             <ResetButton @on-reset="resetSearchCondition" />
         </div>
 
-        <BjTable :loading="loading" :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
+        <TableCommon
+            :loading="loading"
+            :data="list"
+            :need-custom-columns="needCustomColumns"
+            :columns="COLUMNS"
+            need-count
+        >
             <template #base_denom="{ record, column }">
                 <TokenIcon
                     base-page
@@ -86,26 +92,26 @@
                     @click-title="goChains"
                 />
             </template>
-        </BjTable>
+        </TableCommon>
     </PageContainer>
 </template>
 
 <script lang="ts" setup>
-    import PageContainer from '@/components/responsive/pageContainer.vue';
-    import PageTitle from '@/components/responsive/pageTitle.vue';
-    import BjTable from '@/components/responsive/table/index.vue';
-    import { COLUMNS, STATUS_OPTIONS } from './constants';
-    import { thousandDecimal } from '../../constants';
+    import PageContainer from '@/components/responsive/PageContainer.vue';
+    import PageTitle from '@/components/responsive/PageTitle.vue';
+    import TableCommon from '@/components/responsive/table/TableCommon.vue';
     import TokensDropDown from '@/components/responsive/dropdown/DropDownTokens.vue';
     import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
     import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/resetButton.vue';
+    import ResetButton from '@/components/responsive/ResetButton.vue';
+    import TokenIcon from '@/components/responsive/table/TokenIcon.vue';
+    import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
+    import { COLUMNS, STATUS_OPTIONS } from './constants';
+    import { thousandDecimal } from '../../constants';
     import { computed, onMounted, ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
-    import TokenIcon from '@/components/responsive/table/tokenIcon.vue';
     import { useGetIbcDenoms, useIbcChains } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelpers';
-    import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useGetTokenList } from '@/service/tokens';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
     import { urlHelper } from '@/utils/urlTools';

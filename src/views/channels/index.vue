@@ -18,7 +18,13 @@
 
             <ResetButton @on-reset="resetSearchCondition" />
         </div>
-        <BjTable :loading="loading" :data="list" :need-custom-columns="needCustomColumns" :columns="COLUMNS" need-count>
+        <TableCommon
+            :loading="loading"
+            :data="list"
+            :need-custom-columns="needCustomColumns"
+            :columns="COLUMNS"
+            need-count
+        >
             <template #chain_a="{ record, column }">
                 <ChainIcon
                     avatar-can-click
@@ -72,26 +78,26 @@
             <template v-if="list.length !== 0" #table_bottom_status>
                 <BottomStatus :type="BottomStatusType.CHANNEL" />
             </template>
-        </BjTable>
+        </TableCommon>
     </PageContainer>
 </template>
 
 <script setup lang="ts">
-    import PageContainer from '@/components/responsive/pageContainer.vue';
-    import PageTitle from '@/components/responsive/pageTitle.vue';
-    import BjTable from '@/components/responsive/table/index.vue';
-    import { COLUMNS, STATUS_OPTIONS } from './constants';
+    import PageContainer from '@/components/responsive/PageContainer.vue';
+    import PageTitle from '@/components/responsive/PageTitle.vue';
+    import TableCommon from '@/components/responsive/table/TableCommon.vue';
     import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
     import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/resetButton.vue';
+    import ResetButton from '@/components/responsive/ResetButton.vue';
+    import BottomStatus from '@/components/responsive/table/BottomStatus.vue';
+    import TransferTxs from '@/components/responsive/table/TransferTxs.vue';
+    import StatusImg from '@/components/responsive/table/StatusImg.vue';
+    import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
+    import { COLUMNS, STATUS_OPTIONS } from './constants';
     import { computed, onMounted, ref } from 'vue';
-    import BottomStatus from '@/components/responsive/table/bottomStatus.vue';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
-    import TransferTxs from '@/components/responsive/table/transferTxs.vue';
-    import StatusImg from '@/components/responsive/table/statusImg.vue';
     import { TChannelStatus, BottomStatusType } from '@/components/responsive/component.interface';
     import { useGetChannelsList } from '@/service/channels';
-    import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useIbcChains } from '../home/composable';
     import { useRoute, useRouter } from 'vue-router';
     import { formatBigNumber } from '@/helper/parseStringHelpers';

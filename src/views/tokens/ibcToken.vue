@@ -22,7 +22,7 @@
             <ResetButton @on-reset="resetSearchCondition" />
         </div>
 
-        <BjTable
+        <TableCommon
             :loading="loading"
             :data="list"
             :need-custom-columns="needCustomColumns"
@@ -85,25 +85,25 @@
                     >{{ formatBigNumber(record[column.key], 0) }}
                 </div>
             </template>
-        </BjTable>
+        </TableCommon>
     </PageContainer>
 </template>
 
 <script lang="ts" setup>
     // todo clippers => 确认提示Name单元格Token Hash:的字段
-    import PageContainer from '@/components/responsive/pageContainer.vue';
-    import PageTitle from '@/components/responsive/pageTitle.vue';
-    import BjTable from '@/components/responsive/table/index.vue';
-    import { IBC_COLUMNS, IBC_STATUS_OPTIONS, SPECIAL_TOKEN_TYPE } from './constants';
+    import PageContainer from '@/components/responsive/PageContainer.vue';
+    import PageTitle from '@/components/responsive/PageTitle.vue';
+    import TableCommon from '@/components/responsive/table/TableCommon.vue';
     import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
     import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/resetButton.vue';
+    import ResetButton from '@/components/responsive/ResetButton.vue';
+    import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
+    import { IBC_COLUMNS, IBC_STATUS_OPTIONS, SPECIAL_TOKEN_TYPE } from './constants';
     import { computed, onMounted, ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { TIbcTokenType, useGetIbcTokenList } from '@/service/tokens';
     import { useGetIbcDenoms, useIbcChains } from '../home/composable';
     import { getRestString, rmIbcPrefix, formatBigNumber } from '@/helper/parseStringHelpers';
-    import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { isNullOrEmpty } from '@/utils/objectTools';
     import { urlHelper } from '@/utils/urlTools';

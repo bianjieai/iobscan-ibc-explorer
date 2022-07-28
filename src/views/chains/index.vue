@@ -2,7 +2,7 @@
     <PageContainer>
         <PageTitle title="IBC Chains" :subtitle="`${formatBigNumber(list?.length, 0)} chains supported`" />
 
-        <BjTable
+        <TableCommon
             :loading="loading"
             :data="list"
             :need-custom-columns="needCustomColumns"
@@ -43,17 +43,17 @@
                     @on-title-click="goTransfer(record.chain_id)"
                 />
             </template>
-        </BjTable>
+        </TableCommon>
     </PageContainer>
 </template>
 
 <script lang="ts" setup>
-    import PageContainer from '@/components/responsive/pageContainer.vue';
-    import PageTitle from '@/components/responsive/pageTitle.vue';
-    import BjTable from '@/components/responsive/table/index.vue';
+    import PageContainer from '@/components/responsive/PageContainer.vue';
+    import PageTitle from '@/components/responsive/PageTitle.vue';
+    import TableCommon from '@/components/responsive/table/TableCommon.vue';
+    import TransferTxs from '@/components/responsive/table/TransferTxs.vue';
+    import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
     import { COLUMNS } from './constants';
-    import TransferTxs from '@/components/responsive/table/transferTxs.vue';
-    import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useIbcChains } from '../home/composable';
     import { onMounted, ref } from 'vue';
     import { useGetChainsList } from '@/service/chains';

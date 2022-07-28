@@ -1,8 +1,8 @@
 <template>
-    <!-- todo duanjie class="transfer"  设置了样式，看能不能复用 pageContainer 保持统一 -->
+    <!-- todo duanjie class="transfer"  设置了样式，看能不能复用 PageContainer 保持统一 -->
     <div class="transfer">
         <div class="transfer_header">
-            <!-- todo duanjie 看能不能复用 pageTitle -->
+            <!-- todo duanjie 看能不能复用 PageTitle -->
             <div class="transfer_header_container">
                 <div class="transfer_header_line">
                     <p class="transfer_header_title">
