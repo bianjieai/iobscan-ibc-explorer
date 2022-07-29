@@ -8,7 +8,7 @@
             <div class="result_icon_content">
                 <div class="result_icon_wrap">
                     <div class="result_no_data_img_content">
-                        <img src="../../../assets/noDatas.png" alt="" />
+                        <img src="../../../assets/no_datas.png" alt="" />
                     </div>
                     <p class="result_tip_text">There is no valid result.</p>
                     <p class="result_description">Try to search with Transaction.</p>

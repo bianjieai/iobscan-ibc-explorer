@@ -6,12 +6,12 @@
                 <div class="home__top__left">
                     <chains-info
                         :msg="ibcStatisticsChains.chains_24hr"
-                        @click="onClickViewAll(pageParameters.chains)"
+                        @click="onClickViewAll(PAGE_PARAMETERS.chains)"
                     />
                     <chains-info
                         :msg="ibcStatisticsChains.chain_all"
                         style="margin-top: 18px"
-                        @click="onClickViewAll(pageParameters.chains)"
+                        @click="onClickViewAll(PAGE_PARAMETERS.chains)"
                     />
                 </div>
                 <div class="home__top__right">
@@ -67,7 +67,7 @@
     import TransferList from './components/TransferList.vue';
     import { useIbcChains, useIbcTxs, useInterfaceActive } from './composable';
     import { useOnPressEnter } from '@/composables/useStarAnimation';
-    import { pageParameters, ibcStatisticsTxsDefault } from '@/constants/index';
+    import { PAGE_PARAMETERS, ibcStatisticsTxsDefault } from '@/constants/index';
     import { useIbcStatistics } from '@/composables/home';
     const { ibcStatisticsChains, ibcStatisticsChannels, ibcStatisticsDenoms, ibcStatisticsTxs } =
         useIbcStatistics();

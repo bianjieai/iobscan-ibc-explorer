@@ -1,5 +1,5 @@
+import { TChannelStatus } from '@/types/interface/components/table.interface';
 import { API_CODE } from '@/constants/apiCode';
-import { TChannelStatus } from '@/types/interface/component.interface';
 import { ref, Ref } from 'vue';
 import { HttpHelper } from '../helper/httpHelper.js';
 import { baseParams } from './tokens';

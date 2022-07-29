@@ -1,6 +1,6 @@
 ## table
 
-### iconAndTitle
+### IconAndTitle
 
 > 表格内部组件。一个 tablecell 显示 icon 和文字
 
@@ -11,7 +11,7 @@
 3. subtitleIsTag 非必需 表示是否以 tag 的形式展示
 4. iconSize 非必需 small => 32px / normal（默认）=> 40px
 
-### bottomStatus
+### BottomStatus
 
 > 表格底部状态说明
 
@@ -23,7 +23,7 @@
 
 1. table_bottom_status
 
-### index
+### TableCommon
 
 > 表格组件
 
@@ -43,7 +43,7 @@
 
 1. 当 current 和 pageSize 都不传的时候，表示开启前端分页
 
-#### chainsDropDown
+#### ChainsDropDown
 
 > chains 筛选框
 

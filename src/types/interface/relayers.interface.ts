@@ -1,5 +1,5 @@
 import { IRequestPagination, IResponsePageInfo } from '@/types/interface/index.interface';
-import { TRelayerStatus } from '@/types/interface/component.interface.js';
+import { TRelayerStatus } from '@/types/interface/components/table.interface';
 import { Ref } from 'vue';
 
 export interface IRequestRelayerList extends IRequestPagination {

@@ -7,7 +7,7 @@
         <a-layout ref="layout" class="layout">
             <a-layout-header class="header">
                 <div class="header_content">
-                    <div class="logo" @click="onClickLogo">
+                    <div class="logo cursor" @click="onClickLogo">
                         <div class="logo_icon_wrap">
                             <img class="logo_icon" :src="logoIcon" alt="logo" />
                         </div>
@@ -35,13 +35,13 @@
                             >
                                 <img
                                     class="header_input_icon"
-                                    src="/src/assets/ioblink.png"
+                                    src="/src/assets/nav/iob_link.png"
                                     alt="icon"
                                 />
                             </a>
-                            <div class="header_btn_mobile">
+                            <div class="header_btn_mobile cursor">
                                 <img
-                                    src="../assets/menu_mobile.png"
+                                    src="../assets/nav/menu_mobile.png"
                                     alt="menu icon"
                                     class="header_btn_img"
                                     @click="changeShowNav"
@@ -63,6 +63,11 @@
 </template>
 
 <script setup>
+    import { onMounted, onUnmounted, reactive, ref } from 'vue';
+    import { useRouter, useRoute } from 'vue-router';
+    import Navigation from '../components/Navigation.vue';
+    // import HeaderInput from '../components/HeaderInput.vue';
+    import IbcFooter from '../components/IbcFooter.vue';
     import { menus } from '@/constants/index';
     import { useOnPressEnter } from '../composables/useStarAnimation';
     import { useIbcStatisticsChains } from '@/store/index';
@@ -153,9 +158,6 @@
         flex: 1;
         display: flex;
     }
-    a {
-        cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
-    }
     .ant-tooltip {
         max-width: 400px !important;
         .ant-tooltip-content {
@@ -171,17 +173,14 @@
         }
     }
     :deep(.ant-pagination-item) {
-        cursor: url(/src/assets/mouse/shiftlight_mouse.png), default;
-        a {
-            cursor: url('/src/assets/mouse/shiftlight_mouse.png'), default;
-        }
+        cursor: pointer;
         &-link {
-            cursor: url('/src/assets/mouse/shiftlight_mouse.png'), default;
+            cursor: pointer;
         }
     }
     .layout {
         width: 100%;
-        background-image: url('../assets/Summer_bg.png');
+        background-image: url('../assets/iobscan_home_bg.png');
         background-repeat: no-repeat;
         background-size: 1920px 396px;
         background-position: top center;
@@ -204,7 +203,6 @@
                 height: 100%;
                 .logo {
                     .flex(row, nowrap, center, center);
-                    cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
                     .logo_icon {
                         width: 32px;
                         height: 34px;
@@ -239,7 +237,6 @@
             &_btn_mobile {
                 .flex(row, nowrap, center, center);
                 margin-left: 12px;
-                cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
                 display: none;
                 img {
                     width: 32px;

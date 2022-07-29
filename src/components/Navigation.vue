@@ -8,7 +8,7 @@
         <a-menu-item v-for="item of menus" :key="item.value" class="header_menu_item">
             <img
                 v-show="isShowNav"
-                src="../assets/tips_icon.png"
+                src="../assets/nav/tips_icon.png"
                 alt=""
                 class="header_menu_item_img"
             />
@@ -64,9 +64,6 @@
         }
         .ant-menu-item {
             line-height: @nav-height;
-            &:hover {
-                cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
-            }
         }
         .ant-menu-title-content {
             font-size: @font-size4;
@@ -75,7 +72,7 @@
             font-family: Montserrat-Regular, Montserrat;
         }
         .ant-menu-item-selected {
-            background-image: url('../assets/NavSelected.png');
+            background-image: url('../assets/nav/selected.png');
             background-repeat: no-repeat;
             background-size: contain;
             background-position: 50% 90%;
@@ -87,7 +84,7 @@
             }
         }
         .ant-menu-item-active {
-            background-image: url('../assets/NavSelected.png');
+            background-image: url('../assets/nav/selected.png');
             background-repeat: no-repeat;
             background-size: contain;
             background-position: 50% 90%;

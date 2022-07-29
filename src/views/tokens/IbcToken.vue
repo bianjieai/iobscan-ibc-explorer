@@ -22,7 +22,7 @@
             <ResetButton @on-reset="resetSearchCondition" />
         </div>
 
-        <BjTable
+        <TableCommon
             :loading="loading"
             :data="list"
             :need-custom-columns="needCustomColumns"
@@ -93,30 +93,25 @@
 
             <template #receive_txs="{ record, column }">
                 <div
-                    class="hover-cursor"
+                    class="hover_cursor"
                     @click="goTransfer(`allchain,${record.chain_id}`, record.denom)"
                     >{{ formatBigNumber(record[column.key], 0) }}
                 </div>
             </template>
-        </BjTable>
+        </TableCommon>
     </PageContainer>
 </template>
 
 <script lang="ts" setup>
     // todo clippers => 确认提示Name单元格Token Hash:的字段
-    import PageContainer from '@/components/responsive/pageContainer.vue';
-    import PageTitle from '@/components/responsive/pageTitle.vue';
-    import BjTable from '@/components/responsive/table/index.vue';
-    import { IBC_COLUMNS, IBC_STATUS_OPTIONS, SPECIAL_TOKEN_TYPE } from './constants';
-    import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
-    import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/resetButton.vue';
+    import { PAGE_PARAMETERS } from '@/constants';
+    import { IBC_COLUMNS, IBC_STATUS_OPTIONS, SPECIAL_TOKEN_TYPE } from '@/constants/tokens';
     import { computed, onMounted, ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { TIbcTokenType, useGetIbcTokenList } from '@/service/tokens';
     import { useGetIbcDenoms, useIbcChains } from '../home/composable';
+    import { useNeedCustomColumns } from '@/composables';
     import { getRestString, rmIbcPrefix, formatBigNumber } from '@/helper/parseStringHelper';
-    import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { isNullOrEmpty } from '@/utils/objectTools';
     import { urlHelper } from '@/utils/urlTools';
@@ -160,7 +155,7 @@
         };
     });
 
-    const needCustomColumns = ['denom', 'chain_id', 'ibc_hops', 'amount', 'receive_txs'];
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
 
     const chainDropdown = ref();
     const statusDropdown = ref();
@@ -265,6 +260,7 @@
             margin-top: 16px;
         }
     }
+
     @media screen and (max-width: 353px) {
         .select {
         }
@@ -273,6 +269,7 @@
             &:first-of-type {
                 margin-right: 50px;
             }
+
             &:last-of-type {
                 margin-top: 8px;
             }

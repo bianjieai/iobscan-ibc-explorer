@@ -36,9 +36,9 @@
 
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { BottomStatusType, TBottomStatus } from '../../../types/interface/component.interface';
+    import { BottomStatusType, TBottomStatus } from '@/types/interface/components/table.interface';
     import { RELAYER_STATUS } from '@/constants/relayers';
-    import { CHANNEL_STATUS } from '../../../views/channels/constants';
+    import { CHANNEL_STATUS } from '../../../constants/channels';
 
     interface IProps {
         type: TBottomStatus; // 目前支持 channels 和 relayers
@@ -49,13 +49,13 @@
     const activeImgInfo = computed(() => {
         if (props.type === BottomStatusType.CHANNEL) {
             return {
-                src: new URL('../../../assets/channel-open.png', import.meta.url).href,
+                src: new URL('../../../assets/channels/open.png', import.meta.url).href,
                 height: 16,
                 width: 46
             };
         } else {
             return {
-                src: new URL('../../../assets/relayer-running.png', import.meta.url).href,
+                src: new URL('../../../assets/relayers/running.png', import.meta.url).href,
                 height: 18.5,
                 width: 18.5
             };
@@ -65,13 +65,13 @@
     const inActiveImgInfo = computed(() => {
         if (props.type === BottomStatusType.CHANNEL) {
             return {
-                src: new URL('../../../assets/channel-closed.png', import.meta.url).href,
+                src: new URL('../../../assets/channels/closed.png', import.meta.url).href,
                 height: 16,
                 width: 46
             };
         } else {
             return {
-                src: new URL('../../../assets/relayer-stopped.png', import.meta.url).href,
+                src: new URL('../../../assets/relayers/stopped.png', import.meta.url).href,
                 height: 18.5,
                 width: 18.5
             };

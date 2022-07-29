@@ -34,16 +34,17 @@
         d();
     }
     (t = function () {
-        var a, t;
-        ((t = document.createElement('div')).innerHTML = i),
+        var a,
+            t = document.createElement('div');
+        (t.innerHTML = i),
             (i = null),
-            (a = t.getElementsByTagName('svg')[0]) &&
-                (a.setAttribute('aria-hidden', 'true'),
-                (a.style.position = 'absolute'),
-                (a.style.width = 0),
-                (a.style.height = 0),
-                (a.style.overflow = 'hidden'),
-                (t = a),
+            (t = t.getElementsByTagName('svg')[0]) &&
+                (t.setAttribute('aria-hidden', 'true'),
+                (t.style.position = 'absolute'),
+                (t.style.width = 0),
+                (t.style.height = 0),
+                (t.style.overflow = 'hidden'),
+                (t = t),
                 (a = document.body).firstChild ? n(t, a.firstChild) : a.appendChild(t));
     }),
         document.addEventListener

@@ -18,7 +18,7 @@
 
             <ResetButton @on-reset="resetSearchCondition" />
         </div>
-        <BjTable
+        <TableCommon
             :loading="loading"
             :data="list"
             :need-custom-columns="needCustomColumns"
@@ -78,27 +78,19 @@
             <template v-if="list.length !== 0" #table_bottom_status>
                 <BottomStatus :type="BottomStatusType.CHANNEL" />
             </template>
-        </BjTable>
+        </TableCommon>
     </PageContainer>
 </template>
 
 <script setup lang="ts">
-    import PageContainer from '@/components/responsive/pageContainer.vue';
-    import PageTitle from '@/components/responsive/pageTitle.vue';
-    import BjTable from '@/components/responsive/table/index.vue';
-    import { COLUMNS, STATUS_OPTIONS } from './constants';
-    import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
-    import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/resetButton.vue';
+    import { PAGE_PARAMETERS } from '@/constants';
+    import { COLUMNS, STATUS_OPTIONS } from '@/constants/channels';
     import { computed, onMounted, ref } from 'vue';
-    import BottomStatus from '@/components/responsive/table/bottomStatus.vue';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
-    import TransferTxs from '@/components/responsive/table/transferTxs.vue';
-    import StatusImg from '@/components/responsive/table/statusImg.vue';
-    import { TChannelStatus, BottomStatusType } from '@/types/interface/component.interface';
+    import { TChannelStatus, BottomStatusType } from '@/types/interface/components/table.interface';
     import { useGetChannelsList } from '@/service/channels';
-    import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useIbcChains } from '../home/composable';
+    import { useNeedCustomColumns } from '@/composables';
     import { useRoute, useRouter } from 'vue-router';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { urlHelper } from '@/utils/urlTools';
@@ -113,14 +105,7 @@
     const { ibcChains, getIbcChains } = useIbcChains();
     const { list, total, getList } = useGetChannelsList();
 
-    const needCustomColumns = [
-        'chain_a',
-        'status',
-        'chain_b',
-        'operating_period',
-        'last_updated',
-        'ibc_transfer_txs'
-    ];
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channel);
 
     const chainDropdown = ref();
     const statusDropdown = ref();

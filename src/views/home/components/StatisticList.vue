@@ -5,7 +5,7 @@
             <div
                 v-for="item of msg"
                 :key="item.statistics_name"
-                class="list_item ibc_selected_title"
+                class="list_item ibc_selected_title cursor"
                 style="width: 100%"
                 @click="clickListItem(item.statistics_name)"
             >
@@ -18,16 +18,16 @@
                             : ''
                     "
                 >
-                    <span class="list_item_name"
+                    <span class="list_item__name"
                         >{{ (statisticsName as any)[item.statistics_name]
                         }}<span
                             v-if="item.statistics_name.indexOf(dayTime) !== -1"
-                            class="list_item_tip"
+                            class="list_item__tip"
                             >24hr</span
                         ></span
                     >
                     <span
-                        class="list_item_value"
+                        class="list_item__value"
                         :style="
                             item.statistics_name ===
                             ibcStatisticsDenomsDefault.denom_all.statistics_name
@@ -186,7 +186,7 @@
                 }
                 &:nth-of-type(2n),
                 &:last-child {
-                    .list_item_info {
+                    .list_item__info {
                         border-right: 0;
                     }
                 }
@@ -204,7 +204,7 @@
         .horizontal_container {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            .list_item_horizontal {
+            .list_item__horizontal {
                 padding: 24px 0;
                 width: 100%;
                 border-bottom: 1px solid var(--bj-border-color);
@@ -258,7 +258,7 @@
         }
         .horizontal_container {
             grid-template-columns: repeat(1, 1fr);
-            .list_item_horizontal {
+            .list_item__horizontal {
                 &:nth-of-type(2n + 1) {
                     .list_item {
                         border-right: 0;

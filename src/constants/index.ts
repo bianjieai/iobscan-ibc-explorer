@@ -122,11 +122,12 @@ export const menus = [
     }
 ];
 
-export const pageParameters = {
+export const PAGE_PARAMETERS = {
     tx: 'tx',
     chains: 'chains',
     transfers: 'transfers',
     tokens: 'tokens',
+    ibcToken: 'ibcToken',
     channel: 'channel',
     relayers: 'relayers',
     denom: 'denom'
@@ -409,4 +410,55 @@ export const thousandDecimal = 0.0001;
 export const SYMBOL = {
     ATOM: 'ATOM',
     IRIS: 'IRIS'
+};
+
+export const COPYRIGHT = 'Copyright © 2022 IRIS Foundation Ltd. All Rights Reserved.';
+export const ICON_LINK = [
+    {
+        iconName: 'icon-github',
+        iconLink: 'https://github.com/irisnet'
+    },
+    {
+        iconName: 'icon-telegram',
+        iconLink: 'https://t.me/irisnetwork'
+    },
+    {
+        iconName: 'icon-medium',
+        iconLink: 'https://medium.com/irisnet-blog'
+    },
+    {
+        iconName: 'icon-tweeter',
+        iconLink: 'https://twitter.com/irisnetwork'
+    }
+];
+
+export const NEED_CUSTOM_COLUMN = {
+    tokens: [
+        'base_denom',
+        'price',
+        'chain_id',
+        'supply',
+        'ibc_transfer_amount',
+        'ibc_transfer_txs',
+        'chains_involved'
+    ],
+    ibcToken: ['denom', 'chain_id', 'ibc_hops', 'amount', 'receive_txs'],
+    chains: ['chain_id', 'channels', 'relayers', 'ibc_tokens', 'ibc_tokens_value', 'transfer_txs'],
+    channels: [
+        'chain_a',
+        'status',
+        'chain_b',
+        'operating_period',
+        'last_updated',
+        'ibc_transfer_txs'
+    ],
+    relayers: [
+        'relayer_name',
+        'chain_a',
+        'status',
+        'chain_b',
+        'update_time',
+        'txs_success_rate',
+        'transfer_total_txs'
+    ]
 };

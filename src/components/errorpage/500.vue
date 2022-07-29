@@ -2,7 +2,7 @@
     <div class="error_network_container">
         <div class="error_network_content_wrap">
             <div class="error_network_img_content">
-                <img class="error_network_img" src="/src/assets/500.png" alt="" />
+                <img class="error_network_img" src="/src/assets/error/500.png" alt="" />
             </div>
             <div class="description_content">
                 <p class="error_network_img_title">Something went wrong</p>
@@ -28,9 +28,9 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: url('../../assets/bg_default.png') no-repeat center center;
+        background: url('../../assets/error/default_bg.png') no-repeat center center;
         background-size: cover;
-        cursor: url('../../assets/errpr_mouse_tree.png'), default !important;
+        cursor: url('../../assets/error/mouse_tree.png'), default !important;
         user-select: none;
         .error_network_content_wrap {
             max-width: 550px;

@@ -6,29 +6,16 @@
         @visible-change="visibleChange"
     >
         <div
-            :class="[
-                'inline-flex',
-                'items-center',
-                'default_color',
-                'dropdown-container',
-                visible ? 'visible_border' : ''
-            ]"
+            class="dropdown_container cursor inline-flex items-center default_color"
+            :class="{ visible_border: visible }"
         >
             <div
-                :class="[
-                    'inline-flex',
-                    'flex-1',
-                    'text-center',
-                    'mr-8',
-                    'ml-8',
-                    'justify-center',
-                    'items-center',
-                    selectToken.length > 0 ? 'selected_color' : '',
-                    selectedInfo.title === defaultTitle.defaultTokens
-                        ? 'selected_color_default'
-                        : '',
-                    selectToken.length > 0 && visible ? 'visible_color' : ''
-                ]"
+                class="inline-flex flex-1 text-center mr-8 ml-8 justify-center items-center"
+                :class="{
+                    selected_color: selectToken.length > 0,
+                    selected_color_default: selectedInfo.title === defaultTitle.defaultTokens,
+                    visible_color: selectToken.length > 0 && visible
+                }"
             >
                 <img
                     v-if="selectedInfo.icon.length"
@@ -49,7 +36,7 @@
                     fill="currentColor"
                     aria-hidden="true"
                     viewBox="64 64 896 896"
-                    :class="[visible ? 'visible_color' : '']"
+                    :class="{ visible_color: visible }"
                 >
                     <path
                         d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
@@ -62,28 +49,22 @@
             <div class="overlay">
                 <div>
                     <span
-                        :class="[
-                            'chains-tag',
-                            isSelected(undefined) ? 'visible_color visible_border' : ''
-                        ]"
+                        class="chains_tag cursor"
+                        :class="{ 'visible_color visible_border': isSelected(undefined) }"
                         @click="onSelected(defaultTitle.defaultTokens, undefined)"
                         >All Tokens</span
                     >
                 </div>
                 <div class="mt-24">
-                    <div :style="{ marginBottom: '-2px' }" class="leading-none"
+                    <div :style="{ marginBottom: '-2px' }" class="leading_none"
                         >Authed IBC Tokens</div
                     >
                     <div class="flex flex-wrap">
                         <span
                             v-for="item in dropdownData"
                             :key="item.denom"
-                            :class="[
-                                'chains-tag',
-                                'mr-12',
-                                'mt-12',
-                                isSelected(item.denom) ? 'visible_color visible_border' : ''
-                            ]"
+                            class="chains_tag cursor mr-12 mt-12"
+                            :class="{ 'visible_color visible_border': isSelected(item.denom) }"
                             @click="onSelected(item.symbol, item.denom)"
                         >
                             <img :src="iconSrc(item.icon)" width="24" height="24" class="mr-8" />
@@ -92,22 +73,18 @@
                     </div>
                 </div>
                 <div class="mt-24">
-                    <div class="leading-none">Other IBC Tokens</div>
+                    <div class="leading_none">Other IBC Tokens</div>
                     <span
                         key="others"
-                        :class="[
-                            'chains-tag',
-                            'mr-12',
-                            'mt-16',
-                            isSelected('others') ? 'visible_color visible_border' : ''
-                        ]"
+                        class="chains_tag cursor mr-12 mt-16"
+                        :class="{ 'visible_color visible_border': isSelected('others') }"
                         @click="onSelected('Others', 'others')"
                         ><img :src="imgSrc" width="24" height="24" class="mr-8" /> Others</span
                     >
                 </div>
                 <div class="mt-24">
                     <div class="flex items-center">
-                        <div class="leading-none">Custom IBC Tokens</div>
+                        <div class="leading_none">Custom IBC Tokens</div>
                         <a-popover destroy-tooltip-on-hide overlay-class-name="antd-popover">
                             <template #content>
                                 <p class="tip_color">
@@ -116,7 +93,7 @@
                                 </p>
                             </template>
                             <img
-                                class="tip hover"
+                                class="tip cursor"
                                 style="margin-left: 8px"
                                 src="/src/assets/tip.png"
                             />
@@ -298,12 +275,11 @@
 </script>
 
 <style lang="less" scoped>
-    .dropdown-container {
+    .dropdown_container {
         height: 36px;
         border: 1px solid var(--bj-border-color);
         border-radius: 4px;
         background-color: #fff;
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
         min-width: 124px;
     }
 
@@ -357,7 +333,7 @@
         transition: all 0.5s cubic-bezier(0.645, 0.045, 0.355, 1);
     }
 
-    .chains-tag {
+    .chains_tag {
         position: relative;
         display: flex;
         align-items: center;
@@ -366,7 +342,6 @@
         background-image: none;
         border: 1px solid transparent;
         box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         user-select: none;
         padding: 5px 8px 5px 8px;
@@ -399,10 +374,6 @@
         &_color {
             color: var(--bj-text-second);
         }
-    }
-
-    .hover {
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
     }
 
     .tip_color {

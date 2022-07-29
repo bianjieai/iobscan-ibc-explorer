@@ -2,7 +2,7 @@
     <PageContainer>
         <PageTitle title="IBC Tokens" :subtitle="subtitle" />
         <div class="select flex items-center flex-wrap">
-            <TokensDropDown
+            <TokensDropdown
                 ref="tokensDropdown"
                 :base-denom="denomQuery"
                 :dropdown-data="ibcBaseDenomsSorted"
@@ -23,7 +23,7 @@
             <ResetButton @on-reset="resetSearchCondition" />
         </div>
 
-        <BjTable
+        <TableCommon
             :loading="loading"
             :data="list"
             :need-custom-columns="needCustomColumns"
@@ -88,13 +88,13 @@
             </template>
 
             <template #ibc_transfer_txs="{ record, column }">
-                <div class="hover-cursor" @click="goTransfer(record.base_denom, record.chain_id)">{{
+                <div class="hover_cursor" @click="goTransfer(record.base_denom, record.chain_id)">{{
                     `${formatBigNumber(record[column.key], 0)}`
                 }}</div>
             </template>
 
             <template #chains_involved="{ record, column }">
-                <div class="hover-cursor" @click="goIbcToken(record.base_denom)">{{
+                <div class="hover_cursor" @click="goIbcToken(record.base_denom)">{{
                     record[column.key]
                 }}</div>
             </template>
@@ -110,26 +110,18 @@
                     @click-title="goChains"
                 />
             </template>
-        </BjTable>
+        </TableCommon>
     </PageContainer>
 </template>
 
 <script lang="ts" setup>
-    import PageContainer from '@/components/responsive/pageContainer.vue';
-    import PageTitle from '@/components/responsive/pageTitle.vue';
-    import BjTable from '@/components/responsive/table/index.vue';
-    import { COLUMNS, STATUS_OPTIONS } from './constants';
-    import { thousandDecimal } from '../../constants';
-    import TokensDropDown from '@/components/responsive/dropdown/DropDownTokens.vue';
-    import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
-    import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/resetButton.vue';
+    import { thousandDecimal, PAGE_PARAMETERS } from '@/constants';
+    import { COLUMNS, STATUS_OPTIONS } from '@/constants/tokens';
     import { computed, onMounted, ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
-    import TokenIcon from '@/components/responsive/table/tokenIcon.vue';
     import { useGetIbcDenoms, useIbcChains } from '../home/composable';
+    import { useNeedCustomColumns } from '@/composables';
     import { formatBigNumber } from '@/helper/parseStringHelper';
-    import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useGetTokenList } from '@/service/tokens';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
     import { urlHelper } from '@/utils/urlTools';
@@ -147,15 +139,7 @@
         useGetIbcDenoms();
     const { list, getList, total } = useGetTokenList();
 
-    const needCustomColumns = [
-        'base_denom',
-        'price',
-        'chain_id',
-        'supply',
-        'ibc_transfer_amount',
-        'ibc_transfer_txs',
-        'chains_involved'
-    ];
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
 
     const chainDropdown = ref();
     const statusDropdown = ref();

@@ -1,7 +1,7 @@
 <template>
     <div class="block">
         <div class="block__header">
-            <div :class="type === 'dark' ? 'block__header__line_dark' : 'block__header_line'">
+            <div :class="type === 'dark' ? 'block__header__line_dark' : 'block__header__line'">
                 <p
                     class="block__header__title"
                     :style="{ color: type === 'dark' ? '#ffffff' : '#000000' }"
@@ -11,7 +11,7 @@
             </div>
             <a-tooltip>
                 <template #title>{{ tipMsg }}</template>
-                <img v-if="showTip" class="tip_icon" src="@/assets/tip.png" />
+                <img v-if="showTip" class="tip_icon cursor" src="@/assets/tip.png" />
             </a-tooltip>
         </div>
         <div class="block__content">
@@ -91,7 +91,6 @@
             position: absolute;
             margin-left: 16px;
             margin-top: -10px;
-            cursor: url('../assets/mouse/shiftlight_mouse.png'), default !important;
         }
     }
 </style>

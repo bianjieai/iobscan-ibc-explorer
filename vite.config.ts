@@ -62,9 +62,10 @@ export default ({ mode }: { mode: string }) => {
             open: 'http://localhost:3000'
         },
         build: {
+            // 打包删除console配置 以及报错
+            minify: 'terser',
             terserOptions: {
                 compress: {
-                    //生产环境时移除console
                     drop_console: true,
                     drop_debugger: true
                 }
