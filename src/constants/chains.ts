@@ -1,11 +1,11 @@
-import { CompareOrder } from '@/types/interface/table.interface';
+import { CompareOrder } from '@/types/interface/components/table.interface';
 import { TableColumnsType } from 'ant-design-vue';
 
 export const COLUMNS: TableColumnsType = [
     {
         dataIndex: 'chain_id',
         key: 'chain_id',
-        title: 'Chain', // todo clippers => 确认字段
+        title: 'Chain',
         width: 180,
         sorter: (a, b) => a.chainName.localeCompare(b.chainName)
     },

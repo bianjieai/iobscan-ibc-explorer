@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
 import { formatBigNumber } from '../helper/parseStringHelper';
-import { ChannelStatus, TChannelStatus } from '@/types/interface/table.interface.js';
+import { ChannelStatus, TChannelStatus } from '@/types/interface/components/table.interface';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);

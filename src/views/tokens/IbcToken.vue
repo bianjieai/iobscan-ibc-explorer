@@ -104,18 +104,13 @@
 
 <script lang="ts" setup>
     // todo clippers => 确认提示Name单元格Token Hash:的字段
-    import PageContainer from '@/components/responsive/PageContainer.vue';
-    import PageTitle from '@/components/responsive/PageTitle.vue';
-    import TableCommon from '@/components/responsive/table/TableCommon.vue';
-    import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
-    import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/ResetButton.vue';
-    import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
-    import { IBC_COLUMNS, IBC_STATUS_OPTIONS, SPECIAL_TOKEN_TYPE } from './constants';
+    import { PAGE_PARAMETERS } from '@/constants';
+    import { IBC_COLUMNS, IBC_STATUS_OPTIONS, SPECIAL_TOKEN_TYPE } from '@/constants/tokens';
     import { computed, onMounted, ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { TIbcTokenType, useGetIbcTokenList } from '@/service/tokens';
     import { useGetIbcDenoms, useIbcChains } from '../home/composable';
+    import { useNeedCustomColumns } from '@/composables';
     import { getRestString, rmIbcPrefix, formatBigNumber } from '@/helper/parseStringHelper';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { isNullOrEmpty } from '@/utils/objectTools';
@@ -160,7 +155,7 @@
         };
     });
 
-    const needCustomColumns = ['denom', 'chain_id', 'ibc_hops', 'amount', 'receive_txs'];
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
 
     const chainDropdown = ref();
     const statusDropdown = ref();
@@ -265,6 +260,7 @@
             margin-top: 16px;
         }
     }
+
     @media screen and (max-width: 353px) {
         .select {
         }
@@ -273,6 +269,7 @@
             &:first-of-type {
                 margin-right: 50px;
             }
+
             &:last-of-type {
                 margin-top: 8px;
             }

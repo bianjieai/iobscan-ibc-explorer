@@ -36,9 +36,9 @@
 
 <script setup lang="ts">
     import { computed } from 'vue';
-    import { BottomStatusType, TBottomStatus } from '../../../types/interface/table.interface';
+    import { BottomStatusType, TBottomStatus } from '@/types/interface/components/table.interface';
     import { RELAYER_STATUS } from '@/constants/relayers';
-    import { CHANNEL_STATUS } from '../../../views/channels/constants';
+    import { CHANNEL_STATUS } from '../../../constants/channels';
 
     interface IProps {
         type: TBottomStatus; // 目前支持 channels 和 relayers

@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-    import IconAndTitle from '@/components/responsive/table/IconAndTitle.vue';
     import { IIbcchain } from '@/types/interface/index.interface';
     import { computed } from 'vue';
     import { formatLongTitleString } from '@/helper/parseStringHelper';

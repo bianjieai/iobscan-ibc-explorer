@@ -2,7 +2,7 @@
     <PageContainer>
         <PageTitle title="IBC Tokens" :subtitle="subtitle" />
         <div class="select flex items-center flex-wrap">
-            <TokensDropDown
+            <TokensDropdown
                 ref="tokensDropdown"
                 :base-denom="denomQuery"
                 :dropdown-data="ibcBaseDenomsSorted"
@@ -115,20 +115,12 @@
 </template>
 
 <script lang="ts" setup>
-    import PageContainer from '@/components/responsive/PageContainer.vue';
-    import PageTitle from '@/components/responsive/PageTitle.vue';
-    import TableCommon from '@/components/responsive/table/TableCommon.vue';
-    import TokensDropDown from '@/components/responsive/dropdown/DropDownTokens.vue';
-    import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
-    import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/ResetButton.vue';
-    import TokenIcon from '@/components/responsive/table/TokenIcon.vue';
-    import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
-    import { COLUMNS, STATUS_OPTIONS } from './constants';
-    import { thousandDecimal } from '../../constants';
+    import { thousandDecimal, PAGE_PARAMETERS } from '@/constants';
+    import { COLUMNS, STATUS_OPTIONS } from '@/constants/tokens';
     import { computed, onMounted, ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { useGetIbcDenoms, useIbcChains } from '../home/composable';
+    import { useNeedCustomColumns } from '@/composables';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { useGetTokenList } from '@/service/tokens';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
@@ -147,15 +139,7 @@
         useGetIbcDenoms();
     const { list, getList, total } = useGetTokenList();
 
-    const needCustomColumns = [
-        'base_denom',
-        'price',
-        'chain_id',
-        'supply',
-        'ibc_transfer_amount',
-        'ibc_transfer_txs',
-        'chains_involved'
-    ];
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
 
     const chainDropdown = ref();
     const statusDropdown = ref();

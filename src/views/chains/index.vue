@@ -55,16 +55,13 @@
 </template>
 
 <script lang="ts" setup>
-    import PageContainer from '@/components/responsive/PageContainer.vue';
-    import PageTitle from '@/components/responsive/PageTitle.vue';
-    import TableCommon from '@/components/responsive/table/TableCommon.vue';
-    import TransferTxs from '@/components/responsive/table/TransferTxs.vue';
-    import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
-    import { COLUMNS } from './constants';
+    import { PAGE_PARAMETERS } from '@/constants';
+    import { COLUMNS } from '@/constants/chains';
     import { useIbcChains } from '../home/composable';
     import { onMounted, ref } from 'vue';
     import { useGetChainsList } from '@/service/chains';
     import { useRouter } from 'vue-router';
+    import { useNeedCustomColumns } from '@/composables';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { formatBigNumber } from '@/helper/parseStringHelper';
 
@@ -72,21 +69,13 @@
 
     const { ibcChains, getIbcChains } = useIbcChains();
     const { list, getList } = useGetChainsList();
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.chains);
     const loading = ref(false);
 
     onMounted(() => {
         !sessionStorage.getItem('allChains') && getIbcChains();
         getList(loading);
     });
-
-    const needCustomColumns = [
-        'chain_id',
-        'channels',
-        'relayers',
-        'ibc_tokens',
-        'ibc_tokens_value',
-        'transfer_txs'
-    ];
 
     const goChannels = (chain: string) => {
         router.push({
@@ -130,19 +119,23 @@
     .table-warpper {
         margin-top: 32px;
     }
+
     :deep(.ant-table-cell) {
         &:nth-of-type(2) {
             .ant-table-column-sorters {
                 justify-content: flex-start;
+
                 .ant-table-column-title {
                     flex: 0;
                 }
             }
         }
+
         &:nth-of-type(4) {
             padding-right: 26px;
         }
     }
+
     // pc
     @media screen and (min-width: 768px) {
     }

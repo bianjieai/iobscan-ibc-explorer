@@ -1,4 +1,4 @@
-import { CompareOrder } from '@/types/interface/table.interface';
+import { CompareOrder } from '@/types/interface/components/table.interface';
 import { TableColumnsType } from 'ant-design-vue';
 
 export const COLUMNS: TableColumnsType = [

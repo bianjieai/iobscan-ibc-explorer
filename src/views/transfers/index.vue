@@ -34,7 +34,7 @@
                         :need-badge="needBadge"
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
-                        :witch-page="pageParameters.transfers"
+                        :witch-page="PAGE_PARAMETERS.transfers"
                         @on-selected-chain="onSelectedChain"
                     />
                     <!-- todo duanjie 看能否使用 BaseDropdown 复用  -->
@@ -332,7 +332,7 @@
 
 <script setup lang="ts">
     import DropDown from './components/DropDown.vue';
-    import ChainsDropdown from '../../components/responsive/dropdown/DropDownChains.vue';
+    import ChainsDropdown from '../../components/responsive/dropdown/ChainsDropdown';
     import {
         ibcTxStatusSelectOptions,
         transfersStatusOptions,
@@ -340,7 +340,7 @@
         ibcTxStatusDesc,
         defaultTitle,
         unknownSymbol,
-        pageParameters,
+        PAGE_PARAMETERS,
         txStatusNumber,
         CHAINNAME
     } from '../../constants';

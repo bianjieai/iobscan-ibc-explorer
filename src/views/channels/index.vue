@@ -83,22 +83,14 @@
 </template>
 
 <script setup lang="ts">
-    import PageContainer from '@/components/responsive/PageContainer.vue';
-    import PageTitle from '@/components/responsive/PageTitle.vue';
-    import TableCommon from '@/components/responsive/table/TableCommon.vue';
-    import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
-    import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/ResetButton.vue';
-    import BottomStatus from '@/components/responsive/table/BottomStatus.vue';
-    import TransferTxs from '@/components/responsive/table/TransferTxs.vue';
-    import StatusImg from '@/components/responsive/table/StatusImg.vue';
-    import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
-    import { COLUMNS, STATUS_OPTIONS } from './constants';
+    import { PAGE_PARAMETERS } from '@/constants';
+    import { COLUMNS, STATUS_OPTIONS } from '@/constants/channels';
     import { computed, onMounted, ref } from 'vue';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
-    import { TChannelStatus, BottomStatusType } from '@/types/interface/table.interface';
+    import { TChannelStatus, BottomStatusType } from '@/types/interface/components/table.interface';
     import { useGetChannelsList } from '@/service/channels';
     import { useIbcChains } from '../home/composable';
+    import { useNeedCustomColumns } from '@/composables';
     import { useRoute, useRouter } from 'vue-router';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { urlHelper } from '@/utils/urlTools';
@@ -113,14 +105,7 @@
     const { ibcChains, getIbcChains } = useIbcChains();
     const { list, total, getList } = useGetChannelsList();
 
-    const needCustomColumns = [
-        'chain_a',
-        'status',
-        'chain_b',
-        'operating_period',
-        'last_updated',
-        'ibc_transfer_txs'
-    ];
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channel);
 
     const chainDropdown = ref();
     const statusDropdown = ref();

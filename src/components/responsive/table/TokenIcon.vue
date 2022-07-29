@@ -43,7 +43,7 @@
     import {
         TableCellIconSize,
         TTableCellIconSize
-    } from '../../../types/interface/table.interface';
+    } from '@/types/interface/components/table.interface';
 
     interface IProps {
         iconSize?: TTableCellIconSize;

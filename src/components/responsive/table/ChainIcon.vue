@@ -41,7 +41,7 @@
     import {
         TableCellIconSize,
         TTableCellIconSize
-    } from '../../../types/interface/table.interface';
+    } from '@/types/interface/components/table.interface';
     import ChainHelper from '@/helper/chainHelper';
     import { UNKNOWN } from '../../../constants';
 

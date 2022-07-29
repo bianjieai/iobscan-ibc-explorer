@@ -98,23 +98,16 @@
 </template>
 
 <script setup lang="ts">
-    import PageContainer from '@/components/responsive/PageContainer.vue';
-    import PageTitle from '@/components/responsive/PageTitle.vue';
-    import TableCommon from '@/components/responsive/table/TableCommon.vue';
-    import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
-    import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/ResetButton.vue';
-    import TransferTxs from '@/components/responsive/table/TransferTxs.vue';
-    import StatusImg from '@/components/responsive/table/StatusImg.vue';
-    import ChainIcon from '@/components/responsive/table/ChainIcon.vue';
     import NamePopover from './components/NamePopover.vue';
+    import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
     import { computed, onMounted, ref } from 'vue';
     import { formatLastUpdated } from '@/utils/timeTools';
-    import { TRelayerStatus, BottomStatusType } from '@/types/interface/table.interface';
+    import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
     import { useIbcChains } from '../home/composable';
     import { useGetRelayersList } from './composable';
     import { useRoute, useRouter } from 'vue-router';
+    import { useNeedCustomColumns } from '@/composables';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { urlHelper } from '@/utils/urlTools';
 
@@ -130,15 +123,7 @@
     const { ibcChains, getIbcChains } = useIbcChains();
     const { list, getList, total } = useGetRelayersList();
 
-    const needCustomColumns = [
-        'relayer_name',
-        'chain_a',
-        'status',
-        'chain_b',
-        'update_time',
-        'txs_success_rate',
-        'transfer_total_txs'
-    ];
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
 
     const chainDropdown = ref();
     const statusDropdown = ref();
@@ -218,6 +203,7 @@
             margin-right: 8px;
         }
     }
+
     :deep(.ant-table-cell) {
         &:nth-of-type(4) {
             padding-right: 26px !important;

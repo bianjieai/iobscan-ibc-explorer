@@ -48,7 +48,7 @@
     import { computed, onMounted, reactive, ref, watch } from 'vue';
     import { useTimeInterval } from '@/composables';
     import { formatLastUpdated } from '@/utils/timeTools';
-    import { CompareOrder } from '../../../types/interface/table.interface';
+    import { CompareOrder } from '@/types/interface/components/table.interface';
     import BigNumber from 'bignumber.js';
     import { useGetIbcDenoms } from '@/views/home/composable';
     import { formatSupply } from '@/helper/tableCellHelper';

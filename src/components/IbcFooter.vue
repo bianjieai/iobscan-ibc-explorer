@@ -2,7 +2,7 @@
     <div class="footer_content">
         <div class="footer_content_left">
             <span
-                v-for="(item, index) in iconLinks"
+                v-for="(item, index) in ICON_LINK"
                 :key="index"
                 class="footer_content_left_icon cursor"
                 @click="onClickIcon(item.iconLink)"
@@ -12,32 +12,14 @@
             Contact us !
         </div>
         <div class="footer_content_right">
-            {{ copyright }}
+            {{ COPYRIGHT }}
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-    import { ref } from 'vue';
-    const copyright = ref('Copyright © 2022 IRIS Foundation Ltd. All Rights Reserved.');
-    const iconLinks = [
-        {
-            iconName: 'icon-github',
-            iconLink: 'https://github.com/irisnet'
-        },
-        {
-            iconName: 'icon-telegram',
-            iconLink: 'https://t.me/irisnetwork'
-        },
-        {
-            iconName: 'icon-medium',
-            iconLink: 'https://medium.com/irisnet-blog'
-        },
-        {
-            iconName: 'icon-tweeter',
-            iconLink: 'https://twitter.com/irisnetwork'
-        }
-    ];
+    import { COPYRIGHT, ICON_LINK } from '@/constants';
+
     const onClickIcon = (item: string) => {
         window.open(item);
     };

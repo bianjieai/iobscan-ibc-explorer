@@ -106,7 +106,7 @@
 
 <script lang="ts" setup>
     import { computed, onMounted, ref, watch } from 'vue';
-    import { CHAINNAME, defaultTitle, pageParameters } from '@/constants';
+    import { CHAINNAME, defaultTitle, PAGE_PARAMETERS } from '@/constants';
     type TChainData = {
         chain_id: string;
         chain_name: string;
@@ -470,7 +470,7 @@
             }
         }
         return (
-            props.witchPage !== pageParameters.transfers &&
+            props.witchPage !== PAGE_PARAMETERS.transfers &&
             (chainA === 'allchain' ||
                 (![chainA, chainB].includes('allchain') && isLocalCompare.value))
         );
