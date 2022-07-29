@@ -115,7 +115,7 @@
 
     interface IProps {
         selectedDouble?: boolean; // 需要选两个chain
-        needBadge?: false; // 需要角标
+        needBadge?: boolean; // 需要角标
         chainId?: string; // 回填
         dropdownData: TChainData[];
         minWidth?: number;

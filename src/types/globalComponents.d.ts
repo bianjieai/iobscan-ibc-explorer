@@ -9,12 +9,10 @@ declare module '@vue/runtime-core' {
         500: typeof import('./../components/errorpage/500.vue')['default'];
         AAnchor: typeof import('ant-design-vue/es')['Anchor'];
         AAnchorLink: typeof import('ant-design-vue/es')['AnchorLink'];
-        ABadge: typeof import('ant-design-vue/es')['Badge'];
         AButton: typeof import('ant-design-vue/es')['Button'];
         ACard: typeof import('ant-design-vue/es')['Card'];
         AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider'];
         ADivider: typeof import('ant-design-vue/es')['Divider'];
-        ADropdown: typeof import('ant-design-vue/es')['Dropdown'];
         AInput: typeof import('ant-design-vue/es')['Input'];
         ALayout: typeof import('ant-design-vue/es')['Layout'];
         ALayoutContent: typeof import('ant-design-vue/es')['LayoutContent'];
@@ -24,10 +22,8 @@ declare module '@vue/runtime-core' {
         AListItem: typeof import('ant-design-vue/es')['ListItem'];
         AMenu: typeof import('ant-design-vue/es')['Menu'];
         AMenuItem: typeof import('ant-design-vue/es')['MenuItem'];
-        APagination: typeof import('ant-design-vue/es')['Pagination'];
         APopover: typeof import('ant-design-vue/es')['Popover'];
         ASpin: typeof import('ant-design-vue/es')['Spin'];
-        ATable: typeof import('ant-design-vue/es')['Table'];
         ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
         ATypographyText: typeof import('ant-design-vue/es')['TypographyText'];
         BottomStatus: typeof import('./../components/responsive/table/BottomStatus.vue')['default'];

@@ -1,8 +1,7 @@
-import { ref, reactive, watch, onMounted } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useIbcStatisticsChains } from '../../store/index';
-import { GET_IBCSTATISTICS, GET_IBCDENOMS } from '../../constants/actionTypes';
-import { getTxDetailsByTxHash, getIbcDenoms } from '@/service/api';
+import { getTxDetailsByTxHash } from '@/service/api';
 import { groupBy } from 'lodash-es';
 import tokenDefaultImg from '../../assets/token-default.png';
 import { transferTableColumn, defaultTitle } from '../../constants';
@@ -11,17 +10,8 @@ import { storeToRefs } from 'pinia';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
-export const useIbcStatistics = () => {
-    const { ibcStatisticsTxs } = storeToRefs(ibcStatisticsChainsStore);
-    const getIbcStatistics = ibcStatisticsChainsStore[GET_IBCSTATISTICS];
-    return {
-        ibcStatisticsTxs,
-        getIbcStatistics
-    };
-};
-
 export const useIbcTxs = () => {
-    const { ibcTxsCount: tableCount } = storeToRefs(ibcStatisticsChainsStore);
+    const tableCount = ref(0);
     const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
     return {
         tableCount,
@@ -39,46 +29,37 @@ export const useIbcChains = () => {
 };
 
 export const useGetIbcBaseDenoms = () => {
-    const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
     const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
     return {
-        getIbcDenoms,
         ibcBaseDenoms,
         getIbcBaseDenom
     };
 };
 
 export const useGetTokens = () => {
-    let tokens = ref([]);
-    let ibcDenoms = ref([]);
-    getIbcDenoms()
-        .then((res) => {
-            ibcDenoms = res;
-            let tokensObj = groupBy(res, 'symbol');
-            const atomObj = {
-                ATOM: tokensObj['ATOM']
-            };
-            const irisObj = {
-                IRIS: tokensObj['IRIS']
-            };
-            delete tokensObj['ATOM'];
-            delete tokensObj['IRIS'];
+    const tokens = ref([]);
+    const { ibcDenoms } = storeToRefs(ibcStatisticsChainsStore);
+    const tokensObj = groupBy(ibcDenoms, 'symbol');
+    const atomObj = {
+        ATOM: tokensObj['ATOM']
+    };
+    const irisObj = {
+        IRIS: tokensObj['IRIS']
+    };
+    delete tokensObj['ATOM'];
+    delete tokensObj['IRIS'];
 
-            let newkey = Object?.keys(tokensObj).sort();
-            let newObj = {};
-            for (let i = 0; i < newkey.length; i++) {
-                newObj[newkey[i]] = tokensObj[newkey[i]];
-            }
-            tokens = {
-                ...atomObj,
-                ...irisObj,
-                ...newObj
-            };
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    const newkey = Object?.keys(tokensObj).sort();
+    const newObj: any = {};
+    for (let i = 0; i < newkey.length; i++) {
+        newObj[newkey[i]] = tokensObj[newkey[i]];
+    }
+    tokens.value = {
+        ...atomObj,
+        ...irisObj,
+        ...newObj
+    };
     return {
         tokens,
         ibcDenoms
@@ -115,10 +96,10 @@ export const usePagination = () => {
     };
 };
 
-export const useFindIcon = (props) => {
+export const useFindIcon = (props: any) => {
     const findSymbolIcon = () => {
         const findSymbolConfig = props.ibcBaseDenoms?.find(
-            (baseDenom) => baseDenom.symbol === props.selectedSymbol
+            (baseDenom: any) => baseDenom.symbol === props.selectedSymbol
         );
         if (findSymbolConfig) {
             return findSymbolConfig.icon || tokenDefaultImg;
@@ -127,14 +108,14 @@ export const useFindIcon = (props) => {
     };
     const findChainIcon = () => {
         const findChainConfig = props?.options?.find(
-            (item) => item.chain_id === props.selectedChain.chain_id
+            (item: any) => item.chain_id === props.selectedChain.chain_id
         );
         if (findChainConfig) {
             return findChainConfig.icon || tokenDefaultImg;
         }
         return tokenDefaultImg;
     };
-    const isShowSymbol = (key) => {
+    const isShowSymbol = (key: any) => {
         const result = {
             symbolDenom: '',
             symbolIcon: ''
@@ -153,25 +134,10 @@ export const useFindIcon = (props) => {
     };
 };
 
-export const useFindIbcChainIcon = () => {
-    const findIbcChainIcon = (chainId) => {
-        if (ibcChains.value && ibcChains.value.all) {
-            const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
-            if (result) {
-                return result.icon || tokenDefaultImg;
-            }
-        }
-        return tokenDefaultImg;
-    };
-    return {
-        findIbcChainIcon
-    };
-};
-
 export const useGetTableColumns = () => {
     const tableColumns = reactive(transferTableColumn);
     const showTransferLoading = ref(true);
-    const tableDatas = ibcStatisticsChainsStore.ibcTxs;
+    const { ibcTxs: tableDatas } = storeToRefs(ibcStatisticsChainsStore);
     return {
         tableColumns,
         showTransferLoading,
@@ -180,7 +146,7 @@ export const useGetTableColumns = () => {
 };
 export const useIsVisible = () => {
     const isVisible = ref(false);
-    const visibleChange = (visible) => {
+    const visibleChange = (visible: boolean) => {
         isVisible.value = visible;
     };
     return {
@@ -193,15 +159,15 @@ export const useIsVisible = () => {
 export const useTransfersDetailsInfo = () => {
     const route = useRoute();
     const router = useRouter();
-    let ibcTransferOutTxHash = ref('--');
-    let ibcTransferInTxHash = ref('--');
-    let ibcTxStatus = ref('default');
-    let outTxStatus = ref('default');
-    let inTxStatus = ref('default');
-    let sequence = ref('--');
-    let baseDenom = ref('');
-    let scChainId = ref('');
-    let dcChainId = ref('');
+    const ibcTransferOutTxHash = ref('--');
+    const ibcTransferInTxHash = ref('--');
+    const ibcTxStatus = ref('default');
+    const outTxStatus = ref('default');
+    const inTxStatus = ref('default');
+    const sequence = ref('--');
+    const baseDenom = ref('');
+    const scChainId = ref('');
+    const dcChainId = ref('');
     const transferOutDetails = reactive([
         {
             label: 'MsgType:',
@@ -377,7 +343,7 @@ export const useTransfersDetailsInfo = () => {
 
     watch(route, (newValue) => {
         if (newValue?.query?.hash) {
-            getTxDetails(newValue.query.hash);
+            getTxDetails();
         }
     });
     const getTxDetails = () => {
@@ -453,7 +419,8 @@ export const useTransfersDetailsInfo = () => {
                                 });
                             }
                             if (item.label === 'Received Token:' && res?.denoms?.dc_denom) {
-                                item.value.denom = res.denoms.dc_denom;
+                                // item.value.denom = res.denoms.dc_denom;
+                                item.value = res.denoms.dc_denom;
                             }
                         } else {
                             if (item.dataKey) {
@@ -487,11 +454,8 @@ export const useTransfersDetailsInfo = () => {
             });
     };
     if (route?.query?.hash) {
-        getTxDetails(route?.query?.hash);
+        getTxDetails();
     }
-    onMounted(() => {
-        ibcStatisticsChainsStore[GET_IBCDENOMS];
-    });
     return {
         ibcTransferOutTxHash,
         ibcTransferInTxHash,
@@ -518,18 +482,18 @@ export const useNoResult = () => {
             searchInputValue.value = Object.keys(route.query);
         }
     });
-    let searchInputValue = reactive({
+    const searchInputValue = reactive({
         value: ['']
     });
     if (route?.query) {
-        if (/^[A-F0-9]{64}$/.test(Object.keys(route.query))) {
-            getTxDetailsByTxHash(Object.keys(route.query)).then((result) => {
+        if (/^[A-F0-9]{64}$/.test(Object.keys(route.query).join(''))) {
+            getTxDetailsByTxHash(Object.keys(route.query).join('')).then((result) => {
                 if (result.length === 1) {
-                    router.push(`/transfers/details?hash=${Object.keys(route.query)}`);
+                    router.push(`/transfers/details?hash=${Object.keys(route.query).join('')}`);
                 }
             });
         } else {
-            router.push(`/searchResult?${Object.keys(route.query)}`);
+            router.push(`/searchResult?${Object.keys(route.query).join('')}`);
         }
         searchInputValue.value = Object.keys(route.query);
     }

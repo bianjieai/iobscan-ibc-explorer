@@ -42,7 +42,7 @@
                         class="status_select"
                         default-active-first-option
                         :value="JSON.stringify(queryParam.status)"
-                        :get-popup-container="(triggerNode) => triggerNode.parentNode"
+                        :get-popup-container="(triggerNode: any) => triggerNode.parentNode"
                         @change="handleSelectChange"
                     >
                         <a-select-option
@@ -143,7 +143,7 @@
                 <a-table
                     class="transfer_table"
                     style="width: 100%"
-                    :row-key="(record) => record.record_id"
+                    :row-key="(record: any) => record.record_id"
                     :columns="tableColumns"
                     :loading="showTransferLoading"
                     :data-source="tableDatas"
@@ -309,7 +309,7 @@
             </div>
         </div>
         <!-- todo duanjie 状态和分页看能否复用  -->
-        <div v-if="tableCount.value" class="transfer_bottom">
+        <div v-if="tableCount" class="transfer_bottom">
             <span class="status_tips">
                 <span class="status_log">Status:</span>
                 <span v-for="(item, index) in ibcTxStatusDesc" :key="index" class="status_tip">
@@ -330,7 +330,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import DropDown from './components/DropDown.vue';
     import ChainsDropdown from '../../components/responsive/dropdown/DropDownChains.vue';
     import {
@@ -357,10 +357,9 @@
     import * as djs from 'dayjs';
     import { ref, reactive, computed, onMounted, watch } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
-    import { useClearInterval, useGetIbcDenoms } from '../home/composable';
+    import { useGetIbcDenoms } from '../home/composable';
 
     import {
-        useIbcStatistics,
         useIbcTxs,
         useGetTokens,
         useSelectedSymbol,
@@ -368,8 +367,9 @@
         useIbcChains,
         useGetTableColumns
     } from './composable';
-    useClearInterval();
-    const { getIbcDenoms, ibcBaseDenomsSorted } = useGetIbcDenoms();
+    import { useIbcStatistics } from '@/composables/home';
+
+    const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
     const { tableCount, getIbcTxs } = useIbcTxs();
     const { ibcDenoms } = useGetTokens();
@@ -384,7 +384,7 @@
     const pickerPlaceholderColor = ref('var(--bj-text-second)');
 
     let paramsStatus = null,
-        paramsSymbol = null,
+        paramsSymbol: string | null = null,
         paramsDenom = null,
         startTimestamp = 0,
         endTimestamp = 0;
@@ -400,11 +400,11 @@
 
     const dayjs = djs?.default || djs;
 
-    const formatDate = (time) => {
+    const formatDate = (time: any) => {
         return dayjs(time).format('MM-DD HH:mm:ss');
     };
-    const getImageUrl = (status) => {
-        return new URL(`../../assets/status${status}.png`, import.meta.url).href;
+    const getImageUrl = (status: any) => {
+        return new URL(`../../assets/home/status${status}.png`, import.meta.url).href;
     };
 
     let chainId = route?.query.chain;
@@ -415,12 +415,12 @@
         url += `&denom=${route.query.denom}`;
         paramsDenom = route?.query.denom;
     }
-    if (route?.query?.symbol && route?.query?.symbol?.toLowerCase() !== unknownSymbol) {
+    if (route?.query?.symbol && (route?.query?.symbol as any)?.toLowerCase() !== unknownSymbol) {
         url += `&symbol=${route.query.symbol}`;
-        paramsSymbol = route?.query.symbol;
+        paramsSymbol = route?.query.symbol as string;
         watch(ibcDenoms, (newValue) => {
-            if (newValue?.value?.length) {
-                newValue?.value.forEach((item) => {
+            if (newValue?.length) {
+                newValue?.forEach((item: any) => {
                     if (item?.symbol === paramsSymbol) {
                         selectedSymbol.value = item.symbol;
                         isShowSymbolIcon.value = true;
@@ -428,15 +428,15 @@
                 });
             }
         });
-    } else if (paramsDenom && rmIbcPrefix(paramsDenom).length) {
-        selectedSymbol.value = getRestString(rmIbcPrefix(paramsDenom), 4, 4);
+    } else if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
+        selectedSymbol.value = getRestString(rmIbcPrefix(paramsDenom as string), 4, 4);
     }
     if (route?.query?.status) {
         const defaultOptions = transfersStatusOptions.DEFAULT_OPTIONS;
         const successOptions = transfersStatusOptions.SUCCESS_OPTIONS;
         const failedOptions = transfersStatusOptions.FAILED_OPTIONS;
         const processingOptions = transfersStatusOptions.PROCESSING_OPTIONS;
-        paramsStatus = route?.query?.status.split(',');
+        paramsStatus = (route?.query?.status as string).split(',');
         //todo  Optimize the writing
         if (JSON.stringify(paramsStatus) == JSON.stringify(successOptions)) {
             paramsStatus = successOptions;
@@ -452,16 +452,18 @@
 
     if (route?.query?.startTime) {
         url += `&startTime=${route.query.startTime}`;
-        startTimestamp = dayjs(route.query.startTime).unix();
+        startTimestamp = dayjs(route.query.startTime as any).unix();
     }
 
     if (route?.query?.endTime) {
         url += `&endTime=${route.query.endTime}`;
-        endTimestamp = dayjs(route.query.endTime).endOf('day').unix();
+        endTimestamp = dayjs(route.query.endTime as any)
+            .endOf('day')
+            .unix();
     }
 
     if (startTimestamp && endTimestamp) {
-        dateRange.value = [dayjs(startTimestamp * 1000), dayjs(endTimestamp * 1000)];
+        dateRange.value = [dayjs(startTimestamp * 1000), dayjs(endTimestamp * 1000)] as any;
     }
     const queryParam = reactive({
         date_range:
@@ -507,8 +509,9 @@
             use_count: true,
             ...params
         })
-            .then(() => {
-                pagination.total = tableCount.value;
+            .then((data) => {
+                tableCount.value = data as number;
+                pagination.total = data as number;
             })
             .catch((error) => {
                 console.log(error);
@@ -529,12 +532,12 @@
             });
     };
     queryDatas();
-    const startTime = (time) => {
+    const startTime = (time: any) => {
         const nowTimeDate = new Date(time);
         return nowTimeDate.setHours(0, 0, 0, 0);
     };
 
-    const disabledDate = (current) =>
+    const disabledDate = (current: any) =>
         current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
 
     const isIbcTxTotalAndHashFilter = computed(() => {
@@ -550,16 +553,16 @@
             return '';
         }
     });
-    const setAllChains = (allChains) => {
+    const setAllChains = (allChains: any) => {
         if (allChains?.value?.all) {
             const cosmosChain = allChains.value.all.filter(
-                (item) => item.chain_name === CHAINNAME.COSMOSHUB
+                (item: any) => item.chain_name === CHAINNAME.COSMOSHUB
             );
             const irishubChain = allChains.value.all.filter(
-                (item) => item.chain_name === CHAINNAME.IRISHUB
+                (item: any) => item.chain_name === CHAINNAME.IRISHUB
             );
-            let notIncludesIrisAndCosmosChains = [];
-            allChains.value.all.forEach((item) => {
+            let notIncludesIrisAndCosmosChains: any = [];
+            allChains.value.all.forEach((item: any) => {
                 if (
                     item.chain_name !== CHAINNAME.COSMOSHUB &&
                     item.chain_name !== CHAINNAME.IRISHUB
@@ -568,7 +571,7 @@
                 }
             });
             if (notIncludesIrisAndCosmosChains?.length) {
-                notIncludesIrisAndCosmosChains.sort((a, b) => {
+                notIncludesIrisAndCosmosChains.sort((a: any, b: any) => {
                     return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
                         ? -1
                         : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
@@ -584,11 +587,6 @@
         }
     };
     let allChains = ibcChains;
-    if (!Object?.keys(allChains).length) {
-        allChains = sessionStorage.getItem('allChains')
-            ? JSON.parse(sessionStorage.getItem('allChains'))
-            : {};
-    }
     setAllChains(allChains);
     watch(
         () => allChains,
@@ -598,7 +596,7 @@
             }
         }
     );
-    const findIbcChainIcon = (chainId) => {
+    const findIbcChainIcon = (chainId: string) => {
         if (ibcChains && ibcChains.value.all) {
             const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
             if (result) {
@@ -607,7 +605,7 @@
         }
         return chainDefaultImg;
     };
-    const onClickDropdownItem = (item, custom) => {
+    const onClickDropdownItem = (item: any, custom: any) => {
         pagination.current = 1;
         isShowSymbolIcon.value = !custom;
         selectedSymbol.value = item || defaultTitle.defaultTokens;
@@ -656,7 +654,7 @@
         }
         router.replace(url);
     };
-    const handleSelectChange = (item) => {
+    const handleSelectChange = (item: any) => {
         pagination.current = 1;
         queryParam.status = JSONparse(item);
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
@@ -692,11 +690,11 @@
         queryDatas();
     };
 
-    const onOpenChangeRangePicker = (open) => {
+    const onOpenChangeRangePicker = (open: boolean) => {
         pickerPlaceholderColor.value = open ? 'var(--bj-text-third)' : 'var(--bj-text-second)';
     };
 
-    const onChangeRangePicker = (dates) => {
+    const onChangeRangePicker = (dates: any) => {
         pagination.current = 1;
         dateRange.value = dates;
         queryParam.date_range[0] = Math.floor(startTime(dayjs(dates[0]).valueOf()) / 1000);
@@ -734,9 +732,9 @@
         router.replace(url);
         queryDatas();
     };
-    const onPaginationChange = (page) => {
+    const onPaginationChange = (page: any) => {
         pagination.current = page;
-        const params = Tools.urlParser(url);
+        const params: any = Tools.urlParser(url);
         url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
 
         if (params?.chain) {
@@ -790,7 +788,7 @@
         router.replace(url);
         queryDatas();
     };
-    const onSelectedChain = (chain_id) => {
+    const onSelectedChain = (chain_id: any) => {
         queryParam.chain_id = chain_id !== 'allchain,allchain' ? chain_id : '';
         pagination.current = 1;
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
@@ -827,7 +825,7 @@
         queryDatas();
     };
 
-    const handleClickRow = (record) => {
+    const handleClickRow = (record: any) => {
         return {
             onClick: () => {
                 router.push(`/transfers/details?hash=${record.sc_tx_info.hash}`);
@@ -843,9 +841,9 @@
     });
     onMounted(() => {
         getIbcStatistics();
-        getIbcDenoms();
     });
 </script>
+
 <style lang="less" scoped>
     .transfer {
         flex: 1;

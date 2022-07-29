@@ -1,10 +1,6 @@
+import Tools from '@/utils/Tools';
 import { IBaseDenoms } from '@/types/interface/index.interface';
-import { API_CODE } from '@/constants/apiCode';
-import { getIbcStatisticsAPI } from '@/api/home';
-import { findStatistics } from '@/helper/findStatisticsHelper';
-import { ibcStatisticsChainsDefault } from '@/constants/index';
 import { useIbcStatisticsChains } from '@/store/index';
-import { GET_IBCDENOMS } from '@/constants/actionTypes';
 import {
     ibcStatisticsChannelsDefault,
     ibcStatisticsDenomsDefault,
@@ -14,59 +10,9 @@ import {
     ibcStatisticsTxsDefault,
     txStatusNumber
 } from '@/constants';
+import { useTimeInterval } from '@/composables';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
-
-export const initHome = (
-    getIbcStatistics: Function,
-    getIbcTxs: Function,
-    getIbcDenoms: Function,
-    limitIbcTxs: Function
-) => {
-    onMounted(() => {
-        getIbcStatistics();
-        getIbcTxs({ page_num: 1, page_size: 100, use_count: false });
-        getIbcDenoms();
-    });
-    onBeforeUnmount(() => {
-        limitIbcTxs();
-    });
-};
-
-export const useIbcStatistics = () => {
-    const ibcStatisticsChains = reactive(ibcStatisticsChainsDefault);
-    const ibcStatisticsChannels = reactive(ibcStatisticsChannelsDefault);
-    const ibcStatisticsDenoms = reactive(ibcStatisticsDenomsDefault);
-    const ibcStatisticsTxs = reactive(ibcStatisticsTxsDefault);
-    const getIbcStatistics = async () => {
-        try {
-            const { code, data } = await getIbcStatisticsAPI();
-            if (code === API_CODE.success) {
-                ibcStatisticsChains.chains_24hr = findStatistics(data, 'chains_24hr');
-                ibcStatisticsChains.chain_all = findStatistics(data, 'chain_all');
-                ibcStatisticsChannels.channels_24hr = findStatistics(data, 'channels_24hr');
-                ibcStatisticsChannels.channel_all = findStatistics(data, 'channel_all');
-                ibcStatisticsChannels.channel_opened = findStatistics(data, 'channel_opened');
-                ibcStatisticsChannels.channel_closed = findStatistics(data, 'channel_closed');
-                ibcStatisticsDenoms.denom_all = findStatistics(data, 'denom_all');
-                ibcStatisticsDenoms.base_denom_all = findStatistics(data, 'base_denom_all');
-                ibcStatisticsTxs.tx_24hr_all = findStatistics(data, 'tx_24hr_all');
-                ibcStatisticsTxs.tx_all = findStatistics(data, 'tx_all');
-                ibcStatisticsTxs.tx_success = findStatistics(data, 'tx_success');
-                ibcStatisticsTxs.tx_failed = findStatistics(data, 'tx_failed');
-            }
-        } catch (error) {
-            console.log('getIbcStatisticsAPI', error);
-        }
-    };
-    return {
-        ibcStatisticsChains,
-        ibcStatisticsChannels,
-        ibcStatisticsDenoms,
-        ibcStatisticsTxs,
-        getIbcStatistics
-    };
-};
 
 export const useIbcChains = () => {
     const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
@@ -81,7 +27,7 @@ export const useIbcTxs = () => {
     const { ibcTxs } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
     const setExpandByIndex = (idx: number) => {
-        ibcStatisticsChainsStore.ibcTxs.forEach((item, index) => {
+        ibcTxs.value.forEach((item, index) => {
             if (idx == index) {
                 item.expanded = !item.expanded;
             } else {
@@ -92,6 +38,18 @@ export const useIbcTxs = () => {
     const limitIbcTxs = (limitNumber = 10) => {
         ibcStatisticsChainsStore.ibcTxs = ibcStatisticsChainsStore.ibcTxs.slice(0, limitNumber);
     };
+    useTimeInterval(() => {
+        ibcTxs.value = ibcTxs.value.map((item: any) => {
+            item.parseTime = Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', '');
+            return item;
+        });
+    });
+    onMounted(() => {
+        getIbcTxs({ page_num: 1, page_size: 100, use_count: false });
+    });
+    onBeforeUnmount(() => {
+        limitIbcTxs();
+    });
     return {
         ibcTxs,
         getIbcTxs,
@@ -100,21 +58,8 @@ export const useIbcTxs = () => {
     };
 };
 
-export const useClearInterval = () => {
-    const clearIntervalTimer = () => {
-        clearInterval(ibcStatisticsChainsStore.ibcTxTimer);
-    };
-    onBeforeUnmount(() => {
-        clearIntervalTimer();
-    });
-    return {
-        clearIntervalTimer
-    };
-};
-
 export const useGetIbcDenoms = () => {
     const ibcBaseDenoms = ibcStatisticsChainsStore.ibcBaseDenoms;
-    const getIbcDenoms = ibcStatisticsChainsStore[GET_IBCDENOMS];
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
     const getBaseDenomInfoByDenom = (denom: string, chainId: string) => {
         return ibcBaseDenoms.find((item) => item.denom == denom && item.chain_id == chainId);
@@ -137,7 +82,6 @@ export const useGetIbcDenoms = () => {
     return {
         ibcBaseDenoms,
         ibcBaseDenomsSorted,
-        getIbcDenoms,
         getIbcBaseDenom,
         getBaseDenomInfoByDenom
     };
