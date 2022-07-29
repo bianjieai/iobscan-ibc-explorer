@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col items-end">
-        <div class="title" :class="noLink ? '' : 'hover-cursor'" @click="go">{{
+        <div class="title" :class="{ hover_cursor: !noLink }" @click="go">{{
             formatBigNumber(title, 0)
         }}</div>
         <div class="subtitle mt-4">{{

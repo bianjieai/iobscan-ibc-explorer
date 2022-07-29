@@ -76,7 +76,7 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: 'details',
                 name: 'Tokens Details',
-                component: () => import('../views/tokens/ibcToken.vue')
+                component: () => import('../views/tokens/IbcToken.vue')
             }
         ]
     },

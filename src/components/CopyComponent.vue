@@ -1,7 +1,7 @@
 <template>
     <div
         id="tag_copy"
-        class="copy_component_content"
+        class="copy_component_content cursor"
         :data-clipboard-text="copyText"
         @click="handleCopy($event, copyText)"
     >
@@ -58,12 +58,10 @@
         margin-left: 7px;
         display: inline-block;
         align-items: center;
-        cursor: url('../assets/mouse/shiftlight_mouse.png'), default;
         user-select: none;
         .copied {
             font-size: 14px;
             color: rgba(151, 151, 151, 1);
-            cursor: url('../assets/mouse/shiftlight_mouse.png'), default;
             padding-bottom: 2px;
             .text {
                 margin-left: 7px;

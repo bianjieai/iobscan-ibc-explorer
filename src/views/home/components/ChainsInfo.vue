@@ -1,5 +1,5 @@
 <template>
-    <div class="card ibc_selected_title">
+    <div class="card ibc_selected_title cursor">
         <img
             class="card__img"
             :src="msg.statistics_name.indexOf(dayTime) !== -1 ? chains24hrImg : chainsAllImg"
@@ -43,7 +43,6 @@
         background-position: center;
         background-size: cover;
         border-radius: 4px;
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
         &__img {
             margin: 23px 29px;
             width: 60px;

@@ -6,7 +6,7 @@ import {
     ibcStatisticsDenomsDefault,
     channelsStatus,
     SYMBOL,
-    pageParameters,
+    PAGE_PARAMETERS,
     ibcStatisticsTxsDefault,
     txStatusNumber
 } from '@/constants';
@@ -92,11 +92,11 @@ export const useInterfaceActive = () => {
     const tipMsg =
         'Denom is the token denomination to be transferred, base denomination of the relayed fungible token.';
     const onClickViewAll = (msg: string) => {
-        if (msg?.includes && msg.includes(pageParameters.chains)) {
+        if (msg?.includes && msg.includes(PAGE_PARAMETERS.chains)) {
             router.push({
                 name: 'Chains'
             });
-        } else if (msg?.includes && msg.includes(pageParameters.channel)) {
+        } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.channel)) {
             if (msg === ibcStatisticsChannelsDefault.channel_opened.statistics_name) {
                 router.push({
                     name: 'Channels',
@@ -116,7 +116,7 @@ export const useInterfaceActive = () => {
                     name: 'Channels'
                 });
             }
-        } else if (msg?.includes && msg.includes(pageParameters.tx)) {
+        } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.tx)) {
             if (msg === ibcStatisticsTxsDefault.tx_all.statistics_name) {
                 router.push({
                     name: 'Transfers',
@@ -146,7 +146,7 @@ export const useInterfaceActive = () => {
                     }
                 });
             }
-        } else if (msg?.includes && msg.includes(pageParameters.denom)) {
+        } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.denom)) {
             if (msg !== ibcStatisticsDenomsDefault.denom_all.statistics_name) {
                 router.push({
                     name: 'Tokens'

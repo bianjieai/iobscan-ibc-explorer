@@ -10,7 +10,7 @@
         @press-enter="searchInput"
     >
         <template #suffix>
-            <div class="input_prefix" @click="searchInput">
+            <div class="input_prefix cursor" @click="searchInput">
                 <span class="input_prefix_icon iconfont icon-search"></span>
             </div>
         </template>
@@ -97,7 +97,6 @@
             display: flex;
             align-items: center;
             justify-items: center;
-            cursor: url('../assets/mouse/shiftlight_mouse.png'), default;
             .input_prefix_icon {
                 font-size: var(--bj-font-size-home-number);
                 color: rgba(255, 255, 255, 0.7);

@@ -19,7 +19,7 @@
             <ResetButton @on-reset="resetSearchCondition" />
         </div>
 
-        <BjTable
+        <TableCommon
             :loading="loading"
             :data="list"
             :need-custom-columns="needCustomColumns"
@@ -93,28 +93,21 @@
             <template v-if="list?.length !== 0" #table_bottom_status>
                 <BottomStatus :type="BottomStatusType.RELAYER" />
             </template>
-        </BjTable>
+        </TableCommon>
     </PageContainer>
 </template>
 
 <script setup lang="ts">
-    import PageContainer from '@/components/responsive/pageContainer.vue';
-    import PageTitle from '@/components/responsive/pageTitle.vue';
-    import BjTable from '@/components/responsive/table/index.vue';
+    import NamePopover from './components/NamePopover.vue';
+    import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
-    import ChainsDropdown from '@/components/responsive/dropdown/DropDownChains.vue';
-    import BaseDropdown from '@/components/responsive/dropdown/DropDownBase.vue';
-    import ResetButton from '@/components/responsive/resetButton.vue';
     import { computed, onMounted, ref } from 'vue';
     import { formatLastUpdated } from '@/utils/timeTools';
-    import TransferTxs from '@/components/responsive/table/transferTxs.vue';
-    import StatusImg from '@/components/responsive/table/statusImg.vue';
-    import { TRelayerStatus, BottomStatusType } from '@/types/interface/component.interface';
+    import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
     import { useIbcChains } from '../home/composable';
     import { useGetRelayersList } from './composable';
-    import ChainIcon from '@/components/responsive/table/chainIcon.vue';
     import { useRoute, useRouter } from 'vue-router';
-    import NamePopover from './components/namePopover.vue';
+    import { useNeedCustomColumns } from '@/composables';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { urlHelper } from '@/utils/urlTools';
 
@@ -130,15 +123,7 @@
     const { ibcChains, getIbcChains } = useIbcChains();
     const { list, getList, total } = useGetRelayersList();
 
-    const needCustomColumns = [
-        'relayer_name',
-        'chain_a',
-        'status',
-        'chain_b',
-        'update_time',
-        'txs_success_rate',
-        'transfer_total_txs'
-    ];
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
 
     const chainDropdown = ref();
     const statusDropdown = ref();
@@ -218,6 +203,7 @@
             margin-right: 8px;
         }
     }
+
     :deep(.ant-table-cell) {
         &:nth-of-type(4) {
             padding-right: 26px !important;

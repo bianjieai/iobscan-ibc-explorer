@@ -1,12 +1,12 @@
 <template>
     <div class="list_item">
-        <div class="list_item__wrap" :class="!item.expanded ? '' : 'list_item__line_hidden'">
+        <div class="list_item__wrap" :class="{ list_item__line_hidden: item.expanded }">
             <div class="list_item__expand_btn" @click="onClickExpandBtn">
                 <img :src="!item.expanded ? expandImg : packUpImg" alt="" />
             </div>
             <router-link
                 class="list_item__info"
-                :class="!item.expanded ? 'list_item__line' : ''"
+                :class="{ list_item__line: !item.expanded }"
                 :to="`/transfers/details?hash=${item.sc_tx_info.hash}`"
             >
                 <span class="list_item__number">{{ prefixInteger(index + 1, 3) }}</span>
@@ -19,7 +19,7 @@
                 </div>
                 <div
                     class="list_subItem"
-                    :style="{ borderBottom: isFinal ? '' : '1px solid rgba(0, 0, 0, 0.2)' }"
+                    :style="{ borderBottom: isFinal ? '' : '1px solid var(--bj-border-color)' }"
                 >
                     <div class="list_subItem__title_container">
                         <span class="list_subItem__value">{{
@@ -89,12 +89,10 @@
         }
         &__expand_btn {
             display: none;
-            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
         }
         &__info {
             .flex(row, nowrap, space-between, center);
             height: 100%;
-            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
             .list_subItem {
                 .flex(row, nowrap, space-between, center);
                 padding: 14px 0;
@@ -107,14 +105,6 @@
                     .flex(column, nowrap, space-between, flex-start);
                     width: 100%;
                     max-width: 150px;
-                    // &:hover {
-                    //     .list_subItem_value {
-                    //         color: var(--bj-primary-color);
-                    //     }
-                    //     .list_subItem_title {
-                    //         color: var(--bj-primary-color);
-                    //     }
-                    // }
                 }
                 &__value {
                     width: 100%;
@@ -142,9 +132,6 @@
             }
         }
         &__line {
-            a {
-                cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
-            }
         }
         &__ago {
             width: 150px;
@@ -170,7 +157,6 @@
         }
         &__out_hash_wrap {
             display: none;
-            cursor: url(../../../assets/mouse/shiftlight_mouse.png), default;
         }
     }
     @media screen and (max-width: 970px) {
@@ -213,7 +199,7 @@
                 }
             }
             &__line {
-                border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+                border-bottom: 1px solid var(--bj-border-color);
             }
             &__ago {
             }
@@ -234,7 +220,7 @@
         .list_item {
             width: 100%;
             &__wrap {
-                border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+                border-bottom: 1px solid var(--bj-border-color);
             }
             &__line_hidden {
                 border-bottom: none;

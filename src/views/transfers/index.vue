@@ -1,8 +1,8 @@
 <template>
-    <!-- todo duanjie class="transfer"  设置了样式，看能不能复用 pageContainer 保持统一 -->
+    <!-- todo duanjie class="transfer"  设置了样式，看能不能复用 PageContainer 保持统一 -->
     <div class="transfer">
         <div class="transfer_header">
-            <!-- todo duanjie 看能不能复用 pageTitle -->
+            <!-- todo duanjie 看能不能复用 PageTitle -->
             <div class="transfer_header_container">
                 <div class="transfer_header_line">
                     <p class="transfer_header_title">
@@ -34,7 +34,7 @@
                         :need-badge="needBadge"
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
-                        :witch-page="pageParameters.transfers"
+                        :witch-page="PAGE_PARAMETERS.transfers"
                         @on-selected-chain="onSelectedChain"
                     />
                     <!-- todo duanjie 看能否使用 BaseDropdown 复用  -->
@@ -64,7 +64,7 @@
                     <a-range-picker
                         :value="dateRange.value"
                         :disabled-date="disabledDate"
-                        class="date_range hover"
+                        class="date_range cursor"
                         :allow-clear="false"
                         format="YYYY-MM-DD"
                         separator="-"
@@ -112,7 +112,7 @@
                                 </p>
                             </div>
                         </template>
-                        <img class="tip hover" src="../../assets/tip.png" />
+                        <img class="tip cursor" src="../../assets/tip.png" />
                     </a-popover>
                     <!-- todo duanjie 看能不能复用 ResetButton -->
                     <a-button type="primary" @click="onClickReset">
@@ -160,7 +160,7 @@
                                     </div>
                                 </template>
                                 <img
-                                    class="tip hover"
+                                    class="tip cursor"
                                     style="margin-left: 8px"
                                     src="../../assets/tip.png"
                                 />
@@ -180,7 +180,7 @@
                                 </div>
                             </template>
                             <router-link
-                                class="token_link hover"
+                                class="token_link"
                                 :to="
                                     record.status === ibcTxStatus.SUCCESS
                                         ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}`
@@ -190,7 +190,7 @@
                             >
                                 <img
                                     class="token_icon"
-                                    :src="record.symbolIcon || chainDefaultImg"
+                                    :src="record.symbolIcon || tokenDefaultImg"
                                 />
                                 <span class="token_info">
                                     <span class="token_num">{{ formatNum(record.symbolNum) }}</span>
@@ -208,7 +208,7 @@
                                     <p class="tip_color">{{ record.sc_tx_info.hash }}</p>
                                 </div>
                             </template>
-                            <span class="hover">{{
+                            <span class="cursor">{{
                                 getRestString(record.sc_tx_info.hash, 4, 4)
                             }}</span>
                         </a-popover>
@@ -240,7 +240,7 @@
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
                                 <img
-                                    class="status_icon hover"
+                                    class="status_icon"
                                     :src="findIbcChainIcon(record.sc_chain_id)"
                                 />
                             </router-link>
@@ -266,7 +266,7 @@
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
                                 <img
-                                    class="status_icon hover"
+                                    class="status_icon"
                                     :src="findIbcChainIcon(record.dc_chain_id)"
                                 />
                             </router-link>
@@ -279,7 +279,7 @@
                                     <p class="tip_color">{{ record.dc_tx_info.hash || '--' }}</p>
                                 </div>
                             </template>
-                            <span class="hover">{{
+                            <span class="cursor">{{
                                 getRestString(record.dc_tx_info.hash, 4, 4) || '--'
                             }}</span>
                         </a-popover>
@@ -292,7 +292,7 @@
                                     <p class="tip_color">{{ record.dc_addr || '--' }}</p>
                                 </div>
                             </template>
-                            <span class="hover">{{
+                            <span class="cursor">{{
                                 getRestString(record.dc_addr, 3, 8) || '--'
                             }}</span>
                         </a-popover>
@@ -322,6 +322,7 @@
                 class="table_pagination"
                 :class="{ disable_table_pagination: showTransferLoading }"
                 :total="pagination.total"
+                :show-title="false"
                 :disabled="showTransferLoading"
                 @change="onPaginationChange"
             />
@@ -331,7 +332,7 @@
 
 <script setup lang="ts">
     import DropDown from './components/DropDown.vue';
-    import ChainsDropdown from '../../components/responsive/dropdown/DropDownChains.vue';
+    import ChainsDropdown from '../../components/responsive/dropdown/ChainsDropdown';
     import {
         ibcTxStatusSelectOptions,
         transfersStatusOptions,
@@ -339,12 +340,13 @@
         ibcTxStatusDesc,
         defaultTitle,
         unknownSymbol,
-        pageParameters,
+        PAGE_PARAMETERS,
         txStatusNumber,
         CHAINNAME
     } from '../../constants';
     import Tools from '../../utils/Tools';
     import chainDefaultImg from '../../assets/home/chain-default.png';
+    import tokenDefaultImg from '../../assets/token-default.png';
     import {
         JSONparse,
         getRestString,
@@ -930,7 +932,6 @@
                 background: red;
                 &_link {
                     .flex(row, nowrap, flex-start, center);
-                    cursor: url('../../assets/mouse/shiftlight_mouse.png'), default !important;
                     &:hover {
                         .token_info {
                             .token_num {
@@ -1087,15 +1088,9 @@
             color: var(--bj-font-color-65);
         }
     }
-    .hover {
-        cursor: url('../../assets/mouse/shiftlight_mouse.png'), default !important;
-        // &:hover {
-        //     color: var(--bj-primary-color);
-        // }
-    }
     :deep(.ant-table-row) {
         &:hover {
-            cursor: url('../../assets/mouse/shiftlight_mouse.png'), default;
+            cursor: pointer;
         }
     }
     :deep(tbody) {
