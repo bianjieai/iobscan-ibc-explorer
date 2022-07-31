@@ -177,7 +177,6 @@
                 ...irishubChain,
                 ...notIncludesIrisAndCosmosChains
             ];
-            console.log(handleDropdownData.value, handleDropdownData.value.length);
         }
     };
 
