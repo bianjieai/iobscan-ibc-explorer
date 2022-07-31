@@ -67,13 +67,12 @@
 
     const router = useRouter();
 
-    const { ibcChains, getIbcChains } = useIbcChains();
+    const { ibcChains } = useIbcChains();
     const { list, getList } = useGetChainsList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.chains);
     const loading = ref(false);
 
     onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
         getList(loading);
     });
 

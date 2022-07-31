@@ -102,7 +102,7 @@
     const chainIdQuery = route.query.chain as string;
     const statusQuery = route.query.status as TChannelStatus;
 
-    const { ibcChains, getIbcChains } = useIbcChains();
+    const { ibcChains } = useIbcChains();
     const { list, total, getList } = useGetChannelsList();
 
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channel);
@@ -114,8 +114,6 @@
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
 
     onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
-
         refreshList();
     });
 

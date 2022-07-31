@@ -46,7 +46,7 @@
                     <div
                         v-if="getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol"
                         >{{
-                            getBaseDenomInfoByDenom(record[column.key], record.chain_id).symbol
+                            getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol
                         }}</div
                     >
                     <div v-else>
@@ -120,7 +120,7 @@
 
     const router = useRouter();
 
-    const { ibcChains, getIbcChains } = useIbcChains();
+    const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
 
     const route = useRoute();
@@ -131,7 +131,7 @@
     const { list, total, getList } = useGetIbcTokenList(baseDenomQuery);
 
     const baseDenomInfo = computed(() => {
-        const filterData = ibcBaseDenoms.filter(
+        const filterData = ibcBaseDenoms.value.filter(
             (item: any) => item.denom === baseDenomQuery
         ) as any; // todo clippers => 补上类型
         let symbol = '';
@@ -175,9 +175,7 @@
     });
 
     onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
         getIbcBaseDenom();
-
         refreshList();
     });
 

@@ -125,12 +125,7 @@
     const props = withDefaults(defineProps<IProps>(), {
         chainId: '',
         minWidth: 10,
-        witchPage: '',
-        dropdownData:
-            (
-                sessionStorage.getItem('allChains') &&
-                JSON.parse(sessionStorage.getItem('allChains')!)
-            )?.all ?? []
+        witchPage: ''
     });
 
     watch(
@@ -182,6 +177,7 @@
                 ...irishubChain,
                 ...notIncludesIrisAndCosmosChains
             ];
+            console.log(handleDropdownData.value, handleDropdownData.value.length);
         }
     };
 
