@@ -97,7 +97,7 @@ export const usePagination = () => {
 };
 
 export const useFindIcon = (props: any) => {
-    const { ibcBaseDenomsSymbolKeyMap } = storeToRefs(ibcStatisticsChainsStore);
+    const { ibcBaseDenomsSymbolKeyMapGetter } = storeToRefs(ibcStatisticsChainsStore);
     const findSymbolIcon = () => {
         const findSymbolConfig = props.ibcBaseDenoms?.find(
             (baseDenom: any) => baseDenom.symbol === props.selectedSymbol
@@ -122,7 +122,7 @@ export const useFindIcon = (props: any) => {
             symbolIcon: ''
         };
         if (Array.isArray(props.ibcBaseDenoms)) {
-            const findSymbol = ibcBaseDenomsSymbolKeyMap.value[key];
+            const findSymbol = ibcBaseDenomsSymbolKeyMapGetter.value[key];
             result.symbolDenom = findSymbol ? findSymbol.symbol : key;
             result.symbolIcon = findSymbol ? findSymbol.icon : '';
         }

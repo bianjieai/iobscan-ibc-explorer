@@ -16,16 +16,38 @@ export const useIbcStatisticsChains = defineStore('global', {
         return {
             ibcChains: {},
             ibcBaseDenoms: [],
-            ibcBaseDenomsUniqueKeyMap: {},
-            ibcBaseDenomsSymbolKeyMap: {},
             ibcDenoms: [],
-            ibcDenomsMap: {},
             isShowLoading: false,
             ibcTxs: []
         };
     },
+    getters: {
+        ibcBaseDenomsUniqueKeyMapGetter(): { [key: string]: IBaseDenom } {
+            const ibcBaseDenomsUniqueKeyMap: { [key: string]: IBaseDenom } = {};
+            this.ibcBaseDenoms.forEach((token: IBaseDenom) => {
+                const key = getDenomKey(token.chain_id, token.denom);
+                ibcBaseDenomsUniqueKeyMap[key] = token;
+            });
+            return ibcBaseDenomsUniqueKeyMap;
+        },
+        ibcBaseDenomsSymbolKeyMapGetter(): { [key: string]: IBaseDenom } {
+            const ibcBaseDenomsSymbolKeyMap: { [key: string]: IBaseDenom } = {};
+            this.ibcBaseDenoms.forEach((token: IBaseDenom) => {
+                ibcBaseDenomsSymbolKeyMap[token.symbol] = token;
+            });
+            return ibcBaseDenomsSymbolKeyMap;
+        },
+        ibcDenomsMapGetter(): { [key: string]: IResponseIbcDenom } {
+            const ibcDenomsMap: { [key: string]: IResponseIbcDenom } = {};
+            this.ibcDenoms.forEach((token: IResponseIbcDenom) => {
+                const key = getDenomKey(token.chain_id, token.denom);
+                ibcDenomsMap[key] = token;
+            });
+            return ibcDenomsMap;
+        }
+    },
     actions: {
-        async initState() {
+        async initStateAction() {
             const promiseArray = [];
             if (this.ibcBaseDenoms.length <= 0) {
                 promiseArray.push(this.getIbcBaseDenomsAction);
@@ -39,16 +61,7 @@ export const useIbcStatisticsChains = defineStore('global', {
             try {
                 const { code, data } = await getIbcBaseDenomsAPI();
                 if (code == API_CODE.success && data && data.length > 0) {
-                    const ibcBaseDenomsUniqueKeyMap: { [key: string]: IBaseDenom } = {};
-                    const ibcBaseDenomsSymbolKeyMap: { [key: string]: IBaseDenom } = {};
-                    data.forEach((token: IBaseDenom) => {
-                        const key = getDenomKey(token.chain_id, token.denom);
-                        ibcBaseDenomsUniqueKeyMap[key] = token;
-                        ibcBaseDenomsSymbolKeyMap[token.symbol] = token;
-                    });
                     this.ibcBaseDenoms = data;
-                    this.ibcBaseDenomsUniqueKeyMap = ibcBaseDenomsUniqueKeyMap;
-                    this.ibcBaseDenomsSymbolKeyMap = ibcBaseDenomsSymbolKeyMap;
                 }
             } catch (error) {
                 console.log('getIbcBaseDenomsAction', error);
@@ -68,13 +81,7 @@ export const useIbcStatisticsChains = defineStore('global', {
             try {
                 const { code, data } = await getIbcDenomsAPI();
                 if (code === API_CODE.success && data && data.length > 0) {
-                    const ibcDenomsMap: { [key: string]: IResponseIbcDenom } = {};
-                    data.forEach((token: IResponseIbcDenom) => {
-                        const key = getDenomKey(token.chain_id, token.denom);
-                        ibcDenomsMap[key] = token;
-                    });
                     this.ibcDenoms = data;
-                    this.ibcDenomsMap = ibcDenomsMap;
                 }
             } catch (error) {
                 console.log('getIbcDenomsAPI', error);
@@ -115,14 +122,15 @@ export const useIbcStatisticsChains = defineStore('global', {
                         const getSymbolInfo = (data: IIbcTx[]) => {
                             return data.map((item: IIbcTx) => {
                                 const symbol =
-                                    this.ibcDenomsMap[
+                                    this.ibcDenomsMapGetter[
                                         getDenomKey(item.sc_chain_id, item.denoms.sc_denom)
                                     ]?.symbol;
                                 let symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
                                 let symbolDenom = item.base_denom || '';
                                 let symbolIcon = '';
                                 if (symbol) {
-                                    const baseDenomsObj = this.ibcBaseDenomsSymbolKeyMap[symbol];
+                                    const baseDenomsObj =
+                                        this.ibcBaseDenomsSymbolKeyMapGetter[symbol];
                                     if (baseDenomsObj) {
                                         symbolNum = moveDecimal(
                                             item.sc_tx_info?.msg_amount?.amount || 0,
