@@ -4,23 +4,24 @@ import moveDecimal from 'move-decimal-point';
 import { getIbcChainsAPI, getIbcBaseDenomsAPI } from '@/api/index';
 import { API_CODE } from '@/constants/apiCode';
 import { getIbcTxsAPI } from '@/api/transfers';
-import { IIbcChains, IBaseDenoms } from '@/types/interface/index.interface';
+import { IBaseDenoms } from '@/types/interface/index.interface';
 import { IResponseIbcTxc, IIbcTxc } from '@/types/interface/transfers.interface';
 import { getIbcDenomsAPI } from '@/api/home';
 import { IResponseIbcDenom } from '@/types/interface/home.interface';
 import { getDenomKey } from '@/helper/baseDenomHelper';
+import { GlobalState } from '@/types/interface/store.interface';
 
 export const useIbcStatisticsChains = defineStore('global', {
-    state: () => {
+    state: (): GlobalState => {
         return {
-            ibcChains: {} as IIbcChains,
-            ibcBaseDenoms: [] as IBaseDenoms[],
-            ibcBaseDenomsUniqueKeyMap: {} as { [key: string]: IBaseDenoms },
-            ibcBaseDenomsSymbolKeyMap: {} as { [key: string]: IBaseDenoms },
-            ibcDenoms: [] as IResponseIbcDenom[],
-            ibcDenomsMap: {} as { [key: string]: IResponseIbcDenom },
+            ibcChains: {},
+            ibcBaseDenoms: [],
+            ibcBaseDenomsUniqueKeyMap: {},
+            ibcBaseDenomsSymbolKeyMap: {},
+            ibcDenoms: [],
+            ibcDenomsMap: {},
             isShowLoading: false,
-            ibcTxs: [] as IIbcTxc[]
+            ibcTxs: []
         };
     },
     actions: {
@@ -111,9 +112,8 @@ export const useIbcStatisticsChains = defineStore('global', {
                                 error
                             );
                         }
-                        const getSymbolInfo = (oldData?: any) => {
-                            // oldData 中保留有 列表项展开收起的自定义数据
-                            return result.map((item: any, index: number) => {
+                        const getSymbolInfo = (data: IIbcTxc[]) => {
+                            return data.map((item: IIbcTxc) => {
                                 const symbol =
                                     this.ibcDenomsMap[
                                         getDenomKey(item.sc_chain_id, item.denoms.sc_denom)
@@ -134,7 +134,7 @@ export const useIbcStatisticsChains = defineStore('global', {
                                 }
                                 return {
                                     ...item,
-                                    expanded: oldData?.[index]?.expanded ?? false,
+                                    expanded: false,
                                     symbolNum,
                                     symbolDenom,
                                     symbolIcon,
@@ -147,7 +147,7 @@ export const useIbcStatisticsChains = defineStore('global', {
                                 };
                             });
                         };
-                        this.ibcTxs = getSymbolInfo();
+                        this.ibcTxs = getSymbolInfo(result);
                     }
                 }
             } catch (error) {

@@ -10,10 +10,10 @@ export const getBaseDenomByKey = async (
     denom: string
 ): Promise<IBaseDenoms | undefined> => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcBaseDenomsSymbolKeyMap } = storeToRefs(ibcStatisticsChainsStore);
+    const { ibcBaseDenomsSymbolKeyMap } = ibcStatisticsChainsStore;
     if (Object.keys(ibcBaseDenomsSymbolKeyMap.value).length <= 0) {
         await ibcStatisticsChainsStore.getIbcBaseDenomsAction();
     }
     const key = getDenomKey(chainID, denom);
-    return ibcBaseDenomsSymbolKeyMap.value[key];
+    return ibcBaseDenomsSymbolKeyMap[key];
 };
