@@ -20,7 +20,6 @@ export const useIbcStatisticsChains = defineStore('global', {
             ibcDenoms: [] as IResponseIbcDenom[],
             ibcDenomsMap: {} as { [key: string]: IResponseIbcDenom },
             isShowLoading: false,
-            // todo duanjie 只存最新的10条数据
             ibcTxs: [] as IIbcTxc[]
         };
     },
