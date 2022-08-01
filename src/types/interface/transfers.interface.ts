@@ -8,8 +8,7 @@ export interface IRequestIbcTxs extends IRequestPagination2 {
     denom?: string;
     start_time?: string;
 }
-
-export interface IIbcTxs {
+export interface IIbcTx {
     record_id: string;
     sc_addr: string;
     dc_addr: string;
@@ -37,16 +36,4 @@ export interface IIbcTxs {
     tx_time: number;
     end_time: string;
     expanded?: boolean;
-}
-
-export interface IResponseIbcTxs {
-    data: IIbcTxs[];
-    pageNum: number;
-    pageSize: number;
-}
-
-export interface IResponseTxs {
-    data: IIbcTxs[];
-    pageNum: number;
-    pageSize: number;
 }

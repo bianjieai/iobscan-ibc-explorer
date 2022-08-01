@@ -18,6 +18,12 @@ export interface IResponse<P = {}> {
     data: P;
 }
 
+export interface Paging<P = {}> {
+    data: P;
+    pageNum: number;
+    pageSize: number;
+}
+
 export interface IResponsePageInfo {
     page_num: boolean;
     page_size: number;
@@ -37,7 +43,7 @@ export interface IIbcChains {
     inactive?: IIbcchain[];
 }
 
-export interface IBaseDenoms {
+export interface IBaseDenom {
     chain_id: string;
     create_at: number;
     denom: string;

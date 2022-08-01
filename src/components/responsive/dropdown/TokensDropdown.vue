@@ -121,7 +121,7 @@
     import { getRestString } from '@/helper/parseStringHelper';
     import { onMounted, computed, ref } from 'vue';
     import { defaultTitle } from '../../../constants/index';
-    import { IBaseDenoms } from '@/types/interface/index.interface';
+    import { IBaseDenom } from '@/types/interface/index.interface';
     const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href;
 
     type TDenom = string | undefined;
@@ -132,7 +132,7 @@
     };
     interface IProps {
         dropdownData: any[];
-        dropdownDataSymbolMap: { [key: string]: IBaseDenoms };
+        dropdownDataSymbolMap: { [key: string]: IBaseDenom };
         baseDenom?: string;
     }
 

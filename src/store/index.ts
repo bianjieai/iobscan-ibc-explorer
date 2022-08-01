@@ -7,8 +7,8 @@ import { getIbcTxsAPI } from '@/api/transfers';
 import { getIbcDenomsAPI } from '@/api/home';
 import { getDenomKey } from '@/helper/baseDenomHelper';
 import { GlobalState } from '@/types/interface/store.interface';
-import { IBaseDenoms } from '@/types/interface/index.interface';
-import { IResponseIbcTxs, IIbcTxs } from '@/types/interface/transfers.interface';
+import { IBaseDenom, Paging } from '@/types/interface/index.interface';
+import { IIbcTx } from '@/types/interface/transfers.interface';
 import { IResponseIbcDenom } from '@/types/interface/home.interface';
 
 export const useIbcStatisticsChains = defineStore('global', {
@@ -39,9 +39,9 @@ export const useIbcStatisticsChains = defineStore('global', {
             try {
                 const { code, data } = await getIbcBaseDenomsAPI();
                 if (code == API_CODE.success && data && data.length > 0) {
-                    const ibcBaseDenomsUniqueKeyMap: { [key: string]: IBaseDenoms } = {};
-                    const ibcBaseDenomsSymbolKeyMap: { [key: string]: IBaseDenoms } = {};
-                    data.forEach((token: IBaseDenoms) => {
+                    const ibcBaseDenomsUniqueKeyMap: { [key: string]: IBaseDenom } = {};
+                    const ibcBaseDenomsSymbolKeyMap: { [key: string]: IBaseDenom } = {};
+                    data.forEach((token: IBaseDenom) => {
                         const key = getDenomKey(token.chain_id, token.denom);
                         ibcBaseDenomsUniqueKeyMap[key] = token;
                         ibcBaseDenomsSymbolKeyMap[token.symbol] = token;
@@ -94,7 +94,7 @@ export const useIbcStatisticsChains = defineStore('global', {
                     if (use_count) {
                         return data;
                     } else {
-                        const result = (data as IResponseIbcTxs).data;
+                        const result = (data as Paging<IIbcTx[]>).data;
                         const promiseArray = [];
                         if (this.ibcDenoms.length <= 0) {
                             console.log('getIbcTxsAction-execute: getIbcDenomsAction');
@@ -112,8 +112,8 @@ export const useIbcStatisticsChains = defineStore('global', {
                                 error
                             );
                         }
-                        const getSymbolInfo = (data: IIbcTxs[]) => {
-                            return data.map((item: IIbcTxs) => {
+                        const getSymbolInfo = (data: IIbcTx[]) => {
+                            return data.map((item: IIbcTx) => {
                                 const symbol =
                                     this.ibcDenomsMap[
                                         getDenomKey(item.sc_chain_id, item.denoms.sc_denom)

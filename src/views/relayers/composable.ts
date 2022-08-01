@@ -2,14 +2,14 @@ import { baseParams } from '@/service/tokens';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import ChainHelper from '@/helper/chainHelper';
 import { getRelayersListAPI } from '@/api/relayers';
-import { IResponseRelayerList, TRelayersListParams } from '@/types/interface/relayers.interface';
+import { IResponseRelayerList, TRelayersListParam } from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
 
 export const useGetRelayersList = () => {
     const list = ref([]);
     const total = ref(0);
 
-    const getList = async (params: TRelayersListParams = {}) => {
+    const getList = async (params: TRelayersListParam = {}) => {
         const { loading } = params;
         if (loading) {
             loading.value = true;

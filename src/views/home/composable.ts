@@ -1,5 +1,5 @@
 import { formatAge, getTimestamp } from '@/utils/timeTools';
-import { IBaseDenoms } from '@/types/interface/index.interface';
+import { IBaseDenom } from '@/types/interface/index.interface';
 import { useIbcStatisticsChains } from '@/store/index';
 import {
     ibcStatisticsChannelsDefault,
@@ -66,7 +66,7 @@ export const useGetIbcDenoms = () => {
         return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain_id == chainId);
     };
     const ibcBaseDenomsSorted = computed(() => {
-        const tokens: IBaseDenoms[] = [];
+        const tokens: IBaseDenom[] = [];
         const customs = ibcBaseDenoms.value.filter((item) => {
             return item.symbol == SYMBOL.ATOM || item.symbol == SYMBOL.IRIS;
         });

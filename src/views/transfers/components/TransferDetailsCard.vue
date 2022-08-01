@@ -208,7 +208,7 @@
         if (token?.amount >= 0 && token?.denom) {
             let symbol = '';
             if (chainID) {
-                symbol = ibcDenomsMap.value[getDenomKey(chainID, token?.denom)];
+                symbol = ibcDenomsMap.value[getDenomKey(chainID, token?.denom)]?.symbol;
             }
             let symbolNum = token?.amount || 0;
             let symbolDenom = token?.denom || '';
