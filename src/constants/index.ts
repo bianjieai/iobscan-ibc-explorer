@@ -1,3 +1,5 @@
+import { TBaseParams } from '@/types/interface/index.interface';
+
 export const testChains = {
     active: [
         {
@@ -129,6 +131,7 @@ export const PAGE_PARAMETERS = {
     tokens: 'tokens',
     ibcToken: 'ibcToken',
     channel: 'channel',
+    channels: 'channels',
     relayers: 'relayers',
     denom: 'denom'
 };
@@ -461,4 +464,10 @@ export const NEED_CUSTOM_COLUMN = {
         'txs_success_rate',
         'transfer_total_txs'
     ]
+};
+
+export const BASE_PARAMS: TBaseParams = {
+    use_count: false,
+    page_num: 1,
+    page_size: 3000
 };

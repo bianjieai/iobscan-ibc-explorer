@@ -57,62 +57,22 @@
 <script lang="ts" setup>
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS } from '@/constants/chains';
-    import { useIbcChains } from '../home/composable';
-    import { onMounted, ref } from 'vue';
-    import { useGetChainsList } from '@/service/chains';
-    import { useRouter } from 'vue-router';
-    import { useNeedCustomColumns } from '@/composables';
+    import { useIbcChains, useLoading, useNeedCustomColumns } from '@/composables';
+    import { onMounted } from 'vue';
+    import { useGetChainsList, useJump } from '@/views/chains/composable';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { formatBigNumber } from '@/helper/parseStringHelper';
-
-    const router = useRouter();
 
     const { ibcChains, getIbcChains } = useIbcChains();
     const { list, getList } = useGetChainsList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.chains);
-    const loading = ref(false);
+    const { loading } = useLoading();
+    const { goChannels, goRelayers, goTransfer } = useJump();
 
     onMounted(() => {
         !sessionStorage.getItem('allChains') && getIbcChains();
         getList(loading);
     });
-
-    const goChannels = (chain: string) => {
-        router.push({
-            path: '/channels',
-            query: {
-                chain
-            }
-        });
-    };
-
-    const goRelayers = (chain: string, status: number) => {
-        router.push({
-            path: '/relayers',
-            query: {
-                chain,
-                status
-            }
-        });
-    };
-
-    // const goTokens = (chain_id: string) => {
-    //   router.push({
-    //     path: '/tokens',
-    //     query: {
-    //       chain_id
-    //     }
-    //   })
-    // }
-
-    const goTransfer = (chain_id: string) => {
-        router.push({
-            path: '/transfers',
-            query: {
-                chain: chain_id + ',allchain'
-            }
-        });
-    };
 </script>
 
 <style lang="less" scoped>

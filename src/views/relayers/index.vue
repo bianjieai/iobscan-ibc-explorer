@@ -101,97 +101,32 @@
     import NamePopover from './components/NamePopover.vue';
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
-    import { computed, onMounted, ref } from 'vue';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
-    import { useIbcChains } from '../home/composable';
-    import { useGetRelayersList } from './composable';
-    import { useRoute, useRouter } from 'vue-router';
-    import { useNeedCustomColumns } from '@/composables';
-    import { formatBigNumber } from '@/helper/parseStringHelper';
-    import { urlHelper } from '@/utils/urlTools';
+    import { useIbcChains, useNeedCustomColumns, useLoading, useJump } from '@/composables';
+    import {
+        useGetRelayersList,
+        useQuery,
+        useSelected,
+        useRef,
+        useSubTitleComputed
+    } from './composable';
 
-    const loading = ref(false);
-    let pageUrl = '/relayers';
-
-    const route = useRoute();
-    const router = useRouter();
-
-    const chainIdQuery = route.query.chain as string;
-    const statusQuery = route.query.status as TRelayerStatus;
-
+    const { loading } = useLoading();
     const { ibcChains, getIbcChains } = useIbcChains();
     const { list, getList, total } = useGetRelayersList();
-
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
-
-    const chainDropdown = ref();
-    const statusDropdown = ref();
-
-    const originalChainRef = () => {
-        if (!chainIdQuery) return;
-        if (chainIdQuery.includes(',')) {
-            return `${chainIdQuery}`;
-        } else {
-            return `${chainIdQuery},allchain`;
-        }
-    };
-    const searchChain = ref(originalChainRef());
-    const searchStatus = ref(statusQuery ? statusQuery : undefined);
-
-    onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
-
-        refreshList();
-    });
-
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value) {
-            return `${formatBigNumber(total.value, 0)} relayers found`;
-        } else {
-            return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} relayers found`;
-        }
-    });
-
-    const refreshList = () => {
-        getList({
-            chain: searchChain.value,
-            status: searchStatus.value,
-            loading: loading
-        });
-    };
-
-    const onSelectedChain = (chain_id?: string) => {
-        searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pageUrl = urlHelper(pageUrl, {
-            key: 'chain',
-            value: searchChain.value as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const onSelectedStatus = (value?: number | string) => {
-        searchStatus.value = value as TRelayerStatus;
-        pageUrl = urlHelper(pageUrl, {
-            key: 'status',
-            value: value as TRelayerStatus
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    // reset
-    const resetSearchCondition = () => {
-        location.href = '/relayers';
-    };
-
-    const goChains = () => {
-        router.push('/chains');
-    };
+    const { chainIdQuery, statusQuery } = useQuery();
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useSelected(
+        chainIdQuery,
+        statusQuery,
+        getList,
+        getIbcChains,
+        loading
+    );
+    const { goChains, resetSearchCondition } = useJump(`/${PAGE_PARAMETERS.relayers}`);
+    const { chainDropdown, statusDropdown } = useRef();
+    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, list);
 </script>
 
 <style lang="less" scoped>
@@ -208,10 +143,6 @@
         &:nth-of-type(4) {
             padding-right: 26px !important;
         }
-    }
-
-    // pc
-    @media screen and (min-width: 768px) {
     }
 
     // tablet

@@ -103,130 +103,43 @@
 </template>
 
 <script lang="ts" setup>
-    // todo clippers => 确认提示Name单元格Token Hash:的字段
+    import { useIbcChains, useJump, useLoading, useNeedCustomColumns } from '@/composables';
     import { PAGE_PARAMETERS } from '@/constants';
-    import { IBC_COLUMNS, IBC_STATUS_OPTIONS, SPECIAL_TOKEN_TYPE } from '@/constants/tokens';
-    import { computed, onMounted, ref } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
-    import { TIbcTokenType, useGetIbcTokenList } from '@/service/tokens';
-    import { useGetIbcDenoms, useIbcChains } from '../home/composable';
-    import { useNeedCustomColumns } from '@/composables';
-    import { getRestString, rmIbcPrefix, formatBigNumber } from '@/helper/parseStringHelper';
+    import { IBC_STATUS_OPTIONS, IBC_COLUMNS, SPECIAL_TOKEN_TYPE } from '@/constants/tokens';
+    import { formatBigNumber, getRestString, rmIbcPrefix } from '@/helper/parseStringHelper';
     import { formatAmount } from '@/helper/tableCellHelper';
-    import { isNullOrEmpty } from '@/utils/objectTools';
-    import { urlHelper } from '@/utils/urlTools';
+    import { useGetIbcDenoms } from '../home/composable';
+    import {
+        useGetIbcTokenList,
+        useQuery,
+        useSelected,
+        useRef,
+        useSubTitleComputed,
+        useColumnJump,
+        useBaseDenomInfoComputed
+    } from './ibccomposable';
 
-    let pageUrl = '/tokens/details';
-
-    const router = useRouter();
-
+    const { loading } = useLoading();
     const { ibcChains, getIbcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
-
-    const route = useRoute();
-    const baseDenomQuery = route.query.denom as string;
-    const chainIdQuery = route.query.chain as string;
-    const statusQuery = route.query.status as TIbcTokenType;
-
+    const { baseDenomQuery, chainIdQuery, statusQuery } = useQuery();
     const { list, total, getList } = useGetIbcTokenList(baseDenomQuery);
-
-    const baseDenomInfo = computed(() => {
-        const filterData = ibcBaseDenoms.filter(
-            (item: any) => item.denom === baseDenomQuery
-        ) as any; // todo clippers => 补上类型
-        let symbol = '';
-        const filterSymbol = filterData[0]?.symbol;
-
-        if (filterData.length === 0 || isNullOrEmpty(filterSymbol)) {
-            symbol = getRestString(baseDenomQuery, 3, 8);
-        } else {
-            if (filterSymbol.includes('ibc')) {
-                symbol = getRestString(filterSymbol.replace(/ibc\//, ''), 3, 8);
-            } else {
-                symbol = filterSymbol;
-            }
-        }
-
-        return {
-            symbol,
-            imgSrc:
-                filterData[0]?.icon ??
-                new URL('../../assets/token-default.png', import.meta.url).href
-        };
-    });
-
+    const { baseDenomInfo } = useBaseDenomInfoComputed(ibcBaseDenoms, baseDenomQuery);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
-
-    const chainDropdown = ref();
-    const statusDropdown = ref();
-
-    const searchChain = ref<string | undefined>(chainIdQuery ?? undefined);
-    const searchStatus = ref<TIbcTokenType | undefined>(statusQuery);
-
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value) {
-            return `${formatBigNumber(total.value, 0)} tokens found`;
-        } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} tokens found`;
-        }
-    });
-
-    onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
-        getIbcBaseDenom();
-
-        refreshList();
-    });
-
-    const loading = ref(false);
-    const refreshList = () => {
-        getList({
-            chain: searchChain.value,
-            token_type: searchStatus.value,
-            loading: loading
-        });
-    };
-
-    const onSelectedChain = (chain?: string | number) => {
-        searchChain.value = chain as string;
-        pageUrl = urlHelper(pageUrl, {
-            key: 'chain',
-            value: chain as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const onSelectedStatus = (status?: string | number) => {
-        searchStatus.value = status as TIbcTokenType;
-        pageUrl = urlHelper(pageUrl, {
-            key: 'status',
-            value: status as TIbcTokenType
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const resetSearchCondition = () => {
-        location.href = `/tokens/details?denom=${baseDenomQuery}`;
-    };
-
-    const goChains = () => {
-        router.push('/chains');
-    };
-
-    const goTransfer = (chain_id: string, denom: string) => {
-        router.push({
-            path: '/transfers',
-            query: {
-                chain: chain_id,
-                denom
-            }
-        });
-    };
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useSelected(
+        chainIdQuery,
+        statusQuery,
+        getList,
+        getIbcChains,
+        getIbcBaseDenom,
+        loading
+    );
+    const { chainDropdown, statusDropdown } = useRef();
+    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, list);
+    const { goTransfer } = useColumnJump();
+    const { goChains, resetSearchCondition } = useJump(
+        `/${PAGE_PARAMETERS.tokens}/details?denom=${baseDenomQuery}`
+    );
 </script>
 
 <style lang="less" scoped>

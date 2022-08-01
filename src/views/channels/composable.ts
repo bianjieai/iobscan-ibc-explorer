@@ -1,26 +1,26 @@
-import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
+import { getChannelsListAPI } from '@/api/channels';
+import { BASE_PARAMS } from '@/constants';
+import { API_CODE } from '@/constants/apiCode';
 import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
-import { getRelayersListAPI } from '@/api/relayers';
-import { TRelayerStatus } from '@/types/interface/components/table.interface';
-import { IResponseRelayerList, TRelayersListParams } from '@/types/interface/relayers.interface';
-import { API_CODE } from '@/constants/apiCode';
+import { IResponseChannelsList, TChannelsListParams } from '@/types/interface/channels.interface';
+import { TChannelStatus } from '@/types/interface/components/table.interface';
 import { urlHelper } from '@/utils/urlTools';
 import { Ref } from 'vue';
-import { BASE_PARAMS } from '@/constants';
 
-export const useGetRelayersList = () => {
+export const useGetChannelsList = () => {
     const list = ref([]);
     const total = ref(0);
 
-    const getList = async (params: TRelayersListParams = {}) => {
+    const getList = async (params: TChannelsListParams = {}) => {
         const { loading } = params;
+
         if (loading) {
             loading.value = true;
             delete params.loading;
         }
         try {
-            const result = await getRelayersListAPI({
+            const result = await getChannelsListAPI({
                 ...BASE_PARAMS,
                 ...params
             });
@@ -28,16 +28,8 @@ export const useGetRelayersList = () => {
             const { code, data, message } = result;
             if (code === API_CODE.success) {
                 if (!params.use_count) {
-                    const { items } = data as IResponseRelayerList;
-                    list.value = ChainHelper.sortByChainName(items, params.chain)?.map(
-                        (item: any) => {
-                            item.txs_success_rate = formatTransfer_success_txs(
-                                item.transfer_success_txs,
-                                item.transfer_total_txs
-                            );
-                            return item;
-                        }
-                    );
+                    const { items } = data as IResponseChannelsList;
+                    list.value = ChainHelper.sortByChainName(items, params.chain);
                 } else {
                     total.value = data as number;
                 }
@@ -50,7 +42,6 @@ export const useGetRelayersList = () => {
         }
     };
     getList({ use_count: true });
-
     return {
         list,
         total,
@@ -61,30 +52,24 @@ export const useGetRelayersList = () => {
 export const useQuery = () => {
     const route = useRoute();
     const chainIdQuery = route.query.chain as string;
-    const statusQuery = route.query.status as TRelayerStatus;
+    const statusQuery = route.query.status as TChannelStatus;
     return {
         chainIdQuery,
         statusQuery
     };
 };
+
 export const useSelected = (
     chainIdQuery: string,
-    statusQuery: TRelayerStatus,
+    statusQuery: TChannelStatus,
     getList: any,
     getIbcChains: any,
     loading: Ref<boolean>
 ) => {
-    let pageUrl = '/relayers';
+    let pageUrl = '/channels';
+
     const router = useRouter();
-    const originalChainRef = () => {
-        if (!chainIdQuery) return;
-        if (chainIdQuery.includes(',')) {
-            return `${chainIdQuery}`;
-        } else {
-            return `${chainIdQuery},allchain`;
-        }
-    };
-    const searchChain = ref(originalChainRef());
+    const searchChain = ref(chainIdQuery ? chainIdQuery : undefined);
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
     const refreshList = () => {
         getList({
@@ -104,10 +89,10 @@ export const useSelected = (
     };
 
     const onSelectedStatus = (value?: number | string) => {
-        searchStatus.value = value as TRelayerStatus;
+        searchStatus.value = value as TChannelStatus;
         pageUrl = urlHelper(pageUrl, {
             key: 'status',
-            value: value as TRelayerStatus
+            value: value as TChannelStatus
         });
         router.replace(pageUrl);
         refreshList();
@@ -124,6 +109,7 @@ export const useSelected = (
         onSelectedStatus
     };
 };
+
 export const useRef = () => {
     const chainDropdown = ref();
     const statusDropdown = ref();
@@ -132,20 +118,21 @@ export const useRef = () => {
         statusDropdown
     };
 };
+
 export const useSubTitleComputed = (
     searchChain: Ref<string | undefined>,
-    searchStatus: Ref<TRelayerStatus | undefined>,
+    searchStatus: Ref<TChannelStatus | undefined>,
     total: Ref<number>,
     list: Ref<never[]>
 ) => {
     const subtitle = computed(() => {
         if (!searchChain.value && !searchStatus.value) {
-            return `${formatBigNumber(total.value, 0)} relayers found`;
+            return `${formatBigNumber(total.value, 0)} channels found`;
         } else {
-            return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(
+            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
                 total.value,
                 0
-            )} relayers found`;
+            )} channels found`;
         }
     });
     return {

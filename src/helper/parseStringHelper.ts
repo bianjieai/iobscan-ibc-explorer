@@ -2,7 +2,7 @@ import { floor } from 'lodash-es';
 import { BigNumber } from 'bignumber.js';
 import { isString } from '@/utils/objectTools';
 
-function getRestString(string: any, left: any, right: any) {
+function getRestString(string: any, left: number, right: number) {
     if (!isString(string)) return;
     if (string.length <= Number(left) + Number(right)) {
         return string;
@@ -16,11 +16,6 @@ function rmIbcPrefix(ibcHash = '') {
 
 function getLasttyString(string: string) {
     return string && string.length > 20 ? `${string.substring(0, 10)}...` : string;
-}
-
-function getRestString2(string: any, length: number) {
-    if (!isString(string) || String(string).length <= length) return string;
-    return `${string.substr(0, length)}...`;
 }
 
 function formatLongTitleString(string: any) {
@@ -81,6 +76,5 @@ export {
     formatNum,
     getLasttyString,
     formatBigNumber,
-    getRestString2,
     formatLongTitleString
 };

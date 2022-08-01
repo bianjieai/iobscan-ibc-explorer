@@ -85,87 +85,32 @@
 <script setup lang="ts">
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/channels';
-    import { computed, onMounted, ref } from 'vue';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
     import { TChannelStatus, BottomStatusType } from '@/types/interface/components/table.interface';
-    import { useGetChannelsList } from '@/service/channels';
-    import { useIbcChains } from '../home/composable';
-    import { useNeedCustomColumns } from '@/composables';
-    import { useRoute, useRouter } from 'vue-router';
-    import { formatBigNumber } from '@/helper/parseStringHelper';
-    import { urlHelper } from '@/utils/urlTools';
+    import { useIbcChains, useNeedCustomColumns, useJump, useLoading } from '@/composables';
+    import {
+        useGetChannelsList,
+        useQuery,
+        useSelected,
+        useRef,
+        useSubTitleComputed
+    } from '@/views/channels/composable';
 
-    let pageUrl = '/channels';
-
-    const route = useRoute();
-    const router = useRouter();
-    const chainIdQuery = route.query.chain as string;
-    const statusQuery = route.query.status as TChannelStatus;
-
+    const { loading } = useLoading();
     const { ibcChains, getIbcChains } = useIbcChains();
+    const { chainIdQuery, statusQuery } = useQuery();
     const { list, total, getList } = useGetChannelsList();
-
-    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channel);
-
-    const chainDropdown = ref();
-    const statusDropdown = ref();
-
-    const searchChain = ref(chainIdQuery ? chainIdQuery : undefined);
-    const searchStatus = ref(statusQuery ? statusQuery : undefined);
-
-    onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
-
-        refreshList();
-    });
-
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value) {
-            return `${formatBigNumber(total.value, 0)} channels found`;
-        } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} channels found`;
-        }
-    });
-    const loading = ref(false);
-    const refreshList = () => {
-        getList({
-            chain: searchChain.value,
-            status: searchStatus.value,
-            loading: loading
-        });
-    };
-
-    const onSelectedChain = (chain_id?: string) => {
-        searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pageUrl = urlHelper(pageUrl, {
-            key: 'chain',
-            value: searchChain.value as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const onSelectedStatus = (value?: number | string) => {
-        searchStatus.value = value as TChannelStatus;
-        pageUrl = urlHelper(pageUrl, {
-            key: 'status',
-            value: value as TChannelStatus
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    // reset
-    const resetSearchCondition = () => {
-        location.href = '/channels';
-    };
-
-    const goChains = () => {
-        router.push('/chains');
-    };
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channels);
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useSelected(
+        chainIdQuery,
+        statusQuery,
+        getList,
+        getIbcChains,
+        loading
+    );
+    const { chainDropdown, statusDropdown } = useRef();
+    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, list);
+    const { goChains, resetSearchCondition } = useJump(`/${PAGE_PARAMETERS.channels}`);
 </script>
 
 <style lang="less" scoped>

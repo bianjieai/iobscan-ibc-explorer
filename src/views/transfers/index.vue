@@ -343,20 +343,16 @@
         PAGE_PARAMETERS,
         txStatusNumber,
         CHAINNAME
-    } from '../../constants';
-    import Tools from '../../utils/Tools';
-    import chainDefaultImg from '../../assets/home/chain-default.png';
-    import tokenDefaultImg from '../../assets/token-default.png';
-    import {
-        JSONparse,
-        getRestString,
-        formatNum,
-        rmIbcPrefix
-    } from '../../helper/parseStringHelper';
-    import ChainHelper from '../../helper/chainHelper';
+    } from '@/constants';
+    import Tools from '@/utils/Tools';
+    import chainDefaultImg from '@/assets/home/chain-default.png';
+    import tokenDefaultImg from '@/assets/token-default.png';
+    import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
+    import ChainHelper from '@/helper/chainHelper';
     import * as djs from 'dayjs';
     import { ref, reactive, computed, onMounted, watch } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
+    import { useIbcChains } from '@/composables';
     import { useGetIbcDenoms } from '../home/composable';
 
     import {
@@ -364,7 +360,6 @@
         useGetTokens,
         useSelectedSymbol,
         usePagination,
-        useIbcChains,
         useGetTableColumns
     } from './composable';
     import { useIbcStatistics } from '@/composables/home';

@@ -47,3 +47,9 @@ export interface IBaseDenoms {
     symbol: string;
     update_at: number;
 }
+
+export type TBaseParams = {
+    use_count?: boolean;
+    page_num: number;
+    page_size: number;
+};

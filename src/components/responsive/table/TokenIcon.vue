@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-    import { getRestString, getRestString2 } from '@/helper/parseStringHelper';
+    import { getRestString } from '@/helper/parseStringHelper';
     import { IBaseDenoms } from '@/types/interface/index.interface';
     import { computed } from 'vue';
     import {
@@ -68,7 +68,7 @@
             return {
                 defaultTitle: filterData.symbol,
                 title: props.basePage
-                    ? getRestString2(filterData.symbol, 6)
+                    ? getRestString(filterData.symbol, 6, 0)
                     : getRestString(filterData.symbol, 3, 8),
                 subtitle: 'Authed',
                 imgSrc: filterData.icon
@@ -79,7 +79,7 @@
             return {
                 defaultTitle: props.denom,
                 title: props.basePage
-                    ? getRestString2(props.denom, 6)
+                    ? getRestString(props.denom, 6, 0)
                     : getRestString(props.denom, 3, 8),
                 subtitle: 'Other',
                 imgSrc: new URL('../../../assets/token-default.png', import.meta.url).href
