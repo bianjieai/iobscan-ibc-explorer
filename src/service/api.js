@@ -44,10 +44,10 @@ function get(url, params) {
 //     return get(url);
 // }
 
-function getIbcStatistics() {
-    const url = '/ibc/statistics';
-    return get(url);
-}
+// function getIbcStatistics() {
+//     const url = '/ibc/statistics';
+//     return get(url);
+// }
 
 function getIbcConfig() {
     const url = '/ibc/config';
@@ -59,4 +59,4 @@ function getTxDetailsByTxHash(txHash) {
     return get(url);
 }
 
-export { getIbcStatistics, getIbcConfig, getTxDetailsByTxHash };
+export { getIbcConfig, getTxDetailsByTxHash };

@@ -6,11 +6,12 @@
                 ref="tokensDropdown"
                 :base-denom="denomQuery"
                 :dropdown-data="ibcBaseDenomsSorted"
+                :dropdown-data-symbol-map="ibcBaseDenomsSymbolKeyMapGetter"
                 @on-tokens-selected="onSelectedToken"
             />
             <ChainsDropdown
                 ref="chainDropdown"
-                :dropdown-data="ibcChains?.all"
+                :dropdown-data="ibcChains?.all || []"
                 :chain-id="chainIdQuery"
                 @on-selected-chain="onSelectedChain"
             />
@@ -132,9 +133,14 @@
 
     const { loading } = useLoading();
     const { chainIdQuery, denomQuery, statusQuery } = useQuery();
-    const { ibcChains, getIbcChains } = useIbcChains();
-    const { ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom, getBaseDenomInfoByDenom } =
-        useGetIbcDenoms();
+    const { ibcChains } = useIbcChains();
+    const {
+        ibcBaseDenoms,
+        ibcBaseDenomsSorted,
+        ibcBaseDenomsSymbolKeyMapGetter,
+        getIbcBaseDenom,
+        getBaseDenomInfoByDenom
+    } = useGetIbcDenoms();
     const { list, getList, total } = useGetTokenList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
     const {
@@ -144,15 +150,7 @@
         onSelectedToken,
         onSelectedChain,
         onSelectedStatus
-    } = useSelected(
-        denomQuery,
-        chainIdQuery,
-        statusQuery,
-        getList,
-        getIbcChains,
-        getIbcBaseDenom,
-        loading
-    );
+    } = useSelected(denomQuery, chainIdQuery, statusQuery, getList, getIbcBaseDenom, loading);
     const { chainDropdown, statusDropdown, tokensDropdown } = useRef();
     const { subtitle } = useSubTitleComputed(searchChain, searchDenom, searchStatus, total, list);
     const { goIbcToken, goTransfer } = useColumnJump(getBaseDenomInfoByDenom);

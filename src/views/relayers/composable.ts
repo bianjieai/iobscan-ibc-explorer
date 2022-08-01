@@ -3,9 +3,9 @@ import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { getRelayersListAPI } from '@/api/relayers';
 import { TRelayerStatus } from '@/types/interface/components/table.interface';
-import { IResponseRelayerList, TRelayersListParams } from '@/types/interface/relayers.interface';
+import { IResponseRelayerList, TRelayersListParam } from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
-import { urlHelper } from '@/utils/urlTools';
+import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
 import { BASE_PARAMS } from '@/constants';
 
@@ -13,7 +13,7 @@ export const useGetRelayersList = () => {
     const list = ref([]);
     const total = ref(0);
 
-    const getList = async (params: TRelayersListParams = {}) => {
+    const getList = async (params: TRelayersListParam = {}) => {
         const { loading } = params;
         if (loading) {
             loading.value = true;
@@ -71,7 +71,6 @@ export const useSelected = (
     chainIdQuery: string,
     statusQuery: TRelayerStatus,
     getList: any,
-    getIbcChains: any,
     loading: Ref<boolean>
 ) => {
     let pageUrl = '/relayers';
@@ -95,7 +94,7 @@ export const useSelected = (
     };
     const onSelectedChain = (chain_id?: string) => {
         searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: searchChain.value as string
         });
@@ -105,7 +104,7 @@ export const useSelected = (
 
     const onSelectedStatus = (value?: number | string) => {
         searchStatus.value = value as TRelayerStatus;
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'status',
             value: value as TRelayerStatus
         });
@@ -114,7 +113,6 @@ export const useSelected = (
     };
 
     onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
         refreshList();
     });
     return {

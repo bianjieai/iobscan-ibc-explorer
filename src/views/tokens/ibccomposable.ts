@@ -8,7 +8,8 @@ import {
     TIbcTokenType
 } from '@/types/interface/tokens.interface';
 import { isNullOrEmpty } from '@/utils/objectTools';
-import { urlHelper } from '@/utils/urlTools';
+import { urlPageParser } from '@/utils/urlTools';
+import { Ref } from 'vue';
 
 export const useGetIbcTokenList = (base_denom: string) => {
     const list = ref([]);
@@ -66,7 +67,6 @@ export const useSelected = (
     chainIdQuery: string,
     statusQuery: TIbcTokenType,
     getList: any,
-    getIbcChains: any,
     getIbcBaseDenom: any,
     loading: Ref<boolean>
 ) => {
@@ -83,7 +83,7 @@ export const useSelected = (
     };
     const onSelectedChain = (chain?: string | number) => {
         searchChain.value = chain as string;
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: chain as string
         });
@@ -93,7 +93,7 @@ export const useSelected = (
 
     const onSelectedStatus = (status?: string | number) => {
         searchStatus.value = status as TIbcTokenType;
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'status',
             value: status as TIbcTokenType
         });
@@ -102,7 +102,6 @@ export const useSelected = (
     };
 
     onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
         getIbcBaseDenom();
         refreshList();
     });

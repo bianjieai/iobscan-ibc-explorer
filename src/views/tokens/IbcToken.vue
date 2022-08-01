@@ -46,7 +46,7 @@
                     <div
                         v-if="getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol"
                         >{{
-                            getBaseDenomInfoByDenom(record[column.key], record.chain_id).symbol
+                            getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol
                         }}</div
                     >
                     <div v-else>
@@ -120,7 +120,7 @@
     } from './ibccomposable';
 
     const { loading } = useLoading();
-    const { ibcChains, getIbcChains } = useIbcChains();
+    const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
     const { baseDenomQuery, chainIdQuery, statusQuery } = useQuery();
     const { list, total, getList } = useGetIbcTokenList(baseDenomQuery);
@@ -130,7 +130,6 @@
         chainIdQuery,
         statusQuery,
         getList,
-        getIbcChains,
         getIbcBaseDenom,
         loading
     );

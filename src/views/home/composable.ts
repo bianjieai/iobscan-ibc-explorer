@@ -1,5 +1,5 @@
-import Tools from '@/utils/Tools';
-import { IBaseDenoms } from '@/types/interface/index.interface';
+import { formatAge, getTimestamp } from '@/utils/timeTools';
+import { IBaseDenom } from '@/types/interface/index.interface';
 import { useIbcStatisticsChains } from '@/store/index';
 import {
     ibcStatisticsChannelsDefault,
@@ -31,11 +31,12 @@ export const useIbcTxs = () => {
     };
     useTimeInterval(() => {
         ibcTxs.value = ibcTxs.value.map((item: any) => {
-            item.parseTime = Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', '');
+            item.parseTime = formatAge(getTimestamp(), item.tx_time * 1000, '', '');
             return item;
         });
     });
-    onMounted(() => {
+    onMounted(async () => {
+        await ibcStatisticsChainsStore.getIbcDenomsAction();
         getIbcTxs({ page_num: 1, page_size: 100, use_count: false });
     });
     onBeforeUnmount(() => {
@@ -50,18 +51,19 @@ export const useIbcTxs = () => {
 };
 
 export const useGetIbcDenoms = () => {
-    const ibcBaseDenoms = ibcStatisticsChainsStore.ibcBaseDenoms;
+    const { ibcBaseDenoms, ibcBaseDenomsSymbolKeyMapGetter } =
+        storeToRefs(ibcStatisticsChainsStore);
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
     const getBaseDenomInfoByDenom = (denom: string, chainId: string) => {
-        return ibcBaseDenoms.find((item) => item.denom == denom && item.chain_id == chainId);
+        return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain_id == chainId);
     };
     const ibcBaseDenomsSorted = computed(() => {
-        const tokens: IBaseDenoms[] = [];
-        const customs = (ibcBaseDenoms || []).filter((item) => {
+        const tokens: IBaseDenom[] = [];
+        const customs = ibcBaseDenoms.value.filter((item) => {
             return item.symbol == SYMBOL.ATOM || item.symbol == SYMBOL.IRIS;
         });
         customs.sort((a, b) => a.symbol.localeCompare(b.symbol));
-        ibcBaseDenoms
+        ibcBaseDenoms.value
             .sort((a, b) => a.symbol.localeCompare(b.symbol))
             .forEach((item) => {
                 if (item.symbol != SYMBOL.ATOM && item.symbol != SYMBOL.IRIS) {
@@ -72,6 +74,7 @@ export const useGetIbcDenoms = () => {
     });
     return {
         ibcBaseDenoms,
+        ibcBaseDenomsSymbolKeyMapGetter,
         ibcBaseDenomsSorted,
         getIbcBaseDenom,
         getBaseDenomInfoByDenom

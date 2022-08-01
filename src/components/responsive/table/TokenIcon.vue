@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
     import { getRestString } from '@/helper/parseStringHelper';
-    import { IBaseDenoms } from '@/types/interface/index.interface';
+    import { IBaseDenom } from '@/types/interface/index.interface';
     import { computed } from 'vue';
     import {
         TableCellIconSize,
@@ -49,7 +49,7 @@
         iconSize?: TTableCellIconSize;
         denom: string;
         chainId: string;
-        denomsData: IBaseDenoms[];
+        denomsData: IBaseDenom[];
         titleCanClick?: boolean;
         tokenType?: string;
         basePage?: boolean; // 是否是 /tokens 页面

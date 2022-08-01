@@ -145,17 +145,20 @@
 </template>
 
 <script setup>
-    import Tools from '../../../utils/Tools';
     import moveDecimal from 'move-decimal-point';
-    import { transfersDetailStatus, ackConnectStatus } from '../../../constants';
-    import { ref } from 'vue';
+    import { transfersDetailStatus, ackConnectStatus } from '@/constants';
     import * as djs from 'dayjs';
-    import { getRestString, formatBigNumber } from '../../../helper/parseStringHelper';
-    import { useGetIbcBaseDenoms } from '../composable';
+    import { getRestString, formatBigNumber } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
-    const { ibcBaseDenoms } = useGetIbcBaseDenoms();
+    import { getDenomKey } from '@/helper/baseDenomHelper';
+    import { formatAge, getTimestamp } from '@/utils/timeTools';
+    import { useIbcStatisticsChains } from '@/store/index';
 
-    const props = defineProps({
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    const { ibcDenomsMapGetter, ibcBaseDenomsSymbolKeyMapGetter } =
+        storeToRefs(ibcStatisticsChainsStore);
+
+    defineProps({
         title: {
             type: String,
             default: ''
@@ -175,12 +178,6 @@
         baseDenom: {
             type: String,
             default: ''
-        },
-        ibcDenoms: {
-            type: Object,
-            default() {
-                return {};
-            }
         },
         chainId: {
             type: String,
@@ -212,13 +209,13 @@
         if (token?.amount >= 0 && token?.denom) {
             let symbol = '';
             if (chainID) {
-                symbol = Tools.findDenomSymbol(props.ibcDenoms.value, token?.denom, chainID);
+                symbol = ibcDenomsMapGetter.value[getDenomKey(chainID, token?.denom)]?.symbol;
             }
             let symbolNum = token?.amount || 0;
             let symbolDenom = token?.denom || '';
             let denom = token?.denom || '';
             if (symbol) {
-                const findSymbol = Tools.findSymbol(ibcBaseDenoms, symbol);
+                const findSymbol = ibcBaseDenomsSymbolKeyMapGetter.value[symbol];
                 if (findSymbol) {
                     // (token.amount || 0) * 10 ** -findSymbol.scale;
                     symbolNum = formatBigNumber(moveDecimal(token.amount, 0 - findSymbol.scale));
@@ -255,18 +252,6 @@
         if (Array.isArray(fee)) {
             const amountObj = fee[0];
             return amountObj;
-            /*let displayAmountNum = '',displayAmountDenom = ''
-        if(amountObj?.denom && amountObj?.amount){
-            const tokenInfo = Tools.findDenom(store.state.ibcBaseDenoms,amountObj.denom)
-            if(tokenInfo?.scale){
-                displayAmountNum =  moveDecimal(amountObj.amount,0 - tokenInfo.scale)
-                displayAmountDenom = tokenInfo.symbol
-            }else {
-                displayAmountNum = amountObj.amount
-                displayAmountDenom = amountObj.denom
-            }
-        }
-        return `${displayAmountNum} ${displayAmountDenom}`*/
         }
         return fee;
     };
@@ -277,13 +262,19 @@
 
     const formatDate = (timestamp) => {
         if (timestamp > 0) {
-            date.value = `${dayjs(timestamp * 1000).format(
-                'YYYY-MM-DD HH:mm:ss'
-            )} (${Tools.formatAge(Tools.getTimestamp(), timestamp * 1000, 'ago', '>')})`;
+            date.value = `${dayjs(timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
+                getTimestamp(),
+                timestamp * 1000,
+                'ago',
+                '>'
+            )})`;
             setTimeout(() => {
-                date.value = `${dayjs(timestamp * 1000).format(
-                    'YYYY-MM-DD HH:mm:ss'
-                )} (${Tools.formatAge(Tools.getTimestamp(), timestamp * 1000, 'ago', '>')})`;
+                date.value = `${dayjs(timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
+                    getTimestamp(),
+                    timestamp * 1000,
+                    'ago',
+                    '>'
+                )})`;
             }, 1000);
         } else {
             date.value = '--';

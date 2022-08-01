@@ -97,7 +97,7 @@
     } from '@/views/channels/composable';
 
     const { loading } = useLoading();
-    const { ibcChains, getIbcChains } = useIbcChains();
+    const { ibcChains } = useIbcChains();
     const { chainIdQuery, statusQuery } = useQuery();
     const { list, total, getList } = useGetChannelsList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channels);
@@ -105,7 +105,6 @@
         chainIdQuery,
         statusQuery,
         getList,
-        getIbcChains,
         loading
     );
     const { chainDropdown, statusDropdown } = useRef();

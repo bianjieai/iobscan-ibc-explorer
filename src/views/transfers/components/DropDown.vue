@@ -1,3 +1,4 @@
+<!-- todo duanjie 此组件可能会被删除 和 全局组件功能相同 -->
 <template>
     <a-dropdown
         :trigger="['click']"
@@ -119,10 +120,6 @@
     import { defaultTitle, unAuthed } from '@/constants';
     const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
     const props = defineProps({
-        options: {
-            type: Array,
-            default: () => []
-        },
         ibcBaseDenoms: {
             type: Array,
             default: () => []

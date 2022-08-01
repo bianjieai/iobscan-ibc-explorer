@@ -63,14 +63,13 @@
     import { formatAmount } from '@/helper/tableCellHelper';
     import { formatBigNumber } from '@/helper/parseStringHelper';
 
-    const { ibcChains, getIbcChains } = useIbcChains();
+    const { ibcChains } = useIbcChains();
     const { list, getList } = useGetChainsList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.chains);
     const { loading } = useLoading();
     const { goChannels, goRelayers, goTransfer } = useJump();
 
     onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
         getList(loading);
     });
 </script>

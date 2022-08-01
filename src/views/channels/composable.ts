@@ -5,8 +5,9 @@ import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { IResponseChannelsList, TChannelsListParams } from '@/types/interface/channels.interface';
 import { TChannelStatus } from '@/types/interface/components/table.interface';
-import { urlHelper } from '@/utils/urlTools';
-import { Ref } from 'vue';
+import { urlPageParser } from '@/utils/urlTools';
+import { computed, onMounted, ref, Ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 export const useGetChannelsList = () => {
     const list = ref([]);
@@ -63,7 +64,6 @@ export const useSelected = (
     chainIdQuery: string,
     statusQuery: TChannelStatus,
     getList: any,
-    getIbcChains: any,
     loading: Ref<boolean>
 ) => {
     let pageUrl = '/channels';
@@ -80,7 +80,7 @@ export const useSelected = (
     };
     const onSelectedChain = (chain_id?: string) => {
         searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: searchChain.value as string
         });
@@ -90,7 +90,7 @@ export const useSelected = (
 
     const onSelectedStatus = (value?: number | string) => {
         searchStatus.value = value as TChannelStatus;
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'status',
             value: value as TChannelStatus
         });
@@ -99,7 +99,6 @@ export const useSelected = (
     };
 
     onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
         refreshList();
     });
     return {

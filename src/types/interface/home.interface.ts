@@ -1,4 +1,4 @@
-export interface IRequestIbcDenom {
+export interface IResponseIbcDenom {
     chain_id: string;
     denom: string;
     base_denom: string;
@@ -9,7 +9,7 @@ export interface IRequestIbcDenom {
     update_at: number;
 }
 
-export interface IRequestIbcStatistics {
+export interface IResponseIbcStatistic {
     statistics_name: string;
     count: number;
 }

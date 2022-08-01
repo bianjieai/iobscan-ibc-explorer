@@ -113,7 +113,7 @@
     } from './composable';
 
     const { loading } = useLoading();
-    const { ibcChains, getIbcChains } = useIbcChains();
+    const { ibcChains } = useIbcChains();
     const { list, getList, total } = useGetRelayersList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
     const { chainIdQuery, statusQuery } = useQuery();
@@ -121,7 +121,6 @@
         chainIdQuery,
         statusQuery,
         getList,
-        getIbcChains,
         loading
     );
     const { goChains, resetSearchCondition } = useJump(`/${PAGE_PARAMETERS.relayers}`);

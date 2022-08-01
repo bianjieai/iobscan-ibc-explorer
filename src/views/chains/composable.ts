@@ -3,6 +3,7 @@ import { BASE_PARAMS, UNKNOWN } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { useIbcStatisticsChains } from '@/store';
 import { IResponseChainsList } from '@/types/interface/chains.interface';
+import { storeToRefs } from 'pinia';
 import { Ref } from 'vue';
 
 export const useGetChainsList = () => {
@@ -20,23 +21,18 @@ export const useGetChainsList = () => {
             const { code, data, message } = result;
             if (code === API_CODE.success) {
                 const { items } = data as IResponseChainsList;
-                // todo duanjie 待优化
-                const ibcChainsStr = sessionStorage.getItem('allChains');
-                let ibcChains: any;
-                if (ibcChainsStr) {
-                    ibcChains = JSON.parse(ibcChainsStr);
-                } else {
-                    const ibcStatisticsChainsStore = useIbcStatisticsChains();
-                    const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
+                const ibcStatisticsChainsStore = useIbcStatisticsChains();
+                const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
+                const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
+                if (Object.keys(ibcChains.value).length <= 0) {
                     try {
                         await getIbcChains();
-                        ibcChains = ibcStatisticsChainsStore.ibcChains;
                     } catch (error) {
-                        ibcChains = null;
+                        console.log('getIbcChains', error);
                     }
                 }
                 const ibcChainsAllMap: any = {};
-                (ibcChains?.all || []).forEach((ibcChain: any) => {
+                (ibcChains.value?.all || []).forEach((ibcChain: any) => {
                     ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
                 });
 

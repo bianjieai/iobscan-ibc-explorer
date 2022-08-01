@@ -4,8 +4,9 @@ import { API_CODE } from '@/constants/apiCode';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
 import { IResponseTokensList, TTokenListParams } from '@/types/interface/tokens.interface';
-import { urlHelper } from '@/utils/urlTools';
-import { Ref } from 'vue';
+import { urlPageParser } from '@/utils/urlTools';
+import { computed, onMounted, ref, Ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export const useGetTokenList = () => {
     const list = ref([]);
@@ -73,7 +74,6 @@ export const useSelected = (
     chainIdQuery: string,
     statusQuery: 'Authed' | 'Other',
     getList: any,
-    getIbcChains: any,
     getIbcBaseDenom: any,
     loading: Ref<boolean>
 ) => {
@@ -96,7 +96,7 @@ export const useSelected = (
         } else {
             searchDenom.value = '';
         }
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'denom',
             value: denom as string
         });
@@ -105,7 +105,7 @@ export const useSelected = (
     };
     const onSelectedChain = (chain?: string | number) => {
         searchChain.value = chain ? String(chain) : undefined;
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: chain as string
         });
@@ -115,7 +115,7 @@ export const useSelected = (
 
     const onSelectedStatus = (status?: string | number) => {
         searchStatus.value = status as 'Authed' | 'Other';
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'status',
             value: status as string
         });
@@ -124,7 +124,6 @@ export const useSelected = (
     };
 
     onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
         getIbcBaseDenom();
         refreshList();
     });

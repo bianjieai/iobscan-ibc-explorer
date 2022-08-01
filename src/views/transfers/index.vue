@@ -1,13 +1,13 @@
 <template>
     <!-- todo duanjie class="transfer"  设置了样式，看能不能复用 PageContainer 保持统一 -->
     <div class="transfer">
-        <div class="transfer_header">
+        <div class="transfer__header">
             <!-- todo duanjie 看能不能复用 PageTitle -->
-            <div class="transfer_header_container">
-                <div class="transfer_header_line">
-                    <p class="transfer_header_title">
+            <div class="transfer__header__container">
+                <div class="transfer__header__line">
+                    <p class="transfer__header__title">
                         IBC Token Transfer List
-                        <span class="transfer_header_num">
+                        <span class="transfer__header__num">
                             <i class="iconfont icon-shujuliebiao"></i>
                             {{ `${isIbcTxTotalAndHashFilter}` }}
                         </span>
@@ -15,16 +15,16 @@
                 </div>
             </div>
         </div>
-        <div class="transfer_middle">
-            <div class="transfer_middle_top">
-                <div class="transfer_middle_left">
+        <div class="transfer__middle">
+            <div class="transfer__middle__top">
+                <div class="transfer__middle__left">
                     <!-- todo duanjie 看能否使用 TokensDropDown 复用 -->
                     <drop-down
                         class="dropdown_token"
                         :ibc-base-denoms="ibcBaseDenomsSorted"
-                        :selected-symbol="selectedSymbol.value"
+                        :selected-symbol="selectedSymbol"
                         :show-icon="isShowSymbolIcon"
-                        :clear-input="clearInput.value"
+                        :clear-input="clearInput"
                         @click-item="onClickDropdownItem"
                         @click-search="(item) => onClickDropdownItem(item, 'customToken')"
                     />
@@ -32,7 +32,7 @@
                         ref="chainDropdown"
                         :selected-double="selectedDouble"
                         :need-badge="needBadge"
-                        :dropdown-data="ibcChains.all"
+                        :dropdown-data="ibcChains.all ?? []"
                         :chain_id="chainId"
                         :witch-page="PAGE_PARAMETERS.transfers"
                         @on-selected-chain="onSelectedChain"
@@ -60,7 +60,7 @@
                         </a-select-option>
                     </a-select>
                 </div>
-                <div class="transfer_middle_right">
+                <div class="transfer__middle__right">
                     <a-range-picker
                         :value="dateRange.value"
                         :disabled-date="disabledDate"
@@ -138,10 +138,10 @@
                     </a-button>
                 </div>
             </div>
-            <div class="transfer_middle_bottom">
+            <div class="transfer__middle__bottom">
                 <!-- todo duanjie 表格看能否复用  -->
                 <a-table
-                    class="transfer_table"
+                    class="transfer__table"
                     style="width: 100%"
                     :row-key="(record: any) => record.record_id"
                     :columns="tableColumns"
@@ -180,7 +180,7 @@
                                 </div>
                             </template>
                             <router-link
-                                class="token_link"
+                                class="token__link hover"
                                 :to="
                                     record.status === ibcTxStatus.SUCCESS
                                         ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}`
@@ -189,12 +189,14 @@
                                 @click.stop=""
                             >
                                 <img
-                                    class="token_icon"
-                                    :src="record.symbolIcon || tokenDefaultImg"
+                                    class="token__icon"
+                                    :src="record.symbolIcon || chainDefaultImg"
                                 />
-                                <span class="token_info">
-                                    <span class="token_num">{{ formatNum(record.symbolNum) }}</span>
-                                    <span class="token_denom">{{
+                                <span class="token__info">
+                                    <span class="token__info__num">{{
+                                        formatNum(record.symbolNum)
+                                    }}</span>
+                                    <span class="token__info__denom">{{
                                         getRestString(record.symbolDenom, 6, 0)
                                     }}</span>
                                 </span>
@@ -298,18 +300,18 @@
                         </a-popover>
                     </template>
                     <template #time="{ record }">
-                        <span>{{ formatDate(record.tx_time * 1000) }}</span>
+                        <span>{{ dayjsFormatDate(record.tx_time * 1000) }}</span>
                     </template>
                     <template #endTime="{ record }">
                         <span>{{
-                            record.end_time ? formatDate(record.end_time * 1000) : '--'
+                            record.end_time ? dayjsFormatDate(record.end_time * 1000) : '--'
                         }}</span>
                     </template>
                 </a-table>
             </div>
         </div>
         <!-- todo duanjie 状态和分页看能否复用  -->
-        <div v-if="tableCount" class="transfer_bottom">
+        <div v-if="tableCount" class="transfer__bottom">
             <span class="status_tips">
                 <span class="status_log">Status:</span>
                 <span v-for="(item, index) in ibcTxStatusDesc" :key="index" class="status_tip">
@@ -332,7 +334,6 @@
 
 <script setup lang="ts">
     import DropDown from './components/DropDown.vue';
-    import ChainsDropdown from '../../components/responsive/dropdown/ChainsDropdown';
     import {
         ibcTxStatusSelectOptions,
         transfersStatusOptions,
@@ -344,17 +345,11 @@
         txStatusNumber,
         CHAINNAME
     } from '@/constants';
-    import Tools from '@/utils/Tools';
     import chainDefaultImg from '@/assets/home/chain-default.png';
-    import tokenDefaultImg from '@/assets/token-default.png';
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
-    import * as djs from 'dayjs';
-    import { ref, reactive, computed, onMounted, watch } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
-    import { useIbcChains } from '@/composables';
-    import { useGetIbcDenoms } from '../home/composable';
-
+    import { useGetIbcDenoms } from '@/views/home/composable';
+    import { dayjsFormatDate } from '@/utils/timeTools';
     import {
         useIbcTxs,
         useGetTokens,
@@ -363,9 +358,12 @@
         useGetTableColumns
     } from './composable';
     import { useIbcStatistics } from '@/composables/home';
+    import dayjs from 'dayjs';
+    import { urlParser } from '@/utils/urlTools';
+    import { useIbcChains } from '@/composables';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
-    const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
+    const { ibcStatisticsTxs } = useIbcStatistics();
     const { tableCount, getIbcTxs } = useIbcTxs();
     const { ibcDenoms } = useGetTokens();
     const { selectedSymbol, isShowSymbolIcon, clearInput, isShowChainIcon } = useSelectedSymbol();
@@ -393,12 +391,7 @@
     const route = useRoute();
     const router = useRouter();
 
-    const dayjs = djs?.default || djs;
-
-    const formatDate = (time: any) => {
-        return dayjs(time).format('MM-DD HH:mm:ss');
-    };
-    const getImageUrl = (status: any) => {
+    const getImageUrl = (status: string | number) => {
         return new URL(`../../assets/home/status${status}.png`, import.meta.url).href;
     };
 
@@ -729,7 +722,7 @@
     };
     const onPaginationChange = (page: any) => {
         pagination.current = page;
-        const params: any = Tools.urlParser(url);
+        const params: any = urlParser(url);
         url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
 
         if (params?.chain) {
@@ -834,9 +827,6 @@
         }
         ibcTxTotalMoreThan500k.value = true;
     });
-    onMounted(() => {
-        getIbcStatistics();
-    });
 </script>
 
 <style lang="less" scoped>
@@ -846,15 +836,15 @@
         width: 100%;
         text-align: left;
         background-color: #f5f7fc;
-        &_header {
+        &__header {
             width: 100%;
-            &_container {
+            &__container {
                 position: relative;
                 margin: 0 auto;
                 width: 100%;
                 max-width: 1200px;
             }
-            &_line {
+            &__line {
                 position: absolute;
                 top: 11px;
                 display: inline-block;
@@ -866,7 +856,7 @@
                 );
                 border-radius: 5px;
             }
-            &_title {
+            &__title {
                 position: relative;
                 top: -11px;
                 padding-right: 16px;
@@ -875,25 +865,25 @@
                 color: #000000;
                 line-height: 20px;
             }
-            &_num {
+            &__num {
                 margin-left: 12px;
                 font-size: var(--bj-font-size-normal);
                 color: var(--bj-font-color-65);
             }
         }
-        &_middle {
+        &__middle {
             margin: 48px auto 0;
             max-width: 1200px;
-            &_top {
+            &__top {
                 .flex(row, nowrap, flex-start, center);
             }
-            &_left {
+            &__left {
                 .flex(row, nowrap, flex-start, center);
                 .ant-select {
                     width: 146px;
                 }
             }
-            &_right {
+            &__right {
                 .flex(row, nowrap, center, center);
                 & .tip {
                     margin-left: 7px;
@@ -904,11 +894,11 @@
                     height: 32px;
                 }
             }
-            &_bottom {
+            &__bottom {
                 margin-top: 16px;
             }
         }
-        &_table {
+        &__table {
             font-size: 14px;
             font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
@@ -925,7 +915,7 @@
             }
             .token {
                 background: red;
-                &_link {
+                &__link {
                     .flex(row, nowrap, flex-start, center);
                     &:hover {
                         .token_info {
@@ -938,32 +928,32 @@
                         }
                     }
                 }
-                &_icon {
+                &__icon {
                     width: 32px;
                     height: 32px;
                     border-radius: 50%;
                     margin-right: 8px;
                 }
-                &_info {
+                &__info {
                     .flex(column, nowrap, center, flex-start);
-                }
-                &_num {
-                    font-size: var(--bj-font-size-normal);
-                    color: var(--bj-text-second);
-                }
+                    &__num {
+                        font-size: var(--bj-font-size-normal);
+                        color: var(--bj-text-second);
+                    }
 
-                &_denom {
-                    margin-top: 4px;
-                    font-size: var(--bj-font-size-normal);
-                    font-family: Montserrat-Regular, Montserrat;
-                    color: var(--bj-text-third);
+                    &__denom {
+                        margin-top: 4px;
+                        font-size: var(--bj-font-size-normal);
+                        font-family: Montserrat-Regular, Montserrat;
+                        color: var(--bj-text-third);
+                    }
                 }
             }
             .status_icon {
                 width: 22px;
             }
         }
-        &_bottom {
+        &__bottom {
             .flex(row, nowrap, space-between, center);
             margin: 0 auto;
             padding: 16px 24px;
@@ -1095,33 +1085,33 @@
     }
     @media screen and (max-width: 1200px) {
         .transfer {
-            &_header {
-                &_container {
+            &__header {
+                &__container {
                 }
-                &_line {
+                &__line {
                 }
-                &_title {
+                &__title {
                 }
-                &_num {
+                &__num {
                 }
             }
-            &_middle {
-                &_top {
+            &__middle {
+                &__top {
                 }
-                &_left {
+                &__left {
                     .ant-select {
                     }
                 }
-                &_right {
+                &__right {
                     & .tip {
                     }
                     & button {
                     }
                 }
-                &_bottom {
+                &__bottom {
                 }
             }
-            &_table {
+            &__table {
                 width: 100%;
                 overflow-x: auto;
                 :deep(.ant-table-placeholder) {
@@ -1153,19 +1143,19 @@
                     background: rgba(61, 80, 255, 0.9);
                 }
                 .token {
-                    &_icon {
+                    &__icon {
                     }
 
-                    &_num {
+                    &__num {
                     }
 
-                    &_denom {
+                    &__denom {
                     }
                 }
                 .status_icon {
                 }
             }
-            &_bottom {
+            &__bottom {
                 & .status_tips {
                     .status_tip {
                     }
@@ -1189,35 +1179,35 @@
     }
     @media screen and (max-width: 970px) {
         .transfer {
-            &_header {
-                &_container {
+            &__header {
+                &__container {
                 }
-                &_line {
+                &__line {
                 }
-                &_title {
+                &__title {
                 }
-                &_num {
+                &__num {
                 }
             }
-            &_middle {
-                &_top {
+            &__middle {
+                &__top {
                     .flex(column, nowrap, flex-start, flex-start);
                 }
-                &_left {
+                &__left {
                     .ant-select {
                     }
                 }
-                &_right {
+                &__right {
                     margin-top: 12px;
                     & .tip {
                     }
                     & button {
                     }
                 }
-                &_bottom {
+                &__bottom {
                 }
             }
-            &_table {
+            &__table {
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -1225,19 +1215,19 @@
                 :deep(table) {
                 }
                 .token {
-                    &_icon {
+                    &__icon {
                     }
 
-                    &_num {
+                    &__num {
                     }
 
-                    &_denom {
+                    &__denom {
                     }
                 }
                 .status_icon {
                 }
             }
-            &_bottom {
+            &__bottom {
                 .flex(column, nowrap, flex-start, flex-start);
                 & .status_tips {
                     .status_tip {
@@ -1263,55 +1253,55 @@
     }
     @media screen and (max-width: 768px) {
         .transfer {
-            &_header {
-                &_container {
+            &__header {
+                &__container {
                 }
-                &_line {
+                &__line {
                 }
-                &_title {
+                &__title {
                     .flex(column, nowrap, flex-start, flex-start);
                 }
-                &_num {
+                &__num {
                     margin-top: 12px;
                     margin-left: 0;
                 }
             }
-            &_middle {
+            &__middle {
                 margin-top: 72px;
-                &_top {
+                &__top {
                 }
-                &_left {
+                &__left {
                     .ant-select {
                     }
                 }
-                &_right {
+                &__right {
                     & .tip {
                     }
                     & button {
                     }
                 }
-                &_bottom {
+                &__bottom {
                 }
             }
-            &_table {
+            &__table {
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
                 }
                 .token {
-                    &_icon {
+                    &__icon {
                     }
 
-                    &_num {
+                    &__num {
                     }
 
-                    &_denom {
+                    &__denom {
                     }
                 }
                 .status_icon {
                 }
             }
-            &_bottom {
+            &__bottom {
                 padding: 16px;
                 & .status_tips {
                     .status_log {
@@ -1340,20 +1330,20 @@
     }
     @media screen and (max-width: 582px) {
         .transfer {
-            &_header {
-                &_container {
+            &__header {
+                &__container {
                 }
-                &_line {
+                &__line {
                 }
-                &_title {
+                &__title {
                 }
-                &_num {
+                &__num {
                 }
             }
-            &_middle {
-                &_top {
+            &__middle {
+                &__top {
                 }
-                &_left {
+                &__left {
                     flex-wrap: wrap;
                     .ant-select {
                         margin-left: 0;
@@ -1367,34 +1357,34 @@
                         }
                     }
                 }
-                &_right {
+                &__right {
                     & .tip {
                     }
                     & button {
                     }
                 }
-                &_bottom {
+                &__bottom {
                 }
             }
-            &_table {
+            &__table {
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
                 }
                 .token {
-                    &_icon {
+                    &__icon {
                     }
 
-                    &_num {
+                    &__num {
                     }
 
-                    &_denom {
+                    &__denom {
                     }
                 }
                 .status_icon {
                 }
             }
-            &_bottom {
+            &__bottom {
                 padding: 8px;
                 & .status_tips {
                     width: 100%;
@@ -1426,20 +1416,20 @@
     @media screen and (max-width: 420px) {
         .transfer {
             padding: 24px 16px 80px;
-            &_header {
-                &_container {
+            &__header {
+                &__container {
                 }
-                &_line {
+                &__line {
                 }
-                &_title {
+                &__title {
                 }
-                &_num {
+                &__num {
                 }
             }
-            &_middle {
-                &_top {
+            &__middle {
+                &__top {
                 }
-                &_left {
+                &__left {
                     .ant-select {
                         width: 210px;
                     }
@@ -1456,28 +1446,28 @@
                         }
                     }
                 }
-                &_right {
+                &__right {
                     & .tip {
                     }
                     & button {
                     }
                 }
-                &_bottom {
+                &__bottom {
                 }
             }
-            &_table {
+            &__table {
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
                 }
                 .token {
-                    &_icon {
+                    &__icon {
                     }
 
-                    &_num {
+                    &__num {
                     }
 
-                    &_denom {
+                    &__denom {
                     }
                 }
                 .status_icon {
@@ -1519,20 +1509,20 @@
     }
     @media screen and (max-width: 340px) {
         .transfer {
-            &_header {
-                &_container {
+            &__header {
+                &__container {
                 }
-                &_line {
+                &__line {
                 }
-                &_title {
+                &__title {
                 }
-                &_num {
+                &__num {
                 }
             }
-            &_middle {
-                &_top {
+            &__middle {
+                &__top {
                 }
-                &_left {
+                &__left {
                     .ant-select {
                     }
                     :deep(.default_color) {
@@ -1542,34 +1532,34 @@
                         }
                     }
                 }
-                &_right {
+                &__right {
                     & .tip {
                     }
                     & button {
                     }
                 }
-                &_bottom {
+                &__bottom {
                 }
             }
-            &_table {
+            &__table {
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
                 }
                 .token {
-                    &_icon {
+                    &__icon {
                     }
 
-                    &_num {
+                    &__num {
                     }
 
-                    &_denom {
+                    &__denom {
                     }
                 }
                 .status_icon {
                 }
             }
-            &_bottom {
+            &__bottom {
                 & .status_tips {
                     .status_log {
                     }
