@@ -1,4 +1,4 @@
-import { IIbcTxc } from '@/types/interface/transfers.interface';
+import { IIbcTxs } from '@/types/interface/transfers.interface';
 import { IResponseIbcDenom } from '@/types/interface/home.interface';
 import { IBaseDenoms, IIbcChains } from '@/types/interface/index.interface';
 
@@ -10,5 +10,5 @@ export interface GlobalState {
     ibcDenoms: IResponseIbcDenom[];
     ibcDenomsMap: { [key: string]: IResponseIbcDenom };
     isShowLoading: boolean;
-    ibcTxs: IIbcTxc[];
+    ibcTxs: IIbcTxs[];
 }

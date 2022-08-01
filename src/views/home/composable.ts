@@ -1,4 +1,4 @@
-import Tools from '@/utils/Tools';
+import { formatAge, getTimestamp } from '@/utils/timeTools';
 import { IBaseDenoms } from '@/types/interface/index.interface';
 import { useIbcStatisticsChains } from '@/store/index';
 import {
@@ -40,7 +40,7 @@ export const useIbcTxs = () => {
     };
     useTimeInterval(() => {
         ibcTxs.value = ibcTxs.value.map((item: any) => {
-            item.parseTime = Tools.formatAge(Tools.getTimestamp(), item.tx_time * 1000, '', '');
+            item.parseTime = formatAge(getTimestamp(), item.tx_time * 1000, '', '');
             return item;
         });
     });
@@ -60,7 +60,7 @@ export const useIbcTxs = () => {
 };
 
 export const useGetIbcDenoms = () => {
-    const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
+    const { ibcBaseDenoms, ibcBaseDenomsSymbolKeyMap } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
     const getBaseDenomInfoByDenom = (denom: string, chainId: string) => {
         return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain_id == chainId);
@@ -82,6 +82,7 @@ export const useGetIbcDenoms = () => {
     });
     return {
         ibcBaseDenoms,
+        ibcBaseDenomsSymbolKeyMap,
         ibcBaseDenomsSorted,
         getIbcBaseDenom,
         getBaseDenomInfoByDenom

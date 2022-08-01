@@ -1,15 +1,15 @@
 import { defineStore } from 'pinia';
-import Tools from '@/utils/Tools';
+import { formatAge, getTimestamp } from '@/utils/timeTools';
 import moveDecimal from 'move-decimal-point';
 import { getIbcChainsAPI, getIbcBaseDenomsAPI } from '@/api/index';
 import { API_CODE } from '@/constants/apiCode';
 import { getIbcTxsAPI } from '@/api/transfers';
-import { IBaseDenoms } from '@/types/interface/index.interface';
-import { IResponseIbcTxc, IIbcTxc } from '@/types/interface/transfers.interface';
 import { getIbcDenomsAPI } from '@/api/home';
-import { IResponseIbcDenom } from '@/types/interface/home.interface';
 import { getDenomKey } from '@/helper/baseDenomHelper';
 import { GlobalState } from '@/types/interface/store.interface';
+import { IBaseDenoms } from '@/types/interface/index.interface';
+import { IResponseIbcTxs, IIbcTxs } from '@/types/interface/transfers.interface';
+import { IResponseIbcDenom } from '@/types/interface/home.interface';
 
 export const useIbcStatisticsChains = defineStore('global', {
     state: (): GlobalState => {
@@ -94,7 +94,7 @@ export const useIbcStatisticsChains = defineStore('global', {
                     if (use_count) {
                         return data;
                     } else {
-                        const result = (data as IResponseIbcTxc).data;
+                        const result = (data as IResponseIbcTxs).data;
                         const promiseArray = [];
                         if (this.ibcDenoms.length <= 0) {
                             console.log('getIbcTxsAction-execute: getIbcDenomsAction');
@@ -112,8 +112,8 @@ export const useIbcStatisticsChains = defineStore('global', {
                                 error
                             );
                         }
-                        const getSymbolInfo = (data: IIbcTxc[]) => {
-                            return data.map((item: IIbcTxc) => {
+                        const getSymbolInfo = (data: IIbcTxs[]) => {
+                            return data.map((item: IIbcTxs) => {
                                 const symbol =
                                     this.ibcDenomsMap[
                                         getDenomKey(item.sc_chain_id, item.denoms.sc_denom)
@@ -138,8 +138,8 @@ export const useIbcStatisticsChains = defineStore('global', {
                                     symbolNum,
                                     symbolDenom,
                                     symbolIcon,
-                                    parseTime: Tools.formatAge(
-                                        Tools.getTimestamp(),
+                                    parseTime: formatAge(
+                                        getTimestamp(),
                                         item.tx_time * 1000,
                                         '',
                                         ''

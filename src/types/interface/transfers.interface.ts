@@ -1,6 +1,6 @@
 import { IRequestPagination2 } from '@/types/interface/index.interface';
 
-export interface IRequestIbcTxc extends IRequestPagination2 {
+export interface IRequestIbcTxs extends IRequestPagination2 {
     date_range?: string;
     status?: string;
     chain_id?: string;
@@ -9,7 +9,7 @@ export interface IRequestIbcTxc extends IRequestPagination2 {
     start_time?: string;
 }
 
-export interface IIbcTxc {
+export interface IIbcTxs {
     record_id: string;
     sc_addr: string;
     dc_addr: string;
@@ -39,8 +39,14 @@ export interface IIbcTxc {
     expanded?: boolean;
 }
 
-export interface IResponseIbcTxc {
-    data: IIbcTxc[];
+export interface IResponseIbcTxs {
+    data: IIbcTxs[];
+    pageNum: number;
+    pageSize: number;
+}
+
+export interface IResponseTxs {
+    data: IIbcTxs[];
     pageNum: number;
     pageSize: number;
 }

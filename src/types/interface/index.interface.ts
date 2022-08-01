@@ -16,6 +16,7 @@ export interface IResponse<P = {}> {
     code: number;
     message?: string;
     data: P;
+    aa: string;
 }
 
 export interface IResponsePageInfo {

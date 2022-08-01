@@ -4,5 +4,6 @@ export enum API_URL {
     ibcDenomsUrl = '/ibc/denoms',
     ibcStatisticsUrl = '/ibc/statistics',
     ibcTxsUrl = '/ibc/txs',
+    ibcTxDetailsUrl = '/ibc/txs/',
     ibcRelayerListUrl = '/ibc/relayerList'
 }

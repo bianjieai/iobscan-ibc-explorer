@@ -121,7 +121,7 @@
     import { getRestString } from '@/helper/parseStringHelper';
     import { onMounted, computed, ref } from 'vue';
     import { defaultTitle } from '../../../constants/index';
-    import Tools from '@/utils/Tools';
+    import { IBaseDenoms } from '@/types/interface/index.interface';
     const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href;
 
     type TDenom = string | undefined;
@@ -132,15 +132,12 @@
     };
     interface IProps {
         dropdownData: any[];
+        dropdownDataSymbolMap: { [key: string]: IBaseDenoms };
         baseDenom?: string;
     }
 
     const props = withDefaults(defineProps<IProps>(), {
-        baseDenom: '',
-        dropdownData:
-            (sessionStorage.getItem('baseDenoms') &&
-                JSON.parse(sessionStorage.getItem('baseDenoms')!)) ||
-            []
+        baseDenom: ''
     });
 
     const visible = ref(false);
@@ -173,7 +170,7 @@
         if (symbol === 'Others') {
             return imgSrc;
         } else {
-            const baseDenomInfo = Tools.findSymbol(props.dropdownData, symbol);
+            const baseDenomInfo = props.dropdownDataSymbolMap[symbol];
             if (baseDenomInfo) {
                 return baseDenomInfo.icon || imgSrc;
             }
