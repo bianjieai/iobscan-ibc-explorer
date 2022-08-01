@@ -60,7 +60,8 @@ export const useIbcTxs = () => {
 };
 
 export const useGetIbcDenoms = () => {
-    const { ibcBaseDenoms, ibcBaseDenomsSymbolKeyMap } = storeToRefs(ibcStatisticsChainsStore);
+    const { ibcBaseDenoms, ibcBaseDenomsSymbolKeyMapGetter } =
+        storeToRefs(ibcStatisticsChainsStore);
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
     const getBaseDenomInfoByDenom = (denom: string, chainId: string) => {
         return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain_id == chainId);
@@ -82,7 +83,7 @@ export const useGetIbcDenoms = () => {
     });
     return {
         ibcBaseDenoms,
-        ibcBaseDenomsSymbolKeyMap,
+        ibcBaseDenomsSymbolKeyMapGetter,
         ibcBaseDenomsSorted,
         getIbcBaseDenom,
         getBaseDenomInfoByDenom

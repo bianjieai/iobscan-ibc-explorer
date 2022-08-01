@@ -11,7 +11,7 @@
     }`;
     document.body.appendChild(script);
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    ibcStatisticsChainsStore.initState();
+    ibcStatisticsChainsStore.initStateAction();
     useChangeTitleAndIcon();
 </script>
 

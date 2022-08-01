@@ -155,7 +155,8 @@
     import { useIbcStatisticsChains } from '@/store/index';
 
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcDenomsMap, ibcBaseDenomsSymbolKeyMap } = storeToRefs(ibcStatisticsChainsStore);
+    const { ibcDenomsMapGetter, ibcBaseDenomsSymbolKeyMapGetter } =
+        storeToRefs(ibcStatisticsChainsStore);
 
     defineProps({
         title: {
@@ -208,13 +209,13 @@
         if (token?.amount >= 0 && token?.denom) {
             let symbol = '';
             if (chainID) {
-                symbol = ibcDenomsMap.value[getDenomKey(chainID, token?.denom)]?.symbol;
+                symbol = ibcDenomsMapGetter.value[getDenomKey(chainID, token?.denom)]?.symbol;
             }
             let symbolNum = token?.amount || 0;
             let symbolDenom = token?.denom || '';
             let denom = token?.denom || '';
             if (symbol) {
-                const findSymbol = ibcBaseDenomsSymbolKeyMap[symbol];
+                const findSymbol = ibcBaseDenomsSymbolKeyMapGetter.value[symbol];
                 if (findSymbol) {
                     // (token.amount || 0) * 10 ** -findSymbol.scale;
                     symbolNum = formatBigNumber(moveDecimal(token.amount, 0 - findSymbol.scale));

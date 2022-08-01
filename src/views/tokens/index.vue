@@ -6,7 +6,7 @@
                 ref="tokensDropdown"
                 :base-denom="denomQuery"
                 :dropdown-data="ibcBaseDenomsSorted"
-                :dropdown-data-symbol-map="ibcBaseDenomsSymbolKeyMap"
+                :dropdown-data-symbol-map="ibcBaseDenomsSymbolKeyMapGetter"
                 @on-tokens-selected="onSelectedToken"
             />
             <ChainsDropdown
@@ -139,7 +139,7 @@
     const {
         ibcBaseDenoms,
         ibcBaseDenomsSorted,
-        ibcBaseDenomsSymbolKeyMap,
+        ibcBaseDenomsSymbolKeyMapGetter,
         getIbcBaseDenom,
         getBaseDenomInfoByDenom
     } = useGetIbcDenoms();
