@@ -6,12 +6,12 @@
                 ref="tokensDropdown"
                 :base-denom="denomQuery"
                 :dropdown-data="ibcBaseDenomsSorted"
-                :dropdown-symbol-map="ibcBaseDenomsSymbolKeyMap"
+                :dropdown-data-symbol-map="ibcBaseDenomsSymbolKeyMap"
                 @on-tokens-selected="onSelectedToken"
             />
             <ChainsDropdown
                 ref="chainDropdown"
-                :dropdown-data="ibcChains?.all"
+                :dropdown-data="ibcChains?.all || []"
                 :chain-id="chainIdQuery"
                 @on-selected-chain="onSelectedChain"
             />
