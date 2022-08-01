@@ -1,8 +1,10 @@
+import { API_CODE } from '@/constants/apiCode';
+import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { useIbcStatisticsChains } from '@/store/index';
-import { getTxDetailsByTxHash } from '@/service/api';
 import { groupBy } from 'lodash-es';
 import tokenDefaultImg from '@/assets/token-default.png';
 import { transferTableColumn, defaultTitle } from '@/constants';
+import { IBC_TX_STATUS, IBC_SC_AND_DC_TX_STATUS } from '@/constants/transfers';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
@@ -162,9 +164,9 @@ export const useTransfersDetailsInfo = () => {
     const router = useRouter();
     const ibcTransferOutTxHash = ref('--');
     const ibcTransferInTxHash = ref('--');
-    const ibcTxStatus = ref('default');
-    const outTxStatus = ref('default');
-    const inTxStatus = ref('default');
+    const ibcTxStatus = ref(IBC_TX_STATUS.default);
+    const outTxStatus = ref(IBC_SC_AND_DC_TX_STATUS.default);
+    const inTxStatus = ref(IBC_SC_AND_DC_TX_STATUS.default);
     const sequence = ref('--');
     const baseDenom = ref('');
     const scChainId = ref('');
@@ -319,7 +321,7 @@ export const useTransfersDetailsInfo = () => {
             isAddress: true
         }
     ]);
-    const transferInExpandDetails = [
+    const transferInExpandDetails = reactive([
         {
             label: 'Connection:',
             value: '--',
@@ -340,8 +342,7 @@ export const useTransfersDetailsInfo = () => {
             isExpand: true,
             isFormatHeight: true
         }
-    ];
-
+    ]);
     watch(route, (newValue) => {
         if (newValue?.query?.hash) {
             getTxDetails();
@@ -349,110 +350,79 @@ export const useTransfersDetailsInfo = () => {
     });
     const getTxDetails = () => {
         ibcStatisticsChainsStore.isShowLoading = true;
-        //
-        getTxDetailsByTxHash(route.query.hash)
+        const hash: string = (route?.query?.hash || '') as string;
+        getTxDetailsByTxHashAPI(hash)
             .then((result) => {
                 ibcStatisticsChainsStore.isShowLoading = false;
-                if (result?.length === 1) {
-                    const res = result[0];
-                    scChainId.value = res?.sc_chain_id;
-                    dcChainId.value = res?.dc_chain_id;
-                    if (res?.sc_tx_info?.hash) {
-                        ibcTransferOutTxHash.value = res.sc_tx_info.hash;
-                    }
-                    if (res?.sc_tx_info?.status >= 0) {
-                        outTxStatus.value = res.sc_tx_info.status;
-                    }
-                    if (res?.dc_tx_info?.hash) {
-                        ibcTransferInTxHash.value = res.dc_tx_info.hash;
-                    }
-                    if (res?.dc_tx_info?.status >= 0) {
-                        inTxStatus.value = res.dc_tx_info.status;
-                    }
-                    if (res?.sequence) {
-                        sequence.value = res.sequence;
-                    }
-                    if (res?.status) {
-                        ibcTxStatus.value = res.status;
-                    }
-                    if (res?.base_denom) {
-                        baseDenom.value = res.base_denom;
-                    }
-                    transferOutDetails.forEach((item) => {
-                        if (item?.dataKey?.includes('.')) {
-                            const keys = item.dataKey.split('.');
-                            if (keys?.length) {
-                                let result = res;
-                                keys.forEach((key) => {
-                                    result = result[key] || result[key] === 0 ? result[key] : '';
-                                    item.value = result;
-                                });
-                            }
-                        } else {
-                            if (item.dataKey) {
-                                item.value = res[item.dataKey];
-                            }
+                const { code, data } = result;
+                if (code === API_CODE.success) {
+                    if (data?.length === 1) {
+                        const res = data[0];
+                        scChainId.value = res?.sc_chain_id;
+                        dcChainId.value = res?.dc_chain_id;
+                        if (res?.sc_tx_info?.hash) {
+                            ibcTransferOutTxHash.value = res.sc_tx_info.hash;
                         }
-                    });
-                    transferOutExpandDetails.forEach((item) => {
-                        if (item?.dataKey?.includes('.')) {
-                            const keys = item.dataKey.split('.');
-                            if (keys?.length) {
-                                let result = res;
-                                keys.forEach((key) => {
-                                    result = result[key] || result[key] === 0 ? result[key] : '';
-                                    item.value = result;
-                                });
-                            }
-                        } else {
-                            if (item.dataKey) {
-                                item.value = res[item.dataKey];
-                            }
+                        if (res?.sc_tx_info?.status >= 0) {
+                            outTxStatus.value = res.sc_tx_info.status;
                         }
-                    });
-                    transferInDetails.forEach((item) => {
-                        if (item?.dataKey?.includes('.')) {
-                            const keys = item.dataKey.split('.');
-                            if (keys?.length) {
-                                let result = res;
-                                keys.forEach((key) => {
-                                    result = result[key] || result[key] === 0 ? result[key] : '';
-                                    item.value = result;
-                                });
-                            }
-                            if (item.label === 'Received Token:' && res?.denoms?.dc_denom) {
-                                // item.value.denom = res.denoms.dc_denom;
-                                item.value = res.denoms.dc_denom;
-                            }
-                        } else {
-                            if (item.dataKey) {
-                                item.value = res[item.dataKey];
-                            }
+                        if (res?.dc_tx_info?.hash) {
+                            ibcTransferInTxHash.value = res.dc_tx_info.hash;
                         }
-                    });
-                    transferInExpandDetails.forEach((item) => {
-                        if (item?.dataKey?.includes('.')) {
-                            const keys = item.dataKey.split('.');
-                            if (keys?.length) {
-                                let result = res;
-                                keys.forEach((key) => {
-                                    result = result[key] || result[key] === 0 ? result[key] : '';
-                                    item.value = result;
-                                });
-                            }
-                        } else {
-                            if (item.dataKey) {
-                                item.value = res[item.dataKey];
-                            }
+                        if (Number(res?.dc_tx_info?.status) >= 0) {
+                            inTxStatus.value = res.dc_tx_info.status as number;
                         }
-                    });
-                } else {
-                    router.push(`/searchResult?${route.query.hash}`);
+                        if (res?.sequence) {
+                            sequence.value = res.sequence;
+                        }
+                        if (res?.status) {
+                            ibcTxStatus.value = res.status;
+                        }
+                        if (res?.base_denom) {
+                            baseDenom.value = res.base_denom;
+                        }
+                        const handleTransferDetails = (item: any, callback?: Function) => {
+                            let result: any = res;
+                            if (item?.dataKey?.includes('.')) {
+                                const keys = item.dataKey.split('.');
+                                if (keys?.length) {
+                                    keys.forEach((key: string) => {
+                                        result =
+                                            result[key] || result[key] === 0 ? result[key] : '';
+                                        item.value = result;
+                                    });
+                                }
+                                callback && callback(item);
+                            } else {
+                                if (item.dataKey) {
+                                    item.value = result[item.dataKey];
+                                }
+                            }
+                        };
+                        transferOutDetails.forEach((item) => {
+                            handleTransferDetails(item);
+                        });
+                        transferOutExpandDetails.forEach((item) => {
+                            handleTransferDetails(item);
+                        });
+                        transferInDetails.forEach((item) => {
+                            handleTransferDetails(item, (item: any) => {
+                                if (item.label === 'Received Token:' && res?.denoms?.dc_denom) {
+                                    item.value = res.denoms.dc_denom;
+                                }
+                            });
+                        });
+                        transferInExpandDetails.forEach((item) => {
+                            handleTransferDetails(item);
+                        });
+                    } else {
+                        router.push(`/searchResult?${route.query.hash}`);
+                    }
                 }
             })
             .catch((error) => {
                 ibcStatisticsChainsStore.isShowLoading = false;
-                console.error(error);
+                console.error('getTxDetailsByTxHashAPI', error);
             });
     };
     if (route?.query?.hash) {
@@ -489,11 +459,20 @@ export const useNoResult = () => {
     });
     if (route?.query) {
         if (/^[A-F0-9]{64}$/.test(Object.keys(route.query).join(''))) {
-            getTxDetailsByTxHash(Object.keys(route.query).join('')).then((result) => {
-                if (result.length === 1) {
-                    router.push(`/transfers/details?hash=${Object.keys(route.query).join('')}`);
-                }
-            });
+            getTxDetailsByTxHashAPI(Object.keys(route.query).join(''))
+                .then((result) => {
+                    const { code, data } = result;
+                    if (code === API_CODE.success) {
+                        if (data.length === 1) {
+                            router.push(
+                                `/transfers/details?hash=${Object.keys(route.query).join('')}`
+                            );
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.log('getTxDetailsByTxHashAPI', error);
+                });
         } else {
             router.push(`/searchResult?${Object.keys(route.query).join('')}`);
         }
