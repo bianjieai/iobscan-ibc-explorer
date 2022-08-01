@@ -21,7 +21,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import { useNoResult } from '../composable';
     const { searchInputValue, toHome } = useNoResult();
 </script>

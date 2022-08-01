@@ -34,7 +34,7 @@ export interface IIbcTxc {
         sc_denom: string;
         dc_denom: string;
     };
-    tx_time: string;
+    tx_time: number;
     end_time: string;
     expanded?: boolean;
 }

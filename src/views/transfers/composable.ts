@@ -40,6 +40,9 @@ export const useGetIbcBaseDenoms = () => {
 export const useGetTokens = () => {
     const tokens = ref([]);
     const { ibcDenoms } = storeToRefs(ibcStatisticsChainsStore);
+    onMounted(() => {
+        ibcStatisticsChainsStore.getIbcDenomsAction();
+    });
     const tokensObj = groupBy(ibcDenoms, 'symbol');
     const atomObj = {
         ATOM: tokensObj['ATOM']
@@ -67,9 +70,9 @@ export const useGetTokens = () => {
 };
 
 export const useSelectedSymbol = () => {
-    const selectedSymbol = reactive({ value: defaultTitle.defaultTokens });
+    const selectedSymbol = ref(defaultTitle.defaultTokens);
     const isShowSymbolIcon = ref(false);
-    const clearInput = { value: 0 };
+    const clearInput = ref(0);
     const selectedChain = reactive({
         value: {
             chain_name: undefined

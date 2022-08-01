@@ -155,7 +155,7 @@
         dataSource.value = formatDataSourceWithRealTime(backUpDataSource.slice(p, pSize));
     };
     const formatDisplayAmount = (item: any, key: string) => {
-        return formatSupply(item[key], item.base_denom, ibcBaseDenoms, 2, false);
+        return formatSupply(item[key], item.base_denom, ibcBaseDenoms.value, 2, false);
     };
     let tempColumn: any;
     // todo clippers => 后端分页序号处理

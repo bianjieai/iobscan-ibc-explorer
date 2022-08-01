@@ -120,7 +120,7 @@
     const chainIdQuery = route.query.chain as string;
     const statusQuery = route.query.status as TRelayerStatus;
 
-    const { ibcChains, getIbcChains } = useIbcChains();
+    const { ibcChains } = useIbcChains();
     const { list, getList, total } = useGetRelayersList();
 
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
@@ -140,8 +140,6 @@
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
 
     onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
-
         refreshList();
     });
 

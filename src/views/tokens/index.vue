@@ -134,7 +134,7 @@
     const denomQuery = route.query.denom as string;
     const statusQuery = route.query.status as 'Authed' | 'Other';
 
-    const { ibcChains, getIbcChains } = useIbcChains();
+    const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom, getBaseDenomInfoByDenom } =
         useGetIbcDenoms();
     const { list, getList, total } = useGetTokenList();
@@ -162,7 +162,6 @@
     });
 
     onMounted(() => {
-        !sessionStorage.getItem('allChains') && getIbcChains();
         getIbcBaseDenom();
 
         refreshList();

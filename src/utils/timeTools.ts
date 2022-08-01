@@ -7,6 +7,10 @@ import { ChannelStatus, TChannelStatus } from '@/types/interface/components/tabl
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 
+export const dayjsFormatDate = (time: dayjs.ConfigType, format = 'MM-DD HH:mm:ss') => {
+    return dayjs(time).format(format);
+};
+
 /**
  *
  * @param time

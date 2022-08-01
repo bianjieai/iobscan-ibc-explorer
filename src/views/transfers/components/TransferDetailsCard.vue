@@ -145,14 +145,14 @@
 </template>
 
 <script setup>
-    import Tools from '../../../utils/Tools';
+    import Tools from '@/utils/Tools';
     import moveDecimal from 'move-decimal-point';
-    import { transfersDetailStatus, ackConnectStatus } from '../../../constants';
-    import { ref } from 'vue';
+    import { transfersDetailStatus, ackConnectStatus } from '@/constants';
     import * as djs from 'dayjs';
-    import { getRestString, formatBigNumber } from '../../../helper/parseStringHelper';
+    import { getRestString, formatBigNumber } from '@/helper/parseStringHelper';
     import { useGetIbcBaseDenoms } from '../composable';
     import ChainHelper from '@/helper/chainHelper';
+
     const { ibcBaseDenoms } = useGetIbcBaseDenoms();
 
     const props = defineProps({
@@ -201,6 +201,7 @@
     const isExpand = ref(false);
     const date = ref('');
     const formatToken = (token, details) => {
+        console.log(token, details);
         let chainID = '';
         if (details?.length) {
             details.forEach((item) => {
