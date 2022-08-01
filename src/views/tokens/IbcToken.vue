@@ -114,7 +114,7 @@
     import { getRestString, rmIbcPrefix, formatBigNumber } from '@/helper/parseStringHelper';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { isNullOrEmpty } from '@/utils/objectTools';
-    import { urlHelper } from '@/utils/urlTools';
+    import { urlPageParser } from '@/utils/urlTools';
 
     let pageUrl = '/tokens/details';
 
@@ -190,7 +190,7 @@
 
     const onSelectedChain = (chain?: string | number) => {
         searchChain.value = chain as string;
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: chain as string
         });
@@ -200,7 +200,7 @@
 
     const onSelectedStatus = (status?: string | number) => {
         searchStatus.value = status as TIbcTokenType;
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'status',
             value: status as TIbcTokenType
         });

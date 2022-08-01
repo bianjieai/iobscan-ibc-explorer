@@ -109,7 +109,7 @@
     import { useRoute, useRouter } from 'vue-router';
     import { useNeedCustomColumns } from '@/composables';
     import { formatBigNumber } from '@/helper/parseStringHelper';
-    import { urlHelper } from '@/utils/urlTools';
+    import { urlPageParser } from '@/utils/urlTools';
 
     const loading = ref(false);
     let pageUrl = '/relayers';
@@ -164,7 +164,7 @@
 
     const onSelectedChain = (chain_id?: string) => {
         searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: searchChain.value as string
         });
@@ -174,7 +174,7 @@
 
     const onSelectedStatus = (value?: number | string) => {
         searchStatus.value = value as TRelayerStatus;
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'status',
             value: value as TRelayerStatus
         });

@@ -345,7 +345,6 @@
         txStatusNumber,
         CHAINNAME
     } from '@/constants';
-    import Tools from '@/utils/Tools';
     import chainDefaultImg from '@/assets/home/chain-default.png';
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
@@ -361,6 +360,7 @@
     } from './composable';
     import { useIbcStatistics } from '@/composables/home';
     import dayjs from 'dayjs';
+    import { urlParser } from '@/utils/urlTools';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
@@ -722,7 +722,7 @@
     };
     const onPaginationChange = (page: any) => {
         pagination.current = page;
-        const params: any = Tools.urlParser(url);
+        const params: any = urlParser(url);
         url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
 
         if (params?.chain) {

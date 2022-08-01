@@ -6,6 +6,7 @@
                 ref="tokensDropdown"
                 :base-denom="denomQuery"
                 :dropdown-data="ibcBaseDenomsSorted"
+                :dropdown-symbol-map="ibcBaseDenomsSymbolKeyMap"
                 @on-tokens-selected="onSelectedToken"
             />
             <ChainsDropdown
@@ -124,7 +125,7 @@
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { useGetTokenList } from '@/service/tokens';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
-    import { urlHelper } from '@/utils/urlTools';
+    import { urlPageParser } from '@/utils/urlTools';
 
     let pageUrl = '/tokens';
 
@@ -135,8 +136,13 @@
     const statusQuery = route.query.status as 'Authed' | 'Other';
 
     const { ibcChains } = useIbcChains();
-    const { ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom, getBaseDenomInfoByDenom } =
-        useGetIbcDenoms();
+    const {
+        ibcBaseDenoms,
+        ibcBaseDenomsSorted,
+        ibcBaseDenomsSymbolKeyMap,
+        getIbcBaseDenom,
+        getBaseDenomInfoByDenom
+    } = useGetIbcDenoms();
     const { list, getList, total } = useGetTokenList();
 
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
@@ -184,7 +190,7 @@
         } else {
             searchDenom.value = '';
         }
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'denom',
             value: denom as string
         });
@@ -193,7 +199,7 @@
     };
     const onSelectedChain = (chain?: string | number) => {
         searchChain.value = chain ? String(chain) : undefined;
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: chain as string
         });
@@ -203,7 +209,7 @@
 
     const onSelectedStatus = (status?: string | number) => {
         searchStatus.value = status as 'Authed' | 'Other';
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'status',
             value: status as string
         });

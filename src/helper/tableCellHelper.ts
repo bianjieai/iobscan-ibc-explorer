@@ -2,7 +2,7 @@
  * @description format tableCell
  */
 
-import { IBaseDenoms } from '@/types/interface/index.interface';
+import { IBaseDenom } from '@/types/interface/index.interface';
 import { formatBigNumber } from './parseStringHelper';
 import moveDecimal from 'move-decimal-point';
 /**
@@ -19,7 +19,7 @@ export const formatPrice = (price: number | string, numberOfDecimal: number | un
     return `${formatBigNumber(Number(price), numberOfDecimal)}`;
 };
 
-const getScale = (denom?: string, baseDenomData?: IBaseDenoms[]) => {
+const getScale = (denom?: string, baseDenomData?: IBaseDenom[]) => {
     if (Array.isArray(baseDenomData) && denom) {
         const filterData = baseDenomData.filter((item) => item.denom === denom);
         if (filterData.length > 0) {
@@ -35,7 +35,7 @@ const getScale = (denom?: string, baseDenomData?: IBaseDenoms[]) => {
 export const formatSupply = (
     supply: number | string,
     denom: string,
-    baseDenomData: IBaseDenoms[],
+    baseDenomData: IBaseDenom[],
     numberOfDecimal = 2,
     isformat = true
 ) => {
@@ -57,7 +57,7 @@ export const formatSupply = (
 export const formatAmount = (
     amount: number | string,
     denom?: string,
-    baseDenomData?: IBaseDenoms[],
+    baseDenomData?: IBaseDenom[],
     numberOfDecimal = 2
 ) => {
     if (amount === -1 || amount === '-1' || amount === '') {

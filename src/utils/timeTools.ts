@@ -55,3 +55,43 @@ export const formatOperatingPeriod = (time: number, status: TChannelStatus) => {
     }
     return `${formatBigNumber(day + months * 30 + years * 365, 0)} days`;
 };
+
+/**
+ * 根据展示的需求拼接字符串展示成 > xxdxxhxxmxxs ago 或者 xxdxxhxxmxxs ago 或者 xxdxxhxxmxxs
+ */
+export const formatAge = (
+    currentServerTime: number,
+    time: number,
+    suffix: string,
+    prefix: string
+) => {
+    const dateBegin = new Date(time);
+    const dateDiff = currentServerTime - dateBegin.getTime() / 1000;
+    if (dateDiff < 0) {
+        return '';
+    }
+    const dayDiff = Math.floor(dateDiff / (24 * 3600));
+    const hourLevel = dateDiff % (24 * 3600);
+    const hours = Math.floor(hourLevel / 3600);
+    const minuteLevel = dateDiff % 3600;
+    const minutes = Math.floor(minuteLevel / 60);
+    const seconds = dateDiff % 60;
+
+    const str = `${dayDiff ? (dayDiff < 2 ? `${dayDiff} day` : `${dayDiff} days`) : ''} ${
+        hours ? (hours < 2 ? `${hours} hr` : `${hours} hrs`) : ''
+    } ${dayDiff ? '' : minutes ? (minutes < 2 ? `${minutes} min` : `${minutes} mins`) : ''} ${
+        dayDiff || hours ? '' : seconds ? (seconds < 2 ? `${seconds} sec` : `${seconds} secs`) : ''
+    }`;
+
+    if (prefix && suffix) {
+        return `${prefix} ${str} ${suffix}`;
+    }
+    if (suffix) {
+        return `${str} ${suffix}`;
+    }
+    return `${str}`;
+};
+
+export const getTimestamp = () => {
+    return Math.floor(new Date().getTime() / 1000);
+};

@@ -93,7 +93,7 @@
     import { useNeedCustomColumns } from '@/composables';
     import { useRoute, useRouter } from 'vue-router';
     import { formatBigNumber } from '@/helper/parseStringHelper';
-    import { urlHelper } from '@/utils/urlTools';
+    import { urlPageParser } from '@/utils/urlTools';
 
     let pageUrl = '/channels';
 
@@ -138,7 +138,7 @@
 
     const onSelectedChain = (chain_id?: string) => {
         searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: searchChain.value as string
         });
@@ -148,7 +148,7 @@
 
     const onSelectedStatus = (value?: number | string) => {
         searchStatus.value = value as TChannelStatus;
-        pageUrl = urlHelper(pageUrl, {
+        pageUrl = urlPageParser(pageUrl, {
             key: 'status',
             value: value as TChannelStatus
         });

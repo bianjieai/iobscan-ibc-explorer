@@ -1,12 +1,8 @@
-import { ref, reactive, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useIbcStatisticsChains } from '../../store/index';
+import { useIbcStatisticsChains } from '@/store/index';
 import { getTxDetailsByTxHash } from '@/service/api';
 import { groupBy } from 'lodash-es';
-import tokenDefaultImg from '../../assets/token-default.png';
-import { transferTableColumn, defaultTitle } from '../../constants';
-import Tools from '../../utils/Tools';
-import { storeToRefs } from 'pinia';
+import tokenDefaultImg from '@/assets/token-default.png';
+import { transferTableColumn, defaultTitle } from '@/constants';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
@@ -40,6 +36,7 @@ export const useGetIbcBaseDenoms = () => {
 export const useGetTokens = () => {
     const tokens = ref([]);
     const { ibcDenoms } = storeToRefs(ibcStatisticsChainsStore);
+
     onMounted(() => {
         ibcStatisticsChainsStore.getIbcDenomsAction();
     });
@@ -100,6 +97,7 @@ export const usePagination = () => {
 };
 
 export const useFindIcon = (props: any) => {
+    const { ibcBaseDenomsSymbolKeyMap } = storeToRefs(ibcStatisticsChainsStore);
     const findSymbolIcon = () => {
         const findSymbolConfig = props.ibcBaseDenoms?.find(
             (baseDenom: any) => baseDenom.symbol === props.selectedSymbol
@@ -118,13 +116,13 @@ export const useFindIcon = (props: any) => {
         }
         return tokenDefaultImg;
     };
-    const isShowSymbol = (key: any) => {
+    const isShowSymbol = (key: string) => {
         const result = {
             symbolDenom: '',
             symbolIcon: ''
         };
         if (Array.isArray(props.ibcBaseDenoms)) {
-            const findSymbol = Tools.findSymbol(props.ibcBaseDenoms, key);
+            const findSymbol = ibcBaseDenomsSymbolKeyMap.value[key];
             result.symbolDenom = findSymbol ? findSymbol.symbol : key;
             result.symbolIcon = findSymbol ? findSymbol.icon : '';
         }
@@ -351,6 +349,7 @@ export const useTransfersDetailsInfo = () => {
     });
     const getTxDetails = () => {
         ibcStatisticsChainsStore.isShowLoading = true;
+        //
         getTxDetailsByTxHash(route.query.hash)
             .then((result) => {
                 ibcStatisticsChainsStore.isShowLoading = false;

@@ -9,7 +9,7 @@ export interface IResponseIbcDenom {
     update_at: number;
 }
 
-export interface IResponseIbcStatistics {
+export interface IResponseIbcStatistic {
     statistics_name: string;
     count: number;
 }

@@ -57,8 +57,7 @@
 
     const props = withDefaults(defineProps<IProps>(), {
         title: '',
-        iconSize: TableCellIconSize.NORMAL,
-        chainsData: JSON.parse(sessionStorage.getItem('allChains')!)?.all ?? []
+        iconSize: TableCellIconSize.NORMAL
     });
 
     const computedTitle = computed(() => {

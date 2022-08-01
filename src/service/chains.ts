@@ -24,22 +24,18 @@ export const useGetChainsList = () => {
         if (code === 0) {
             const { items } = data;
             // todo duanjie 待优化
-            const ibcChainsStr = sessionStorage.getItem('allChains');
-            let ibcChains: any;
-            if (ibcChainsStr) {
-                ibcChains = JSON.parse(ibcChainsStr);
-            } else {
-                const ibcStatisticsChainsStore = useIbcStatisticsChains();
-                const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
+            const ibcStatisticsChainsStore = useIbcStatisticsChains();
+            const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
+            const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
+            if (Object.keys(ibcChains.value).length <= 0) {
                 try {
                     await getIbcChains();
-                    ibcChains = ibcStatisticsChainsStore.ibcChains;
                 } catch (error) {
-                    ibcChains = null;
+                    console.log('getIbcChains', error);
                 }
             }
             const ibcChainsAllMap: any = {};
-            (ibcChains?.all || []).forEach((ibcChain: any) => {
+            (ibcChains.value?.all || []).forEach((ibcChain: any) => {
                 ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
             });
             list.value = items.map((item: any) => {

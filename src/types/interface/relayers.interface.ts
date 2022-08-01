@@ -29,7 +29,7 @@ export interface IResponseRelayerList {
     page_info: IResponsePageInfo;
 }
 
-export interface TRelayersListParams {
+export interface TRelayersListParam {
     chain?: string;
     status?: TRelayerStatus;
     use_count?: boolean;
