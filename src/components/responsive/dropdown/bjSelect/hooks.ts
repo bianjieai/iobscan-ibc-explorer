@@ -6,7 +6,7 @@ export const useInit = (props: IProps) => {
     const visible = ref(false);
     const selectItems = ref<DataItem[]>([]);
     const inputItems = ref<DataItem[]>([]); // 输入框的集合
-    const tokenInput = ref<TDenom>(undefined);
+    const tokenInput = ref<string | undefined>(undefined);
     const flatData = ref<DataItem[]>([]); // 拍扁后的数组
 
     const resetFlatArr = (data: Data) => {
@@ -40,18 +40,18 @@ export const useInit = (props: IProps) => {
         }
 
         values.forEach((v) => {
-            const temp = flatData.value.find((item) => item.denom === v);
+            const temp = flatData.value.find((item) => item[props.format!] === v);
             if (temp) {
                 selectItems.value.push(temp);
             } else {
                 inputItems.value.push({
-                    denom: v,
-                    symbol: v
+                    [props.format!]: v,
+                    [props.renderItem!]: v
                 });
             }
         });
 
-        tokenInput.value = inputItems.value.map((v) => v.denom).join(',');
+        tokenInput.value = inputItems.value.map((v) => v[props.format!]).join(',');
     };
 
     onMounted(() => {

@@ -7,13 +7,15 @@
                 :data="bjSelectData"
                 :value="searchDenom"
                 placeholder="All Tokens"
+                format="denom"
+                render-item="symbol"
                 :input-ctn="{
                     title: 'Custom IBC Tokens',
                     toolTip: 'Hash (in hex format) of the denomination trace information.',
                     placeholder: 'Search by ibc/hash',
                     btnTxt: 'Confirm'
                 }"
-                @onChange="onSelectedToken"
+                @on-change="onSelectedToken"
             />
             <!--            <TokensDropdown-->
             <!--                ref="tokensDropdown"-->
@@ -193,7 +195,7 @@
     const tokensDropdown = ref();
 
     // 缓存筛选条件
-    const searchDenom = ref(denomQuery);
+    const searchDenom = ref(denomQuery || '');
     const searchChain = ref<string | undefined>(chainIdQuery);
     const searchStatus = ref<'Authed' | 'Other'>(statusQuery);
 

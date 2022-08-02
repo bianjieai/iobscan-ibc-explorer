@@ -1,10 +1,12 @@
+import { DataItem, ModeType, IProps } from './type';
+
 /**
  * 根据不同类型返回对应的数据：单选返回单值，多选返回数组集合
  * @param selectData
  * @param mode
  * @param keygen
  */
-export const getValByMode = (selectData, mode, keygen = 'denom') => {
+export const getValByMode = (selectData: DataItem[], mode: ModeType, keygen = 'denom') => {
     switch (mode) {
         case 'multiple':
             return selectData.map((v) => v[keygen]);
@@ -18,7 +20,7 @@ export const getValByMode = (selectData, mode, keygen = 'denom') => {
  * @param selectData
  * @param mode
  */
-export const closeByMode = (selectData, mode) => {
+export const closeByMode = (selectData: DataItem[], mode: ModeType) => {
     switch (mode) {
         case 'multiple':
             return false;
@@ -34,11 +36,18 @@ export const closeByMode = (selectData, mode) => {
  * @param inputVal
  * @param mode
  */
-export const inputItemsByMode = (inputVal, mode) => {
-    let tokens;
-    const res = [];
+type InputItemsByModeRes = {
+    [key: string]: any;
+};
 
-    switch (mode) {
+export const inputItemsByMode = (
+    inputVal: string | undefined,
+    props: IProps
+): InputItemsByModeRes[] => {
+    let tokens;
+    const res: InputItemsByModeRes[] = [];
+
+    switch (props.mode) {
         case 'multiple':
             tokens = inputVal?.split(',').filter((v) => v);
             break;
@@ -49,8 +58,8 @@ export const inputItemsByMode = (inputVal, mode) => {
 
     tokens?.forEach((v) => {
         res.push({
-            denom: v,
-            symbol: v
+            [props.format!]: v,
+            [props.renderItem!]: v
         });
     });
 

@@ -6,33 +6,33 @@
         @visibleChange="visibleChange"
     >
         <div
-            class="flex items-center default_color dropdown-container"
+            class="flex items-center default__color dropdown__container"
             :class="[{ visible__border: visible }]"
         >
             <div
-                class="flex flex-1 overflow-auto flex-wrap text-center mr-8 ml-8 justify-center items-center selected_color_default"
+                class="flex flex-1 overflow-auto flex-wrap text-center mr-8 ml-8 justify-center items-center selected__color_default"
                 :class="[
                     {
-                        selected_color: selectItems.length > 0 || inputItems.length > 0,
-                        visible_color: (selectItems.length > 0 || inputItems.length > 0) && visible
+                        selected__color: selectItems.length > 0 || inputItems.length > 0,
+                        visible__color: (selectItems.length > 0 || inputItems.length > 0) && visible
                     }
                 ]"
             >
                 <!--        输入的渲染-->
                 <div
                     v-for="item in inputItems"
-                    :key="item.denom"
+                    :key="item[format]"
                     class="flex items-center"
                     :class="{ multiple: props.mode === 'multiple' }"
                 >
-                    <span class="selectedInfo_title" :title="item.symbol">{{
-                        getRestString(item.symbol, 4, 4)
+                    <span class="selectedInfo__title" :title="item[renderItem]">{{
+                        getRestString(item[renderItem], 4, 4)
                     }}</span>
                 </div>
                 <!--        选择的渲染-->
                 <div
                     v-for="item in selectItems"
-                    :key="item.denom"
+                    :key="item[format]"
                     class="flex items-center"
                     :class="{ multiple: props.mode === 'multiple' }"
                 >
@@ -43,17 +43,19 @@
                         class="mr-4"
                         :src="item.icon"
                     />
-                    <span class="selectedInfo_title" :title="item.symbol">{{ item.symbol }}</span>
+                    <span class="selectedInfo__title" :title="item[renderItem]">{{
+                        item[renderItem]
+                    }}</span>
                 </div>
                 <!--        都没有选的时候展示，类似placeholder-->
                 <div
                     v-if="!inputItems.length && !selectItems.length"
-                    class="selected_color_default"
+                    class="selected__color_default"
                 >
-                    <span class="selectedInfo_title">{{ props.placeholder }}</span>
+                    <span class="selectedInfo__title">{{ props.placeholder }}</span>
                 </div>
             </div>
-            <span class="button_icon flex justify-between items-center">
+            <span class="button__icon flex justify-between items-center">
                 <svg
                     :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }"
                     focusable="false"
@@ -63,7 +65,7 @@
                     fill="currentColor"
                     aria-hidden="true"
                     viewBox="64 64 896 896"
-                    :class="[visible ? 'visible_color' : '']"
+                    :class="[visible ? 'visible__color' : '']"
                 >
                     <path
                         d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
@@ -83,7 +85,7 @@
                             overlay-class-name="antd-popover"
                         >
                             <template #content>
-                                <p class="tip_color">
+                                <p class="confirm__button">
                                     {{ group.tooltips }}
                                 </p>
                             </template>
@@ -97,12 +99,12 @@
                     <div class="chains__wrap">
                         <div
                             v-for="item in group?.children"
-                            :key="item.denom"
+                            :key="item[format]"
                             :class="[
-                                'chains-tag',
+                                'chains__tag',
                                 {
-                                    'visible_color visible__border selected': isSelected(
-                                        item.denom
+                                    'visible__color visible__border selected': isSelected(
+                                        item[format]
                                     ),
                                     disabled: item.disabled || group.disabled
                                 }
@@ -116,7 +118,7 @@
                                 height="24"
                                 class="mr-8"
                             />
-                            <span class="symbol">{{ item.symbol }}</span>
+                            <span class="symbol">{{ item[renderItem] }}</span>
                         </div>
                     </div>
                 </div>
@@ -129,7 +131,7 @@
                             overlay-class-name="antd-popover"
                         >
                             <template #content>
-                                <p class="tip_color">
+                                <p class="confirm__button">
                                     {{ props.inputCtn.toolTip }}
                                 </p>
                             </template>
@@ -144,12 +146,12 @@
                         <a-input
                             v-model:value="tokenInput"
                             allow-clear
-                            class="token-input"
+                            class="token__input"
                             :placeholder="props.inputCtn.placeholder"
                         />
                         <a-button
                             type="primary"
-                            class="confirm-button ml-12"
+                            class="confirm__button ml-12"
                             @click="confirmChains"
                             >{{ props.inputCtn.btnTxt }}</a-button
                         >
@@ -159,11 +161,10 @@
         </template>
     </a-dropdown>
 </template>
-
 <script lang="ts" setup>
     import { getRestString } from '@/helper/parseStringHelper';
     const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href;
-    import { DataItem, Data, TDenom } from './bjSelect/type';
+    import { DataItem, TDenom } from './bjSelect/type';
     import { useInit } from './bjSelect/hooks';
     import { getValByMode, closeByMode, inputItemsByMode } from './bjSelect/common';
 
@@ -171,10 +172,26 @@
      * defineProps 使用外部引入的interface或者type会报错
      */
     interface IProps {
-        data: Data;
-        value?: string | string[];
+        data: {
+            groupName?: String;
+            hideGroupName?: boolean;
+            icon?: string;
+            tooltips?: string;
+            children?: {
+                denom?: TDenom;
+                symbol?: string;
+                disabled?: boolean;
+                hideIcon?: boolean;
+                icon?: string;
+                tooltips?: string;
+                [key: string]: any;
+            }[];
+        }[];
+        value: string | number | (string | number)[];
         mode?: 'multiple';
         placeholder?: string;
+        format: string;
+        renderItem: string;
         inputCtn?: {
             title?: string;
             toolTip?: string;
@@ -187,10 +204,12 @@
         data: () => []
     });
 
+    const { format, renderItem } = { ...props };
+
     const { visible, selectItems, tokenInput, inputItems, resetVal } = useInit(props);
 
     // 是否选中
-    const isSelected = (denom: TDenom) => selectItems.value.some((v) => v.denom === denom);
+    const isSelected = (val: TDenom) => selectItems.value.some((v) => v[props.format!] === val);
 
     defineExpose({
         selectItems,
@@ -206,7 +225,7 @@
      * @param close 是否收起关闭，默认不关闭，通过closeByMode函数判断
      */
     const sumbitTokens = (selectData: DataItem[], close = false) => {
-        let res = getValByMode(selectData, props.mode);
+        let res = getValByMode(selectData, props.mode, props.format);
 
         emit('onChange', res);
         if (close || closeByMode(selectData, props.mode)) {
@@ -224,7 +243,7 @@
                 break;
         }
 
-        inputItems.value = inputItemsByMode(tokenInput.value, props.mode);
+        inputItems.value = inputItemsByMode(tokenInput.value, props);
         sumbitTokens([...inputItems.value, ...selectItems.value], true);
     };
 
@@ -247,7 +266,9 @@
             switch (props.mode) {
                 case 'multiple':
                     // 多选时候，有取消操作
-                    const index = selectItems.value.findIndex((v) => v.denom === item.denom);
+                    const index = selectItems.value.findIndex(
+                        (v) => v[props.format!] === item[props.format!]
+                    );
                     if (index === -1) {
                         selectItems.value.push(item);
                     } else {
@@ -267,7 +288,7 @@
 </script>
 
 <style lang="less" scoped>
-    .dropdown-container {
+    .dropdown__container {
         height: 36px;
         border: 1px solid var(--bj-border-color);
         border-radius: 4px;
@@ -276,7 +297,7 @@
         min-width: 124px;
     }
 
-    .button_icon {
+    .button__icon {
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         padding: 0 6px;
         border-left: 1px solid var(--bj-border-color);
@@ -292,11 +313,11 @@
         box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
     }
 
-    .visible_color {
+    .visible__color {
         color: var(--bj-primary-color) !important;
     }
 
-    .default_color {
+    .default__color {
         color: var(--bj-text-second);
     }
 
@@ -307,7 +328,7 @@
         border-radius: 4px;
     }
 
-    .selected_color {
+    .selected__color {
         color: var(--bj-primary-color);
         //overflow: hidden;
         //text-overflow: ellipsis;
@@ -317,7 +338,7 @@
             color: var(--bj-text-second);
         }
     }
-    .selectedInfo_title {
+    .selectedInfo__title {
         max-width: 118px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -345,7 +366,7 @@
         grid-gap: 12px;
     }
 
-    .chains-tag {
+    .chains__tag {
         position: relative;
         display: flex;
         align-items: center;
@@ -365,7 +386,7 @@
         box-sizing: border-box;
 
         &.selected {
-            background: hsl(223deg 54% 95%);
+            background: #fff;
         }
 
         &.disabled {
@@ -386,18 +407,18 @@
         }
     }
 
-    .token-input {
+    .token__input {
         width: 240px;
     }
 
-    .confirm_button {
+    .confirm__button {
         color: #fff;
     }
 
     .tip {
         width: 20px;
 
-        &_color {
+        &__color {
             color: var(--bj-text-second);
             text-align: center;
             margin: -2px -2px;
@@ -446,11 +467,11 @@
             height: 450px;
         }
 
-        .confirm-button {
+        .confirm__button {
             margin: 12px 0 0;
         }
 
-        .token-input {
+        .token__input {
             width: 245px;
         }
     }
