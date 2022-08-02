@@ -2,13 +2,26 @@
     <PageContainer>
         <PageTitle title="IBC Tokens" :subtitle="subtitle" />
         <div class="select flex items-center flex-wrap">
-            <TokensDropdown
+            <BjSelect
                 ref="tokensDropdown"
-                :base-denom="denomQuery"
-                :dropdown-data="ibcBaseDenomsSorted"
-                :dropdown-data-symbol-map="ibcBaseDenomsSymbolKeyMapGetter"
-                @on-tokens-selected="onSelectedToken"
+                :data="bjSelectData"
+                :value="searchDenom"
+                placeholder="All Tokens"
+                :input-ctn="{
+                    title: 'Custom IBC Tokens',
+                    toolTip: 'Hash (in hex format) of the denomination trace information.',
+                    placeholder: 'Search by ibc/hash',
+                    btnTxt: 'Confirm'
+                }"
+                @onChange="onSelectedToken"
             />
+            <!--            <TokensDropdown-->
+            <!--                ref="tokensDropdown"-->
+            <!--                :base-denom="denomQuery"-->
+            <!--                :dropdown-data="ibcBaseDenomsSorted"-->
+            <!--                :dropdown-data-symbol-map="ibcBaseDenomsSymbolKeyMapGetter"-->
+            <!--                @on-tokens-selected="onSelectedToken"-->
+            <!--            />-->
             <ChainsDropdown
                 ref="chainDropdown"
                 :dropdown-data="ibcChains?.all || []"
@@ -118,7 +131,6 @@
 <script lang="ts" setup>
     import { thousandDecimal, PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/tokens';
-    import { computed, onMounted, ref } from 'vue';
     import { useRoute, useRouter } from 'vue-router';
     import { useGetIbcDenoms, useIbcChains } from '../home/composable';
     import { useNeedCustomColumns } from '@/composables';
@@ -139,13 +151,42 @@
     const {
         ibcBaseDenoms,
         ibcBaseDenomsSorted,
-        ibcBaseDenomsSymbolKeyMapGetter,
+        // ibcBaseDenomsSymbolKeyMapGetter,
         getIbcBaseDenom,
         getBaseDenomInfoByDenom
     } = useGetIbcDenoms();
     const { list, getList, total } = useGetTokenList();
 
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
+
+    const bjSelectData = computed(() => {
+        return [
+            {
+                groupName: '',
+                hideGroupName: true,
+                children: [
+                    {
+                        denom: '',
+                        symbol: 'All Tokens',
+                        hideIcon: true
+                    }
+                ]
+            },
+            {
+                groupName: 'Authed IBC Tokens',
+                children: [...ibcBaseDenomsSorted.value]
+            },
+            {
+                groupName: 'Custom IBC Tokens',
+                children: [
+                    {
+                        denom: 'others',
+                        symbol: 'Others'
+                    }
+                ]
+            }
+        ];
+    });
 
     const chainDropdown = ref();
     const statusDropdown = ref();
