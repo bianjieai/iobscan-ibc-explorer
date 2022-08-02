@@ -1,9 +1,9 @@
 <template>
-    <div class="page-title-container">
+    <div class="page_title_container">
         <img v-if="hasIcon" class="icon" :src="imgSrc" />
         <div class="flex">
-            <div class="title-p">
-                <img v-if="hasIcon" class="icon inline-icon" :src="imgSrc" />
+            <div class="title_p">
+                <img v-if="hasIcon" class="icon inline_icon" :src="imgSrc" />
                 <a-typography-text class="title">{{ title }}</a-typography-text>
                 <div class="background" :style="{ bottom: hasIcon ? '3px' : '-3px' }"></div>
             </div>
@@ -24,7 +24,7 @@
 </script>
 
 <style lang="less" scoped>
-    .page-title-container {
+    .page_title_container {
         display: inline-flex;
         align-items: center;
         line-height: 1;
@@ -43,11 +43,11 @@
             margin-right: 8px;
         }
 
-        .inline-icon {
+        .inline_icon {
             display: none;
         }
 
-        .title-p {
+        .title_p {
             margin-right: 8px;
 
             .title {
@@ -77,7 +77,7 @@
 
     // mobile
     @media screen and (max-width: 414px) {
-        .page-title-container {
+        .page_title_container {
             display: inline-flex;
             text-align: left;
 
@@ -89,11 +89,11 @@
                 display: none;
             }
 
-            .inline-icon {
+            .inline_icon {
                 display: block;
             }
 
-            .title-p {
+            .title_p {
                 position: relative;
                 display: inline-flex;
                 align-items: center;

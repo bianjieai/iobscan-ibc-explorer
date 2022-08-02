@@ -142,9 +142,9 @@ export const useBaseDenomInfoComputed = (ibcBaseDenoms: any, baseDenomQuery: str
 
         return {
             symbol,
-            imgSrc:
-                filterData[0]?.icon ??
-                new URL('../../assets/token-default.png', import.meta.url).href
+            imgSrc: filterData[0]?.icon
+                ? filterData[0]?.icon
+                : new URL('../../assets/token-default.png', import.meta.url).href
         };
     });
     return {
