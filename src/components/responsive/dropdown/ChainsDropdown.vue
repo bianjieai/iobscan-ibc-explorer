@@ -448,21 +448,21 @@
          * 1、transfers 页左右不用 sort，
          * 2、选择 All Chains + Other Chain => 选择了一条链，第一个选择的是 All Chains 的需要 sort
          * 3、选择了两个都不是 All Chains 的 chain，
-         *    a、判断选中两条链是否包含 Cosmosis Hub 或 IRIS Hub，[a,b].indexOf(COSMOSHUB) === 1 || [a,b].indexOf(IRISHUB) === 1，需要 sort, 第一项包含的不需要 sort
-         *    b、根据首字母（或依次）判断是否需要 sort
+         *    a、判断选中两条链是否包含 Cosmos Hub 或 IRIS Hub，
+         *      若包含 Cosmos Hub，A 不需要 sort，B 需要 sort；
+         *      若包含 IRIS Hub，A 不需要 sort， B 需要 sort；
+         *    b、其他的根据 chain_name 字母大小写排序
          */
         const isLocalCompare = ref(false);
         const chainAName = props.dropdownData?.find((item) => item.chain_id === chainA)?.chain_name;
         const chainBName = props.dropdownData?.find((item) => item.chain_id === chainB)?.chain_name;
-        if (
-            [chainAName, chainBName].indexOf(CHAINNAME.COSMOSHUB) === 0 ||
-            [chainAName, chainBName].indexOf(CHAINNAME.IRISHUB) === 0
-        ) {
+        if ([chainAName, chainBName].indexOf(CHAINNAME.COSMOSHUB) === 0) {
             isLocalCompare.value = false;
-        } else if (
-            [chainAName, chainBName].indexOf(CHAINNAME.COSMOSHUB) === 1 ||
-            [chainAName, chainBName].indexOf(CHAINNAME.IRISHUB) === 1
-        ) {
+        } else if ([chainAName, chainBName].indexOf(CHAINNAME.COSMOSHUB) === 1) {
+            isLocalCompare.value = true;
+        } else if ([chainAName, chainBName].indexOf(CHAINNAME.IRISHUB) === 0) {
+            isLocalCompare.value = false;
+        } else if ([chainAName, chainBName].indexOf(CHAINNAME.IRISHUB) === 1) {
             isLocalCompare.value = true;
         } else if (chainBName) {
             if (chainAName?.localeCompare(chainBName) === 1) {
