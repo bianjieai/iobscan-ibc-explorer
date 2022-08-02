@@ -918,11 +918,11 @@
                 &__link {
                     .flex(row, nowrap, flex-start, center);
                     &:hover {
-                        .token_info {
-                            .token_num {
+                        .token__info {
+                            &__num {
                                 color: var(--bj-primary-color);
                             }
-                            .token_denom {
+                            &__denom {
                                 color: var(--bj-primary-color);
                             }
                         }

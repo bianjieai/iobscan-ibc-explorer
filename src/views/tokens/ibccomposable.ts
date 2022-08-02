@@ -124,7 +124,7 @@ export const useRef = () => {
 
 export const useBaseDenomInfoComputed = (ibcBaseDenoms: any, baseDenomQuery: string) => {
     const baseDenomInfo = computed(() => {
-        const filterData = ibcBaseDenoms.filter(
+        const filterData = ibcBaseDenoms.value.filter(
             (item: any) => item.denom === baseDenomQuery
         ) as any; // todo clippers => 补上类型
         let symbol = '';

@@ -29,6 +29,6 @@ export interface IResponseChannelsListItem {
 }
 
 export interface IResponseChannelsList {
-    items: IResponseChannelsListItem;
+    items: IResponseChannelsListItem[];
     page_info: IResponsePageInfo;
 }
