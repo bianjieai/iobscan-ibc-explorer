@@ -15,15 +15,6 @@ export const useIbcTxs = () => {
     };
 };
 
-export const useIbcChains = () => {
-    const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
-    const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
-    return {
-        ibcChains,
-        getIbcChains
-    };
-};
-
 export const useGetIbcBaseDenoms = () => {
     const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;

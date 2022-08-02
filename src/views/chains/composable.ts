@@ -1,9 +1,8 @@
 import { getChainsListAPI } from '@/api/chains';
+import { useIbcChains } from '@/composables';
 import { BASE_PARAMS, UNKNOWN } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
-import { useIbcStatisticsChains } from '@/store';
 import { IResponseChainsList } from '@/types/interface/chains.interface';
-import { storeToRefs } from 'pinia';
 import { Ref } from 'vue';
 
 export const useGetChainsList = () => {
@@ -21,9 +20,7 @@ export const useGetChainsList = () => {
             const { code, data, message } = result;
             if (code === API_CODE.success) {
                 const { items } = data as IResponseChainsList;
-                const ibcStatisticsChainsStore = useIbcStatisticsChains();
-                const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
-                const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
+                const { ibcChains, getIbcChains } = useIbcChains();
                 if (Object.keys(ibcChains.value).length <= 0) {
                     try {
                         await getIbcChains();
