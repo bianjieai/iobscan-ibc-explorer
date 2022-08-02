@@ -3,7 +3,7 @@ import { BASE_PARAMS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
-import { IResponseChannelsList, TChannelsListParams } from '@/types/interface/channels.interface';
+import { IResponseChannelsList, IRequestChannelsList } from '@/types/interface/channels.interface';
 import { TChannelStatus } from '@/types/interface/components/table.interface';
 import { urlPageParser } from '@/utils/urlTools';
 import { computed, onMounted, ref, Ref } from 'vue';
@@ -13,7 +13,7 @@ export const useGetChannelsList = () => {
     const list = ref([]);
     const total = ref(0);
 
-    const getList = async (params: TChannelsListParams = {}) => {
+    const getList = async (params: IRequestChannelsList) => {
         const { loading } = params;
 
         if (loading) {
@@ -42,7 +42,7 @@ export const useGetChannelsList = () => {
             console.error(error);
         }
     };
-    getList({ use_count: true });
+    getList({ ...BASE_PARAMS, use_count: true });
     return {
         list,
         total,

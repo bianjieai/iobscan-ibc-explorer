@@ -10,7 +10,7 @@
             <ChainsDropdown
                 ref="chainDropdown"
                 :chain-id="chainIdQuery"
-                :dropdown-data="ibcChains?.all ?? []"
+                :dropdown-data="ibcChains.all"
                 @on-selected-chain="onSelectedChain"
             />
             <BaseDropdown
@@ -65,7 +65,7 @@
                     avatar-can-click
                     title-can-click
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains?.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                     @click-title="goChains"

@@ -32,7 +32,7 @@
                         ref="chainDropdown"
                         :selected-double="selectedDouble"
                         :need-badge="needBadge"
-                        :dropdown-data="ibcChains.all ?? []"
+                        :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         :witch-page="PAGE_PARAMETERS.transfers"
                         @on-selected-chain="onSelectedChain"
@@ -62,7 +62,7 @@
                 </div>
                 <div class="transfer__middle__right">
                     <a-range-picker
-                        :value="dateRange.value"
+                        :value="(dateRange.value as any)"
                         :disabled-date="disabledDate"
                         class="date_range cursor"
                         :allow-clear="false"

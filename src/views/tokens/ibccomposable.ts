@@ -3,8 +3,8 @@ import { BASE_PARAMS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
 import {
+    IRequestIbcTokenList,
     IResponseIbcTokenList,
-    TIbcTokenListParams,
     TIbcTokenType
 } from '@/types/interface/tokens.interface';
 import { isNullOrEmpty } from '@/utils/objectTools';
@@ -15,7 +15,7 @@ export const useGetIbcTokenList = (base_denom: string) => {
     const list = ref([]);
     const total = ref(0);
 
-    const getList = async (params: TIbcTokenListParams = {}) => {
+    const getList = async (params: IRequestIbcTokenList) => {
         const { loading } = params;
         if (loading) {
             loading.value = true;
@@ -31,7 +31,7 @@ export const useGetIbcTokenList = (base_denom: string) => {
             if (code === API_CODE.success) {
                 if (!params.use_count) {
                     const { items } = data as IResponseIbcTokenList;
-                    list.value = items ?? [];
+                    list.value = items;
                 } else {
                     total.value = data as number;
                 }

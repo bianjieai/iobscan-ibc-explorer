@@ -6,7 +6,7 @@ import { IResponseChainsList } from '@/types/interface/chains.interface';
 import { Ref } from 'vue';
 
 export const useGetChainsList = () => {
-    const list = ref([]);
+    const list = ref<any>([]);
 
     const getList = async (loading?: Ref<boolean>) => {
         if (loading) {

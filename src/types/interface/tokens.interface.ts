@@ -1,31 +1,19 @@
 import { Ref } from 'vue';
 import { IRequestPagination, IResponsePageInfo } from './index.interface';
 
+export type TTokenType = 'Authed' | 'Other';
 export type TIbcTokenType = 'Authed' | 'Other' | 'Genesis';
-
-export type TTokenListParams = {
-    base_denom?: string;
-    chain?: string;
-    token_type?: 'Authed' | 'Other';
-    use_count?: boolean;
-    loading?: Ref<boolean>;
-};
-export type TIbcTokenListParams = {
-    chain?: string;
-    token_type?: TIbcTokenType;
-    use_count?: boolean;
-    loading?: Ref<boolean>;
-};
 
 export interface IRequestTokensList extends IRequestPagination {
     base_denom?: string;
     chain?: string;
-    token_type?: string;
+    token_type?: TTokenType;
+    loading?: Ref<boolean>;
 }
 export interface IRequestIbcTokenList extends IRequestPagination {
-    base_denom?: string;
     chain?: string;
-    token_type?: string;
+    token_type?: TIbcTokenType;
+    loading?: Ref<boolean>;
 }
 
 export interface IResponseTokensListItem {

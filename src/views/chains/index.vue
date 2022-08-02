@@ -17,7 +17,7 @@
             <template #chain_id="{ record, column }">
                 <ChainIcon
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains?.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                 />
             </template>

@@ -3,7 +3,11 @@ import { BASE_PARAMS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
-import { IResponseTokensList, TTokenListParams } from '@/types/interface/tokens.interface';
+import {
+    IResponseTokensList,
+    IRequestTokensList,
+    TTokenType
+} from '@/types/interface/tokens.interface';
 import { urlPageParser } from '@/utils/urlTools';
 import { computed, onMounted, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -12,7 +16,7 @@ export const useGetTokenList = () => {
     const list = ref([]);
     const total = ref(0);
 
-    const getList = async (params: TTokenListParams = {}) => {
+    const getList = async (params: IRequestTokensList) => {
         const { loading } = params;
         if (loading) {
             loading.value = true;
@@ -61,7 +65,7 @@ export const useQuery = () => {
     const route = useRoute();
     const chainIdQuery = route.query.chain as string;
     const denomQuery = route.query.denom as string;
-    const statusQuery = route.query.status as 'Authed' | 'Other';
+    const statusQuery = route.query.status as TTokenType;
     return {
         chainIdQuery,
         denomQuery,
@@ -72,7 +76,7 @@ export const useQuery = () => {
 export const useSelected = (
     denomQuery: string,
     chainIdQuery: string,
-    statusQuery: 'Authed' | 'Other',
+    statusQuery: TTokenType,
     getList: any,
     getIbcBaseDenom: any,
     loading: Ref<boolean>
@@ -81,7 +85,7 @@ export const useSelected = (
     const router = useRouter();
     const searchDenom = ref(denomQuery);
     const searchChain = ref<string | undefined>(chainIdQuery);
-    const searchStatus = ref<'Authed' | 'Other'>(statusQuery);
+    const searchStatus = ref<TTokenType>(statusQuery);
     const refreshList = () => {
         getList({
             base_denom: searchDenom.value,
@@ -114,7 +118,7 @@ export const useSelected = (
     };
 
     const onSelectedStatus = (status?: string | number) => {
-        searchStatus.value = status as 'Authed' | 'Other';
+        searchStatus.value = status as TTokenType;
         pageUrl = urlPageParser(pageUrl, {
             key: 'status',
             value: status as string
@@ -151,7 +155,7 @@ export const useRef = () => {
 export const useSubTitleComputed = (
     searchChain: Ref<string | undefined>,
     searchDenom: Ref<string>,
-    searchStatus: Ref<'Authed' | 'Other'>,
+    searchStatus: Ref<TTokenType>,
     total: Ref<number>,
     list: Ref<never[]>
 ) => {

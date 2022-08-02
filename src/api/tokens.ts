@@ -16,13 +16,13 @@ export const getTokensListAPI = async (param: IRequestTokensList) => {
     });
 };
 
-export const getIbcTokenListAPI = async (data: string, param: IRequestIbcTokenList) => {
+export const getIbcTokenListAPI = async (base_denom: string, param: IRequestIbcTokenList) => {
     const urlPrefix = import.meta.env.VITE_BASE_GO_API;
-    const ibcTokenListUrl = `${urlPrefix}/ibc/${data.replace('ibc/', '')}${
+    const ibcTokenListUrl = `${urlPrefix}/ibc/${base_denom.replace('ibc/', '')}${
         API_URL.ibcIbcTokenListUrl
     }`;
     return request<IResponse<IResponseIbcTokenList | number>>({
-        url: `${ibcTokenListUrl}`,
+        url: ibcTokenListUrl,
         method: 'get',
         params: param
     });

@@ -1,10 +1,9 @@
 import { Ref } from 'vue';
-import { IResponsePageInfo } from './index.interface';
+import { IRequestPagination, IResponsePageInfo } from './index.interface';
 
-export type TChainsListParams = {
-    use_count?: boolean;
+export interface IChainsListParams extends IRequestPagination {
     loading?: Ref<boolean>;
-};
+}
 export interface IResponseChainsListItem {
     chainName: string;
     chain_id: string;

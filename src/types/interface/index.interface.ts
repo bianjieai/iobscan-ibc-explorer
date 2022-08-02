@@ -38,9 +38,9 @@ export interface IIbcchain {
 }
 
 export interface IIbcChains {
-    all?: IIbcchain[];
-    active?: IIbcchain[];
-    inactive?: IIbcchain[];
+    all: IIbcchain[];
+    active: IIbcchain[];
+    inactive: IIbcchain[];
 }
 
 export interface IBaseDenom {
@@ -53,9 +53,3 @@ export interface IBaseDenom {
     symbol: string;
     update_at: number;
 }
-
-export type TBaseParams = {
-    use_count?: boolean;
-    page_num: number;
-    page_size: number;
-};

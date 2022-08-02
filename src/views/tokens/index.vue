@@ -11,7 +11,7 @@
             />
             <ChainsDropdown
                 ref="chainDropdown"
-                :dropdown-data="ibcChains?.all || []"
+                :dropdown-data="ibcChains.all"
                 :chain-id="chainIdQuery"
                 @on-selected-chain="onSelectedChain"
             />
@@ -105,7 +105,7 @@
                     title-can-click
                     avatar-can-click
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                     @click-title="goChains"
@@ -130,7 +130,6 @@
     import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
-
     const { loading } = useLoading();
     const { chainIdQuery, denomQuery, statusQuery } = useQuery();
     const { ibcChains } = useIbcChains();

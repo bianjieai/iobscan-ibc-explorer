@@ -4,7 +4,7 @@
         <div class="select flex items-center flex-wrap">
             <ChainsDropdown
                 ref="chainDropdown"
-                :dropdown-data="ibcChains?.all ?? []"
+                :dropdown-data="ibcChains.all"
                 :chain-id="chainIdQuery"
                 selected-double
                 @on-selected-chain="onSelectedChain"
@@ -36,7 +36,7 @@
                     :chain-b-address="record.chain_b_address"
                     :img-src="record.relayer_icon"
                     :relayer-name="record[column.key]"
-                    :ibc-chains="ibcChains?.all"
+                    :ibc-chains="ibcChains.all"
                 />
             </template>
 
@@ -46,7 +46,7 @@
                     :title="record.channel_a"
                     no-subtitle
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains?.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                 />
@@ -67,7 +67,7 @@
                     :title="record.channel_b"
                     no-subtitle
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains?.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                 />

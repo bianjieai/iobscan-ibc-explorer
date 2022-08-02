@@ -2,16 +2,10 @@ import { TChannelStatus } from '@/types/interface/components/table.interface';
 import { Ref } from 'vue';
 import { IRequestPagination, IResponsePageInfo } from './index.interface';
 
-export type TChannelsListParams = {
-    chain?: string;
-    status?: TChannelStatus;
-    use_count?: boolean;
-    loading?: Ref<boolean>;
-};
-
 export interface IRequestChannelsList extends IRequestPagination {
     chain?: string;
     status?: TChannelStatus;
+    loading?: Ref<boolean>;
 }
 
 export interface IResponseChannelsListItem {
