@@ -53,3 +53,13 @@ export interface IBaseDenom {
     symbol: string;
     update_at: number;
 }
+
+export interface IAmountDenom {
+    denom: string;
+    amount: string;
+}
+
+export interface IDenomTrace {
+    sc_denom: string;
+    dc_denom: string;
+}

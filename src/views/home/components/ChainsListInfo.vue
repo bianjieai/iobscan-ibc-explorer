@@ -176,6 +176,7 @@
             font-weight: 600;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
             color: var(--bj-text-second);
             vertical-align: middle;
         }

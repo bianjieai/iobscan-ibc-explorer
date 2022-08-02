@@ -2,31 +2,40 @@
     <div class="transfer">
         <div class="transfer__detail">
             <div class="transfer__detail__top_content">
-                <div class="transfer__detail_title">
+                <div class="transfer__detail__title">
                     <span class="detail_title">Transfer Details</span>
-                    <span v-show="ibcTxStatus === 1" class="success_icon">
+                    <span v-show="ibcTxStatus === IBC_TX_STATUS.success" class="success_icon">
                         <i class="iconfont icon-chenggong"></i>
                         Success
                     </span>
-                    <span v-show="ibcTxStatus === 2 || ibcTxStatus === 4" class="failed_icon">
+                    <span
+                        v-show="
+                            ibcTxStatus === IBC_TX_STATUS.failed ||
+                            ibcTxStatus === IBC_TX_STATUS.refund
+                        "
+                        class="failed_icon"
+                    >
                         <i class="iconfont icon-shibai"></i>
                         Failed
                     </span>
-                    <span v-show="ibcTxStatus === 3" class="processing_icon">
+                    <span v-show="ibcTxStatus === IBC_TX_STATUS.processing" class="processing_icon">
                         <i class="iconfont icon-dengdai"></i>
                         Processing
                     </span>
                 </div>
                 <div class="transfer__ibc_out_tx_hash">
                     <span class="transfer__ibc_out_tx_hash__label">
-                        <i v-show="outTxStatus === 'default'" class="iconfont icon-address1"></i>
                         <i
-                            v-show="outTxStatus === 1"
+                            v-show="outTxStatus === IBC_SC_AND_DC_TX_STATUS.default"
+                            class="iconfont icon-address1"
+                        ></i>
+                        <i
+                            v-show="outTxStatus === IBC_SC_AND_DC_TX_STATUS.success"
                             style="color: rgba(0, 200, 83, 1)"
                             class="iconfont icon-address1"
                         ></i>
                         <i
-                            v-show="outTxStatus === 0"
+                            v-show="outTxStatus === IBC_SC_AND_DC_TX_STATUS.failed"
                             style="color: rgba(255, 90, 90, 1)"
                             class="iconfont icon-address1"
                         ></i>
@@ -43,36 +52,42 @@
                 </div>
                 <div class="transfer__arrows_icon">
                     <i
-                        v-show="ibcTxStatus === 1"
+                        v-show="ibcTxStatus === IBC_TX_STATUS.success"
                         style="color: rgba(0, 200, 83, 1)"
                         class="iconfont_style iconfont icon-zhuangtai"
                     ></i>
                     <i
-                        v-show="ibcTxStatus === 2 || ibcTxStatus === 4"
+                        v-show="
+                            ibcTxStatus === IBC_TX_STATUS.failed ||
+                            ibcTxStatus === IBC_TX_STATUS.refund
+                        "
                         style="color: rgba(255, 90, 90, 1)"
                         class="iconfont_style iconfont icon-zhuangtai"
                     ></i>
                     <i
-                        v-show="ibcTxStatus === 3"
+                        v-show="ibcTxStatus === IBC_TX_STATUS.processing"
                         style="color: rgba(255, 196, 0, 1)"
                         class="iconfont_style iconfont icon-zhuangtai"
                     ></i>
                     <i
-                        v-show="ibcTxStatus === 'default'"
+                        v-show="ibcTxStatus === IBC_TX_STATUS.default"
                         style="color: rgba(0, 0, 0, 0.35)"
                         class="iconfont_style iconfont icon-zhuangtai"
                     ></i>
                 </div>
                 <div class="transfer__ibc_in_tx_hash">
                     <span class="transfer__ibc_in_tx_hash__label">
-                        <i v-show="inTxStatus === 'default'" class="iconfont icon-address1"></i>
                         <i
-                            v-show="inTxStatus === 1"
+                            v-show="inTxStatus === IBC_SC_AND_DC_TX_STATUS.default"
+                            class="iconfont icon-address1"
+                        ></i>
+                        <i
+                            v-show="inTxStatus === IBC_SC_AND_DC_TX_STATUS.success"
                             style="color: rgba(0, 200, 83, 1)"
                             class="iconfont icon-address1"
                         ></i>
                         <i
-                            v-show="inTxStatus === 0"
+                            v-show="inTxStatus === IBC_SC_AND_DC_TX_STATUS.failed"
                             style="color: rgba(255, 90, 90, 1)"
                             class="iconfont icon-address1"
                         ></i>
@@ -125,9 +140,9 @@
 </template>
 
 <script setup lang="ts">
+    import { IBC_TX_STATUS, IBC_SC_AND_DC_TX_STATUS } from '@/constants/transfers';
     import TransferDetailsCard from '../components/TransferDetailsCard.vue';
     import { useTransfersDetailsInfo } from '../composable';
-
     const {
         ibcTransferOutTxHash,
         ibcTransferInTxHash,

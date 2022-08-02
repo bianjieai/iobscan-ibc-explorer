@@ -1,4 +1,5 @@
 <template>
+    <!-- todo 页面组件重构，后续再处理 -->
     <!-- todo duanjie class="transfer"  设置了样式，看能不能复用 PageContainer 保持统一 -->
     <div class="transfer">
         <div class="transfer__header">
@@ -425,15 +426,19 @@
         const failedOptions = transfersStatusOptions.FAILED_OPTIONS;
         const processingOptions = transfersStatusOptions.PROCESSING_OPTIONS;
         paramsStatus = (route?.query?.status as string).split(',');
-        //todo  Optimize the writing
-        if (JSON.stringify(paramsStatus) == JSON.stringify(successOptions)) {
-            paramsStatus = successOptions;
-        } else if (JSON.stringify(paramsStatus) == JSON.stringify(failedOptions)) {
-            paramsStatus = failedOptions;
-        } else if (JSON.stringify(paramsStatus) == JSON.stringify(processingOptions)) {
-            paramsStatus = processingOptions;
-        } else {
-            paramsStatus = defaultOptions;
+        switch (JSON.stringify(paramsStatus)) {
+            case JSON.stringify(successOptions):
+                paramsStatus = successOptions;
+                break;
+            case JSON.stringify(failedOptions):
+                paramsStatus = failedOptions;
+                break;
+            case JSON.stringify(processingOptions):
+                paramsStatus = processingOptions;
+                break;
+            default:
+                paramsStatus = defaultOptions;
+                break;
         }
         url += `&status=${paramsStatus}`;
     }
