@@ -416,7 +416,7 @@ export const useTransfersDetailsInfo = () => {
                             handleTransferDetails(item);
                         });
                     } else {
-                        router.push(`/searchResult?${route.query.hash}`);
+                        router.replace(`/searchResult?${route.query.hash}`);
                     }
                 }
             })
