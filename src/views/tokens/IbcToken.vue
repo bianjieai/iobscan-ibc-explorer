@@ -103,7 +103,6 @@
 </template>
 
 <script lang="ts" setup>
-    // todo clippers => 确认提示Name单元格Token Hash:的字段
     import { PAGE_PARAMETERS } from '@/constants';
     import { IBC_COLUMNS, IBC_STATUS_OPTIONS, SPECIAL_TOKEN_TYPE } from '@/constants/tokens';
     import { computed, onMounted, ref } from 'vue';
@@ -115,6 +114,7 @@
     import { formatAmount } from '@/helper/tableCellHelper';
     import { isNullOrEmpty } from '@/utils/objectTools';
     import { urlPageParser } from '@/utils/urlTools';
+    import { IBaseDenom } from '@/types/interface/index.interface';
 
     let pageUrl = '/tokens/details';
 
@@ -132,8 +132,8 @@
 
     const baseDenomInfo = computed(() => {
         const filterData = ibcBaseDenoms.value.filter(
-            (item: any) => item.denom === baseDenomQuery
-        ) as any; // todo clippers => 补上类型
+            (item: IBaseDenom) => item.denom === baseDenomQuery
+        );
         let symbol = '';
         const filterSymbol = filterData[0]?.symbol;
 
