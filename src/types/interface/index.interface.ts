@@ -59,7 +59,7 @@ export interface IAmountDenom {
     amount: string;
 }
 
-export interface IDenoms {
+export interface IDenomTrace {
     sc_denom: string;
     dc_denom: string;
 }

@@ -1,4 +1,4 @@
-import { IAmountDenom, IDenoms } from './index.interface';
+import { IAmountDenom, IDenomTrace } from './index.interface';
 import { IRequestPagination2 } from '@/types/interface/index.interface';
 
 export interface IRequestIbcTxs extends IRequestPagination2 {
@@ -28,7 +28,7 @@ export interface IIbcTx {
         hash: string;
     };
     base_denom: string;
-    denoms: IDenoms;
+    denoms: IDenomTrace;
     tx_time: number;
     end_time: string;
     expanded?: boolean;
@@ -40,7 +40,7 @@ export interface IIbcTxDetail {
     dc_chain_id: string;
     dc_channel: string;
     dc_port: string;
-    denoms: IDenoms;
+    denoms: IDenomTrace;
     sc_addr: string;
     sc_chain_id: string;
     sc_channel: string;
