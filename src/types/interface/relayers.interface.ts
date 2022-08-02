@@ -5,6 +5,7 @@ import { Ref } from 'vue';
 export interface IRequestRelayerList extends IRequestPagination {
     chain?: string;
     status?: TRelayerStatus;
+    loading?: Ref<boolean>;
 }
 
 export interface IResponseRelayerListItem {
@@ -27,11 +28,4 @@ export interface IResponseRelayerListItem {
 export interface IResponseRelayerList {
     items: IResponseRelayerListItem;
     page_info: IResponsePageInfo;
-}
-
-export interface TRelayersListParam {
-    chain?: string;
-    status?: TRelayerStatus;
-    use_count?: boolean;
-    loading?: Ref<boolean>;
 }

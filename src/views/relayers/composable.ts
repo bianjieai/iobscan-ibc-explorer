@@ -3,7 +3,7 @@ import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { getRelayersListAPI } from '@/api/relayers';
 import { TRelayerStatus } from '@/types/interface/components/table.interface';
-import { IResponseRelayerList, TRelayersListParam } from '@/types/interface/relayers.interface';
+import { IRequestRelayerList, IResponseRelayerList } from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
 import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
@@ -13,7 +13,7 @@ export const useGetRelayersList = () => {
     const list = ref([]);
     const total = ref(0);
 
-    const getList = async (params: TRelayersListParam = {}) => {
+    const getList = async (params: IRequestRelayerList) => {
         const { loading } = params;
         if (loading) {
             loading.value = true;
@@ -49,7 +49,7 @@ export const useGetRelayersList = () => {
             console.error(error);
         }
     };
-    getList({ use_count: true });
+    getList({ ...BASE_PARAMS, use_count: true });
 
     return {
         list,

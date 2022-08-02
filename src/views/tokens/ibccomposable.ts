@@ -12,7 +12,7 @@ import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
 
 export const useGetIbcTokenList = (base_denom: string) => {
-    const list = ref([]);
+    const list = ref<any>([]);
     const total = ref(0);
 
     const getList = async (params: IRequestIbcTokenList) => {
@@ -43,7 +43,7 @@ export const useGetIbcTokenList = (base_denom: string) => {
             console.log(error);
         }
     };
-    getList({ use_count: true });
+    getList({ ...BASE_PARAMS, use_count: true });
     return {
         list,
         total,

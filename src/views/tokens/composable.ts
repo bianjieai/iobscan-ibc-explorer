@@ -53,7 +53,7 @@ export const useGetTokenList = () => {
             console.log(error);
         }
     };
-    getList({ use_count: true });
+    getList({ ...BASE_PARAMS, use_count: true });
     return {
         list,
         total,
