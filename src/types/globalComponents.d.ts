@@ -29,7 +29,6 @@ declare module '@vue/runtime-core' {
         ARangePicker: typeof import('ant-design-vue/es')['RangePicker'];
         ASelect: typeof import('ant-design-vue/es')['Select'];
         ASelectOption: typeof import('ant-design-vue/es')['SelectOption'];
-        ASpin: typeof import('ant-design-vue/es')['Spin'];
         ATable: typeof import('ant-design-vue/es')['Table'];
         ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
         ATypographyText: typeof import('ant-design-vue/es')['TypographyText'];
@@ -42,7 +41,6 @@ declare module '@vue/runtime-core' {
         HeaderInput: typeof import('./../components/HeaderInput.vue')['default'];
         IbcFooter: typeof import('./../components/IbcFooter.vue')['default'];
         IconAndTitle: typeof import('./../components/responsive/table/IconAndTitle.vue')['default'];
-        Loading: typeof import('./../components/Loading.vue')['default'];
         Navigation: typeof import('./../components/Navigation.vue')['default'];
         NoDatas: typeof import('./../components/NoDatas.vue')['default'];
         PageContainer: typeof import('./../components/responsive/PageContainer.vue')['default'];

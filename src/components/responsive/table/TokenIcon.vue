@@ -12,7 +12,7 @@
         >
             <a-popover v-if="titleCanPopover(tokenInfo.title)">
                 <template #content>
-                    <div class="popover-c">{{ tokenInfo.defaultTitle }}</div>
+                    <div class="popover_c">{{ tokenInfo.defaultTitle }}</div>
                 </template>
                 <div
                     class="title leading_none"

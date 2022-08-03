@@ -35,7 +35,7 @@
                     placement="topLeft"
                 >
                     <template #content>
-                        <div class="notice-text">
+                        <div class="notice_text">
                             <div>Path: {{ record.denom_path }}</div>
                             <div>Token Hash: {{ record[column.key] }}</div>
                         </div>
@@ -52,7 +52,7 @@
                     <div v-else>
                         <a-popover v-if="record[column.key].length > 11" placement="topLeft">
                             <template #content>
-                                <div class="popover-c">{{ record[column.key] }}</div>
+                                <div class="popover_c">{{ record[column.key] }}</div>
                             </template>
                             <div>{{ getRestString(record[column.key], 3, 8) }}</div>
                         </a-popover>
@@ -78,7 +78,7 @@
             <template #amount="{ record, column }">
                 <a-popover>
                     <template #content>
-                        <div class="popover-c">{{
+                        <div class="popover_c">{{
                             `${
                                 formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms)
                                     .popover
@@ -151,7 +151,7 @@
         }
     }
 
-    .notice-text {
+    .notice_text {
         color: var(--bj-text-second);
     }
 

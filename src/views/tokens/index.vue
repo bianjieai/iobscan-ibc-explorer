@@ -45,7 +45,7 @@
             <template #price="{ record, column }">
                 <a-popover v-if="+record[column.key] !== -1">
                     <template #content>
-                        <div class="popover-c">{{
+                        <div class="popover_c">{{
                             `${record.currency} ${formatPrice(record[column.key], undefined)}`
                         }}</div>
                     </template>
@@ -68,7 +68,7 @@
             <template #ibc_transfer_amount="{ record, column }">
                 <a-popover>
                     <template #content>
-                        <div class="popover-c"
+                        <div class="popover_c"
                             >{{
                                 `${
                                     formatAmount(

@@ -103,11 +103,11 @@
                         <a-input
                             v-model:value="tokenInput"
                             allow-clear
-                            class="token-input"
+                            class="token_input"
                             placeholder="Search by ibc/hash"
                             @input="onInputChange"
                         />
-                        <a-button type="primary" class="confirm-button ml-12" @click="confirmChains"
+                        <a-button type="primary" class="confirm_button ml-12" @click="confirmChains"
                             >Confirm</a-button
                         >
                     </div>
@@ -357,7 +357,7 @@
         }
     }
 
-    .token-input {
+    .token_input {
         width: 240px;
     }
 
@@ -415,11 +415,11 @@
             height: 450px;
         }
 
-        .confirm-button {
+        .confirm_button {
             margin: 12px 0 0;
         }
 
-        .token-input {
+        .token_input {
             width: 245px;
         }
     }

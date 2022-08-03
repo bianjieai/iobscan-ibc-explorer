@@ -1,5 +1,5 @@
 <template>
-    <div class="table-warpper">
+    <div class="table_wrapper">
         <a-table
             :row-key="rowKey"
             :columns="columnsSource"
@@ -22,7 +22,7 @@
                 </template>
             </template>
         </a-table>
-        <div class="thead-border-bottom"></div>
+        <div class="thead_border_bottom"></div>
         <div
             v-if="hasData || $slots.table_bottom_status"
             class="flex justify-between pt-16 items-center bottom"
@@ -356,13 +356,13 @@
     :deep(td.ant-table-column-sort) {
         background: transparent;
     }
-    .table-warpper {
+    .table_wrapper {
         padding: 0 24px;
         background-color: #fff;
         border-radius: 4px;
         position: relative;
     }
-    .thead-border-bottom {
+    .thead_border_bottom {
         position: absolute;
         top: 48px;
         left: 0;
@@ -386,7 +386,7 @@
     }
     // mobile
     @media screen and (max-width: 414px) {
-        .table-warpper {
+        .table_wrapper {
             padding: 0 16px;
         }
         .bottom {
