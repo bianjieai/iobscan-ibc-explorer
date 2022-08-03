@@ -59,7 +59,7 @@
     import { COLUMNS } from '@/constants/chains';
     import { useIbcChains, useLoading, useNeedCustomColumns } from '@/composables';
     import { onMounted } from 'vue';
-    import { useGetChainsList, useJump } from '@/views/chains/composable';
+    import { useGetChainsList, useColumnJump } from '@/views/chains/composable';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { formatBigNumber } from '@/helper/parseStringHelper';
 
@@ -67,7 +67,7 @@
     const { list, getList } = useGetChainsList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.chains);
     const { loading } = useLoading();
-    const { goChannels, goRelayers, goTransfer } = useJump();
+    const { goChannels, goRelayers, goTransfer } = useColumnJump();
 
     onMounted(() => {
         getList(loading);

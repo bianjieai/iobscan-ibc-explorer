@@ -118,7 +118,7 @@
 <script lang="ts" setup>
     import { thousandDecimal, PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/tokens';
-    import { useIbcChains, useNeedCustomColumns, useJump, useLoading } from '@/composables';
+    import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
     import {
         useGetTokenList,
         useQuery,
@@ -152,14 +152,13 @@
     } = useSelected(denomQuery, chainIdQuery, statusQuery, getList, getIbcBaseDenom, loading);
     const { chainDropdown, statusDropdown, tokensDropdown } = useRef();
     const { subtitle } = useSubTitleComputed(searchChain, searchDenom, searchStatus, total, list);
-    const { goIbcToken, goTransfer } = useColumnJump(getBaseDenomInfoByDenom);
-    const { goChains, resetSearchCondition } = useJump(`/${PAGE_PARAMETERS.tokens}`);
+    const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
+        useColumnJump(getBaseDenomInfoByDenom);
 </script>
 
 <style lang="less" scoped>
     .select {
         margin-top: 32px;
-        margin-bottom: 16px;
 
         :deep(.ant-dropdown-trigger) {
             margin-right: 8px;

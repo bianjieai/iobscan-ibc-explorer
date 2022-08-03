@@ -36,6 +36,9 @@ export interface IIbcchain {
     chain_name: string;
     icon: string;
 }
+export interface IIbcchainMap {
+    [propName: string]: string;
+}
 
 export interface IIbcChains {
     all: IIbcchain[];

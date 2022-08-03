@@ -19,9 +19,10 @@ export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerI
 };
 
 export const useChangeTitleAndIcon = () => {
-    const link: any =
+    const link: HTMLLinkElement =
         document.querySelector('link[rel *= "icon"]') || document.createElement('link');
-    const title: any = document.querySelector('title') || document.createElement('title');
+    const title: HTMLTitleElement =
+        document.querySelector('title') || document.createElement('title');
     link.rel = 'icon';
     link.href = import.meta.env.VITE_FAVICON;
     title.innerHTML = import.meta.env.VITE_TITLE;
@@ -73,17 +74,12 @@ export const useIbcChains = () => {
 };
 
 // 重置状态跳转及点击跳转
-export const useJump = (resetRoute: string) => {
-    const router = useRouter();
-    const goChains = () => {
-        router.push('/chains');
-    };
+export const useJump = () => {
     // reset
-    const resetSearchCondition = () => {
-        location.href = resetRoute;
+    const resetSearch = (resetRoute?: string) => {
+        location.href = resetRoute || location.href.split('?')[0];
     };
     return {
-        goChains,
-        resetSearchCondition
+        resetSearch
     };
 };

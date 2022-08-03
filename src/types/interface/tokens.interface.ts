@@ -27,6 +27,9 @@ export interface IResponseTokensListItem {
     supply: string;
     token_type: string;
 }
+export interface ITokensListItem extends IResponseTokensListItem {
+    name?: string;
+}
 
 export interface IResponseIbcTokenListItem {
     amount: string;

@@ -1,10 +1,13 @@
 import { getIbcTokenListAPI } from '@/api/tokens';
-import { BASE_PARAMS } from '@/constants';
+import { useJump } from '@/composables';
+import { BASE_PARAMS, PAGE_PARAMETERS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
+import { IBaseDenom } from '@/types/interface/index.interface';
 import {
     IRequestIbcTokenList,
     IResponseIbcTokenList,
+    IResponseIbcTokenListItem,
     TIbcTokenType
 } from '@/types/interface/tokens.interface';
 import { isNullOrEmpty } from '@/utils/objectTools';
@@ -12,8 +15,8 @@ import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
 
 export const useGetIbcTokenList = (base_denom: string) => {
-    const list = ref<any>([]);
-    const total = ref(0);
+    const list = ref<IResponseIbcTokenListItem[]>([]);
+    const total = ref<number>(0);
 
     const getList = async (params: IRequestIbcTokenList) => {
         const { loading } = params;
@@ -66,8 +69,8 @@ export const useQuery = () => {
 export const useSelected = (
     chainIdQuery: string,
     statusQuery: TIbcTokenType,
-    getList: any,
-    getIbcBaseDenom: any,
+    getList: (params: IRequestIbcTokenList) => Promise<void>,
+    getIbcBaseDenom: () => Promise<void>,
     loading: Ref<boolean>
 ) => {
     let pageUrl = '/tokens/details';
@@ -76,6 +79,7 @@ export const useSelected = (
     const searchStatus = ref<TIbcTokenType | undefined>(statusQuery);
     const refreshList = () => {
         getList({
+            ...BASE_PARAMS,
             chain: searchChain.value,
             token_type: searchStatus.value,
             loading: loading
@@ -122,11 +126,14 @@ export const useRef = () => {
     };
 };
 
-export const useBaseDenomInfoComputed = (ibcBaseDenoms: any, baseDenomQuery: string) => {
+export const useBaseDenomInfoComputed = (
+    ibcBaseDenoms: Ref<IBaseDenom[]>,
+    baseDenomQuery: string
+) => {
     const baseDenomInfo = computed(() => {
         const filterData = ibcBaseDenoms.value.filter(
-            (item: any) => item.denom === baseDenomQuery
-        ) as any; // todo clippers => 补上类型
+            (item: IBaseDenom) => item.denom === baseDenomQuery
+        );
         let symbol = '';
         const filterSymbol = filterData[0]?.symbol;
 
@@ -155,7 +162,7 @@ export const useSubTitleComputed = (
     searchChain: Ref<string | undefined>,
     searchStatus: Ref<TIbcTokenType | undefined>,
     total: Ref<number>,
-    list: Ref<never[]>
+    list: Ref<IResponseIbcTokenListItem[]>
 ) => {
     const subtitle = computed(() => {
         if (!searchChain.value && !searchStatus.value) {
@@ -172,8 +179,11 @@ export const useSubTitleComputed = (
     };
 };
 
-export const useColumnJump = () => {
+export const useColumnJump = (baseDenomQuery: string) => {
     const router = useRouter();
+    const goChains = () => {
+        router.push('/chains');
+    };
     const goTransfer = (chain_id: string, denom: string) => {
         router.push({
             path: '/transfers',
@@ -183,7 +193,13 @@ export const useColumnJump = () => {
             }
         });
     };
+    const resetSearchCondition = () => {
+        const { resetSearch } = useJump();
+        resetSearch(`/${PAGE_PARAMETERS.tokens}/details?denom=${baseDenomQuery}`);
+    };
     return {
-        goTransfer
+        goChains,
+        goTransfer,
+        resetSearchCondition
     };
 };

@@ -107,17 +107,13 @@
 <script lang="ts" setup>
     import { computed, onMounted, ref, watch } from 'vue';
     import { CHAINNAME, defaultTitle, PAGE_PARAMETERS } from '@/constants';
-    type TChainData = {
-        chain_id: string;
-        chain_name: string;
-        icon: string;
-    };
+    import { IIbcchain } from '@/types/interface/index.interface';
 
     interface IProps {
         selectedDouble?: boolean; // 需要选两个chain
         needBadge?: boolean; // 需要角标
         chainId?: string; // 回填
-        dropdownData: TChainData[];
+        dropdownData: IIbcchain[];
         minWidth?: number;
         witchPage?: string;
     }
@@ -143,19 +139,19 @@
     };
 
     let backupDropdownData: TSelectedChain[] = [];
-    const handleDropdownData = ref<TChainData[]>();
+    const handleDropdownData = ref<IIbcchain[]>();
     const confirmFlag = ref(false);
 
-    const setAllChains = (dropdownData: TChainData[] = props.dropdownData) => {
+    const setAllChains = (dropdownData: IIbcchain[] = props.dropdownData) => {
         if (dropdownData?.length > 0) {
             const cosmosChain = dropdownData.filter(
-                (item) => item.chain_name === CHAINNAME.COSMOSHUB
+                (item: IIbcchain) => item.chain_name === CHAINNAME.COSMOSHUB
             );
             const irishubChain = dropdownData.filter(
-                (item) => item.chain_name === CHAINNAME.IRISHUB
+                (item: IIbcchain) => item.chain_name === CHAINNAME.IRISHUB
             );
-            let notIncludesIrisAndCosmosChains: TChainData[] = [];
-            dropdownData.forEach((item) => {
+            let notIncludesIrisAndCosmosChains: IIbcchain[] = [];
+            dropdownData.forEach((item: IIbcchain) => {
                 if (
                     item.chain_name !== CHAINNAME.COSMOSHUB &&
                     item.chain_name !== CHAINNAME.IRISHUB
@@ -186,7 +182,7 @@
             const idArr = props.chainId.split(',');
             for (let i = 0; i < idArr.length; i++) {
                 const filterData = props.dropdownData.find(
-                    (item: any) => item.chain_id === idArr[i]
+                    (item: IIbcchain) => item.chain_id === idArr[i]
                 );
                 if (filterData) {
                     const chain_name = filterData.chain_name;

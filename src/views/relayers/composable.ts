@@ -3,15 +3,22 @@ import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { getRelayersListAPI } from '@/api/relayers';
 import { TRelayerStatus } from '@/types/interface/components/table.interface';
-import { IRequestRelayerList, IResponseRelayerList } from '@/types/interface/relayers.interface';
+import {
+    IRelayersListItem,
+    IRequestRelayerList,
+    IResponseRelayerList,
+    IResponseRelayerListItem
+} from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
 import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
 import { BASE_PARAMS } from '@/constants';
+import { useJump } from '@/composables';
+import { useRoute, useRouter } from 'vue-router';
 
 export const useGetRelayersList = () => {
-    const list = ref([]);
-    const total = ref(0);
+    const list = ref<IResponseRelayerListItem[]>([]);
+    const total = ref<number>(0);
 
     const getList = async (params: IRequestRelayerList) => {
         const { loading } = params;
@@ -30,7 +37,7 @@ export const useGetRelayersList = () => {
                 if (!params.use_count) {
                     const { items } = data as IResponseRelayerList;
                     list.value = ChainHelper.sortByChainName(items, params.chain)?.map(
-                        (item: any) => {
+                        (item: IRelayersListItem) => {
                             item.txs_success_rate = formatTransfer_success_txs(
                                 item.transfer_success_txs,
                                 item.transfer_total_txs
@@ -70,7 +77,7 @@ export const useQuery = () => {
 export const useSelected = (
     chainIdQuery: string,
     statusQuery: TRelayerStatus,
-    getList: any,
+    getList: (params: IRequestRelayerList) => Promise<void>,
     loading: Ref<boolean>
 ) => {
     let pageUrl = '/relayers';
@@ -87,6 +94,7 @@ export const useSelected = (
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
     const refreshList = () => {
         getList({
+            ...BASE_PARAMS,
             chain: searchChain.value,
             status: searchStatus.value,
             loading: loading
@@ -134,7 +142,7 @@ export const useSubTitleComputed = (
     searchChain: Ref<string | undefined>,
     searchStatus: Ref<TRelayerStatus | undefined>,
     total: Ref<number>,
-    list: Ref<never[]>
+    list: Ref<IResponseRelayerListItem[]>
 ) => {
     const subtitle = computed(() => {
         if (!searchChain.value && !searchStatus.value) {
@@ -148,5 +156,19 @@ export const useSubTitleComputed = (
     });
     return {
         subtitle
+    };
+};
+export const useColumnJump = () => {
+    const router = useRouter();
+    const goChains = () => {
+        router.push('/chains');
+    };
+    const resetSearchCondition = () => {
+        const { resetSearch } = useJump();
+        resetSearch();
+    };
+    return {
+        goChains,
+        resetSearchCondition
     };
 };

@@ -2,11 +2,12 @@ import { getChainsListAPI } from '@/api/chains';
 import { useIbcChains } from '@/composables';
 import { BASE_PARAMS, UNKNOWN } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
-import { IResponseChainsList } from '@/types/interface/chains.interface';
+import { IResponseChainsList, IResponseChainsListItem } from '@/types/interface/chains.interface';
+import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
 import { Ref } from 'vue';
 
 export const useGetChainsList = () => {
-    const list = ref<any>([]);
+    const list = ref<IResponseChainsListItem[]>([]);
 
     const getList = async (loading?: Ref<boolean>) => {
         if (loading) {
@@ -28,12 +29,12 @@ export const useGetChainsList = () => {
                         console.log('getIbcChains', error);
                     }
                 }
-                const ibcChainsAllMap: any = {};
-                (ibcChains.value?.all || []).forEach((ibcChain: any) => {
+                const ibcChainsAllMap: IIbcchainMap = {};
+                (ibcChains.value?.all || []).forEach((ibcChain: IIbcchain) => {
                     ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
                 });
 
-                list.value = items.map((item: any) => {
+                list.value = items.map((item: IResponseChainsListItem) => {
                     const chainName = ibcChainsAllMap[item.chain_id];
                     item.chainName = chainName ? chainName : UNKNOWN;
                     return item;
@@ -53,7 +54,7 @@ export const useGetChainsList = () => {
     };
 };
 
-export const useJump = () => {
+export const useColumnJump = () => {
     const router = useRouter();
     const goChannels = (chain: string) => {
         router.push({

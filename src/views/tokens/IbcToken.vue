@@ -103,7 +103,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { useIbcChains, useJump, useLoading, useNeedCustomColumns } from '@/composables';
+    import { useIbcChains, useLoading, useNeedCustomColumns } from '@/composables';
     import { PAGE_PARAMETERS } from '@/constants';
     import { IBC_STATUS_OPTIONS, IBC_COLUMNS, SPECIAL_TOKEN_TYPE } from '@/constants/tokens';
     import { formatBigNumber, getRestString, rmIbcPrefix } from '@/helper/parseStringHelper';
@@ -135,16 +135,12 @@
     );
     const { chainDropdown, statusDropdown } = useRef();
     const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, list);
-    const { goTransfer } = useColumnJump();
-    const { goChains, resetSearchCondition } = useJump(
-        `/${PAGE_PARAMETERS.tokens}/details?denom=${baseDenomQuery}`
-    );
+    const { goChains, goTransfer, resetSearchCondition } = useColumnJump(baseDenomQuery);
 </script>
 
 <style lang="less" scoped>
     .select {
         margin-top: 26px;
-        margin-bottom: 16px;
 
         :deep(.ant-dropdown-trigger) {
             margin-right: 8px;

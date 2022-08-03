@@ -87,13 +87,14 @@
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/channels';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
     import { TChannelStatus, BottomStatusType } from '@/types/interface/components/table.interface';
-    import { useIbcChains, useNeedCustomColumns, useJump, useLoading } from '@/composables';
+    import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
     import {
         useGetChannelsList,
         useQuery,
         useSelected,
         useRef,
-        useSubTitleComputed
+        useSubTitleComputed,
+        useColumnJump
     } from '@/views/channels/composable';
 
     const { loading } = useLoading();
@@ -109,13 +110,12 @@
     );
     const { chainDropdown, statusDropdown } = useRef();
     const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, list);
-    const { goChains, resetSearchCondition } = useJump(`/${PAGE_PARAMETERS.channels}`);
+    const { goChains, resetSearchCondition } = useColumnJump();
 </script>
 
 <style lang="less" scoped>
     .select {
         margin-top: 32px;
-        margin-bottom: 16px;
 
         :deep(.ant-dropdown-trigger) {
             margin-right: 8px;

@@ -1,17 +1,22 @@
 import { getChannelsListAPI } from '@/api/channels';
+import { useJump } from '@/composables';
 import { BASE_PARAMS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
-import { IResponseChannelsList, IRequestChannelsList } from '@/types/interface/channels.interface';
+import {
+    IResponseChannelsList,
+    IRequestChannelsList,
+    IResponseChannelsListItem
+} from '@/types/interface/channels.interface';
 import { TChannelStatus } from '@/types/interface/components/table.interface';
 import { urlPageParser } from '@/utils/urlTools';
 import { computed, onMounted, ref, Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 export const useGetChannelsList = () => {
-    const list = ref([]);
-    const total = ref(0);
+    const list = ref<IResponseChannelsListItem[]>([]);
+    const total = ref<number>(0);
 
     const getList = async (params: IRequestChannelsList) => {
         const { loading } = params;
@@ -63,7 +68,7 @@ export const useQuery = () => {
 export const useSelected = (
     chainIdQuery: string,
     statusQuery: TChannelStatus,
-    getList: any,
+    getList: (params: IRequestChannelsList) => Promise<void>,
     loading: Ref<boolean>
 ) => {
     let pageUrl = '/channels';
@@ -73,6 +78,7 @@ export const useSelected = (
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
     const refreshList = () => {
         getList({
+            ...BASE_PARAMS,
             chain: searchChain.value,
             status: searchStatus.value,
             loading: loading
@@ -122,7 +128,7 @@ export const useSubTitleComputed = (
     searchChain: Ref<string | undefined>,
     searchStatus: Ref<TChannelStatus | undefined>,
     total: Ref<number>,
-    list: Ref<never[]>
+    list: Ref<IResponseChannelsListItem[]>
 ) => {
     const subtitle = computed(() => {
         if (!searchChain.value && !searchStatus.value) {
@@ -136,5 +142,20 @@ export const useSubTitleComputed = (
     });
     return {
         subtitle
+    };
+};
+
+export const useColumnJump = () => {
+    const router = useRouter();
+    const goChains = () => {
+        router.push('/chains');
+    };
+    const resetSearchCondition = () => {
+        const { resetSearch } = useJump();
+        resetSearch();
+    };
+    return {
+        goChains,
+        resetSearchCondition
     };
 };

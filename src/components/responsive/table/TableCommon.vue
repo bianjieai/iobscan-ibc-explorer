@@ -52,10 +52,20 @@
     import BigNumber from 'bignumber.js';
     import { useGetIbcDenoms } from '@/views/home/composable';
     import { formatSupply } from '@/helper/tableCellHelper';
+    import { IResponseChainsListItem } from '@/types/interface/chains.interface';
+    import { IResponseIbcTokenListItem, ITokensListItem } from '@/types/interface/tokens.interface';
+    import { IResponseRelayerListItem } from '@/types/interface/relayers.interface';
+    import { IResponseChannelsListItem } from '@/types/interface/channels.interface';
     const { ibcBaseDenoms } = useGetIbcDenoms();
+    type TData =
+        | IResponseChainsListItem[]
+        | ITokensListItem[]
+        | IResponseIbcTokenListItem[]
+        | IResponseRelayerListItem[]
+        | IResponseChannelsListItem[];
     interface IProps {
         columns: TableColumnsType;
-        data: any[];
+        data: TData;
         needCustomColumns: string[];
         needCount?: boolean;
         pageSize?: number | null;
@@ -357,6 +367,7 @@
         background: transparent;
     }
     .table_wrapper {
+        margin-top: 16px;
         padding: 0 24px;
         background-color: #fff;
         border-radius: 4px;

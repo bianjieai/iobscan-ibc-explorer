@@ -120,7 +120,7 @@
 <script lang="ts" setup>
     import { getRestString } from '@/helper/parseStringHelper';
     import { onMounted, computed, ref } from 'vue';
-    import { defaultTitle } from '../../../constants/index';
+    import { defaultTitle } from '@/constants/index';
     import { IBaseDenom } from '@/types/interface/index.interface';
     const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href;
 
@@ -131,7 +131,7 @@
         symbol: string;
     };
     interface IProps {
-        dropdownData: any[];
+        dropdownData: IBaseDenom[];
         dropdownDataSymbolMap: { [key: string]: IBaseDenom };
         baseDenom?: string;
     }

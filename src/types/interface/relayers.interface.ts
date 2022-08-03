@@ -1,6 +1,7 @@
 import { IRequestPagination, IResponsePageInfo } from '@/types/interface/index.interface';
 import { TRelayerStatus } from '@/types/interface/components/table.interface';
 import { Ref } from 'vue';
+export type TTxsSuccessRate = string | number | undefined;
 
 export interface IRequestRelayerList extends IRequestPagination {
     chain?: string;
@@ -23,6 +24,10 @@ export interface IResponseRelayerListItem {
     transfer_success_txs: number;
     transfer_total_txs_value: string;
     currency: string;
+}
+
+export interface IRelayersListItem extends IResponseRelayerListItem {
+    txs_success_rate?: TTxsSuccessRate;
 }
 
 export interface IResponseRelayerList {

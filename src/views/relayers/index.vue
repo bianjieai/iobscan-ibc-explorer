@@ -103,13 +103,14 @@
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
-    import { useIbcChains, useNeedCustomColumns, useLoading, useJump } from '@/composables';
+    import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
     import {
         useGetRelayersList,
         useQuery,
         useSelected,
         useRef,
-        useSubTitleComputed
+        useSubTitleComputed,
+        useColumnJump
     } from './composable';
 
     const { loading } = useLoading();
@@ -123,15 +124,14 @@
         getList,
         loading
     );
-    const { goChains, resetSearchCondition } = useJump(`/${PAGE_PARAMETERS.relayers}`);
     const { chainDropdown, statusDropdown } = useRef();
     const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, list);
+    const { goChains, resetSearchCondition } = useColumnJump();
 </script>
 
 <style lang="less" scoped>
     .select {
         margin-top: 32px;
-        margin-bottom: 16px;
 
         :deep(.ant-dropdown-trigger) {
             margin-right: 8px;
