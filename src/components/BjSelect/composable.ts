@@ -1,17 +1,18 @@
 import { onMounted, ref, watch } from 'vue';
-import { DataItem, TDenom, Data, IProps } from './type';
+import { IDataItem, TDenom, TData, TProps } from './interface';
+import { MODES } from './constants';
 
 // 初始化
-export const useInit = (props: IProps) => {
+export const useInit = (props: TProps) => {
     const visible = ref(false);
-    const selectItems = ref<DataItem[]>([]);
-    const inputItems = ref<DataItem[]>([]); // 输入框的集合
+    const selectItems = ref<IDataItem[]>([]);
+    const inputItems = ref<IDataItem[]>([]); // 输入框的集合
     const tokenInput = ref<string | undefined>(undefined);
-    const flatData = ref<DataItem[]>([]); // 拍扁后的数组
+    const flatData = ref<IDataItem[]>([]); // 拍扁后的数组
 
-    const resetFlatArr = (data: Data) => {
+    const resetFlatArr = (data: TData) => {
         // 拍扁数组处理，集合
-        const tempFlats: DataItem[] = [];
+        const tempFlats: IDataItem[] = [];
 
         data?.forEach((v) => {
             if (v.children && v.children.length) {
@@ -29,7 +30,7 @@ export const useInit = (props: IProps) => {
 
         // 所有值都处理为数组操作，最后返回时候，再判断返回什么样的值
         let values;
-        if (props.mode === 'multiple') {
+        if (props.mode === MODES.multiple) {
             if (val && !Array.isArray(val)) {
                 throw 'value need array';
             }
@@ -40,18 +41,18 @@ export const useInit = (props: IProps) => {
         }
 
         values.forEach((v) => {
-            const temp = flatData.value.find((item) => item[props.format!] === v);
+            const temp = flatData.value.find((item) => item.id === v);
             if (temp) {
                 selectItems.value.push(temp);
             } else {
                 inputItems.value.push({
-                    [props.format!]: v,
-                    [props.renderItem!]: v
+                    id: v,
+                    title: v
                 });
             }
         });
 
-        tokenInput.value = inputItems.value.map((v) => v[props.format!]).join(',');
+        tokenInput.value = inputItems.value.map((v) => v.id).join(',');
     };
 
     onMounted(() => {

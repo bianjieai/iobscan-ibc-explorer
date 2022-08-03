@@ -1,17 +1,17 @@
-import { DataItem, ModeType, IProps } from './type';
-
+import { IDataItem, ModeType, TProps } from './interface';
+import { MODES } from './constants';
 /**
  * 根据不同类型返回对应的数据：单选返回单值，多选返回数组集合
  * @param selectData
  * @param mode
  * @param keygen
  */
-export const getValByMode = (selectData: DataItem[], mode: ModeType, keygen = 'denom') => {
+export const getValByMode = (selectData: IDataItem[], mode: ModeType) => {
     switch (mode) {
-        case 'multiple':
-            return selectData.map((v) => v[keygen]);
+        case MODES.multiple:
+            return selectData;
         default:
-            return selectData[0][keygen];
+            return selectData[0];
     }
 };
 
@@ -20,11 +20,11 @@ export const getValByMode = (selectData: DataItem[], mode: ModeType, keygen = 'd
  * @param selectData
  * @param mode
  */
-export const closeByMode = (selectData: DataItem[], mode: ModeType) => {
+export const closeByMode = (selectData: IDataItem[], mode: ModeType) => {
     switch (mode) {
-        case 'multiple':
+        case MODES.multiple:
             return false;
-        case 'two':
+        case MODES.double:
             return selectData.length === 2;
         default:
             return true;
@@ -36,19 +36,16 @@ export const closeByMode = (selectData: DataItem[], mode: ModeType) => {
  * @param inputVal
  * @param mode
  */
-type InputItemsByModeRes = {
-    [key: string]: any;
-};
-
-export const inputItemsByMode = (
-    inputVal: string | undefined,
-    props: IProps
-): InputItemsByModeRes[] => {
+export const inputItemsByMode = (inputVal: string | undefined, props: TProps): IDataItem[] => {
     let tokens;
-    const res: InputItemsByModeRes[] = [];
+    const res: IDataItem[] = [];
+
+    if (!inputVal || !inputVal.trim()) {
+        return res;
+    }
 
     switch (props.mode) {
-        case 'multiple':
+        case MODES.multiple:
             tokens = inputVal?.split(',').filter((v) => v);
             break;
         default:
@@ -58,8 +55,8 @@ export const inputItemsByMode = (
 
     tokens?.forEach((v) => {
         res.push({
-            [props.format!]: v,
-            [props.renderItem!]: v
+            id: v,
+            title: v
         });
     });
 

@@ -6,55 +6,21 @@
         @visibleChange="visibleChange"
     >
         <div
-            class="flex items-center default__color dropdown__container"
+            class="flex items-center default__color dropdown__container cursor"
             :class="[{ visible__border: visible }]"
         >
-            <div
-                class="flex flex-1 overflow-auto flex-wrap text-center mr-8 ml-8 justify-center items-center selected__color_default"
-                :class="[
-                    {
-                        selected__color: selectItems.length > 0 || inputItems.length > 0,
-                        visible__color: (selectItems.length > 0 || inputItems.length > 0) && visible
-                    }
-                ]"
-            >
-                <!--        输入的渲染-->
-                <div
-                    v-for="item in inputItems"
-                    :key="item[format]"
-                    class="flex items-center"
-                    :class="{ multiple: props.mode === 'multiple' }"
-                >
-                    <span class="selectedInfo__title" :title="item[renderItem]">{{
-                        getRestString(item[renderItem], 4, 4)
-                    }}</span>
-                </div>
-                <!--        选择的渲染-->
-                <div
-                    v-for="item in selectItems"
-                    :key="item[format]"
-                    class="flex items-center"
-                    :class="{ multiple: props.mode === 'multiple' }"
-                >
-                    <img
-                        v-if="item.icon?.length"
-                        width="18"
-                        height="18"
-                        class="mr-4"
-                        :src="item.icon"
-                    />
-                    <span class="selectedInfo__title" :title="item[renderItem]">{{
-                        item[renderItem]
-                    }}</span>
-                </div>
-                <!--        都没有选的时候展示，类似placeholder-->
-                <div
-                    v-if="!inputItems.length && !selectItems.length"
-                    class="selected__color_default"
-                >
-                    <span class="selectedInfo__title">{{ props.placeholder }}</span>
-                </div>
-            </div>
+            <!--            多选单选的展示 start-->
+            <template v-if="props.mode !== MODES.double">
+                <show-base
+                    :visible="visible"
+                    :select-items="selectItems"
+                    :input-items="inputItems"
+                    :placeholder="placeholder"
+                    :hide-icon="hideIcon"
+                    :mode="props.mode"
+                />
+            </template>
+            <!--            多选单选的展示 end-->
             <span class="button__icon flex justify-between items-center">
                 <svg
                     :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }"
@@ -76,7 +42,7 @@
 
         <template #overlay>
             <div class="overlay">
-                <div v-for="group in data" :key="group.groupName" class="mb-20">
+                <div v-for="group in props.data" :key="group.groupName" class="mb-20">
                     <div v-if="!group.hideGroupName" class="flex items-center">
                         <div class="title">{{ group.groupName }}</div>
                         <a-popover
@@ -90,7 +56,7 @@
                                 </p>
                             </template>
                             <img
-                                class="tip hover"
+                                class="tip cursor"
                                 style="margin-left: 8px"
                                 src="/src/assets/tip.png"
                             />
@@ -99,13 +65,12 @@
                     <div class="chains__wrap">
                         <div
                             v-for="item in group?.children"
-                            :key="item[format]"
+                            :key="item.id"
                             :class="[
                                 'chains__tag',
+                                'cursor',
                                 {
-                                    'visible__color visible__border selected': isSelected(
-                                        item[format]
-                                    ),
+                                    'visible__color visible__border selected': isSelected(item.id),
                                     disabled: item.disabled || group.disabled
                                 }
                             ]"
@@ -113,30 +78,30 @@
                         >
                             <img
                                 v-if="!item.hideIcon"
-                                :src="item.icon || imgSrc"
+                                :src="item.icon || defaultImg"
                                 width="24"
                                 height="24"
                                 class="mr-8"
                             />
-                            <span class="symbol">{{ item[renderItem] }}</span>
+                            <span class="symbol">{{ item.title }}</span>
                         </div>
                     </div>
                 </div>
-                <div v-if="props.inputCtn" class="mt-24">
-                    <div class="flex items-center">
-                        <div class="leading-none">{{ props.inputCtn?.title }}</div>
+                <div v-if="inputCtn" class="mt-24">
+                    <div v-if="inputCtn?.title" class="flex items-center">
+                        <div class="leading-none">{{ inputCtn?.title }}</div>
                         <a-popover
-                            v-if="props.inputCtn.toolTip"
+                            v-if="inputCtn.toolTip"
                             destroy-tooltip-on-hide
                             overlay-class-name="antd-popover"
                         >
                             <template #content>
-                                <p class="confirm__button">
-                                    {{ props.inputCtn.toolTip }}
+                                <p class="tip__color">
+                                    {{ inputCtn.toolTip }}
                                 </p>
                             </template>
                             <img
-                                class="tip hover"
+                                class="tip cursor"
                                 style="margin-left: 8px"
                                 src="/src/assets/tip.png"
                             />
@@ -147,14 +112,14 @@
                             v-model:value="tokenInput"
                             allow-clear
                             class="token__input"
-                            :placeholder="props.inputCtn.placeholder"
+                            :placeholder="inputCtn.placeholder"
                         />
                         <a-button
                             type="primary"
                             class="confirm__button ml-12"
                             @click="confirmChains"
-                            >{{ props.inputCtn.btnTxt }}</a-button
-                        >
+                            >{{ inputCtn.btnTxt }}
+                        </a-button>
                     </div>
                 </div>
             </div>
@@ -162,36 +127,34 @@
     </a-dropdown>
 </template>
 <script lang="ts" setup>
-    import { getRestString } from '@/helper/parseStringHelper';
-    const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href;
-    import { DataItem, TDenom } from './bjSelect/type';
-    import { useInit } from './bjSelect/hooks';
-    import { getValByMode, closeByMode, inputItemsByMode } from './bjSelect/common';
+    import { IDataItem, TDenom } from './interface';
+    import { useInit } from './composable';
+    import { getValByMode, closeByMode, inputItemsByMode } from './helper';
+    import { MODES } from './constants';
 
     /**
      * defineProps 使用外部引入的interface或者type会报错
      */
-    interface IProps {
+    interface TProps {
         data: {
-            groupName?: String;
+            groupName?: string;
             hideGroupName?: boolean;
             icon?: string;
             tooltips?: string;
             children?: {
-                denom?: TDenom;
-                symbol?: string;
+                id: number | string;
+                title: string;
                 disabled?: boolean;
                 hideIcon?: boolean;
                 icon?: string;
                 tooltips?: string;
-                [key: string]: any;
             }[];
         }[];
         value: string | number | (string | number)[];
         mode?: 'multiple';
         placeholder?: string;
-        format: string;
-        renderItem: string;
+        defaultImg?: string;
+        hideIcon?: boolean;
         inputCtn?: {
             title?: string;
             toolTip?: string;
@@ -200,16 +163,17 @@
         };
     }
 
-    const props = withDefaults(defineProps<IProps>(), {
-        data: () => []
+    const props = withDefaults(defineProps<TProps>(), {
+        data: () => [],
+        defaultImg: './images/token-default.png'
     });
 
-    const { format, renderItem } = { ...props };
+    const { inputCtn, placeholder, defaultImg, hideIcon } = { ...props };
 
     const { visible, selectItems, tokenInput, inputItems, resetVal } = useInit(props);
 
     // 是否选中
-    const isSelected = (val: TDenom) => selectItems.value.some((v) => v[props.format!] === val);
+    const isSelected = (val: TDenom) => selectItems.value.some((v) => v.id === val);
 
     defineExpose({
         selectItems,
@@ -217,15 +181,15 @@
     });
 
     const emit = defineEmits<{
-        (e: 'onChange', res: TDenom | TDenom[]): void;
+        (e: 'onChange', res: IDataItem | IDataItem[]): void;
     }>();
 
     /**
      * @param selectData 选中的数据
      * @param close 是否收起关闭，默认不关闭，通过closeByMode函数判断
      */
-    const sumbitTokens = (selectData: DataItem[], close = false) => {
-        let res = getValByMode(selectData, props.mode, props.format);
+    const sumbitTokens = (selectData: IDataItem[], close = false) => {
+        let res = getValByMode(selectData, props.mode);
 
         emit('onChange', res);
         if (close || closeByMode(selectData, props.mode)) {
@@ -235,7 +199,7 @@
 
     const confirmChains = () => {
         switch (props.mode) {
-            case 'multiple':
+            case MODES.multiple:
                 break;
             default:
                 // 单选时候，
@@ -252,7 +216,7 @@
         resetVal(props.value);
     };
 
-    const onSelected = (item: DataItem) => {
+    const onSelected = (item: IDataItem) => {
         if (item.disabled) {
             return;
         }
@@ -264,11 +228,9 @@
         // 写成内联函数形式，只是为了减少onSelected主体代码。
         function selectByMode() {
             switch (props.mode) {
-                case 'multiple':
+                case MODES.multiple:
                     // 多选时候，有取消操作
-                    const index = selectItems.value.findIndex(
-                        (v) => v[props.format!] === item[props.format!]
-                    );
+                    const index = selectItems.value.findIndex((v) => v.id === item.id);
                     if (index === -1) {
                         selectItems.value.push(item);
                     } else {
@@ -293,7 +255,6 @@
         border: 1px solid var(--bj-border-color);
         border-radius: 4px;
         background-color: #fff;
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
         min-width: 124px;
     }
 
@@ -334,7 +295,7 @@
         //text-overflow: ellipsis;
         padding-left: 8px;
         //max-width: 118px;
-        &_default {
+        &__default {
             color: var(--bj-text-second);
         }
     }
@@ -375,7 +336,6 @@
         background-image: none;
         border: 1px solid transparent;
         box-shadow: 0 2px 0 rgb(0 0 0 / 2%);
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default;
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         user-select: none;
         padding: 5px 8px 5px 8px;
@@ -425,10 +385,6 @@
             word-break: break-word;
             max-width: 230px;
         }
-    }
-
-    .hover {
-        cursor: url('../../../assets/mouse/shiftlight_mouse.png'), default !important;
     }
 
     // tablet

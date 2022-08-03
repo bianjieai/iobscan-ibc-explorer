@@ -7,15 +7,21 @@ declare module '@vue/runtime-core' {
     export interface GlobalComponents {
         404: typeof import('./../components/errorpage/404.vue')['default'];
         500: typeof import('./../components/errorpage/500.vue')['default'];
+        AAnchor: typeof import('ant-design-vue/es')['Anchor'];
+        AAnchorLink: typeof import('ant-design-vue/es')['AnchorLink'];
         ABadge: typeof import('ant-design-vue/es')['Badge'];
         AButton: typeof import('ant-design-vue/es')['Button'];
+        ACard: typeof import('ant-design-vue/es')['Card'];
         AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider'];
+        ADivider: typeof import('ant-design-vue/es')['Divider'];
         ADropdown: typeof import('ant-design-vue/es')['Dropdown'];
         AInput: typeof import('ant-design-vue/es')['Input'];
         ALayout: typeof import('ant-design-vue/es')['Layout'];
         ALayoutContent: typeof import('ant-design-vue/es')['LayoutContent'];
         ALayoutFooter: typeof import('ant-design-vue/es')['LayoutFooter'];
         ALayoutHeader: typeof import('ant-design-vue/es')['LayoutHeader'];
+        AList: typeof import('ant-design-vue/es')['List'];
+        AListItem: typeof import('ant-design-vue/es')['ListItem'];
         AMenu: typeof import('ant-design-vue/es')['Menu'];
         AMenuItem: typeof import('ant-design-vue/es')['MenuItem'];
         APagination: typeof import('ant-design-vue/es')['Pagination'];
@@ -25,9 +31,10 @@ declare module '@vue/runtime-core' {
         ASelectOption: typeof import('ant-design-vue/es')['SelectOption'];
         ASpin: typeof import('ant-design-vue/es')['Spin'];
         ATable: typeof import('ant-design-vue/es')['Table'];
+        ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
         ATypographyText: typeof import('ant-design-vue/es')['TypographyText'];
         BaseDropdown: typeof import('./../components/responsive/dropdown/BaseDropdown.vue')['default'];
-        BjSelect: typeof import('./../components/responsive/dropdown/BjSelect.vue')['default'];
+        BjSelect: typeof import('./../components/BjSelect/index.vue')['default'];
         BottomStatus: typeof import('./../components/responsive/table/BottomStatus.vue')['default'];
         ChainIcon: typeof import('./../components/responsive/table/ChainIcon.vue')['default'];
         ChainsDropdown: typeof import('./../components/responsive/dropdown/ChainsDropdown.vue')['default'];
@@ -44,6 +51,8 @@ declare module '@vue/runtime-core' {
         ResetButton: typeof import('./../components/responsive/ResetButton.vue')['default'];
         RouterLink: typeof import('vue-router')['RouterLink'];
         RouterView: typeof import('vue-router')['RouterView'];
+        ShowBase: typeof import('./../components/BjSelect/mode/ShowBase.vue')['default'];
+        ShowDouble: typeof import('./../components/BjSelect/mode/ShowDouble.vue')['default'];
         StatusImg: typeof import('./../components/responsive/table/StatusImg.vue')['default'];
         TableCommon: typeof import('./../components/responsive/table/TableCommon.vue')['default'];
         TokenIcon: typeof import('./../components/responsive/table/TokenIcon.vue')['default'];

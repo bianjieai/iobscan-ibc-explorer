@@ -4,11 +4,9 @@
         <div class="select flex items-center flex-wrap">
             <BjSelect
                 ref="tokensDropdown"
-                :data="bjSelectData"
+                :data="tokenData"
                 :value="searchDenom"
                 placeholder="All Tokens"
-                format="denom"
-                render-item="symbol"
                 :input-ctn="{
                     title: 'Custom IBC Tokens',
                     toolTip: 'Hash (in hex format) of the denomination trace information.',
@@ -24,12 +22,24 @@
             <!--                :dropdown-data-symbol-map="ibcBaseDenomsSymbolKeyMapGetter"-->
             <!--                @on-tokens-selected="onSelectedToken"-->
             <!--            />-->
-            <ChainsDropdown
+            <BjSelect
                 ref="chainDropdown"
-                :dropdown-data="ibcChains?.all || []"
-                :chain-id="chainIdQuery"
-                @on-selected-chain="onSelectedChain"
+                :data="chainData"
+                :value="searchChain"
+                placeholder="All Chains"
+                :hide-icon="true"
+                :input-ctn="{
+                    placeholder: 'Search by Chain ID',
+                    btnTxt: 'Confirm'
+                }"
+                @on-change="onSelectedChain"
             />
+            <!--            <ChainsDropdown-->
+            <!--                ref="chainDropdown"-->
+            <!--                :dropdown-data="ibcChains?.all || []"-->
+            <!--                :chain-id="chainIdQuery"-->
+            <!--                @on-selected-chain="onSelectedChain"-->
+            <!--            />-->
             <BaseDropdown
                 ref="statusDropdown"
                 :status="statusQuery"
@@ -140,6 +150,7 @@
     import { useGetTokenList } from '@/service/tokens';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
     import { urlPageParser } from '@/utils/urlTools';
+    import { IDataItem } from '@/components/BjSelect/interface';
 
     let pageUrl = '/tokens';
 
@@ -161,31 +172,61 @@
 
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
 
-    const bjSelectData = computed(() => {
+    const tokenData = computed(() => {
         return [
             {
                 groupName: '',
                 hideGroupName: true,
                 children: [
                     {
-                        denom: '',
-                        symbol: 'All Tokens',
-                        hideIcon: true
+                        title: 'All Tokens',
+                        id: '',
+                        hideIcon: true,
+                        value: null
                     }
                 ]
             },
             {
                 groupName: 'Authed IBC Tokens',
-                children: [...ibcBaseDenomsSorted.value]
+                children: ibcBaseDenomsSorted.value.map((v) => ({
+                    title: v.symbol,
+                    id: v.denom,
+                    icon: v.icon,
+                    value: v
+                }))
             },
             {
                 groupName: 'Custom IBC Tokens',
                 children: [
                     {
-                        denom: 'others',
-                        symbol: 'Others'
+                        id: 'others',
+                        title: 'Others'
                     }
                 ]
+            }
+        ];
+    });
+    const chainData = computed(() => {
+        return [
+            {
+                hideGroupName: true,
+                children: [
+                    {
+                        title: 'All Chains',
+                        id: '',
+                        hideIcon: true,
+                        value: null
+                    }
+                ]
+            },
+            {
+                hideGroupName: true,
+                children: ibcChains.value?.all?.map((v) => ({
+                    title: v.chain_name,
+                    id: v.chain_id,
+                    icon: v.icon,
+                    value: v
+                }))
             }
         ];
     });
@@ -196,7 +237,7 @@
 
     // 缓存筛选条件
     const searchDenom = ref(denomQuery || '');
-    const searchChain = ref<string | undefined>(chainIdQuery);
+    const searchChain = ref<string | undefined>(chainIdQuery || '');
     const searchStatus = ref<'Authed' | 'Other'>(statusQuery);
 
     const subtitle = computed(() => {
@@ -227,7 +268,8 @@
         });
     };
 
-    const onSelectedToken = (denom?: string | number) => {
+    const onSelectedToken = (val: IDataItem | undefined) => {
+        const denom = val?.id;
         if (denom) {
             searchDenom.value = denom as string;
         } else {
@@ -240,8 +282,9 @@
         router.replace(pageUrl);
         refreshList();
     };
-    const onSelectedChain = (chain?: string | number) => {
-        searchChain.value = chain ? String(chain) : undefined;
+    const onSelectedChain = (val: IDataItem | undefined) => {
+        const chain = val?.id;
+        searchChain.value = chain ? String(chain) : '';
         pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: chain as string
