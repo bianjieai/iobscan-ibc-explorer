@@ -2,12 +2,12 @@
     <PageContainer>
         <PageTitle
             title="IBC Chains"
-            :subtitle="`${formatBigNumber(list?.length, 0)} chains supported`"
+            :subtitle="`${formatBigNumber(chainsList?.length, 0)} chains supported`"
         />
 
         <TableCommon
             :loading="loading"
-            :data="list"
+            :data="chainsList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"
             need-count
@@ -58,20 +58,15 @@
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS } from '@/constants/chains';
     import { useIbcChains, useLoading, useNeedCustomColumns } from '@/composables';
-    import { onMounted } from 'vue';
-    import { useGetChainsList, useColumnJump } from '@/views/chains/composable';
+    import { useGetChainsList, useChainsColumnJump } from '@/views/chains/composable';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { formatBigNumber } from '@/helper/parseStringHelper';
 
-    const { ibcChains } = useIbcChains();
-    const { list, getList } = useGetChainsList();
-    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.chains);
     const { loading } = useLoading();
-    const { goChannels, goRelayers, goTransfer } = useColumnJump();
-
-    onMounted(() => {
-        getList(loading);
-    });
+    const { ibcChains } = useIbcChains();
+    const { chainsList } = useGetChainsList(loading);
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.chains);
+    const { goChannels, goRelayers, goTransfer } = useChainsColumnJump();
 </script>
 
 <style lang="less" scoped>

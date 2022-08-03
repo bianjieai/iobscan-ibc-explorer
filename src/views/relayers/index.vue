@@ -21,7 +21,7 @@
 
         <TableCommon
             :loading="loading"
-            :data="list"
+            :data="relayersList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"
             :real-time-key="[{ scKey: 'update_time', dcKey: 'last_updated' }]"
@@ -90,7 +90,7 @@
                 />
             </template>
 
-            <template v-if="list?.length !== 0" #table_bottom_status>
+            <template v-if="relayersList?.length !== 0" #table_bottom_status>
                 <BottomStatus :type="BottomStatusType.RELAYER" />
             </template>
         </TableCommon>
@@ -106,27 +106,27 @@
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
     import {
         useGetRelayersList,
-        useQuery,
-        useSelected,
-        useRef,
+        useRelayersQuery,
+        useRelayersSelected,
+        useRelayersRef,
         useSubTitleComputed,
-        useColumnJump
+        useRelayersColumnJump
     } from './composable';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
-    const { list, getList, total } = useGetRelayersList();
+    const { relayersList, getRelayersList, total } = useGetRelayersList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
-    const { chainIdQuery, statusQuery } = useQuery();
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useSelected(
+    const { chainIdQuery, statusQuery } = useRelayersQuery();
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useRelayersSelected(
         chainIdQuery,
         statusQuery,
-        getList,
+        getRelayersList,
         loading
     );
-    const { chainDropdown, statusDropdown } = useRef();
-    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, list);
-    const { goChains, resetSearchCondition } = useColumnJump();
+    const { chainDropdown, statusDropdown } = useRelayersRef();
+    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, relayersList);
+    const { goChains, resetSearchCondition } = useRelayersColumnJump();
 </script>
 
 <style lang="less" scoped>

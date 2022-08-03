@@ -1,5 +1,5 @@
 import { getChannelsListAPI } from '@/api/channels';
-import { useJump } from '@/composables';
+import { useResetSearch } from '@/composables';
 import { BASE_PARAMS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import ChainHelper from '@/helper/chainHelper';
@@ -15,10 +15,10 @@ import { computed, onMounted, ref, Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 export const useGetChannelsList = () => {
-    const list = ref<IResponseChannelsListItem[]>([]);
+    const channelsList = ref<IResponseChannelsListItem[]>([]);
     const total = ref<number>(0);
 
-    const getList = async (params: IRequestChannelsList) => {
+    const getChannelsList = async (params: IRequestChannelsList) => {
         const { loading } = params;
 
         if (loading) {
@@ -35,7 +35,7 @@ export const useGetChannelsList = () => {
             if (code === API_CODE.success) {
                 if (!params.use_count) {
                     const { items } = data as IResponseChannelsList;
-                    list.value = ChainHelper.sortByChainName(items, params.chain);
+                    channelsList.value = ChainHelper.sortByChainName(items, params.chain);
                 } else {
                     total.value = data as number;
                 }
@@ -47,15 +47,15 @@ export const useGetChannelsList = () => {
             console.error(error);
         }
     };
-    getList({ ...BASE_PARAMS, use_count: true });
+    getChannelsList({ ...BASE_PARAMS, use_count: true });
     return {
-        list,
+        channelsList,
         total,
-        getList
+        getChannelsList
     };
 };
 
-export const useQuery = () => {
+export const useChannelsQuery = () => {
     const route = useRoute();
     const chainIdQuery = route.query.chain as string;
     const statusQuery = route.query.status as TChannelStatus;
@@ -65,10 +65,10 @@ export const useQuery = () => {
     };
 };
 
-export const useSelected = (
+export const useChannelsSelected = (
     chainIdQuery: string,
     statusQuery: TChannelStatus,
-    getList: (params: IRequestChannelsList) => Promise<void>,
+    getChannelsList: (params: IRequestChannelsList) => Promise<void>,
     loading: Ref<boolean>
 ) => {
     let pageUrl = '/channels';
@@ -77,7 +77,7 @@ export const useSelected = (
     const searchChain = ref(chainIdQuery ? chainIdQuery : undefined);
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
     const refreshList = () => {
-        getList({
+        getChannelsList({
             ...BASE_PARAMS,
             chain: searchChain.value,
             status: searchStatus.value,
@@ -115,7 +115,7 @@ export const useSelected = (
     };
 };
 
-export const useRef = () => {
+export const useChannelsRef = () => {
     const chainDropdown = ref();
     const statusDropdown = ref();
     return {
@@ -128,13 +128,13 @@ export const useSubTitleComputed = (
     searchChain: Ref<string | undefined>,
     searchStatus: Ref<TChannelStatus | undefined>,
     total: Ref<number>,
-    list: Ref<IResponseChannelsListItem[]>
+    channelsList: Ref<IResponseChannelsListItem[]>
 ) => {
     const subtitle = computed(() => {
         if (!searchChain.value && !searchStatus.value) {
             return `${formatBigNumber(total.value, 0)} channels found`;
         } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
+            return `${formatBigNumber(channelsList.value.length, 0)} of the ${formatBigNumber(
                 total.value,
                 0
             )} channels found`;
@@ -145,13 +145,13 @@ export const useSubTitleComputed = (
     };
 };
 
-export const useColumnJump = () => {
+export const useChannelsColumnJump = () => {
     const router = useRouter();
     const goChains = () => {
         router.push('/chains');
     };
     const resetSearchCondition = () => {
-        const { resetSearch } = useJump();
+        const { resetSearch } = useResetSearch();
         resetSearch();
     };
     return {

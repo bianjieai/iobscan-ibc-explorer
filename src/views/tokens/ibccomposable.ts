@@ -1,5 +1,5 @@
 import { getIbcTokenListAPI } from '@/api/tokens';
-import { useJump } from '@/composables';
+import { useResetSearch } from '@/composables';
 import { BASE_PARAMS, PAGE_PARAMETERS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
@@ -15,10 +15,10 @@ import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
 
 export const useGetIbcTokenList = (base_denom: string) => {
-    const list = ref<IResponseIbcTokenListItem[]>([]);
+    const ibcTokenList = ref<IResponseIbcTokenListItem[]>([]);
     const total = ref<number>(0);
 
-    const getList = async (params: IRequestIbcTokenList) => {
+    const getIbcTokenList = async (params: IRequestIbcTokenList) => {
         const { loading } = params;
         if (loading) {
             loading.value = true;
@@ -34,7 +34,7 @@ export const useGetIbcTokenList = (base_denom: string) => {
             if (code === API_CODE.success) {
                 if (!params.use_count) {
                     const { items } = data as IResponseIbcTokenList;
-                    list.value = items;
+                    ibcTokenList.value = items;
                 } else {
                     total.value = data as number;
                 }
@@ -46,15 +46,15 @@ export const useGetIbcTokenList = (base_denom: string) => {
             console.log(error);
         }
     };
-    getList({ ...BASE_PARAMS, use_count: true });
+    getIbcTokenList({ ...BASE_PARAMS, use_count: true });
     return {
-        list,
+        ibcTokenList,
         total,
-        getList
+        getIbcTokenList
     };
 };
 
-export const useQuery = () => {
+export const useIbcTokenQuery = () => {
     const route = useRoute();
     const baseDenomQuery = route.query.denom as string;
     const chainIdQuery = route.query.chain as string;
@@ -66,10 +66,10 @@ export const useQuery = () => {
     };
 };
 
-export const useSelected = (
+export const useIbcTokenSelected = (
     chainIdQuery: string,
     statusQuery: TIbcTokenType,
-    getList: (params: IRequestIbcTokenList) => Promise<void>,
+    getIbcTokenList: (params: IRequestIbcTokenList) => Promise<void>,
     getIbcBaseDenom: () => Promise<void>,
     loading: Ref<boolean>
 ) => {
@@ -78,7 +78,7 @@ export const useSelected = (
     const searchChain = ref<string | undefined>(chainIdQuery ?? undefined);
     const searchStatus = ref<TIbcTokenType | undefined>(statusQuery);
     const refreshList = () => {
-        getList({
+        getIbcTokenList({
             ...BASE_PARAMS,
             chain: searchChain.value,
             token_type: searchStatus.value,
@@ -117,7 +117,7 @@ export const useSelected = (
     };
 };
 
-export const useRef = () => {
+export const useIbcTokenRef = () => {
     const chainDropdown = ref();
     const statusDropdown = ref();
     return {
@@ -162,13 +162,13 @@ export const useSubTitleComputed = (
     searchChain: Ref<string | undefined>,
     searchStatus: Ref<TIbcTokenType | undefined>,
     total: Ref<number>,
-    list: Ref<IResponseIbcTokenListItem[]>
+    ibcTokenList: Ref<IResponseIbcTokenListItem[]>
 ) => {
     const subtitle = computed(() => {
         if (!searchChain.value && !searchStatus.value) {
             return `${formatBigNumber(total.value, 0)} tokens found`;
         } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
+            return `${formatBigNumber(ibcTokenList.value.length, 0)} of the ${formatBigNumber(
                 total.value,
                 0
             )} tokens found`;
@@ -179,7 +179,7 @@ export const useSubTitleComputed = (
     };
 };
 
-export const useColumnJump = (baseDenomQuery: string) => {
+export const useIbcTokenColumnJump = (baseDenomQuery: string) => {
     const router = useRouter();
     const goChains = () => {
         router.push('/chains');
@@ -194,7 +194,7 @@ export const useColumnJump = (baseDenomQuery: string) => {
         });
     };
     const resetSearchCondition = () => {
-        const { resetSearch } = useJump();
+        const { resetSearch } = useResetSearch();
         resetSearch(`/${PAGE_PARAMETERS.tokens}/details?denom=${baseDenomQuery}`);
     };
     return {

@@ -20,7 +20,7 @@
         </div>
         <TableCommon
             :loading="loading"
-            :data="list"
+            :data="channelsList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"
             need-count
@@ -75,7 +75,7 @@
                 />
             </template>
 
-            <template v-if="list.length !== 0" #table_bottom_status>
+            <template v-if="channelsList.length !== 0" #table_bottom_status>
                 <BottomStatus :type="BottomStatusType.CHANNEL" />
             </template>
         </TableCommon>
@@ -90,27 +90,27 @@
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
     import {
         useGetChannelsList,
-        useQuery,
-        useSelected,
-        useRef,
+        useChannelsQuery,
+        useChannelsSelected,
+        useChannelsRef,
         useSubTitleComputed,
-        useColumnJump
+        useChannelsColumnJump
     } from '@/views/channels/composable';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
-    const { chainIdQuery, statusQuery } = useQuery();
-    const { list, total, getList } = useGetChannelsList();
+    const { chainIdQuery, statusQuery } = useChannelsQuery();
+    const { channelsList, total, getChannelsList } = useGetChannelsList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channels);
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useSelected(
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useChannelsSelected(
         chainIdQuery,
         statusQuery,
-        getList,
+        getChannelsList,
         loading
     );
-    const { chainDropdown, statusDropdown } = useRef();
-    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, list);
-    const { goChains, resetSearchCondition } = useColumnJump();
+    const { chainDropdown, statusDropdown } = useChannelsRef();
+    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, channelsList);
+    const { goChains, resetSearchCondition } = useChannelsColumnJump();
 </script>
 
 <style lang="less" scoped>

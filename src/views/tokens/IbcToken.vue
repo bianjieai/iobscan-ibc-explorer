@@ -24,7 +24,7 @@
 
         <TableCommon
             :loading="loading"
-            :data="list"
+            :data="ibcTokenList"
             :need-custom-columns="needCustomColumns"
             :columns="IBC_COLUMNS"
             need-count
@@ -111,31 +111,31 @@
     import { useGetIbcDenoms } from '../home/composable';
     import {
         useGetIbcTokenList,
-        useQuery,
-        useSelected,
-        useRef,
+        useIbcTokenQuery,
+        useIbcTokenSelected,
+        useIbcTokenRef,
         useSubTitleComputed,
-        useColumnJump,
+        useIbcTokenColumnJump,
         useBaseDenomInfoComputed
     } from './ibccomposable';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
-    const { baseDenomQuery, chainIdQuery, statusQuery } = useQuery();
-    const { list, total, getList } = useGetIbcTokenList(baseDenomQuery);
+    const { baseDenomQuery, chainIdQuery, statusQuery } = useIbcTokenQuery();
+    const { ibcTokenList, total, getIbcTokenList } = useGetIbcTokenList(baseDenomQuery);
     const { baseDenomInfo } = useBaseDenomInfoComputed(ibcBaseDenoms, baseDenomQuery);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useSelected(
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useIbcTokenSelected(
         chainIdQuery,
         statusQuery,
-        getList,
+        getIbcTokenList,
         getIbcBaseDenom,
         loading
     );
-    const { chainDropdown, statusDropdown } = useRef();
-    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, list);
-    const { goChains, goTransfer, resetSearchCondition } = useColumnJump(baseDenomQuery);
+    const { chainDropdown, statusDropdown } = useIbcTokenRef();
+    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, ibcTokenList);
+    const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump(baseDenomQuery);
 </script>
 
 <style lang="less" scoped>

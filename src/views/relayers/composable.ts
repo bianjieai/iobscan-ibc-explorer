@@ -13,14 +13,14 @@ import { API_CODE } from '@/constants/apiCode';
 import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
 import { BASE_PARAMS } from '@/constants';
-import { useJump } from '@/composables';
+import { useResetSearch } from '@/composables';
 import { useRoute, useRouter } from 'vue-router';
 
 export const useGetRelayersList = () => {
-    const list = ref<IResponseRelayerListItem[]>([]);
+    const relayersList = ref<IResponseRelayerListItem[]>([]);
     const total = ref<number>(0);
 
-    const getList = async (params: IRequestRelayerList) => {
+    const getRelayersList = async (params: IRequestRelayerList) => {
         const { loading } = params;
         if (loading) {
             loading.value = true;
@@ -36,7 +36,7 @@ export const useGetRelayersList = () => {
             if (code === API_CODE.success) {
                 if (!params.use_count) {
                     const { items } = data as IResponseRelayerList;
-                    list.value = ChainHelper.sortByChainName(items, params.chain)?.map(
+                    relayersList.value = ChainHelper.sortByChainName(items, params.chain)?.map(
                         (item: IRelayersListItem) => {
                             item.txs_success_rate = formatTransfer_success_txs(
                                 item.transfer_success_txs,
@@ -56,16 +56,16 @@ export const useGetRelayersList = () => {
             console.error(error);
         }
     };
-    getList({ ...BASE_PARAMS, use_count: true });
+    getRelayersList({ ...BASE_PARAMS, use_count: true });
 
     return {
-        list,
+        relayersList,
         total,
-        getList
+        getRelayersList
     };
 };
 
-export const useQuery = () => {
+export const useRelayersQuery = () => {
     const route = useRoute();
     const chainIdQuery = route.query.chain as string;
     const statusQuery = route.query.status as TRelayerStatus;
@@ -74,10 +74,10 @@ export const useQuery = () => {
         statusQuery
     };
 };
-export const useSelected = (
+export const useRelayersSelected = (
     chainIdQuery: string,
     statusQuery: TRelayerStatus,
-    getList: (params: IRequestRelayerList) => Promise<void>,
+    getRelayersList: (params: IRequestRelayerList) => Promise<void>,
     loading: Ref<boolean>
 ) => {
     let pageUrl = '/relayers';
@@ -93,7 +93,7 @@ export const useSelected = (
     const searchChain = ref(originalChainRef());
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
     const refreshList = () => {
-        getList({
+        getRelayersList({
             ...BASE_PARAMS,
             chain: searchChain.value,
             status: searchStatus.value,
@@ -130,7 +130,7 @@ export const useSelected = (
         onSelectedStatus
     };
 };
-export const useRef = () => {
+export const useRelayersRef = () => {
     const chainDropdown = ref();
     const statusDropdown = ref();
     return {
@@ -142,13 +142,13 @@ export const useSubTitleComputed = (
     searchChain: Ref<string | undefined>,
     searchStatus: Ref<TRelayerStatus | undefined>,
     total: Ref<number>,
-    list: Ref<IResponseRelayerListItem[]>
+    relayersList: Ref<IResponseRelayerListItem[]>
 ) => {
     const subtitle = computed(() => {
         if (!searchChain.value && !searchStatus.value) {
             return `${formatBigNumber(total.value, 0)} relayers found`;
         } else {
-            return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(
+            return `${formatBigNumber(relayersList.value?.length, 0)} of the ${formatBigNumber(
                 total.value,
                 0
             )} relayers found`;
@@ -158,13 +158,13 @@ export const useSubTitleComputed = (
         subtitle
     };
 };
-export const useColumnJump = () => {
+export const useRelayersColumnJump = () => {
     const router = useRouter();
     const goChains = () => {
         router.push('/chains');
     };
     const resetSearchCondition = () => {
-        const { resetSearch } = useJump();
+        const { resetSearch } = useResetSearch();
         resetSearch();
     };
     return {

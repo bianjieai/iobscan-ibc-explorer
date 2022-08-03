@@ -1,5 +1,5 @@
 import { getTokensListAPI } from '@/api/tokens';
-import { useJump } from '@/composables';
+import { useResetSearch } from '@/composables';
 import { BASE_PARAMS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
@@ -15,10 +15,10 @@ import { computed, onMounted, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export const useGetTokenList = () => {
-    const list = ref<ITokensListItem[]>([]);
+    const tokensList = ref<ITokensListItem[]>([]);
     const total = ref<number>(0);
 
-    const getList = async (params: IRequestTokensList) => {
+    const getTokensList = async (params: IRequestTokensList) => {
         const { loading } = params;
         if (loading) {
             loading.value = true;
@@ -43,7 +43,7 @@ export const useGetTokenList = () => {
                             : getRestString(item.base_denom, 6, 0);
                         temp.push(item);
                     }
-                    list.value = temp;
+                    tokensList.value = temp;
                 } else {
                     total.value = data as number;
                 }
@@ -55,15 +55,15 @@ export const useGetTokenList = () => {
             console.log(error);
         }
     };
-    getList({ ...BASE_PARAMS, use_count: true });
+    getTokensList({ ...BASE_PARAMS, use_count: true });
     return {
-        list,
+        tokensList,
         total,
-        getList
+        getTokensList
     };
 };
 
-export const useQuery = () => {
+export const useTokensQuery = () => {
     const route = useRoute();
     const chainIdQuery = route.query.chain as string;
     const denomQuery = route.query.denom as string;
@@ -75,11 +75,11 @@ export const useQuery = () => {
     };
 };
 
-export const useSelected = (
+export const useTokensSelected = (
     denomQuery: string,
     chainIdQuery: string,
     statusQuery: TTokenType,
-    getList: (params: IRequestTokensList) => Promise<void>,
+    getTokensList: (params: IRequestTokensList) => Promise<void>,
     getIbcBaseDenom: () => Promise<void>,
     loading: Ref<boolean>
 ) => {
@@ -89,7 +89,7 @@ export const useSelected = (
     const searchChain = ref<string | undefined>(chainIdQuery);
     const searchStatus = ref<TTokenType>(statusQuery);
     const refreshList = () => {
-        getList({
+        getTokensList({
             ...BASE_PARAMS,
             base_denom: searchDenom.value,
             chain: searchChain.value,
@@ -144,7 +144,7 @@ export const useSelected = (
     };
 };
 
-export const useRef = () => {
+export const useTokensRef = () => {
     const chainDropdown = ref();
     const statusDropdown = ref();
     const tokensDropdown = ref();
@@ -160,13 +160,13 @@ export const useSubTitleComputed = (
     searchDenom: Ref<string>,
     searchStatus: Ref<TTokenType>,
     total: Ref<number>,
-    list: Ref<ITokensListItem[]>
+    tokensList: Ref<ITokensListItem[]>
 ) => {
     const subtitle = computed(() => {
         if (!searchChain.value && !searchStatus.value && !searchDenom.value) {
             return `${formatBigNumber(total.value, 0)} tokens found`;
         } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
+            return `${formatBigNumber(tokensList.value.length, 0)} of the ${formatBigNumber(
                 total.value,
                 0
             )} tokens found`;
@@ -177,7 +177,7 @@ export const useSubTitleComputed = (
     };
 };
 
-export const useColumnJump = (getBaseDenomInfoByDenom: any) => {
+export const useTokensColumnJump = (getBaseDenomInfoByDenom: any) => {
     const router = useRouter();
     const goChains = () => {
         router.push('/chains');
@@ -200,7 +200,7 @@ export const useColumnJump = (getBaseDenomInfoByDenom: any) => {
         });
     };
     const resetSearchCondition = () => {
-        const { resetSearch } = useJump();
+        const { resetSearch } = useResetSearch();
         resetSearch();
     };
     return {

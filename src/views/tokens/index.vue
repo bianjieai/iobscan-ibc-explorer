@@ -26,7 +26,7 @@
 
         <TableCommon
             :loading="loading"
-            :data="list"
+            :data="tokensList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"
             need-count
@@ -121,17 +121,17 @@
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
     import {
         useGetTokenList,
-        useQuery,
-        useSelected,
-        useRef,
+        useTokensQuery,
+        useTokensSelected,
+        useTokensRef,
         useSubTitleComputed,
-        useColumnJump
+        useTokensColumnJump
     } from '@/views/tokens/composable';
     import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
     const { loading } = useLoading();
-    const { chainIdQuery, denomQuery, statusQuery } = useQuery();
+    const { chainIdQuery, denomQuery, statusQuery } = useTokensQuery();
     const { ibcChains } = useIbcChains();
     const {
         ibcBaseDenoms,
@@ -140,7 +140,7 @@
         getIbcBaseDenom,
         getBaseDenomInfoByDenom
     } = useGetIbcDenoms();
-    const { list, getList, total } = useGetTokenList();
+    const { tokensList, getTokensList, total } = useGetTokenList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
     const {
         searchChain,
@@ -149,11 +149,24 @@
         onSelectedToken,
         onSelectedChain,
         onSelectedStatus
-    } = useSelected(denomQuery, chainIdQuery, statusQuery, getList, getIbcBaseDenom, loading);
-    const { chainDropdown, statusDropdown, tokensDropdown } = useRef();
-    const { subtitle } = useSubTitleComputed(searchChain, searchDenom, searchStatus, total, list);
+    } = useTokensSelected(
+        denomQuery,
+        chainIdQuery,
+        statusQuery,
+        getTokensList,
+        getIbcBaseDenom,
+        loading
+    );
+    const { chainDropdown, statusDropdown, tokensDropdown } = useTokensRef();
+    const { subtitle } = useSubTitleComputed(
+        searchChain,
+        searchDenom,
+        searchStatus,
+        total,
+        tokensList
+    );
     const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
-        useColumnJump(getBaseDenomInfoByDenom);
+        useTokensColumnJump(getBaseDenomInfoByDenom);
 </script>
 
 <style lang="less" scoped>

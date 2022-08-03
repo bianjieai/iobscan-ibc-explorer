@@ -74,7 +74,7 @@ export const useIbcChains = () => {
 };
 
 // 重置状态跳转及点击跳转
-export const useJump = () => {
+export const useResetSearch = () => {
     // reset
     const resetSearch = (resetRoute?: string) => {
         location.href = resetRoute || location.href.split('?')[0];

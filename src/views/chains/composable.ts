@@ -5,11 +5,10 @@ import { API_CODE } from '@/constants/apiCode';
 import { IResponseChainsList, IResponseChainsListItem } from '@/types/interface/chains.interface';
 import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
 import { Ref } from 'vue';
+export const useGetChainsList = (loading?: Ref<boolean>) => {
+    const chainsList = ref<IResponseChainsListItem[]>([]);
 
-export const useGetChainsList = () => {
-    const list = ref<IResponseChainsListItem[]>([]);
-
-    const getList = async (loading?: Ref<boolean>) => {
+    const getChainsList = async (loading?: Ref<boolean>) => {
         if (loading) {
             loading.value = true;
         }
@@ -34,7 +33,7 @@ export const useGetChainsList = () => {
                     ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
                 });
 
-                list.value = items.map((item: IResponseChainsListItem) => {
+                chainsList.value = items.map((item: IResponseChainsListItem) => {
                     const chainName = ibcChainsAllMap[item.chain_id];
                     item.chainName = chainName ? chainName : UNKNOWN;
                     return item;
@@ -47,14 +46,16 @@ export const useGetChainsList = () => {
             console.log(error);
         }
     };
+    onMounted(() => {
+        getChainsList(loading);
+    });
 
     return {
-        list,
-        getList
+        chainsList
     };
 };
 
-export const useColumnJump = () => {
+export const useChainsColumnJump = () => {
     const router = useRouter();
     const goChannels = (chain: string) => {
         router.push({
