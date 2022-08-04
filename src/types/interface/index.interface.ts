@@ -38,9 +38,9 @@ export interface IIbcchain {
 }
 
 export interface IIbcChains {
-    all?: IIbcchain[];
-    active?: IIbcchain[];
-    inactive?: IIbcchain[];
+    all: IIbcchain[];
+    active: IIbcchain[];
+    inactive: IIbcchain[];
 }
 
 export interface IBaseDenom {

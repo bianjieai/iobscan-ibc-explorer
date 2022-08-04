@@ -140,21 +140,6 @@ export const txStatusNumber = {
 };
 export const dayTime = '24';
 
-export const chainMenus = [
-    {
-        label: 'Active',
-        value: 'active'
-    },
-    {
-        label: 'Inactive',
-        value: 'inactive'
-    },
-    {
-        label: 'All',
-        value: 'all'
-    }
-];
-
 export const anchorsDatas = [
     {
         title: 'A-E',

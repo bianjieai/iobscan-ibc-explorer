@@ -76,27 +76,6 @@
     background-color: #f2f2f2;
 }
 
-.ant-anchor-link-title {
-    width: 26px;
-    font-family: Montserrat-Regular, Montserrat;
-    text-align: justify;
-    font-size: var(--bj-font-size-normal);
-    font-family: Montserrat-Regular, Montserrat;
-    font-weight: 400;
-    color: var(--bj-text-third);
-}
-
-.ant-anchor-link-active .ant-anchor-link-title {
-    color: #ffffff;
-    width: 32px;
-    background-color: #3d50ff;
-    border-radius: var(--border-radius-normal);
-    padding: 2px;
-}
-.ant-anchor-link-active .ant-anchor-link-title-active .custom_title {
-    color: #fff;
-}
-
 .transfer_table .ant-table-thead tr th {
     font-size: var(--bj-font-size-sub-title);
     font-family: Montserrat-Regular, Montserrat;

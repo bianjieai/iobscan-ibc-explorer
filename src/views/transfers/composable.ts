@@ -6,9 +6,8 @@ import tokenDefaultImg from '@/assets/token-default.png';
 import { transferTableColumn, defaultTitle } from '@/constants';
 import { IBC_TX_STATUS, IBC_SC_AND_DC_TX_STATUS } from '@/constants/transfers';
 
-const ibcStatisticsChainsStore = useIbcStatisticsChains();
-
 export const useIbcTxs = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const tableCount = ref(0);
     const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
     return {
@@ -18,6 +17,7 @@ export const useIbcTxs = () => {
 };
 
 export const useIbcChains = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
     return {
@@ -27,6 +27,7 @@ export const useIbcChains = () => {
 };
 
 export const useGetIbcBaseDenoms = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
     return {
@@ -36,6 +37,7 @@ export const useGetIbcBaseDenoms = () => {
 };
 
 export const useGetTokens = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const tokens = ref([]);
     const { ibcDenoms } = storeToRefs(ibcStatisticsChainsStore);
 
@@ -99,6 +101,7 @@ export const usePagination = () => {
 };
 
 export const useFindIcon = (props: any) => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcBaseDenomsSymbolKeyMapGetter } = storeToRefs(ibcStatisticsChainsStore);
     const findSymbolIcon = () => {
         const findSymbolConfig = props.ibcBaseDenoms?.find(
@@ -138,6 +141,7 @@ export const useFindIcon = (props: any) => {
 };
 
 export const useGetTableColumns = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const tableColumns = reactive(transferTableColumn);
     const showTransferLoading = ref(true);
     const { ibcTxs: tableDatas } = storeToRefs(ibcStatisticsChainsStore);
@@ -160,6 +164,7 @@ export const useIsVisible = () => {
 
 // transfers details
 export const useTransfersDetailsInfo = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const route = useRoute();
     const router = useRouter();
     const ibcTransferOutTxHash = ref('--');

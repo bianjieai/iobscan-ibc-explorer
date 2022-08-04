@@ -1,9 +1,6 @@
 <template>
-    <loading v-show="ibcStatisticsChainsStore.isShowLoading"></loading>
     <a-config-provider class="bj-root">
-        <template #renderEmpty>
-            <no-datas />
-        </template>
+        <loading v-show="ibcStatisticsChainsStore.isShowLoading"></loading>
         <a-layout ref="layout" class="layout">
             <a-layout-header class="header">
                 <div class="header_content">
@@ -51,7 +48,6 @@
                     </div>
                 </div>
             </a-layout-header>
-
             <a-layout-content class="content">
                 <router-view />
             </a-layout-content>
@@ -59,6 +55,9 @@
                 <ibc-footer />
             </a-layout-footer>
         </a-layout>
+        <template #renderEmpty>
+            <no-datas />
+        </template>
     </a-config-provider>
 </template>
 
@@ -194,6 +193,10 @@
             height: 80px;
             line-height: 80px;
             background: transparent;
+            // position: fixed;
+            // top: 0;
+            // left: 0;
+            // right: 0;
             z-index: 10;
             &_content {
                 .flex(row, nowrap, space-between, center);
@@ -245,6 +248,7 @@
             }
         }
         & .content {
+            // margin-top: 80px;
             box-sizing: border-box;
             .flex(column, nowrap, flex-start, center);
             flex: 1;

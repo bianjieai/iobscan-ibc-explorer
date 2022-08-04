@@ -163,8 +163,9 @@ export const useInterfaceActive = () => {
             // });
         }
     };
-    const onMenuSelected = (menuKey: string) => {
-        console.log(menuKey);
+    const onMenuSelected = () => {
+        // 参数传递menuKey
+        // console.log(menuKey);
     };
     return {
         tipMsg,
