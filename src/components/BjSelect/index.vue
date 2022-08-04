@@ -21,6 +21,16 @@
                 />
             </template>
             <!--            多选单选的展示 end-->
+            <!--            多选单选的展示 start-->
+            <template v-else>
+                <show-double
+                    :visible="visible"
+                    :double-select-items="doubleSelectItems"
+                    :placeholders="props.placeholders"
+                    :hide-icon="hideIcon"
+                />
+            </template>
+            <!--            多选单选的展示 end-->
             <span class="button__icon flex justify-between items-center">
                 <svg
                     :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }"
@@ -84,6 +94,12 @@
                                 class="mr-8"
                             />
                             <span class="symbol">{{ item.title }}</span>
+                            <div
+                                v-if="props.needBadge && getBadgeStr(item.id)"
+                                class="chains__tag__badge"
+                            >
+                                {{ getBadgeStr(item.id) }}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -113,6 +129,7 @@
                             allow-clear
                             class="token__input"
                             :placeholder="inputCtn.placeholder"
+                            @input="onInputChange"
                         />
                         <a-button
                             type="primary"
@@ -148,6 +165,7 @@
                 hideIcon?: boolean;
                 icon?: string;
                 tooltips?: string;
+                doubleTime?: boolean;
             }[];
         }[];
         value: string | number | (string | number)[];
@@ -155,6 +173,14 @@
         placeholder?: string;
         defaultImg?: string;
         hideIcon?: boolean;
+        editModel?: boolean; // 修改时候是否展示框变化，默认false
+        paddingItem?: {
+            id: string | number;
+            title: string;
+        };
+        needBadge?: boolean;
+        badges?: [string, string];
+        placeholders?: [string, string];
         inputCtn?: {
             title?: string;
             toolTip?: string;
@@ -165,7 +191,8 @@
 
     const props = withDefaults(defineProps<TProps>(), {
         data: () => [],
-        defaultImg: './images/token-default.png'
+        defaultImg: './images/token-default.png',
+        editModel: false
     });
 
     const { inputCtn, placeholder, defaultImg, hideIcon } = { ...props };
@@ -174,6 +201,25 @@
 
     // 是否选中
     const isSelected = (val: TDenom) => selectItems.value.some((v) => v.id === val);
+
+    // 获取badges
+    const getBadgeStr = (val: TDenom) => {
+        const isDouble = doubleSelectItems.value.filter((v) => v.id === val)?.length === 2;
+
+        if (isDouble) {
+            return props.badges!.join('-');
+        }
+
+        const index = doubleSelectItems.value.findIndex((v) => v.id === val);
+        if (index !== -1) {
+            return props.badges![index];
+        }
+    };
+
+    // 目前多选和输入互斥，只选择其中一个
+    const doubleSelectItems = computed(() => {
+        return [...inputItems.value, ...selectItems.value];
+    });
 
     defineExpose({
         selectItems,
@@ -191,29 +237,59 @@
     const sumbitTokens = (selectData: IDataItem[], close = false) => {
         let res = getValByMode(selectData, props.mode);
 
-        emit('onChange', res);
-        if (close || closeByMode(selectData, props.mode)) {
-            visible.value = false;
+        if (
+            props.mode !== MODES.double ||
+            (props.mode === MODES.double && selectData.length === 2)
+        ) {
+            emit('onChange', res);
+            if (close || closeByMode(selectData, props.mode)) {
+                visible.value = false;
+            }
         }
     };
 
+    // 确认confirm时候
     const confirmChains = () => {
+        let res: IDataItem[] = [];
+        inputItems.value = inputItemsByMode(tokenInput.value, props);
+
         switch (props.mode) {
+            // 多选时候都输出
             case MODES.multiple:
+                res = [...inputItems.value, ...selectItems.value];
+                break;
+            // 只选择两个时候
+            case MODES.double:
+                res = [...inputItems.value, ...selectItems.value];
                 break;
             default:
-                // 单选时候，
+                // 单选时候，清空选择框
                 selectItems.value = [];
+                res = [...inputItems.value];
                 break;
         }
 
-        inputItems.value = inputItemsByMode(tokenInput.value, props);
-        sumbitTokens([...inputItems.value, ...selectItems.value], true);
+        sumbitTokens(res, true);
     };
 
     // 收起展开时候都重新赋值
     const visibleChange = () => {
         resetVal(props.value);
+    };
+
+    const onInputChange = () => {
+        // 选两个时候，清空选择框
+        if (props.mode === MODES.double) {
+            selectItems.value = [];
+        }
+        // 修改时候是否展示框变化
+        if (props.editModel) {
+            inputItems.value = inputItemsByMode(tokenInput.value, props);
+            // 如果输入的只有一个值，选中all，这里作为配置项传进来。
+            if (inputItems.value.length === 1) {
+                selectItems.value = [(props.paddingItem || {}) as IDataItem];
+            }
+        }
     };
 
     const onSelected = (item: IDataItem) => {
@@ -227,10 +303,11 @@
 
         // 写成内联函数形式，只是为了减少onSelected主体代码。
         function selectByMode() {
+            let index;
             switch (props.mode) {
                 case MODES.multiple:
                     // 多选时候，有取消操作
-                    const index = selectItems.value.findIndex((v) => v.id === item.id);
+                    index = selectItems.value.findIndex((v) => v.id === item.id);
                     if (index === -1) {
                         selectItems.value.push(item);
                     } else {
@@ -238,6 +315,20 @@
                             ...selectItems.value.slice(0, index),
                             ...selectItems.value.slice(index + 1)
                         ];
+                    }
+                    return;
+                // 只选择两个时候, 清空input, 超过两个重选
+                case MODES.double:
+                    if (inputItems.value.length + selectItems.value.length === 2) {
+                        selectItems.value = [item];
+                        inputItems.value = [];
+                        tokenInput.value = '';
+                    } else {
+                        index = selectItems.value.findIndex((v) => v.id === item.id);
+                        // 可以选择自己两次的，比如all选项
+                        if (index === -1 || item.doubleTime) {
+                            selectItems.value.push(item);
+                        }
                     }
                     return;
                 default:
@@ -365,10 +456,24 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
+        &__badge {
+            position: absolute;
+            top: 0;
+            right: 36px;
+            transform: translate(50%, -50%);
+            border-radius: 16px;
+            line-height: 14px;
+            color: #fff;
+            background-color: var(--bj-primary-color);
+            font-size: 10px;
+            padding: 1px 8px;
+            white-space: nowrap;
+            z-index: 1;
+        }
     }
 
     .token__input {
-        width: 240px;
+        width: 280px;
     }
 
     .confirm__button {

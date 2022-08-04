@@ -30,7 +30,7 @@ export const useInit = (props: TProps) => {
 
         // 所有值都处理为数组操作，最后返回时候，再判断返回什么样的值
         let values;
-        if (props.mode === MODES.multiple) {
+        if (props.mode === MODES.double || props.mode === MODES.multiple) {
             if (val && !Array.isArray(val)) {
                 throw 'value need array';
             }

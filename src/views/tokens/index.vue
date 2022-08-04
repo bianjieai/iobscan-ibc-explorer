@@ -236,8 +236,8 @@
     const tokensDropdown = ref();
 
     // 缓存筛选条件
-    const searchDenom = ref(denomQuery || '');
-    const searchChain = ref<string | undefined>(chainIdQuery || '');
+    const searchDenom = ref(denomQuery);
+    const searchChain = ref<string | undefined>(chainIdQuery);
     const searchStatus = ref<'Authed' | 'Other'>(statusQuery);
 
     const subtitle = computed(() => {

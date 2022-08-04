@@ -29,15 +29,35 @@
                         @click-item="onClickDropdownItem"
                         @click-search="(item) => onClickDropdownItem(item, 'customToken')"
                     />
-                    <chains-dropdown
+                    <BjSelect
                         ref="chainDropdown"
-                        :selected-double="selectedDouble"
-                        :need-badge="needBadge"
-                        :dropdown-data="ibcChains.all ?? []"
-                        :chain_id="chainId"
-                        :witch-page="PAGE_PARAMETERS.transfers"
-                        @on-selected-chain="onSelectedChain"
+                        :data="chainData"
+                        :value="chainIds"
+                        :placeholders="['All Chains', 'All Chains']"
+                        :hide-icon="true"
+                        :badges="['Transfer', 'Receive']"
+                        mode="double"
+                        :need-badge="true"
+                        :edit-model="true"
+                        :padding-item="{
+                            id: 'allchain',
+                            title: 'All Chains'
+                        }"
+                        :input-ctn="{
+                            placeholder: 'Search by Chain ID,Chain ID',
+                            btnTxt: 'Confirm'
+                        }"
+                        @on-change="onSelectedChain"
                     />
+                    <!--                    <chains-dropdown-->
+                    <!--                        ref="chainDropdown"-->
+                    <!--                        :selected-double="selectedDouble"-->
+                    <!--                        :need-badge="needBadge"-->
+                    <!--                        :dropdown-data="ibcChains.all ?? []"-->
+                    <!--                        :chain_id="chainId"-->
+                    <!--                        :witch-page="PAGE_PARAMETERS.transfers"-->
+                    <!--                        @on-selected-chain="onSelectedChain"-->
+                    <!--                    />-->
                     <!-- todo duanjie 看能否使用 BaseDropdown 复用  -->
                     <a-select
                         class="status_select"
@@ -152,7 +172,7 @@
                     :custom-row="handleClickRow"
                 >
                     <template #customTitle>
-                        <p>
+                        <div>
                             Token
                             <a-popover destroy-tooltip-on-hide>
                                 <template #content>
@@ -166,7 +186,7 @@
                                     src="../../assets/tip.png"
                                 />
                             </a-popover>
-                        </p>
+                        </div>
                     </template>
                     <template #token="{ record }">
                         <a-popover placement="right" destroy-tooltip-on-hide>
@@ -342,7 +362,7 @@
         ibcTxStatusDesc,
         defaultTitle,
         unknownSymbol,
-        PAGE_PARAMETERS,
+        // PAGE_PARAMETERS,
         txStatusNumber,
         CHAINNAME
     } from '@/constants';
@@ -362,6 +382,7 @@
     import { useIbcStatistics } from '@/composables/home';
     import dayjs from 'dayjs';
     import { urlParser } from '@/utils/urlTools';
+    import { IDataItem, TDenom } from '@/components/BjSelect/interface';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
@@ -372,8 +393,8 @@
     const { ibcChains } = useIbcChains();
     const { tableColumns, showTransferLoading, tableDatas } = useGetTableColumns();
     const chainDropdown = ref();
-    const selectedDouble = ref(true);
-    const needBadge = ref(true);
+    // const selectedDouble = ref(true);
+    // const needBadge = ref(true);
 
     const pickerPlaceholderColor = ref('var(--bj-text-second)');
 
@@ -467,6 +488,33 @@
         chain_id: chainId || undefined,
         symbol: paramsSymbol || undefined,
         denom: paramsDenom || undefined
+    });
+
+    const chainIds = ref<TDenom[]>(chainId ? (chainId as string).split(',') : []);
+    const chainData = computed(() => {
+        return [
+            {
+                hideGroupName: true,
+                children: [
+                    {
+                        title: 'All Chains',
+                        doubleTime: true,
+                        id: 'allchain',
+                        hideIcon: true,
+                        value: null
+                    }
+                ]
+            },
+            {
+                hideGroupName: true,
+                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
+                    title: v.chain_name,
+                    id: v.chain_id,
+                    icon: v.icon,
+                    value: v
+                }))
+            }
+        ];
     });
 
     const queryDatas = () => {
@@ -781,7 +829,10 @@
         router.replace(url);
         queryDatas();
     };
-    const onSelectedChain = (chain_id: any) => {
+    const onSelectedChain = (val: IDataItem[]) => {
+        chainIds.value = val.map((v) => v.id);
+        const chain_id = chainIds.value.join(',');
+
         queryParam.chain_id = chain_id !== 'allchain,allchain' ? chain_id : '';
         pagination.current = 1;
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;

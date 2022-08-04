@@ -10,6 +10,8 @@ export const getValByMode = (selectData: IDataItem[], mode: ModeType) => {
     switch (mode) {
         case MODES.multiple:
             return selectData;
+        case MODES.double:
+            return selectData;
         default:
             return selectData[0];
     }
@@ -46,6 +48,9 @@ export const inputItemsByMode = (inputVal: string | undefined, props: TProps): I
 
     switch (props.mode) {
         case MODES.multiple:
+            tokens = inputVal?.split(',').filter((v) => v);
+            break;
+        case MODES.double:
             tokens = inputVal?.split(',').filter((v) => v);
             break;
         default:

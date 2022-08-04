@@ -83,4 +83,35 @@ export default class ChainHelper {
         }
         return [];
     }
+
+    // 按照类型顺序重新排序（ChainDropDown.vue 中的setAllChains 函数修改）
+    static sortArrsByNames(
+        dropdownData: any[],
+        sortNames = [CHAINNAME.COSMOSHUB, CHAINNAME.IRISHUB]
+    ) {
+        if (!dropdownData?.length) {
+            return [];
+        }
+
+        const res = [];
+
+        sortNames.forEach((v) => {
+            const mathItem = dropdownData.filter((item) => item.chain_name === v);
+            res.push(...mathItem);
+        });
+
+        const excludes = dropdownData.filter((v) => !sortNames.includes(v.chain_name));
+
+        excludes.sort((a, b) => {
+            return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
+                ? -1
+                : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
+                ? 1
+                : 0;
+        });
+
+        res.push(...excludes);
+
+        return res;
+    }
 }

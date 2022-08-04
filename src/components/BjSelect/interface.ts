@@ -5,6 +5,7 @@ export interface IDataItem {
     hideIcon?: boolean;
     icon?: string;
     tooltips?: string;
+    doubleTime?: boolean;
 }
 
 export type TData = {
