@@ -1,23 +1,7 @@
 import { Ref } from 'vue';
+import { currentMenuType } from '@/types/interface/home.interface';
 import { IIbcChains } from '@/types/interface/index.interface';
-import { anchorsDatas } from '@/constants';
-
-type currentMenuType = 'active' | 'inactive' | 'all';
-
-const chainMenus: { label: string; value: currentMenuType }[] = [
-    {
-        label: 'Active',
-        value: 'active'
-    },
-    {
-        label: 'Inactive',
-        value: 'inactive'
-    },
-    {
-        label: 'All',
-        value: 'all'
-    }
-];
+import { anchorsDatas, chainMenus } from '@/constants';
 
 export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
     const menus = reactive(chainMenus);
@@ -137,6 +121,7 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
         if (!isSuccess) {
             label = findClassName(currentChainList[0].chain_name);
         }
+        lock.value = true;
         setTimeout(() => {
             onClickAnchor(label);
         }, 0);

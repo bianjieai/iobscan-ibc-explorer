@@ -1,3 +1,4 @@
+import { currentMenuType } from '@/types/interface/home.interface';
 import { IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
 
@@ -300,6 +301,21 @@ export const channelsStatus = {
     channelOpenedStatus: '1',
     channelClosedStatus: '2'
 };
+
+export const chainMenus: { label: string; value: currentMenuType }[] = [
+    {
+        label: 'Active',
+        value: 'active'
+    },
+    {
+        label: 'Inactive',
+        value: 'inactive'
+    },
+    {
+        label: 'All',
+        value: 'all'
+    }
+];
 
 export const ibcTxStatusSelectOptions = [
     {
