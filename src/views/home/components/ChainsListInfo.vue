@@ -130,7 +130,7 @@
         }
         .card_list {
             width: 100%;
-            width: calc(100% - 50px);
+            // width: calc(100% - 50px);
             padding-right: 20px;
             height: 182px;
             overflow-y: auto;

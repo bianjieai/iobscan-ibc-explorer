@@ -54,8 +54,6 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
     };
 
     onMounted(() => {
-        // todo duanjie 疑问点 为什么ref 取值不同
-        // console.log(linkListRef.value, scrollListRef.value);
         const scrollDom = scrollListRef.value.$el;
         scrollDom.onscroll = () => {
             if (lock.value) {
