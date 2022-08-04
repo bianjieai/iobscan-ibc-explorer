@@ -1,24 +1,4 @@
 @font-face {
-    font-family: 'DroidSansMono';
-    src: url('./DroidSansMono-enMp.ttf');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Verdana';
-    src: url('./Verdana.ttf');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
-    font-family: 'Montserrat';
-    src: url('./Montserrat-Regular.otf');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
     font-family: 'GolosUI_Regular';
     src: url('./Golos-UI_Regular.ttf');
     font-weight: normal;
