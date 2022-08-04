@@ -16,7 +16,7 @@
                 id="card_list"
                 ref="listRef"
                 class="card_list ibc_scrollbar"
-                :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }"
+                :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 4, xxl: 4 }"
                 :data-source="chainList[currentMenu as any]"
             >
                 <template #renderItem="{ item }">
@@ -147,6 +147,7 @@
             border-radius: var(--border-radius-normal);
             :deep(.ant-card-body) {
                 padding: 12px;
+                min-width: 160px;
                 height: 126px;
             }
             &__img {
@@ -172,6 +173,12 @@
                 font-weight: 400;
                 color: var(--bj-font-color-65);
                 word-break: break-all;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
             }
         }
         .list_anchor {

@@ -15,8 +15,8 @@
                             : 'selected_color'
                     ]"
                     :style="{
-                        flex: !selectedDouble ? '1' : 'auto',
-                        textAlign: !selectedDouble ? 'center' : 'left'
+                        // flex: !selectedDouble ? '1' : 'auto',
+                        // textAlign: !selectedDouble ? 'center' : 'left'
                     }"
                     >{{ chain_a }}</div
                 >

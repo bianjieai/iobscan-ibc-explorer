@@ -97,14 +97,6 @@
         }
     }
 
-    @media screen and (min-width: 768px) {
-    }
-
-    // tablet
-    @media screen and (min-width: 414px) and (max-width: 768px) {
-    }
-
-    // mobile
     @media screen and (max-width: 414px) {
         .status_container {
             line-height: 20px;

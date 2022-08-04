@@ -36,6 +36,7 @@
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         :witch-page="PAGE_PARAMETERS.transfers"
+                        :min-width="210"
                         @on-selected-chain="onSelectedChain"
                     />
                     <!-- todo duanjie 看能否使用 BaseDropdown 复用  -->
@@ -156,9 +157,9 @@
                             Token
                             <a-popover destroy-tooltip-on-hide>
                                 <template #content>
-                                    <div>
-                                        <p class="tip_color">Sent Token</p>
-                                    </div>
+                                    <p class="tip_color">Sent Token</p>
+                                    <!-- <div>
+                                    </div> -->
                                 </template>
                                 <img
                                     class="tip cursor"
@@ -1255,6 +1256,7 @@
     }
     @media screen and (max-width: 768px) {
         .transfer {
+            padding: 40px 32px 60px;
             &__header {
                 &__container {
                 }
@@ -1332,6 +1334,7 @@
     }
     @media screen and (max-width: 582px) {
         .transfer {
+            padding: 24px 16px 60px;
             &__header {
                 &__container {
                 }
@@ -1417,7 +1420,6 @@
     }
     @media screen and (max-width: 420px) {
         .transfer {
-            padding: 24px 16px 80px;
             &__header {
                 &__container {
                 }
