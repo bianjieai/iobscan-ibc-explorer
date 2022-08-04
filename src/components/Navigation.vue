@@ -5,12 +5,12 @@
         mode="horizontal"
         @click="clickMenuItem"
     >
-        <a-menu-item v-for="item of menus" :key="item.value" class="header_menu_item">
+        <a-menu-item v-for="item of menus" :key="item.value" class="header_menu__item">
             <img
                 v-show="isShowNav"
                 src="../assets/nav/tips_icon.png"
                 alt=""
-                class="header_menu_item_img"
+                class="header_menu__item__img"
             />
             {{ item.label }}
         </a-menu-item>
@@ -57,10 +57,13 @@
         line-height: @nav-height;
         background-color: transparent;
         border: 0;
-        &_item {
+        &__item {
             width: 110px;
             padding: 0 !important;
             text-align: center;
+            &__img {
+                display: none;
+            }
         }
         .ant-menu-item {
             line-height: @nav-height;
@@ -95,14 +98,11 @@
                 display: none;
             }
         }
-        .header_menu_item_img {
-            display: none;
-        }
     }
 
     @media screen and (max-width: 1200px) {
         .header_menu {
-            &_item {
+            &__item {
                 width: 90px;
             }
         }
@@ -122,25 +122,23 @@
             align-items: baseline;
             justify-content: space-around;
             padding: 20px 0 0 2px;
-            &_item {
+            &__item {
                 margin-left: 32px;
                 width: 40px;
                 height: 15px;
                 line-height: 15px !important;
                 text-align: left;
                 margin-bottom: 24px !important;
-                &_img {
+                &__img {
+                    display: inline-block;
                     visibility: hidden;
                     height: 8px;
                 }
             }
-            .header_menu_item_img {
-                display: inline-block;
-            }
         }
         .ant-menu-item-selected {
             background-image: none !important;
-            .header_menu_item_img {
+            .header_menu__item__img {
                 visibility: visible;
             }
         }
@@ -149,8 +147,10 @@
         }
     }
     @media screen and (max-width: 768px) {
-        .header_menu_item {
-            margin-left: 16px;
+        .header_menu {
+            &__item {
+                margin-left: 16px;
+            }
         }
     }
 </style>

@@ -4,7 +4,7 @@
         <div class="select flex items-center flex-wrap">
             <ChainsDropdown
                 ref="chainDropdown"
-                :dropdown-data="ibcChains?.all ?? []"
+                :dropdown-data="ibcChains.all"
                 :chain-id="chainIdQuery"
                 selected-double
                 @on-selected-chain="onSelectedChain"
@@ -21,7 +21,7 @@
 
         <TableCommon
             :loading="loading"
-            :data="list"
+            :data="relayersList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"
             :real-time-key="[{ scKey: 'update_time', dcKey: 'last_updated' }]"
@@ -36,7 +36,7 @@
                     :chain-b-address="record.chain_b_address"
                     :img-src="record.relayer_icon"
                     :relayer-name="record[column.key]"
-                    :ibc-chains="ibcChains?.all"
+                    :ibc-chains="ibcChains.all"
                 />
             </template>
 
@@ -46,7 +46,7 @@
                     :title="record.channel_a"
                     no-subtitle
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains?.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                 />
@@ -67,7 +67,7 @@
                     :title="record.channel_b"
                     no-subtitle
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains?.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                 />
@@ -90,7 +90,7 @@
                 />
             </template>
 
-            <template v-if="list?.length !== 0" #table_bottom_status>
+            <template v-if="relayersList?.length !== 0" #table_bottom_status>
                 <BottomStatus :type="BottomStatusType.RELAYER" />
             </template>
         </TableCommon>
@@ -101,101 +101,37 @@
     import NamePopover from './components/NamePopover.vue';
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
-    import { computed, onMounted, ref } from 'vue';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
-    import { useIbcChains } from '../home/composable';
-    import { useGetRelayersList } from './composable';
-    import { useRoute, useRouter } from 'vue-router';
-    import { useNeedCustomColumns } from '@/composables';
-    import { formatBigNumber } from '@/helper/parseStringHelper';
-    import { urlPageParser } from '@/utils/urlTools';
+    import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
+    import {
+        useGetRelayersList,
+        useRelayersQuery,
+        useRelayersSelected,
+        useRelayersRef,
+        useSubTitleComputed,
+        useRelayersColumnJump
+    } from './composable';
 
-    const loading = ref(false);
-    let pageUrl = '/relayers';
-
-    const route = useRoute();
-    const router = useRouter();
-
-    const chainIdQuery = route.query.chain as string;
-    const statusQuery = route.query.status as TRelayerStatus;
-
+    const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
-    const { list, getList, total } = useGetRelayersList();
-
+    const { relayersList, getRelayersList, total } = useGetRelayersList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
-
-    const chainDropdown = ref();
-    const statusDropdown = ref();
-
-    const originalChainRef = () => {
-        if (!chainIdQuery) return;
-        if (chainIdQuery.includes(',')) {
-            return `${chainIdQuery}`;
-        } else {
-            return `${chainIdQuery},allchain`;
-        }
-    };
-    const searchChain = ref(originalChainRef());
-    const searchStatus = ref(statusQuery ? statusQuery : undefined);
-
-    onMounted(() => {
-        refreshList();
-    });
-
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value) {
-            return `${formatBigNumber(total.value, 0)} relayers found`;
-        } else {
-            return `${formatBigNumber(list.value?.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} relayers found`;
-        }
-    });
-
-    const refreshList = () => {
-        getList({
-            chain: searchChain.value,
-            status: searchStatus.value,
-            loading: loading
-        });
-    };
-
-    const onSelectedChain = (chain_id?: string) => {
-        searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'chain',
-            value: searchChain.value as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const onSelectedStatus = (value?: number | string) => {
-        searchStatus.value = value as TRelayerStatus;
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'status',
-            value: value as TRelayerStatus
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    // reset
-    const resetSearchCondition = () => {
-        location.href = '/relayers';
-    };
-
-    const goChains = () => {
-        router.push('/chains');
-    };
+    const { chainIdQuery, statusQuery } = useRelayersQuery();
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useRelayersSelected(
+        chainIdQuery,
+        statusQuery,
+        getRelayersList,
+        loading
+    );
+    const { chainDropdown, statusDropdown } = useRelayersRef();
+    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, relayersList);
+    const { goChains, resetSearchCondition } = useRelayersColumnJump();
 </script>
 
 <style lang="less" scoped>
     .select {
         margin-top: 32px;
-        margin-bottom: 16px;
 
         :deep(.ant-dropdown-trigger) {
             margin-right: 8px;
@@ -206,10 +142,6 @@
         &:nth-of-type(4) {
             padding-right: 26px !important;
         }
-    }
-
-    // pc
-    @media screen and (min-width: 768px) {
     }
 
     // tablet

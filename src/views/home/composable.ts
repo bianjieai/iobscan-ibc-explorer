@@ -14,15 +14,6 @@ import { useTimeInterval } from '@/composables';
 
 const ibcStatisticsChainsStore = useIbcStatisticsChains();
 
-export const useIbcChains = () => {
-    const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
-    const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
-    return {
-        ibcChains,
-        getIbcChains
-    };
-};
-
 export const useIbcTxs = () => {
     const { ibcTxs } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;

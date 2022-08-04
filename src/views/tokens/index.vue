@@ -2,44 +2,19 @@
     <PageContainer>
         <PageTitle title="IBC Tokens" :subtitle="subtitle" />
         <div class="select flex items-center flex-wrap">
-            <BjSelect
+            <TokensDropdown
                 ref="tokensDropdown"
-                :data="tokenData"
-                :value="searchDenom"
-                placeholder="All Tokens"
-                :input-ctn="{
-                    title: 'Custom IBC Tokens',
-                    toolTip: 'Hash (in hex format) of the denomination trace information.',
-                    placeholder: 'Search by ibc/hash',
-                    btnTxt: 'Confirm'
-                }"
-                @on-change="onSelectedToken"
+                :base-denom="denomQuery"
+                :dropdown-data="ibcBaseDenomsSorted"
+                :dropdown-data-symbol-map="ibcBaseDenomsSymbolKeyMapGetter"
+                @on-tokens-selected="onSelectedToken"
             />
-            <!--            <TokensDropdown-->
-            <!--                ref="tokensDropdown"-->
-            <!--                :base-denom="denomQuery"-->
-            <!--                :dropdown-data="ibcBaseDenomsSorted"-->
-            <!--                :dropdown-data-symbol-map="ibcBaseDenomsSymbolKeyMapGetter"-->
-            <!--                @on-tokens-selected="onSelectedToken"-->
-            <!--            />-->
-            <BjSelect
+            <ChainsDropdown
                 ref="chainDropdown"
-                :data="chainData"
-                :value="searchChain"
-                placeholder="All Chains"
-                :hide-icon="true"
-                :input-ctn="{
-                    placeholder: 'Search by Chain ID',
-                    btnTxt: 'Confirm'
-                }"
-                @on-change="onSelectedChain"
+                :dropdown-data="ibcChains.all"
+                :chain-id="chainIdQuery"
+                @on-selected-chain="onSelectedChain"
             />
-            <!--            <ChainsDropdown-->
-            <!--                ref="chainDropdown"-->
-            <!--                :dropdown-data="ibcChains?.all || []"-->
-            <!--                :chain-id="chainIdQuery"-->
-            <!--                @on-selected-chain="onSelectedChain"-->
-            <!--            />-->
             <BaseDropdown
                 ref="statusDropdown"
                 :status="statusQuery"
@@ -51,7 +26,7 @@
 
         <TableCommon
             :loading="loading"
-            :data="list"
+            :data="tokensList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"
             need-count
@@ -70,7 +45,7 @@
             <template #price="{ record, column }">
                 <a-popover v-if="+record[column.key] !== -1">
                     <template #content>
-                        <div class="popover-c">{{
+                        <div class="popover_c">{{
                             `${record.currency} ${formatPrice(record[column.key], undefined)}`
                         }}</div>
                     </template>
@@ -93,7 +68,7 @@
             <template #ibc_transfer_amount="{ record, column }">
                 <a-popover>
                     <template #content>
-                        <div class="popover-c"
+                        <div class="popover_c"
                             >{{
                                 `${
                                     formatAmount(
@@ -143,198 +118,60 @@
 <script lang="ts" setup>
     import { thousandDecimal, PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/tokens';
-    import { useRoute, useRouter } from 'vue-router';
-    import { useGetIbcDenoms, useIbcChains } from '../home/composable';
-    import { useNeedCustomColumns } from '@/composables';
+    import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
+    import {
+        useGetTokenList,
+        useTokensQuery,
+        useTokensSelected,
+        useTokensRef,
+        useSubTitleComputed,
+        useTokensColumnJump
+    } from '@/views/tokens/composable';
+    import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
-    import { useGetTokenList } from '@/service/tokens';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
-    import { urlPageParser } from '@/utils/urlTools';
-    import { IDataItem } from '@/components/BjSelect/interface';
-
-    let pageUrl = '/tokens';
-
-    const router = useRouter();
-    const route = useRoute();
-    const chainIdQuery = route.query.chain as string;
-    const denomQuery = route.query.denom as string;
-    const statusQuery = route.query.status as 'Authed' | 'Other';
-
+    const { loading } = useLoading();
+    const { chainIdQuery, denomQuery, statusQuery } = useTokensQuery();
     const { ibcChains } = useIbcChains();
     const {
         ibcBaseDenoms,
         ibcBaseDenomsSorted,
-        // ibcBaseDenomsSymbolKeyMapGetter,
+        ibcBaseDenomsSymbolKeyMapGetter,
         getIbcBaseDenom,
         getBaseDenomInfoByDenom
     } = useGetIbcDenoms();
-    const { list, getList, total } = useGetTokenList();
-
+    const { tokensList, getTokensList, total } = useGetTokenList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
-
-    const tokenData = computed(() => {
-        return [
-            {
-                groupName: '',
-                hideGroupName: true,
-                children: [
-                    {
-                        title: 'All Tokens',
-                        id: '',
-                        hideIcon: true,
-                        value: null
-                    }
-                ]
-            },
-            {
-                groupName: 'Authed IBC Tokens',
-                children: ibcBaseDenomsSorted.value.map((v) => ({
-                    title: v.symbol,
-                    id: v.denom,
-                    icon: v.icon,
-                    value: v
-                }))
-            },
-            {
-                groupName: 'Custom IBC Tokens',
-                children: [
-                    {
-                        id: 'others',
-                        title: 'Others'
-                    }
-                ]
-            }
-        ];
-    });
-    const chainData = computed(() => {
-        return [
-            {
-                hideGroupName: true,
-                children: [
-                    {
-                        title: 'All Chains',
-                        id: '',
-                        hideIcon: true,
-                        value: null
-                    }
-                ]
-            },
-            {
-                hideGroupName: true,
-                children: ibcChains.value?.all?.map((v) => ({
-                    title: v.chain_name,
-                    id: v.chain_id,
-                    icon: v.icon,
-                    value: v
-                }))
-            }
-        ];
-    });
-
-    const chainDropdown = ref();
-    const statusDropdown = ref();
-    const tokensDropdown = ref();
-
-    // 缓存筛选条件
-    const searchDenom = ref(denomQuery);
-    const searchChain = ref<string | undefined>(chainIdQuery);
-    const searchStatus = ref<'Authed' | 'Other'>(statusQuery);
-
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value && !searchDenom.value) {
-            return `${formatBigNumber(total.value, 0)} tokens found`;
-        } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} tokens found`;
-        }
-    });
-
-    onMounted(() => {
-        getIbcBaseDenom();
-
-        refreshList();
-    });
-
-    const loading = ref(false);
-
-    const refreshList = () => {
-        getList({
-            base_denom: searchDenom.value,
-            chain: searchChain.value,
-            token_type: searchStatus.value,
-            loading: loading
-        });
-    };
-
-    const onSelectedToken = (val: IDataItem | undefined) => {
-        const denom = val?.id;
-        if (denom) {
-            searchDenom.value = denom as string;
-        } else {
-            searchDenom.value = '';
-        }
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'denom',
-            value: denom as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-    const onSelectedChain = (val: IDataItem | undefined) => {
-        const chain = val?.id;
-        searchChain.value = chain ? String(chain) : '';
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'chain',
-            value: chain as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const onSelectedStatus = (status?: string | number) => {
-        searchStatus.value = status as 'Authed' | 'Other';
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'status',
-            value: status as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const resetSearchCondition = () => {
-        // 重制所有, 包括默认的排序列
-        location.href = '/tokens';
-    };
-
-    const goIbcToken = (denom: string) => {
-        router.push({
-            path: '/tokens/details',
-            query: {
-                denom
-            }
-        });
-    };
-
-    const goTransfer = (denom: string, chainId: string) => {
-        let baseDenomInfo = getBaseDenomInfoByDenom(denom, chainId);
-        let query = baseDenomInfo ? { symbol: baseDenomInfo.symbol } : { denom };
-        router.push({
-            path: '/transfers',
-            query: query
-        });
-    };
-
-    const goChains = () => {
-        router.push('/chains');
-    };
+    const {
+        searchChain,
+        searchDenom,
+        searchStatus,
+        onSelectedToken,
+        onSelectedChain,
+        onSelectedStatus
+    } = useTokensSelected(
+        denomQuery,
+        chainIdQuery,
+        statusQuery,
+        getTokensList,
+        getIbcBaseDenom,
+        loading
+    );
+    const { chainDropdown, statusDropdown, tokensDropdown } = useTokensRef();
+    const { subtitle } = useSubTitleComputed(
+        searchChain,
+        searchDenom,
+        searchStatus,
+        total,
+        tokensList
+    );
+    const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
+        useTokensColumnJump(getBaseDenomInfoByDenom);
 </script>
 
 <style lang="less" scoped>
     .select {
         margin-top: 32px;
-        margin-bottom: 16px;
 
         :deep(.ant-dropdown-trigger) {
             margin-right: 8px;

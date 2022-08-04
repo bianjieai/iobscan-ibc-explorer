@@ -43,6 +43,13 @@
         background-position: center;
         background-size: cover;
         border-radius: 4px;
+        &:hover {
+            .card__content {
+                &__value {
+                    color: var(--bj-primary-color);
+                }
+            }
+        }
         &__img {
             margin: 23px 29px;
             width: 60px;

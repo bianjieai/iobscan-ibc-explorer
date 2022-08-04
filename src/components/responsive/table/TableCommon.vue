@@ -1,5 +1,5 @@
 <template>
-    <div class="table-warpper">
+    <div class="table_wrapper">
         <a-table
             :row-key="rowKey"
             :columns="columnsSource"
@@ -22,7 +22,7 @@
                 </template>
             </template>
         </a-table>
-        <div class="thead-border-bottom"></div>
+        <div class="thead_border_bottom"></div>
         <div
             v-if="hasData || $slots.table_bottom_status"
             class="flex justify-between pt-16 items-center bottom"
@@ -52,10 +52,20 @@
     import BigNumber from 'bignumber.js';
     import { useGetIbcDenoms } from '@/views/home/composable';
     import { formatSupply } from '@/helper/tableCellHelper';
+    import { IResponseChainsListItem } from '@/types/interface/chains.interface';
+    import { IResponseIbcTokenListItem, ITokensListItem } from '@/types/interface/tokens.interface';
+    import { IResponseRelayerListItem } from '@/types/interface/relayers.interface';
+    import { IResponseChannelsListItem } from '@/types/interface/channels.interface';
     const { ibcBaseDenoms } = useGetIbcDenoms();
+    type TData =
+        | IResponseChainsListItem[]
+        | ITokensListItem[]
+        | IResponseIbcTokenListItem[]
+        | IResponseRelayerListItem[]
+        | IResponseChannelsListItem[];
     interface IProps {
         columns: TableColumnsType;
-        data: any[];
+        data: TData;
         needCustomColumns: string[];
         needCount?: boolean;
         pageSize?: number | null;
@@ -356,13 +366,14 @@
     :deep(td.ant-table-column-sort) {
         background: transparent;
     }
-    .table-warpper {
+    .table_wrapper {
+        margin-top: 16px;
         padding: 0 24px;
         background-color: #fff;
         border-radius: 4px;
         position: relative;
     }
-    .thead-border-bottom {
+    .thead_border_bottom {
         position: absolute;
         top: 48px;
         left: 0;
@@ -386,7 +397,7 @@
     }
     // mobile
     @media screen and (max-width: 414px) {
-        .table-warpper {
+        .table_wrapper {
             padding: 0 16px;
         }
         .bottom {

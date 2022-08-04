@@ -1,5 +1,5 @@
 <template>
-    <div class="status-container">
+    <div class="status_container">
         <div class="flex justify-between items-center flex-wrap">
             <div>{{ type }} Status: </div>
             <div class="flex">
@@ -80,7 +80,7 @@
 </script>
 
 <style lang="less" scoped>
-    .status-container {
+    .status_container {
         background: #f8f9fc;
         border-radius: 14px;
         line-height: 28px;
@@ -106,7 +106,7 @@
 
     // mobile
     @media screen and (max-width: 414px) {
-        .status-container {
+        .status_container {
             line-height: 20px;
             padding: 8px 16px 8px 8px;
         }

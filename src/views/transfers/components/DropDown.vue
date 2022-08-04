@@ -7,22 +7,22 @@
         @visible-change="visibleChange"
     >
         <a-button class="button">
-            <div class="button_token_icon">
+            <div class="button__token_icon">
                 <img
-                    class="button_pre_icon"
+                    class="button__pre_icon"
                     :style="{ display: showIcon ? 'block' : 'none' }"
                     :src="findSymbolIcon()"
                 />
                 <span
                     :class="
                         selectedSymbol === defaultTitle.defaultTokens
-                            ? 'button_title_default'
-                            : 'button_title'
+                            ? 'button__title_default'
+                            : 'button__title'
                     "
                     >{{ selectedSymbol }}</span
                 >
             </div>
-            <span class="button_icon">
+            <span class="button__icon">
                 <svg
                     :style="{ transform: isVisible ? 'rotate(180deg)' : 'rotate(0)' }"
                     focusable="false"
@@ -41,45 +41,45 @@
         </a-button>
         <template #overlay>
             <div class="overlay">
-                <div class="overlay_wrap">
-                    <div class="overlay_title cursor" @click="onClickAll">
+                <div class="overlay__wrap">
+                    <div class="overlay__title cursor" @click="onClickAll">
                         {{ 'All Tokens' }}
                     </div>
-                    <div class="overlay_item">
-                        <h2 class="overlay_item_title">Authed IBC Tokens</h2>
-                        <div class="overlay_item_content">
+                    <div class="overlay__item">
+                        <h2 class="overlay__item__title">Authed IBC Tokens</h2>
+                        <div class="overlay__item__content">
                             <template v-for="item in ibcBaseDenoms" :key="item.denom">
                                 <div
                                     class="content_item cursor"
                                     :title="item.symbol.length > 9 ? item.symbol : ''"
                                     :class="{
-                                        content_item_selected:
+                                        content_item__selected:
                                             selectedSymbol && selectedSymbol === item.symbol
                                     }"
                                     @click="onClickItem(item.symbol)"
                                 >
                                     <img
-                                        class="content_item_icon"
+                                        class="content_item__icon"
                                         :src="item.icon || tokenDefaultImg"
                                     />
-                                    <span class="content_item_title">{{ item?.symbol }}</span>
+                                    <span class="content_item__title">{{ item?.symbol }}</span>
                                 </div>
                             </template>
                         </div>
                     </div>
 
-                    <div class="overlay_item">
-                        <h2 class="overlay_item_title">Other IBC Tokens</h2>
-                        <div class="overlay_item_content">
+                    <div class="overlay__item">
+                        <h2 class="overlay__item__title">Other IBC Tokens</h2>
+                        <div class="overlay__item__content">
                             <div class="content_item cursor" @click="onClickItem(unAuthed)">
-                                <img class="content_item_icon" :src="tokenDefaultImg" />
-                                <span class="content_item_title">Others</span>
+                                <img class="content_item__icon" :src="tokenDefaultImg" />
+                                <span class="content_item__title">Others</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="overlay_item">
-                        <h2 class="overlay_item_title">
+                    <div class="overlay__item">
+                        <h2 class="overlay__item__title">
                             Custom IBC Tokens
                             <a-popover destroy-tooltip-on-hide>
                                 <template #content>
@@ -97,10 +97,10 @@
                                 />
                             </a-popover>
                         </h2>
-                        <div class="overlay_item_content flex-c">
+                        <div class="overlay__item__content">
                             <a-input
                                 v-model:value="inputValue"
-                                class="overlay_item_input"
+                                class="overlay__item__input"
                                 allow-clear
                                 :placeholder="'Search by ibc/hash'"
                             />
@@ -114,8 +114,8 @@
 </template>
 
 <script setup>
-    import { rmIbcPrefix } from '../../../helper/parseStringHelper';
-    import { useFindIcon, useIsVisible } from '../composable';
+    import { rmIbcPrefix } from '@/helper/parseStringHelper';
+    import { useFindIcon, useIsVisible } from '@/views/transfers/composable';
     import { ref, watch } from 'vue';
     import { defaultTitle, unAuthed } from '@/constants';
     const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
@@ -176,28 +176,28 @@
         &:blur {
             box-shadow: none;
         }
-        &_token_icon {
+        &__token_icon {
             flex: 1;
             .flex(row, nowrap, center, center);
             overflow: hidden;
         }
-        &_title {
+        &___title {
             // max-width: 86px;
             text-overflow: ellipsis;
             color: var(--bj-text-third);
             overflow: hidden;
             color: var(--bj-primary-color);
-            &_default {
-                color: var(--bj-text-second);
-            }
+        }
+        &__title_default {
+            color: var(--bj-text-second);
         }
         &:hover {
             border-color: var(--bj-primary-color);
-            .button_icon {
+            .button__icon {
                 transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
             }
         }
-        &_icon {
+        &__icon {
             height: 100%;
             padding-left: 6px;
             .flex(column, nowrap, center, center);
@@ -205,7 +205,7 @@
             color: rgba(0, 0, 0, 0.35);
             border-left: 1px solid var(--bj-border-color);
         }
-        &_pre_icon {
+        &__pre_icon {
             width: 18px;
             margin-right: 5px;
         }
@@ -217,9 +217,9 @@
         border-radius: 4px;
         border: 1px solid #d9dfee;
         padding: 16px 4px 24px 16px;
-        &_wrap {
+        &__wrap {
         }
-        &_title {
+        &__title {
             display: inline-block;
             background: #f5f7fc;
             border-radius: 4px;
@@ -239,15 +239,15 @@
                 // background-color: #ffffff;
             }
         }
-        &_item {
+        &__item {
             width: 100%;
-            &_title {
+            &__title {
                 font-size: var(--bj-font-size-normal);
                 font-weight: 400;
                 color: #000000;
                 margin-bottom: 14px;
             }
-            &_content {
+            &__content {
                 width: 100%;
                 .flex(row, wrap, flex-start, center);
                 .content_item {
@@ -259,7 +259,7 @@
                     padding: 6px 6px;
                     transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
                     .flex(row, nowrap, flex-start, center);
-                    .content_item_title {
+                    .content_item__title {
                         overflow: hidden;
                         text-overflow: ellipsis;
                         white-space: nowrap;
@@ -270,20 +270,20 @@
                         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
                         // background-color: #ffffff;
                     }
-                    &_selected {
+                    &__selected {
                         border: 1px solid var(--bj-primary-color);
                         color: var(--bj-primary-color);
                         background-color: #ffffff;
-                        .content_item_title {
+                        .content_item__title {
                             color: var(--bj-primary-color);
                         }
                     }
-                    &_icon {
+                    &__icon {
                         width: 24px;
                         height: 24px;
                         margin-right: 8px;
                     }
-                    &_title {
+                    &__title {
                         font-size: var(--bj-font-size-normal);
                         font-family: Montserrat-Regular, Montserrat;
                         font-weight: 400;
@@ -294,14 +294,11 @@
                     }
                 }
             }
-            &_input {
+            &__input {
                 width: 240px;
                 margin-right: 12px;
             }
         }
-    }
-    .flex-c {
-        .flex(row, nowrap, flex-start, center);
     }
     .tip {
         width: 20px;
@@ -313,30 +310,30 @@
     }
     .ant-dropdown-open {
         border-color: var(--bj-primary-color);
-        .button_icon {
+        .button__icon {
             color: var(--bj-primary-color);
         }
-        &_title {
+        &__title {
             color: var(--bj-primary-color);
         }
     }
 
     @media screen and (max-width: 970px) {
         .button {
-            &_title {
+            &__title {
             }
             &:hover {
-                .button_icon {
+                .button__icon {
                 }
             }
-            &_icon {
+            &__icon {
             }
-            &_pre_icon {
+            &__pre_icon {
             }
         }
         .overlay {
             max-width: 680px;
-            &_wrap {
+            &__wrap {
                 height: 454px;
                 overflow: auto;
                 &::-webkit-scrollbar {
@@ -360,212 +357,204 @@
                     background: rgba(61, 80, 255, 0.9);
                 }
             }
-            &_title {
+            &__title {
                 &:hover {
                 }
             }
-            &_item {
-                &_title {
+            &__item {
+                &__title {
                 }
-                &_content {
+                &__content {
                     .content_item {
                         max-width: 120px;
-                        .content_item_title {
+                        .content_item__title {
                         }
                         &:hover {
                         }
-                        &_selected {
+                        &__selected {
                         }
-                        &_icon {
+                        &__icon {
                         }
-                        &_title {
+                        &__title {
                         }
                     }
                 }
-                &_input {
+                &__input {
                 }
             }
-        }
-        .flex-c {
         }
         .tip {
             &_color {
             }
         }
         .ant-dropdown-open {
-            .button_icon {
+            .button__icon {
             }
         }
     }
     @media screen and (max-width: 768px) {
         .button {
-            &_title {
+            &__title {
             }
             &:hover {
-                .button_icon {
+                .button__icon {
                 }
             }
-            &_icon {
+            &__icon {
             }
-            &_pre_icon {
+            &__pre_icon {
             }
         }
         .overlay {
-            &_wrap {
+            &__wrap {
             }
-            &_title {
+            &__title {
                 width: 120px;
                 &:hover {
                 }
             }
-            &_item {
-                &_title {
+            &__item {
+                &__title {
                 }
-                &_content {
+                &__content {
                     width: 95%;
                     .content_item {
                         max-width: 120px;
-                        .content_item_title {
+                        .content_item__title {
                         }
                         &:hover {
                         }
-                        &_selected {
+                        &__selected {
                         }
-                        &_icon {
+                        &__icon {
                         }
-                        &_title {
+                        &__title {
                         }
                     }
                 }
-                &_input {
+                &__input {
                     margin-right: 4px;
                 }
             }
-        }
-        .flex-c {
         }
         .tip {
             &_color {
             }
         }
         .ant-dropdown-open {
-            .button_icon {
+            .button__icon {
             }
         }
     }
     @media screen and (max-width: 582px) {
         .button {
-            &_title {
+            &__title {
             }
             &:hover {
-                .button_icon {
+                .button__icon {
                 }
             }
-            &_icon {
+            &__icon {
             }
-            &_pre_icon {
+            &__pre_icon {
             }
         }
         .overlay {
             max-width: 450px;
-            &_wrap {
+            &__wrap {
             }
-            &_title {
+            &__title {
                 &:hover {
                 }
             }
-            &_item {
-                &_title {
+            &__item {
+                &__title {
                 }
-                &_content {
+                &__content {
                     .content_item {
-                        .content_item_title {
+                        .content_item__title {
                         }
                         &:hover {
                         }
-                        &_selected {
+                        &__selected {
                         }
-                        &_icon {
+                        &__icon {
                         }
-                        &_title {
+                        &__title {
                         }
                     }
                 }
-                &_input {
+                &__input {
                 }
             }
-        }
-        .flex-c {
         }
         .tip {
             &_color {
             }
         }
         .ant-dropdown-open {
-            .button_icon {
+            .button__icon {
             }
         }
     }
     @media screen and (max-width: 420px) {
         .button {
-            &_title {
+            &__title {
             }
             &:hover {
-                .button_icon {
+                .button__icon {
                 }
             }
-            &_icon {
+            &__icon {
             }
-            &_pre_icon {
+            &__pre_icon {
             }
         }
         .overlay {
             max-width: 288px;
-            &_wrap {
+            &__wrap {
             }
-            &_title {
+            &__title {
                 &:hover {
                 }
             }
-            &_item {
+            &__item {
                 &:last-of-type {
-                    .overlay_item_content {
+                    .overlay__item__content {
                         .flex(column, wrap, flex-start, flex-start);
                         :deep(.ant-btn) {
                             margin-top: 12px;
                         }
                     }
                 }
-                &_title {
+                &__title {
                 }
-                &_content {
+                &__content {
                     width: 100%;
 
                     .content_item {
-                        .content_item_title {
+                        .content_item__title {
                         }
                         &:hover {
                         }
-                        &_selected {
+                        &__selected {
                         }
-                        &_icon {
+                        &__icon {
                         }
-                        &_title {
+                        &__title {
                         }
                     }
                 }
-                &_input {
+                &__input {
                 }
             }
-        }
-        .flex-c {
         }
         .tip {
             &_color {
             }
         }
         .ant-dropdown-open {
-            .button_icon {
+            .button__icon {
             }
         }
         .dropdown_token {

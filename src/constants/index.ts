@@ -1,3 +1,6 @@
+import { IRequestPagination } from '@/types/interface/index.interface';
+import { TableColumnsType } from 'ant-design-vue';
+
 export const testChains = {
     active: [
         {
@@ -128,7 +131,9 @@ export const PAGE_PARAMETERS = {
     transfers: 'transfers',
     tokens: 'tokens',
     ibcToken: 'ibcToken',
+    // home 页跳转参数中判断 包含的是 channel， 非 channels，[ibcStatisticsChannelsDefault]
     channel: 'channel',
+    channels: 'channels',
     relayers: 'relayers',
     denom: 'denom'
 };
@@ -336,7 +341,7 @@ export const transfersStatusOptions = {
     PROCESSING_OPTIONS: ['3']
 };
 
-export const transferTableColumn = [
+export const transferTableColumn: TableColumnsType = [
     {
         dataIndex: 'token',
         slots: { customRender: 'token', title: 'customTitle' },
@@ -461,4 +466,10 @@ export const NEED_CUSTOM_COLUMN = {
         'txs_success_rate',
         'transfer_total_txs'
     ]
+};
+
+export const BASE_PARAMS: IRequestPagination = {
+    use_count: false,
+    page_num: 1,
+    page_size: 3000
 };
