@@ -23,6 +23,8 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
                     ? element.classList.add('self_link_active')
                     : element.classList.remove('self_link_active');
             }
+        } else {
+            console.log('labelContainerDom Dom no render');
         }
     };
 
@@ -33,7 +35,9 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
         // 初始值,第一次选中第一个chain 对应的标签
         if (once) {
             once = false;
-            highlightedLabel(className);
+            nextTick(() => {
+                highlightedLabel(className);
+            });
         }
         return className;
     };
@@ -75,6 +79,8 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
                     const label = listID.replace('list', '');
                     highlightedLabel(label);
                 }
+            } else {
+                console.log('list containerDom no render');
             }
         };
     });
