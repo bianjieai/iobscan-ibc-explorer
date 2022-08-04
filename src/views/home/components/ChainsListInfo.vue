@@ -45,7 +45,7 @@
                     v-for="item of anchors"
                     :id="`a-link${item.title}`"
                     :key="item.title"
-                    class="list_anchor_item"
+                    class="list_anchor__item"
                     @click="onClickAnchor(item.title)"
                 >
                     <div class="custom_title">
@@ -175,7 +175,7 @@
             margin-left: 18px;
             &__item {
                 width: 100%;
-                margin: 7px 0;
+                margin: 6px 0;
                 text-align: justify;
                 font-size: var(--bj-font-size-normal);
                 font-family: Montserrat-Regular, Montserrat;

@@ -1,7 +1,6 @@
 import { API_CODE } from '@/constants/apiCode';
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { useIbcStatisticsChains } from '@/store/index';
-import { groupBy } from 'lodash-es';
 import tokenDefaultImg from '@/assets/token-default.png';
 import { transferTableColumn, defaultTitle } from '@/constants';
 import { IBC_TX_STATUS, IBC_SC_AND_DC_TX_STATUS } from '@/constants/transfers';
@@ -26,36 +25,13 @@ export const useGetIbcBaseDenoms = () => {
     };
 };
 
-export const useGetTokens = () => {
+export const useIbcDenoms = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const tokens = ref([]);
     const { ibcDenoms } = storeToRefs(ibcStatisticsChainsStore);
-
     onMounted(() => {
         ibcStatisticsChainsStore.getIbcDenomsAction();
     });
-    const tokensObj = groupBy(ibcDenoms, 'symbol');
-    const atomObj = {
-        ATOM: tokensObj['ATOM']
-    };
-    const irisObj = {
-        IRIS: tokensObj['IRIS']
-    };
-    delete tokensObj['ATOM'];
-    delete tokensObj['IRIS'];
-
-    const newkey = Object?.keys(tokensObj).sort();
-    const newObj: any = {};
-    for (let i = 0; i < newkey.length; i++) {
-        newObj[newkey[i]] = tokensObj[newkey[i]];
-    }
-    tokens.value = {
-        ...atomObj,
-        ...irisObj,
-        ...newObj
-    };
     return {
-        tokens,
         ibcDenoms
     };
 };

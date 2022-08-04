@@ -193,10 +193,14 @@
             height: 80px;
             line-height: 80px;
             background: transparent;
-            // position: fixed;
-            // top: 0;
-            // left: 0;
-            // right: 0;
+            background-image: url('../assets/iobscan_home_bg.png');
+            background-repeat: no-repeat;
+            background-size: 1920px 396px;
+            background-position: top center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 10;
             &_content {
                 .flex(row, nowrap, space-between, center);
@@ -248,7 +252,7 @@
             }
         }
         & .content {
-            // margin-top: 80px;
+            margin-top: 80px;
             box-sizing: border-box;
             .flex(column, nowrap, flex-start, center);
             flex: 1;

@@ -353,7 +353,7 @@
     import { dayjsFormatDate } from '@/utils/timeTools';
     import {
         useIbcTxs,
-        useGetTokens,
+        useIbcDenoms,
         useSelectedSymbol,
         usePagination,
         useGetTableColumns
@@ -366,7 +366,7 @@
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
     const { tableCount, getIbcTxs } = useIbcTxs();
-    const { ibcDenoms } = useGetTokens();
+    const { ibcDenoms } = useIbcDenoms();
     const { selectedSymbol, isShowSymbolIcon, clearInput, isShowChainIcon } = useSelectedSymbol();
     const { pagination } = usePagination();
     const { ibcChains } = useIbcChains();
