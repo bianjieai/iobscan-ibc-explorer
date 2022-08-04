@@ -878,7 +878,7 @@
             }
         }
         &__middle {
-            margin: 48px auto 0;
+            margin: 58px auto 0;
             max-width: 1200px;
             &__top {
                 .flex(row, nowrap, flex-start, center);
