@@ -173,7 +173,7 @@
         .list_anchor {
             width: 28px;
             margin-left: 18px;
-            &_item {
+            &__item {
                 width: 100%;
                 margin: 7px 0;
                 text-align: justify;

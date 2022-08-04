@@ -1,5 +1,5 @@
 <template>
-    <a-config-provider class="bj-root">
+    <a-config-provider class="bj_root">
         <loading v-show="ibcStatisticsChainsStore.isShowLoading"></loading>
         <a-layout ref="layout" class="layout">
             <a-layout-header class="header">
