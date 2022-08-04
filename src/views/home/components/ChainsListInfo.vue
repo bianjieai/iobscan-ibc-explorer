@@ -104,7 +104,6 @@
             border: 0;
             :deep(.ant-menu-title-content) {
                 font-size: var(--bj-font-size-normal);
-                font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
             }
             .ant-menu-item-active {
@@ -133,7 +132,6 @@
         }
         &__item {
             font-size: var(--bj-font-size-normal);
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             color: var(--bj-text-third);
         }
@@ -161,19 +159,16 @@
                 max-width: 152px;
                 font-size: var(--bj-font-size-sub-title);
                 line-height: 20px;
-                font-family: Montserrat-SemiBold, Montserrat;
-                font-weight: 600;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                color: var(--bj-text-second);
+                color: var(--bj-text-normal);
                 vertical-align: middle;
             }
             &__value {
                 margin: 4px 0 6px;
                 font-size: var(--bj-font-size-normal);
                 line-height: 16px;
-                font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
                 color: var(--bj-font-color-65);
                 word-break: break-all;
@@ -194,7 +189,6 @@
         .nodatas_title {
             margin-top: 16px;
             font-size: 14px;
-            font-family: PingFangSC-Regular, PingFang SC;
             font-weight: 400;
             color: var(--bj-font-color-65);
         }

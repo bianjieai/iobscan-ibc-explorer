@@ -226,7 +226,6 @@
             padding: 6px 12px;
             border: 1px solid transparent;
             font-size: var(--bj-font-size-normal);
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             color: var(--bj-font-color-65);
             margin-bottom: 16px;
@@ -268,7 +267,6 @@
                         border: 1px solid var(--bj-primary-color);
                         color: var(--bj-primary-color);
                         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-                        // background-color: #ffffff;
                     }
                     &__selected {
                         border: 1px solid var(--bj-primary-color);
@@ -285,7 +283,6 @@
                     }
                     &__title {
                         font-size: var(--bj-font-size-normal);
-                        font-family: Montserrat-Regular, Montserrat;
                         font-weight: 400;
                         overflow: hidden;
                         // text-overflow: ellipsis;

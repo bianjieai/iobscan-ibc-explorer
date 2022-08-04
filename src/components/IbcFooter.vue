@@ -35,10 +35,9 @@
 
         &__left {
             .flex(row, nowrap, flex-start, center);
-            font-size: @font-size5;
-            font-family: Montserrat-Regular, Montserrat;
+            font-size: var(--bj-font-size-normal);
             font-weight: 400;
-            color: @font-color2;
+            color: var(--bj-font-color-65);
 
             &__icon {
                 .flex(row, nowrap, center, center);
@@ -47,7 +46,7 @@
                 height: 28px;
                 padding: 6px;
                 background-color: rgba(61, 80, 255, 0.1);
-                border-radius: @card-radio;
+                border-radius: var(--border-radius-normal);
 
                 &:first-child {
                     .iconfont {
@@ -77,17 +76,15 @@
         }
 
         &__right {
-            font-size: @font-size5;
-            font-family: Montserrat-Regular, Montserrat;
+            font-size: var(--bj-font-size-normal);
             font-weight: 400;
-            color: @font-color2;
+            color: var(--bj-font-color-65);
+            line-height: 14px;
         }
     }
 
     @media screen and (max-width: 1200px) {
         .footer_content {
-            padding: 16px 32px;
-
             &__left {
                 &__icon {
                 }
@@ -109,6 +106,7 @@
 
             &__right {
                 margin-top: 16px;
+                line-height: 18px;
             }
         }
     }

@@ -92,11 +92,15 @@
         .input_prefix {
             height: 40px;
             border-radius: 0 20px 20px 0;
-            padding: 4px 18px;
+            padding: 8px 12px;
             background: #3d50ff;
             display: flex;
             align-items: center;
             justify-items: center;
+            &:hover {
+                background: #667aff;
+                border-color: #667aff;
+            }
             .input_prefix_icon {
                 font-size: var(--bj-font-size-home-number);
                 color: rgba(255, 255, 255, 0.7);

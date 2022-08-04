@@ -120,7 +120,7 @@
 
     @media screen and (max-width: 1200px) {
         .home {
-            padding: 48px 32px 100px 32px;
+            padding: 48px 48px 100px 48px;
             &__top {
                 width: 100%;
                 &__slot {
@@ -156,7 +156,7 @@
     }
     @media screen and (max-width: 768px) {
         .home {
-            padding: 36px 16px 48px 16px;
+            padding: 40px 32px 60px 32px;
             &__top {
                 &__slot {
                     .flex(column, nowrap, center, center);
@@ -181,7 +181,7 @@
     }
     @media screen and (max-width: 530px) {
         .home {
-            padding: 16px 16px 48px 16px;
+            padding: 24px 16px 60px 16px;
             &__header_input_layout {
                 display: inline-block;
                 .flex(row, nowrap, flex-start, center);

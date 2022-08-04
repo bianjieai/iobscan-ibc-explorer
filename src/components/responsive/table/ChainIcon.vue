@@ -122,6 +122,7 @@
     .title {
         padding: 2px;
         font-size: var(--bj-font-size-sub-title);
+        color: var(--bj-text-second);
         max-width: 150px;
         overflow: hidden;
         text-overflow: ellipsis;

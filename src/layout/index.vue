@@ -252,7 +252,7 @@
         }
         & .footer {
             .flex(column, nowrap, space-between, center);
-            padding: 0;
+            padding: 0 48px;
             width: 100%;
             background-color: #eef0f6;
             z-index: 10;
@@ -264,12 +264,12 @@
                 box-sizing: border-box;
                 &_content {
                     .logo {
-                        margin-left: 32px;
+                        margin-left: 48px;
                         .logo_icon {
                         }
                     }
                     .header_input_wrapper {
-                        margin-right: 32px;
+                        margin-right: 48px;
                     }
                 }
                 &_input_wrapper {
@@ -326,13 +326,13 @@
             & .header {
                 &_content {
                     .logo {
-                        margin-left: 16px;
+                        margin-left: 32px;
                         width: 136px;
                         .logo_icon {
                         }
                     }
                     .header_input_wrapper {
-                        margin-right: 16px;
+                        margin-right: 32px;
                     }
                 }
                 &_input_wrapper {
@@ -352,6 +352,7 @@
             & .content {
             }
             & .footer {
+                padding: 0 32px;
             }
         }
     }
@@ -360,8 +361,12 @@
             & .header {
                 &_content {
                     .logo {
+                        margin-left: 16px;
                         .logo_icon {
                         }
+                    }
+                    .header_input_wrapper {
+                        margin-right: 16px;
                     }
                 }
                 &_input_wrapper {
@@ -383,6 +388,7 @@
             & .content {
             }
             & .footer {
+                padding: 0 16px;
             }
         }
     }

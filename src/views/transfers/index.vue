@@ -837,7 +837,7 @@
 <style lang="less" scoped>
     .transfer {
         flex: 1;
-        padding: 48px 32px 100px;
+        padding: 48px 48px 100px;
         width: 100%;
         text-align: left;
         background-color: #f5f7fc;
@@ -905,7 +905,6 @@
         }
         &__table {
             font-size: 14px;
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             :deep(.ant-table-placeholder) {
                 // .flex(column, nowrap, center, center);
@@ -913,7 +912,6 @@
             }
             :deep(a, span) {
                 font-size: var(--bj-font-size-normal);
-                font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
                 color: var(--bj-font-color-65);
                 line-height: 14px;
@@ -942,14 +940,13 @@
                 &__info {
                     .flex(column, nowrap, center, flex-start);
                     &__num {
-                        font-size: var(--bj-font-size-normal);
-                        color: var(--bj-text-second);
+                        font-size: var(--bj-font-size-sub-title);
+                        color: var(--bj-text-normal);
                     }
 
                     &__denom {
                         margin-top: 4px;
                         font-size: var(--bj-font-size-normal);
-                        font-family: Montserrat-Regular, Montserrat;
                         color: var(--bj-text-third);
                     }
                 }

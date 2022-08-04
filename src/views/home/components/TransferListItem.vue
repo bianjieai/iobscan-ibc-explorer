@@ -109,10 +109,8 @@
                 &__value {
                     width: 100%;
                     text-align: left;
-                    font-size: var(--bj-font-size-normal);
-                    font-family: Montserrat-Regular, Montserrat;
-                    font-weight: 400;
-                    color: rgba(0, 0, 0, 0.75);
+                    font-size: var(--bj-font-size-sub-title);
+                    color: var(--bj-text-normal);
                     line-height: var(--bj-font-size-normal);
                 }
 
@@ -120,7 +118,6 @@
                     text-align: left;
                     margin-top: 4px;
                     font-size: var(--bj-font-size-normal);
-                    font-family: Montserrat-Regular, Montserrat;
                     font-weight: 400;
                     color: var(--bj-text-third);
                     line-height: 18px;
@@ -137,14 +134,12 @@
             width: 150px;
             text-align: right;
             font-size: var(--bj-font-size-normal);
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             color: var(--bj-font-color-65);
             line-height: var(--bj-font-size-normal);
         }
         &__number {
             font-size: var(--bj-font-size-normal);
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             color: var(--bj-text-third);
             line-height: var(--bj-font-size-normal);

@@ -57,26 +57,23 @@
         &__content {
             .flex(column, nowrap, flex-start, flex-start);
             &__name {
-                font-size: @font-size4;
-                font-family: Montserrat-Regular, Montserrat;
-                color: @font-color2;
-                line-height: @font-size4;
+                font-size: var(--bj-font-size-sub-title);
+                color: var(--bj-font-color-65);
+                line-height: var(--bj-font-size-sub-title);
                 margin-bottom: 16px;
             }
             &__value {
-                font-size: @font-size2;
-                font-family: Montserrat-Regular, Montserrat;
-                color: @font-color1;
-                line-height: @font-size2;
+                font-size: var(--bj-font-size-home-number);
+                color: var(--bj-text-normal);
+                line-height: var(--bj-font-size-home-number);
                 transition: color 0.3s ease;
             }
             &__tip {
                 margin-left: 8px;
                 padding: 0 4px;
-                font-size: @font-size6;
-                font-family: Montserrat-Regular, Montserrat;
+                font-size: var(--bj-font-size-small);
                 color: #3d50ff;
-                line-height: @font-size6;
+                line-height: var(--bj-font-size-small);
                 background: rgba(61, 80, 255, 0.15);
                 border-radius: 7px;
             }

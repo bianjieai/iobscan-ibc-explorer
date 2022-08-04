@@ -96,6 +96,7 @@
 
     .title {
         font-size: var(--bj-font-size-sub-title);
+        color: var(--bj-text-second);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

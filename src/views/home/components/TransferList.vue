@@ -4,7 +4,7 @@
         <div class="list__top">
             <span class="list__top__name">Latest 100 IBC Token Transfer List</span>
             <router-link :to="'/transfers'">
-                <a-button class="list__top__button">View All</a-button>
+                <span class="list__top__button">View All</span>
             </router-link>
         </div>
         <div class="list__middle">
@@ -59,30 +59,33 @@
 <style lang="less" scoped>
     .list {
         &__top {
+            padding: 18px 24px 0;
             width: 100%;
             .flex(row, nowrap, space-between, center);
             &__name {
                 font-size: var(--bj-font-size-normal);
-                font-family: Montserrat-Regular, Montserrat;
                 color: var(--bj-font-color-65);
                 line-height: var(--bj-font-size-normal);
-                margin: 24px;
             }
             &__button {
-                margin: 24px;
-                height: 24px;
-                line-height: 24px;
+                padding: 1px 12px;
                 border: 0;
-                border-radius: 12px;
+                border-radius: 16px;
                 background-color: #3d50ff;
                 color: #ffffff;
                 font-size: var(--bj-font-size-normal);
                 .flex(row, nowrap, center, center);
+                &:hover {
+                    color: #fff;
+                    border-color: #667aff;
+                    background: #667aff;
+                }
             }
         }
         &__middle {
+            margin-top: 10px;
             width: 100%;
-            height: 473px;
+            height: 487px;
         }
         &__bottom {
             .flex(row, nowrap, space-between, center);
@@ -150,9 +153,9 @@
             &__top {
                 .flex(column, nowrap, flex-start, flex-start);
                 &__name {
-                    margin-bottom: 0;
                 }
                 &__button {
+                    margin-top: 12px;
                 }
             }
             &__middle {
