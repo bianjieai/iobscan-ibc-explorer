@@ -20,7 +20,7 @@
                     placement="bottom"
                 >
                     <template #content>
-                        <div class="popover-c">{{ formatChainID(chainInfo.subtitle) }}</div>
+                        <div class="popover_c">{{ formatChainID(chainInfo.subtitle) }}</div>
                     </template>
                     <div v-if="!noSubtitle" class="subtitle leading_none tag">{{
                         formatChainID(chainInfo.subtitle)

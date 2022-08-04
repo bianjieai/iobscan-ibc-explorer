@@ -1,7 +1,7 @@
 <template>
     <div class="nodatas">
-        <img class="nodatas_icon" src="../assets/no_datas.png" />
-        <p class="nodatas_title">No Data</p>
+        <img class="nodatas__icon" src="../assets/no_datas.png" />
+        <p class="nodatas__title">No Data</p>
     </div>
 </template>
 
@@ -11,10 +11,10 @@
     .nodatas {
         .flex(column, nowrap, center, center);
         // min-height: 210px; // 适应table min-height: 300px
-        &_icon {
+        &__icon {
             width: 120px;
         }
-        &_title {
+        &__title {
             margin-top: 16px;
             font-size: var(--bj-font-size-normal);
             font-family: Montserrat-Regular, Montserrat;

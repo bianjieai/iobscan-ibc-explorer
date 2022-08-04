@@ -1,5 +1,5 @@
 <template>
-    <div class="page-container">
+    <div class="page_container">
         <div class="container">
             <slot></slot>
         </div>
@@ -7,7 +7,7 @@
 </template>
 
 <style lang="less" scoped>
-    .page-container {
+    .page_container {
         background-color: var(--bj-background-color);
         flex: 1;
         padding: 48px 32px 100px;
@@ -30,7 +30,7 @@
 
     // mobile
     @media screen and (max-width: 414px) {
-        .page-container {
+        .page_container {
             padding: 24px 16px 80px;
         }
         .container {

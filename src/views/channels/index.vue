@@ -4,7 +4,7 @@
         <div class="select flex items-center flex-wrap">
             <ChainsDropdown
                 ref="chainDropdown"
-                :dropdown-data="ibcChains?.all ?? []"
+                :dropdown-data="ibcChains.all"
                 :chain-id="chainIdQuery"
                 selected-double
                 @on-selected-chain="onSelectedChain"
@@ -20,7 +20,7 @@
         </div>
         <TableCommon
             :loading="loading"
-            :data="list"
+            :data="channelsList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"
             need-count
@@ -31,7 +31,7 @@
                     :title="record.channel_a"
                     no-subtitle
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains?.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                 />
@@ -52,7 +52,7 @@
                     :title="record.channel_b"
                     no-subtitle
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains?.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                 />
@@ -75,7 +75,7 @@
                 />
             </template>
 
-            <template v-if="list.length !== 0" #table_bottom_status>
+            <template v-if="channelsList.length !== 0" #table_bottom_status>
                 <BottomStatus :type="BottomStatusType.CHANNEL" />
             </template>
         </TableCommon>
@@ -85,91 +85,37 @@
 <script setup lang="ts">
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/channels';
-    import { computed, onMounted, ref } from 'vue';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
     import { TChannelStatus, BottomStatusType } from '@/types/interface/components/table.interface';
-    import { useGetChannelsList } from '@/service/channels';
-    import { useIbcChains } from '../home/composable';
-    import { useNeedCustomColumns } from '@/composables';
-    import { useRoute, useRouter } from 'vue-router';
-    import { formatBigNumber } from '@/helper/parseStringHelper';
-    import { urlPageParser } from '@/utils/urlTools';
+    import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
+    import {
+        useGetChannelsList,
+        useChannelsQuery,
+        useChannelsSelected,
+        useChannelsRef,
+        useSubTitleComputed,
+        useChannelsColumnJump
+    } from '@/views/channels/composable';
 
-    let pageUrl = '/channels';
-
-    const route = useRoute();
-    const router = useRouter();
-    const chainIdQuery = route.query.chain as string;
-    const statusQuery = route.query.status as TChannelStatus;
-
+    const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
-    const { list, total, getList } = useGetChannelsList();
-
-    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channel);
-
-    const chainDropdown = ref();
-    const statusDropdown = ref();
-
-    const searchChain = ref(chainIdQuery ? chainIdQuery : undefined);
-    const searchStatus = ref(statusQuery ? statusQuery : undefined);
-
-    onMounted(() => {
-        refreshList();
-    });
-
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value) {
-            return `${formatBigNumber(total.value, 0)} channels found`;
-        } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} channels found`;
-        }
-    });
-    const loading = ref(false);
-    const refreshList = () => {
-        getList({
-            chain: searchChain.value,
-            status: searchStatus.value,
-            loading: loading
-        });
-    };
-
-    const onSelectedChain = (chain_id?: string) => {
-        searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'chain',
-            value: searchChain.value as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const onSelectedStatus = (value?: number | string) => {
-        searchStatus.value = value as TChannelStatus;
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'status',
-            value: value as TChannelStatus
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    // reset
-    const resetSearchCondition = () => {
-        location.href = '/channels';
-    };
-
-    const goChains = () => {
-        router.push('/chains');
-    };
+    const { chainIdQuery, statusQuery } = useChannelsQuery();
+    const { channelsList, total, getChannelsList } = useGetChannelsList();
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channels);
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useChannelsSelected(
+        chainIdQuery,
+        statusQuery,
+        getChannelsList,
+        loading
+    );
+    const { chainDropdown, statusDropdown } = useChannelsRef();
+    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, channelsList);
+    const { goChains, resetSearchCondition } = useChannelsColumnJump();
 </script>
 
 <style lang="less" scoped>
     .select {
         margin-top: 32px;
-        margin-bottom: 16px;
 
         :deep(.ant-dropdown-trigger) {
             margin-right: 8px;

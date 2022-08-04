@@ -1,17 +1,17 @@
 <template>
     <div class="footer_content">
-        <div class="footer_content_left">
+        <div class="footer_content__left">
             <span
                 v-for="(item, index) in ICON_LINK"
                 :key="index"
-                class="footer_content_left_icon cursor"
+                class="footer_content__left__icon cursor"
                 @click="onClickIcon(item.iconLink)"
             >
                 <i class="iconfont" :class="item.iconName"></i>
             </span>
             Contact us !
         </div>
-        <div class="footer_content_right">
+        <div class="footer_content__right">
             {{ COPYRIGHT }}
         </div>
     </div>
@@ -33,14 +33,14 @@
         max-width: 1200px;
         .flex(row, nowrap, space-between, center);
 
-        &_left {
+        &__left {
             .flex(row, nowrap, flex-start, center);
             font-size: @font-size5;
             font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             color: @font-color2;
 
-            &_icon {
+            &__icon {
                 .flex(row, nowrap, center, center);
                 margin-right: 8px;
                 width: 28px;
@@ -76,7 +76,7 @@
             }
         }
 
-        &_right {
+        &__right {
             font-size: @font-size5;
             font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
@@ -88,12 +88,12 @@
         .footer_content {
             padding: 16px 32px;
 
-            &_left {
-                &_icon {
+            &__left {
+                &__icon {
                 }
             }
 
-            &_right {
+            &__right {
             }
         }
     }
@@ -102,12 +102,12 @@
         .footer_content {
             .flex(column, nowrap, center, center);
 
-            &_left {
-                &_icon {
+            &__left {
+                &__icon {
                 }
             }
 
-            &_right {
+            &__right {
                 margin-top: 16px;
             }
         }

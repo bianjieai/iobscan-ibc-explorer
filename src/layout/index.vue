@@ -1,6 +1,6 @@
 <template>
     <loading v-show="ibcStatisticsChainsStore.isShowLoading"></loading>
-    <a-config-provider class="bj-root">
+    <a-config-provider class="bj_root">
         <template #renderEmpty>
             <no-datas />
         </template>
@@ -154,7 +154,7 @@
 </script>
 
 <style lang="less" scoped>
-    .bj-root {
+    .bj_root {
         flex: 1;
         display: flex;
     }

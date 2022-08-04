@@ -10,7 +10,7 @@
             <ChainsDropdown
                 ref="chainDropdown"
                 :chain-id="chainIdQuery"
-                :dropdown-data="ibcChains?.all ?? []"
+                :dropdown-data="ibcChains.all"
                 @on-selected-chain="onSelectedChain"
             />
             <BaseDropdown
@@ -24,7 +24,7 @@
 
         <TableCommon
             :loading="loading"
-            :data="list"
+            :data="ibcTokenList"
             :need-custom-columns="needCustomColumns"
             :columns="IBC_COLUMNS"
             need-count
@@ -35,7 +35,7 @@
                     placement="topLeft"
                 >
                     <template #content>
-                        <div class="notice-text">
+                        <div class="notice_text">
                             <div>Path: {{ record.denom_path }}</div>
                             <div>Token Hash: {{ record[column.key] }}</div>
                         </div>
@@ -52,7 +52,7 @@
                     <div v-else>
                         <a-popover v-if="record[column.key].length > 11" placement="topLeft">
                             <template #content>
-                                <div class="popover-c">{{ record[column.key] }}</div>
+                                <div class="popover_c">{{ record[column.key] }}</div>
                             </template>
                             <div>{{ getRestString(record[column.key], 3, 8) }}</div>
                         </a-popover>
@@ -65,7 +65,7 @@
                     avatar-can-click
                     title-can-click
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains?.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                     @click-title="goChains"
@@ -78,7 +78,7 @@
             <template #amount="{ record, column }">
                 <a-popover>
                     <template #content>
-                        <div class="popover-c">{{
+                        <div class="popover_c">{{
                             `${
                                 formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms)
                                     .popover
@@ -103,141 +103,51 @@
 </template>
 
 <script lang="ts" setup>
+    import { useIbcChains, useLoading, useNeedCustomColumns } from '@/composables';
     import { PAGE_PARAMETERS } from '@/constants';
-    import { IBC_COLUMNS, IBC_STATUS_OPTIONS, SPECIAL_TOKEN_TYPE } from '@/constants/tokens';
-    import { computed, onMounted, ref } from 'vue';
-    import { useRoute, useRouter } from 'vue-router';
-    import { TIbcTokenType, useGetIbcTokenList } from '@/service/tokens';
-    import { useGetIbcDenoms, useIbcChains } from '../home/composable';
-    import { useNeedCustomColumns } from '@/composables';
-    import { getRestString, rmIbcPrefix, formatBigNumber } from '@/helper/parseStringHelper';
+    import { IBC_STATUS_OPTIONS, IBC_COLUMNS, SPECIAL_TOKEN_TYPE } from '@/constants/tokens';
+    import { formatBigNumber, getRestString, rmIbcPrefix } from '@/helper/parseStringHelper';
     import { formatAmount } from '@/helper/tableCellHelper';
-    import { isNullOrEmpty } from '@/utils/objectTools';
-    import { urlPageParser } from '@/utils/urlTools';
-    import { IBaseDenom } from '@/types/interface/index.interface';
+    import { useGetIbcDenoms } from '../home/composable';
+    import {
+        useGetIbcTokenList,
+        useIbcTokenQuery,
+        useIbcTokenSelected,
+        useIbcTokenRef,
+        useSubTitleComputed,
+        useIbcTokenColumnJump,
+        useBaseDenomInfoComputed
+    } from './ibccomposable';
 
-    let pageUrl = '/tokens/details';
-
-    const router = useRouter();
-
+    const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
-
-    const route = useRoute();
-    const baseDenomQuery = route.query.denom as string;
-    const chainIdQuery = route.query.chain as string;
-    const statusQuery = route.query.status as TIbcTokenType;
-
-    const { list, total, getList } = useGetIbcTokenList(baseDenomQuery);
-
-    const baseDenomInfo = computed(() => {
-        const filterData = ibcBaseDenoms.value.filter(
-            (item: IBaseDenom) => item.denom === baseDenomQuery
-        );
-        let symbol = '';
-        const filterSymbol = filterData[0]?.symbol;
-
-        if (filterData.length === 0 || isNullOrEmpty(filterSymbol)) {
-            symbol = getRestString(baseDenomQuery, 3, 8);
-        } else {
-            if (filterSymbol.includes('ibc')) {
-                symbol = getRestString(filterSymbol.replace(/ibc\//, ''), 3, 8);
-            } else {
-                symbol = filterSymbol;
-            }
-        }
-
-        return {
-            symbol,
-            imgSrc:
-                filterData[0]?.icon ??
-                new URL('../../assets/token-default.png', import.meta.url).href
-        };
-    });
-
+    const { baseDenomQuery, chainIdQuery, statusQuery } = useIbcTokenQuery();
+    const { ibcTokenList, total, getIbcTokenList } = useGetIbcTokenList(baseDenomQuery);
+    const { baseDenomInfo } = useBaseDenomInfoComputed(ibcBaseDenoms, baseDenomQuery);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
-
-    const chainDropdown = ref();
-    const statusDropdown = ref();
-
-    const searchChain = ref<string | undefined>(chainIdQuery ?? undefined);
-    const searchStatus = ref<TIbcTokenType | undefined>(statusQuery);
-
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value) {
-            return `${formatBigNumber(total.value, 0)} tokens found`;
-        } else {
-            return `${formatBigNumber(list.value.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} tokens found`;
-        }
-    });
-
-    onMounted(() => {
-        getIbcBaseDenom();
-        refreshList();
-    });
-
-    const loading = ref(false);
-    const refreshList = () => {
-        getList({
-            chain: searchChain.value,
-            token_type: searchStatus.value,
-            loading: loading
-        });
-    };
-
-    const onSelectedChain = (chain?: string | number) => {
-        searchChain.value = chain as string;
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'chain',
-            value: chain as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const onSelectedStatus = (status?: string | number) => {
-        searchStatus.value = status as TIbcTokenType;
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'status',
-            value: status as TIbcTokenType
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const resetSearchCondition = () => {
-        location.href = `/tokens/details?denom=${baseDenomQuery}`;
-    };
-
-    const goChains = () => {
-        router.push('/chains');
-    };
-
-    const goTransfer = (chain_id: string, denom: string) => {
-        router.push({
-            path: '/transfers',
-            query: {
-                chain: chain_id,
-                denom
-            }
-        });
-    };
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useIbcTokenSelected(
+        chainIdQuery,
+        statusQuery,
+        getIbcTokenList,
+        getIbcBaseDenom,
+        loading
+    );
+    const { chainDropdown, statusDropdown } = useIbcTokenRef();
+    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, ibcTokenList);
+    const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump(baseDenomQuery);
 </script>
 
 <style lang="less" scoped>
     .select {
         margin-top: 26px;
-        margin-bottom: 16px;
 
         :deep(.ant-dropdown-trigger) {
             margin-right: 8px;
         }
     }
 
-    .notice-text {
+    .notice_text {
         color: var(--bj-text-second);
     }
 

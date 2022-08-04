@@ -45,7 +45,7 @@
             <div
                 v-for="item of msg"
                 :key="item.statistics_name"
-                class="list_item__horizontal ibc_selected_title"
+                class="list_item__horizontal ibc_selected_title cursor"
                 @click="clickListItem(item.statistics_name)"
             >
                 <div class="list_item">
@@ -119,6 +119,11 @@
     .list_item {
         padding: 24px 0;
         border-bottom: 1px solid var(--bj-border-color);
+        &:hover {
+            .list_item__value {
+                color: var(--bj-primary-color);
+            }
+        }
         &:first-child {
             padding-top: 0;
         }

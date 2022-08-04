@@ -7,7 +7,7 @@
             <div class="transfer__header__container">
                 <div class="transfer__header__line">
                     <p class="transfer__header__title">
-                        IBC Token Transfer List
+                        IBC Token Transfer
                         <span class="transfer__header__num">
                             <i class="iconfont icon-shujuliebiao"></i>
                             {{ `${isIbcTxTotalAndHashFilter}` }}
@@ -33,7 +33,7 @@
                         ref="chainDropdown"
                         :selected-double="selectedDouble"
                         :need-badge="needBadge"
-                        :dropdown-data="ibcChains.all ?? []"
+                        :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         :witch-page="PAGE_PARAMETERS.transfers"
                         @on-selected-chain="onSelectedChain"
@@ -63,7 +63,7 @@
                 </div>
                 <div class="transfer__middle__right">
                     <a-range-picker
-                        :value="dateRange.value"
+                        :value="(dateRange.value as any)"
                         :disabled-date="disabledDate"
                         class="date_range cursor"
                         :allow-clear="false"
@@ -356,12 +356,12 @@
         useGetTokens,
         useSelectedSymbol,
         usePagination,
-        useIbcChains,
         useGetTableColumns
     } from './composable';
     import { useIbcStatistics } from '@/composables/home';
     import dayjs from 'dayjs';
     import { urlParser } from '@/utils/urlTools';
+    import { useIbcChains } from '@/composables';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
@@ -923,11 +923,11 @@
                 &__link {
                     .flex(row, nowrap, flex-start, center);
                     &:hover {
-                        .token_info {
-                            .token_num {
+                        .token__info {
+                            &__num {
                                 color: var(--bj-primary-color);
                             }
-                            .token_denom {
+                            &__denom {
                                 color: var(--bj-primary-color);
                             }
                         }

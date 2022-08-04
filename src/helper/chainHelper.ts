@@ -1,6 +1,6 @@
-import { isArray } from '../utils/objectTools';
-import { CHAINNAME } from '../constants';
-import { useIbcChains } from '../views/home/composable';
+import { isArray } from '@/utils/objectTools';
+import { CHAINNAME } from '@/constants';
+import { useIbcChains } from '@/composables';
 const { ibcChains } = useIbcChains();
 export default class ChainHelper {
     static formatChainId(chainId: any) {

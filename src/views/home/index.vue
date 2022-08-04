@@ -65,7 +65,8 @@
     import ChainsListInfo from './components/ChainsListInfo.vue';
     import StatisticList from './components/StatisticList.vue';
     import TransferList from './components/TransferList.vue';
-    import { useIbcChains, useIbcTxs, useInterfaceActive } from './composable';
+    import { useIbcChains } from '@/composables';
+    import { useIbcTxs, useInterfaceActive } from './composable';
     import { useOnPressEnter } from '@/composables/useStarAnimation';
     import { PAGE_PARAMETERS, ibcStatisticsTxsDefault } from '@/constants/index';
     import { useIbcStatistics } from '@/composables/home';

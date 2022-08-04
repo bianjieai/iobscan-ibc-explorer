@@ -103,11 +103,11 @@
                         <a-input
                             v-model:value="tokenInput"
                             allow-clear
-                            class="token-input"
+                            class="token_input"
                             placeholder="Search by ibc/hash"
                             @input="onInputChange"
                         />
-                        <a-button type="primary" class="confirm-button ml-12" @click="confirmChains"
+                        <a-button type="primary" class="confirm_button ml-12" @click="confirmChains"
                             >Confirm</a-button
                         >
                     </div>
@@ -120,7 +120,7 @@
 <script lang="ts" setup>
     import { getRestString } from '@/helper/parseStringHelper';
     import { onMounted, computed, ref } from 'vue';
-    import { defaultTitle } from '../../../constants/index';
+    import { defaultTitle } from '@/constants/index';
     import { IBaseDenom } from '@/types/interface/index.interface';
     const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href;
 
@@ -131,7 +131,7 @@
         symbol: string;
     };
     interface IProps {
-        dropdownData: any[];
+        dropdownData: IBaseDenom[];
         dropdownDataSymbolMap: { [key: string]: IBaseDenom };
         baseDenom?: string;
     }
@@ -357,7 +357,7 @@
         }
     }
 
-    .token-input {
+    .token_input {
         width: 240px;
     }
 
@@ -415,11 +415,11 @@
             height: 450px;
         }
 
-        .confirm-button {
+        .confirm_button {
             margin: 12px 0 0;
         }
 
-        .token-input {
+        .token_input {
             width: 245px;
         }
     }
