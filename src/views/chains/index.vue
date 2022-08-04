@@ -2,12 +2,12 @@
     <PageContainer>
         <PageTitle
             title="IBC Chains"
-            :subtitle="`${formatBigNumber(list?.length, 0)} chains supported`"
+            :subtitle="`${formatBigNumber(chainsList?.length, 0)} chains supported`"
         />
 
         <TableCommon
             :loading="loading"
-            :data="list"
+            :data="chainsList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"
             need-count
@@ -17,7 +17,7 @@
             <template #chain_id="{ record, column }">
                 <ChainIcon
                     :chain-id="record[column.key]"
-                    :chains-data="ibcChains?.all ?? []"
+                    :chains-data="ibcChains.all"
                     icon-size="small"
                 />
             </template>
@@ -57,61 +57,16 @@
 <script lang="ts" setup>
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS } from '@/constants/chains';
-    import { useIbcChains } from '../home/composable';
-    import { onMounted, ref } from 'vue';
-    import { useGetChainsList } from '@/service/chains';
-    import { useRouter } from 'vue-router';
-    import { useNeedCustomColumns } from '@/composables';
+    import { useIbcChains, useLoading, useNeedCustomColumns } from '@/composables';
+    import { useGetChainsList, useChainsColumnJump } from '@/views/chains/composable';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { formatBigNumber } from '@/helper/parseStringHelper';
 
-    const router = useRouter();
-
+    const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
-    const { list, getList } = useGetChainsList();
+    const { chainsList } = useGetChainsList(loading);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.chains);
-    const loading = ref(false);
-
-    onMounted(() => {
-        getList(loading);
-    });
-
-    const goChannels = (chain: string) => {
-        router.push({
-            path: '/channels',
-            query: {
-                chain
-            }
-        });
-    };
-
-    const goRelayers = (chain: string, status: number) => {
-        router.push({
-            path: '/relayers',
-            query: {
-                chain,
-                status
-            }
-        });
-    };
-
-    // const goTokens = (chain_id: string) => {
-    //   router.push({
-    //     path: '/tokens',
-    //     query: {
-    //       chain_id
-    //     }
-    //   })
-    // }
-
-    const goTransfer = (chain_id: string) => {
-        router.push({
-            path: '/transfers',
-            query: {
-                chain: chain_id + ',allchain'
-            }
-        });
-    };
+    const { goChannels, goRelayers, goTransfer } = useChainsColumnJump();
 </script>
 
 <style lang="less" scoped>

@@ -153,7 +153,7 @@
 </script>
 
 <style lang="less" scoped>
-    .bj-root {
+    .bj_root {
         flex: 1;
         display: flex;
     }

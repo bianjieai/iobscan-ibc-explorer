@@ -14,7 +14,11 @@ import { IResponseIbcDenom } from '@/types/interface/home.interface';
 export const useIbcStatisticsChains = defineStore('global', {
     state: (): GlobalState => {
         return {
-            ibcChains: {},
+            ibcChains: {
+                all: [],
+                active: [],
+                inactive: []
+            },
             ibcBaseDenoms: [],
             ibcDenoms: [],
             isShowLoading: false,
@@ -52,7 +56,7 @@ export const useIbcStatisticsChains = defineStore('global', {
             if (this.ibcBaseDenoms.length <= 0) {
                 promiseArray.push(this.getIbcBaseDenomsAction);
             }
-            if (Object.keys(this.ibcChains).length <= 0) {
+            if (this.ibcChains.all.length <= 0) {
                 promiseArray.push(this.getIbcChainsAction);
             }
             await Promise.all(promiseArray.map((item) => item()));

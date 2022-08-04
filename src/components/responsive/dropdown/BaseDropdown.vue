@@ -35,7 +35,7 @@
             </span>
         </div>
         <template #overlay>
-            <div class="overlay-container">
+            <div class="overlay_container">
                 <div
                     v-for="item in options"
                     :key="item.value"
@@ -129,7 +129,7 @@
         }
     }
 
-    .overlay-container {
+    .overlay_container {
         background: #fff;
         color: var(--bj-text-second);
         border: 1px solid var(--bj-border-color);

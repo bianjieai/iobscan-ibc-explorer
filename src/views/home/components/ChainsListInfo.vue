@@ -29,11 +29,11 @@
                         <router-link :to="`/chains`">
                             <a-card class="menu_card">
                                 <img
-                                    class="card_img"
+                                    class="menu_card__img"
                                     :src="item.icon ? item.icon : chainDefaultImg"
                                 />
-                                <p class="card_title">{{ item.chain_name }}</p>
-                                <p class="card_value">{{ formatChainID(item.chain_id) }}</p>
+                                <p class="menu_card__title">{{ item.chain_name }}</p>
+                                <p class="menu_card__value">{{ formatChainID(item.chain_id) }}</p>
                             </a-card>
                         </router-link>
                     </a-list-item>
@@ -142,33 +142,33 @@
                 padding: 12px;
                 height: 126px;
             }
-        }
-        .card_img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-        }
-        .card_title {
-            margin: 6px auto 0;
-            max-width: 152px;
-            font-size: var(--bj-font-size-sub-title);
-            line-height: 20px;
-            font-family: Montserrat-SemiBold, Montserrat;
-            font-weight: 600;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            color: var(--bj-text-second);
-            vertical-align: middle;
-        }
-        .card_value {
-            margin: 4px 0 6px;
-            font-size: var(--bj-font-size-normal);
-            line-height: 16px;
-            font-family: Montserrat-Regular, Montserrat;
-            font-weight: 400;
-            color: var(--bj-font-color-65);
-            word-break: break-all;
+            &__img {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+            }
+            &__title {
+                margin: 6px auto 0;
+                max-width: 152px;
+                font-size: var(--bj-font-size-sub-title);
+                line-height: 20px;
+                font-family: Montserrat-SemiBold, Montserrat;
+                font-weight: 600;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                color: var(--bj-text-second);
+                vertical-align: middle;
+            }
+            &__value {
+                margin: 4px 0 6px;
+                font-size: var(--bj-font-size-normal);
+                line-height: 16px;
+                font-family: Montserrat-Regular, Montserrat;
+                font-weight: 400;
+                color: var(--bj-font-color-65);
+                word-break: break-all;
+            }
         }
         .list_anchor {
             width: 28px;
@@ -209,11 +209,11 @@
     .custom_title {
         .flex(row, nowrap, space-between, center);
         color: var(--bj-text-third);
-        &_left {
+        &__left {
             width: 10px;
             text-align: left;
         }
-        &_right {
+        &__right {
             width: 12px;
             text-align: center;
         }

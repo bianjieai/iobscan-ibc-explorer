@@ -1,7 +1,7 @@
 <template>
     <a-popover placement="topLeft">
         <template #content>
-            <div class="popover-c">
+            <div class="popover_c">
                 <div>Relayer Name: {{ relayerName ? relayerName : UNKNOWN }}</div>
                 <div>{{ `${chain_a_name} Address` }}: {{ chainAAddress }}</div>
                 <div>{{ `${chain_b_name} Address` }}: {{ chainAAddress }}</div>
