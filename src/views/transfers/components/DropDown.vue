@@ -181,7 +181,7 @@
             .flex(row, nowrap, center, center);
             overflow: hidden;
         }
-        &___title {
+        &__title {
             // max-width: 86px;
             text-overflow: ellipsis;
             color: var(--bj-text-third);

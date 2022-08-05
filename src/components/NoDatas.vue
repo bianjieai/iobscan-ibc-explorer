@@ -10,7 +10,7 @@
 <style lang="less" scoped>
     .nodatas {
         .flex(column, nowrap, center, center);
-        // min-height: 210px; // 适应table min-height: 300px
+        margin: 30px 0 20px;
         &__icon {
             width: 120px;
         }

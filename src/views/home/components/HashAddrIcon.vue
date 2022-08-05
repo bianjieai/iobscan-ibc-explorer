@@ -124,7 +124,7 @@
         }
     }
     .status_icon {
-        width: 22px;
+        width: 24px;
         margin: 0 16px;
     }
     .tip_color {
