@@ -64,11 +64,13 @@
     }
     .layout {
         width: 100%;
+        height: 100%;
         background-image: url('../assets/iobscan_home_bg.png');
         background-repeat: no-repeat;
         background-size: 1920px 396px;
         background-position: top center;
         background-color: #f5f7fc;
+        .flex(column, nowrap, flex-start, center);
         flex: 1;
         position: relative;
         min-height: auto;
@@ -95,10 +97,7 @@
             flex: 1;
         }
         &__footer {
-            .flex(column, nowrap, space-between, center);
-            padding: 0;
             width: 100%;
-            background-color: #eef0f6;
         }
     }
 </style>
