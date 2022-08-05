@@ -16,7 +16,7 @@
 
             <div v-if="chainInfo.subtitle !== '--'">
                 <a-popover
-                    v-if="formatChainID(chainInfo.subtitle)?.length >= 18"
+                    v-if="formatChainID(chainInfo.subtitle)?.length >= 20"
                     placement="bottom"
                 >
                     <template #content>

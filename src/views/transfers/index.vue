@@ -7,7 +7,7 @@
             <div class="transfer__header__container">
                 <div class="transfer__header__line">
                     <p class="transfer__header__title">
-                        IBC Token Transfer
+                        <span>IBC Token Transfer</span>
                         <span class="transfer__header__num">
                             <i class="iconfont icon-shujuliebiao"></i>
                             {{ `${isIbcTxTotalAndHashFilter}` }}
@@ -872,7 +872,7 @@
                 line-height: 20px;
             }
             &__num {
-                margin-left: 12px;
+                margin-left: 8px;
                 font-size: var(--bj-font-size-normal);
                 color: var(--bj-font-color-65);
             }

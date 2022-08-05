@@ -25,10 +25,11 @@
                         <span class="list_subItem__value">{{
                             formatNum(item.symbolNum) || 0
                         }}</span>
-                        <a-tooltip placement="topLeft">
+                        <a-tooltip v-if="item.symbolDenom?.length > 22" placement="topLeft">
                             <template #title>{{ item.symbolDenom || '' }}</template>
                             <span class="list_subItem__title">{{ item.symbolDenom || '' }}</span>
                         </a-tooltip>
+                        <span v-else class="list_subItem__title">{{ item.symbolDenom || '' }}</span>
                     </div>
 
                     <div class="list_subItem__adress_container">
@@ -100,11 +101,12 @@
                 &__adress_container {
                     flex: 1;
                     .flex(row, nowrap, space-between, center);
+                    margin-left: 8px;
                 }
                 &__title_container {
                     .flex(column, nowrap, space-between, flex-start);
                     width: 100%;
-                    max-width: 150px;
+                    max-width: 180px;
                 }
                 &__value {
                     width: 100%;
@@ -121,7 +123,7 @@
                     font-weight: 400;
                     color: var(--bj-text-third);
                     line-height: 18px;
-                    width: 150px;
+                    width: 180px;
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
