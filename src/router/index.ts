@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Layout from '../layout/index.vue';
+import Layout from '@/layout/index.vue';
+import LayoutError from '@/layout/LayoutError.vue';
 import { createInterceptor } from './interceptor';
 
 const routes: Array<RouteRecordRaw> = [
@@ -7,11 +8,6 @@ const routes: Array<RouteRecordRaw> = [
         path: '/500',
         name: '500',
         component: () => import('../components/errorpage/500.vue')
-    },
-    {
-        path: '/404',
-        name: '404',
-        component: () => import('../components/errorpage/404.vue')
     },
     {
         path: '/',
@@ -127,7 +123,15 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/:pathMatch(.*)*',
-        redirect: '/404'
+        component: LayoutError,
+        meta: {},
+        children: [
+            {
+                path: '',
+                name: '404',
+                component: () => import('../components/errorpage/404.vue')
+            }
+        ]
     }
 ];
 

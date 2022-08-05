@@ -66,3 +66,8 @@ export interface IDenomTrace {
     sc_denom: string;
     dc_denom: string;
 }
+
+export enum FooterMode {
+    light,
+    dark
+}
