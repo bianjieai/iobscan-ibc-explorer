@@ -26,7 +26,7 @@
 <style scoped lang="less">
     .error_network {
         width: 100%;
-        min-height: 100vh;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;
