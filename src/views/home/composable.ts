@@ -1,3 +1,4 @@
+import { IIbcTx } from './../../types/interface/transfers.interface';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
 import { IBaseDenom } from '@/types/interface/index.interface';
 import { useIbcStatisticsChains } from '@/store/index';
@@ -12,45 +13,73 @@ import {
 } from '@/constants';
 import { useTimeInterval } from '@/composables';
 
-const ibcStatisticsChainsStore = useIbcStatisticsChains();
-
-export const useIbcTxs = () => {
-    const { ibcTxs } = storeToRefs(ibcStatisticsChainsStore);
+export const useIbcTxs = (timerInterval?: number) => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
+    const homeIbcTxs = ref([...ibcTxs]);
     const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
-    const setExpandByIndex = (idx: number) => {
-        ibcTxs.value.forEach((item, index) => {
-            if (idx == index) {
+    const expandedId = ref<string | null>();
+    const setExpandByIndex = (recordId: string) => {
+        expandedId.value = recordId;
+        homeIbcTxs.value.forEach((item) => {
+            if (item.record_id === recordId) {
                 item.expanded = !item.expanded;
+                if (!item.expanded) {
+                    expandedId.value = null;
+                }
             } else {
                 item.expanded = false;
             }
         });
     };
-    const limitIbcTxs = (limitNumber = 10) => {
-        ibcStatisticsChainsStore.ibcTxs = ibcStatisticsChainsStore.ibcTxs.slice(0, limitNumber);
+    const setIbcTxs = (limitNumber = 10) => {
+        ibcStatisticsChainsStore.ibcTxs = homeIbcTxs.value.slice(0, limitNumber);
     };
     useTimeInterval(() => {
-        ibcTxs.value = ibcTxs.value.map((item: any) => {
+        homeIbcTxs.value = homeIbcTxs.value.map((item: any) => {
             item.parseTime = formatAge(getTimestamp(), item.tx_time * 1000, '', '');
             return item;
         });
     });
+    const initGetIbcTxs = async () => {
+        homeIbcTxs.value = (await getIbcTxs({
+            page_num: 1,
+            page_size: 100,
+            use_count: false
+        })) as IIbcTx[];
+        homeIbcTxs.value = homeIbcTxs.value.map((item: any) => {
+            if (item.record_id === expandedId.value) {
+                item.expanded = true;
+            } else {
+                item.expanded = false;
+            }
+            return item;
+        });
+        setIbcTxs();
+    };
+    let timer: number;
     onMounted(async () => {
         await ibcStatisticsChainsStore.getIbcDenomsAction();
-        getIbcTxs({ page_num: 1, page_size: 100, use_count: false });
+        initGetIbcTxs();
+        if (Number(timerInterval) > 0) {
+            timer = setInterval(() => {
+                console.log('initGetIbcTxs', timerInterval);
+                initGetIbcTxs();
+            }, timerInterval);
+        }
     });
     onBeforeUnmount(() => {
-        limitIbcTxs();
+        timer && clearInterval(timer);
     });
     return {
-        ibcTxs,
+        homeIbcTxs,
         getIbcTxs,
-        setExpandByIndex,
-        limitIbcTxs
+        setExpandByIndex
     };
 };
 
 export const useGetIbcDenoms = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcBaseDenoms, ibcBaseDenomsSymbolKeyMapGetter } =
         storeToRefs(ibcStatisticsChainsStore);
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;

@@ -7,8 +7,8 @@ export const useInterfaceActive = (emits: any) => {
     const clickListItem = (item: any) => {
         emits('clickItem', item);
     };
-    const itemDidExpand = (idx: number) => {
-        emits('itemDidExpand', idx);
+    const itemDidExpand = (recordId: number) => {
+        emits('itemDidExpand', recordId);
     };
     return {
         onClickViewAll,

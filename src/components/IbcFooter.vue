@@ -1,5 +1,5 @@
 <template>
-    <div class="footer_container">
+    <div class="footer_container" :class="{ footer_dark_container: isDark }">
         <div class="content">
             <div class="content__left">
                 <span
@@ -107,6 +107,13 @@
             }
         }
     }
+    .footer_dark_container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: rgba(238, 240, 246, 0.1);
+    }
 
     @media screen and (max-width: 1200px) {
         .dark {
@@ -127,6 +134,8 @@
                 &__right {
                 }
             }
+        }
+        .footer_dark_container {
         }
     }
 
@@ -150,6 +159,8 @@
                     margin-top: 16px;
                 }
             }
+        }
+        .footer_dark_container {
         }
     }
 </style>

@@ -72,8 +72,7 @@
         }
     });
     const emits = defineEmits(['clickItem', 'clickViewAll', 'itemDidExpand']);
-
-    const { onClickExpandBtn } = useIsExpand(emits, props.index);
+    const { onClickExpandBtn } = useIsExpand(emits, props.item.record_id);
 </script>
 
 <style lang="less" scoped>
