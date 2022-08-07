@@ -1,18 +1,18 @@
 <template>
     <div class="footer_container">
-        <div class="footer_content">
-            <div class="footer_content__left">
+        <div class="content">
+            <div class="content__left">
                 <span
                     v-for="(item, index) in ICON_LINK"
                     :key="index"
-                    class="footer_content__left__icon cursor"
+                    class="content__left__icon cursor"
                     @click="onClickIcon(item.iconLink)"
                 >
-                    <i class="iconfont" :class="item.iconName"></i>
+                    <i class="iconfont content__left__iconfont" :class="item.iconName"></i>
                 </span>
-                <span :class="{ dark: isDark }"> Contact us ! </span>
+                <span :class="{ dark: isDark, light: isLight }"> Contact us ! </span>
             </div>
-            <div class="footer_content__right" :class="{ dark: isDark }">
+            <div class="content__right" :class="{ dark: isDark, light: isLight }">
                 {{ COPYRIGHT }}
             </div>
         </div>
@@ -31,18 +31,27 @@
     const isDark = computed(() => {
         return props.type === FooterMode.dark;
     });
+    const isLight = computed(() => {
+        return props.type === FooterMode.light;
+    });
     const onClickIcon = (item: string) => {
         window.open(item);
     };
 </script>
 
 <style lang="less" scoped>
+    .dark {
+        color: @font-color6;
+    }
+    .light {
+        color: @font-color2;
+    }
     .footer_container {
         .flex(column, nowrap, space-between, center);
         padding: 0;
         width: 100%;
         background-color: #eef0f6;
-        .footer_content {
+        .content {
             box-sizing: border-box;
             padding: 16px 0;
             width: 100%;
@@ -54,7 +63,6 @@
                 font-size: @font-size5;
                 font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
-                color: @font-color2;
 
                 &__icon {
                     .flex(row, nowrap, center, center);
@@ -66,13 +74,13 @@
                     border-radius: @card-radio;
 
                     &:first-child {
-                        .iconfont {
+                        .content__left__iconfont {
                             font-size: 19px;
                         }
                     }
 
                     &:last-child {
-                        .iconfont {
+                        .content__left__iconfont {
                             font-size: 15px;
                         }
                     }
@@ -80,13 +88,13 @@
                     &:hover {
                         background-color: var(--bj-primary-color);
 
-                        .iconfont {
+                        .content__left__iconfont {
                             color: #fff;
                         }
                     }
                 }
 
-                .iconfont {
+                &__iconfont {
                     font-size: var(--bj-font-size-sub-title);
                     color: var(--bj-primary-color);
                 }
@@ -96,47 +104,51 @@
                 font-size: @font-size5;
                 font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
-                color: @font-color2;
             }
-        }
-        .dark {
-            color: @font-color6;
         }
     }
 
     @media screen and (max-width: 1200px) {
+        .dark {
+        }
+        .light {
+        }
         .footer_container {
-            .footer_content {
+            .content {
                 padding: 16px 32px;
-
                 &__left {
                     &__icon {
+                    }
+
+                    &__iconfont {
                     }
                 }
 
                 &__right {
                 }
             }
-            .dark {
-            }
         }
     }
 
     @media screen and (max-width: 768px) {
+        .dark {
+        }
+        .light {
+        }
         .footer_container {
-            .footer_content {
+            .content {
                 .flex(column, nowrap, center, center);
-
                 &__left {
                     &__icon {
+                    }
+
+                    &__iconfont {
                     }
                 }
 
                 &__right {
                     margin-top: 16px;
                 }
-            }
-            .dark {
             }
         }
     }

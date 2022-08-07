@@ -1,7 +1,6 @@
 import { Ref } from 'vue';
-import { currentMenuType } from '@/types/interface/home.interface';
 import { IIbcChains } from '@/types/interface/index.interface';
-import { anchorsDatas, chainMenus } from '@/constants';
+import { anchorsDatas, chainMenus, currentMenuType } from '@/constants';
 
 export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
     const menus = reactive(chainMenus);

@@ -13,5 +13,3 @@ export interface IResponseIbcStatistic {
     statistics_name: string;
     count: number;
 }
-
-export type currentMenuType = 'active' | 'inactive' | 'all';
