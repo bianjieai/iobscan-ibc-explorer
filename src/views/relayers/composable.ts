@@ -132,7 +132,6 @@ export const useRelayersSelected = (
                         title: 'All Chains',
                         doubleTime: true,
                         id: 'allchain',
-                        hideIcon: true,
                         value: null
                     }
                 ]

@@ -116,7 +116,6 @@ export const useChannelsSelected = (
                         title: 'All Chains',
                         doubleTime: true,
                         id: 'allchain',
-                        hideIcon: true,
                         value: null
                     }
                 ]
