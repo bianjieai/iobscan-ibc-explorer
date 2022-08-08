@@ -10,6 +10,7 @@ export const useInit = (props: TProps) => {
     const tokenInput = ref<string | undefined>(undefined);
     const flatData = ref<IDataItem[]>([]); // 拍扁后的数组
 
+    // 考虑写成computed，但是这样初始化逻辑就都在computed处理了，onMounted什么都没有了
     const resetFlatArr = (data: TData) => {
         // 拍扁数组处理，集合
         const tempFlats: IDataItem[] = [];
@@ -23,7 +24,7 @@ export const useInit = (props: TProps) => {
         flatData.value = tempFlats;
     };
 
-    const resetVal = (val: TDenom | TDenom[]) => {
+    const resetVal = (val?: TDenom | TDenom[]) => {
         tokenInput.value = undefined; // 清空input
         inputItems.value = [];
         selectItems.value = []; // 清空选中
@@ -56,7 +57,6 @@ export const useInit = (props: TProps) => {
     };
 
     onMounted(() => {
-        // 先整理集合，再去赋值
         resetFlatArr(props.data);
         resetVal(props.value);
     });

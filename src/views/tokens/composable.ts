@@ -11,8 +11,11 @@ import {
     ITokensListItem
 } from '@/types/interface/tokens.interface';
 import { urlPageParser } from '@/utils/urlTools';
-import { computed, onMounted, ref, Ref } from 'vue';
+import { computed, ComputedRef, onMounted, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { IDataItem } from '@/components/BjSelect/interface';
+import { IBaseDenom } from '@/types/interface/index.interface';
+const tokenIcon = new URL('../../assets/token-default.png', import.meta.url).href;
 
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
@@ -81,7 +84,9 @@ export const useTokensSelected = (
     statusQuery: TTokenType,
     getTokensList: (params: IRequestTokensList) => Promise<void>,
     getIbcBaseDenom: () => Promise<void>,
-    loading: Ref<boolean>
+    loading: Ref<boolean>,
+    ibcBaseDenomsSorted: ComputedRef<IBaseDenom[]>,
+    ibcChains: any
 ) => {
     let pageUrl = '/tokens';
     const router = useRouter();
@@ -97,7 +102,8 @@ export const useTokensSelected = (
             loading: loading
         });
     };
-    const onSelectedToken = (denom?: string | number) => {
+    const onSelectedToken = (val?: IDataItem) => {
+        const denom = val?.id;
         if (denom) {
             searchDenom.value = denom as string;
         } else {
@@ -110,8 +116,9 @@ export const useTokensSelected = (
         router.replace(pageUrl);
         refreshList();
     };
-    const onSelectedChain = (chain?: string | number) => {
-        searchChain.value = chain ? String(chain) : undefined;
+    const onSelectedChain = (val?: IDataItem) => {
+        const chain = val?.id;
+        searchChain.value = chain !== undefined ? String(chain) : undefined;
         pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: chain as string
@@ -130,6 +137,65 @@ export const useTokensSelected = (
         refreshList();
     };
 
+    const tokenData = computed(() => {
+        return [
+            {
+                groupName: '',
+                children: [
+                    {
+                        title: 'All Tokens',
+                        id: '',
+                        value: null
+                    }
+                ]
+            },
+            {
+                groupName: 'Authed IBC Tokens',
+                children: ibcBaseDenomsSorted.value.map((v) => ({
+                    title: v.symbol,
+                    id: v.denom,
+                    icon: v.icon || tokenIcon,
+                    metaData: v
+                }))
+            },
+            {
+                groupName: 'Custom IBC Tokens',
+                children: [
+                    {
+                        id: 'others',
+                        title: 'Others',
+                        icon: tokenIcon
+                    }
+                ]
+            }
+        ];
+    });
+
+    const chainData = computed(() => {
+        return [
+            {
+                hideGroupName: true,
+                children: [
+                    {
+                        title: 'All Chains',
+                        id: '',
+                        hideIcon: true,
+                        value: null
+                    }
+                ]
+            },
+            {
+                hideGroupName: true,
+                children: ibcChains.value?.all?.map((v: any) => ({
+                    title: v.chain_name,
+                    id: v.chain_id,
+                    icon: v.icon,
+                    metaData: v
+                }))
+            }
+        ];
+    });
+
     onMounted(() => {
         getIbcBaseDenom();
         refreshList();
@@ -140,7 +206,9 @@ export const useTokensSelected = (
         searchStatus,
         onSelectedToken,
         onSelectedChain,
-        onSelectedStatus
+        onSelectedStatus,
+        tokenData,
+        chainData
     };
 };
 

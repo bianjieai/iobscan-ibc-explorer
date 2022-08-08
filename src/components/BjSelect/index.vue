@@ -6,8 +6,8 @@
         @visibleChange="visibleChange"
     >
         <div
-            class="flex items-center default__color dropdown__container cursor"
-            :class="[{ visible__border: visible }]"
+            class="flex items-center default_color dropdown_container cursor"
+            :class="[{ visible_border: visible }]"
         >
             <!--            多选单选的展示 start-->
             <template v-if="props.mode !== MODES.double">
@@ -31,7 +31,7 @@
                 />
             </template>
             <!--            多选单选的展示 end-->
-            <span class="button__icon flex justify-between items-center">
+            <span class="button_icon flex justify-between items-center">
                 <svg
                     :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }"
                     focusable="false"
@@ -41,7 +41,7 @@
                     fill="currentColor"
                     aria-hidden="true"
                     viewBox="64 64 896 896"
-                    :class="[visible ? 'visible__color' : '']"
+                    :class="[visible ? 'visible_color' : '']"
                 >
                     <path
                         d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
@@ -53,7 +53,7 @@
         <template #overlay>
             <div class="overlay">
                 <div v-for="group in props.data" :key="group.groupName" class="mb-20">
-                    <div v-if="!group.hideGroupName" class="flex items-center">
+                    <div v-if="group.groupName" class="flex items-center">
                         <div class="title">{{ group.groupName }}</div>
                         <a-popover
                             v-if="group.tooltips"
@@ -61,43 +61,41 @@
                             overlay-class-name="antd-popover"
                         >
                             <template #content>
-                                <p class="confirm__button">
+                                <p class="confirm_button">
                                     {{ group.tooltips }}
                                 </p>
                             </template>
                             <img
+                                v-if="group.icon"
                                 class="tip cursor"
                                 style="margin-left: 8px"
-                                src="/src/assets/tip.png"
+                                :src="group.icon"
                             />
                         </a-popover>
                     </div>
-                    <div class="chains__wrap">
+                    <div class="chains_wrap">
                         <div
                             v-for="item in group?.children"
                             :key="item.id"
                             :class="[
-                                'chains__tag',
+                                'chains_tag',
                                 'cursor',
                                 {
-                                    'visible__color visible__border selected': isSelected(item.id),
-                                    disabled: item.disabled || group.disabled
+                                    'visible_color visible_border selected': isSelected(item.id),
+                                    disabled: item.disabled
                                 }
                             ]"
                             @click="onSelected(item)"
                         >
                             <img
-                                v-if="!item.hideIcon"
-                                :src="item.icon || defaultImg"
+                                v-if="item?.icon"
+                                :src="item.icon"
                                 width="24"
                                 height="24"
                                 class="mr-8"
                             />
                             <span class="symbol">{{ item.title }}</span>
-                            <div
-                                v-if="props.needBadge && getBadgeStr(item.id)"
-                                class="chains__tag__badge"
-                            >
+                            <div v-if="badges && getBadgeStr(item.id)" class="chains_tag__badge">
                                 {{ getBadgeStr(item.id) }}
                             </div>
                         </div>
@@ -117,9 +115,10 @@
                                 </p>
                             </template>
                             <img
+                                v-if="inputCtn.icon"
                                 class="tip cursor"
                                 style="margin-left: 8px"
-                                src="/src/assets/tip.png"
+                                :src="inputCtn.icon"
                             />
                         </a-popover>
                     </div>
@@ -127,14 +126,11 @@
                         <a-input
                             v-model:value="tokenInput"
                             allow-clear
-                            class="token__input"
+                            class="token_input"
                             :placeholder="inputCtn.placeholder"
                             @input="onInputChange"
                         />
-                        <a-button
-                            type="primary"
-                            class="confirm__button ml-12"
-                            @click="confirmChains"
+                        <a-button type="primary" class="confirm_button ml-12" @click="confirmChains"
                             >{{ inputCtn.btnTxt }}
                         </a-button>
                     </div>
@@ -152,37 +148,31 @@
     /**
      * defineProps 使用外部引入的interface或者type会报错
      */
-    interface TProps {
+    export interface TProps {
         data: {
             groupName?: string;
-            hideGroupName?: boolean;
             icon?: string;
             tooltips?: string;
             children?: {
                 id: number | string;
                 title: string;
                 disabled?: boolean;
-                hideIcon?: boolean;
-                icon?: string;
                 tooltips?: string;
                 doubleTime?: boolean;
+                metaData?: any;
             }[];
         }[];
-        value: string | number | (string | number)[];
-        mode?: 'multiple';
+        value?: string | number | (string | number)[];
+        mode?: MODES.multiple | MODES.double;
         placeholder?: string;
-        defaultImg?: string;
         hideIcon?: boolean;
         editModel?: boolean; // 修改时候是否展示框变化，默认false
-        paddingItem?: {
-            id: string | number;
-            title: string;
-        };
-        needBadge?: boolean;
+        associateId?: string | number; // 双选时候，input输入时候一个值时候，另外展示的值
         badges?: [string, string];
         placeholders?: [string, string];
         inputCtn?: {
             title?: string;
+            icon?: string;
             toolTip?: string;
             placeholder?: string;
             btnTxt: string;
@@ -191,13 +181,12 @@
 
     const props = withDefaults(defineProps<TProps>(), {
         data: () => [],
-        defaultImg: './images/token-default.png',
         editModel: false
     });
 
-    const { inputCtn, placeholder, defaultImg, hideIcon } = { ...props };
+    const { inputCtn, placeholder, hideIcon, badges } = { ...props };
 
-    const { visible, selectItems, tokenInput, inputItems, resetVal } = useInit(props);
+    const { visible, selectItems, tokenInput, inputItems, flatData, resetVal } = useInit(props);
 
     // 是否选中
     const isSelected = (val: TDenom) => selectItems.value.some((v) => v.id === val);
@@ -287,7 +276,11 @@
             inputItems.value = inputItemsByMode(tokenInput.value, props);
             // 如果输入的只有一个值，选中all，这里作为配置项传进来。
             if (inputItems.value.length === 1) {
-                selectItems.value = [(props.paddingItem || {}) as IDataItem];
+                const matchItem = flatData.value.find((v) => v.id === props.associateId);
+
+                if (matchItem) {
+                    selectItems.value = [matchItem as IDataItem];
+                }
             }
         }
     };
@@ -341,7 +334,7 @@
 </script>
 
 <style lang="less" scoped>
-    .dropdown__container {
+    .dropdown_container {
         height: 36px;
         border: 1px solid var(--bj-border-color);
         border-radius: 4px;
@@ -349,7 +342,7 @@
         min-width: 124px;
     }
 
-    .button__icon {
+    .button_icon {
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         padding: 0 6px;
         border-left: 1px solid var(--bj-border-color);
@@ -360,16 +353,16 @@
         }
     }
 
-    .visible__border {
+    .visible_border {
         border: 1px solid var(--bj-primary-color) !important;
         box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
     }
 
-    .visible__color {
+    .visible_color {
         color: var(--bj-primary-color) !important;
     }
 
-    .default__color {
+    .default_color {
         color: var(--bj-text-second);
     }
 
@@ -380,21 +373,6 @@
         border-radius: 4px;
     }
 
-    .selected__color {
-        color: var(--bj-primary-color);
-        //overflow: hidden;
-        //text-overflow: ellipsis;
-        padding-left: 8px;
-        //max-width: 118px;
-        &__default {
-            color: var(--bj-text-second);
-        }
-    }
-    .selectedInfo__title {
-        max-width: 118px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
     .overlay {
         max-width: 872px;
         background: #ffffff;
@@ -410,7 +388,7 @@
         margin-bottom: 7px;
     }
 
-    .chains__wrap {
+    .chains_wrap {
         //display: grid;
         //grid-template-columns: repeat(auto-fill, 158px);
         display: flex;
@@ -418,7 +396,7 @@
         grid-gap: 12px;
     }
 
-    .chains__tag {
+    .chains_tag {
         position: relative;
         display: flex;
         align-items: center;
@@ -472,11 +450,11 @@
         }
     }
 
-    .token__input {
+    .token_input {
         width: 280px;
     }
 
-    .confirm__button {
+    .confirm_button {
         color: #fff;
     }
 
@@ -528,11 +506,11 @@
             height: 450px;
         }
 
-        .confirm__button {
+        .confirm_button {
             margin: 12px 0 0;
         }
 
-        .token__input {
+        .token_input {
             width: 245px;
         }
     }

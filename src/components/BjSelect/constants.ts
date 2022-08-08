@@ -1,4 +1,4 @@
-export const MODES = {
-    multiple: 'multiple',
-    double: 'double'
-};
+export enum MODES {
+    multiple = 'multiple',
+    double = 'double'
+}

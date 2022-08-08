@@ -3,9 +3,9 @@
         class="flex flex-1 overflow-auto flex-wrap text-center mr-8 ml-8 justify-center items-center"
         :class="[
             {
-                selected__color__default: selectItems.length === 0 && inputItems.length === 0,
-                selected__color: selectItems.length > 0 || inputItems.length > 0,
-                visible__color: (selectItems.length > 0 || inputItems.length > 0) && visible
+                selected_color__default: selectItems.length === 0 && inputItems.length === 0,
+                selected_color: selectItems.length > 0 || inputItems.length > 0,
+                visible_color: (selectItems.length > 0 || inputItems.length > 0) && visible
             }
         ]"
     >
@@ -16,7 +16,7 @@
             class="flex items-center"
             :class="{ multiple: props.mode === MODES.multiple }"
         >
-            <span class="selectedInfo__title" :title="item.title">{{
+            <span class="selected_info_title" :title="item.title">{{
                 getRestString(item.title, 4, 4)
             }}</span>
         </div>
@@ -34,11 +34,11 @@
                 class="mr-4"
                 :src="item.icon"
             />
-            <span class="selectedInfo__title" :title="item.title">{{ item.title }}</span>
+            <span class="selected_info_title" :title="item.title">{{ item.title }}</span>
         </div>
         <!--        都没有选的时候展示，类似placeholder-->
         <div v-if="!inputItems.length && !selectItems.length" class="selected__color_default">
-            <span class="selectedInfo__title">{{ placeholder }}</span>
+            <span class="selected_info_title">{{ placeholder }}</span>
         </div>
     </div>
 </template>
@@ -78,20 +78,20 @@
         border-radius: 4px;
     }
 
-    .selected__color {
+    .selected_color {
         color: var(--bj-primary-color);
         //overflow: hidden;
         //text-overflow: ellipsis;
         padding-left: 8px;
         //max-width: 118px;
-        &_default {
+        &__default {
             color: var(--bj-text-second);
         }
     }
-    .visible__color {
+    .visible_color {
         color: var(--bj-primary-color) !important;
     }
-    .selectedInfo__title {
+    .selected_info_title {
         max-width: 118px;
         overflow: hidden;
         text-overflow: ellipsis;

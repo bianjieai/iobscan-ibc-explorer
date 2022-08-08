@@ -4,12 +4,19 @@
             class="mr-8 ml-8"
             :class="[
                 {
-                    selected__color__default: doubleSelectItems.length === 0,
-                    selected__color: doubleSelectItems.length > 0,
-                    visible__color: doubleSelectItems.length > 0 && visible
+                    selected_color__default: doubleSelectItems.length === 0,
+                    selected_color: doubleSelectItems.length > 0,
+                    visible_color: doubleSelectItems.length > 0 && visible
                 }
             ]"
         >
+            <img
+                v-if="!hideIcon && doubleSelectItems[0]?.icon?.length"
+                width="18"
+                height="18"
+                class="mr-4"
+                :src="doubleSelectItems[0]?.icon"
+            />
             {{ doubleSelectItems[0]?.title || placeholders[0] }}
         </div>
         <div>-</div>
@@ -17,12 +24,19 @@
             class="mr-8 ml-8"
             :class="[
                 {
-                    selected__color__default: doubleSelectItems.length === 0,
-                    selected__color: doubleSelectItems.length > 1,
-                    visible__color: doubleSelectItems.length > 1 && visible
+                    selected_color__default: doubleSelectItems.length === 0,
+                    selected_color: doubleSelectItems.length > 1,
+                    visible_color: doubleSelectItems.length > 1 && visible
                 }
             ]"
         >
+            <img
+                v-if="!hideIcon && doubleSelectItems[1]?.icon?.length"
+                width="18"
+                height="18"
+                class="mr-4"
+                :src="doubleSelectItems[1]?.icon"
+            />
             {{ doubleSelectItems[1]?.title || placeholders[1] }}
         </div>
     </div>
@@ -48,7 +62,7 @@
         .flex(row, nowrap, center, center);
         flex: 1;
     }
-    .selected__color {
+    .selected_color {
         color: var(--bj-primary-color);
         overflow: hidden;
         text-overflow: ellipsis;
@@ -58,10 +72,10 @@
             color: var(--bj-text-second);
         }
     }
-    .visible__color {
+    .visible_color {
         color: var(--bj-primary-color) !important;
     }
-    .selectedInfo__title {
+    .selectedInfo_title {
         max-width: 118px;
         overflow: hidden;
         text-overflow: ellipsis;
