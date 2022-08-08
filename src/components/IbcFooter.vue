@@ -41,10 +41,10 @@
 
 <style lang="less" scoped>
     .dark {
-        color: @font-color6;
+        color: var(--bj-text-second-white);
     }
     .light {
-        color: @font-color2;
+        color: var(--bj-font-color-65);
     }
     .footer_container {
         .flex(column, nowrap, space-between, center);
@@ -60,9 +60,9 @@
 
             &__left {
                 .flex(row, nowrap, flex-start, center);
-                font-size: @font-size5;
-                font-family: Montserrat-Regular, Montserrat;
+                font-size: var(--bj-font-size-normal);
                 font-weight: 400;
+                color: var(--bj-font-color-65);
 
                 &__icon {
                     .flex(row, nowrap, center, center);
@@ -71,7 +71,7 @@
                     height: 28px;
                     padding: 6px;
                     background-color: rgba(61, 80, 255, 0.1);
-                    border-radius: @card-radio;
+                    border-radius: var(--border-radius-normal);
 
                     &:first-child {
                         .content__left__iconfont {
@@ -101,9 +101,9 @@
             }
 
             &__right {
-                font-size: @font-size5;
-                font-family: Montserrat-Regular, Montserrat;
+                font-size: var(--bj-font-size-normal);
                 font-weight: 400;
+                line-height: 14px;
             }
         }
     }

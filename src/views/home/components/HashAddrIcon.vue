@@ -10,7 +10,7 @@
                     <a-popover v-if="item.sc_tx_info.hash" destroy-tooltip-on-hide>
                         <template #content>
                             <div>
-                                <p class="tip_color">{{ item.sc_tx_info.hash }}</p>
+                                <p class="popover_c">{{ item.sc_tx_info.hash }}</p>
                             </div>
                         </template>
                         <span class="hover">{{ getRestString(item.sc_tx_info.hash, 6, 5) }}</span>
@@ -22,7 +22,7 @@
                     <a-popover destroy-tooltip-on-hide>
                         <template #content>
                             <div>
-                                <p class="tip_color">{{ item.sc_addr }}</p>
+                                <p class="popover_c">{{ item.sc_addr }}</p>
                             </div>
                         </template>
                         <span>{{ getRestString(item.sc_addr, 6, 6) || '--' }}</span>
@@ -43,7 +43,7 @@
                     <a-popover v-if="item?.dc_tx_info?.hash" destroy-tooltip-on-hide>
                         <template #content>
                             <div>
-                                <p class="tip_color">{{ item?.dc_tx_info?.hash || '' }}</p>
+                                <p class="popover_c">{{ item?.dc_tx_info?.hash || '' }}</p>
                             </div>
                         </template>
                         <span class="hover">{{
@@ -57,7 +57,7 @@
                     <a-popover destroy-tooltip-on-hide>
                         <template #content>
                             <div>
-                                <p class="tip_color">{{ item.dc_addr }}</p>
+                                <p class="popover_c">{{ item.dc_addr }}</p>
                             </div>
                         </template>
                         <span>{{ getRestString(item.dc_addr, 6, 6) || '--' }}</span>
@@ -100,7 +100,6 @@
         &__address_icon {
             width: 24px;
             height: 24px;
-            // margin: 0 10px;
             border-radius: 50%;
         }
         &__container {
@@ -111,13 +110,9 @@
             width: 100%;
             min-width: 145px;
             font-size: var(--bj-font-size-normal);
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             color: var(--bj-font-color-65);
             line-height: var(--bj-font-size-normal);
-            & .hover {
-                color: var(--bj-font-color-65);
-            }
         }
         &__icon {
             width: 14px;
@@ -125,11 +120,8 @@
         }
     }
     .status_icon {
-        width: 22px;
+        width: 24px;
         margin: 0 16px;
-    }
-    .tip_color {
-        color: var(--bj-font-color-65);
     }
     @media screen and (max-width: 600px) {
         .status_icon {

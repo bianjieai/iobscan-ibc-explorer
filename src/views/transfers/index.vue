@@ -7,7 +7,7 @@
             <div class="transfer__header__container">
                 <div class="transfer__header__line">
                     <p class="transfer__header__title">
-                        IBC Token Transfer
+                        <span>IBC Token Transfer</span>
                         <span class="transfer__header__num">
                             <i class="iconfont icon-shujuliebiao"></i>
                             {{ `${isIbcTxTotalAndHashFilter}` }}
@@ -36,6 +36,7 @@
                         :dropdown-data="ibcChains.all"
                         :chain_id="chainId"
                         :witch-page="PAGE_PARAMETERS.transfers"
+                        :min-width="210"
                         @on-selected-chain="onSelectedChain"
                     />
                     <!-- todo duanjie 看能否使用 BaseDropdown 复用  -->
@@ -107,7 +108,7 @@
                     <a-popover destroy-tooltip-on-hide>
                         <template #content>
                             <div>
-                                <p class="tip_color">
+                                <p class="popover_c">
                                     Date selection range from the first IBC Transfer to the latest
                                     IBC Transfer
                                 </p>
@@ -152,13 +153,11 @@
                     :custom-row="handleClickRow"
                 >
                     <template #customTitle>
-                        <p>
-                            Token
+                        <div class="flex items-center">
+                            <span class="cell_name">Token</span>
                             <a-popover destroy-tooltip-on-hide>
                                 <template #content>
-                                    <div>
-                                        <p class="tip_color">Sent Token</p>
-                                    </div>
+                                    <p class="popover_c">Sent Token</p>
                                 </template>
                                 <img
                                     class="tip cursor"
@@ -166,16 +165,16 @@
                                     src="../../assets/tip.png"
                                 />
                             </a-popover>
-                        </p>
+                        </div>
                     </template>
                     <template #token="{ record }">
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color"
+                                    <p class="popover_c"
                                         >Sent Token: {{ record.denoms.sc_denom || '--' }}</p
                                     >
-                                    <p class="tip_color"
+                                    <p class="popover_c"
                                         >Received Token: {{ record.denoms.dc_denom || '--' }}</p
                                     >
                                 </div>
@@ -208,7 +207,7 @@
                         <a-popover destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">{{ record.sc_tx_info.hash }}</p>
+                                    <p class="popover_c">{{ record.sc_tx_info.hash }}</p>
                                 </div>
                             </template>
                             <span class="cursor">{{
@@ -220,7 +219,7 @@
                         <a-popover destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">{{ record.sc_addr }}</p>
+                                    <p class="popover_c">{{ record.sc_addr }}</p>
                                 </div>
                             </template>
                             <span>{{ getRestString(record.sc_addr, 3, 8) || '--' }}</span>
@@ -230,15 +229,14 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color"
-                                        >Chain ID：{{
-                                            ChainHelper.formatChainId(record.sc_chain_id)
-                                        }}</p
+                                    <p class="popover_c"
+                                        >Chain ID:
+                                        {{ ChainHelper.formatChainId(record.sc_chain_id) }}</p
                                     >
-                                    <p class="tip_color"
+                                    <p class="popover_c"
                                         >Channel ID: {{ record.sc_channel || '--' }}</p
                                     >
-                                    <p class="tip_color">Sequence: {{ record.sequence || '--' }}</p>
+                                    <p class="popover_c">Sequence: {{ record.sequence || '--' }}</p>
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
@@ -250,21 +248,20 @@
                         </a-popover>
                         <img
                             class="status_icon"
-                            style="margin: 0 20px"
+                            style="margin: 0 20px; width: 18px"
                             :src="getImageUrl(record.status)"
                         />
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color"
-                                        >Chain ID：{{
-                                            ChainHelper.formatChainId(record.dc_chain_id)
-                                        }}</p
+                                    <p class="popover_c"
+                                        >Chain ID:
+                                        {{ ChainHelper.formatChainId(record.dc_chain_id) }}</p
                                     >
-                                    <p class="tip_color"
+                                    <p class="popover_c"
                                         >Channel ID: {{ record.dc_channel || '--' }}</p
                                     >
-                                    <p class="tip_color">Sequence: {{ record.sequence || '--' }}</p>
+                                    <p class="popover_c">Sequence: {{ record.sequence || '--' }}</p>
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
@@ -279,7 +276,7 @@
                         <a-popover v-if="record.dc_tx_info.hash" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">{{ record.dc_tx_info.hash || '--' }}</p>
+                                    <p class="popover_c">{{ record.dc_tx_info.hash || '--' }}</p>
                                 </div>
                             </template>
                             <span class="cursor">{{
@@ -292,7 +289,7 @@
                         <a-popover destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">{{ record.dc_addr || '--' }}</p>
+                                    <p class="popover_c">{{ record.dc_addr || '--' }}</p>
                                 </div>
                             </template>
                             <span class="cursor">{{
@@ -309,6 +306,7 @@
                         }}</span>
                     </template>
                 </a-table>
+                <div class="thead_border_bottom"></div>
             </div>
         </div>
         <!-- todo duanjie 状态和分页看能否复用  -->
@@ -538,11 +536,11 @@
         if (!ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
             return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
         } else if (!ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
-            return `${tableCount} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
+            return `${tableCount.value} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
         } else if (ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
             return 'Last 500k transfers found';
         } else if (ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
-            return `${tableCount} of the last 500k transfers found`;
+            return `${tableCount.value} of the last 500k transfers found`;
         } else {
             return '';
         }
@@ -838,7 +836,7 @@
 <style lang="less" scoped>
     .transfer {
         flex: 1;
-        padding: 48px 32px 100px;
+        padding: 48px 48px 100px;
         width: 100%;
         text-align: left;
         background-color: #f5f7fc;
@@ -872,13 +870,13 @@
                 line-height: 20px;
             }
             &__num {
-                margin-left: 12px;
+                margin-left: 8px;
                 font-size: var(--bj-font-size-normal);
                 color: var(--bj-font-color-65);
             }
         }
         &__middle {
-            margin: 48px auto 0;
+            margin: 58px auto 0;
             max-width: 1200px;
             &__top {
                 .flex(row, nowrap, flex-start, center);
@@ -901,23 +899,41 @@
                 }
             }
             &__bottom {
+                position: relative;
                 margin-top: 16px;
             }
         }
         &__table {
             font-size: 14px;
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
+            :deep(.ant-table-thead tr th) {
+                padding: 11px 16px;
+                border-bottom: 0;
+                &:first-child {
+                    padding-left: 0;
+                }
+            }
+            :deep(.ant-table-tbody tr td) {
+                &:first-child {
+                    padding-left: 0;
+                }
+            }
+            :deep(.ant-table-content) {
+                margin: 0 24px;
+                overflow-x: auto;
+            }
             :deep(.ant-table-placeholder) {
-                // .flex(column, nowrap, center, center);
                 min-height: 500px;
             }
             :deep(a, span) {
                 font-size: var(--bj-font-size-normal);
-                font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
                 color: var(--bj-font-color-65);
                 line-height: 14px;
+            }
+            .cell_name {
+                font-size: var(--bj-font-size-sub-title);
+                line-height: 20px;
             }
             .token {
                 background: red;
@@ -943,21 +959,31 @@
                 &__info {
                     .flex(column, nowrap, center, flex-start);
                     &__num {
-                        font-size: var(--bj-font-size-normal);
-                        color: var(--bj-text-second);
+                        font-size: var(--bj-font-size-sub-title);
+                        color: var(--bj-text-normal);
+                        line-height: 20px;
                     }
 
                     &__denom {
-                        margin-top: 4px;
+                        margin-top: 1px;
                         font-size: var(--bj-font-size-normal);
-                        font-family: Montserrat-Regular, Montserrat;
                         color: var(--bj-text-third);
+                        line-height: 18px;
                     }
                 }
             }
             .status_icon {
-                width: 22px;
+                width: 24px;
             }
+        }
+        .thead_border_bottom {
+            position: absolute;
+            top: 48px;
+            left: 0;
+            right: 0;
+            background: var(--bj-border-color);
+            height: 1px;
+            z-index: 1;
         }
         &__bottom {
             .flex(row, nowrap, space-between, center);
@@ -1089,7 +1115,7 @@
             vertical-align: middle;
         }
     }
-    @media screen and (max-width: 1200px) {
+    @media screen and (max-width: 1260px) {
         .transfer {
             &__header {
                 &__container {
@@ -1119,34 +1145,35 @@
             }
             &__table {
                 width: 100%;
-                overflow-x: auto;
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
                 }
+                :deep(.ant-table-content) {
+                    &::-webkit-scrollbar {
+                        height: 4px;
+                    }
+
+                    &::-webkit-scrollbar-track {
+                        box-shadow: inset006pxrgba(0, 0, 0, 0.3);
+                        border-radius: 2px;
+                        height: 6px;
+                        background: rgba(61, 80, 255, 0.1);
+                    }
+
+                    &::-webkit-scrollbar-thumb {
+                        border-radius: 4px;
+                        box-shadow: inset006pxrgba(0, 0, 0, 0.5);
+                        background: rgba(61, 80, 255, 0.5);
+                    }
+
+                    &::-webkit-scrollbar-thumb:window-inactive {
+                        background: rgba(61, 80, 255, 0.9);
+                    }
+                }
                 :deep(table) {
                     width: 1200px;
                     background-color: #fff;
-                }
-                &::-webkit-scrollbar {
-                    height: 4px;
-                }
-
-                &::-webkit-scrollbar-track {
-                    box-shadow: inset006pxrgba(0, 0, 0, 0.3);
-                    border-radius: 2px;
-                    height: 6px;
-                    background: rgba(61, 80, 255, 0.1);
-                }
-
-                &::-webkit-scrollbar-thumb {
-                    border-radius: 4px;
-                    box-shadow: inset006pxrgba(0, 0, 0, 0.5);
-                    background: rgba(61, 80, 255, 0.5);
-                }
-
-                &::-webkit-scrollbar-thumb:window-inactive {
-                    background: rgba(61, 80, 255, 0.9);
                 }
                 .token {
                     &__icon {
@@ -1259,6 +1286,7 @@
     }
     @media screen and (max-width: 768px) {
         .transfer {
+            padding: 40px 32px 60px;
             &__header {
                 &__container {
                 }
@@ -1336,6 +1364,7 @@
     }
     @media screen and (max-width: 582px) {
         .transfer {
+            padding: 24px 16px 60px;
             &__header {
                 &__container {
                 }
@@ -1370,6 +1399,9 @@
                     }
                 }
                 &__bottom {
+                    :deep(.ant-table-content) {
+                        margin: 0 16px;
+                    }
                 }
             }
             &__table {
@@ -1391,7 +1423,7 @@
                 }
             }
             &__bottom {
-                padding: 8px;
+                padding: 16px;
                 & .status_tips {
                     width: 100%;
                     justify-content: flex-start;
@@ -1421,7 +1453,6 @@
     }
     @media screen and (max-width: 420px) {
         .transfer {
-            padding: 24px 16px 80px;
             &__header {
                 &__container {
                 }

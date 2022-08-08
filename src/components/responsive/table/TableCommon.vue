@@ -311,8 +311,7 @@
     }
     :deep(.ant-table-tbody > tr > td) {
         border-bottom: 1px solid var(--bj-border-color);
-        padding: 15px 16px;
-        padding-left: 0;
+        padding: 16px 16px 15px 0;
         &:only-child {
             border-bottom: none;
         }
@@ -382,11 +381,8 @@
         height: 1px;
         z-index: 1;
     }
-    // pc
-    @media screen and (min-width: 768px) {
-    }
     // tablet
-    @media screen and (min-width: 414px) and (max-width: 768px) {
+    @media screen and (max-width: 768px) {
         .bottom {
             display: block;
         }
@@ -396,7 +392,7 @@
         }
     }
     // mobile
-    @media screen and (max-width: 414px) {
+    @media screen and (max-width: 530px) {
         .table_wrapper {
             padding: 0 16px;
         }

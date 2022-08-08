@@ -10,7 +10,9 @@
                 </p>
             </div>
             <a-tooltip>
-                <template #title>{{ tipMsg }}</template>
+                <template #title
+                    ><span class="popover_c">{{ tipMsg }}</span></template
+                >
                 <img v-if="showTip" class="tip_icon cursor" src="@/assets/tip.png" />
             </a-tooltip>
         </div>
@@ -49,9 +51,8 @@
             display: inline-block;
             &__title {
                 display: inline-block;
-                font-size: @font-size3;
-                font-family: Montserrat-Regular, Montserrat;
-                font-weight: @nav-font-weight;
+                font-size: var(--bj-font-size-title);
+                font-weight: var(--bj-font-weight-normal);
                 margin-right: 10px;
                 position: relative;
                 top: -16px;
@@ -85,7 +86,7 @@
         &__content {
             width: 100%;
             background-color: #ffffff;
-            border-radius: @card-radio;
+            border-radius: var(--border-radius-normal);
         }
         .tip_icon {
             width: 24px;

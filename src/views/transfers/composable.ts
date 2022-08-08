@@ -5,16 +5,6 @@ import tokenDefaultImg from '@/assets/token-default.png';
 import { transferTableColumn, defaultTitle } from '@/constants';
 import { IBC_TX_STATUS, IBC_SC_AND_DC_TX_STATUS } from '@/constants/transfers';
 
-export const useGetIbcBaseDenoms = () => {
-    const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
-    const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
-    return {
-        ibcBaseDenoms,
-        getIbcBaseDenom
-    };
-};
-
 export const useIbcDenoms = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcDenoms } = storeToRefs(ibcStatisticsChainsStore);

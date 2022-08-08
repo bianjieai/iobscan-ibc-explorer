@@ -16,7 +16,7 @@
                 id="card_list"
                 ref="scrollListRef"
                 class="card_list ibc_scrollbar"
-                :grid="{ gutter: 16, xs: 1, sm: 2, md: 4, lg: 4, xl: 4, xxl: 4 }"
+                :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 4, xxl: 4 }"
                 :data-source="chainList[currentMenu[0]]"
             >
                 <template #renderItem="{ item }">
@@ -25,7 +25,6 @@
                         :class="findClassName(item.chain_name)"
                         class="ibc_selected_border card_list_item"
                     >
-                        <!-- <router-link :to="`/chains/details?chain_id=${item.chain_id}`">-->
                         <router-link :to="`/chains`">
                             <a-card class="menu_card">
                                 <img
@@ -116,7 +115,6 @@
             border: 0;
             :deep(.ant-menu-title-content) {
                 font-size: var(--bj-font-size-normal);
-                font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
             }
             .ant-menu-item-active {
@@ -137,9 +135,15 @@
         }
         &__item {
             font-size: var(--bj-font-size-normal);
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             color: var(--bj-text-third);
+        }
+        :deep(.ant-menu-item) {
+            padding: 0 24px 0 0;
+            &::after {
+                left: 0;
+                right: 24px;
+            }
         }
         .card_list {
             width: 100%;
@@ -153,6 +157,7 @@
             border-radius: var(--border-radius-normal);
             :deep(.ant-card-body) {
                 padding: 12px;
+                min-width: 160px;
                 height: 126px;
             }
             &__img {
@@ -165,22 +170,25 @@
                 max-width: 152px;
                 font-size: var(--bj-font-size-sub-title);
                 line-height: 20px;
-                font-family: Montserrat-SemiBold, Montserrat;
-                font-weight: 600;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-                color: var(--bj-text-second);
+                color: var(--bj-text-normal);
                 vertical-align: middle;
             }
             &__value {
                 margin: 4px 0 6px;
                 font-size: var(--bj-font-size-normal);
                 line-height: 16px;
-                font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
                 color: var(--bj-font-color-65);
                 word-break: break-all;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                -webkit-line-clamp: 2;
+                overflow: hidden;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
             }
         }
         .list_anchor {
@@ -206,17 +214,18 @@
                 }
             }
         }
-        .nodatas_icon {
-            width: 120px;
-            margin-top: 24px;
-        }
-
-        .nodatas_title {
-            margin-top: 16px;
-            font-size: 14px;
-            font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;
-            color: var(--bj-font-color-65);
+        .nodatas {
+            margin: 0;
+            &__icon {
+                width: 120px;
+                margin-top: 24px;
+            }
+            &__title {
+                margin-top: 16px;
+                font-size: 14px;
+                font-weight: 400;
+                color: var(--bj-font-color-65);
+            }
         }
     }
     .custom_title {

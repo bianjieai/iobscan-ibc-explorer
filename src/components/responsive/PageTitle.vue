@@ -7,7 +7,9 @@
                 <a-typography-text class="title">{{ title }}</a-typography-text>
                 <div class="background" :style="{ bottom: hasIcon ? '3px' : '-3px' }"></div>
             </div>
-            <a-typography-text class="number">( {{ subtitle }} )</a-typography-text>
+            <a-typography-text class="number"
+                ><i class="iconfont icon-shujuliebiao"></i>{{ subtitle }}</a-typography-text
+            >
         </div>
     </div>
 </template>
@@ -57,6 +59,9 @@
 
         .number {
             color: var(--bj-text-second);
+            .iconfont {
+                margin-right: 4px;
+            }
         }
 
         .background {

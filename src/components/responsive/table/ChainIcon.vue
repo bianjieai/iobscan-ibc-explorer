@@ -16,7 +16,7 @@
 
             <div v-if="chainInfo.subtitle !== '--'">
                 <a-popover
-                    v-if="formatChainID(chainInfo.subtitle)?.length >= 18"
+                    v-if="formatChainID(chainInfo.subtitle)?.length >= 20"
                     placement="bottom"
                 >
                     <template #content>
@@ -122,6 +122,7 @@
     .title {
         padding: 2px;
         font-size: var(--bj-font-size-sub-title);
+        color: var(--bj-text-second);
         max-width: 150px;
         overflow: hidden;
         text-overflow: ellipsis;
