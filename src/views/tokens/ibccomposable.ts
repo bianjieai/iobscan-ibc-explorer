@@ -1,3 +1,4 @@
+import { axiosCancel } from '@/utils/axios';
 import { getIbcTokenListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
 import { BASE_PARAMS, PAGE_PARAMETERS } from '@/constants';
@@ -42,7 +43,9 @@ export const useGetIbcTokenList = (base_denom: string) => {
                 console.error(message);
             }
         } catch (error) {
-            loading && (loading.value = false);
+            if (!axiosCancel(error)) {
+                loading && (loading.value = false);
+            }
             console.log(error);
         }
     };

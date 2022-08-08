@@ -15,9 +15,9 @@ import { computed, ComputedRef, onMounted, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { IDataItem } from '@/components/BjSelect/interface';
 import { IBaseDenom } from '@/types/interface/index.interface';
+import { axiosCancel } from '@/utils/axios';
 const tokenIcon = new URL('../../assets/token-default.png', import.meta.url).href;
 const chainIcon = new URL('../../assets/home/chain-default.png', import.meta.url).href;
-
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
     const total = ref<number>(0);
@@ -55,7 +55,9 @@ export const useGetTokenList = () => {
                 console.error(message);
             }
         } catch (error) {
-            loading && (loading.value = false);
+            if (!axiosCancel(error)) {
+                loading && (loading.value = false);
+            }
             console.log(error);
         }
     };
