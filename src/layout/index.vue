@@ -6,10 +6,21 @@
                 <ibc-header />
             </div>
             <div class="layout__content">
-                <router-view />
+                <div
+                    v-show="!ibcStatisticsChainsStore.isShow500"
+                    class="layout__content__router_container"
+                >
+                    <router-view />
+                </div>
+                <div
+                    v-show="ibcStatisticsChainsStore.isShow500"
+                    class="layout__content__error_container"
+                >
+                    <error-500 />
+                </div>
             </div>
             <div class="layout__footer">
-                <ibc-footer />
+                <ibc-footer :type="footerType" />
             </div>
         </div>
         <template #renderEmpty>
@@ -20,7 +31,11 @@
 
 <script setup lang="ts">
     import { useIbcStatisticsChains } from '@/store/index';
+    import { FooterMode } from '@/types/interface/index.interface';
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    const footerType = computed(() => {
+        return ibcStatisticsChainsStore.isShow500 ? FooterMode.dark : FooterMode.light;
+    });
     let timer1: number, timer2: number;
     // const { setStar1, setStar2 } = useStarAnimation(layout);
     onMounted(() => {
@@ -96,6 +111,13 @@
             .flex(column, nowrap, flex-start, center);
             flex: 1;
             width: 100%;
+            &__router_container {
+                width: 100%;
+            }
+            &__error_container {
+                width: 100%;
+                height: 100%;
+            }
         }
         &__footer {
             width: 100%;

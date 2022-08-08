@@ -49,7 +49,7 @@
                 />
                 <transfer-list
                     :ibc-chains="ibcChains"
-                    :transfer-list="ibcTxs"
+                    :transfer-list="homeIbcTxs"
                     @click-view-all="onClickViewAll(ibcStatisticsTxsDefault.tx_all.statistics_name)"
                     @click-item="onClickViewAll"
                     @item-did-expand="setExpandByIndex"
@@ -70,10 +70,12 @@
     import { useOnPressEnter } from '@/composables/useStarAnimation';
     import { PAGE_PARAMETERS, ibcStatisticsTxsDefault } from '@/constants/index';
     import { useIbcStatistics } from '@/composables/home';
+    import { DATA_REFRESH_GAP } from '@/constants/home';
     const { ibcStatisticsChains, ibcStatisticsChannels, ibcStatisticsDenoms, ibcStatisticsTxs } =
-        useIbcStatistics();
-    const { ibcChains } = useIbcChains();
-    const { ibcTxs, setExpandByIndex } = useIbcTxs();
+        useIbcStatistics(DATA_REFRESH_GAP);
+
+    const { ibcChains } = useIbcChains(DATA_REFRESH_GAP);
+    const { homeIbcTxs, setExpandByIndex } = useIbcTxs(DATA_REFRESH_GAP);
     const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
     const { onPressEnter } = useOnPressEnter();
 </script>
@@ -84,6 +86,7 @@
         padding: 48px 0 100px 0;
         width: 100%;
         max-width: 1200px;
+        margin: 0 auto;
         &__header_input_layout {
             display: none;
         }

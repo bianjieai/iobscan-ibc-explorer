@@ -17,10 +17,13 @@
     </div>
 </template>
 
-<script>
-    export default {
-        name: '500'
-    };
+<script setup lang="ts">
+    import { useIbcStatisticsChains } from '@/store/index';
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    onBeforeUnmount(() => {
+        console.log('onBeforeUnmount======error 500');
+        ibcStatisticsChainsStore.isShow500 = false;
+    });
 </script>
 
 <style scoped lang="less">

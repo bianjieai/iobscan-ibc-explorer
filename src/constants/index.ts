@@ -479,3 +479,5 @@ export const BASE_PARAMS: IRequestPagination = {
     page_num: 1,
     page_size: 3000
 };
+
+export const AxiosTimeout = 15000;

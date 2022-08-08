@@ -27,13 +27,6 @@
             flex: 1;
         }
         &__footer_container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            .footer_container {
-                background-color: rgba(238, 240, 246, 0.1);
-            }
         }
     }
 </style>

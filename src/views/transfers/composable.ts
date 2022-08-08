@@ -5,16 +5,6 @@ import tokenDefaultImg from '@/assets/token-default.png';
 import { transferTableColumn, defaultTitle } from '@/constants';
 import { IBC_TX_STATUS, IBC_SC_AND_DC_TX_STATUS } from '@/constants/transfers';
 
-export const useIbcTxs = () => {
-    const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const tableCount = ref(0);
-    const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
-    return {
-        tableCount,
-        getIbcTxs
-    };
-};
-
 export const useGetIbcBaseDenoms = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
@@ -110,11 +100,25 @@ export const useGetTableColumns = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const tableColumns = reactive(transferTableColumn);
     const showTransferLoading = ref(true);
-    const { ibcTxs: tableDatas } = storeToRefs(ibcStatisticsChainsStore);
+    const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
+    const tableDatas = ref([...ibcTxs]);
+    const tableCount = ref(0);
+    const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
+    watch(
+        () => tableDatas.value,
+        () => {
+            setIbcTxs();
+        }
+    );
+    const setIbcTxs = (limitNumber = 10) => {
+        ibcStatisticsChainsStore.ibcTxs = tableDatas.value.slice(0, limitNumber);
+    };
     return {
         tableColumns,
         showTransferLoading,
-        tableDatas
+        tableDatas,
+        tableCount,
+        getIbcTxs
     };
 };
 export const useIsVisible = () => {

@@ -22,6 +22,7 @@ export const useIbcStatisticsChains = defineStore('global', {
             ibcBaseDenoms: [],
             ibcDenoms: [],
             isShowLoading: false,
+            isShow500: false,
             ibcTxs: []
         };
     },
@@ -78,6 +79,7 @@ export const useIbcStatisticsChains = defineStore('global', {
                     this.ibcChains = data;
                 }
             } catch (error) {
+                this.isShow500 = true;
                 console.log('getIbcChains', error);
             }
         },
@@ -105,8 +107,6 @@ export const useIbcStatisticsChains = defineStore('global', {
                     if (use_count) {
                         return data;
                     } else {
-                        // todo duanjie 更新数据时，需要对比，返回数据是否是最新的数据，如果不是需舍去
-                        // console.log('====', location.href, queryParams);
                         const result = (data as Paging<IIbcTx[]>).data;
                         const promiseArray = [];
                         if (this.ibcDenoms.length <= 0) {
@@ -161,10 +161,11 @@ export const useIbcStatisticsChains = defineStore('global', {
                                 };
                             });
                         };
-                        this.ibcTxs = getSymbolInfo(result);
+                        return getSymbolInfo(result);
                     }
                 }
             } catch (error) {
+                this.isShow500 = true;
                 console.log('getIbcTxsAPI', error);
             }
         }

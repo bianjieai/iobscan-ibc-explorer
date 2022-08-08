@@ -85,6 +85,19 @@
         onClickAnchor,
         onSelectedMenu
     } = useAnchors(chainList, emits);
+    watch(
+        () => prop.chainList,
+        () => {
+            const id = document.querySelector('.self_link_active')?.id;
+            let label: string;
+            if (id) {
+                label = id.replace('a-link', '');
+                setTimeout(() => {
+                    onClickAnchor(label);
+                }, 0);
+            }
+        }
+    );
     const formatChainID = (chainId: string) => {
         return ChainHelper.formatChainId(chainId);
     };
