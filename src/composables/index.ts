@@ -73,7 +73,7 @@ export const useIbcChains = (timerInterval?: number) => {
         if (Number(timerInterval) > 0) {
             timer = setInterval(() => {
                 console.log('getIbcChains', timerInterval);
-                getIbcChains();
+                getIbcChains(false);
             }, timerInterval);
         }
     });

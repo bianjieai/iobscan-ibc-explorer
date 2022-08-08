@@ -72,14 +72,16 @@ export const useIbcStatisticsChains = defineStore('global', {
                 console.log('getIbcBaseDenomsAction', error);
             }
         },
-        async getIbcChainsAction() {
+        async getIbcChainsAction(isNeedJudgeShow500 = true) {
             try {
                 const { code, data } = await getIbcChainsAPI();
                 if (code == API_CODE.success && data) {
                     this.ibcChains = data;
                 }
             } catch (error) {
-                this.isShow500 = true;
+                if (isNeedJudgeShow500 === true) {
+                    this.isShow500 = true;
+                }
                 console.log('getIbcChains', error);
             }
         },
@@ -93,7 +95,7 @@ export const useIbcStatisticsChains = defineStore('global', {
                 console.log('getIbcDenomsAPI', error);
             }
         },
-        async getIbcTxsAction(queryParams: any) {
+        async getIbcTxsAction(queryParams: any, isNeedJudgeShow500 = true) {
             if (queryParams?.date_range) {
                 queryParams.date_range = queryParams.date_range?.toString();
             }
@@ -165,7 +167,9 @@ export const useIbcStatisticsChains = defineStore('global', {
                     }
                 }
             } catch (error) {
-                this.isShow500 = true;
+                if (isNeedJudgeShow500 === true) {
+                    this.isShow500 = true;
+                }
                 console.log('getIbcTxsAPI', error);
             }
         }
