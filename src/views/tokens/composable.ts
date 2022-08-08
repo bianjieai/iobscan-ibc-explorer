@@ -16,6 +16,7 @@ import { useRouter } from 'vue-router';
 import { IDataItem } from '@/components/BjSelect/interface';
 import { IBaseDenom } from '@/types/interface/index.interface';
 const tokenIcon = new URL('../../assets/token-default.png', import.meta.url).href;
+const chainIcon = new URL('../../assets/home/chain-default.png', import.meta.url).href;
 
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
@@ -174,22 +175,19 @@ export const useTokensSelected = (
     const chainData = computed(() => {
         return [
             {
-                hideGroupName: true,
                 children: [
                     {
                         title: 'All Chains',
                         id: '',
-                        hideIcon: true,
                         value: null
                     }
                 ]
             },
             {
-                hideGroupName: true,
                 children: ibcChains.value?.all?.map((v: any) => ({
                     title: v.chain_name,
                     id: v.chain_id,
-                    icon: v.icon,
+                    icon: v.icon || chainIcon,
                     metaData: v
                 }))
             }
