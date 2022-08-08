@@ -350,8 +350,7 @@
     import { useGetIbcDenoms } from '@/views/home/composable';
     import { dayjsFormatDate } from '@/utils/timeTools';
     import {
-        useIbcTxs,
-        useGetTokens,
+        useIbcDenoms,
         useSelectedSymbol,
         usePagination,
         useGetTableColumns
@@ -360,15 +359,16 @@
     import dayjs from 'dayjs';
     import { urlParser } from '@/utils/urlTools';
     import { useIbcChains } from '@/composables';
+    import { IIbcTx } from '@/types/interface/transfers.interface';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
-    const { tableCount, getIbcTxs } = useIbcTxs();
-    const { ibcDenoms } = useGetTokens();
+    const { ibcDenoms } = useIbcDenoms();
     const { selectedSymbol, isShowSymbolIcon, clearInput, isShowChainIcon } = useSelectedSymbol();
     const { pagination } = usePagination();
     const { ibcChains } = useIbcChains();
-    const { tableColumns, showTransferLoading, tableDatas } = useGetTableColumns();
+    const { tableColumns, showTransferLoading, tableDatas, tableCount, getIbcTxs } =
+        useGetTableColumns();
     const chainDropdown = ref();
     const selectedDouble = ref(true);
     const needBadge = ref(true);
@@ -514,7 +514,8 @@
             use_count: false,
             ...params
         })
-            .then(() => {
+            .then((data) => {
+                tableDatas.value = data as IIbcTx[];
                 showTransferLoading.value = false;
             })
             .catch((error) => {

@@ -10,14 +10,14 @@
                 {{ item.label }}
             </a-menu-item>
         </a-menu>
-        <div class="chainlist__bottom">
+        <div id="chainList_content" class="chainlist__bottom">
             <a-list
-                v-show="chainList[currentMenu as any] && chainList[currentMenu as any].length"
+                v-show="isHaveData"
                 id="card_list"
-                ref="listRef"
+                ref="scrollListRef"
                 class="card_list ibc_scrollbar"
                 :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 4, xxl: 4 }"
-                :data-source="chainList[currentMenu as any]"
+                :data-source="chainList[currentMenu[0]]"
             >
                 <template #renderItem="{ item }">
                     <a-list-item
@@ -38,32 +38,24 @@
                     </a-list-item>
                 </template>
             </a-list>
-            <a-anchor
-                v-show="chainList[currentMenu as any] && chainList[currentMenu as any].length"
-                class="list_anchor"
-                :affix="false"
-                :get-container="getBindElement"
-                @change="onChangeAnchor"
-            >
-                <a-anchor-link
+            <!-- todo duanjie 样式待调整 -->
+            <div v-show="isHaveData" ref="linkListRef" class="list_anchor">
+                <div
                     v-for="item of anchors"
+                    :id="`a-link${item.title}`"
                     :key="item.title"
                     class="list_anchor__item"
-                    :href="`#list${item.title}`"
-                    @click.prevent.stop="() => {}"
+                    @click="onClickAnchor(item.title)"
                 >
-                    <template #title>
-                        <div class="custom_title">
-                            <span class="custom_title__left">{{ item.title.split('')[0] }}</span>
-                            <span>{{ item.title.split('')[1] }}</span>
-                            <span class="custom_title__right">{{ item.title.split('')[2] }}</span>
-                        </div>
-                    </template>
-                </a-anchor-link>
-            </a-anchor>
-
+                    <div class="custom_title">
+                        <span class="custom_title_left">{{ item.title.split('')[0] }}</span>
+                        <span>{{ item.title.split('')[1] }}</span>
+                        <span class="custom_title_right">{{ item.title.split('')[2] }}</span>
+                    </div>
+                </div>
+            </div>
             <no-datas
-                v-if="!chainList[currentMenu as any] || !chainList[currentMenu as any].length"
+                v-if="!chainList[currentMenu[0]] || !chainList[currentMenu[0]].length"
                 class="card_list"
             />
         </div>
@@ -71,29 +63,48 @@
 </template>
 
 <script setup lang="ts">
-    import {
-        useMenus,
-        useInterfaceActive,
-        useAnchors,
-        useGetBindElement
-    } from '../composable/useChainsListInfo';
+    import { useAnchors } from '../composable/useChainsListInfo';
     import ChainHelper from '@/helper/chainHelper';
+    import { IIbcChains } from '@/types/interface/index.interface';
+    import { Ref } from 'vue';
     const chainDefaultImg = new URL('../../../assets/home/chain-default.png', import.meta.url).href;
-    defineProps({
-        chainList: {
-            type: Object,
-            required: true
-        }
-    });
+    interface IProps {
+        chainList: IIbcChains;
+    }
+    const prop = defineProps<IProps>();
+    const { chainList } = toRefs(prop);
     const emits = defineEmits(['onMenuSelected', 'clickItem']);
-    const { menus, currentMenu } = useMenus();
-    const { onSelectedMenu } = useInterfaceActive(emits);
-    const { anchors, listRef, findClassName, onChangeAnchor } = useAnchors();
-    const { getBindElement } = useGetBindElement();
-
+    const {
+        menus,
+        currentMenu,
+        anchors,
+        scrollListRef,
+        linkListRef,
+        findClassName,
+        onClickAnchor,
+        onSelectedMenu
+    } = useAnchors(chainList, emits);
+    watch(
+        () => prop.chainList,
+        () => {
+            const id = document.querySelector('.self_link_active')?.id;
+            let label: string;
+            if (id) {
+                label = id.replace('a-link', '');
+                setTimeout(() => {
+                    onClickAnchor(label);
+                }, 0);
+            }
+        }
+    );
     const formatChainID = (chainId: string) => {
         return ChainHelper.formatChainId(chainId);
     };
+    const isHaveData: Ref<boolean> = computed(() => {
+        return Boolean(
+            chainList.value[currentMenu.value[0]] && chainList.value[currentMenu.value[0]].length
+        );
+    });
 </script>
 
 <style lang="less" scoped>
@@ -121,14 +132,6 @@
             margin-top: 8px;
             width: 100%;
             .flex(row, nowrap, flex-start, flex-start);
-            :deep(.ant-anchor-wrapper) {
-                overflow: visible;
-                .ant-anchor {
-                    .ant-anchor-ink::before {
-                        width: 0;
-                    }
-                }
-            }
         }
         &__item {
             font-size: var(--bj-font-size-normal);
@@ -138,8 +141,8 @@
         .card_list {
             width: 100%;
             // width: calc(100% - 50px);
-            height: 182px;
             padding-right: 20px;
+            height: 182px;
             overflow-y: auto;
             overflow-x: hidden;
         }
@@ -182,10 +185,26 @@
             }
         }
         .list_anchor {
-            width: 50px;
-
+            width: 28px;
+            margin-left: 18px;
             &__item {
                 width: 100%;
+                margin: 6px 0;
+                text-align: justify;
+                font-size: var(--bj-font-size-normal);
+                font-family: Montserrat-Regular, Montserrat;
+                font-weight: 400;
+                color: var(--bj-text-third);
+            }
+            .self_link_active {
+                color: #ffffff;
+                width: 32px;
+                background-color: #3d50ff;
+                border-radius: var(--border-radius-normal);
+                padding: 0px 2px;
+                .custom_title {
+                    color: #fff;
+                }
             }
         }
         .nodatas_icon {

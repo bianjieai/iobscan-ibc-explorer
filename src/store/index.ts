@@ -22,6 +22,7 @@ export const useIbcStatisticsChains = defineStore('global', {
             ibcBaseDenoms: [],
             ibcDenoms: [],
             isShowLoading: false,
+            isShow500: false,
             ibcTxs: []
         };
     },
@@ -78,6 +79,7 @@ export const useIbcStatisticsChains = defineStore('global', {
                     this.ibcChains = data;
                 }
             } catch (error) {
+                this.isShow500 = true;
                 console.log('getIbcChains', error);
             }
         },
@@ -159,10 +161,11 @@ export const useIbcStatisticsChains = defineStore('global', {
                                 };
                             });
                         };
-                        this.ibcTxs = getSymbolInfo(result);
+                        return getSymbolInfo(result);
                     }
                 }
             } catch (error) {
+                this.isShow500 = true;
                 console.log('getIbcTxsAPI', error);
             }
         }

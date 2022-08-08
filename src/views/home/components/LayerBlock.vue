@@ -46,6 +46,7 @@
 <style lang="less" scoped>
     .block {
         .flex(column, nowrap, flex-start, flex-start);
+        position: relative;
         &__header {
             display: inline-block;
             &__title {

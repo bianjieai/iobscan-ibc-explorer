@@ -1,9 +1,9 @@
+import { AxiosTimeout } from '@/constants/index';
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 
-const router = useRouter();
-
 const service = axios.create({
-    baseURL: import.meta.env.VITE_BASE_API
+    baseURL: import.meta.env.VITE_BASE_API,
+    timeout: AxiosTimeout
 });
 
 // Request interceptors
@@ -25,12 +25,6 @@ service.interceptors.response.use(
     },
     (error: any) => {
         // do something
-        const url = error?.config?.url;
-        if (url?.includes('/ibc/chains') || url?.includes('/ibc/txs')) {
-            if (!error?.message?.includes('code 200')) {
-                router.push('/500');
-            }
-        }
         return Promise.reject(error);
     }
 );

@@ -7,5 +7,6 @@ export interface GlobalState {
     ibcBaseDenoms: IBaseDenom[];
     ibcDenoms: IResponseIbcDenom[];
     isShowLoading: boolean;
+    isShow500: boolean;
     ibcTxs: IIbcTx[];
 }

@@ -1,14 +1,14 @@
 import { API_CODE } from '@/constants/apiCode';
 import { getIbcStatisticsAPI } from '@/api/home';
 import { findStatistics } from '@/helper/findStatisticsHelper';
-import { ibcStatisticsChainsDefault } from '@/constants/index';
 import {
     ibcStatisticsChannelsDefault,
     ibcStatisticsDenomsDefault,
-    ibcStatisticsTxsDefault
-} from '@/constants';
+    ibcStatisticsTxsDefault,
+    ibcStatisticsChainsDefault
+} from '@/constants/index';
 
-export const useIbcStatistics = () => {
+export const useIbcStatistics = (timerInterval?: number) => {
     const ibcStatisticsChains = reactive(ibcStatisticsChainsDefault);
     const ibcStatisticsChannels = reactive(ibcStatisticsChannelsDefault);
     const ibcStatisticsDenoms = reactive(ibcStatisticsDenomsDefault);
@@ -34,8 +34,18 @@ export const useIbcStatistics = () => {
             console.log('getIbcStatisticsAPI', error);
         }
     };
+    let timer: number;
     onMounted(() => {
         getIbcStatistics();
+        if (Number(timerInterval) > 0) {
+            timer = setInterval(() => {
+                console.log('getIbcStatistics', timerInterval);
+                getIbcStatistics();
+            }, timerInterval);
+        }
+    });
+    onBeforeUnmount(() => {
+        timer && clearInterval(timer);
     });
     return {
         ibcStatisticsChains,
