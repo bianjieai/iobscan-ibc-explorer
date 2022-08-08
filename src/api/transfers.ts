@@ -1,13 +1,15 @@
 import { API_URL } from '@/constants/apiUrl';
-import request from '@/utils/axios';
+import request, { executeCancel, setExecuteCancel } from '@/utils/axios';
 import { IResponse, Paging } from '@/types/interface/index.interface';
 import { IRequestIbcTxs, IIbcTx, IIbcTxDetail } from '@/types/interface/transfers.interface';
 
 export const getIbcTxsAPI = (params: IRequestIbcTxs) => {
+    executeCancel(params.use_count);
     return request<IResponse<Paging<IIbcTx[]> | number>>({
         url: API_URL.ibcTxsUrl,
         method: 'get',
-        params: params
+        params: params,
+        cancelToken: setExecuteCancel(params.use_count)
     });
 };
 

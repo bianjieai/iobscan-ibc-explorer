@@ -13,6 +13,7 @@ import {
 import { urlPageParser } from '@/utils/urlTools';
 import { computed, onMounted, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { axiosCancel } from '@/utils/axios';
 
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
@@ -51,7 +52,9 @@ export const useGetTokenList = () => {
                 console.error(message);
             }
         } catch (error) {
-            loading && (loading.value = false);
+            if (!axiosCancel(error)) {
+                loading && (loading.value = false);
+            }
             console.log(error);
         }
     };

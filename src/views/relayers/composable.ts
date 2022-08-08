@@ -15,6 +15,7 @@ import { Ref } from 'vue';
 import { BASE_PARAMS } from '@/constants';
 import { useResetSearch } from '@/composables';
 import { useRoute, useRouter } from 'vue-router';
+import { axiosCancel } from '@/utils/axios';
 
 export const useGetRelayersList = () => {
     const relayersList = ref<IResponseRelayerListItem[]>([]);
@@ -52,7 +53,9 @@ export const useGetRelayersList = () => {
                 console.error(message);
             }
         } catch (error) {
-            loading && (loading.value = false);
+            if (!axiosCancel(error)) {
+                loading && (loading.value = false);
+            }
             console.error(error);
         }
     };

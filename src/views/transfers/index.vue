@@ -362,6 +362,7 @@
     import { urlParser } from '@/utils/urlTools';
     import { useIbcChains } from '@/composables';
     import { IIbcTx } from '@/types/interface/transfers.interface';
+    import { axiosCancel } from '@/utils/axios';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
@@ -521,7 +522,9 @@
                 showTransferLoading.value = false;
             })
             .catch((error) => {
-                showTransferLoading.value = false;
+                if (!axiosCancel(error)) {
+                    showTransferLoading.value = false;
+                }
                 console.log(error);
             });
     };
@@ -761,7 +764,9 @@
                 showTransferLoading.value = false;
             })
             .catch((error) => {
-                showTransferLoading.value = false;
+                if (!axiosCancel(error)) {
+                    showTransferLoading.value = false;
+                }
                 console.log(error);
             });
     };
