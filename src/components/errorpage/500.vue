@@ -7,7 +7,7 @@
             <div class="error_network__content__wrap">
                 <p class="error_network__content__title">Something went wrong</p>
                 <p class="error_network__content__description"
-                    >Don’t worry, we’ll fix it soon. Please try again after some time.</p
+                    >Don't panic, we'll fix it soon. Please try again after some time.</p
                 >
                 <router-link :to="'/home'" class="error_network__content__button"
                     >Go Back</router-link
@@ -26,7 +26,7 @@
 <style scoped lang="less">
     .error_network {
         width: 100%;
-        min-height: 100vh;
+        height: 100%;
         display: flex;
         align-items: center;
         justify-content: center;

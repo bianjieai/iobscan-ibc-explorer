@@ -1,14 +1,12 @@
 import { API_CODE } from '@/constants/apiCode';
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { useIbcStatisticsChains } from '@/store/index';
-import { groupBy } from 'lodash-es';
 import tokenDefaultImg from '@/assets/token-default.png';
 import { transferTableColumn, defaultTitle } from '@/constants';
 import { IBC_TX_STATUS, IBC_SC_AND_DC_TX_STATUS } from '@/constants/transfers';
 
-const ibcStatisticsChainsStore = useIbcStatisticsChains();
-
 export const useIbcTxs = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const tableCount = ref(0);
     const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
     return {
@@ -18,6 +16,7 @@ export const useIbcTxs = () => {
 };
 
 export const useGetIbcBaseDenoms = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
     return {
@@ -26,35 +25,13 @@ export const useGetIbcBaseDenoms = () => {
     };
 };
 
-export const useGetTokens = () => {
-    const tokens = ref([]);
+export const useIbcDenoms = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcDenoms } = storeToRefs(ibcStatisticsChainsStore);
-
     onMounted(() => {
         ibcStatisticsChainsStore.getIbcDenomsAction();
     });
-    const tokensObj = groupBy(ibcDenoms, 'symbol');
-    const atomObj = {
-        ATOM: tokensObj['ATOM']
-    };
-    const irisObj = {
-        IRIS: tokensObj['IRIS']
-    };
-    delete tokensObj['ATOM'];
-    delete tokensObj['IRIS'];
-
-    const newkey = Object?.keys(tokensObj).sort();
-    const newObj: any = {};
-    for (let i = 0; i < newkey.length; i++) {
-        newObj[newkey[i]] = tokensObj[newkey[i]];
-    }
-    tokens.value = {
-        ...atomObj,
-        ...irisObj,
-        ...newObj
-    };
     return {
-        tokens,
         ibcDenoms
     };
 };
@@ -90,6 +67,7 @@ export const usePagination = () => {
 };
 
 export const useFindIcon = (props: any) => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcBaseDenomsSymbolKeyMapGetter } = storeToRefs(ibcStatisticsChainsStore);
     const findSymbolIcon = () => {
         const findSymbolConfig = props.ibcBaseDenoms?.find(
@@ -129,6 +107,7 @@ export const useFindIcon = (props: any) => {
 };
 
 export const useGetTableColumns = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const tableColumns = reactive(transferTableColumn);
     const showTransferLoading = ref(true);
     const { ibcTxs: tableDatas } = storeToRefs(ibcStatisticsChainsStore);
@@ -151,6 +130,7 @@ export const useIsVisible = () => {
 
 // transfers details
 export const useTransfersDetailsInfo = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const route = useRoute();
     const router = useRouter();
     const ibcTransferOutTxHash = ref('--');

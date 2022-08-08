@@ -145,21 +145,6 @@ export const txStatusNumber = {
 };
 export const dayTime = '24';
 
-export const chainMenus = [
-    {
-        label: 'Active',
-        value: 'active'
-    },
-    {
-        label: 'Inactive',
-        value: 'inactive'
-    },
-    {
-        label: 'All',
-        value: 'all'
-    }
-];
-
 export const anchorsDatas = [
     {
         title: 'A-E',
@@ -315,6 +300,27 @@ export const channelsStatus = {
     channelOpenedStatus: '1',
     channelClosedStatus: '2'
 };
+
+export enum currentMenuType {
+    active = 'active',
+    inactive = 'inactive',
+    all = 'all'
+}
+
+export const chainMenus: { label: string; value: currentMenuType }[] = [
+    {
+        label: 'Active',
+        value: currentMenuType.active
+    },
+    {
+        label: 'Inactive',
+        value: currentMenuType.inactive
+    },
+    {
+        label: 'All',
+        value: currentMenuType.all
+    }
+];
 
 export const ibcTxStatusSelectOptions = [
     {

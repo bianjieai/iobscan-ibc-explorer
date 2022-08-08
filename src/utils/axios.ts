@@ -28,6 +28,7 @@ service.interceptors.response.use(
         const url = error?.config?.url;
         if (url?.includes('/ibc/chains') || url?.includes('/ibc/txs')) {
             if (!error?.message?.includes('code 200')) {
+                // todo duanjie 500
                 router.push('/500');
             }
         }

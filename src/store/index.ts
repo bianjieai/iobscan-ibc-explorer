@@ -105,6 +105,8 @@ export const useIbcStatisticsChains = defineStore('global', {
                     if (use_count) {
                         return data;
                     } else {
+                        // todo duanjie 更新数据时，需要对比，返回数据是否是最新的数据，如果不是需舍去
+                        // console.log('====', location.href, queryParams);
                         const result = (data as Paging<IIbcTx[]>).data;
                         const promiseArray = [];
                         if (this.ibcDenoms.length <= 0) {
