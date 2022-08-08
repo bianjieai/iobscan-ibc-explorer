@@ -84,7 +84,7 @@
                             <a-popover destroy-tooltip-on-hide>
                                 <template #content>
                                     <div>
-                                        <p class="tip_color">
+                                        <p class="popover_c">
                                             Hash (in hex format) of the <br />
                                             denomination trace information.
                                         </p>
@@ -300,10 +300,9 @@
     .tip {
         width: 20px;
         z-index: 1;
-        &_color {
-            color: var(--bj-font-color-65);
-            text-align: center;
-        }
+    }
+    .popover_c {
+        text-align: center;
     }
     .ant-dropdown-open {
         border-color: var(--bj-primary-color);
@@ -381,8 +380,6 @@
             }
         }
         .tip {
-            &_color {
-            }
         }
         .ant-dropdown-open {
             .button__icon {
@@ -435,8 +432,6 @@
             }
         }
         .tip {
-            &_color {
-            }
         }
         .ant-dropdown-open {
             .button__icon {
@@ -486,8 +481,6 @@
             }
         }
         .tip {
-            &_color {
-            }
         }
         .ant-dropdown-open {
             .button__icon {
@@ -547,8 +540,6 @@
             }
         }
         .tip {
-            &_color {
-            }
         }
         .ant-dropdown-open {
             .button__icon {

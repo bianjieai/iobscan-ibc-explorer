@@ -87,7 +87,7 @@
                         <div class="leading_none">Custom IBC Tokens</div>
                         <a-popover destroy-tooltip-on-hide overlay-class-name="antd-popover">
                             <template #content>
-                                <p class="tip_color">
+                                <p class="popover_c">
                                     Hash (in hex format) of the <br />
                                     denomination trace information.
                                 </p>
@@ -367,16 +367,9 @@
 
     .tip {
         width: 20px;
-
-        &_color {
-            color: var(--bj-text-second);
-        }
     }
-
-    .tip_color {
-        color: var(--bj-text-second);
+    .popover_c {
         text-align: center;
-        margin: -2px -2px;
     }
 
     // tablet

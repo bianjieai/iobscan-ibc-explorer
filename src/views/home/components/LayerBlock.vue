@@ -10,7 +10,9 @@
                 </p>
             </div>
             <a-tooltip>
-                <template #title>{{ tipMsg }}</template>
+                <template #title
+                    ><span class="popover_c">{{ tipMsg }}</span></template
+                >
                 <img v-if="showTip" class="tip_icon cursor" src="@/assets/tip.png" />
             </a-tooltip>
         </div>

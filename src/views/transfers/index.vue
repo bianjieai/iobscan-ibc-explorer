@@ -108,7 +108,7 @@
                     <a-popover destroy-tooltip-on-hide>
                         <template #content>
                             <div>
-                                <p class="tip_color">
+                                <p class="popover_c">
                                     Date selection range from the first IBC Transfer to the latest
                                     IBC Transfer
                                 </p>
@@ -157,7 +157,7 @@
                             <span class="cell_name">Token</span>
                             <a-popover destroy-tooltip-on-hide>
                                 <template #content>
-                                    <p class="tip_color">Sent Token</p>
+                                    <p class="popover_c">Sent Token</p>
                                 </template>
                                 <img
                                     class="tip cursor"
@@ -171,10 +171,10 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color"
+                                    <p class="popover_c"
                                         >Sent Token: {{ record.denoms.sc_denom || '--' }}</p
                                     >
-                                    <p class="tip_color"
+                                    <p class="popover_c"
                                         >Received Token: {{ record.denoms.dc_denom || '--' }}</p
                                     >
                                 </div>
@@ -207,7 +207,7 @@
                         <a-popover destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">{{ record.sc_tx_info.hash }}</p>
+                                    <p class="popover_c">{{ record.sc_tx_info.hash }}</p>
                                 </div>
                             </template>
                             <span class="cursor">{{
@@ -219,7 +219,7 @@
                         <a-popover destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">{{ record.sc_addr }}</p>
+                                    <p class="popover_c">{{ record.sc_addr }}</p>
                                 </div>
                             </template>
                             <span>{{ getRestString(record.sc_addr, 3, 8) || '--' }}</span>
@@ -229,15 +229,14 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color"
-                                        >Chain ID：{{
-                                            ChainHelper.formatChainId(record.sc_chain_id)
-                                        }}</p
+                                    <p class="popover_c"
+                                        >Chain ID:
+                                        {{ ChainHelper.formatChainId(record.sc_chain_id) }}</p
                                     >
-                                    <p class="tip_color"
+                                    <p class="popover_c"
                                         >Channel ID: {{ record.sc_channel || '--' }}</p
                                     >
-                                    <p class="tip_color">Sequence: {{ record.sequence || '--' }}</p>
+                                    <p class="popover_c">Sequence: {{ record.sequence || '--' }}</p>
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
@@ -255,15 +254,14 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color"
-                                        >Chain ID：{{
-                                            ChainHelper.formatChainId(record.dc_chain_id)
-                                        }}</p
+                                    <p class="popover_c"
+                                        >Chain ID:
+                                        {{ ChainHelper.formatChainId(record.dc_chain_id) }}</p
                                     >
-                                    <p class="tip_color"
+                                    <p class="popover_c"
                                         >Channel ID: {{ record.dc_channel || '--' }}</p
                                     >
-                                    <p class="tip_color">Sequence: {{ record.sequence || '--' }}</p>
+                                    <p class="popover_c">Sequence: {{ record.sequence || '--' }}</p>
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
@@ -278,7 +276,7 @@
                         <a-popover v-if="record.dc_tx_info.hash" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">{{ record.dc_tx_info.hash || '--' }}</p>
+                                    <p class="popover_c">{{ record.dc_tx_info.hash || '--' }}</p>
                                 </div>
                             </template>
                             <span class="cursor">{{
@@ -291,7 +289,7 @@
                         <a-popover destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="tip_color">{{ record.dc_addr || '--' }}</p>
+                                    <p class="popover_c">{{ record.dc_addr || '--' }}</p>
                                 </div>
                             </template>
                             <span class="cursor">{{

@@ -25,10 +25,10 @@
                         <span class="list_subItem__value">{{
                             formatNum(item.symbolNum) || 0
                         }}</span>
-                        <a-tooltip v-if="item.symbolDenom?.length > 22" placement="topLeft">
-                            <template #title>{{ item.symbolDenom || '' }}</template>
+                        <a-popover v-if="item.symbolDenom?.length > 22">
+                            <template #content>{{ item.symbolDenom || '' }}</template>
                             <span class="list_subItem__title">{{ item.symbolDenom || '' }}</span>
-                        </a-tooltip>
+                        </a-popover>
                         <span v-else class="list_subItem__title">{{ item.symbolDenom || '' }}</span>
                     </div>
 
