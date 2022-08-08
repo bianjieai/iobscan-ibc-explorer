@@ -8,6 +8,7 @@
         "stage": "vite --mode staging",
         "prod": "vite --mode production",
         "vue:tsc": "vue-tsc --noEmit",
+        "build:dev": "vue-tsc --noEmit && vite build --mode development",
         "build:qa": "vue-tsc --noEmit && vite build --mode qa",
         "build:staging": "vue-tsc --noEmit && vite build --mode staging",
         "build": "vue-tsc --noEmit && vite build --mode production",
