@@ -2,18 +2,31 @@
     <PageContainer>
         <PageTitle title="IBC Tokens" :subtitle="subtitle" />
         <div class="select flex items-center flex-wrap">
-            <TokensDropdown
+            <BjSelect
                 ref="tokensDropdown"
-                :base-denom="denomQuery"
-                :dropdown-data="ibcBaseDenomsSorted"
-                :dropdown-data-symbol-map="ibcBaseDenomsSymbolKeyMapGetter"
-                @on-tokens-selected="onSelectedToken"
+                :data="tokenData"
+                :value="searchDenom"
+                placeholder="All Tokens"
+                :input-ctn="{
+                    title: 'Custom IBC Tokens',
+                    toolTip: 'Hash (in hex format) of the denomination trace information.',
+                    placeholder: 'Search by ibc/hash',
+                    btnTxt: 'Confirm',
+                    icon: '/src/assets/tip.png'
+                }"
+                @on-change="onSelectedToken"
             />
-            <ChainsDropdown
+            <BjSelect
                 ref="chainDropdown"
-                :dropdown-data="ibcChains.all"
-                :chain-id="chainIdQuery"
-                @on-selected-chain="onSelectedChain"
+                :data="chainData"
+                :value="searchChain"
+                placeholder="All Chains"
+                :hide-icon="true"
+                :input-ctn="{
+                    placeholder: 'Search by Chain ID',
+                    btnTxt: 'Confirm'
+                }"
+                @on-change="onSelectedChain"
             />
             <BaseDropdown
                 ref="statusDropdown"
@@ -130,13 +143,14 @@
     import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
+
     const { loading } = useLoading();
     const { chainIdQuery, denomQuery, statusQuery } = useTokensQuery();
     const { ibcChains } = useIbcChains();
     const {
         ibcBaseDenoms,
         ibcBaseDenomsSorted,
-        ibcBaseDenomsSymbolKeyMapGetter,
+        // ibcBaseDenomsSymbolKeyMapGetter,
         getIbcBaseDenom,
         getBaseDenomInfoByDenom
     } = useGetIbcDenoms();
@@ -148,14 +162,18 @@
         searchStatus,
         onSelectedToken,
         onSelectedChain,
-        onSelectedStatus
+        onSelectedStatus,
+        tokenData,
+        chainData
     } = useTokensSelected(
         denomQuery,
         chainIdQuery,
         statusQuery,
         getTokensList,
         getIbcBaseDenom,
-        loading
+        loading,
+        ibcBaseDenomsSorted,
+        ibcChains
     );
     const { chainDropdown, statusDropdown, tokensDropdown } = useTokensRef();
     const { subtitle } = useSubTitleComputed(

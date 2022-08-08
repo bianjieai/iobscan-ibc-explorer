@@ -27,6 +27,7 @@ declare module '@vue/runtime-core' {
         ATooltip: typeof import('ant-design-vue/es')['Tooltip'];
         ATypographyText: typeof import('ant-design-vue/es')['TypographyText'];
         BaseDropdown: typeof import('./../components/responsive/dropdown/BaseDropdown.vue')['default'];
+        BjSelect: typeof import('./../components/BjSelect/index.vue')['default'];
         BottomStatus: typeof import('./../components/responsive/table/BottomStatus.vue')['default'];
         ChainIcon: typeof import('./../components/responsive/table/ChainIcon.vue')['default'];
         ChainsDropdown: typeof import('./../components/responsive/dropdown/ChainsDropdown.vue')['default'];
@@ -45,6 +46,8 @@ declare module '@vue/runtime-core' {
         ResetButton: typeof import('./../components/responsive/ResetButton.vue')['default'];
         RouterLink: typeof import('vue-router')['RouterLink'];
         RouterView: typeof import('vue-router')['RouterView'];
+        ShowBase: typeof import('./../components/BjSelect/mode/ShowBase.vue')['default'];
+        ShowDouble: typeof import('./../components/BjSelect/mode/ShowDouble.vue')['default'];
         StatusImg: typeof import('./../components/responsive/table/StatusImg.vue')['default'];
         TableCommon: typeof import('./../components/responsive/table/TableCommon.vue')['default'];
         TokenIcon: typeof import('./../components/responsive/table/TokenIcon.vue')['default'];
