@@ -909,6 +909,14 @@
             :deep(.ant-table-thead tr th) {
                 padding: 11px 16px;
                 border-bottom: 0;
+                &:first-child {
+                    padding-left: 0;
+                }
+            }
+            :deep(.ant-table-tbody tr td) {
+                &:first-child {
+                    padding-left: 0;
+                }
             }
             :deep(.ant-table-content) {
                 margin: 0 24px;
@@ -1391,6 +1399,9 @@
                     }
                 }
                 &__bottom {
+                    :deep(.ant-table-content) {
+                        margin: 0 16px;
+                    }
                 }
             }
             &__table {
@@ -1412,7 +1423,7 @@
                 }
             }
             &__bottom {
-                padding: 8px;
+                padding: 16px;
                 & .status_tips {
                     width: 100%;
                     justify-content: flex-start;

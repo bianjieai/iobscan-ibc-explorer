@@ -192,6 +192,7 @@
             &__top {
                 margin-top: 48px;
                 &__slot {
+                    padding: 16px;
                 }
                 &__left {
                     .ibc_selected_title {

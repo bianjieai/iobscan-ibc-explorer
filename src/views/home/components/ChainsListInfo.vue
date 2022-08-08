@@ -138,6 +138,13 @@
             font-weight: 400;
             color: var(--bj-text-third);
         }
+        :deep(.ant-menu-item) {
+            padding: 0 24px 0 0;
+            &::after {
+                left: 0;
+                right: 24px;
+            }
+        }
         .card_list {
             width: 100%;
             // width: calc(100% - 50px);
@@ -207,16 +214,18 @@
                 }
             }
         }
-        .nodatas_icon {
-            width: 120px;
-            margin-top: 24px;
-        }
-
-        .nodatas_title {
-            margin-top: 16px;
-            font-size: 14px;
-            font-weight: 400;
-            color: var(--bj-font-color-65);
+        .nodatas {
+            margin: 0;
+            &__icon {
+                width: 120px;
+                margin-top: 24px;
+            }
+            &__title {
+                margin-top: 16px;
+                font-size: 14px;
+                font-weight: 400;
+                color: var(--bj-font-color-65);
+            }
         }
     }
     .custom_title {

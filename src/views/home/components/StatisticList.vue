@@ -241,7 +241,10 @@
             }
         }
     }
-    @media screen and (max-width: 520px) {
+    @media screen and (max-width: 530px) {
+        .statistic_list {
+            padding: 16px;
+        }
         .vertical_container {
             grid-template-columns: repeat(1, 1fr);
             .list_item {

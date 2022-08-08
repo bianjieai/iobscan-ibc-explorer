@@ -37,6 +37,7 @@
 <style lang="less" scoped>
     .card {
         .flex(row, nowrap, flex-start, center);
+        padding: 19px 24px;
         width: 360px;
         height: 108px;
         background-image: url('../../../assets/home/card.png');
@@ -51,7 +52,7 @@
             }
         }
         &__img {
-            margin: 23px 29px;
+            margin-right: 24px;
             width: 60px;
         }
         &__content {
@@ -76,6 +77,27 @@
                 line-height: var(--bj-font-size-small);
                 background: rgba(61, 80, 255, 0.15);
                 border-radius: 7px;
+            }
+        }
+    }
+    @media screen and (max-width: 375px) {
+        .card {
+            &:hover {
+                .card__content {
+                    &__value {
+                    }
+                }
+            }
+            &__img {
+                display: none;
+            }
+            &__content {
+                &__name {
+                }
+                &__value {
+                }
+                &__tip {
+                }
             }
         }
     }
