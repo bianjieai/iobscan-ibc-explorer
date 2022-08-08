@@ -15,6 +15,8 @@ import { Ref } from 'vue';
 import { BASE_PARAMS } from '@/constants';
 import { useResetSearch } from '@/composables';
 import { useRoute, useRouter } from 'vue-router';
+import { IDataItem, TDenom } from '@/components/BjSelect/interface';
+import { CHAIN_ICON } from '@/constants/bjSelect';
 
 export const useGetRelayersList = () => {
     const relayersList = ref<IResponseRelayerListItem[]>([]);
@@ -78,7 +80,8 @@ export const useRelayersSelected = (
     chainIdQuery: string,
     statusQuery: TRelayerStatus,
     getRelayersList: (params: IRequestRelayerList) => Promise<void>,
-    loading: Ref<boolean>
+    loading: Ref<boolean>,
+    ibcChains: any
 ) => {
     let pageUrl = '/relayers';
     const router = useRouter();
@@ -91,6 +94,7 @@ export const useRelayersSelected = (
         }
     };
     const searchChain = ref(originalChainRef());
+    const chainIds = ref<TDenom[]>(searchChain.value ? searchChain.value.split(',') : []);
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
     const refreshList = () => {
         getRelayersList({
@@ -100,7 +104,16 @@ export const useRelayersSelected = (
             loading: loading
         });
     };
-    const onSelectedChain = (chain_id?: string) => {
+    const onSelectedChain = (vals: IDataItem[]) => {
+        // allChain 只能是最后一个，否则交换
+        const res = vals.map((v) => v.id);
+        if (res[0] === 'allchain') {
+            chainIds.value = [res[1], res[0]];
+        } else {
+            chainIds.value = res;
+        }
+
+        const chain_id = chainIds.value.join(',');
         searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
         pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
@@ -109,6 +122,32 @@ export const useRelayersSelected = (
         router.replace(pageUrl);
         refreshList();
     };
+
+    const chainData = computed(() => {
+        return [
+            {
+                hideGroupName: true,
+                children: [
+                    {
+                        title: 'All Chains',
+                        doubleTime: true,
+                        id: 'allchain',
+                        hideIcon: true,
+                        value: null
+                    }
+                ]
+            },
+            {
+                hideGroupName: true,
+                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
+                    title: v.chain_name,
+                    id: v.chain_id,
+                    icon: v.icon || CHAIN_ICON,
+                    value: v
+                }))
+            }
+        ];
+    });
 
     const onSelectedStatus = (value?: number | string) => {
         searchStatus.value = value as TRelayerStatus;
@@ -124,7 +163,9 @@ export const useRelayersSelected = (
         refreshList();
     });
     return {
+        chainIds,
         searchChain,
+        chainData,
         searchStatus,
         onSelectedChain,
         onSelectedStatus

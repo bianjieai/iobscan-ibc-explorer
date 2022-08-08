@@ -29,14 +29,21 @@
                         @click-item="onClickDropdownItem"
                         @click-search="(item) => onClickDropdownItem(item, 'customToken')"
                     />
-                    <chains-dropdown
+                    <BjSelect
                         ref="chainDropdown"
-                        :selected-double="selectedDouble"
-                        :need-badge="needBadge"
-                        :dropdown-data="ibcChains.all"
-                        :chain_id="chainId"
-                        :witch-page="PAGE_PARAMETERS.transfers"
-                        @on-selected-chain="onSelectedChain"
+                        :data="chainData"
+                        :value="chainIds"
+                        :placeholders="['All Chains', 'All Chains']"
+                        :hide-icon="true"
+                        :badges="['Transfer', 'Receive']"
+                        mode="double"
+                        associate-id="allchain"
+                        :edit-model="true"
+                        :input-ctn="{
+                            placeholder: 'Search by Chain ID,Chain ID',
+                            btnTxt: 'Confirm'
+                        }"
+                        @on-change="onSelectedChain"
                     />
                     <!-- todo duanjie 看能否使用 BaseDropdown 复用  -->
                     <a-select
@@ -152,7 +159,7 @@
                     :custom-row="handleClickRow"
                 >
                     <template #customTitle>
-                        <p>
+                        <div>
                             Token
                             <a-popover destroy-tooltip-on-hide>
                                 <template #content>
@@ -166,7 +173,7 @@
                                     src="../../assets/tip.png"
                                 />
                             </a-popover>
-                        </p>
+                        </div>
                     </template>
                     <template #token="{ record }">
                         <a-popover placement="right" destroy-tooltip-on-hide>
@@ -342,7 +349,7 @@
         ibcTxStatusDesc,
         defaultTitle,
         unknownSymbol,
-        PAGE_PARAMETERS,
+        // PAGE_PARAMETERS,
         txStatusNumber,
         CHAINNAME
     } from '@/constants';
@@ -362,6 +369,8 @@
     import { urlParser } from '@/utils/urlTools';
     import { useIbcChains } from '@/composables';
     import { IIbcTx } from '@/types/interface/transfers.interface';
+    import { IDataItem, TDenom } from '@/components/BjSelect/interface';
+    import { CHAIN_ICON } from '@/constants/bjSelect';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
@@ -372,8 +381,8 @@
     const { tableColumns, showTransferLoading, tableDatas, tableCount, getIbcTxs } =
         useGetTableColumns();
     const chainDropdown = ref();
-    const selectedDouble = ref(true);
-    const needBadge = ref(true);
+    // const selectedDouble = ref(true);
+    // const needBadge = ref(true);
 
     const pickerPlaceholderColor = ref('var(--bj-text-second)');
 
@@ -782,7 +791,37 @@
         router.replace(url);
         queryDatas();
     };
-    const onSelectedChain = (chain_id: any) => {
+
+    const chainIds = ref<TDenom[]>(chainId ? (chainId as string).split(',') : []);
+    const chainData = computed(() => {
+        return [
+            {
+                hideGroupName: true,
+                children: [
+                    {
+                        title: 'All Chains',
+                        doubleTime: true,
+                        id: 'allchain',
+                        hideIcon: true,
+                        value: null
+                    }
+                ]
+            },
+            {
+                hideGroupName: true,
+                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
+                    title: v.chain_name,
+                    id: v.chain_id,
+                    icon: v.icon || CHAIN_ICON,
+                    value: v
+                }))
+            }
+        ];
+    });
+    const onSelectedChain = (vals: IDataItem[]) => {
+        chainIds.value = vals?.map((v) => v.id);
+        const chain_id = chainIds.value.join(',');
+
         queryParam.chain_id = chain_id !== 'allchain,allchain' ? chain_id : '';
         pagination.current = 1;
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;

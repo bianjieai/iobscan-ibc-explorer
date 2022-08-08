@@ -2,12 +2,20 @@
     <PageContainer>
         <PageTitle title="IBC Channels" :subtitle="subtitle" />
         <div class="select flex items-center flex-wrap">
-            <ChainsDropdown
+            <BjSelect
                 ref="chainDropdown"
-                :dropdown-data="ibcChains.all"
-                :chain-id="chainIdQuery"
-                selected-double
-                @on-selected-chain="onSelectedChain"
+                :data="chainData"
+                :value="chainIds"
+                :placeholders="['All Chains', 'All Chains']"
+                :hide-icon="true"
+                mode="double"
+                associate-id="allchain"
+                :edit-model="true"
+                :input-ctn="{
+                    placeholder: 'Search by Chain ID,Chain ID',
+                    btnTxt: 'Confirm'
+                }"
+                @on-change="onSelectedChain"
             />
             <BaseDropdown
                 ref="statusDropdown"
@@ -102,12 +110,8 @@
     const { chainIdQuery, statusQuery } = useChannelsQuery();
     const { channelsList, total, getChannelsList } = useGetChannelsList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channels);
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useChannelsSelected(
-        chainIdQuery,
-        statusQuery,
-        getChannelsList,
-        loading
-    );
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus, chainIds, chainData } =
+        useChannelsSelected(chainIdQuery, statusQuery, getChannelsList, loading, ibcChains);
     const { chainDropdown, statusDropdown } = useChannelsRef();
     const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, channelsList);
     const { goChains, resetSearchCondition } = useChannelsColumnJump();

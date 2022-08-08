@@ -2,12 +2,20 @@
     <PageContainer>
         <PageTitle title="IBC Relayers" :subtitle="subtitle" />
         <div class="select flex items-center flex-wrap">
-            <ChainsDropdown
+            <BjSelect
                 ref="chainDropdown"
-                :dropdown-data="ibcChains.all"
-                :chain-id="chainIdQuery"
-                selected-double
-                @on-selected-chain="onSelectedChain"
+                :data="chainData"
+                :value="chainIds"
+                :placeholders="['All Chains', 'All Chains']"
+                :hide-icon="true"
+                mode="double"
+                associate-id="allchain"
+                :edit-model="true"
+                :input-ctn="{
+                    placeholder: 'Search by Chain ID,Chain ID',
+                    btnTxt: 'Confirm'
+                }"
+                @on-change="onSelectedChain"
             />
             <BaseDropdown
                 ref="statusDropdown"
@@ -118,12 +126,8 @@
     const { relayersList, getRelayersList, total } = useGetRelayersList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
     const { chainIdQuery, statusQuery } = useRelayersQuery();
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useRelayersSelected(
-        chainIdQuery,
-        statusQuery,
-        getRelayersList,
-        loading
-    );
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus, chainIds, chainData } =
+        useRelayersSelected(chainIdQuery, statusQuery, getRelayersList, loading, ibcChains);
     const { chainDropdown, statusDropdown } = useRelayersRef();
     const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, relayersList);
     const { goChains, resetSearchCondition } = useRelayersColumnJump();
