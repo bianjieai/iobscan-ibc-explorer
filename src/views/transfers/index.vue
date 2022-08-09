@@ -809,7 +809,6 @@
                 ]
             },
             {
-                hideGroupName: true,
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
                     title: v.chain_name,
                     id: v.chain_id,
