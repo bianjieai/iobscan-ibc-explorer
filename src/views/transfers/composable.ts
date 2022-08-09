@@ -362,9 +362,6 @@ export const useTransfersDetailsInfo = () => {
                                 callback && callback(item);
                             } else {
                                 if (item.dataKey) {
-                                    if (item.dataKey === 'ack') {
-                                        console.log(item, result[item.dataKey]);
-                                    }
                                     item.value = result[item.dataKey];
                                 }
                             }
