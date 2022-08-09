@@ -33,7 +33,9 @@ export const useIbcTxs = (timerInterval?: number) => {
         });
     };
     const setIbcTxs = (limitNumber = 10) => {
-        ibcStatisticsChainsStore.ibcTxs = homeIbcTxs.value.slice(0, limitNumber);
+        if (homeIbcTxs.value && homeIbcTxs.value.length > 0) {
+            ibcStatisticsChainsStore.ibcTxs = homeIbcTxs.value.slice(0, limitNumber);
+        }
     };
     useTimeInterval(() => {
         homeIbcTxs.value = homeIbcTxs.value.map((item: any) => {

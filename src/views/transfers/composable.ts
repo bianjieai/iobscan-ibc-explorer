@@ -101,7 +101,9 @@ export const useGetTableColumns = () => {
         }
     );
     const setIbcTxs = (limitNumber = 10) => {
-        ibcStatisticsChainsStore.ibcTxs = tableDatas.value.slice(0, limitNumber);
+        if (tableDatas.value && tableDatas.value.length > 0) {
+            ibcStatisticsChainsStore.ibcTxs = tableDatas.value.slice(0, limitNumber);
+        }
     };
     return {
         tableColumns,
