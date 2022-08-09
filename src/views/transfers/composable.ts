@@ -298,7 +298,7 @@ export const useTransfersDetailsInfo = () => {
         {
             label: 'Packet Ack:',
             value: '--',
-            dataKey: 'dc_tx_info.ack',
+            dataKey: 'ack',
             isExpand: true,
             isAck: true
         },
