@@ -76,7 +76,7 @@ export const useIbcStatisticsChains = defineStore('global', {
         async getIbcChainsAction(isNeedJudgeShow500 = true) {
             try {
                 const { code, data } = await getIbcChainsAPI();
-                if (code == API_CODE.success && data && data.items) {
+                if (code == API_CODE.success && data && data.items && data.items.length > 0) {
                     this.ibcChains = data.items[0];
                 }
             } catch (error) {
