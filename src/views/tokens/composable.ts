@@ -17,6 +17,7 @@ import { IDataItem } from '@/components/BjSelect/interface';
 import { IBaseDenom } from '@/types/interface/index.interface';
 import { axiosCancel } from '@/utils/axios';
 import { CHAIN_ICON, Token_ICON } from '@/constants/bjSelect';
+import ChainHelper from '@/helper/chainHelper';
 
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
@@ -186,7 +187,7 @@ export const useTokensSelected = (
                 ]
             },
             {
-                children: ibcChains.value?.all?.map((v: any) => ({
+                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v: any) => ({
                     title: v.chain_name,
                     id: v.chain_id,
                     icon: v.icon || CHAIN_ICON,
