@@ -7,7 +7,7 @@ import { getIbcTxsAPI } from '@/api/transfers';
 import { getIbcDenomsAPI } from '@/api/home';
 import { getDenomKey } from '@/helper/baseDenomHelper';
 import { GlobalState } from '@/types/interface/store.interface';
-import { IBaseDenom, Paging } from '@/types/interface/index.interface';
+import { IBaseDenom, IResponsePagingData } from '@/types/interface/index.interface';
 import { IIbcTx } from '@/types/interface/transfers.interface';
 import { IResponseIbcDenom } from '@/types/interface/home.interface';
 import { axiosCancel } from '@/utils/axios';
@@ -66,8 +66,8 @@ export const useIbcStatisticsChains = defineStore('global', {
         async getIbcBaseDenomsAction() {
             try {
                 const { code, data } = await getIbcBaseDenomsAPI();
-                if (code == API_CODE.success && data && data.length > 0) {
-                    this.ibcBaseDenoms = data;
+                if (code == API_CODE.success && data && data.items && data.items.length > 0) {
+                    this.ibcBaseDenoms = data.items;
                 }
             } catch (error) {
                 console.log('getIbcBaseDenomsAction', error);
@@ -76,8 +76,8 @@ export const useIbcStatisticsChains = defineStore('global', {
         async getIbcChainsAction(isNeedJudgeShow500 = true) {
             try {
                 const { code, data } = await getIbcChainsAPI();
-                if (code == API_CODE.success && data) {
-                    this.ibcChains = data;
+                if (code == API_CODE.success && data && data.items) {
+                    this.ibcChains = data.items[0];
                 }
             } catch (error) {
                 if (isNeedJudgeShow500 === true) {
@@ -89,8 +89,8 @@ export const useIbcStatisticsChains = defineStore('global', {
         async getIbcDenomsAction() {
             try {
                 const { code, data } = await getIbcDenomsAPI();
-                if (code === API_CODE.success && data && data.length > 0) {
-                    this.ibcDenoms = data;
+                if (code === API_CODE.success && data && data.items && data.items.length > 0) {
+                    this.ibcDenoms = data.items;
                 }
             } catch (error) {
                 console.log('getIbcDenomsAPI', error);
@@ -110,7 +110,7 @@ export const useIbcStatisticsChains = defineStore('global', {
                     if (use_count) {
                         return data;
                     } else {
-                        const result = (data as Paging<IIbcTx[]>).data;
+                        const result = (data as IResponsePagingData<IIbcTx[]>).items;
                         const promiseArray = [];
                         if (this.ibcDenoms.length <= 0) {
                             console.log('getIbcTxsAction-execute: getIbcDenomsAction');
