@@ -1,4 +1,4 @@
-import { ITransfersDetails, ITransfersExpandDetails } from "@/types/interface/transfers.interface";
+import { ITransfersDetails, ITransfersExpandDetails } from '@/types/interface/transfers.interface';
 export enum IBC_TX_STATUS {
     'default' = 1000, // web custom staus
     'success' = 1,
@@ -79,7 +79,6 @@ export const TRANSFERS_OUT_DETAILS: ITransfersDetails[] = [
         isNotLink: true
     }
 ];
-
 export const TRANSFERS_OUT_EXPAND_DETAILS: ITransfersExpandDetails[] = [
     {
         label: 'Connection:',
@@ -100,7 +99,7 @@ export const TRANSFERS_OUT_EXPAND_DETAILS: ITransfersExpandDetails[] = [
         dataKey: 'sc_tx_info.msg.msg.timeout_timestamp',
         isExpand: false
     }
-]
+];
 export const TRANSFERS_IN_DETAILS: ITransfersDetails[] = [
     {
         label: 'MsgType:',
@@ -176,7 +175,7 @@ export const TRANSFERS_IN_EXPAND_DETAILS: ITransfersExpandDetails[] = [
     {
         label: 'Packet Ack:',
         value: '--',
-        dataKey: 'dc_tx_info.ack',
+        dataKey: 'ack',
         isExpand: true,
         isAck: true
     },
@@ -187,4 +186,4 @@ export const TRANSFERS_IN_EXPAND_DETAILS: ITransfersExpandDetails[] = [
         isExpand: true,
         isFormatHeight: true
     }
-]
+];
