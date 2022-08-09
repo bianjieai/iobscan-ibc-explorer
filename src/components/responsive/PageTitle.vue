@@ -54,6 +54,8 @@
 
             .title {
                 font-size: var(--bj-font-size-title);
+                font-family: Eurocine-regular;
+                font-weight: 600;
             }
         }
 

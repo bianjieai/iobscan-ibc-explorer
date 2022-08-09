@@ -23,6 +23,5 @@
         display: flex;
         flex-direction: column;
         min-width: 320px;
-        overflow-x: auto;
     }
 </style>

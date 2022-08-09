@@ -17,35 +17,24 @@
     </a-menu>
 </template>
 
-<script>
-    import { reactive, onBeforeUnmount } from 'vue';
-
-    export default {
-        props: {
-            menus: {
-                type: Array,
-                required: true
-            },
-            currentMenu: {
-                type: Array,
-                required: true
-            },
-            isShowNav: Boolean
-        },
-        emits: ['clickMenu'],
-        setup(props, context) {
-            const timeOuter = reactive({ value: null });
-            const clickMenuItem = ({ key }) => {
-                context.emit('clickMenu', key);
-            };
-            onBeforeUnmount(() => {
-                clearTimeout(timeOuter.value);
-            });
-
-            return {
-                clickMenuItem
-            };
-        }
+<script lang="ts" setup>
+    import { MenuClickEventHandler } from 'ant-design-vue/lib/menu/src/interface.js';
+    type Key = string | number;
+    interface IMenu {
+        label: string;
+        value: string;
+    }
+    interface IProps {
+        menus: IMenu[];
+        currentMenu: Key[];
+        isShowNav: boolean;
+    }
+    defineProps<IProps>();
+    const emits = defineEmits<{
+        (e: 'clickMenu', key: string): MenuClickEventHandler;
+    }>();
+    const clickMenuItem = (e: { key: string }): MenuClickEventHandler => {
+        return emits('clickMenu', e.key);
     };
 </script>
 
@@ -67,14 +56,15 @@
         }
         .ant-menu-item {
             line-height: var(--bj-nav-height);
+            transition: border-color 0.3s linear;
         }
         .ant-menu-title-content {
             font-size: var(--bj-font-size-sub-title);
             color: rgba(#ffffff, 0.65);
             font-weight: var(--bj-font-weight-normal);
         }
-        .ant-menu-item-selected {
-            background-image: url('../assets/nav/selected.png');
+        .ant-menu-item-active {
+            background-image: url('../assets/nav/innovation_bar_bg.png');
             background-repeat: no-repeat;
             background-size: contain;
             background-position: 50% 90%;
@@ -85,7 +75,7 @@
                 display: none;
             }
         }
-        .ant-menu-item-active {
+        .ant-menu-item-selected {
             background-image: url('../assets/nav/selected.png');
             background-repeat: no-repeat;
             background-size: contain;

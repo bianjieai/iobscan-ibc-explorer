@@ -17,45 +17,30 @@
     </a-input>
 </template>
 
-<script>
+<script setup lang="ts">
     import { ref } from 'vue';
     import router from '../router';
-    export default {
-        props: {
-            disabled: Boolean
-        },
-        emits: ['pressedEnter'],
-        setup(props, context) {
-            let inputValue = ref('');
-            let isActiveInputStyle = ref(false);
-            const onPressEnter = (evt) => {
-                context.emit('pressedEnter', evt.target.value);
-            };
-            const setInputBorderStyle = () => {
-                isActiveInputStyle.value = true;
-            };
-            const removeInputBorderStyle = () => {
-                isActiveInputStyle.value = false;
-            };
-            const searchInput = () => {
-                if (inputValue.value !== '') {
-                    if (/^[A-F0-9]{64}$/.test(inputValue.value)) {
-                        router.push(`/transfers/details?hash=${inputValue.value}`);
-                        inputValue.value = '';
-                    } else {
-                        router.push(`/searchResult?${inputValue.value}`);
-                        inputValue.value = '';
-                    }
-                }
-            };
-            return {
-                inputValue,
-                isActiveInputStyle,
-                onPressEnter,
-                searchInput,
-                setInputBorderStyle,
-                removeInputBorderStyle
-            };
+    interface IProps {
+        disabled: boolean;
+    }
+    defineProps<IProps>();
+    let inputValue = ref('');
+    let isActiveInputStyle = ref(false);
+    const setInputBorderStyle = () => {
+        isActiveInputStyle.value = true;
+    };
+    const removeInputBorderStyle = () => {
+        isActiveInputStyle.value = false;
+    };
+    const searchInput = () => {
+        if (inputValue.value !== '') {
+            if (/^[A-F0-9]{64}$/.test(inputValue.value)) {
+                router.push(`/transfers/details?hash=${inputValue.value}`);
+                inputValue.value = '';
+            } else {
+                router.push(`/searchResult?${inputValue.value}`);
+                inputValue.value = '';
+            }
         }
     };
 </script>

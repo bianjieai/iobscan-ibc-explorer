@@ -47,12 +47,14 @@
     .block {
         .flex(column, nowrap, flex-start, flex-start);
         position: relative;
+        margin-top: 12px;
         &__header {
             display: inline-block;
             &__title {
                 display: inline-block;
                 font-size: var(--bj-font-size-title);
-                font-weight: var(--bj-font-weight-normal);
+                font-family: Eurocine-regular;
+                font-weight: 600;
                 margin-right: 10px;
                 position: relative;
                 top: -16px;

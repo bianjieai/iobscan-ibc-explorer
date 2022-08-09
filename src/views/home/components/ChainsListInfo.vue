@@ -199,7 +199,6 @@
                 margin: 6px 0;
                 text-align: justify;
                 font-size: var(--bj-font-size-normal);
-                font-family: Montserrat-Regular, Montserrat;
                 font-weight: 400;
                 color: var(--bj-text-third);
             }
