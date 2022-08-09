@@ -13,6 +13,7 @@ import { TChannelStatus } from '@/types/interface/components/table.interface';
 import { urlPageParser } from '@/utils/urlTools';
 import { computed, onMounted, ref, Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { axiosCancel } from '@/utils/axios';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
 import { CHAIN_ICON } from '@/constants/bjSelect';
 
@@ -45,7 +46,9 @@ export const useGetChannelsList = () => {
                 console.error(message);
             }
         } catch (error) {
-            loading && (loading.value = false);
+            if (!axiosCancel(error)) {
+                loading && (loading.value = false);
+            }
             console.error(error);
         }
     };

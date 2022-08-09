@@ -150,7 +150,6 @@
 
         &__name {
             font-size: var(--bj-font-size-sub-title);
-            font-family: Montserrat-Regular, Montserrat;
             color: var(--bj-font-color-65);
             line-height: var(--bj-font-size-sub-title);
             margin-bottom: 16px;
@@ -160,7 +159,6 @@
             transition: color 0.3s;
             transition-timing-function: ease;
             font-size: var(--bj-font-size-home-number);
-            font-family: Montserrat-Regular, Montserrat;
             color: var(--bj-text-normal);
             line-height: var(--bj-font-size-home-number);
         }
@@ -169,7 +167,6 @@
             margin-left: 8px;
             padding: 0 4px;
             font-size: var(--bj-font-size-small);
-            font-family: Montserrat-Regular, Montserrat;
             color: #3d50ff;
             line-height: var(--bj-font-size-small);
             background: rgba(61, 80, 255, 0.15);
@@ -244,7 +241,10 @@
             }
         }
     }
-    @media screen and (max-width: 520px) {
+    @media screen and (max-width: 530px) {
+        .statistic_list {
+            padding: 16px;
+        }
         .vertical_container {
             grid-template-columns: repeat(1, 1fr);
             .list_item {

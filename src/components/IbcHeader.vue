@@ -2,11 +2,11 @@
     <div class="header_container">
         <div class="header_content">
             <div class="logo cursor" @click="onClickLogo">
-                <div class="logo_icon_wrap">
-                    <img class="logo_icon" :src="logoIcon" alt="logo" />
+                <div class="logo__icon">
+                    <img :src="logoIcon" alt="logo" />
                 </div>
-                <div class="logo_text_wrap">
-                    <img class="logo_text" :src="logoName" alt="" />
+                <div class="logo__text">
+                    <img :src="logoName" alt="" />
                 </div>
             </div>
             <navigation
@@ -119,19 +119,17 @@
             height: 100%;
             .logo {
                 .flex(row, nowrap, center, center);
-                .logo_icon {
-                    width: 32px;
-                    height: 34px;
+                &__icon {
                     img {
-                        height: 100%;
+                        width: 32px;
+                        height: 34px;
                     }
                 }
-                .logo_text {
+                &__text {
                     margin-left: 9px;
-                    width: 100px;
-                    height: 34px;
                     img {
-                        height: 100%;
+                        width: 100px;
+                        height: 34px;
                     }
                 }
             }
@@ -142,25 +140,25 @@
             }
             .header_input_wrapper {
                 .flex(row, nowrap, space-between, center);
-            }
-            .header_input_icon_wrapper {
-                .flex(row, nowrap, space-between, center);
-                margin-left: 12px;
-                a {
-                    .flex(row, nowrap, center, center);
-                }
-            }
-            .header_input_icon {
-                width: 32px;
-                height: 32px;
-            }
-            .header_btn_mobile {
-                .flex(row, nowrap, center, center);
-                margin-left: 12px;
-                display: none;
-                img {
-                    width: 32px;
-                    height: 32px;
+                .header_input_icon_wrapper {
+                    .flex(row, nowrap, space-between, center);
+                    margin-left: 12px;
+                    a {
+                        .flex(row, nowrap, center, center);
+                        .header_input_icon {
+                            width: 32px;
+                            height: 32px;
+                        }
+                    }
+                    .header_btn_mobile {
+                        .flex(row, nowrap, center, center);
+                        margin-left: 12px;
+                        display: none;
+                        img {
+                            width: 32px;
+                            height: 32px;
+                        }
+                    }
                 }
             }
         }
@@ -169,25 +167,23 @@
         .header_container {
             .header_content {
                 .logo {
-                    margin-left: 32px;
-                    .logo_icon {
+                    margin-left: 48px;
+                    &__icon {
                     }
                 }
                 .header_navigation {
                 }
                 .header_input_wrapper {
-                    margin-right: 32px;
-                }
-                .header_input_wrapper {
-                }
-                .header_input_icon_wrapper {
-                    a {
-                    }
-                }
-                .header_input_icon {
-                }
-                .header_btn_mobile {
-                    img {
+                    margin-right: 48px;
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {
+                            }
+                        }
+                        .header_btn_mobile {
+                            img {
+                            }
+                        }
                     }
                 }
             }
@@ -198,20 +194,22 @@
             .header_content {
                 position: relative;
                 .logo {
-                    .logo_icon {
+                    &__icon {
                     }
+                }
+                .header_navigation {
                 }
                 .header_input_wrapper {
-                }
-                .header_input_icon_wrapper {
-                    a {
-                    }
-                }
-                .header_input_icon {
-                }
-                .header_btn_mobile {
-                    display: inline-block;
-                    img {
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {
+                            }
+                        }
+                        .header_btn_mobile {
+                            display: inline-block;
+                            img {
+                            }
+                        }
                     }
                 }
             }
@@ -221,27 +219,24 @@
         .header_container {
             .header_content {
                 .logo {
-                    margin-left: 16px;
+                    margin-left: 32px;
                     width: 136px;
-                    .logo_icon {
+                    &__icon {
                     }
                 }
                 .header_navigation {
                 }
                 .header_input_wrapper {
-                    margin-right: 16px;
-                }
-                .header_input_wrapper {
-                }
-                .header_input_icon_wrapper {
-                    a {
-                    }
-                }
-                .header_input_icon {
-                }
-                .header_btn_mobile {
-                    display: inline-block;
-                    img {
+                    margin-right: 32px;
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {
+                            }
+                        }
+                        .header_btn_mobile {
+                            img {
+                            }
+                        }
                     }
                 }
             }
@@ -251,24 +246,26 @@
         .header_container {
             .header_content {
                 .logo {
-                    .logo_icon {
+                    margin-left: 16px;
+                    &__icon {
                     }
                 }
                 .header_navigation {
                 }
                 .header_input_wrapper {
-                }
-                .header_input_layout {
-                    display: none;
-                }
-                .header_input_icon_wrapper {
-                    a {
+                    margin-right: 16px;
+                    .header_input_layout {
+                        display: none;
                     }
-                }
-                .header_input_icon {
-                }
-                .header_btn_mobile {
-                    img {
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {
+                            }
+                        }
+                        .header_btn_mobile {
+                            img {
+                            }
+                        }
                     }
                 }
             }

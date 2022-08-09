@@ -12,12 +12,12 @@
                         <span class="details_item_amount">{{
                             formatToken(item.value, details).symbolNum || '--'
                         }}</span>
-                        <a-tooltip>
-                            <template #title>
+                        <a-popover destroy-tooltip-on-hide>
+                            <template #content>
                                 {{ formatToken(item.value, details).denom }}
                             </template>
                             <span>{{ formatDenom(formatToken(item.value, details).symbol) }}</span>
-                        </a-tooltip>
+                        </a-popover>
                     </router-link>
                     <span v-else>--</span>
                 </span>
@@ -31,14 +31,14 @@
                     <span class="details_item_amount">{{
                         formatToken(formatFee(item.value), details).symbolNum || '--'
                     }}</span>
-                    <a-tooltip>
-                        <template #title>
+                    <a-popover destroy-tooltip-on-hide>
+                        <template #content>
                             {{ formatToken(formatFee(item.value), details).denom }}
                         </template>
                         <span>{{
                             formatDenom(formatToken(formatFee(item.value), details).symbol)
                         }}</span>
-                    </a-tooltip>
+                    </a-popover>
                 </span>
                 <router-link
                     v-else-if="item.isFormatChainID"
@@ -95,14 +95,14 @@
                         >{{ formatToken(item.value, expandDetails).symbolNum || '--'
                         }}{{ formatToken(item.value, expandDetails).denom }}</span
                     >
-                    <a-tooltip>
-                        <template #title>
+                    <a-popover destroy-tooltip-on-hide>
+                        <template #content>
                             {{ formatToken(item.value, expandDetails).denom }}
                         </template>
                         <span>{{
                             formatDenom(formatToken(item.value, expandDetails).symbol)
                         }}</span>
-                    </a-tooltip>
+                    </a-popover>
                 </span>
                 <span v-if="item.isFormatHeight" class="details_item_value">{{
                     formatHeight(item.value)

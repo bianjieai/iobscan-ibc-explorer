@@ -84,7 +84,7 @@
                             <a-popover destroy-tooltip-on-hide>
                                 <template #content>
                                     <div>
-                                        <p class="tip_color">
+                                        <p class="popover_c">
                                             Hash (in hex format) of the <br />
                                             denomination trace information.
                                         </p>
@@ -181,7 +181,7 @@
             .flex(row, nowrap, center, center);
             overflow: hidden;
         }
-        &___title {
+        &__title {
             // max-width: 86px;
             text-overflow: ellipsis;
             color: var(--bj-text-third);
@@ -226,7 +226,6 @@
             padding: 6px 12px;
             border: 1px solid transparent;
             font-size: var(--bj-font-size-normal);
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             color: var(--bj-font-color-65);
             margin-bottom: 16px;
@@ -268,7 +267,6 @@
                         border: 1px solid var(--bj-primary-color);
                         color: var(--bj-primary-color);
                         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-                        // background-color: #ffffff;
                     }
                     &__selected {
                         border: 1px solid var(--bj-primary-color);
@@ -285,7 +283,6 @@
                     }
                     &__title {
                         font-size: var(--bj-font-size-normal);
-                        font-family: Montserrat-Regular, Montserrat;
                         font-weight: 400;
                         overflow: hidden;
                         // text-overflow: ellipsis;
@@ -303,10 +300,9 @@
     .tip {
         width: 20px;
         z-index: 1;
-        &_color {
-            color: var(--bj-font-color-65);
-            text-align: center;
-        }
+    }
+    .popover_c {
+        text-align: center;
     }
     .ant-dropdown-open {
         border-color: var(--bj-primary-color);
@@ -384,8 +380,6 @@
             }
         }
         .tip {
-            &_color {
-            }
         }
         .ant-dropdown-open {
             .button__icon {
@@ -438,8 +432,6 @@
             }
         }
         .tip {
-            &_color {
-            }
         }
         .ant-dropdown-open {
             .button__icon {
@@ -489,8 +481,6 @@
             }
         }
         .tip {
-            &_color {
-            }
         }
         .ant-dropdown-open {
             .button__icon {
@@ -550,8 +540,6 @@
             }
         }
         .tip {
-            &_color {
-            }
         }
         .ant-dropdown-open {
             .button__icon {

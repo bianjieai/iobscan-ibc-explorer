@@ -1,0 +1,12 @@
+@font-face {
+    font-family: 'GolosUI_Regular';
+    src: url('./Golos-UI_Regular.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'GolosUI_Medium';
+    src: url('./Golos-UI_Medium.ttf');
+    font-weight: normal;
+    font-style: normal;
+}

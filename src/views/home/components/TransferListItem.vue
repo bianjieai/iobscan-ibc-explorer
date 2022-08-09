@@ -25,10 +25,11 @@
                         <span class="list_subItem__value">{{
                             formatNum(item.symbolNum) || 0
                         }}</span>
-                        <a-tooltip placement="topLeft">
-                            <template #title>{{ item.symbolDenom || '' }}</template>
+                        <a-popover v-if="item.symbolDenom?.length > 22">
+                            <template #content>{{ item.symbolDenom || '' }}</template>
                             <span class="list_subItem__title">{{ item.symbolDenom || '' }}</span>
-                        </a-tooltip>
+                        </a-popover>
+                        <span v-else class="list_subItem__title">{{ item.symbolDenom || '' }}</span>
                     </div>
 
                     <div class="list_subItem__adress_container">
@@ -99,19 +100,18 @@
                 &__adress_container {
                     flex: 1;
                     .flex(row, nowrap, space-between, center);
+                    margin-left: 8px;
                 }
                 &__title_container {
                     .flex(column, nowrap, space-between, flex-start);
                     width: 100%;
-                    max-width: 150px;
+                    max-width: 180px;
                 }
                 &__value {
                     width: 100%;
                     text-align: left;
-                    font-size: var(--bj-font-size-normal);
-                    font-family: Montserrat-Regular, Montserrat;
-                    font-weight: 400;
-                    color: rgba(0, 0, 0, 0.75);
+                    font-size: var(--bj-font-size-sub-title);
+                    color: var(--bj-text-normal);
                     line-height: var(--bj-font-size-normal);
                 }
 
@@ -119,11 +119,10 @@
                     text-align: left;
                     margin-top: 4px;
                     font-size: var(--bj-font-size-normal);
-                    font-family: Montserrat-Regular, Montserrat;
                     font-weight: 400;
                     color: var(--bj-text-third);
                     line-height: 18px;
-                    width: 150px;
+                    width: 180px;
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;
@@ -136,14 +135,12 @@
             width: 150px;
             text-align: right;
             font-size: var(--bj-font-size-normal);
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             color: var(--bj-font-color-65);
             line-height: var(--bj-font-size-normal);
         }
         &__number {
             font-size: var(--bj-font-size-normal);
-            font-family: Montserrat-Regular, Montserrat;
             font-weight: 400;
             color: var(--bj-text-third);
             line-height: var(--bj-font-size-normal);

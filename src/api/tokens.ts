@@ -6,17 +6,21 @@ import {
     IResponseIbcTokenList,
     IResponseTokensList
 } from '@/types/interface/tokens.interface';
-import request from '@/utils/axios';
-export const getTokensListAPI = async (param: IRequestTokensList) => {
+import request, { executeCancel, setExecuteCancel } from '@/utils/axios';
+
+export const getTokensListAPI = async (params: IRequestTokensList) => {
+    executeCancel(params.use_count);
     const urlPrefix = import.meta.env.VITE_BASE_GO_API;
     return request<IResponse<IResponseTokensList | number>>({
         url: `${urlPrefix}${API_URL.ibcTokensListUrl}`,
         method: 'get',
-        params: param
+        params: params,
+        cancelToken: setExecuteCancel(params.use_count)
     });
 };
 
-export const getIbcTokenListAPI = async (base_denom: string, param: IRequestIbcTokenList) => {
+export const getIbcTokenListAPI = async (base_denom: string, params: IRequestIbcTokenList) => {
+    executeCancel(params.use_count);
     const urlPrefix = import.meta.env.VITE_BASE_GO_API;
     const ibcTokenListUrl = `${urlPrefix}/ibc/${base_denom.replace('ibc/', '')}${
         API_URL.ibcIbcTokenListUrl
@@ -24,6 +28,7 @@ export const getIbcTokenListAPI = async (base_denom: string, param: IRequestIbcT
     return request<IResponse<IResponseIbcTokenList | number>>({
         url: ibcTokenListUrl,
         method: 'get',
-        params: param
+        params: params,
+        cancelToken: setExecuteCancel(params.use_count)
     });
 };

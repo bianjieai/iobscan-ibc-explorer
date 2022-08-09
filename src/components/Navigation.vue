@@ -53,8 +53,8 @@
     .header_menu {
         flex: 1;
         .flex(row, nowrap, center, center);
-        height: @nav-height;
-        line-height: @nav-height;
+        height: var(--bj-nav-height);
+        line-height: var(--bj-nav-height);
         background-color: transparent;
         border: 0;
         &__item {
@@ -66,13 +66,12 @@
             }
         }
         .ant-menu-item {
-            line-height: @nav-height;
+            line-height: var(--bj-nav-height);
         }
         .ant-menu-title-content {
-            font-size: @font-size4;
+            font-size: var(--bj-font-size-sub-title);
             color: rgba(#ffffff, 0.65);
-            font-weight: @nav-font-weight;
-            font-family: Montserrat-Regular, Montserrat;
+            font-weight: var(--bj-font-weight-normal);
         }
         .ant-menu-item-selected {
             background-image: url('../assets/nav/selected.png');

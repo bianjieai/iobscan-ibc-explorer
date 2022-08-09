@@ -32,6 +32,7 @@
 <style lang="less">
     .title {
         font-size: var(--bj-font-size-sub-title);
+        color: var(--bj-text-normal);
     }
 
     .subtitle {

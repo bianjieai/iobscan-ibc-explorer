@@ -15,6 +15,7 @@ import { computed, ComputedRef, onMounted, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { IDataItem } from '@/components/BjSelect/interface';
 import { IBaseDenom } from '@/types/interface/index.interface';
+import { axiosCancel } from '@/utils/axios';
 import { CHAIN_ICON, Token_ICON } from '@/constants/bjSelect';
 
 export const useGetTokenList = () => {
@@ -54,7 +55,9 @@ export const useGetTokenList = () => {
                 console.error(message);
             }
         } catch (error) {
-            loading && (loading.value = false);
+            if (!axiosCancel(error)) {
+                loading && (loading.value = false);
+            }
             console.log(error);
         }
     };

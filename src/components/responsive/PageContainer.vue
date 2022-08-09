@@ -10,7 +10,7 @@
     .page_container {
         background-color: var(--bj-background-color);
         flex: 1;
-        padding: 48px 32px 100px;
+        padding: 48px 48px 100px;
         width: 100%;
         text-align: left;
         box-sizing: border-box;
@@ -20,21 +20,19 @@
             margin: 0 auto;
         }
     }
-
-    // tablet
-    @media screen and (min-width: 414px) and (max-width: 768px) {
-        .container {
-            width: 100%;
+    @media screen and (max-width: 768px) {
+        .page_container {
+            padding: 40px 32px 60px;
+            .container {
+                width: 100%;
+            }
         }
     }
-
-    // mobile
-    @media screen and (max-width: 414px) {
+    @media screen and (max-width: 530px) {
         .page_container {
-            padding: 24px 16px 80px;
-        }
-        .container {
-            width: 100%;
+            padding: 24px 16px 60px;
+            .container {
+            }
         }
     }
 </style>

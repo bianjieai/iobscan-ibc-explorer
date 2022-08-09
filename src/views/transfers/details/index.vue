@@ -171,7 +171,7 @@
         &__detail {
             box-sizing: content-box;
             margin: 0 auto;
-            padding: 48px 32px 154px;
+            padding: 48px 48px 100px;
             width: 100%;
             max-width: 1200px;
             text-align: left;
@@ -361,8 +361,6 @@
     @media screen and (max-width: 1000px) {
         .transfer {
             &__detail {
-                padding: 24px 16px 80px;
-
                 &__top_content {
                 }
 
@@ -442,6 +440,7 @@
     @media screen and (max-width: 800px) {
         .transfer {
             &__detail {
+                padding: 40px 32px 60px;
                 &__top_content {
                 }
 
@@ -532,6 +531,7 @@
     @media screen and (max-width: 530px) {
         .transfer {
             &__detail {
+                padding: 24px 16px 60px;
                 &__top_content {
                 }
 

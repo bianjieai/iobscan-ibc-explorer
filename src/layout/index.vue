@@ -54,20 +54,6 @@
         flex: 1;
         display: flex;
     }
-    .ant-tooltip {
-        max-width: 400px !important;
-        .ant-tooltip-content {
-            .ant-tooltip-arrow {
-                .ant-tooltip-arrow-content {
-                    background: rgba(255, 255, 255, 1) !important;
-                }
-            }
-            .ant-tooltip-inner {
-                background: rgba(255, 255, 255, 1) !important;
-                color: var(--bj-font-color-65);
-            }
-        }
-    }
     :deep(.ant-pagination-item) {
         cursor: pointer;
         &-link {

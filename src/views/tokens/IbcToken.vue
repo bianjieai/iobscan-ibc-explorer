@@ -146,17 +146,23 @@
             margin-right: 8px;
         }
     }
+    :deep(.ant-table-cell) {
+        &:nth-of-type(3) {
+            .ant-table-column-sorters {
+                justify-content: flex-start;
+                .ant-table-column-title {
+                    flex: 0;
+                }
+            }
+        }
+    }
 
     .notice_text {
         color: var(--bj-text-second);
     }
 
-    // pc
-    @media screen and (min-width: 768px) {
-    }
-
     // tablet
-    @media screen and (min-width: 414px) and (max-width: 768px) {
+    @media screen and (max-width: 768px) {
         .select {
             margin-top: 24px;
         }

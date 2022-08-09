@@ -42,23 +42,27 @@ export const useIbcTxs = (timerInterval?: number) => {
         });
     });
     const initGetIbcTxs = async (isNeedJudgeShow500 = true) => {
-        homeIbcTxs.value = (await getIbcTxs(
-            {
-                page_num: 1,
-                page_size: 100,
-                use_count: false
-            },
-            isNeedJudgeShow500
-        )) as IIbcTx[];
-        homeIbcTxs.value = homeIbcTxs.value.map((item: any) => {
-            if (item.record_id === expandedId.value) {
-                item.expanded = true;
-            } else {
-                item.expanded = false;
-            }
-            return item;
-        });
-        setIbcTxs();
+        try {
+            homeIbcTxs.value = (await getIbcTxs(
+                {
+                    page_num: 1,
+                    page_size: 100,
+                    use_count: false
+                },
+                isNeedJudgeShow500
+            )) as IIbcTx[];
+            homeIbcTxs.value = homeIbcTxs.value.map((item: any) => {
+                if (item.record_id === expandedId.value) {
+                    item.expanded = true;
+                } else {
+                    item.expanded = false;
+                }
+                return item;
+            });
+            setIbcTxs();
+        } catch (error) {
+            console.log(error);
+        }
     };
     let timer: number;
     onMounted(async () => {
