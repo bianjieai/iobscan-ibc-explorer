@@ -8,7 +8,7 @@
                 :value="chainIds"
                 :placeholders="['All Chains', 'All Chains']"
                 :hide-icon="true"
-                mode="double"
+                :mode="MODES.double"
                 associate-id="allchain"
                 :edit-model="true"
                 :input-ctn="{
@@ -104,6 +104,7 @@
         useSubTitleComputed,
         useChannelsColumnJump
     } from '@/views/channels/composable';
+    import { MODES } from '@/components/BjSelect/constants';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();

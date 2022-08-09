@@ -36,7 +36,7 @@
                         :placeholders="['All Chains', 'All Chains']"
                         :hide-icon="true"
                         :badges="['Transfer', 'Receive']"
-                        mode="double"
+                        :mode="MODES.double"
                         associate-id="allchain"
                         :edit-model="true"
                         :input-ctn="{
@@ -371,6 +371,7 @@
     import { IIbcTx } from '@/types/interface/transfers.interface';
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
     import { CHAIN_ICON } from '@/constants/bjSelect';
+    import { MODES } from '@/components/BjSelect/constants';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
@@ -796,13 +797,12 @@
     const chainData = computed(() => {
         return [
             {
-                hideGroupName: true,
                 children: [
                     {
                         title: 'All Chains',
                         doubleTime: true,
                         id: 'allchain',
-                        value: null
+                        metaData: null
                     }
                 ]
             },
@@ -812,7 +812,7 @@
                     title: v.chain_name,
                     id: v.chain_id,
                     icon: v.icon || CHAIN_ICON,
-                    value: v
+                    metaData: v
                 }))
             }
         ];

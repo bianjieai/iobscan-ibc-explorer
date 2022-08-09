@@ -110,23 +110,21 @@ export const useChannelsSelected = (
     const chainData = computed(() => {
         return [
             {
-                hideGroupName: true,
                 children: [
                     {
                         title: 'All Chains',
                         doubleTime: true,
                         id: 'allchain',
-                        value: null
+                        metaData: null
                     }
                 ]
             },
             {
-                hideGroupName: true,
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
                     title: v.chain_name,
                     id: v.chain_id,
                     icon: v.icon || CHAIN_ICON,
-                    value: v
+                    metaData: v
                 }))
             }
         ];
