@@ -10,6 +10,7 @@ import { GlobalState } from '@/types/interface/store.interface';
 import { IBaseDenom, Paging } from '@/types/interface/index.interface';
 import { IIbcTx } from '@/types/interface/transfers.interface';
 import { IResponseIbcDenom } from '@/types/interface/home.interface';
+import { axiosCancel } from '@/utils/axios';
 
 export const useIbcStatisticsChains = defineStore('global', {
     state: (): GlobalState => {
@@ -167,10 +168,13 @@ export const useIbcStatisticsChains = defineStore('global', {
                     }
                 }
             } catch (error) {
-                if (isNeedJudgeShow500 === true) {
-                    this.isShow500 = true;
+                if (!axiosCancel(error)) {
+                    if (isNeedJudgeShow500 === true) {
+                        this.isShow500 = true;
+                    }
                 }
                 console.log('getIbcTxsAPI', error);
+                throw error;
             }
         }
     }
