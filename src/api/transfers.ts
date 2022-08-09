@@ -5,7 +5,7 @@ import { IRequestIbcTxs, IIbcTx, IIbcTxDetail } from '@/types/interface/transfer
 
 export const getIbcTxsAPI = (params: IRequestIbcTxs) => {
     executeCancel(params.use_count);
-    return request<IResponse<IResponsePagingData<IIbcTx[] | number>>>({
+    return request<IResponse<IResponsePagingData<IIbcTx[]> | number>>({
         url: API_URL.ibcTxsUrl,
         method: 'get',
         params: params,
