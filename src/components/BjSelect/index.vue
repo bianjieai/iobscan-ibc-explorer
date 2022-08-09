@@ -3,7 +3,7 @@
         v-model:visible="visible"
         :trigger="['click']"
         :overlay-style="{ zIndex: 1020 }"
-        @visibleChange="visibleChange"
+        @visible-change="visibleChange"
     >
         <div
             class="flex items-center default_color dropdown_container cursor"

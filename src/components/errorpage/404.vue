@@ -16,11 +16,7 @@
     </div>
 </template>
 
-<script>
-    export default {
-        name: '404'
-    };
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="less">
     .error_page {

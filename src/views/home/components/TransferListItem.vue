@@ -25,7 +25,7 @@
                         <span class="list_subItem__value">{{
                             formatNum(item.symbolNum) || 0
                         }}</span>
-                        <a-popover v-if="item.symbolDenom?.length > 22">
+                        <a-popover v-if="item.symbolDenom?.length > 18">
                             <template #content>{{ item.symbolDenom || '' }}</template>
                             <span class="list_subItem__title">{{ item.symbolDenom || '' }}</span>
                         </a-popover>
@@ -105,7 +105,7 @@
                 &__title_container {
                     .flex(column, nowrap, space-between, flex-start);
                     width: 100%;
-                    max-width: 180px;
+                    max-width: 150px;
                 }
                 &__value {
                     width: 100%;
@@ -122,7 +122,7 @@
                     font-weight: 400;
                     color: var(--bj-text-third);
                     line-height: 18px;
-                    width: 180px;
+                    width: 150px;
                     white-space: nowrap;
                     overflow: hidden;
                     text-overflow: ellipsis;

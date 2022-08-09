@@ -9,11 +9,7 @@
     </div>
 </template>
 
-<script>
-    export default {
-        name: 'ComingSoon'
-    };
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="less">
     .coming_soon_container {

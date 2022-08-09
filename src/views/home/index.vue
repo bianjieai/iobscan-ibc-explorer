@@ -113,10 +113,12 @@
             margin-top: 24px;
             width: 100%;
             &__left {
+                margin-right: 24px;
+                width: 274px;
             }
             &__right {
                 flex: 1;
-                margin-left: 24px;
+                max-width: 902px;
             }
         }
     }
@@ -147,12 +149,13 @@
                 margin-top: 24px;
                 width: 100%;
                 &__left {
+                    margin-right: 0;
                     width: 100%;
                 }
                 &__right {
                     margin-top: 24px;
-                    margin-left: 0;
                     width: 100%;
+                    max-width: 100%;
                 }
             }
         }

@@ -113,3 +113,26 @@ export interface IIbcTxDetail {
     dc_connect: string;
     sc_connect: string;
 }
+
+export interface ITransfersDetails {
+    label: string;
+    value: string;
+    dataKey?: string | undefined;
+    isFormatChainID?: boolean | undefined;
+    isChannelID?: boolean | undefined;
+    isFormatToken?: boolean | undefined;
+    isAddress?: boolean | undefined;
+    isFormatStatus?: boolean | undefined;
+    isFormatDate?: boolean | undefined;
+    isFormatFee?: boolean | undefined;
+    isNotLink?: boolean | undefined;
+}
+
+export interface ITransfersExpandDetails {
+    label: string;
+    value: string;
+    dataKey: string;
+    isExpand: boolean;
+    isAck?: boolean | undefined;
+    isFormatHeight?: boolean | undefined;
+}

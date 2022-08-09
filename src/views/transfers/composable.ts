@@ -3,7 +3,15 @@ import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { useIbcStatisticsChains } from '@/store/index';
 import tokenDefaultImg from '@/assets/token-default.png';
 import { transferTableColumn, defaultTitle } from '@/constants';
-import { IBC_TX_STATUS, IBC_SC_AND_DC_TX_STATUS } from '@/constants/transfers';
+import {
+    IBC_TX_STATUS,
+    IBC_SC_AND_DC_TX_STATUS,
+    TRANSFERS_OUT_DETAILS,
+    TRANSFERS_OUT_EXPAND_DETAILS,
+    TRANSFERS_IN_DETAILS,
+    TRANSFERS_IN_EXPAND_DETAILS
+} from '@/constants/transfers';
+import { ITransfersDetails, ITransfersExpandDetails } from '@/types/interface/transfers.interface';
 
 export const useIbcDenoms = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -136,178 +144,14 @@ export const useTransfersDetailsInfo = () => {
     const baseDenom = ref('');
     const scChainId = ref('');
     const dcChainId = ref('');
-    const transferOutDetails = reactive([
-        {
-            label: 'MsgType:',
-            value: 'IBC Transfer Out'
-        },
-        {
-            label: 'Chain ID:',
-            value: '--',
-            dataKey: 'sc_chain_id',
-            isFormatChainID: true
-        },
-        {
-            label: 'Port:',
-            value: '--',
-            dataKey: 'sc_port'
-        },
-        {
-            label: 'Channel ID:',
-            value: '--',
-            dataKey: 'sc_channel',
-            isChannelID: true
-        },
-        {
-            label: 'Send Token:',
-            value: '--',
-            dataKey: 'sc_tx_info.msg_amount',
-            isFormatToken: true
-        },
-        {
-            label: 'From Address:',
-            value: '--',
-            dataKey: 'sc_tx_info.msg.msg.sender',
-            isAddress: true
-        },
-        {
-            label: 'Block:',
-            value: '--',
-            dataKey: 'sc_tx_info.height'
-        },
-        {
-            label: 'Status:',
-            value: '--',
-            dataKey: 'sc_tx_info.status',
-            isFormatStatus: true
-        },
-        {
-            label: 'Timestamp:',
-            value: '--',
-            dataKey: 'tx_time',
-            isFormatDate: true
-        },
-        {
-            label: 'Fee:',
-            value: '--',
-            dataKey: 'sc_tx_info.fee.amount',
-            isFormatFee: true
-        },
-        {
-            label: 'Signer:',
-            value: '--',
-            dataKey: 'sc_signers',
-            isAddress: true,
-            isNotLink: true
-        }
-    ]);
-    const transferOutExpandDetails = reactive([
-        {
-            label: 'Connection:',
-            value: '--',
-            dataKey: 'sc_connect',
-            isExpand: false
-        },
-        {
-            label: 'Time Out Height:',
-            value: '--',
-            dataKey: 'sc_tx_info.msg.msg.timeout_height',
-            isExpand: false,
-            isFormatHeight: true
-        },
-        {
-            label: 'Time Out Timestamp:',
-            value: '--',
-            dataKey: 'sc_tx_info.msg.msg.timeout_timestamp',
-            isExpand: false
-        }
-    ]);
-    const transferInDetails = reactive([
-        {
-            label: 'MsgType:',
-            value: 'IBC Transfer In'
-        },
-        {
-            label: 'Chain ID:',
-            value: '--',
-            dataKey: 'dc_chain_id',
-            isFormatChainID: true
-        },
-        {
-            label: 'Port:',
-            value: '--',
-            dataKey: 'dc_port'
-        },
-        {
-            label: 'Channel ID:',
-            value: '--',
-            dataKey: 'dc_channel',
-            isChannelID: true
-        },
-        {
-            label: 'Received Token:',
-            value: '--',
-            dataKey: 'dc_tx_info.msg.msg.packet.data',
-            isFormatToken: true
-        },
-        {
-            label: 'To Address:',
-            value: '--',
-            dataKey: 'sc_tx_info.msg.msg.receiver',
-            isAddress: true
-        },
-        {
-            label: 'Block:',
-            value: '--',
-            dataKey: 'dc_tx_info.height'
-        },
-        {
-            label: 'Status:',
-            value: '--',
-            dataKey: 'dc_tx_info.status',
-            isFormatStatus: true
-        },
-        {
-            label: 'Timestamp:',
-            value: '--',
-            dataKey: 'dc_tx_info.time',
-            isFormatDate: true
-        },
-        {
-            label: 'Fee:',
-            value: '--',
-            dataKey: 'dc_tx_info.fee.amount',
-            isFormatFee: true
-        },
-        {
-            label: 'Signer:',
-            value: '--',
-            dataKey: 'dc_signers',
-            isAddress: true
-        }
-    ]);
-    const transferInExpandDetails = reactive([
-        {
-            label: 'Connection:',
-            value: '--',
-            dataKey: 'dc_connect',
-            isExpand: true
-        },
-        {
-            label: 'Packet Ack:',
-            value: '--',
-            dataKey: 'dc_tx_info.ack',
-            isExpand: true,
-            isAck: true
-        },
-        {
-            label: 'Proof Height:',
-            value: '--',
-            dataKey: 'dc_tx_info.msg.msg.proof_height',
-            isExpand: true,
-            isFormatHeight: true
-        }
-    ]);
+    const transferOutDetails = reactive<ITransfersDetails[]>(TRANSFERS_OUT_DETAILS);
+    const transferOutExpandDetails = reactive<ITransfersExpandDetails[]>(
+        TRANSFERS_OUT_EXPAND_DETAILS
+    );
+    const transferInDetails = reactive<ITransfersDetails[]>(TRANSFERS_IN_DETAILS);
+    const transferInExpandDetails = reactive<ITransfersExpandDetails[]>(
+        TRANSFERS_IN_EXPAND_DETAILS
+    );
     watch(route, (newValue) => {
         if (newValue?.query?.hash) {
             getTxDetails();

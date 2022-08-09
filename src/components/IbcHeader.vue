@@ -42,11 +42,12 @@
 
 <script setup lang="ts">
     import { menus } from '@/constants/index';
-    import { RouteLocationNormalized, RouteRecordName } from 'vue-router';
+    import { RouteLocationNormalized } from 'vue-router';
+    type Key = string | number;
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
     const logoName = new URL(import.meta.env.VITE_LOGO_NAME, import.meta.url).href;
     const headerMenus = reactive(menus);
-    const currentMenu = ref<RouteRecordName[]>([]);
+    const currentMenu = ref<Key[]>([]);
     const isShowNav = ref(false);
     const router = useRouter();
     const route = useRoute();
@@ -67,11 +68,11 @@
         isShowNav.value = !isShowNav.value;
     };
 
-    const getCurrentRouterNames = (r: RouteLocationNormalized): RouteRecordName[] => {
+    const getCurrentRouterNames = (r: RouteLocationNormalized): Key[] => {
         if (r) {
             const name = r?.matched[0].children.map((item) => item.name);
             if (name && name.length > 0) {
-                return name as RouteRecordName[];
+                return name as Key[];
             }
             return [];
         }
@@ -88,7 +89,7 @@
         }
     };
     onMounted(() => {
-        currentMenu.value = getCurrentRouterNames(route);
+        currentMenu.value = getCurrentRouterNames(route) as Key[];
         document.addEventListener('click', htmlClickFn);
     });
     onBeforeUnmount(() => {
@@ -96,7 +97,7 @@
     });
 
     router.beforeEach((to: RouteLocationNormalized) => {
-        currentMenu.value = getCurrentRouterNames(to);
+        currentMenu.value = getCurrentRouterNames(to) as Key[];
     });
 </script>
 
