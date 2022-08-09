@@ -323,8 +323,8 @@ export const useTransfersDetailsInfo = () => {
                 ibcStatisticsChainsStore.isShowLoading = false;
                 const { code, data } = result;
                 if (code === API_CODE.success) {
-                    if (data?.length === 1) {
-                        const res = data[0];
+                    if (data?.items?.length === 1) {
+                        const res = data?.items[0];
                         scChainId.value = res?.sc_chain_id;
                         dcChainId.value = res?.dc_chain_id;
                         if (res?.sc_tx_info?.hash) {
@@ -430,7 +430,7 @@ export const useNoResult = () => {
                 .then((result) => {
                     const { code, data } = result;
                     if (code === API_CODE.success) {
-                        if (data.length === 1) {
+                        if (data?.items?.length === 1) {
                             router.push(
                                 `/transfers/details?hash=${Object.keys(route.query).join('')}`
                             );

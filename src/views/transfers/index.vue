@@ -508,7 +508,9 @@
 
         getIbcTxs({
             use_count: true,
-            ...params
+            ...params,
+            page_num: 1,
+            page_size: 10
         })
             .then((data) => {
                 tableCount.value = data as number;
