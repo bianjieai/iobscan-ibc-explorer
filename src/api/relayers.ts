@@ -5,9 +5,8 @@ import { IRequestRelayerList, IResponseRelayerList } from '@/types/interface/rel
 
 export const getRelayersListAPI = async (params: IRequestRelayerList) => {
     executeCancel(params.use_count);
-    const urlPrefix = import.meta.env.VITE_BASE_GO_API;
     return request<IResponse<IResponseRelayerList | number>>({
-        url: `${urlPrefix}${API_URL.ibcRelayerListUrl}`,
+        url: API_URL.ibcRelayerListUrl,
         method: 'get',
         params: params,
         cancelToken: setExecuteCancel(params.use_count)

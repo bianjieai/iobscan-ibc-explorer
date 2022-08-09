@@ -16,8 +16,9 @@ import { useRouter } from 'vue-router';
 import { IDataItem } from '@/components/BjSelect/interface';
 import { IBaseDenom } from '@/types/interface/index.interface';
 import { axiosCancel } from '@/utils/axios';
-const tokenIcon = new URL('../../assets/token-default.png', import.meta.url).href;
-const chainIcon = new URL('../../assets/home/chain-default.png', import.meta.url).href;
+import { CHAIN_ICON, Token_ICON } from '@/constants/bjSelect';
+import ChainHelper from '@/helper/chainHelper';
+
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
     const total = ref<number>(0);
@@ -157,7 +158,7 @@ export const useTokensSelected = (
                 children: ibcBaseDenomsSorted.value.map((v) => ({
                     title: v.symbol,
                     id: v.denom,
-                    icon: v.icon || tokenIcon,
+                    icon: v.icon || Token_ICON,
                     metaData: v
                 }))
             },
@@ -167,7 +168,7 @@ export const useTokensSelected = (
                     {
                         id: 'others',
                         title: 'Others',
-                        icon: tokenIcon
+                        icon: Token_ICON
                     }
                 ]
             }
@@ -186,10 +187,10 @@ export const useTokensSelected = (
                 ]
             },
             {
-                children: ibcChains.value?.all?.map((v: any) => ({
+                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v: any) => ({
                     title: v.chain_name,
                     id: v.chain_id,
-                    icon: v.icon || chainIcon,
+                    icon: v.icon || CHAIN_ICON,
                     metaData: v
                 }))
             }

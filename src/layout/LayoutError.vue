@@ -22,11 +22,26 @@
         display: flex;
         flex-direction: column;
         &__header_container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
         }
         &__content_container {
             flex: 1;
         }
         &__footer_container {
+        }
+    }
+    @media screen and (max-width: 800px) {
+        .layout_error_container {
+            &__header_container {
+                position: relative;
+            }
+            &__content_container {
+            }
+            &__footer_container {
+            }
         }
     }
 </style>

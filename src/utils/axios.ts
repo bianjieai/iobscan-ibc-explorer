@@ -2,7 +2,7 @@ import { AxiosTimeout } from '@/constants/index';
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 
 const service = axios.create({
-    baseURL: import.meta.env.VITE_BASE_API,
+    baseURL: import.meta.env.VITE_BASE_GO_API,
     timeout: AxiosTimeout
 });
 

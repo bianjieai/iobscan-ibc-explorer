@@ -18,14 +18,19 @@ export interface IResponse<P = {}> {
     data: P;
 }
 
-export interface Paging<P = {}> {
-    data: P;
-    pageNum: number;
-    pageSize: number;
+export interface IResponseData<P = {}> {
+    items: P;
+    time_stamp?: number;
+}
+
+export interface IResponsePagingData<P = {}> {
+    items: P;
+    page_info: IResponsePageInfo;
+    time_stamp?: number;
 }
 
 export interface IResponsePageInfo {
-    page_num: boolean;
+    page_num: number;
     page_size: number;
     total_item: number;
     total_page: number;

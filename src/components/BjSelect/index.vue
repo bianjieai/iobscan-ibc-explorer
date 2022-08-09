@@ -59,7 +59,11 @@
 
         <template #overlay>
             <div class="overlay">
-                <div v-for="group in props.data" :key="group.groupName" class="mb-20">
+                <div
+                    v-for="group in props.data"
+                    :key="group.groupName"
+                    :class="[group.groupName ? 'mb-20' : 'mb-12']"
+                >
                     <div v-if="group.groupName" class="flex items-center">
                         <div class="title">{{ group.groupName }}</div>
                         <a-popover
@@ -163,6 +167,7 @@
             children?: {
                 id: number | string;
                 title: string;
+                icon?: string;
                 disabled?: boolean;
                 tooltips?: string;
                 doubleTime?: boolean;

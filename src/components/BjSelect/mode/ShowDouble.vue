@@ -4,9 +4,9 @@
             class="mr-8 ml-8"
             :class="[
                 {
-                    selected_color__default: doubleSelectItems.length === 0,
-                    selected_color: doubleSelectItems.length > 0,
-                    visible_color: doubleSelectItems.length > 0 && visible
+                    selected_color__default: !doubleSelectItems[0] && !visible,
+                    selected_color__third: !doubleSelectItems[0] && visible,
+                    selected_color: doubleSelectItems[0]
                 }
             ]"
         >
@@ -24,9 +24,9 @@
             class="mr-8 ml-8"
             :class="[
                 {
-                    selected_color__default: doubleSelectItems.length === 0,
-                    selected_color: doubleSelectItems.length > 1,
-                    visible_color: doubleSelectItems.length > 1 && visible
+                    selected_color__default: !doubleSelectItems[1] && !visible,
+                    selected_color__third: !doubleSelectItems[1] && visible,
+                    selected_color: doubleSelectItems[1]
                 }
             ]"
         >
@@ -70,6 +70,9 @@
         max-width: 118px;
         &__default {
             color: var(--bj-text-second);
+        }
+        &__third {
+            color: var(--bj-text-third);
         }
     }
     .visible_color {
