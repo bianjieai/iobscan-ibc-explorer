@@ -18,6 +18,7 @@ import { IBaseDenom } from '@/types/interface/index.interface';
 import { axiosCancel } from '@/utils/axios';
 import { CHAIN_ICON, Token_ICON } from '@/constants/bjSelect';
 import ChainHelper from '@/helper/chainHelper';
+import { CHAIN_DEFAULT_VALUE, TOKEN_DEFAULT_VALUE } from '@/constants/tokens';
 
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
@@ -148,7 +149,7 @@ export const useTokensSelected = (
                 children: [
                     {
                         title: 'All Tokens',
-                        id: '',
+                        id: TOKEN_DEFAULT_VALUE,
                         value: null
                     }
                 ]
@@ -181,7 +182,7 @@ export const useTokensSelected = (
                 children: [
                     {
                         title: 'All Chains',
-                        id: '',
+                        id: CHAIN_DEFAULT_VALUE,
                         value: null
                     }
                 ]

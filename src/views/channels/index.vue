@@ -1,7 +1,7 @@
 <template>
     <PageContainer>
         <PageTitle title="IBC Channels" :subtitle="subtitle" />
-        <div class="select flex items-center flex-wrap">
+        <div class="select flex items-center flex-wrap wrapRelative">
             <BjSelect
                 ref="chainDropdown"
                 :data="chainData"
@@ -14,6 +14,10 @@
                 :input-ctn="{
                     placeholder: 'Search by Chain ID,Chain ID',
                     btnTxt: 'Confirm'
+                }"
+                :default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
+                :dropdown-props="{
+                    getPopupContainer: getPopupContainer
                 }"
                 @on-change="onSelectedChain"
             />
@@ -105,6 +109,7 @@
         useChannelsColumnJump
     } from '@/views/channels/composable';
     import { MODES } from '@/components/BjSelect/constants';
+    import { CHAIN_DEFAULT_VALUE } from '@/constants/channels';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
@@ -116,9 +121,14 @@
     const { chainDropdown, statusDropdown } = useChannelsRef();
     const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, channelsList);
     const { goChains, resetSearchCondition } = useChannelsColumnJump();
+
+    const getPopupContainer = () => document.querySelector('.wrapRelative');
 </script>
 
 <style lang="less" scoped>
+    .wrapRelative {
+        position: relative;
+    }
     .select {
         margin-top: 32px;
 

@@ -96,3 +96,31 @@ export const useResetSearch = () => {
         resetSearch
     };
 };
+
+// 判断是否滚动到底部或是最上面
+export const useBoundary = (ele: HTMLElement) => {
+    const res = ref({
+        top: false,
+        bottom: false
+    });
+
+    const handle = () => {
+        res.value.top = ele.scrollTop === 0;
+
+        if (ele.scrollHeight === ele.scrollTop + ele.offsetHeight) {
+            res.value.bottom = true;
+        } else {
+            res.value.bottom = false;
+        }
+    };
+
+    onMounted(() => {
+        ele.addEventListener('scroll', handle);
+    });
+
+    onBeforeUnmount(() => {
+        ele.removeEventListener('scroll', handle);
+    });
+
+    return res;
+};

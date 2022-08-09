@@ -68,3 +68,5 @@ export const CHANNEL_STATUS = {
     OPEN: 'Open',
     CLOSED: 'Closed'
 };
+
+export const CHAIN_DEFAULT_VALUE = 'allchain';

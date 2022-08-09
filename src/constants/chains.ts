@@ -59,3 +59,5 @@ export const COLUMNS: TableColumnsType = [
         width: 180
     }
 ];
+
+export const CHAIN_DEFAULT_VALUE = 'allchain';

@@ -3,6 +3,8 @@
         v-model:visible="visible"
         :trigger="['click']"
         :overlay-style="{ zIndex: 1020 }"
+        :destroy-popup-on-hide="true"
+        :get-popup-container="dropdownProps?.getPopupContainer"
         @visible-change="visibleChange"
     >
         <div
@@ -18,6 +20,7 @@
                     :placeholder="placeholder"
                     :hide-icon="hideIcon"
                     :mode="props.mode"
+                    :default-val="defaultVal"
                 />
             </template>
             <!--            多选单选的展示 end-->
@@ -28,25 +31,11 @@
                     :double-select-items="doubleSelectItems"
                     :placeholders="props.placeholders"
                     :hide-icon="hideIcon"
+                    :default-val="defaultVal"
                 />
             </template>
             <!--            多选单选的展示 end-->
             <span class="button_icon flex justify-between items-center">
-                <!-- <svg
-                    :style="{ transform: visible ? 'rotate(180deg)' : 'rotate(0)' }"
-                    focusable="false"
-                    data-icon="down"
-                    width="12px"
-                    height="12px"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    viewBox="64 64 896 896"
-                    :class="[visible ? 'visible_color' : '']"
-                >
-                    <path
-                        d="M884 256h-75c-5.1 0-9.9 2.5-12.9 6.6L512 654.2 227.9 262.6c-3-4.1-7.8-6.6-12.9-6.6h-75c-6.5 0-10.3 7.4-6.5 12.7l352.6 486.1c12.8 17.6 39 17.6 51.7 0l352.6-486.1c3.9-5.3.1-12.7-6.4-12.7z"
-                    ></path>
-                </svg> -->
                 <i
                     :class="[visible ? 'visible_color' : '']"
                     class="iconfont icon-zhankai-copy-icon"
@@ -60,8 +49,9 @@
         <template #overlay>
             <div class="overlay">
                 <div
-                    v-for="group in props.data"
+                    v-for="(group, ind) in props.data"
                     :key="group.groupName"
+                    class="relative"
                     :class="[group.groupName ? 'mb-20' : 'mb-12']"
                 >
                     <div v-if="group.groupName" class="flex items-center">
@@ -84,6 +74,11 @@
                             />
                         </a-popover>
                     </div>
+                    <div
+                        :class="{
+                            top_shadow: !isBoundary[ind]?.top
+                        }"
+                    ></div>
                     <div class="chains_wrap">
                         <div
                             v-for="item in group?.children"
@@ -111,6 +106,11 @@
                             </div>
                         </div>
                     </div>
+                    <div
+                        :class="{
+                            bottom_shadow: !isBoundary[ind]?.bottom
+                        }"
+                    ></div>
                 </div>
                 <div v-if="inputCtn" class="mt-24">
                     <div v-if="inputCtn?.title" class="flex items-center">
@@ -174,6 +174,7 @@
                 metaData?: any;
             }[];
         }[];
+        defaultVal?: string | number | (string | number)[];
         value?: string | number | (string | number)[];
         mode?: MODES.multiple | MODES.double;
         placeholder?: string;
@@ -189,6 +190,7 @@
             placeholder?: string;
             btnTxt: string;
         };
+        dropdownProps?: {};
     }
 
     const props = withDefaults(defineProps<TProps>(), {
@@ -196,7 +198,7 @@
         editModel: false
     });
 
-    const { inputCtn, placeholder, hideIcon, badges } = { ...props };
+    const { inputCtn, placeholder, hideIcon, badges, defaultVal, dropdownProps } = { ...props };
 
     const { visible, selectItems, tokenInput, inputItems, flatData, resetVal } = useInit(props);
 
@@ -273,9 +275,48 @@
         sumbitTokens(res, true);
     };
 
-    // 收起展开时候都重新赋值
-    const visibleChange = () => {
+    // 监听滚动
+    const isBoundary = ref<
+        {
+            top?: boolean;
+            bottom?: boolean;
+        }[]
+    >([]);
+    const eleRef = ref();
+    const scrollFn = (visible: boolean) => {
+        if (visible) {
+            setTimeout(() => {
+                eleRef.value = document.querySelectorAll('.chains_wrap');
+                isBoundary.value = [];
+                Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement, ind: number) => {
+                    isBoundary.value[ind] = {
+                        top: true,
+                        bottom: true
+                    };
+                    ele.addEventListener('scroll', () => {
+                        isBoundary.value[ind].top = ele.scrollTop === 0;
+                        if (ele.scrollHeight === ele.scrollTop + ele.offsetHeight) {
+                            isBoundary.value[ind].bottom = true;
+                        } else {
+                            isBoundary.value[ind].bottom = false;
+                        }
+                    });
+                });
+                console.log(isBoundary.value);
+            });
+        } else {
+            Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement) => {
+                ele.removeEventListener('scroll', () => {});
+            });
+        }
+    };
+
+    const visibleChange = (visible: boolean) => {
+        // 收起展开时候都重新赋值
         resetVal(props.value);
+
+        // 监听一些滚动，只是为了加阴影
+        scrollFn(visible);
     };
 
     const onInputChange = () => {
@@ -346,6 +387,22 @@
 </script>
 
 <style lang="less" scoped>
+    .top_shadow {
+        position: absolute;
+        width: 100%;
+        height: 30px;
+        pointer-events: none;
+        z-index: 1;
+        box-shadow: inset 0 10px 8px -8px #00000026;
+    }
+    .bottom_shadow {
+        position: absolute;
+        width: 100%;
+        height: 30px;
+        pointer-events: none;
+        z-index: 1;
+        box-shadow: 0 -10px 8px -8px #00000026;
+    }
     .dropdown_container {
         height: 36px;
         border: 1px solid var(--bj-border-color);
@@ -407,6 +464,9 @@
         display: flex;
         flex-wrap: wrap;
         grid-gap: 12px;
+        max-height: 210px;
+        overflow-y: auto;
+        position: relative;
     }
 
     .chains_tag {

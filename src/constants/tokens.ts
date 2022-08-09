@@ -131,3 +131,7 @@ export const IBC_STATUS_OPTIONS = [
 export const SPECIAL_TOKEN_TYPE = {
     GENESIS: 'Genesis'
 };
+
+export const TOKEN_DEFAULT_VALUE = '';
+
+export const CHAIN_DEFAULT_VALUE = '';

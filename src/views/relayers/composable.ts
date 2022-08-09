@@ -18,6 +18,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
 import { CHAIN_ICON } from '@/constants/bjSelect';
+import { CHAIN_DEFAULT_VALUE } from '@/constants/relayers';
 
 export const useGetRelayersList = () => {
     const relayersList = ref<IResponseRelayerListItem[]>([]);
@@ -133,7 +134,7 @@ export const useRelayersSelected = (
                     {
                         title: 'All Chains',
                         doubleTime: true,
-                        id: 'allchain',
+                        id: CHAIN_DEFAULT_VALUE,
                         metaData: null
                     }
                 ]
