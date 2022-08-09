@@ -14,6 +14,8 @@ import { urlPageParser } from '@/utils/urlTools';
 import { computed, onMounted, ref, Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
+import { IDataItem, TDenom } from '@/components/BjSelect/interface';
+import { CHAIN_ICON } from '@/constants/bjSelect';
 
 export const useGetChannelsList = () => {
     const channelsList = ref<IResponseChannelsListItem[]>([]);
@@ -72,12 +74,14 @@ export const useChannelsSelected = (
     chainIdQuery: string,
     statusQuery: TChannelStatus,
     getChannelsList: (params: IRequestChannelsList) => Promise<void>,
-    loading: Ref<boolean>
+    loading: Ref<boolean>,
+    ibcChains: any
 ) => {
     let pageUrl = '/channels';
 
     const router = useRouter();
     const searchChain = ref(chainIdQuery ? chainIdQuery : undefined);
+    const chainIds = ref<TDenom[]>(searchChain.value ? searchChain.value.split(',') : []);
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
     const refreshList = () => {
         getChannelsList({
@@ -87,7 +91,16 @@ export const useChannelsSelected = (
             loading: loading
         });
     };
-    const onSelectedChain = (chain_id?: string) => {
+    const onSelectedChain = (vals: IDataItem[]) => {
+        // allChain 只能是最后一个，否则交换
+        const res = vals.map((v) => v.id);
+        if (res[0] === 'allchain') {
+            chainIds.value = [res[1], res[0]];
+        } else {
+            chainIds.value = res;
+        }
+
+        const chain_id = chainIds.value.join(',');
         searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
         pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
@@ -96,6 +109,29 @@ export const useChannelsSelected = (
         router.replace(pageUrl);
         refreshList();
     };
+
+    const chainData = computed(() => {
+        return [
+            {
+                children: [
+                    {
+                        title: 'All Chains',
+                        doubleTime: true,
+                        id: 'allchain',
+                        metaData: null
+                    }
+                ]
+            },
+            {
+                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
+                    title: v.chain_name,
+                    id: v.chain_id,
+                    icon: v.icon || CHAIN_ICON,
+                    metaData: v
+                }))
+            }
+        ];
+    });
 
     const onSelectedStatus = (value?: number | string) => {
         searchStatus.value = value as TChannelStatus;
@@ -111,7 +147,9 @@ export const useChannelsSelected = (
         refreshList();
     });
     return {
+        chainIds,
         searchChain,
+        chainData,
         searchStatus,
         onSelectedChain,
         onSelectedStatus
