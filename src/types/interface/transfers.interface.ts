@@ -36,6 +36,7 @@ export interface IIbcTx {
 
 export interface IIbcTxDetail {
     base_denom: string;
+    base_denom_chain_id: string;
     dc_addr: string;
     dc_chain_id: string;
     dc_channel: string;
@@ -112,6 +113,7 @@ export interface IIbcTxDetail {
     dc_signers: string[];
     dc_connect: string;
     sc_connect: string;
+    ack: string;
 }
 
 export interface ITransfersDetails {
