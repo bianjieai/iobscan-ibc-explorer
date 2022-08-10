@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-        <div class="transfer__middle">
+        <div class="transfer__middle relative">
             <div class="transfer__middle__top">
                 <div class="transfer__middle__left">
                     <!-- todo duanjie 看能否使用 TokensDropDown 复用 -->
@@ -42,6 +42,10 @@
                         :input-ctn="{
                             placeholder: 'Search by Chain ID,Chain ID',
                             btnTxt: 'Confirm'
+                        }"
+                        :default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
+                        :dropdown-props="{
+                            getPopupContainer: chainGetPopupContainer
                         }"
                         @on-change="onSelectedChain"
                     />
@@ -370,6 +374,7 @@
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
     import { CHAIN_ICON } from '@/constants/bjSelect';
     import { MODES } from '@/components/BjSelect/constants';
+    import { CHAIN_DEFAULT_VALUE } from '@/constants/chains';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
@@ -794,6 +799,7 @@
         pagination.current = 1;
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
         router.replace(url);
+        chainIds.value = [];
         queryDatas();
     };
 
@@ -805,7 +811,7 @@
                     {
                         title: 'All Chains',
                         doubleTime: true,
-                        id: 'allchain',
+                        id: CHAIN_DEFAULT_VALUE,
                         metaData: null
                     }
                 ]
@@ -820,6 +826,8 @@
             }
         ];
     });
+    const chainGetPopupContainer = () => document.querySelector('.transfer__middle');
+
     const onSelectedChain = (vals: IDataItem[]) => {
         chainIds.value = vals?.map((v) => v.id);
         const chain_id = chainIds.value.join(',');

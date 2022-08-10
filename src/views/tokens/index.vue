@@ -1,7 +1,7 @@
 <template>
     <PageContainer>
         <PageTitle title="IBC Tokens" :subtitle="subtitle" />
-        <div class="select flex items-center flex-wrap">
+        <div class="select flex items-center flex-wrap wrapRelative">
             <BjSelect
                 ref="tokensDropdown"
                 :data="tokenData"
@@ -14,6 +14,10 @@
                     btnTxt: 'Confirm',
                     icon: '/src/assets/tip.png'
                 }"
+                :default-val="TOKEN_DEFAULT_VALUE"
+                :dropdown-props="{
+                    getPopupContainer: getPopupContainer
+                }"
                 @on-change="onSelectedToken"
             />
             <BjSelect
@@ -25,6 +29,10 @@
                 :input-ctn="{
                     placeholder: 'Search by Chain ID',
                     btnTxt: 'Confirm'
+                }"
+                :default-val="CHAIN_DEFAULT_VALUE"
+                :dropdown-props="{
+                    getPopupContainer: getPopupContainer
                 }"
                 @on-change="onSelectedChain"
             />
@@ -130,7 +138,12 @@
 
 <script lang="ts" setup>
     import { thousandDecimal, PAGE_PARAMETERS } from '@/constants';
-    import { COLUMNS, STATUS_OPTIONS } from '@/constants/tokens';
+    import {
+        COLUMNS,
+        STATUS_OPTIONS,
+        CHAIN_DEFAULT_VALUE,
+        TOKEN_DEFAULT_VALUE
+    } from '@/constants/tokens';
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
     import {
         useGetTokenList,
@@ -185,9 +198,14 @@
     );
     const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
         useTokensColumnJump(getBaseDenomInfoByDenom);
+
+    const getPopupContainer = () => document.querySelector('.wrapRelative');
 </script>
 
 <style lang="less" scoped>
+    .wrapRelative {
+        position: relative;
+    }
     .select {
         margin-top: 32px;
 
