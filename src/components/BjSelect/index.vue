@@ -151,6 +151,7 @@
     </a-dropdown>
 </template>
 <script lang="ts" setup>
+    import { DropdownProps } from 'ant-design-vue/es/dropdown';
     import { IDataItem, TDenom } from './interface';
     import { useInit } from './composable';
     import { getValByMode, closeByMode, inputItemsByMode } from './helper';
@@ -190,7 +191,7 @@
             placeholder?: string;
             btnTxt: string;
         };
-        dropdownProps?: {};
+        dropdownProps?: DropdownProps;
     }
 
     const props = withDefaults(defineProps<TProps>(), {
