@@ -296,14 +296,13 @@
                     };
                     ele.addEventListener('scroll', () => {
                         isBoundary.value[ind].top = ele.scrollTop === 0;
-                        if (ele.scrollHeight === ele.scrollTop + ele.offsetHeight) {
+                        if (ele.scrollHeight === ele.scrollTop + ele.clientHeight) {
                             isBoundary.value[ind].bottom = true;
                         } else {
                             isBoundary.value[ind].bottom = false;
                         }
                     });
                 });
-                console.log(isBoundary.value);
             });
         } else {
             Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement) => {
@@ -395,6 +394,7 @@
         pointer-events: none;
         z-index: 1;
         box-shadow: inset 0 10px 8px -8px #00000026;
+        margin-top: -10px;
     }
     .bottom_shadow {
         position: absolute;
@@ -402,7 +402,10 @@
         height: 30px;
         pointer-events: none;
         z-index: 1;
-        box-shadow: 0 -10px 8px -8px #00000026;
+        background: linear-gradient(360deg, rgba(17, 22, 77, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+        transform: translateY(-100%);
+        margin-top: 10px;
+        //box-shadow: inset 0 -10px 8px -8px #00000026;
     }
     .dropdown_container {
         height: 36px;
@@ -456,7 +459,7 @@
     }
 
     .title {
-        margin-bottom: 7px;
+        margin-bottom: 12px;
     }
 
     .chains_wrap {
@@ -468,6 +471,8 @@
         max-height: 210px;
         overflow-y: auto;
         position: relative;
+        padding: 10px 0;
+        margin: -10px 0;
     }
 
     .chains_tag {
@@ -548,7 +553,7 @@
     @media screen and (max-width: 768px) {
         .overlay {
             max-width: 381px;
-            height: 450px;
+            max-height: 552px;
             overflow-y: auto;
             &::-webkit-scrollbar {
                 width: 6px;
@@ -577,7 +582,6 @@
     @media screen and (max-width: 414px) {
         .overlay {
             max-width: 284px;
-            height: 450px;
         }
 
         .confirm_button {
