@@ -409,7 +409,30 @@ const testChains = {
   const SYMBOL = {
     ATOM:'ATOM',
     IRIS:'IRIS'
+}
+const FOOTER_MODE = {
+  light: 'light',
+  dark: 'dark'
+}
+const COPYRIGHT = 'Copyright © 2022 IRIS Foundation Ltd. All Rights Reserved.';
+const ICON_LINK = [
+  {
+      iconName: 'icon-github',
+      iconLink: 'https://github.com/irisnet'
+  },
+  {
+      iconName: 'icon-telegram',
+      iconLink: 'https://t.me/irisnetwork'
+  },
+  {
+      iconName: 'icon-medium',
+      iconLink: 'https://medium.com/irisnet-blog'
+  },
+  {
+      iconName: 'icon-tweeter',
+      iconLink: 'https://twitter.com/irisnetwork'
   }
+];
   export {
     testChains,
     ibcStatisticsTxsTest,
@@ -443,6 +466,9 @@ const testChains = {
     CHAINNAME,
     UNKNOWN,
     SYMBOL,
-    thousandDecimal
+  thousandDecimal,
+  FOOTER_MODE,
+  COPYRIGHT,
+  ICON_LINK
   };
   
