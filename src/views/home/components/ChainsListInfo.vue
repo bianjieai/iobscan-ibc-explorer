@@ -17,7 +17,7 @@
                 ref="scrollListRef"
                 class="card_list ibc_scrollbar"
                 :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 4, xxl: 4 }"
-                :data-source="chainList[currentMenu[0]]"
+                :data-source="sortChainList[currentMenu[0]]"
             >
                 <template #renderItem="{ item }">
                     <a-list-item
@@ -82,7 +82,8 @@
         linkListRef,
         findClassName,
         onClickAnchor,
-        onSelectedMenu
+        onSelectedMenu,
+        sortChainList
     } = useAnchors(chainList, emits);
     watch(
         () => prop.chainList,
