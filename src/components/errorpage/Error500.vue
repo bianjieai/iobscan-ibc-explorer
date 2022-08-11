@@ -6,11 +6,11 @@
                 <img class="content__img__small" src="/src/assets/error/500_small.png" alt="" />
             </div>
             <div class="content__text">
-                <p class="content__text__title">Something went wrong</p>
+                <p class="content__text__title">Something went wrong.</p>
                 <p class="content__text__description"
                     >Don't panic, we'll fix it soon. Please try again after some time.</p
                 >
-                <router-link :to="'/home'" class="content__text__button">Go Back</router-link>
+                <div class="content__text__button" @click="goBackClick">Go Back</div>
             </div>
         </div>
     </div>
@@ -23,6 +23,15 @@
         console.log('onBeforeUnmount======error 500');
         ibcStatisticsChainsStore.isShow500 = false;
     });
+    const router = useRouter();
+    const route = useRoute();
+    const goBackClick = () => {
+        if (route.path === '/home') {
+            location.reload();
+        } else {
+            router.push('/home');
+        }
+    };
 </script>
 
 <style scoped lang="less">
