@@ -41,7 +41,7 @@
                     />
                 </layer-block>
             </div>
-            <layer-block class="home__bottom__right" title="IBC Token Transfer">
+            <layer-block class="home__bottom__right" title="IBC Token Transfers">
                 <statistic-list
                     type="horizontal"
                     :msg="ibcStatisticsTxs"

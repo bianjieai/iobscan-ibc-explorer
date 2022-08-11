@@ -56,7 +56,6 @@
     }
 
     const props = withDefaults(defineProps<IProps>(), {
-        title: '',
         iconSize: TableCellIconSize.NORMAL
     });
 
