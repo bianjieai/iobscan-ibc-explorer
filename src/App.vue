@@ -25,9 +25,9 @@ useChangeTitleAndIcon();
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
   min-width: 320px;
   overflow-x: auto;
 }

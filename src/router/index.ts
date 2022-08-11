@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import Layout from '../layout/index.vue'
+import LayoutMaintenance from '../layout/LayoutMaintenance.vue'
 import { createInterceptor } from './interceptor'
 
 const routes: Array<RouteRecordRaw> = [
@@ -127,6 +128,19 @@ const routes: Array<RouteRecordRaw> = [
                 path: '',
                 name: 'Relayers',
                 component: () => import('../views/relayers/index.vue'),
+                meta: {}
+            }
+        ]
+    },
+    {
+        path: '/maintenance',
+        component: LayoutMaintenance,
+        meta: {},
+        children: [
+            {
+                path: '',
+                name: 'Maintenance',
+                component: () => import('../components/MaintenancePage.vue'),
                 meta: {}
             }
         ]

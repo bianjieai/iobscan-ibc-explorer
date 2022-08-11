@@ -1,7 +1,9 @@
 .ant-anchor-link::before {
     width: 0px !important;
 }
-
+.ant-layout-content {
+    min-height: auto;
+}
 .ant-message-notice-content {
     background-color: rgba(0, 0, 0, 0.35);
     border-width: 1px 4px 1px 1px;
