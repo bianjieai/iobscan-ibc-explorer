@@ -31,31 +31,47 @@ export const useGetTokenList = () => {
             delete params.loading;
         }
         try {
-            const result = await getTokensListAPI({
-                ...BASE_PARAMS,
-                ...params
-            });
-            loading && (loading.value = false);
-            const { code, data, message } = result;
-            if (code === API_CODE.success) {
-                if (!params.use_count) {
-                    const { items } = data as IResponseTokensList;
-                    const temp: ITokensListItem[] = [];
-                    for (let i = 0; i < (items ?? []).length; i++) {
-                        const item: ITokensListItem = items[i];
-                        const baseDenom = await getBaseDenomByKey(item.chain_id, item.base_denom);
-                        item['name'] = baseDenom
-                            ? getRestString(baseDenom.symbol, 6, 0)
-                            : getRestString(item.base_denom, 6, 0);
-                        temp.push(item);
+            const allData = {} as IResponseTokensList;
+            const getAllData = async () => {
+                const result = await getTokensListAPI({
+                    ...BASE_PARAMS,
+                    ...params
+                });
+                const { code, data, message } = result;
+                if (data.constructor === Object) {
+                    if (data.items.length < BASE_PARAMS.page_size) {
+                        allData.items = (allData.items || []).concat(data?.items);
+                        loading && (loading.value = false);
+                        if (code === API_CODE.success) {
+                            if (!params.use_count) {
+                                const { items } = allData as IResponseTokensList;
+                                const temp: ITokensListItem[] = [];
+                                for (let i = 0; i < (items ?? []).length; i++) {
+                                    const item: ITokensListItem = items[i];
+                                    const baseDenom = await getBaseDenomByKey(
+                                        item.chain_id,
+                                        item.base_denom
+                                    );
+                                    item['name'] = baseDenom
+                                        ? getRestString(baseDenom.symbol, 6, 0)
+                                        : getRestString(item.base_denom, 6, 0);
+                                    temp.push(item);
+                                }
+                                tokensList.value = temp;
+                            } else {
+                                total.value = data as number;
+                            }
+                        } else {
+                            console.error(message);
+                        }
+                    } else {
+                        allData.items = (allData.items || []).concat(data.items);
+                        params.page_num++;
+                        getAllData();
                     }
-                    tokensList.value = temp;
-                } else {
-                    total.value = data as number;
                 }
-            } else {
-                console.error(message);
-            }
+            };
+            getAllData();
         } catch (error) {
             if (!axiosCancel(error)) {
                 loading && (loading.value = false);

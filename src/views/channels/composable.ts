@@ -30,22 +30,40 @@ export const useGetChannelsList = () => {
             delete params.loading;
         }
         try {
-            const result = await getChannelsListAPI({
-                ...BASE_PARAMS,
-                ...params
-            });
-            loading && (loading.value = false);
-            const { code, data, message } = result;
-            if (code === API_CODE.success) {
-                if (!params.use_count) {
-                    const { items } = data as IResponseChannelsList;
-                    channelsList.value = ChainHelper.sortByChainName(items, params.chain);
+            const allData = {} as IResponseChannelsList;
+            const getAllData = async () => {
+                const result = await getChannelsListAPI({
+                    ...BASE_PARAMS,
+                    ...params
+                });
+                const { code, data, message } = result;
+                if (data.constructor === Object) {
+                    if (data.items.length < BASE_PARAMS.page_size) {
+                        allData.items = (allData.items || []).concat(data?.items);
+                        loading && (loading.value = false);
+                        if (code === API_CODE.success) {
+                            if (!params.use_count) {
+                                const { items } = allData as IRequestChannelsList;
+                                channelsList.value = ChainHelper.sortByChainName(
+                                    items,
+                                    params.chain
+                                );
+                            } else {
+                                total.value = data as number;
+                            }
+                        } else {
+                            console.error(message);
+                        }
+                    } else {
+                        allData.items = (allData.items || []).concat(data.items);
+                        params.page_num++;
+                        getAllData();
+                    }
                 } else {
                     total.value = data as number;
                 }
-            } else {
-                console.error(message);
-            }
+            };
+            getAllData();
         } catch (error) {
             if (!axiosCancel(error)) {
                 loading && (loading.value = false);

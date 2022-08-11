@@ -31,30 +31,46 @@ export const useGetRelayersList = () => {
             delete params.loading;
         }
         try {
-            const result = await getRelayersListAPI({
-                ...BASE_PARAMS,
-                ...params
-            });
-            loading && (loading.value = false);
-            const { code, data, message } = result;
-            if (code === API_CODE.success) {
-                if (!params.use_count) {
-                    const { items } = data as IResponseRelayerList;
-                    relayersList.value = ChainHelper.sortByChainName(items, params.chain)?.map(
-                        (item: IRelayersListItem) => {
-                            item.txs_success_rate = formatTransfer_success_txs(
-                                item.transfer_success_txs,
-                                item.transfer_total_txs
-                            );
-                            return item;
+            const allData = {} as IResponseRelayerList;
+            const getAllData = async () => {
+                const result = await getRelayersListAPI({
+                    ...BASE_PARAMS,
+                    ...params
+                });
+                const { code, data, message } = result;
+                if (data.constructor === Object) {
+                    if (data.items.length < BASE_PARAMS.page_size) {
+                        allData.items = (allData.items || []).concat(data?.items);
+                        loading && (loading.value = false);
+                        if (code === API_CODE.success) {
+                            if (!params.use_count) {
+                                const { items } = allData as IResponseRelayerList;
+                                relayersList.value = ChainHelper.sortByChainName(
+                                    items,
+                                    params.chain
+                                )?.map((item: IRelayersListItem) => {
+                                    item.txs_success_rate = formatTransfer_success_txs(
+                                        item.transfer_success_txs,
+                                        item.transfer_total_txs
+                                    );
+                                    return item;
+                                });
+                            } else {
+                                total.value = data as number;
+                            }
+                        } else {
+                            console.error(message);
                         }
-                    );
+                    } else {
+                        allData.items = (allData.items || []).concat(data.items);
+                        params.page_num++;
+                        getAllData();
+                    }
                 } else {
                     total.value = data as number;
                 }
-            } else {
-                console.error(message);
-            }
+            };
+            getAllData();
         } catch (error) {
             if (!axiosCancel(error)) {
                 loading && (loading.value = false);
@@ -63,7 +79,6 @@ export const useGetRelayersList = () => {
         }
     };
     getRelayersList({ ...BASE_PARAMS, use_count: true });
-
     return {
         relayersList,
         total,
