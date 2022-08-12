@@ -264,7 +264,7 @@
                 break;
             // 只选择两个时候
             case MODES.double:
-                res = [...inputItems.value, ...selectItems.value];
+                res = [...inputItems.value.slice(0, 2), ...selectItems.value].slice(0, 2);
                 break;
             default:
                 // 单选时候，清空选择框

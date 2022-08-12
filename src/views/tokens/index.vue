@@ -12,7 +12,7 @@
                     toolTip: 'Hash (in hex format) of the denomination trace information.',
                     placeholder: 'Search by ibc/hash',
                     btnTxt: 'Confirm',
-                    icon: '/src/assets/tip.png'
+                    icon: TIP_ICON
                 }"
                 :default-val="TOKEN_DEFAULT_VALUE"
                 :dropdown-props="{
@@ -156,6 +156,7 @@
     import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
+    import { TIP_ICON } from '@/constants/bjSelect';
 
     const { loading } = useLoading();
     const { chainIdQuery, denomQuery, statusQuery } = useTokensQuery();

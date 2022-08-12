@@ -30,8 +30,6 @@
     const props = defineProps<IProps>();
 
     const findChainName = (chainId: string) => {
-        console.log(props.ibcChains, '---');
-
         if (Array.isArray(props.ibcChains)) {
             const ibcChain = props.ibcChains.find((item) => item.chain_id === chainId);
             if (ibcChain) {

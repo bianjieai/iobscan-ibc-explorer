@@ -51,6 +51,7 @@ export interface IIbcChains {
     inactive: IIbcchain[];
 }
 
+export type TIbcChainsKeys = keyof IIbcChains;
 export interface IBaseDenom {
     chain_id: string;
     create_at: number;
