@@ -129,22 +129,35 @@
     import { useFindIcon, useIsVisible } from '@/views/transfers/composable';
     import { ref, watch } from 'vue';
     import { defaultTitle, unAuthed } from '@/constants';
+    import { IBaseDenom } from '@/types/interface/index.interface';
     const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
-    const props = defineProps({
-        ibcBaseDenoms: {
-            type: Array,
-            default: () => []
-        },
-        selectedSymbol: {
-            type: String,
-            default: ''
-        },
-        clearInput: {
-            type: Number,
-            required: true
-        },
-        showIcon: Boolean
-    });
+    const props = withDefaults(
+        defineProps<{
+            ibcBaseDenoms?: IBaseDenom[];
+            selectedSymbol?: string;
+            clearInput: number;
+            showIcon?: boolean;
+        }>(),
+        {
+            ibcBaseDenoms: () => [],
+            selectedSymbol: ''
+        }
+    );
+    // const props = defineProps({
+    //     ibcBaseDenoms: {
+    //         type: Array,
+    //         default: () => []
+    //     },
+    //     selectedSymbol: {
+    //         type: String,
+    //         default: ''
+    //     },
+    //     clearInput: {
+    //         type: Number,
+    //         required: true
+    //     },
+    //     showIcon: Boolean
+    // });
     const emits = defineEmits(['clickItem', 'clickSearch']);
     const { findSymbolIcon } = useFindIcon(props);
     const { isVisible, visibleChange } = useIsVisible();
