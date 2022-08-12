@@ -231,7 +231,8 @@
     });
 
     const emit = defineEmits<{
-        (e: 'onChange', res: IDataItem | IDataItem[]): void;
+        // (e: 'onChange', res?: IDataItem | IDataItem[]): void;
+        (e: 'onChange', res: any): void;
     }>();
 
     /**
