@@ -55,7 +55,7 @@
                 </span>
                 <span v-else-if="item.isAddress" class="details_item_value">
                     <span v-show="Array.isArray(item.value)">
-                        <div v-if="item.value.length >= 1">
+                        <div v-if="item.value?.length >= 1">
                             <span v-for="(address, addressIndex) of item.value" :key="addressIndex">
                                 <span v-if="item.isNotLink" class="value_style">{{
                                     address || '--'

@@ -1,9 +1,9 @@
 <template>
     <div class="status_container">
-        <div class="flex justify-between items-center flex-wrap">
+        <div class="flex justify-between items-center flex-wrap status_container__content">
             <div>{{ type }} Status: </div>
             <div class="flex status_content">
-                <div class="flex items-center ml-16 first_status">
+                <div class="flex items-center ml-16">
                     <img
                         :src="activeImgInfo.src"
                         :width="activeImgInfo.width"
@@ -103,12 +103,13 @@
             padding: 8px 16px 8px 8px;
         }
     }
-    @media screen and (max-width: 420px) {
+    @media screen and (max-width: 402px) {
         .status_container {
-            .status_content {
-                margin-top: 8px;
-                .first_status {
-                    margin-left: 0;
+            &__content {
+                flex-direction: column;
+                align-items: flex-start;
+                .status_content {
+                    margin-top: 8px;
                 }
             }
         }

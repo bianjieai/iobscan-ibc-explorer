@@ -240,14 +240,14 @@
             margin-top: 24px;
         }
     }
-    @media screen and (max-width: 510px) {
+    @media screen and (max-width: 477px) {
         .select {
             .ant-btn {
                 margin-top: 8px;
             }
         }
     }
-    @media screen and (max-width: 478px) {
+    @media screen and (max-width: 445px) {
         .select {
             :deep(.ant-dropdown-trigger) {
                 &:nth-of-type(3) {
