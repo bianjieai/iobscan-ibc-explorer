@@ -200,7 +200,7 @@
                             >
                                 <img
                                     class="token__icon"
-                                    :src="record.symbolIcon || chainDefaultImg"
+                                    :src="record.symbolIcon || tokenDefaultImg"
                                 />
                                 <span class="token__info">
                                     <span class="token__info__num">{{
@@ -355,6 +355,7 @@
         CHAINNAME
     } from '@/constants';
     import chainDefaultImg from '@/assets/home/chain-default.png';
+    import tokenDefaultImg from '@/assets/token-default.png';
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
     import { useGetIbcDenoms } from '@/views/home/composable';
@@ -564,16 +565,16 @@
             return '';
         }
     });
-    const setAllChains = (allChains: any) => {
-        if (allChains?.value?.all) {
-            const cosmosChain = allChains.value.all.filter(
+    const setAllChains = (ibcChains: any) => {
+        if (ibcChains?.value?.all) {
+            const cosmosChain = ibcChains.value.all.filter(
                 (item: any) => item.chain_name === CHAINNAME.COSMOSHUB
             );
-            const irishubChain = allChains.value.all.filter(
+            const irishubChain = ibcChains.value.all.filter(
                 (item: any) => item.chain_name === CHAINNAME.IRISHUB
             );
             let notIncludesIrisAndCosmosChains: any = [];
-            allChains.value.all.forEach((item: any) => {
+            ibcChains.value.all.forEach((item: any) => {
                 if (
                     item.chain_name !== CHAINNAME.COSMOSHUB &&
                     item.chain_name !== CHAINNAME.IRISHUB
@@ -597,10 +598,9 @@
             ];
         }
     };
-    let allChains = ibcChains;
-    setAllChains(allChains);
+    setAllChains(ibcChains);
     watch(
-        () => allChains,
+        () => ibcChains,
         (newValue) => {
             if (newValue?.value?.all) {
                 setAllChains(newValue);
@@ -743,7 +743,7 @@
         router.replace(url);
         queryDatas();
     };
-    const onPaginationChange = (page: any) => {
+    const onPaginationChange = (page: number) => {
         pagination.current = page;
         const params: any = urlParser(url);
         url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
@@ -774,7 +774,8 @@
             use_count: false,
             ...queryParam
         })
-            .then(() => {
+            .then((data) => {
+                tableDatas.value = data as IIbcTx[];
                 showTransferLoading.value = false;
             })
             .catch((error) => {
@@ -826,7 +827,7 @@
             }
         ];
     });
-    const chainGetPopupContainer = () => document.querySelector('.transfer__middle');
+    const chainGetPopupContainer = (): HTMLElement => document.querySelector('.transfer__middle')!;
 
     const onSelectedChain = (vals: IDataItem[]) => {
         chainIds.value = vals?.map((v) => v.id);
@@ -1565,10 +1566,11 @@
                 .status_icon {
                 }
             }
-            &_bottom {
+            &__bottom {
                 & .status_tips {
                     flex-wrap: wrap;
                     justify-content: space-between;
+                    padding-bottom: 0;
                     .status_log {
                         width: 100%;
                         margin-bottom: 8px;

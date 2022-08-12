@@ -12,7 +12,7 @@
                     toolTip: 'Hash (in hex format) of the denomination trace information.',
                     placeholder: 'Search by ibc/hash',
                     btnTxt: 'Confirm',
-                    icon: '/src/assets/tip.png'
+                    icon: TIP_ICON
                 }"
                 :default-val="TOKEN_DEFAULT_VALUE"
                 :dropdown-props="{
@@ -156,6 +156,7 @@
     import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
+    import { TIP_ICON } from '@/constants/bjSelect';
 
     const { loading } = useLoading();
     const { chainIdQuery, denomQuery, statusQuery } = useTokensQuery();
@@ -199,7 +200,7 @@
     const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
         useTokensColumnJump(getBaseDenomInfoByDenom);
 
-    const getPopupContainer = () => document.querySelector('.wrapRelative');
+    const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
 </script>
 
 <style lang="less" scoped>
@@ -239,14 +240,14 @@
             margin-top: 24px;
         }
     }
-    @media screen and (max-width: 510px) {
+    @media screen and (max-width: 477px) {
         .select {
             .ant-btn {
                 margin-top: 8px;
             }
         }
     }
-    @media screen and (max-width: 478px) {
+    @media screen and (max-width: 445px) {
         .select {
             :deep(.ant-dropdown-trigger) {
                 &:nth-of-type(3) {

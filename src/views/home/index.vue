@@ -153,7 +153,7 @@
                     width: 100%;
                 }
                 &__right {
-                    margin-top: 24px;
+                    margin-top: 40px !important;
                     width: 100%;
                     max-width: 100%;
                 }
@@ -193,7 +193,7 @@
                 .flex(row, nowrap, flex-start, center);
             }
             &__top {
-                margin-top: 48px;
+                margin-top: 48px !important;
                 &__slot {
                     padding: 16px;
                 }

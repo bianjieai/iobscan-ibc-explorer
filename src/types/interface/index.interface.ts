@@ -51,6 +51,7 @@ export interface IIbcChains {
     inactive: IIbcchain[];
 }
 
+export type TIbcChainsKeys = keyof IIbcChains;
 export interface IBaseDenom {
     chain_id: string;
     create_at: number;
@@ -75,4 +76,10 @@ export interface IDenomTrace {
 export enum FooterMode {
     light,
     dark
+}
+
+export interface IPaginationParams {
+    total: number;
+    current: number;
+    pageSize: number;
 }

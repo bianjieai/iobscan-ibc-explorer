@@ -195,7 +195,7 @@ export const useTokensSelected = (
                     {
                         title: 'All Tokens',
                         id: TOKEN_DEFAULT_VALUE,
-                        value: null
+                        metaData: null
                     }
                 ]
             },
@@ -228,7 +228,7 @@ export const useTokensSelected = (
                     {
                         title: 'All Chains',
                         id: CHAIN_DEFAULT_VALUE,
-                        value: null
+                        metaData: null
                     }
                 ]
             },

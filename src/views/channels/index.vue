@@ -122,7 +122,7 @@
     const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, channelsList);
     const { goChains, resetSearchCondition } = useChannelsColumnJump();
 
-    const getPopupContainer = () => document.querySelector('.wrapRelative');
+    const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
 </script>
 
 <style lang="less" scoped>
@@ -160,15 +160,17 @@
         .selected_color {
             max-width: 72px !important;
         }
-
+    }
+    @media screen and (max-width: 394px) {
+        :deep(.ant-btn-icon-only) {
+            margin-top: 8px;
+        }
+    }
+    @media screen and (max-width: 362px) {
         :deep(.ant-dropdown-trigger) {
             &:last-of-type {
                 margin-top: 8px;
             }
-        }
-
-        :deep(.ant-btn-icon-only) {
-            margin-top: 8px;
         }
     }
 </style>

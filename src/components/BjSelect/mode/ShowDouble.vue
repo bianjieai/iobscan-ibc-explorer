@@ -8,7 +8,7 @@
                 class="mr-4"
                 :src="doubleSelectItems[0]?.icon"
             />
-            {{ doubleSelectItems[0]?.title || placeholders[0] }}
+            {{ doubleSelectItems[0]?.title || placeholders?.[0] }}
         </div>
         <div>-</div>
         <div class="mr-8 ml-8" :class="showInputClass[1]">
@@ -19,7 +19,7 @@
                 class="mr-4"
                 :src="doubleSelectItems[1]?.icon"
             />
-            {{ doubleSelectItems[1]?.title || placeholders[1] }}
+            {{ doubleSelectItems[1]?.title || placeholders?.[1] }}
         </div>
     </div>
 </template>

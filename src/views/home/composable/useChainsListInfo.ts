@@ -1,5 +1,5 @@
-import { Ref } from 'vue';
-import { IIbcChains } from '@/types/interface/index.interface';
+import { Ref, ComputedRef } from 'vue';
+import { IIbcChains, IIbcchain, TIbcChainsKeys } from '@/types/interface/index.interface';
 import { anchorsDatas, chainMenus, currentMenuType } from '@/constants';
 
 export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
@@ -55,6 +55,28 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
             lock.value = true;
         }
     };
+
+    const sortChainList: ComputedRef<IIbcChains> = computed<IIbcChains>(() => {
+        const res: IIbcChains = {
+            all: [],
+            active: [],
+            inactive: []
+        };
+
+        Object.keys(chainList.value).forEach((key) => {
+            res[key as TIbcChainsKeys] = chainList.value[key as TIbcChainsKeys]
+                .slice()
+                .sort((a: IIbcchain, b: IIbcchain) => {
+                    return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
+                        ? -1
+                        : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
+                        ? 1
+                        : 0;
+                });
+        });
+
+        return res;
+    });
 
     onMounted(() => {
         const scrollDom = scrollListRef.value.$el;
@@ -144,6 +166,7 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
         findClassName,
         onClickAnchor,
         onSelectedMenu,
-        clickListItem
+        clickListItem,
+        sortChainList
     };
 };
