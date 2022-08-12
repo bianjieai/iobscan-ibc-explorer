@@ -21,31 +21,41 @@ export const useGetChainsList = (loading?: Ref<boolean>) => {
                 console.log(result);
                 const { code, data, message } = result;
                 if (code === API_CODE.success) {
-                    if (data.items.length < allParams.page_size) {
-                        allData = [...(allData || []), ...data?.items];
+                    if (typeof data === 'number') {
                         loading && (loading.value = false);
-                        const { ibcChains, getIbcChains } = useIbcChains();
-                        if (Object.keys(ibcChains.value).length <= 0) {
-                            try {
-                                await getIbcChains();
-                            } catch (error) {
-                                console.log('getIbcChains', error);
+                        return;
+                    } else {
+                        if (!data || data.items.length === 0) {
+                            loading && (loading.value = false);
+                            return;
+                        } else {
+                            if (data.items.length < allParams.page_size) {
+                                allData = [...(allData || []), ...data?.items];
+                                loading && (loading.value = false);
+                                const { ibcChains, getIbcChains } = useIbcChains();
+                                if (Object.keys(ibcChains.value).length <= 0) {
+                                    try {
+                                        await getIbcChains();
+                                    } catch (error) {
+                                        console.log('getIbcChains', error);
+                                    }
+                                }
+                                const ibcChainsAllMap: IIbcchainMap = {};
+                                (ibcChains.value?.all || []).forEach((ibcChain: IIbcchain) => {
+                                    ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
+                                });
+
+                                chainsList.value = allData.map((item: IResponseChainsListItem) => {
+                                    const chainName = ibcChainsAllMap[item.chain_id];
+                                    item.chainName = chainName ? chainName : UNKNOWN;
+                                    return item;
+                                });
+                            } else {
+                                allData = [...(allData || []), ...data?.items];
+                                allParams.page_num++;
+                                getAllData();
                             }
                         }
-                        const ibcChainsAllMap: IIbcchainMap = {};
-                        (ibcChains.value?.all || []).forEach((ibcChain: IIbcchain) => {
-                            ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
-                        });
-
-                        chainsList.value = allData.map((item: IResponseChainsListItem) => {
-                            const chainName = ibcChainsAllMap[item.chain_id];
-                            item.chainName = chainName ? chainName : UNKNOWN;
-                            return item;
-                        });
-                    } else {
-                        allData = [...(allData || []), ...data?.items];
-                        allParams.page_num++;
-                        getAllData();
                     }
                 } else {
                     console.error(message);

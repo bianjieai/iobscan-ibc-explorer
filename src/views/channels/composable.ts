@@ -32,19 +32,31 @@ export const useGetChannelsList = () => {
         try {
             const allParams = { ...BASE_PARAMS, ...params };
             const getAllData = async () => {
-                debugger;
                 const result = await getChannelsListAPI(allParams);
                 const { code, data, message } = result;
                 if (code === API_CODE.success) {
                     if (!allParams.use_count) {
-                        if (data.items.length < allParams.page_size) {
-                            allData = [...(allData || []), ...data?.items];
+                        if (typeof data === 'number') {
                             loading && (loading.value = false);
-                            channelsList.value = ChainHelper.sortByChainName(allData, params.chain);
+                            return;
                         } else {
-                            allData = [...(allData || []), ...data?.items];
-                            allParams.page_num++;
-                            getAllData();
+                            if (!data.items || data.items.length === 0) {
+                                loading && (loading.value = false);
+                                return;
+                            } else {
+                                if (data.items.length < allParams.page_size) {
+                                    allData = [...(allData || []), ...data?.items];
+                                    loading && (loading.value = false);
+                                    channelsList.value = ChainHelper.sortByChainName(
+                                        allData,
+                                        params.chain
+                                    );
+                                } else {
+                                    allData = [...(allData || []), ...data?.items];
+                                    allParams.page_num++;
+                                    getAllData();
+                                }
+                            }
                         }
                     } else {
                         total.value = data as number;

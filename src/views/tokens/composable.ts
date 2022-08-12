@@ -24,7 +24,6 @@ import { CHAIN_DEFAULT_VALUE, TOKEN_DEFAULT_VALUE } from '@/constants/tokens';
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
     const total = ref<number>(0);
-
     const getTokensList = async (params: IRequestTokensList) => {
         const { loading } = params;
         if (loading) {
@@ -40,26 +39,36 @@ export const useGetTokenList = () => {
                 const { code, data, message } = result;
                 if (code === API_CODE.success) {
                     if (!allParams.use_count) {
-                        if (data.items.length < allParams.page_size) {
-                            allData = [...(allData || []), ...data.items];
+                        if (typeof data === 'number') {
                             loading && (loading.value = false);
-                            const temp: ITokensListItem[] = [];
-                            for (let i = 0; i < (allData ?? []).length; i++) {
-                                const item: ITokensListItem = allData[i];
-                                const baseDenom = await getBaseDenomByKey(
-                                    item.chain_id,
-                                    item.base_denom
-                                );
-                                item['name'] = baseDenom
-                                    ? getRestString(baseDenom.symbol, 6, 0)
-                                    : getRestString(item.base_denom, 6, 0);
-                                temp.push(item);
-                            }
-                            tokensList.value = temp;
+                            return;
                         } else {
-                            allData = [...(allData || []), ...data.items];
-                            allParams.page_num++;
-                            getAllData();
+                            if (!data || data.items.length === 0) {
+                                loading && (loading.value = false);
+                                return;
+                            } else {
+                                if (data.items.length < allParams.page_size) {
+                                    allData = [...(allData || []), ...data.items];
+                                    loading && (loading.value = false);
+                                    const temp: ITokensListItem[] = [];
+                                    for (let i = 0; i < (allData ?? []).length; i++) {
+                                        const item: ITokensListItem = allData[i];
+                                        const baseDenom = await getBaseDenomByKey(
+                                            item.chain_id,
+                                            item.base_denom
+                                        );
+                                        item['name'] = baseDenom
+                                            ? getRestString(baseDenom.symbol, 6, 0)
+                                            : getRestString(item.base_denom, 6, 0);
+                                        temp.push(item);
+                                    }
+                                    tokensList.value = temp;
+                                } else {
+                                    allData = [...(allData || []), ...data.items];
+                                    allParams.page_num++;
+                                    getAllData();
+                                }
+                            }
                         }
                     } else {
                         total.value = (data as number) || 0;
@@ -67,38 +76,6 @@ export const useGetTokenList = () => {
                 } else {
                     console.error(message);
                 }
-                // if (data.constructor === Object) {
-                //     if (data.items.length < BASE_PARAMS.page_size) {
-                //         allData.items = (allData.items || []).concat(data?.items);
-                //         loading && (loading.value = false);
-                //         if (code === API_CODE.success) {
-                //             if (!params.use_count) {
-                //                 const { items } = allData as IResponseTokensList;
-                //                 const temp: ITokensListItem[] = [];
-                // for (let i = 0; i < (items ?? []).length; i++) {
-                //     const item: ITokensListItem = items[i];
-                //     const baseDenom = await getBaseDenomByKey(
-                //         item.chain_id,
-                //         item.base_denom
-                //     );
-                //     item['name'] = baseDenom
-                //         ? getRestString(baseDenom.symbol, 6, 0)
-                //         : getRestString(item.base_denom, 6, 0);
-                //     temp.push(item);
-                // }
-                //                 tokensList.value = temp;
-                //             } else {
-                //                 total.value = data as number;
-                //             }
-                //         } else {
-                //             console.error(message);
-                //         }
-                //     } else {
-                //         allData.items = (allData.items || []).concat(data.items);
-                //         params.page_num++;
-                //         getAllData();
-                //     }
-                // }
             };
             getAllData();
         } catch (error) {

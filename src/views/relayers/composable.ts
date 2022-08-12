@@ -37,25 +37,33 @@ export const useGetRelayersList = () => {
                 const { code, data, message } = result;
                 if (code === API_CODE.success) {
                     if (!allParams.use_count) {
-                        if (data.items.length < allParams.page_size) {
-                            allData = [...(allData || []), ...data?.items];
+                        if (typeof data === 'number') {
                             loading && (loading.value = false);
-                            relayersList.value = ChainHelper.sortByChainName(
-                                allData,
-                                allParams.chain
-                            )?.map((item: IRelayersListItem) => {
-                                item.txs_success_rate = formatTransfer_success_txs(
-                                    item.transfer_success_txs,
-                                    item.transfer_total_txs
-                                );
-                                return item;
-                            });
-                        } else if (data.items && data.items.length === allParams.page_size) {
-                            allData = [...(allData || []), ...data?.items];
-                            allParams.page_num++;
-                            getAllData();
+                            return;
                         } else {
-                            console.error(message);
+                            if (!data || data.items.length === 0) {
+                                loading && (loading.value = false);
+                                return;
+                            } else {
+                                if (data.items.length < allParams.page_size) {
+                                    allData = [...(allData || []), ...data?.items];
+                                    loading && (loading.value = false);
+                                    relayersList.value = ChainHelper.sortByChainName(
+                                        allData,
+                                        allParams.chain
+                                    )?.map((item: IRelayersListItem) => {
+                                        item.txs_success_rate = formatTransfer_success_txs(
+                                            item.transfer_success_txs,
+                                            item.transfer_total_txs
+                                        );
+                                        return item;
+                                    });
+                                } else {
+                                    allData = [...(allData || []), ...data?.items];
+                                    allParams.page_num++;
+                                    getAllData();
+                                }
+                            }
                         }
                     } else {
                         total.value = (data as number) || 0;
