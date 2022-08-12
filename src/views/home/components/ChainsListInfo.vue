@@ -180,7 +180,7 @@
             &__value {
                 margin: 4px 0 6px;
                 font-size: var(--bj-font-size-normal);
-                line-height: 16px;
+                line-height: 17px;
                 font-weight: 400;
                 color: var(--bj-font-color-65);
                 word-break: break-all;

@@ -75,6 +75,7 @@
     }
     .selected_color {
         color: var(--bj-primary-color);
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         padding-left: 8px;

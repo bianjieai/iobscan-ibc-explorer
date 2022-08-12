@@ -53,7 +53,7 @@ function formatNum(numOrigin: any) {
         result = `${formatBigNumber(Math.floor(num / million), undefined)} M`;
     } else if (num >= thousand) {
         result = formatBigNumber(Math.floor(num), undefined);
-    } else if (num <= thousandDecimal) {
+    } else if (num < thousandDecimal) {
         result = `< ${thousandDecimal}`;
     } else {
         result = floor(num, 4);
