@@ -5,7 +5,7 @@ import { API_CODE } from '@/constants/apiCode';
 import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import {
-    IResponseChannelsList,
+    // IResponseChannelsList,
     IRequestChannelsList,
     IResponseChannelsListItem
 } from '@/types/interface/channels.interface';
@@ -24,43 +24,33 @@ export const useGetChannelsList = () => {
 
     const getChannelsList = async (params: IRequestChannelsList) => {
         const { loading } = params;
-
         if (loading) {
             loading.value = true;
             delete params.loading;
         }
+        let allData = [] as IResponseChannelsListItem[];
         try {
-            const allData = {} as IResponseChannelsList;
+            const allParams = { ...BASE_PARAMS, ...params };
             const getAllData = async () => {
-                const result = await getChannelsListAPI({
-                    ...BASE_PARAMS,
-                    ...params
-                });
+                debugger;
+                const result = await getChannelsListAPI(allParams);
                 const { code, data, message } = result;
-                if (data.constructor === Object) {
-                    if (data.items.length < BASE_PARAMS.page_size) {
-                        allData.items = (allData.items || []).concat(data?.items);
-                        loading && (loading.value = false);
-                        if (code === API_CODE.success) {
-                            if (!params.use_count) {
-                                const { items } = allData as IRequestChannelsList;
-                                channelsList.value = ChainHelper.sortByChainName(
-                                    items,
-                                    params.chain
-                                );
-                            } else {
-                                total.value = data as number;
-                            }
+                if (code === API_CODE.success) {
+                    if (!allParams.use_count) {
+                        if (data.items.length < allParams.page_size) {
+                            allData = [...(allData || []), ...data?.items];
+                            loading && (loading.value = false);
+                            channelsList.value = ChainHelper.sortByChainName(allData, params.chain);
                         } else {
-                            console.error(message);
+                            allData = [...(allData || []), ...data?.items];
+                            allParams.page_num++;
+                            getAllData();
                         }
                     } else {
-                        allData.items = (allData.items || []).concat(data.items);
-                        params.page_num++;
-                        getAllData();
+                        total.value = data as number;
                     }
                 } else {
-                    total.value = data as number;
+                    console.error(message);
                 }
             };
             getAllData();

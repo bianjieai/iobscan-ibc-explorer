@@ -1,3 +1,4 @@
+import { IResponseTokensListItem } from './../../types/interface/tokens.interface';
 import { getTokensListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
 import { BASE_PARAMS } from '@/constants';
@@ -5,7 +6,7 @@ import { API_CODE } from '@/constants/apiCode';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
 import {
-    IResponseTokensList,
+    // IResponseTokensList,
     IRequestTokensList,
     TTokenType,
     ITokensListItem
@@ -30,46 +31,74 @@ export const useGetTokenList = () => {
             loading.value = true;
             delete params.loading;
         }
+        let allData = [] as IResponseTokensListItem[];
         try {
-            const allData = {} as IResponseTokensList;
+            // const allData = {} as IResponseTokensList;
+            const allParams = { ...BASE_PARAMS, ...params };
             const getAllData = async () => {
-                const result = await getTokensListAPI({
-                    ...BASE_PARAMS,
-                    ...params
-                });
+                const result = await getTokensListAPI(allParams);
                 const { code, data, message } = result;
-                if (data.constructor === Object) {
-                    if (data.items.length < BASE_PARAMS.page_size) {
-                        allData.items = (allData.items || []).concat(data?.items);
-                        loading && (loading.value = false);
-                        if (code === API_CODE.success) {
-                            if (!params.use_count) {
-                                const { items } = allData as IResponseTokensList;
-                                const temp: ITokensListItem[] = [];
-                                for (let i = 0; i < (items ?? []).length; i++) {
-                                    const item: ITokensListItem = items[i];
-                                    const baseDenom = await getBaseDenomByKey(
-                                        item.chain_id,
-                                        item.base_denom
-                                    );
-                                    item['name'] = baseDenom
-                                        ? getRestString(baseDenom.symbol, 6, 0)
-                                        : getRestString(item.base_denom, 6, 0);
-                                    temp.push(item);
-                                }
-                                tokensList.value = temp;
-                            } else {
-                                total.value = data as number;
+                if (code === API_CODE.success) {
+                    if (!allParams.use_count) {
+                        if (data.items.length < allParams.page_size) {
+                            allData = [...(allData || []), ...data.items];
+                            loading && (loading.value = false);
+                            const temp: ITokensListItem[] = [];
+                            for (let i = 0; i < (allData ?? []).length; i++) {
+                                const item: ITokensListItem = allData[i];
+                                const baseDenom = await getBaseDenomByKey(
+                                    item.chain_id,
+                                    item.base_denom
+                                );
+                                item['name'] = baseDenom
+                                    ? getRestString(baseDenom.symbol, 6, 0)
+                                    : getRestString(item.base_denom, 6, 0);
+                                temp.push(item);
                             }
+                            tokensList.value = temp;
                         } else {
-                            console.error(message);
+                            allData = [...(allData || []), ...data.items];
+                            allParams.page_num++;
+                            getAllData();
                         }
                     } else {
-                        allData.items = (allData.items || []).concat(data.items);
-                        params.page_num++;
-                        getAllData();
+                        total.value = (data as number) || 0;
                     }
+                } else {
+                    console.error(message);
                 }
+                // if (data.constructor === Object) {
+                //     if (data.items.length < BASE_PARAMS.page_size) {
+                //         allData.items = (allData.items || []).concat(data?.items);
+                //         loading && (loading.value = false);
+                //         if (code === API_CODE.success) {
+                //             if (!params.use_count) {
+                //                 const { items } = allData as IResponseTokensList;
+                //                 const temp: ITokensListItem[] = [];
+                // for (let i = 0; i < (items ?? []).length; i++) {
+                //     const item: ITokensListItem = items[i];
+                //     const baseDenom = await getBaseDenomByKey(
+                //         item.chain_id,
+                //         item.base_denom
+                //     );
+                //     item['name'] = baseDenom
+                //         ? getRestString(baseDenom.symbol, 6, 0)
+                //         : getRestString(item.base_denom, 6, 0);
+                //     temp.push(item);
+                // }
+                //                 tokensList.value = temp;
+                //             } else {
+                //                 total.value = data as number;
+                //             }
+                //         } else {
+                //             console.error(message);
+                //         }
+                //     } else {
+                //         allData.items = (allData.items || []).concat(data.items);
+                //         params.page_num++;
+                //         getAllData();
+                //     }
+                // }
             };
             getAllData();
         } catch (error) {

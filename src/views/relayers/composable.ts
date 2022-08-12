@@ -6,7 +6,6 @@ import { TRelayerStatus } from '@/types/interface/components/table.interface';
 import {
     IRelayersListItem,
     IRequestRelayerList,
-    IResponseRelayerList,
     IResponseRelayerListItem
 } from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
@@ -30,44 +29,39 @@ export const useGetRelayersList = () => {
             loading.value = true;
             delete params.loading;
         }
+        let allData = [] as IResponseRelayerListItem[];
         try {
-            const allData = {} as IResponseRelayerList;
+            const allParams = { ...BASE_PARAMS, ...params };
             const getAllData = async () => {
-                const result = await getRelayersListAPI({
-                    ...BASE_PARAMS,
-                    ...params
-                });
+                const result = await getRelayersListAPI(allParams);
                 const { code, data, message } = result;
-                if (data.constructor === Object) {
-                    if (data.items.length < BASE_PARAMS.page_size) {
-                        allData.items = (allData.items || []).concat(data?.items);
-                        loading && (loading.value = false);
-                        if (code === API_CODE.success) {
-                            if (!params.use_count) {
-                                const { items } = allData as IResponseRelayerList;
-                                relayersList.value = ChainHelper.sortByChainName(
-                                    items,
-                                    params.chain
-                                )?.map((item: IRelayersListItem) => {
-                                    item.txs_success_rate = formatTransfer_success_txs(
-                                        item.transfer_success_txs,
-                                        item.transfer_total_txs
-                                    );
-                                    return item;
-                                });
-                            } else {
-                                total.value = data as number;
-                            }
+                if (code === API_CODE.success) {
+                    if (!allParams.use_count) {
+                        if (data.items.length < allParams.page_size) {
+                            allData = [...(allData || []), ...data?.items];
+                            loading && (loading.value = false);
+                            relayersList.value = ChainHelper.sortByChainName(
+                                allData,
+                                allParams.chain
+                            )?.map((item: IRelayersListItem) => {
+                                item.txs_success_rate = formatTransfer_success_txs(
+                                    item.transfer_success_txs,
+                                    item.transfer_total_txs
+                                );
+                                return item;
+                            });
+                        } else if (data.items && data.items.length === allParams.page_size) {
+                            allData = [...(allData || []), ...data?.items];
+                            allParams.page_num++;
+                            getAllData();
                         } else {
                             console.error(message);
                         }
                     } else {
-                        allData.items = (allData.items || []).concat(data.items);
-                        params.page_num++;
-                        getAllData();
+                        total.value = (data as number) || 0;
                     }
                 } else {
-                    total.value = data as number;
+                    console.error(message);
                 }
             };
             getAllData();

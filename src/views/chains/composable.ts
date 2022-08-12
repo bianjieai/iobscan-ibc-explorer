@@ -2,55 +2,53 @@ import { getChainsListAPI } from '@/api/chains';
 import { useIbcChains } from '@/composables';
 import { BASE_PARAMS, UNKNOWN } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
-import { IResponseChainsList, IResponseChainsListItem } from '@/types/interface/chains.interface';
+import { IResponseChainsListItem } from '@/types/interface/chains.interface';
 import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
 import { Ref } from 'vue';
 export const useGetChainsList = (loading?: Ref<boolean>) => {
     const chainsList = ref<IResponseChainsListItem[]>([]);
-
     const getChainsList = async (loading?: Ref<boolean>) => {
         if (loading) {
             loading.value = true;
         }
+        let allData = [] as IResponseChainsListItem[];
         try {
-            const allData = {} as IResponseChainsList;
+            const allParams = { ...BASE_PARAMS };
             const getAllData = async () => {
                 const result = await getChainsListAPI({
-                    ...BASE_PARAMS
+                    ...allParams
                 });
+                console.log(result);
                 const { code, data, message } = result;
-                if (data.constructor === Object) {
-                    if (data.items.length < BASE_PARAMS.page_size) {
-                        allData.items = (allData.items || []).concat(data?.items);
+                if (code === API_CODE.success) {
+                    if (data.items.length < allParams.page_size) {
+                        allData = [...(allData || []), ...data?.items];
                         loading && (loading.value = false);
-                        if (code === API_CODE.success) {
-                            const { items } = allData as IResponseChainsList;
-                            const { ibcChains, getIbcChains } = useIbcChains();
-                            if (Object.keys(ibcChains.value).length <= 0) {
-                                try {
-                                    await getIbcChains();
-                                } catch (error) {
-                                    console.log('getIbcChains', error);
-                                }
+                        const { ibcChains, getIbcChains } = useIbcChains();
+                        if (Object.keys(ibcChains.value).length <= 0) {
+                            try {
+                                await getIbcChains();
+                            } catch (error) {
+                                console.log('getIbcChains', error);
                             }
-                            const ibcChainsAllMap: IIbcchainMap = {};
-                            (ibcChains.value?.all || []).forEach((ibcChain: IIbcchain) => {
-                                ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
-                            });
-
-                            chainsList.value = items.map((item: IResponseChainsListItem) => {
-                                const chainName = ibcChainsAllMap[item.chain_id];
-                                item.chainName = chainName ? chainName : UNKNOWN;
-                                return item;
-                            });
-                        } else {
-                            console.error(message);
                         }
+                        const ibcChainsAllMap: IIbcchainMap = {};
+                        (ibcChains.value?.all || []).forEach((ibcChain: IIbcchain) => {
+                            ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
+                        });
+
+                        chainsList.value = allData.map((item: IResponseChainsListItem) => {
+                            const chainName = ibcChainsAllMap[item.chain_id];
+                            item.chainName = chainName ? chainName : UNKNOWN;
+                            return item;
+                        });
                     } else {
-                        allData.items = (allData.items || []).concat(data.items);
-                        BASE_PARAMS.page_num++;
+                        allData = [...(allData || []), ...data?.items];
+                        allParams.page_num++;
                         getAllData();
                     }
+                } else {
+                    console.error(message);
                 }
             };
             getAllData();
