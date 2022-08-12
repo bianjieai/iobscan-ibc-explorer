@@ -4,7 +4,7 @@
             <div class="popover_c">
                 <div>Relayer Name: {{ relayerName ? relayerName : UNKNOWN }}</div>
                 <div>{{ `${chain_a_name} Address` }}: {{ chainAAddress }}</div>
-                <div>{{ `${chain_b_name} Address` }}: {{ chainAAddress }}</div>
+                <div>{{ `${chain_b_name} Address` }}: {{ chainBAddress }}</div>
             </div>
         </template>
         <IconAndTitle :title="relayerName" :img-src="imgSrc" relayer icon-size="small" />
@@ -30,6 +30,8 @@
     const props = defineProps<IProps>();
 
     const findChainName = (chainId: string) => {
+        console.log(props.ibcChains, '---');
+
         if (Array.isArray(props.ibcChains)) {
             const ibcChain = props.ibcChains.find((item) => item.chain_id === chainId);
             if (ibcChain) {

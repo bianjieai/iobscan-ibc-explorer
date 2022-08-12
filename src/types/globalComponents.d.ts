@@ -6,6 +6,7 @@ import '@vue/runtime-core';
 declare module '@vue/runtime-core' {
     export interface GlobalComponents {
         404: typeof import('./../components/errorpage/404.vue')['default'];
+        ABadge: typeof import('ant-design-vue/es')['Badge'];
         AButton: typeof import('ant-design-vue/es')['Button'];
         ACard: typeof import('ant-design-vue/es')['Card'];
         AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider'];

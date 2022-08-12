@@ -171,15 +171,17 @@
         .select {
             margin-top: 16px;
         }
-
+    }
+    @media screen and (max-width: 394px) {
+        :deep(.ant-btn-icon-only) {
+            margin-top: 8px;
+        }
+    }
+    @media screen and (max-width: 362px) {
         :deep(.ant-dropdown-trigger) {
             &:last-of-type {
                 margin-top: 8px;
             }
-        }
-
-        :deep(.ant-btn-icon-only) {
-            margin-top: 8px;
         }
     }
 </style>
