@@ -12,6 +12,7 @@ import {
     TRANSFERS_IN_EXPAND_DETAILS
 } from '@/constants/transfers';
 import { ITransfersDetails, ITransfersExpandDetails } from '@/types/interface/transfers.interface';
+import { IPaginationParams } from '@/types/interface/index.interface';
 
 export const useIbcDenoms = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -44,9 +45,10 @@ export const useSelectedSymbol = () => {
 };
 
 export const usePagination = () => {
-    const pagination = reactive({
+    const route = useRoute();
+    const pagination = reactive<IPaginationParams>({
         total: 0,
-        current: 1,
+        current: Number(route?.query?.pageNum) || 1,
         pageSize: 10
     });
     return {
@@ -219,7 +221,7 @@ export const useTransfersDetailsInfo = () => {
                         transferInDetails.forEach((item) => {
                             handleTransferDetails(item, (item: any) => {
                                 if (item.label === 'Received Token:' && res?.denoms?.dc_denom) {
-                                    item.value = res.denoms.dc_denom;
+                                    item.value.denom = res.denoms.dc_denom;
                                 }
                             });
                         });

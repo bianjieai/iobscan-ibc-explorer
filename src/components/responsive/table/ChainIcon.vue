@@ -10,9 +10,24 @@
             @click="avatarClick"
         />
         <div class="flex flex-col justify-around">
-            <div class="title leading_none" :class="{ hover_cursor: titleCanClick }" @click="go">{{
-                computedTitle
-            }}</div>
+            <a-popover v-if="computedTitle.length > 16" destroy-tooltip-on-hide>
+                <template #content>
+                    {{ computedTitle }}
+                </template>
+                <div
+                    class="title leading_none"
+                    :class="{ hover_cursor: titleCanClick }"
+                    @click="go"
+                    >{{ computedTitle }}</div
+                >
+            </a-popover>
+            <div
+                v-else
+                class="title leading_none"
+                :class="{ hover_cursor: titleCanClick }"
+                @click="go"
+                >{{ computedTitle }}</div
+            >
 
             <div v-if="chainInfo.subtitle !== '--'">
                 <a-popover

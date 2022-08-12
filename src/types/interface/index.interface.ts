@@ -77,3 +77,9 @@ export enum FooterMode {
     light,
     dark
 }
+
+export interface IPaginationParams {
+    total: number;
+    current: number;
+    pageSize: number;
+}
