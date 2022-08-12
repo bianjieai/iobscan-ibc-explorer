@@ -1,4 +1,4 @@
-import { Ref } from 'vue';
+import { Ref, ComputedRef } from 'vue';
 import { IIbcChains, IIbcchain, TIbcChainsKeys } from '@/types/interface/index.interface';
 import { anchorsDatas, chainMenus, currentMenuType } from '@/constants';
 
@@ -56,18 +56,23 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
         }
     };
 
-    const sortChainList = computed<IIbcChains>(() => {
-        const res = {} as IIbcChains;
-        const keys = Object.keys(chainList.value) as TIbcChainsKeys[];
+    const sortChainList: ComputedRef<IIbcChains> = computed<IIbcChains>(() => {
+        const res: IIbcChains = {
+            all: [],
+            active: [],
+            inactive: []
+        };
 
-        keys.forEach((key) => {
-            res[key] = chainList.value[key].slice().sort((a: IIbcchain, b: IIbcchain) => {
-                return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
-                    ? -1
-                    : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
-                    ? 1
-                    : 0;
-            });
+        Object.keys(chainList.value).forEach((key) => {
+            res[key as TIbcChainsKeys] = chainList.value[key as TIbcChainsKeys]
+                .slice()
+                .sort((a: IIbcchain, b: IIbcchain) => {
+                    return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
+                        ? -1
+                        : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
+                        ? 1
+                        : 0;
+                });
         });
 
         return res;

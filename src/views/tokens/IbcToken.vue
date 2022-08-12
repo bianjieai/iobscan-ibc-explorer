@@ -6,12 +6,21 @@
             has-icon
             :img-src="baseDenomInfo.imgSrc"
         />
-        <div class="select flex items-center flex-wrap">
-            <ChainsDropdown
+        <div class="select flex items-center flex-wrap wrapRelative">
+            <BjSelect
                 ref="chainDropdown"
-                :chain-id="chainIdQuery"
-                :dropdown-data="ibcChains.all"
-                @on-selected-chain="onSelectedChain"
+                :data="chainData"
+                :value="searchChain"
+                placeholder="All Chains"
+                :hide-icon="true"
+                :input-ctn="{
+                    placeholder: 'Search by Chain ID',
+                    btnTxt: 'Confirm'
+                }"
+                :dropdown-props="{
+                    getPopupContainer: getPopupContainer
+                }"
+                @on-change="onSelectedChain"
             />
             <BaseDropdown
                 ref="statusDropdown"
@@ -126,19 +135,25 @@
     const { ibcTokenList, total, getIbcTokenList } = useGetIbcTokenList(baseDenomQuery);
     const { baseDenomInfo } = useBaseDenomInfoComputed(ibcBaseDenoms, baseDenomQuery);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus } = useIbcTokenSelected(
-        chainIdQuery,
-        statusQuery,
-        getIbcTokenList,
-        getIbcBaseDenom,
-        loading
-    );
+    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus, chainData } =
+        useIbcTokenSelected(
+            chainIdQuery,
+            statusQuery,
+            getIbcTokenList,
+            getIbcBaseDenom,
+            loading,
+            ibcChains
+        );
     const { chainDropdown, statusDropdown } = useIbcTokenRef();
     const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, ibcTokenList);
     const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump(baseDenomQuery);
+    const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
 </script>
 
 <style lang="less" scoped>
+    .wrapRelative {
+        position: relative;
+    }
     .select {
         margin-top: 26px;
 

@@ -122,7 +122,7 @@
     const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, channelsList);
     const { goChains, resetSearchCondition } = useChannelsColumnJump();
 
-    const getPopupContainer = () => document.querySelector('.wrapRelative');
+    const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
 </script>
 
 <style lang="less" scoped>
