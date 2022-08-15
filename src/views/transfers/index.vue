@@ -827,7 +827,7 @@
             }
         ];
     });
-    const chainGetPopupContainer = () => document.querySelector('.transfer__middle');
+    const chainGetPopupContainer = (): HTMLElement => document.querySelector('.transfer__middle')!;
 
     const onSelectedChain = (vals: IDataItem[]) => {
         chainIds.value = vals?.map((v) => v.id);

@@ -86,7 +86,7 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 6;
+            z-index: 9999;
         }
         &__content {
             margin-top: 80px;

@@ -14,6 +14,9 @@ import {
 import { isNullOrEmpty } from '@/utils/objectTools';
 import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
+import { IDataItem } from '@/components/BjSelect/interface';
+import ChainHelper from '@/helper/chainHelper';
+import { CHAIN_ICON } from '@/constants/bjSelect';
 
 export const useGetIbcTokenList = (base_denom: string) => {
     const ibcTokenList = ref<IResponseIbcTokenListItem[]>([]);
@@ -74,7 +77,8 @@ export const useIbcTokenSelected = (
     statusQuery: TIbcTokenType,
     getIbcTokenList: (params: IRequestIbcTokenList) => Promise<void>,
     getIbcBaseDenom: () => Promise<void>,
-    loading: Ref<boolean>
+    loading: Ref<boolean>,
+    ibcChains: any
 ) => {
     let pageUrl = '/tokens/details';
     const router = useRouter();
@@ -88,7 +92,8 @@ export const useIbcTokenSelected = (
             loading: loading
         });
     };
-    const onSelectedChain = (chain?: string | number) => {
+    const onSelectedChain = (val?: IDataItem) => {
+        const chain = val?.id;
         searchChain.value = chain as string;
         pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
@@ -97,6 +102,28 @@ export const useIbcTokenSelected = (
         router.replace(pageUrl);
         refreshList();
     };
+
+    const chainData = computed(() => {
+        return [
+            {
+                children: [
+                    {
+                        title: 'All Chains',
+                        id: '',
+                        metaData: null
+                    }
+                ]
+            },
+            {
+                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v: any) => ({
+                    title: v.chain_name,
+                    id: v.chain_id,
+                    icon: v.icon || CHAIN_ICON,
+                    metaData: v
+                }))
+            }
+        ];
+    });
 
     const onSelectedStatus = (status?: string | number) => {
         searchStatus.value = status as TIbcTokenType;
@@ -114,6 +141,7 @@ export const useIbcTokenSelected = (
     });
     return {
         searchChain,
+        chainData,
         searchStatus,
         onSelectedChain,
         onSelectedStatus

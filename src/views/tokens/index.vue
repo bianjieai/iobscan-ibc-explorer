@@ -200,7 +200,7 @@
     const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
         useTokensColumnJump(getBaseDenomInfoByDenom);
 
-    const getPopupContainer = () => document.querySelector('.wrapRelative');
+    const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
 </script>
 
 <style lang="less" scoped>

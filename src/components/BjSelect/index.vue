@@ -47,7 +47,7 @@
         </div>
 
         <template #overlay>
-            <div class="overlay">
+            <div class="overlay ibc_scrollbar">
                 <div
                     v-for="(group, ind) in props.data"
                     :key="group.groupName"
@@ -79,7 +79,7 @@
                             top_shadow: !isBoundary[ind]?.top
                         }"
                     ></div>
-                    <div class="chains_wrap">
+                    <div class="chains_wrap ibc_scrollbar">
                         <div
                             v-for="item in group?.children"
                             :key="item.id"
@@ -231,7 +231,8 @@
     });
 
     const emit = defineEmits<{
-        (e: 'onChange', res: IDataItem | IDataItem[]): void;
+        // (e: 'onChange', res?: IDataItem | IDataItem[]): void;
+        (e: 'onChange', res: any): void;
     }>();
 
     /**
@@ -264,7 +265,17 @@
                 break;
             // 只选择两个时候
             case MODES.double:
-                res = [...inputItems.value.slice(0, 2), ...selectItems.value].slice(0, 2);
+                res = [...inputItems.value, ...selectItems.value].slice(0, 2);
+                // 如果确定时候，输入为空时候需要填充
+                if (inputItems.value.length === 0) {
+                    const matchItem: IDataItem | undefined = flatData.value.find(
+                        (v) => v.id === props.associateId
+                    );
+
+                    if (matchItem) {
+                        res = [matchItem, matchItem];
+                    }
+                }
                 break;
             default:
                 // 单选时候，清空选择框
@@ -365,7 +376,7 @@
                     return;
                 // 只选择两个时候, 清空input, 超过两个重选
                 case MODES.double:
-                    if (inputItems.value.length + selectItems.value.length === 2) {
+                    if (inputItems.value.length + selectItems.value.length >= 2) {
                         selectItems.value = [item];
                         inputItems.value = [];
                         tokenInput.value = '';
@@ -555,26 +566,6 @@
             max-width: 381px;
             max-height: 552px;
             overflow-y: auto;
-            &::-webkit-scrollbar {
-                width: 6px;
-            }
-
-            &::-webkit-scrollbar-track {
-                box-shadow: inset006pxrgba(0, 0, 0, 0.3);
-                border-radius: 2px;
-                width: 8px;
-                background: rgba(61, 80, 255, 0.1);
-            }
-
-            &::-webkit-scrollbar-thumb {
-                border-radius: 4px;
-                box-shadow: inset006pxrgba(0, 0, 0, 0.5);
-                background: rgba(61, 80, 255, 0.5);
-            }
-
-            &::-webkit-scrollbar-thumb:window-inactive {
-                background: rgba(61, 80, 255, 0.9);
-            }
         }
     }
 

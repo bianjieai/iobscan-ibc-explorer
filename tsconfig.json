@@ -21,7 +21,8 @@
             "@/*": ["src/*"],
             "~/*": ["node_modules/*"]
         },
-        "outDir": "./"
+        "outDir": "./",
+        "typeRoots": ["./node_modules/@types/", "./src/types"]
     },
     "include": [
         "src/**/*.ts",

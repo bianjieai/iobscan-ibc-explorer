@@ -4,7 +4,7 @@
         :trigger="['click']"
         :placement="'bottomLeft'"
         :visible="isVisible"
-        @visible-change="visibleChange"
+        @visible-change="visibleChangeFn"
     >
         <a-button class="button">
             <div class="button__token_icon">
@@ -45,9 +45,15 @@
                     <div class="overlay__title cursor" @click="onClickAll">
                         {{ 'All Tokens' }}
                     </div>
-                    <div class="overlay__item">
+
+                    <div class="overlay__item relative">
                         <h2 class="overlay__item__title">Authed IBC Tokens</h2>
-                        <div class="overlay__item__content">
+                        <div
+                            :class="{
+                                top_shadow: !isBoundary?.[0]?.top
+                            }"
+                        ></div>
+                        <div class="overlay__item__content ibc_scrollbar chains_wrap">
                             <template v-for="item in ibcBaseDenoms" :key="item.denom">
                                 <div
                                     class="content_item cursor"
@@ -66,6 +72,11 @@
                                 </div>
                             </template>
                         </div>
+                        <div
+                            :class="{
+                                bottom_shadow: !isBoundary?.[0]?.bottom
+                            }"
+                        ></div>
                     </div>
 
                     <div class="overlay__item">
@@ -113,31 +124,87 @@
     </a-dropdown>
 </template>
 
-<script setup>
+<script setup lang="ts">
     import { rmIbcPrefix } from '@/helper/parseStringHelper';
     import { useFindIcon, useIsVisible } from '@/views/transfers/composable';
     import { ref, watch } from 'vue';
     import { defaultTitle, unAuthed } from '@/constants';
+    import { IBaseDenom } from '@/types/interface/index.interface';
     const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
-    const props = defineProps({
-        ibcBaseDenoms: {
-            type: Array,
-            default: () => []
-        },
-        selectedSymbol: {
-            type: String,
-            default: ''
-        },
-        clearInput: {
-            type: Number,
-            required: true
-        },
-        showIcon: Boolean
-    });
+    const props = withDefaults(
+        defineProps<{
+            ibcBaseDenoms?: IBaseDenom[];
+            selectedSymbol?: string;
+            clearInput: number;
+            showIcon?: boolean;
+        }>(),
+        {
+            ibcBaseDenoms: () => [],
+            selectedSymbol: ''
+        }
+    );
+    // const props = defineProps({
+    //     ibcBaseDenoms: {
+    //         type: Array,
+    //         default: () => []
+    //     },
+    //     selectedSymbol: {
+    //         type: String,
+    //         default: ''
+    //     },
+    //     clearInput: {
+    //         type: Number,
+    //         required: true
+    //     },
+    //     showIcon: Boolean
+    // });
     const emits = defineEmits(['clickItem', 'clickSearch']);
     const { findSymbolIcon } = useFindIcon(props);
     const { isVisible, visibleChange } = useIsVisible();
     const inputValue = ref('');
+
+    // 监听滚动
+    const isBoundary = ref<
+        {
+            top?: boolean;
+            bottom?: boolean;
+        }[]
+    >([]);
+    const eleRef = ref<any>();
+    const scrollFn = (visible: boolean): void => {
+        if (visible) {
+            setTimeout(() => {
+                eleRef.value = document.querySelectorAll('.chains_wrap');
+                isBoundary.value = [];
+                Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement, ind: number) => {
+                    isBoundary.value[ind] = {
+                        top: true,
+                        bottom: true
+                    };
+                    ele.addEventListener('scroll', () => {
+                        isBoundary.value[ind].top = ele.scrollTop === 0;
+                        if (ele.scrollHeight === ele.scrollTop + ele.clientHeight) {
+                            isBoundary.value[ind].bottom = true;
+                        } else {
+                            isBoundary.value[ind].bottom = false;
+                        }
+                    });
+                });
+            });
+        } else {
+            Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement) => {
+                ele.removeEventListener('scroll', () => {});
+            });
+        }
+    };
+
+    const visibleChangeFn = (visible: boolean): void => {
+        // 收起展开时候都重新赋值
+        visibleChange(visible);
+
+        // 监听一些滚动，只是为了加阴影
+        scrollFn(visible);
+    };
 
     watch(
         () => props.clearInput,
@@ -145,7 +212,7 @@
             inputValue.value = '';
         }
     );
-    const onClickItem = (key) => {
+    const onClickItem = (key: any) => {
         inputValue.value = '';
         emits('clickItem', key);
         isVisible.value = false;
@@ -161,6 +228,24 @@
 </script>
 
 <style lang="less" scoped>
+    .top_shadow {
+        position: absolute;
+        width: 100%;
+        height: 30px;
+        pointer-events: none;
+        z-index: 1;
+        box-shadow: inset 0 10px 8px -8px #00000026;
+    }
+    .bottom_shadow {
+        position: absolute;
+        width: 100%;
+        height: 30px;
+        pointer-events: none;
+        z-index: 1;
+        background: linear-gradient(360deg, rgba(17, 22, 77, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+        transform: translateY(-100%);
+        //box-shadow: inset 0 -10px 8px -8px #00000026;
+    }
     .button {
         padding: 0 5px 0 5px;
         width: 146px;
@@ -248,6 +333,8 @@
             }
             &__content {
                 width: 100%;
+                max-height: 210px;
+                overflow-y: auto;
                 .flex(row, wrap, flex-start, center);
                 .content_item {
                     width: 158px;
