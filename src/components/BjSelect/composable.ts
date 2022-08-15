@@ -7,6 +7,7 @@ export const useInit = (props: TProps) => {
     const visible = ref(false);
     const selectItems = ref<IDataItem[]>([]);
     const inputItems = ref<IDataItem[]>([]); // 输入框的集合
+    const valueItems = ref<IDataItem[]>([]); // 输入或者选择的集合
     const tokenInput = ref<string | undefined>(undefined);
     const flatData = ref<IDataItem[]>([]); // 拍扁后的数组
 
@@ -28,6 +29,7 @@ export const useInit = (props: TProps) => {
         tokenInput.value = undefined; // 清空input
         inputItems.value = [];
         selectItems.value = []; // 清空选中
+        valueItems.value = []; // 清空
 
         // 所有值都处理为数组操作，最后返回时候，再判断返回什么样的值
         let values;
@@ -45,8 +47,13 @@ export const useInit = (props: TProps) => {
             const temp = flatData.value.find((item) => item.id === v);
             if (temp) {
                 selectItems.value.push(temp);
+                valueItems.value.push(temp);
             } else {
                 inputItems.value.push({
+                    id: v,
+                    title: v
+                });
+                valueItems.value.push({
                     id: v,
                     title: v
                 });
@@ -82,6 +89,7 @@ export const useInit = (props: TProps) => {
         tokenInput,
         flatData,
         inputItems,
-        resetVal
+        resetVal,
+        valueItems
     };
 };

@@ -28,7 +28,7 @@
             <template v-else>
                 <show-double
                     :visible="visible"
-                    :double-select-items="doubleSelectItems"
+                    :double-select-items="valueItems"
                     :placeholders="props.placeholders"
                     :hide-icon="hideIcon"
                     :default-val="defaultVal"
@@ -51,7 +51,6 @@
                 <div
                     v-for="(group, ind) in props.data"
                     :key="group.groupName"
-                    class="relative"
                     :class="[group.groupName ? 'mb-20' : 'mb-12']"
                 >
                     <div v-if="group.groupName" class="flex items-center">
@@ -74,43 +73,50 @@
                             />
                         </a-popover>
                     </div>
-                    <div
-                        :class="{
-                            top_shadow: !isBoundary[ind]?.top
-                        }"
-                    ></div>
-                    <div class="chains_wrap ibc_scrollbar">
+                    <div class="relative">
                         <div
-                            v-for="item in group?.children"
-                            :key="item.id"
-                            :class="[
-                                'chains_tag',
-                                'cursor',
-                                {
-                                    'visible_color visible_border selected': isSelected(item.id),
-                                    disabled: item.disabled
-                                }
-                            ]"
-                            @click="onSelected(item)"
-                        >
-                            <img
-                                v-if="item?.icon"
-                                :src="item.icon"
-                                width="24"
-                                height="24"
-                                class="mr-8"
-                            />
-                            <span class="symbol">{{ item.title }}</span>
-                            <div v-if="badges && getBadgeStr(item.id)" class="chains_tag__badge">
-                                {{ getBadgeStr(item.id) }}
+                            :class="{
+                                top_shadow: isBoundary[ind]?.top
+                            }"
+                        ></div>
+                        <div class="chains_wrap ibc_scrollbar">
+                            <div
+                                v-for="item in group?.children"
+                                :key="item.id"
+                                :class="[
+                                    'chains_tag',
+                                    'cursor',
+                                    {
+                                        'visible_color visible_border selected': isSelected(
+                                            item.id
+                                        ),
+                                        disabled: item.disabled
+                                    }
+                                ]"
+                                @click="onSelected(item)"
+                            >
+                                <img
+                                    v-if="item?.icon"
+                                    :src="item.icon"
+                                    width="24"
+                                    height="24"
+                                    class="mr-8"
+                                />
+                                <span class="symbol">{{ item.title }}</span>
+                                <div
+                                    v-if="badges && getBadgeStr(item.id)"
+                                    class="chains_tag__badge"
+                                >
+                                    {{ getBadgeStr(item.id) }}
+                                </div>
                             </div>
                         </div>
+                        <div
+                            :class="{
+                                bottom_shadow: isBoundary[ind]?.bottom
+                            }"
+                        ></div>
                     </div>
-                    <div
-                        :class="{
-                            bottom_shadow: !isBoundary[ind]?.bottom
-                        }"
-                    ></div>
                 </div>
                 <div v-if="inputCtn" class="mt-24">
                     <div v-if="inputCtn?.title" class="flex items-center">
@@ -201,29 +207,25 @@
 
     const { inputCtn, placeholder, hideIcon, badges, defaultVal, dropdownProps } = { ...props };
 
-    const { visible, selectItems, tokenInput, inputItems, flatData, resetVal } = useInit(props);
+    const { visible, selectItems, tokenInput, inputItems, flatData, resetVal, valueItems } =
+        useInit(props);
 
     // 是否选中
-    const isSelected = (val: TDenom) => selectItems.value.some((v) => v.id === val);
+    const isSelected = (val: TDenom) => valueItems.value.some((v) => v.id === val);
 
     // 获取badges
     const getBadgeStr = (val: TDenom) => {
-        const isDouble = doubleSelectItems.value.filter((v) => v.id === val)?.length === 2;
+        const isDouble = valueItems.value.filter((v) => v.id === val)?.length === 2;
 
         if (isDouble) {
             return props.badges!.join('-');
         }
 
-        const index = doubleSelectItems.value.findIndex((v) => v.id === val);
+        const index = valueItems.value.findIndex((v) => v.id === val);
         if (index !== -1) {
             return props.badges![index];
         }
     };
-
-    // 目前多选和输入互斥，只选择其中一个
-    const doubleSelectItems = computed(() => {
-        return [...inputItems.value, ...selectItems.value];
-    });
 
     defineExpose({
         selectItems,
@@ -284,6 +286,7 @@
                 break;
         }
 
+        valueItems.value = res;
         sumbitTokens(res, true);
     };
 
@@ -297,24 +300,22 @@
     const eleRef = ref();
     const scrollFn = (visible: boolean) => {
         if (visible) {
+            isBoundary.value = [];
+            // 加上延迟是因为，打开之后就直接返回visible了，但是收起来之后才会返回visible。
             setTimeout(() => {
                 eleRef.value = document.querySelectorAll('.chains_wrap');
-                isBoundary.value = [];
                 Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement, ind: number) => {
-                    isBoundary.value[ind] = {
-                        top: true,
-                        bottom: true
-                    };
+                    isBoundary.value[ind] = {};
                     ele.addEventListener('scroll', () => {
-                        isBoundary.value[ind].top = ele.scrollTop === 0;
+                        isBoundary.value[ind].top = ele.scrollTop !== 0;
                         if (ele.scrollHeight === ele.scrollTop + ele.clientHeight) {
-                            isBoundary.value[ind].bottom = true;
-                        } else {
                             isBoundary.value[ind].bottom = false;
+                        } else {
+                            isBoundary.value[ind].bottom = true;
                         }
                     });
                 });
-            });
+            }, 600);
         } else {
             Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement) => {
                 ele.removeEventListener('scroll', () => {});
@@ -347,6 +348,8 @@
                 }
             }
         }
+
+        valueItems.value = [...inputItems.value, ...selectItems.value];
     };
 
     const onSelected = (item: IDataItem) => {
@@ -356,7 +359,7 @@
 
         selectByMode();
 
-        sumbitTokens([...inputItems.value, ...selectItems.value]);
+        sumbitTokens(valueItems.value);
 
         // 写成内联函数形式，只是为了减少onSelected主体代码。
         function selectByMode() {
@@ -373,7 +376,7 @@
                             ...selectItems.value.slice(index + 1)
                         ];
                     }
-                    return;
+                    break;
                 // 只选择两个时候, 清空input, 超过两个重选
                 case MODES.double:
                     if (inputItems.value.length + selectItems.value.length >= 2) {
@@ -387,12 +390,13 @@
                             selectItems.value.push(item);
                         }
                     }
-                    return;
+                    break;
                 default:
                     // 单选时候，选择和输入只能有一个，所以清除input输入
                     selectItems.value = [item];
                     inputItems.value = [];
             }
+            valueItems.value = [...inputItems.value, ...selectItems.value];
         }
     };
 </script>
@@ -404,8 +408,9 @@
         height: 30px;
         pointer-events: none;
         z-index: 1;
-        box-shadow: inset 0 10px 8px -8px #00000026;
-        margin-top: -10px;
+        background: linear-gradient(180deg, rgba(17, 22, 77, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+        // box-shadow: inset 0 10px 8px -8px #00000026;
+        // margin-top: -10px;
     }
     .bottom_shadow {
         position: absolute;
