@@ -6,6 +6,7 @@ import { TRelayerStatus } from '@/types/interface/components/table.interface';
 import {
     IRelayersListItem,
     IRequestRelayerList,
+    IResponseRelayerList,
     IResponseRelayerListItem
 } from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
@@ -29,46 +30,62 @@ export const useGetRelayersList = () => {
             loading.value = true;
             delete params.loading;
         }
-        let allData = [] as IResponseRelayerListItem[];
+        let allData: IResponseRelayerListItem[] = [];
+        const allParams = { ...BASE_PARAMS, ...params };
         try {
-            const allParams = { ...BASE_PARAMS, ...params };
             const getAllData = async () => {
                 const result = await getRelayersListAPI(allParams);
                 const { code, data, message } = result;
                 if (code === API_CODE.success) {
                     if (!allParams.use_count) {
-                        if (typeof data === 'number') {
-                            loading && (loading.value = false);
-                            return;
-                        } else {
-                            if (!data || data.items.length === 0) {
+                        const items = (data as IResponseRelayerList).items;
+                        if (items && items.length > 0) {
+                            if (items.length < allParams.page_size) {
+                                allData = [...(allData || []), ...items];
                                 loading && (loading.value = false);
-                                return;
+                                relayersList.value = ChainHelper.sortByChainName(
+                                    allData,
+                                    allParams.chain
+                                )?.map((item: IRelayersListItem) => {
+                                    item.txs_success_rate = formatTransfer_success_txs(
+                                        item.transfer_success_txs,
+                                        item.transfer_total_txs
+                                    );
+                                    return item;
+                                });
                             } else {
-                                if (data.items.length < allParams.page_size) {
-                                    allData = [...(allData || []), ...data?.items];
-                                    loading && (loading.value = false);
-                                    relayersList.value = ChainHelper.sortByChainName(
-                                        allData,
-                                        allParams.chain
-                                    )?.map((item: IRelayersListItem) => {
-                                        item.txs_success_rate = formatTransfer_success_txs(
-                                            item.transfer_success_txs,
-                                            item.transfer_total_txs
-                                        );
-                                        return item;
-                                    });
-                                } else {
-                                    allData = [...(allData || []), ...data?.items];
-                                    allParams.page_num++;
-                                    getAllData();
-                                }
+                                allData = [...(allData || []), ...items];
+                                allParams.page_num++;
+                                getAllData();
                             }
+                        } else {
+                            loading && (loading.value = false);
+                            relayersList.value = ChainHelper.sortByChainName(
+                                allData,
+                                allParams.chain
+                            )?.map((item: IRelayersListItem) => {
+                                item.txs_success_rate = formatTransfer_success_txs(
+                                    item.transfer_success_txs,
+                                    item.transfer_total_txs
+                                );
+                                return item;
+                            });
+                            return;
                         }
                     } else {
                         total.value = (data as number) || 0;
                     }
                 } else {
+                    loading && (loading.value = false);
+                    relayersList.value = ChainHelper.sortByChainName(allData, allParams.chain)?.map(
+                        (item: IRelayersListItem) => {
+                            item.txs_success_rate = formatTransfer_success_txs(
+                                item.transfer_success_txs,
+                                item.transfer_total_txs
+                            );
+                            return item;
+                        }
+                    );
                     console.error(message);
                 }
             };
@@ -77,6 +94,15 @@ export const useGetRelayersList = () => {
             if (!axiosCancel(error)) {
                 loading && (loading.value = false);
             }
+            relayersList.value = ChainHelper.sortByChainName(allData, allParams.chain)?.map(
+                (item: IRelayersListItem) => {
+                    item.txs_success_rate = formatTransfer_success_txs(
+                        item.transfer_success_txs,
+                        item.transfer_total_txs
+                    );
+                    return item;
+                }
+            );
             console.error(error);
         }
     };

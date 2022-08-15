@@ -5,7 +5,7 @@ import { API_CODE } from '@/constants/apiCode';
 import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import {
-    // IResponseChannelsList,
+    IResponseChannelsList,
     IRequestChannelsList,
     IResponseChannelsListItem
 } from '@/types/interface/channels.interface';
@@ -28,40 +28,42 @@ export const useGetChannelsList = () => {
             loading.value = true;
             delete params.loading;
         }
-        let allData = [] as IResponseChannelsListItem[];
+        let allData: IResponseChannelsListItem[] = [];
+        const allParams = { ...BASE_PARAMS, ...params };
         try {
-            const allParams = { ...BASE_PARAMS, ...params };
             const getAllData = async () => {
                 const result = await getChannelsListAPI(allParams);
                 const { code, data, message } = result;
                 if (code === API_CODE.success) {
                     if (!allParams.use_count) {
-                        if (typeof data === 'number') {
-                            loading && (loading.value = false);
-                            return;
-                        } else {
-                            if (!data.items || data.items.length === 0) {
+                        const items = (data as IResponseChannelsList).items;
+                        if (items && items.length > 0) {
+                            if (items.length < allParams.page_size) {
+                                allData = [...(allData || []), ...items];
                                 loading && (loading.value = false);
-                                return;
+                                channelsList.value = ChainHelper.sortByChainName(
+                                    allData,
+                                    allParams.chain
+                                );
                             } else {
-                                if (data.items.length < allParams.page_size) {
-                                    allData = [...(allData || []), ...data?.items];
-                                    loading && (loading.value = false);
-                                    channelsList.value = ChainHelper.sortByChainName(
-                                        allData,
-                                        params.chain
-                                    );
-                                } else {
-                                    allData = [...(allData || []), ...data?.items];
-                                    allParams.page_num++;
-                                    getAllData();
-                                }
+                                allData = [...(allData || []), ...items];
+                                allParams.page_num++;
+                                getAllData();
                             }
+                        } else {
+                            loading && (loading.value = false);
+                            channelsList.value = ChainHelper.sortByChainName(
+                                allData,
+                                allParams.chain
+                            );
+                            return;
                         }
                     } else {
                         total.value = data as number;
                     }
                 } else {
+                    loading && (loading.value = false);
+                    channelsList.value = ChainHelper.sortByChainName(allData, allParams.chain);
                     console.error(message);
                 }
             };
@@ -70,6 +72,7 @@ export const useGetChannelsList = () => {
             if (!axiosCancel(error)) {
                 loading && (loading.value = false);
             }
+            channelsList.value = ChainHelper.sortByChainName(allData, allParams.chain);
             console.error(error);
         }
     };

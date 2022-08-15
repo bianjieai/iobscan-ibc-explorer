@@ -3,10 +3,9 @@ import { getTokensListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
 import { BASE_PARAMS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
-import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
-import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
+import { formatBigNumber } from '@/helper/parseStringHelper';
 import {
-    // IResponseTokensList,
+    IResponseTokensList,
     IRequestTokensList,
     TTokenType,
     ITokensListItem
@@ -31,49 +30,35 @@ export const useGetTokenList = () => {
             delete params.loading;
         }
         let allData = [] as IResponseTokensListItem[];
+        const allParams = { ...BASE_PARAMS, ...params };
         try {
-            // const allData = {} as IResponseTokensList;
-            const allParams = { ...BASE_PARAMS, ...params };
             const getAllData = async () => {
                 const result = await getTokensListAPI(allParams);
                 const { code, data, message } = result;
                 if (code === API_CODE.success) {
                     if (!allParams.use_count) {
-                        if (typeof data === 'number') {
-                            loading && (loading.value = false);
-                            return;
-                        } else {
-                            if (!data || data.items.length === 0) {
+                        const items = (data as IResponseTokensList).items;
+                        if (items && items.length > 0) {
+                            if (items.length < allParams.page_size) {
+                                allData = [...(allData || []), ...items];
                                 loading && (loading.value = false);
-                                return;
+                                tokensList.value = await ChainHelper.sortByBaseDenom(allData);
                             } else {
-                                if (data.items.length < allParams.page_size) {
-                                    allData = [...(allData || []), ...data.items];
-                                    loading && (loading.value = false);
-                                    const temp: ITokensListItem[] = [];
-                                    for (let i = 0; i < (allData ?? []).length; i++) {
-                                        const item: ITokensListItem = allData[i];
-                                        const baseDenom = await getBaseDenomByKey(
-                                            item.chain_id,
-                                            item.base_denom
-                                        );
-                                        item['name'] = baseDenom
-                                            ? getRestString(baseDenom.symbol, 6, 0)
-                                            : getRestString(item.base_denom, 6, 0);
-                                        temp.push(item);
-                                    }
-                                    tokensList.value = temp;
-                                } else {
-                                    allData = [...(allData || []), ...data.items];
-                                    allParams.page_num++;
-                                    getAllData();
-                                }
+                                allData = [...(allData || []), ...items];
+                                allParams.page_num++;
+                                getAllData();
                             }
+                        } else {
+                            loading && (loading.value = false);
+                            tokensList.value = await ChainHelper.sortByBaseDenom(allData);
+                            return;
                         }
                     } else {
                         total.value = (data as number) || 0;
                     }
                 } else {
+                    loading && (loading.value = false);
+                    tokensList.value = await ChainHelper.sortByBaseDenom(allData);
                     console.error(message);
                 }
             };
@@ -82,6 +67,7 @@ export const useGetTokenList = () => {
             if (!axiosCancel(error)) {
                 loading && (loading.value = false);
             }
+            tokensList.value = await ChainHelper.sortByBaseDenom(allData);
             console.log(error);
         }
     };

@@ -1,6 +1,11 @@
 import { isArray } from '@/utils/objectTools';
-import { CHAINNAME } from '@/constants';
+import { CHAINNAME, UNKNOWN } from '@/constants';
 import { useIbcChains } from '@/composables';
+import { IResponseChainsListItem } from '@/types/interface/chains.interface';
+import { IResponseTokensListItem, ITokensListItem } from '@/types/interface/tokens.interface';
+import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
+import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
+import { getRestString } from '@/helper/parseStringHelper';
 const { ibcChains } = useIbcChains();
 export default class ChainHelper {
     static formatChainId(chainId: any) {
@@ -113,5 +118,43 @@ export default class ChainHelper {
         res.push(...excludes);
 
         return res;
+    }
+
+    static async sortByChainMap(
+        data: IResponseChainsListItem[]
+    ): Promise<IResponseChainsListItem[]> {
+        const { ibcChains, getIbcChains } = useIbcChains();
+        if (Object.keys(ibcChains.value).length <= 0) {
+            try {
+                await getIbcChains();
+            } catch (error) {
+                console.log('getIbcChains', error);
+            }
+        }
+        const ibcChainsAllMap: IIbcchainMap = {};
+        (ibcChains.value?.all || []).forEach((ibcChain: IIbcchain) => {
+            ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
+        });
+        const chainsList = ref<IResponseChainsListItem[]>([]);
+        chainsList.value = data.map((item: IResponseChainsListItem) => {
+            const chainName = ibcChainsAllMap[item.chain_id];
+            item.chainName = chainName ? chainName : UNKNOWN;
+            return item;
+        });
+        console.log(chainsList.value);
+        return chainsList.value;
+    }
+
+    static async sortByBaseDenom(data: IResponseTokensListItem[]) {
+        const temp: ITokensListItem[] = [];
+        for (let i = 0; i < (data ?? []).length; i++) {
+            const item: ITokensListItem = data[i];
+            const baseDenom = await getBaseDenomByKey(item.chain_id, item.base_denom);
+            item['name'] = baseDenom
+                ? getRestString(baseDenom.symbol, 6, 0)
+                : getRestString(item.base_denom, 6, 0);
+            temp.push(item);
+        }
+        return temp;
     }
 }
