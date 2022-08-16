@@ -18,10 +18,5 @@
 <style>
     #app {
         text-align: center;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        min-width: 320px;
     }
 </style>
