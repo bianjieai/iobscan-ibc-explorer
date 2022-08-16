@@ -1,9 +1,7 @@
 import { getChainsListAPI } from '@/api/chains';
-import { useIbcChains } from '@/composables';
-import { BASE_PARAMS, UNKNOWN } from '@/constants';
+import { BASE_PARAMS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { IResponseChainsList, IResponseChainsListItem } from '@/types/interface/chains.interface';
-import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
 import ChainHelper from '@/helper/chainHelper';
 import { Ref } from 'vue';
 export const useGetChainsList = (loading?: Ref<boolean>) => {
@@ -26,7 +24,7 @@ export const useGetChainsList = (loading?: Ref<boolean>) => {
                         if (items.length < allParams.page_size) {
                             allData = [...(allData || []), ...items];
                             loading && (loading.value = false);
-                            chainsList.value = await ChainHelper.sortByChainMap(allData);
+                            chainsList.value = await ChainHelper.getChainName(allData);
                             console.log(chainsList.value);
                         } else {
                             allData = [...(allData || []), ...items];
@@ -35,36 +33,19 @@ export const useGetChainsList = (loading?: Ref<boolean>) => {
                         }
                     } else {
                         loading && (loading.value = false);
-                        const { ibcChains, getIbcChains } = useIbcChains();
-                        if (Object.keys(ibcChains.value).length <= 0) {
-                            try {
-                                await getIbcChains();
-                            } catch (error) {
-                                console.log('getIbcChains', error);
-                            }
-                        }
-                        const ibcChainsAllMap: IIbcchainMap = {};
-                        (ibcChains.value?.all || []).forEach((ibcChain: IIbcchain) => {
-                            ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
-                        });
-
-                        chainsList.value = allData.map((item: IResponseChainsListItem) => {
-                            const chainName = ibcChainsAllMap[item.chain_id];
-                            item.chainName = chainName ? chainName : UNKNOWN;
-                            return item;
-                        });
+                        chainsList.value = await ChainHelper.getChainName(allData);
                         return;
                     }
                 } else {
                     loading && (loading.value = false);
-                    chainsList.value = await ChainHelper.sortByChainMap(allData);
+                    chainsList.value = await ChainHelper.getChainName(allData);
                     console.error(message);
                 }
             };
             getAllData();
         } catch (error) {
             loading && (loading.value = false);
-            chainsList.value = await ChainHelper.sortByChainMap(allData);
+            chainsList.value = await ChainHelper.getChainName(allData);
             console.log(error);
         }
     };

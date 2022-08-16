@@ -42,7 +42,7 @@ export const useGetTokenList = () => {
                             if (items.length < allParams.page_size) {
                                 allData = [...(allData || []), ...items];
                                 loading && (loading.value = false);
-                                tokensList.value = await ChainHelper.sortByBaseDenom(allData);
+                                tokensList.value = await ChainHelper.getBaseDenom(allData);
                             } else {
                                 allData = [...(allData || []), ...items];
                                 allParams.page_num++;
@@ -50,7 +50,7 @@ export const useGetTokenList = () => {
                             }
                         } else {
                             loading && (loading.value = false);
-                            tokensList.value = await ChainHelper.sortByBaseDenom(allData);
+                            tokensList.value = await ChainHelper.getBaseDenom(allData);
                             return;
                         }
                     } else {
@@ -58,7 +58,7 @@ export const useGetTokenList = () => {
                     }
                 } else {
                     loading && (loading.value = false);
-                    tokensList.value = await ChainHelper.sortByBaseDenom(allData);
+                    tokensList.value = await ChainHelper.getBaseDenom(allData);
                     console.error(message);
                 }
             };
@@ -67,7 +67,7 @@ export const useGetTokenList = () => {
             if (!axiosCancel(error)) {
                 loading && (loading.value = false);
             }
-            tokensList.value = await ChainHelper.sortByBaseDenom(allData);
+            tokensList.value = await ChainHelper.getBaseDenom(allData);
             console.log(error);
         }
     };

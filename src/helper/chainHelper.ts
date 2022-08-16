@@ -1,11 +1,17 @@
 import { isArray } from '@/utils/objectTools';
-import { CHAINNAME, UNKNOWN } from '@/constants';
+import { BASE_PARAMS, CHAINNAME, UNKNOWN } from '@/constants';
 import { useIbcChains } from '@/composables';
 import { IResponseChainsListItem } from '@/types/interface/chains.interface';
 import { IResponseTokensListItem, ITokensListItem } from '@/types/interface/tokens.interface';
 import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { getRestString } from '@/helper/parseStringHelper';
+import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
+import {
+    IRelayersListItem,
+    IRequestRelayerList,
+    IResponseRelayerListItem
+} from '@/types/interface/relayers.interface';
 const { ibcChains } = useIbcChains();
 export default class ChainHelper {
     static formatChainId(chainId: any) {
@@ -120,9 +126,10 @@ export default class ChainHelper {
         return res;
     }
 
-    static async sortByChainMap(
-        data: IResponseChainsListItem[]
-    ): Promise<IResponseChainsListItem[]> {
+    static async getChainName(data: IResponseChainsListItem[]): Promise<IResponseChainsListItem[]> {
+        if (data.length === 0) {
+            return [];
+        }
         const { ibcChains, getIbcChains } = useIbcChains();
         if (Object.keys(ibcChains.value).length <= 0) {
             try {
@@ -141,11 +148,10 @@ export default class ChainHelper {
             item.chainName = chainName ? chainName : UNKNOWN;
             return item;
         });
-        console.log(chainsList.value);
         return chainsList.value;
     }
 
-    static async sortByBaseDenom(data: IResponseTokensListItem[]) {
+    static async getBaseDenom(data: IResponseTokensListItem[]) {
         const temp: ITokensListItem[] = [];
         for (let i = 0; i < (data ?? []).length; i++) {
             const item: ITokensListItem = data[i];
@@ -156,5 +162,20 @@ export default class ChainHelper {
             temp.push(item);
         }
         return temp;
+    }
+
+    static formatTransfer(data: IResponseRelayerListItem[], params: IRequestRelayerList) {
+        const relayersList = ref<IResponseRelayerListItem[]>([]);
+        const allParams = { ...BASE_PARAMS, ...params };
+        relayersList.value = ChainHelper.sortByChainName(data, allParams.chain)?.map(
+            (item: IRelayersListItem) => {
+                item.txs_success_rate = formatTransfer_success_txs(
+                    item.transfer_success_txs,
+                    item.transfer_total_txs
+                );
+                return item;
+            }
+        );
+        return relayersList.value;
     }
 }
