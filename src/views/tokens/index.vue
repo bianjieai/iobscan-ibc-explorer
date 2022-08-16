@@ -14,7 +14,7 @@
                     btnTxt: 'Confirm',
                     icon: TIP_ICON
                 }"
-                :default-val="TOKEN_DEFAULT_VALUE"
+                :select-color-default-val="TOKEN_DEFAULT_VALUE"
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
                 }"
@@ -30,7 +30,7 @@
                     placeholder: 'Search by Chain ID',
                     btnTxt: 'Confirm'
                 }"
-                :default-val="CHAIN_DEFAULT_VALUE"
+                :select-color-default-val="CHAIN_DEFAULT_VALUE"
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
                 }"

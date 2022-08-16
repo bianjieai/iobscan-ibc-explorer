@@ -7,6 +7,7 @@ export interface IDataItem {
     tooltips?: string;
     doubleTime?: boolean;
     metaData?: any;
+    inputFlag?: boolean; // 判断是输入还是选择的，在展示的时候需要处理
 }
 
 export type TData = {

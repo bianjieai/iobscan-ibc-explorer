@@ -15,7 +15,7 @@
                     placeholder: 'Search by Chain ID,Chain ID',
                     btnTxt: 'Confirm'
                 }"
-                :default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
+                :select-color-default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
                 }"

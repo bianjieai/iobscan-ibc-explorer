@@ -16,25 +16,24 @@
                 <show-base
                     :visible="visible"
                     :select-items="selectItems"
-                    :input-items="inputItems"
                     :placeholder="placeholder"
                     :hide-icon="hideIcon"
                     :mode="props.mode"
-                    :default-val="defaultVal"
+                    :select-color-default-val="selectColorDefaultVal"
                 />
             </template>
             <!--            多选单选的展示 end-->
-            <!--            多选单选的展示 start-->
+            <!--            只选择两个时候的展示 start-->
             <template v-else>
                 <show-double
                     :visible="visible"
-                    :double-select-items="doubleSelectItems"
+                    :select-items="selectItems"
                     :placeholders="props.placeholders"
                     :hide-icon="hideIcon"
-                    :default-val="defaultVal"
+                    :select-color-default-val="selectColorDefaultVal"
                 />
             </template>
-            <!--            多选单选的展示 end-->
+            <!--            只选择两个时候的展示 end-->
             <span class="button_icon flex justify-between items-center">
                 <i
                     :class="[visible ? 'visible_color' : '']"
@@ -51,7 +50,6 @@
                 <div
                     v-for="(group, ind) in props.data"
                     :key="group.groupName"
-                    class="relative"
                     :class="[group.groupName ? 'mb-20' : 'mb-12']"
                 >
                     <div v-if="group.groupName" class="flex items-center">
@@ -74,43 +72,50 @@
                             />
                         </a-popover>
                     </div>
-                    <div
-                        :class="{
-                            top_shadow: !isBoundary[ind]?.top
-                        }"
-                    ></div>
-                    <div class="chains_wrap ibc_scrollbar">
+                    <div class="relative">
                         <div
-                            v-for="item in group?.children"
-                            :key="item.id"
-                            :class="[
-                                'chains_tag',
-                                'cursor',
-                                {
-                                    'visible_color visible_border selected': isSelected(item.id),
-                                    disabled: item.disabled
-                                }
-                            ]"
-                            @click="onSelected(item)"
-                        >
-                            <img
-                                v-if="item?.icon"
-                                :src="item.icon"
-                                width="24"
-                                height="24"
-                                class="mr-8"
-                            />
-                            <span class="symbol">{{ item.title }}</span>
-                            <div v-if="badges && getBadgeStr(item.id)" class="chains_tag__badge">
-                                {{ getBadgeStr(item.id) }}
+                            :class="{
+                                top_shadow: isBoundary[ind]?.top
+                            }"
+                        ></div>
+                        <div class="chains_wrap ibc_scrollbar">
+                            <div
+                                v-for="item in group?.children"
+                                :key="item.id"
+                                :class="[
+                                    'chains_tag',
+                                    'cursor',
+                                    {
+                                        'visible_color visible_border selected': isSelected(
+                                            item.id
+                                        ),
+                                        disabled: item.disabled
+                                    }
+                                ]"
+                                @click="onSelected(item)"
+                            >
+                                <img
+                                    v-if="item?.icon"
+                                    :src="item.icon"
+                                    width="24"
+                                    height="24"
+                                    class="mr-8"
+                                />
+                                <span class="symbol">{{ item.title }}</span>
+                                <div
+                                    v-if="badges && getBadgeStr(item.id)"
+                                    class="chains_tag__badge"
+                                >
+                                    {{ getBadgeStr(item.id) }}
+                                </div>
                             </div>
                         </div>
+                        <div
+                            :class="{
+                                bottom_shadow: isBoundary[ind]?.bottom
+                            }"
+                        ></div>
                     </div>
-                    <div
-                        :class="{
-                            bottom_shadow: !isBoundary[ind]?.bottom
-                        }"
-                    ></div>
                 </div>
                 <div v-if="inputCtn" class="mt-24">
                     <div v-if="inputCtn?.title" class="flex items-center">
@@ -154,7 +159,7 @@
     import { DropdownProps } from 'ant-design-vue/es/dropdown';
     import { IDataItem, TDenom } from './interface';
     import { useInit } from './composable';
-    import { getValByMode, closeByMode, inputItemsByMode } from './helper';
+    import { getValByMode, closeByMode, inputItemsByMode, getLastArrs } from './helper';
     import { MODES } from './constants';
 
     /**
@@ -173,9 +178,11 @@
                 tooltips?: string;
                 doubleTime?: boolean;
                 metaData?: any;
+                inputFlag?: boolean; // 用来输入还是选择在展示时候有区别
             }[];
         }[];
-        defaultVal?: string | number | (string | number)[];
+        // ux交互：选中时候展示default颜色。
+        selectColorDefaultVal?: string | number | (string | number)[];
         value?: string | number | (string | number)[];
         mode?: MODES.multiple | MODES.double;
         placeholder?: string;
@@ -199,36 +206,32 @@
         editModel: false
     });
 
-    const { inputCtn, placeholder, hideIcon, badges, defaultVal, dropdownProps } = { ...props };
+    const { inputCtn, placeholder, hideIcon, badges, selectColorDefaultVal, dropdownProps } = {
+        ...props
+    };
 
-    const { visible, selectItems, tokenInput, inputItems, flatData, resetVal } = useInit(props);
+    const { visible, selectItems, tokenInput, flatData, resetVal } = useInit({
+        mode: props.mode,
+        data: props.data,
+        value: props.value
+    });
 
     // 是否选中
     const isSelected = (val: TDenom) => selectItems.value.some((v) => v.id === val);
 
     // 获取badges
     const getBadgeStr = (val: TDenom) => {
-        const isDouble = doubleSelectItems.value.filter((v) => v.id === val)?.length === 2;
+        const isDouble = selectItems.value.filter((v) => v.id === val)?.length === 2;
 
         if (isDouble) {
             return props.badges!.join('-');
         }
 
-        const index = doubleSelectItems.value.findIndex((v) => v.id === val);
+        const index = selectItems.value.findIndex((v) => v.id === val);
         if (index !== -1) {
             return props.badges![index];
         }
     };
-
-    // 目前多选和输入互斥，只选择其中一个
-    const doubleSelectItems = computed(() => {
-        return [...inputItems.value, ...selectItems.value];
-    });
-
-    defineExpose({
-        selectItems,
-        tokenInput
-    });
 
     const emit = defineEmits<{
         // (e: 'onChange', res?: IDataItem | IDataItem[]): void;
@@ -256,18 +259,19 @@
     // 确认confirm时候
     const confirmChains = () => {
         let res: IDataItem[] = [];
-        inputItems.value = inputItemsByMode(tokenInput.value, props);
+        const inputItems = inputItemsByMode(tokenInput.value, props.mode);
 
         switch (props.mode) {
             // 多选时候都输出
             case MODES.multiple:
-                res = [...inputItems.value, ...selectItems.value];
+                res = getLastArrs([...inputItems, ...selectItems.value]);
                 break;
             // 只选择两个时候
             case MODES.double:
-                res = [...inputItems.value, ...selectItems.value].slice(0, 2);
+                // 两个的时候允许选择all两次，即associateId
+                res = getLastArrs([...inputItems, ...selectItems.value]).slice(0, 2);
                 // 如果确定时候，输入为空时候需要填充
-                if (inputItems.value.length === 0) {
+                if (inputItems.length === 0) {
                     const matchItem: IDataItem | undefined = flatData.value.find(
                         (v) => v.id === props.associateId
                     );
@@ -279,11 +283,11 @@
                 break;
             default:
                 // 单选时候，清空选择框
-                selectItems.value = [];
-                res = [...inputItems.value];
+                res = getLastArrs(inputItems);
                 break;
         }
 
+        selectItems.value = res;
         sumbitTokens(res, true);
     };
 
@@ -297,24 +301,22 @@
     const eleRef = ref();
     const scrollFn = (visible: boolean) => {
         if (visible) {
+            isBoundary.value = [];
+            // 加上延迟是因为，打开之后就直接返回visible了，但是收起来之后才会返回visible。
             setTimeout(() => {
                 eleRef.value = document.querySelectorAll('.chains_wrap');
-                isBoundary.value = [];
                 Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement, ind: number) => {
-                    isBoundary.value[ind] = {
-                        top: true,
-                        bottom: true
-                    };
+                    isBoundary.value[ind] = {};
                     ele.addEventListener('scroll', () => {
-                        isBoundary.value[ind].top = ele.scrollTop === 0;
+                        isBoundary.value[ind].top = ele.scrollTop !== 0;
                         if (ele.scrollHeight === ele.scrollTop + ele.clientHeight) {
-                            isBoundary.value[ind].bottom = true;
-                        } else {
                             isBoundary.value[ind].bottom = false;
+                        } else {
+                            isBoundary.value[ind].bottom = true;
                         }
                     });
                 });
-            });
+            }, 600);
         } else {
             Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement) => {
                 ele.removeEventListener('scroll', () => {});
@@ -336,10 +338,11 @@
             selectItems.value = [];
         }
         // 修改时候是否展示框变化
+        let inputItems: IDataItem[] = [];
         if (props.editModel) {
-            inputItems.value = inputItemsByMode(tokenInput.value, props);
+            inputItems = inputItemsByMode(tokenInput.value, props.mode);
             // 如果输入的只有一个值，选中all，这里作为配置项传进来。
-            if (inputItems.value.length === 1) {
+            if (inputItems.length === 1) {
                 const matchItem = flatData.value.find((v) => v.id === props.associateId);
 
                 if (matchItem) {
@@ -347,6 +350,8 @@
                 }
             }
         }
+
+        selectItems.value = getLastArrs([...inputItems, ...selectItems.value]);
     };
 
     const onSelected = (item: IDataItem) => {
@@ -356,7 +361,7 @@
 
         selectByMode();
 
-        sumbitTokens([...inputItems.value, ...selectItems.value]);
+        sumbitTokens(selectItems.value);
 
         // 写成内联函数形式，只是为了减少onSelected主体代码。
         function selectByMode() {
@@ -373,12 +378,11 @@
                             ...selectItems.value.slice(index + 1)
                         ];
                     }
-                    return;
+                    break;
                 // 只选择两个时候, 清空input, 超过两个重选
                 case MODES.double:
-                    if (inputItems.value.length + selectItems.value.length >= 2) {
+                    if (selectItems.value.length >= 2) {
                         selectItems.value = [item];
-                        inputItems.value = [];
                         tokenInput.value = '';
                     } else {
                         index = selectItems.value.findIndex((v) => v.id === item.id);
@@ -387,11 +391,11 @@
                             selectItems.value.push(item);
                         }
                     }
-                    return;
+                    break;
                 default:
                     // 单选时候，选择和输入只能有一个，所以清除input输入
                     selectItems.value = [item];
-                    inputItems.value = [];
+                    tokenInput.value = '';
             }
         }
     };
@@ -404,8 +408,9 @@
         height: 30px;
         pointer-events: none;
         z-index: 1;
-        box-shadow: inset 0 10px 8px -8px #00000026;
-        margin-top: -10px;
+        background: linear-gradient(180deg, rgba(17, 22, 77, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+        // box-shadow: inset 0 10px 8px -8px #00000026;
+        // margin-top: -10px;
     }
     .bottom_shadow {
         position: absolute;
