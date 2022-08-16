@@ -116,13 +116,16 @@
         border-radius: 4px;
         background-color: #fff;
         min-width: 126px;
+        &:hover {
+            border-color: var(--bj-primary-color);
+        }
     }
 
     .button_icon {
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         padding: 0 6px;
         border-left: 1px solid var(--bj-border-color);
-        height: 36px;
+        height: 34px;
 
         & > svg {
             color: var(--bj-text-third);
@@ -159,9 +162,9 @@
 
     .selected_color {
         color: var(--bj-primary-color);
-        &_default {
-            color: var(--bj-text-second);
-        }
+    }
+    .selected_color_default {
+        color: var(--bj-text-second);
     }
 
     .selected_option {

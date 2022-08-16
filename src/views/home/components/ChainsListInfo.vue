@@ -15,7 +15,7 @@
                 v-show="isHaveData"
                 id="card_list"
                 ref="scrollListRef"
-                class="card_list ibc_scrollbar"
+                class="card_list"
                 :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 4, xxl: 4 }"
                 :data-source="sortChainList[currentMenu[0]]"
             >

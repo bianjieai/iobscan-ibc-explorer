@@ -618,27 +618,6 @@
             width: 284px;
             height: 450px;
             overflow-y: auto;
-
-            &::-webkit-scrollbar {
-                width: 6px;
-            }
-
-            &::-webkit-scrollbar-track {
-                box-shadow: inset006pxrgba(0, 0, 0, 0.3);
-                border-radius: 2px;
-                width: 8px;
-                background: rgba(61, 80, 255, 0.1);
-            }
-
-            &::-webkit-scrollbar-thumb {
-                border-radius: 4px;
-                box-shadow: inset006pxrgba(0, 0, 0, 0.5);
-                background: rgba(61, 80, 255, 0.5);
-            }
-
-            &::-webkit-scrollbar-thumb:window-inactive {
-                background: rgba(61, 80, 255, 0.9);
-            }
         }
 
         .confirm-button {

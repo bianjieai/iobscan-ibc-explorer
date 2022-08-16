@@ -47,7 +47,7 @@
         </div>
 
         <template #overlay>
-            <div class="overlay ibc_scrollbar">
+            <div class="overlay">
                 <div
                     v-for="(group, ind) in props.data"
                     :key="group.groupName"
@@ -79,7 +79,7 @@
                             top_shadow: !isBoundary[ind]?.top
                         }"
                     ></div>
-                    <div class="chains_wrap ibc_scrollbar">
+                    <div class="chains_wrap">
                         <div
                             v-for="item in group?.children"
                             :key="item.id"
@@ -430,7 +430,7 @@
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         padding: 0 2px;
         border-left: 1px solid var(--bj-border-color);
-        height: 36px;
+        height: 34px;
 
         .iconfont {
             font-size: 18px;
@@ -449,6 +449,9 @@
 
     .default_color {
         color: var(--bj-text-second);
+        &:hover {
+            border-color: var(--bj-primary-color);
+        }
     }
 
     .multiple {
