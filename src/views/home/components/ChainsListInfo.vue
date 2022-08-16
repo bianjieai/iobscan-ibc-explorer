@@ -216,6 +216,7 @@
         }
         .nodatas {
             margin: 0;
+            padding-right: 0;
             &__icon {
                 width: 120px;
                 margin-top: 24px;

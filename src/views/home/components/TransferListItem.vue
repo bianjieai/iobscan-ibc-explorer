@@ -10,9 +10,9 @@
                 :to="`/transfers/details?hash=${item.sc_tx_info.hash}`"
             >
                 <span class="list_item__number">{{ prefixInteger(index + 1, 3) }}</span>
-                <div class="list_item_link">
+                <div class="list_item__link">
                     <img
-                        class="list_item_icon"
+                        class="list_item__icon"
                         :src="item.symbolIcon || tokenDefaultImg"
                         alt="icon"
                     />
@@ -146,7 +146,7 @@
             line-height: var(--bj-font-size-normal);
             margin: 0 0 0 8px;
         }
-        &_icon {
+        &__icon {
             width: 40px;
             border-radius: 50%;
             margin: 0 24px 0 12px;
@@ -258,6 +258,7 @@
             }
 
             &__icon {
+                margin: 0 8px 0 8px;
             }
             &__out_hash_wrap {
                 .out_hash {

@@ -69,4 +69,5 @@ body {
     -moz-osx-font-smoothing: grayscale;
     color: var(--bj-text-normal);
     background-color: var(--bj-background-color);
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }

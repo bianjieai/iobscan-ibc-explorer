@@ -142,7 +142,8 @@
 <script setup lang="ts">
     import { IBC_TX_STATUS, IBC_SC_AND_DC_TX_STATUS } from '@/constants/transfers';
     import TransferDetailsCard from '../components/TransferDetailsCard.vue';
-    import { useTransfersDetailsInfo } from '../composable';
+    import { useTransfersDetailsInfo, useIbcDenoms } from '../composable';
+    useIbcDenoms();
     const {
         ibcTransferOutTxHash,
         ibcTransferInTxHash,

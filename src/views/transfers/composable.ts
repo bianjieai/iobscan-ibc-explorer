@@ -102,7 +102,6 @@ export const useGetTableColumns = () => {
     const showTransferLoading = ref(true);
     const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
     const tableDatas = ref([...ibcTxs]);
-    const tableCount = ref(0);
     const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
     watch(
         () => tableDatas.value,
@@ -119,7 +118,6 @@ export const useGetTableColumns = () => {
         tableColumns,
         showTransferLoading,
         tableDatas,
-        tableCount,
         getIbcTxs
     };
 };
@@ -166,7 +164,6 @@ export const useTransfersDetailsInfo = () => {
         const hash: string = (route?.query?.hash || '') as string;
         getTxDetailsByTxHashAPI(hash)
             .then((result) => {
-                console.log(result);
                 ibcStatisticsChainsStore.isShowLoading = false;
                 const { code, data } = result;
                 if (code === API_CODE.success) {

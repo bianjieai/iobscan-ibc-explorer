@@ -154,6 +154,11 @@
     }
 
     :deep(.ant-table-cell) {
+        &:nth-of-type(3) {
+            padding-left: 16px;
+        }
+    }
+    :deep(.ant-table-cell) {
         &:nth-of-type(4) {
             padding-right: 26px !important;
         }

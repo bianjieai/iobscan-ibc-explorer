@@ -320,7 +320,7 @@
             </div>
         </div>
         <!-- todo duanjie 状态和分页看能否复用  -->
-        <div v-if="tableCount" class="transfer__bottom">
+        <div v-if="pagination.total" class="transfer__bottom">
             <span class="status_tips">
                 <span class="status_log">Status:</span>
                 <span v-for="(item, index) in ibcTxStatusDesc" :key="index" class="status_tip">
@@ -383,8 +383,7 @@
     const { selectedSymbol, isShowSymbolIcon, clearInput, isShowChainIcon } = useSelectedSymbol();
     const { pagination } = usePagination();
     const { ibcChains } = useIbcChains();
-    const { tableColumns, showTransferLoading, tableDatas, tableCount, getIbcTxs } =
-        useGetTableColumns();
+    const { tableColumns, showTransferLoading, tableDatas, getIbcTxs } = useGetTableColumns();
     const chainDropdown = ref();
     // const selectedDouble = ref(true);
     // const needBadge = ref(true);
@@ -399,7 +398,7 @@
     const dateRange = reactive({ value: [] });
     const maxTableLength = ref(500000);
     let isHashFilterParams = ref(false);
-    let ibcTxTotalMoreThan500k = ref(true);
+    let ibcTxTotalMoreThan500k = ref(false);
     let pageNum = 1,
         pageSize = 10;
     let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
@@ -418,7 +417,7 @@
         url += `&denom=${route.query.denom}`;
         paramsDenom = route?.query.denom;
     }
-    if (route?.query?.symbol && (route?.query?.symbol as any)?.toLowerCase() !== unknownSymbol) {
+    if (route?.query?.symbol && (route?.query?.symbol as string)?.toLowerCase() !== unknownSymbol) {
         url += `&symbol=${route.query.symbol}`;
         paramsSymbol = route?.query.symbol as string;
         watch(ibcDenoms, (newValue) => {
@@ -501,7 +500,6 @@
             symbol: queryParam.symbol,
             denom: queryParam.denom
         };
-        isHashFilterParams.value = false;
         if (
             !params.chain_id &&
             !params.denom &&
@@ -509,6 +507,8 @@
             params.status === txStatusNumber.defaultStatus &&
             isDateDefaultValue
         ) {
+            isHashFilterParams.value = false;
+        } else {
             isHashFilterParams.value = true;
         }
 
@@ -519,7 +519,6 @@
             page_size: 10
         })
             .then((data) => {
-                tableCount.value = data as number;
                 pagination.total = data as number;
             })
             .catch((error) => {
@@ -553,16 +552,21 @@
         current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
 
     const isIbcTxTotalAndHashFilter = computed(() => {
-        if (!ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
-            return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
-        } else if (!ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
-            return `${tableCount.value} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
-        } else if (ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
-            return 'Last 500k transfers found';
-        } else if (ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
-            return `${tableCount.value} of the last 500k transfers found`;
+        if (ibcTxTotalMoreThan500k.value) {
+            if (isHashFilterParams.value) {
+                if (pagination.total === maxTableLength.value) {
+                    return 'Last 500k transfers found';
+                }
+                return `${pagination.total} of the last 500k transfers found`;
+            } else {
+                return 'Last 500k transfers found';
+            }
         } else {
-            return '';
+            if (isHashFilterParams.value) {
+                return `${pagination.total} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
+            } else {
+                return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
+            }
         }
     });
     const setAllChains = (ibcChains: any) => {
@@ -878,10 +882,11 @@
     };
 
     watch(ibcStatisticsTxs, (newValue) => {
-        if (newValue?.tx_all?.count < maxTableLength.value) {
+        if (newValue?.tx_all?.count <= maxTableLength.value) {
             ibcTxTotalMoreThan500k.value = false;
+        } else {
+            ibcTxTotalMoreThan500k.value = true;
         }
-        ibcTxTotalMoreThan500k.value = true;
     });
 </script>
 
@@ -1071,8 +1076,8 @@
                 }
             }
             & :deep(.table_pagination) {
-                text-align: right;
                 li {
+                    margin-bottom: 8px;
                     width: initial;
                     height: 24px;
                     min-width: 24px;
