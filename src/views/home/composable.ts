@@ -38,7 +38,7 @@ export const useIbcTxs = (timerInterval?: number) => {
         }
     };
     useTimeInterval(() => {
-        homeIbcTxs.value = homeIbcTxs.value.map((item: any) => {
+        homeIbcTxs.value = homeIbcTxs.value?.map((item: any) => {
             item.parseTime = formatAge(getTimestamp(), item.tx_time * 1000, '', '');
             return item;
         });
@@ -53,7 +53,7 @@ export const useIbcTxs = (timerInterval?: number) => {
                 },
                 isNeedJudgeShow500
             )) as IIbcTx[];
-            homeIbcTxs.value = homeIbcTxs.value.map((item: any) => {
+            homeIbcTxs.value = homeIbcTxs.value?.map((item: any) => {
                 if (item.record_id === expandedId.value) {
                     item.expanded = true;
                 } else {

@@ -336,6 +336,7 @@
         text-align: right;
     }
     :deep(.ant-pagination li) {
+        margin-bottom: 8px;
         width: initial;
         height: 24px;
         min-width: 24px;

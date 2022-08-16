@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center">
+    <div class="flex items-center token_icon">
         <img
             :src="tokenInfo.imgSrc"
             class="icon cursor mr-8"
@@ -99,6 +99,13 @@
 </script>
 
 <style lang="less" scoped>
+    .token_icon {
+        &:hover {
+            .leading_none {
+                color: var(--bj-primary-color);
+            }
+        }
+    }
     .icon {
         width: 40px;
         height: 40px;

@@ -93,8 +93,9 @@
 
     .selected_color {
         color: var(--bj-primary-color);
-        //overflow: hidden;
-        //text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         padding-left: 8px;
         //max-width: 118px;
         &__default {
