@@ -500,17 +500,6 @@
             symbol: queryParam.symbol,
             denom: queryParam.denom
         };
-        if (
-            !params.chain_id &&
-            !params.denom &&
-            !params.symbol &&
-            params.status === txStatusNumber.defaultStatus &&
-            isDateDefaultValue
-        ) {
-            isHashFilterParams.value = false;
-        } else {
-            isHashFilterParams.value = true;
-        }
 
         getIbcTxs({
             use_count: true,
@@ -523,6 +512,19 @@
             })
             .catch((error) => {
                 console.log(error);
+            })
+            .finally(() => {
+                if (
+                    !params.chain_id &&
+                    !params.denom &&
+                    !params.symbol &&
+                    params.status === txStatusNumber.defaultStatus &&
+                    isDateDefaultValue
+                ) {
+                    isHashFilterParams.value = false;
+                } else {
+                    isHashFilterParams.value = true;
+                }
             });
 
         getIbcTxs({
@@ -542,6 +544,7 @@
                 console.log(error);
             });
     };
+
     queryDatas();
     const startTime = (time: any) => {
         const nowTimeDate = new Date(time);
