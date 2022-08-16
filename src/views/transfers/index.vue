@@ -558,15 +558,13 @@
                     return 'Last 500k transfers found';
                 }
                 return `${pagination.total} of the last 500k transfers found`;
-            } else {
-                return 'Last 500k transfers found';
             }
+            return 'Last 500k transfers found';
         } else {
             if (isHashFilterParams.value) {
                 return `${pagination.total} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
-            } else {
-                return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
             }
+            return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
         }
     });
     const setAllChains = (ibcChains: any) => {
