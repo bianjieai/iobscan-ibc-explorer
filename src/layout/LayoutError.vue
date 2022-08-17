@@ -21,6 +21,7 @@
         flex: 1;
         display: flex;
         flex-direction: column;
+        height: 100%;
         &__header_container {
             position: fixed;
             top: 0;

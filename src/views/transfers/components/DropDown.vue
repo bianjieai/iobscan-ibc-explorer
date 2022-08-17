@@ -234,7 +234,8 @@
         height: 30px;
         pointer-events: none;
         z-index: 1;
-        box-shadow: inset 0 10px 8px -8px #00000026;
+        background: linear-gradient(180deg, rgba(17, 22, 77, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+        // box-shadow: inset 0 10px 8px -8px #00000026;
     }
     .bottom_shadow {
         position: absolute;
@@ -296,7 +297,7 @@
         }
     }
     .overlay {
-        max-width: 854px;
+        max-width: 872px;
         background-color: #fff;
         box-shadow: 0px 2px 8px 0px #d9deec;
         border-radius: 4px;

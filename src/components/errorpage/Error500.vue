@@ -1,5 +1,5 @@
 <template>
-    <div class="error_network_container">
+    <div class="error_network_container" :style="{ minHeight: `${minHeight}px` }">
         <div class="content">
             <div class="content__img">
                 <img class="content__img__large" src="/src/assets/error/500_large.png" alt="" />
@@ -23,6 +23,15 @@
         console.log('onBeforeUnmount======error 500');
         ibcStatisticsChainsStore.isShow500 = false;
     });
+
+    const minHeight = ref();
+    onMounted(() => {
+        minHeight.value =
+            document.body.offsetHeight -
+            (document.querySelector('.layout__header')! as HTMLElement).offsetHeight;
+
+        console.log(minHeight);
+    });
     const router = useRouter();
     const route = useRoute();
     const goBackClick = () => {
@@ -36,17 +45,14 @@
 
 <style scoped lang="less">
     .error_network_container {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        overflow: auto;
         background: url('../../assets/error/default_bg.png') no-repeat center center;
         background-size: cover;
         cursor: url('../../assets/error/mouse_tree.png'), default !important;
         user-select: none;
         .content {
             max-width: 895px;
+            margin: 0 auto;
             position: relative;
             &__img {
                 width: 100%;
@@ -94,7 +100,6 @@
     }
     @media screen and (max-width: 900px) {
         .error_network_container {
-            align-items: flex-start;
             .content {
                 margin-top: 120px;
                 max-width: 768px;
