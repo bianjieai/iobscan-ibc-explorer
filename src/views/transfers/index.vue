@@ -500,17 +500,6 @@
             symbol: queryParam.symbol,
             denom: queryParam.denom
         };
-        if (
-            !params.chain_id &&
-            !params.denom &&
-            !params.symbol &&
-            params.status === txStatusNumber.defaultStatus &&
-            isDateDefaultValue
-        ) {
-            isHashFilterParams.value = false;
-        } else {
-            isHashFilterParams.value = true;
-        }
 
         getIbcTxs({
             use_count: true,
@@ -523,6 +512,19 @@
             })
             .catch((error) => {
                 console.log(error);
+            })
+            .finally(() => {
+                if (
+                    !params.chain_id &&
+                    !params.denom &&
+                    !params.symbol &&
+                    params.status === txStatusNumber.defaultStatus &&
+                    isDateDefaultValue
+                ) {
+                    isHashFilterParams.value = false;
+                } else {
+                    isHashFilterParams.value = true;
+                }
             });
 
         getIbcTxs({
@@ -542,6 +544,7 @@
                 console.log(error);
             });
     };
+
     queryDatas();
     const startTime = (time: any) => {
         const nowTimeDate = new Date(time);
@@ -1147,6 +1150,9 @@
         margin-right: 8px;
         width: 250px;
         height: 36px;
+        &:hover {
+            border-color: var(--bj-primary-color);
+        }
         :deep(.ant-picker-input > input) {
             color: var(--bj-primary-color);
             text-align: center;
@@ -1207,28 +1213,6 @@
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
-                }
-                :deep(.ant-table-content) {
-                    &::-webkit-scrollbar {
-                        height: 4px;
-                    }
-
-                    &::-webkit-scrollbar-track {
-                        box-shadow: inset006pxrgba(0, 0, 0, 0.3);
-                        border-radius: 2px;
-                        height: 6px;
-                        background: rgba(61, 80, 255, 0.1);
-                    }
-
-                    &::-webkit-scrollbar-thumb {
-                        border-radius: 4px;
-                        box-shadow: inset006pxrgba(0, 0, 0, 0.5);
-                        background: rgba(61, 80, 255, 0.5);
-                    }
-
-                    &::-webkit-scrollbar-thumb:window-inactive {
-                        background: rgba(61, 80, 255, 0.9);
-                    }
                 }
                 :deep(table) {
                     width: 1200px;

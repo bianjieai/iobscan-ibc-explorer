@@ -241,26 +241,6 @@
     :deep(.ant-table) {
         overflow-x: auto;
         font-size: 14px;
-        /* 设置滚动条的样式 */
-        &::-webkit-scrollbar {
-            height: 4px;
-        }
-        /* 滚动槽 */
-        &::-webkit-scrollbar-track {
-            box-shadow: inset006pxrgba(0, 0, 0, 0.3);
-            border-radius: 2px;
-            height: 6px;
-            background: rgba(61, 80, 255, 0.1);
-        }
-        /* 滚动条滑块 */
-        &::-webkit-scrollbar-thumb {
-            border-radius: 4px;
-            box-shadow: inset006pxrgba(0, 0, 0, 0.5);
-            background: rgba(61, 80, 255, 0.5);
-        }
-        &::-webkit-scrollbar-thumb:window-inactive {
-            background: rgba(61, 80, 255, 0.9);
-        }
     }
     :deep(.ant-table-container) {
         width: 1150px; // TODO clippers => 宽度待定
@@ -269,23 +249,6 @@
     :deep(div.ant-table-body) {
         overflow-y: auto !important;
         max-height: 690px !important;
-        &::-webkit-scrollbar {
-            width: 6px;
-        }
-        &::-webkit-scrollbar-track {
-            box-shadow: inset006pxrgba(0, 0, 0, 0.3);
-            border-radius: 2px;
-            width: 8px;
-            background: rgba(61, 80, 255, 0.1);
-        }
-        &::-webkit-scrollbar-thumb {
-            border-radius: 4px;
-            box-shadow: inset006pxrgba(0, 0, 0, 0.5);
-            background: rgba(61, 80, 255, 0.5);
-        }
-        &::-webkit-scrollbar-thumb:window-inactive {
-            background: rgba(61, 80, 255, 0.9);
-        }
     }
     :deep(.ant-table-thead .ant-table-cell) {
         font-size: var(--bj-font-size-sub-title);

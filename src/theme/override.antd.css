@@ -61,24 +61,6 @@
     color: #3d50ff;
 }
 
-.ibc_scrollbar {
-    scrollbar-color: #3d50ff #f2f2f2;
-    scrollbar-width: thin;
-}
-.ibc_scrollbar::-webkit-scrollbar {
-    width: 4px;
-}
-
-.ibc_scrollbar::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-    background: #3d50ff;
-}
-
-.ibc_scrollbar::-webkit-scrollbar-track {
-    background-color: #f2f2f2;
-}
-
 .transfer__table .ant-table-thead tr th {
     font-size: var(--bj-font-size-sub-title);
     background-color: #ffffff;

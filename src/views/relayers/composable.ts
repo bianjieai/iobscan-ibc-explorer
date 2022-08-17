@@ -111,7 +111,7 @@ export const useRelayersSelected = (
     const onSelectedChain = (vals: IDataItem[]) => {
         // allChain 只能是最后一个，否则交换
         const res = vals.map((v) => v.id);
-        if (res[0] === 'allchain') {
+        if (ChainHelper.isNeedSort(res, vals)) {
             chainIds.value = [res[1], res[0]];
         } else {
             chainIds.value = res;

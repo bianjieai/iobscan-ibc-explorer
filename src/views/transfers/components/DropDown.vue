@@ -53,7 +53,7 @@
                                 top_shadow: !isBoundary?.[0]?.top
                             }"
                         ></div>
-                        <div class="overlay__item__content ibc_scrollbar chains_wrap">
+                        <div class="overlay__item__content chains_wrap">
                             <template v-for="item in ibcBaseDenoms" :key="item.denom">
                                 <div
                                     class="content_item cursor"
@@ -420,26 +420,6 @@
             &__wrap {
                 height: 454px;
                 overflow: auto;
-                &::-webkit-scrollbar {
-                    width: 4px;
-                }
-
-                &::-webkit-scrollbar-track {
-                    box-shadow: inset006pxrgba(0, 0, 0, 0.3);
-                    border-radius: 2px;
-                    width: 8px;
-                    background: rgba(61, 80, 255, 0.1);
-                }
-
-                &::-webkit-scrollbar-thumb {
-                    border-radius: 4px;
-                    box-shadow: inset006pxrgba(0, 0, 0, 0.5);
-                    background: rgba(61, 80, 255, 0.5);
-                }
-
-                &::-webkit-scrollbar-thumb:window-inactive {
-                    background: rgba(61, 80, 255, 0.9);
-                }
             }
             &__title {
                 &:hover {
