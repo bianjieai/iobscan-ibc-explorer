@@ -1,8 +1,7 @@
 import { onMounted, ref, watch } from 'vue';
-import { IDataItem, TDenom, TData, TProps } from './interface';
+import { IDataItem, TDenom, TData, TUseInit } from './interface';
 import { MODES } from './constants';
 
-type TUseInit = Pick<TProps, 'mode' | 'data' | 'value'>;
 // 初始化
 export const useInit = (props: TUseInit) => {
     const visible = ref(false);
