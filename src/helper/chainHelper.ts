@@ -138,7 +138,8 @@ export default class ChainHelper {
             isLocaleCompare.value = false;
         } else if (chainsName.indexOf(CHAINNAME.IRISHUB) === 1) {
             isLocaleCompare.value = true;
-        } else if (chainsName[1]) {
+        } else if (chainsName[1] && chooseChains.every((v) => !v.inputFlag)) {
+            // 不是输入时候才排序
             if ((chainsName[0] as string)?.localeCompare(chainsName[1] as string) === 1) {
                 isLocaleCompare.value = true;
             }

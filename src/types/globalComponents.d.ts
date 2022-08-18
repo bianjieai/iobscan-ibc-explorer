@@ -19,6 +19,7 @@ declare module '@vue/runtime-core' {
     ASelectOption: typeof import('ant-design-vue/es')['SelectOption']
     ASpin: typeof import('ant-design-vue/es')['Spin']
     ATable: typeof import('ant-design-vue/es')['Table']
+    ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
     BaseDropdown: typeof import('./../components/responsive/dropdown/BaseDropdown.vue')['default']
     BjSelect: typeof import('./../components/BjSelect/index.vue')['default']
     BottomStatus: typeof import('./../components/responsive/table/BottomStatus.vue')['default']
