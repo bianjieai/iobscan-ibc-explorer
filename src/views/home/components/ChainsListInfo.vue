@@ -44,7 +44,7 @@
                     v-for="item of anchors"
                     :id="`a-link${item.title}`"
                     :key="item.title"
-                    class="list_anchor__item"
+                    class="list_anchor__item cursor"
                     @click="onClickAnchor(item.title)"
                 >
                     <div class="custom_title">

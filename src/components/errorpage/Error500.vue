@@ -29,8 +29,6 @@
         minHeight.value =
             document.body.offsetHeight -
             (document.querySelector('.layout__header')! as HTMLElement).offsetHeight;
-
-        console.log(minHeight);
     });
     const router = useRouter();
     const route = useRoute();
