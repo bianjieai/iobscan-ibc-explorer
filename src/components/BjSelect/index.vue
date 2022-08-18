@@ -157,24 +157,22 @@
 </template>
 <script lang="ts" setup>
     import { DropdownProps } from 'ant-design-vue/es/dropdown';
-    import { IDataItem, TDenom } from './interface';
+    import { IDataItem, TDenom, TData } from './interface';
     import { useInit } from './composable';
     import { getValByMode, closeByMode, inputItemsByMode, getLastArrs } from './helper';
     import { MODES } from './constants';
-    import { ISelectedData } from '@/types/interface/components/selected.interface';
 
     /**
      * defineProps 使用外部引入的interface或者type会报错
      */
     export interface IProps {
-        data: ISelectedData[];
+        data: TData;
         // ux交互：选中时候展示default颜色。
         selectColorDefaultVal?: string | number | (string | number)[];
         value?: string | number | (string | number)[];
         mode?: MODES.multiple | MODES.double;
         placeholder?: string;
         hideIcon?: boolean;
-        editModel?: boolean; // 修改时候是否展示框变化，默认false
         associateId?: string | number; // 双选时候，input输入时候一个值时候，另外展示的值
         badges?: [string, string];
         placeholders?: [string, string];
@@ -189,19 +187,14 @@
     }
 
     const props = withDefaults(defineProps<IProps>(), {
-        data: () => [],
-        editModel: false
+        data: () => []
     });
 
     const { inputCtn, placeholder, hideIcon, badges, selectColorDefaultVal, dropdownProps } = {
         ...props
     };
 
-    const { visible, selectItems, tokenInput, flatData, resetVal } = useInit({
-        mode: props.mode,
-        data: props.data,
-        value: props.value
-    });
+    const { visible, selectItems, tokenInput, flatData, resetVal } = useInit(props);
 
     // 是否选中
     const isSelected = (val: TDenom) => selectItems.value.some((v) => v.id === val);
@@ -244,37 +237,19 @@
 
     // 确认confirm时候
     const confirmChains = () => {
-        let res: IDataItem[] = [];
         const inputItems = inputItemsByMode(tokenInput.value, props.mode);
 
-        switch (props.mode) {
-            // 多选时候都输出
-            case MODES.multiple:
-                res = getLastArrs([...inputItems, ...selectItems.value]);
-                break;
-            // 只选择两个时候
-            case MODES.double:
-                // 两个的时候允许选择all两次，即associateId
-                res = getLastArrs([...inputItems, ...selectItems.value]).slice(0, 2);
-                // 如果确定时候，输入为空时候需要填充
-                if (inputItems.length === 0) {
-                    const matchItem: IDataItem | undefined = flatData.value.find(
-                        (v) => v.id === props.associateId
-                    );
+        // 双选时候，如果选择框没有值时候希望填充
+        if (props.mode === MODES.double && inputItems.length === 0) {
+            const matchItem: IDataItem | undefined = flatData.value.find(
+                (v) => v.id === props.associateId
+            );
 
-                    if (matchItem) {
-                        res = [matchItem, matchItem];
-                    }
-                }
-                break;
-            default:
-                // 单选时候，清空选择框
-                res = getLastArrs(inputItems);
-                break;
+            if (matchItem) {
+                selectItems.value = [matchItem, matchItem];
+            }
         }
-
-        selectItems.value = res;
-        sumbitTokens(res, true);
+        sumbitTokens(selectItems.value, true);
     };
 
     // 监听滚动
@@ -319,24 +294,36 @@
     };
 
     const onInputChange = () => {
-        // 选两个时候，清空选择框
-        if (props.mode === MODES.double) {
-            selectItems.value = [];
-        }
-        // 修改时候是否展示框变化
-        let inputItems: IDataItem[] = [];
-        if (props.editModel) {
-            inputItems = inputItemsByMode(tokenInput.value, props.mode);
-            // 如果输入的只有一个值，选中all，这里作为配置项传进来。
-            if (inputItems?.length === 1) {
-                const matchItem = flatData.value.find((v) => v.id === props.associateId);
+        let res: IDataItem[] = [];
+        const inputItems = inputItemsByMode(tokenInput.value, props.mode);
 
-                if (matchItem) {
-                    selectItems.value = [matchItem as IDataItem];
+        switch (props.mode) {
+            // 多选时候都输出
+            case MODES.multiple:
+                res = getLastArrs([...selectItems.value, ...inputItems]);
+                break;
+            // 只选择两个时候
+            case MODES.double:
+                // 输入框作为选择项
+                res = getLastArrs(inputItems).slice(0, 2);
+                const matchItem = flatData.value.find((v) => v.id === props.associateId);
+                // 填充选项，选中all，这里作为配置项传进来。
+                if (inputItems.length === 1) {
+                    if (matchItem) {
+                        res = [...inputItems, matchItem] as IDataItem[];
+                    }
+                } else if (inputItems.length === 0) {
+                    res = [matchItem, matchItem] as IDataItem[];
                 }
-            }
+                console.log(res);
+                break;
+            default:
+                // 单选时候，清空选择框
+                res = getLastArrs(inputItems);
+                break;
         }
-        selectItems.value = getLastArrs([...inputItems, ...selectItems.value]);
+
+        selectItems.value = res;
     };
 
     const onSelected = (item: IDataItem) => {
