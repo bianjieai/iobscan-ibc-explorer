@@ -92,9 +92,8 @@ export const useChannelsSelected = (
         });
     };
     const onSelectedChain = (vals: IDataItem[]) => {
-        // allChain 只能是最后一个，否则交换
         const res = vals.map((v) => v.id);
-        if (ChainHelper.isNeedSort(res, vals)) {
+        if (ChainHelper.isNeedSort(res, chainData.value)) {
             chainIds.value = [res[1], res[0]];
         } else {
             chainIds.value = res;
