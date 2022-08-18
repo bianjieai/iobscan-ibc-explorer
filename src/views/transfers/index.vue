@@ -352,7 +352,8 @@
         unknownSymbol,
         // PAGE_PARAMETERS,
         txStatusNumber,
-        CHAINNAME
+        CHAINNAME,
+        CHAIN_DEFAULT_VALUE
     } from '@/constants';
     import chainDefaultImg from '@/assets/home/chain-default.png';
     import tokenDefaultImg from '@/assets/token-default.png';
@@ -375,7 +376,6 @@
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
     import { CHAIN_ICON } from '@/constants/bjSelect';
     import { MODES } from '@/components/BjSelect/constants';
-    import { CHAIN_DEFAULT_VALUE } from '@/constants/chains';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();

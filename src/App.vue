@@ -18,6 +18,5 @@
 <style>
     #app {
         text-align: center;
-        height: 100%;
     }
 </style>

@@ -111,7 +111,7 @@
 
 <script setup lang="ts">
     import NamePopover from './components/NamePopover.vue';
-    import { PAGE_PARAMETERS } from '@/constants';
+    import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
@@ -125,7 +125,6 @@
         useRelayersColumnJump
     } from './composable';
     import { MODES } from '@/components/BjSelect/constants';
-    import { CHAIN_DEFAULT_VALUE } from '@/constants/relayers';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();

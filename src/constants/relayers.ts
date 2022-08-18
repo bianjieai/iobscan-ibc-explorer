@@ -71,5 +71,3 @@ export const RELAYER_STATUS = {
     RUNNING: 'Running',
     UNKNOWN: 'Unknown'
 };
-
-export const CHAIN_DEFAULT_VALUE = 'allchain';

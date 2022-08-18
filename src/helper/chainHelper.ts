@@ -1,5 +1,5 @@
 import { isArray } from '@/utils/objectTools';
-import { CHAINNAME } from '@/constants';
+import { CHAINNAME, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { useIbcChains } from '@/composables';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
 const { ibcChains } = useIbcChains();
@@ -128,7 +128,7 @@ export default class ChainHelper {
          */
         const isLocaleCompare = ref<boolean>(false);
         const chainsName = chooseChains.map((chain) => chain.title);
-        if (chainIdArr[0] === 'allchain') {
+        if (chainIdArr[0] === CHAIN_DEFAULT_VALUE) {
             isLocaleCompare.value = true;
         } else if (chainsName.indexOf(CHAINNAME.COSMOSHUB) === 0) {
             isLocaleCompare.value = false;

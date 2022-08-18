@@ -12,13 +12,12 @@ import {
 import { API_CODE } from '@/constants/apiCode';
 import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
-import { BASE_PARAMS } from '@/constants';
+import { BASE_PARAMS, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { useResetSearch } from '@/composables';
 import { useRoute, useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
 import { CHAIN_ICON } from '@/constants/bjSelect';
-import { CHAIN_DEFAULT_VALUE } from '@/constants/relayers';
 
 export const useGetRelayersList = () => {
     const relayersList = ref<IResponseRelayerListItem[]>([]);

@@ -57,7 +57,10 @@
         }
     }
     .layout {
+        display: flex;
+        flex-direction: column;
         width: 100%;
+        min-height: 100vh;
         padding-top: 80px;
         background-image: url('../assets/iobscan_home_bg.png');
         background-repeat: no-repeat;
@@ -82,6 +85,7 @@
             z-index: 1025; // 下拉框和
         }
         &__content {
+            flex: 1;
             box-sizing: border-box;
             &__router_container {
                 width: 100%;
