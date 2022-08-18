@@ -119,34 +119,24 @@
     import { formatBigNumber, getRestString, rmIbcPrefix } from '@/helper/parseStringHelper';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { useGetIbcDenoms } from '../home/composable';
-    import {
-        useGetIbcTokenList,
-        useIbcTokenQuery,
-        useIbcTokenSelected,
-        useIbcTokenRef,
-        useSubTitleComputed,
-        useIbcTokenColumnJump,
-        useBaseDenomInfoComputed
-    } from './ibccomposable';
+    import { useGetIbcTokenList, useIbcTokenRef, useIbcTokenColumnJump } from './ibccomposable';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
-    const { baseDenomQuery, chainIdQuery, statusQuery } = useIbcTokenQuery();
-    const { ibcTokenList, total, getIbcTokenList } = useGetIbcTokenList(baseDenomQuery);
-    const { baseDenomInfo } = useBaseDenomInfoComputed(ibcBaseDenoms, baseDenomQuery);
+    const {
+        ibcTokenList,
+        subtitle,
+        searchChain,
+        chainData,
+        onSelectedChain,
+        onSelectedStatus,
+        baseDenomInfo,
+        baseDenomQuery,
+        statusQuery
+    } = useGetIbcTokenList(loading, ibcChains, getIbcBaseDenom, ibcBaseDenoms);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus, chainData } =
-        useIbcTokenSelected(
-            chainIdQuery,
-            statusQuery,
-            getIbcTokenList,
-            getIbcBaseDenom,
-            loading,
-            ibcChains
-        );
     const { chainDropdown, statusDropdown } = useIbcTokenRef();
-    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, ibcTokenList);
     const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump(baseDenomQuery);
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
 </script>

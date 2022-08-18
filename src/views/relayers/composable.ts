@@ -1,6 +1,5 @@
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import ChainHelper from '@/helper/chainHelper';
-import { formatBigNumber } from '@/helper/parseStringHelper';
 import { getRelayersListAPI } from '@/api/relayers';
 import { TRelayerStatus } from '@/types/interface/components/table.interface';
 import {
@@ -12,82 +11,23 @@ import {
 import { API_CODE } from '@/constants/apiCode';
 import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
-import { BASE_PARAMS, CHAIN_DEFAULT_VALUE } from '@/constants';
+import { BASE_PARAMS, CHAIN_DEFAULT_VALUE, PAGE_PARAMETERS } from '@/constants';
 import { useResetSearch } from '@/composables';
 import { useRoute, useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
 import { CHAIN_ICON } from '@/constants/bjSelect';
+import { IIbcChains } from '@/types/interface/index.interface';
+import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
-export const useGetRelayersList = () => {
+export const useGetRelayersList = (loading: Ref<boolean>, ibcChains: Ref<IIbcChains>) => {
+    const router = useRouter();
+    const route = useRoute();
+    let pageUrl = '/relayers';
     const relayersList = ref<IResponseRelayerListItem[]>([]);
     const total = ref<number>(0);
-
-    const getRelayersList = async (params: IRequestRelayerList) => {
-        const { loading } = params;
-        if (loading) {
-            loading.value = true;
-            delete params.loading;
-        }
-        try {
-            const result = await getRelayersListAPI({
-                ...BASE_PARAMS,
-                ...params
-            });
-            loading && (loading.value = false);
-            const { code, data, message } = result;
-            if (code === API_CODE.success) {
-                if (!params.use_count) {
-                    const { items } = data as IResponseRelayerList;
-                    relayersList.value = ChainHelper.sortByChainName(items, params.chain)?.map(
-                        (item: IRelayersListItem) => {
-                            item.txs_success_rate = formatTransfer_success_txs(
-                                item.transfer_success_txs,
-                                item.transfer_total_txs
-                            );
-                            return item;
-                        }
-                    );
-                } else {
-                    total.value = data as number;
-                }
-            } else {
-                console.error(message);
-            }
-        } catch (error) {
-            if (!axiosCancel(error)) {
-                loading && (loading.value = false);
-            }
-            console.error(error);
-        }
-    };
-    getRelayersList({ ...BASE_PARAMS, use_count: true });
-
-    return {
-        relayersList,
-        total,
-        getRelayersList
-    };
-};
-
-export const useRelayersQuery = () => {
-    const route = useRoute();
     const chainIdQuery = route.query.chain as string;
     const statusQuery = route.query.status as TRelayerStatus;
-    return {
-        chainIdQuery,
-        statusQuery
-    };
-};
-export const useRelayersSelected = (
-    chainIdQuery: string,
-    statusQuery: TRelayerStatus,
-    getRelayersList: (params: IRequestRelayerList) => Promise<void>,
-    loading: Ref<boolean>,
-    ibcChains: any
-) => {
-    let pageUrl = '/relayers';
-    const router = useRouter();
     const originalChainRef = () => {
         if (!chainIdQuery) return;
         if (chainIdQuery.includes(',')) {
@@ -99,6 +39,7 @@ export const useRelayersSelected = (
     const searchChain = ref(originalChainRef());
     const chainIds = ref<TDenom[]>(searchChain.value ? searchChain.value.split(',') : []);
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
+    const isHaveParams = ref<boolean>(false);
     const refreshList = () => {
         getRelayersList({
             ...BASE_PARAMS,
@@ -162,41 +103,77 @@ export const useRelayersSelected = (
     onMounted(() => {
         refreshList();
     });
+
+    const getRelayersList = async (params: IRequestRelayerList) => {
+        const { loading } = params;
+        if (loading) {
+            loading.value = true;
+            delete params.loading;
+        }
+        try {
+            const result = await getRelayersListAPI({
+                ...BASE_PARAMS,
+                ...params
+            });
+            loading && (loading.value = false);
+            const { code, data, message } = result;
+            if (code === API_CODE.success) {
+                if (!params.use_count) {
+                    const { items } = data as IResponseRelayerList;
+                    relayersList.value = ChainHelper.sortByChainName(items, params.chain)?.map(
+                        (item: IRelayersListItem) => {
+                            item.txs_success_rate = formatTransfer_success_txs(
+                                item.transfer_success_txs,
+                                item.transfer_total_txs
+                            );
+                            return item;
+                        }
+                    );
+                } else {
+                    total.value = data as number;
+                }
+            } else {
+                console.error(message);
+            }
+        } catch (error) {
+            if (!axiosCancel(error)) {
+                loading && (loading.value = false);
+            }
+            console.error(error);
+        } finally {
+            if (!searchChain.value && !searchStatus.value) {
+                isHaveParams.value = false;
+            } else {
+                isHaveParams.value = true;
+            }
+        }
+    };
+    getRelayersList({ ...BASE_PARAMS, use_count: true });
+    const subtitle = computed(() => {
+        return formatSubTitle(
+            isHaveParams.value,
+            total.value,
+            relayersList.value.length,
+            PAGE_PARAMETERS.relayers
+        );
+    });
     return {
-        chainIds,
-        searchChain,
-        chainData,
-        searchStatus,
+        relayersList,
+        subtitle,
         onSelectedChain,
-        onSelectedStatus
+        onSelectedStatus,
+        chainIds,
+        chainData,
+        statusQuery
     };
 };
+
 export const useRelayersRef = () => {
     const chainDropdown = ref();
     const statusDropdown = ref();
     return {
         chainDropdown,
         statusDropdown
-    };
-};
-export const useSubTitleComputed = (
-    searchChain: Ref<string | undefined>,
-    searchStatus: Ref<TRelayerStatus | undefined>,
-    total: Ref<number>,
-    relayersList: Ref<IResponseRelayerListItem[]>
-) => {
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value) {
-            return `${formatBigNumber(total.value, 0)} relayers found`;
-        } else {
-            return `${formatBigNumber(relayersList.value?.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} relayers found`;
-        }
-    });
-    return {
-        subtitle
     };
 };
 export const useRelayersColumnJump = () => {

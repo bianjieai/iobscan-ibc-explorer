@@ -145,58 +145,30 @@
         TOKEN_DEFAULT_VALUE
     } from '@/constants/tokens';
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
-    import {
-        useGetTokenList,
-        useTokensQuery,
-        useTokensSelected,
-        useTokensRef,
-        useSubTitleComputed,
-        useTokensColumnJump
-    } from '@/views/tokens/composable';
+    import { useGetTokenList, useTokensRef, useTokensColumnJump } from '@/views/tokens/composable';
     import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
     import { TIP_ICON } from '@/constants/bjSelect';
 
     const { loading } = useLoading();
-    const { chainIdQuery, denomQuery, statusQuery } = useTokensQuery();
     const { ibcChains } = useIbcChains();
+    const { ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom, getBaseDenomInfoByDenom } =
+        useGetIbcDenoms();
     const {
-        ibcBaseDenoms,
-        ibcBaseDenomsSorted,
-        // ibcBaseDenomsSymbolKeyMapGetter,
-        getIbcBaseDenom,
-        getBaseDenomInfoByDenom
-    } = useGetIbcDenoms();
-    const { tokensList, getTokensList, total } = useGetTokenList();
-    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
-    const {
-        searchChain,
-        searchDenom,
-        searchStatus,
+        tokensList,
+        subtitle,
         onSelectedToken,
         onSelectedChain,
         onSelectedStatus,
         tokenData,
-        chainData
-    } = useTokensSelected(
-        denomQuery,
-        chainIdQuery,
-        statusQuery,
-        getTokensList,
-        getIbcBaseDenom,
-        loading,
-        ibcBaseDenomsSorted,
-        ibcChains
-    );
-    const { chainDropdown, statusDropdown, tokensDropdown } = useTokensRef();
-    const { subtitle } = useSubTitleComputed(
-        searchChain,
+        chainData,
         searchDenom,
-        searchStatus,
-        total,
-        tokensList
-    );
+        searchChain,
+        statusQuery
+    } = useGetTokenList(loading, ibcChains, ibcBaseDenomsSorted, getIbcBaseDenom);
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
+    const { chainDropdown, statusDropdown, tokensDropdown } = useTokensRef();
     const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
         useTokensColumnJump(getBaseDenomInfoByDenom);
 

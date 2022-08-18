@@ -1,9 +1,8 @@
 import { getChannelsListAPI } from '@/api/channels';
 import { useResetSearch } from '@/composables';
-import { BASE_PARAMS, CHAIN_DEFAULT_VALUE } from '@/constants';
+import { BASE_PARAMS, CHAIN_DEFAULT_VALUE, PAGE_PARAMETERS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import ChainHelper from '@/helper/chainHelper';
-import { formatBigNumber } from '@/helper/parseStringHelper';
 import {
     IResponseChannelsList,
     IRequestChannelsList,
@@ -16,70 +15,19 @@ import { useRoute, useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
 import { CHAIN_ICON } from '@/constants/bjSelect';
+import { IIbcChains } from '@/types/interface/index.interface';
+import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
-export const useGetChannelsList = () => {
+export const useGetChannelsList = (loading: Ref<boolean>, ibcChains: Ref<IIbcChains>) => {
+    const router = useRouter();
+    const route = useRoute();
+    let pageUrl = '/channels';
     const channelsList = ref<IResponseChannelsListItem[]>([]);
     const total = ref<number>(0);
-
-    const getChannelsList = async (params: IRequestChannelsList) => {
-        const { loading } = params;
-
-        if (loading) {
-            loading.value = true;
-            delete params.loading;
-        }
-        try {
-            const result = await getChannelsListAPI({
-                ...BASE_PARAMS,
-                ...params
-            });
-            loading && (loading.value = false);
-            const { code, data, message } = result;
-            if (code === API_CODE.success) {
-                if (!params.use_count) {
-                    const { items } = data as IResponseChannelsList;
-                    channelsList.value = ChainHelper.sortByChainName(items, params.chain);
-                } else {
-                    total.value = data as number;
-                }
-            } else {
-                console.error(message);
-            }
-        } catch (error) {
-            if (!axiosCancel(error)) {
-                loading && (loading.value = false);
-            }
-            console.error(error);
-        }
-    };
-    getChannelsList({ ...BASE_PARAMS, use_count: true });
-    return {
-        channelsList,
-        total,
-        getChannelsList
-    };
-};
-
-export const useChannelsQuery = () => {
-    const route = useRoute();
+    const isHaveParams = ref<boolean>(false);
     const chainIdQuery = route.query.chain as string;
     const statusQuery = route.query.status as TChannelStatus;
-    return {
-        chainIdQuery,
-        statusQuery
-    };
-};
 
-export const useChannelsSelected = (
-    chainIdQuery: string,
-    statusQuery: TChannelStatus,
-    getChannelsList: (params: IRequestChannelsList) => Promise<void>,
-    loading: Ref<boolean>,
-    ibcChains: any
-) => {
-    let pageUrl = '/channels';
-
-    const router = useRouter();
     const searchChain = ref(chainIdQuery ? chainIdQuery : undefined);
     const chainIds = ref<TDenom[]>(searchChain.value ? searchChain.value.split(',') : []);
     const searchStatus = ref(statusQuery ? statusQuery : undefined);
@@ -146,13 +94,61 @@ export const useChannelsSelected = (
     onMounted(() => {
         refreshList();
     });
+
+    const getChannelsList = async (params: IRequestChannelsList) => {
+        const { loading } = params;
+
+        if (loading) {
+            loading.value = true;
+            delete params.loading;
+        }
+        try {
+            const result = await getChannelsListAPI({
+                ...BASE_PARAMS,
+                ...params
+            });
+            loading && (loading.value = false);
+            const { code, data, message } = result;
+            if (code === API_CODE.success) {
+                if (!params.use_count) {
+                    const { items } = data as IResponseChannelsList;
+                    channelsList.value = ChainHelper.sortByChainName(items, params.chain);
+                } else {
+                    total.value = data as number;
+                }
+            } else {
+                console.error(message);
+            }
+        } catch (error) {
+            if (!axiosCancel(error)) {
+                loading && (loading.value = false);
+            }
+            console.error(error);
+        } finally {
+            if (!searchChain.value && !searchStatus.value) {
+                isHaveParams.value = false;
+            } else {
+                isHaveParams.value = true;
+            }
+        }
+    };
+    getChannelsList({ ...BASE_PARAMS, use_count: true });
+    const subtitle = computed(() => {
+        return formatSubTitle(
+            isHaveParams.value,
+            total.value,
+            channelsList.value.length,
+            PAGE_PARAMETERS.channels
+        );
+    });
     return {
-        chainIds,
-        searchChain,
-        chainData,
-        searchStatus,
+        channelsList,
+        subtitle,
         onSelectedChain,
-        onSelectedStatus
+        onSelectedStatus,
+        chainIds,
+        chainData,
+        statusQuery
     };
 };
 
@@ -162,27 +158,6 @@ export const useChannelsRef = () => {
     return {
         chainDropdown,
         statusDropdown
-    };
-};
-
-export const useSubTitleComputed = (
-    searchChain: Ref<string | undefined>,
-    searchStatus: Ref<TChannelStatus | undefined>,
-    total: Ref<number>,
-    channelsList: Ref<IResponseChannelsListItem[]>
-) => {
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value) {
-            return `${formatBigNumber(total.value, 0)} channels found`;
-        } else {
-            return `${formatBigNumber(channelsList.value.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} channels found`;
-        }
-    });
-    return {
-        subtitle
     };
 };
 

@@ -386,3 +386,4 @@ export const BASE_PARAMS: IRequestPagination = {
 export const AxiosTimeout = 15000;
 
 export const CHAIN_DEFAULT_VALUE = 'allchain';
+export const TOTAL_BOUND = 500000;
