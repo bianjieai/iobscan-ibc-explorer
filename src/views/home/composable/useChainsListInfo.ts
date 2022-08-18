@@ -107,7 +107,15 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
     });
 
     const onSelectedMenu = ({ key }: { key: any }) => {
+        highlightedLabel(anchorsDatas[0].title);
         const currentChainList = chainList.value[currentMenu.value[0]];
+        currentChainList.sort((a: IIbcchain, b: IIbcchain) => {
+            return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
+                ? -1
+                : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
+                ? 1
+                : 0;
+        });
         if (!(currentChainList && currentChainList.length > 0)) return;
         const scrollDom = scrollListRef.value.$el;
         if (!scrollDom) return;
