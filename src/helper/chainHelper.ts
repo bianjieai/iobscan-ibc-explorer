@@ -1,7 +1,7 @@
 import { isArray } from '@/utils/objectTools';
 import { CHAINNAME, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { useIbcChains } from '@/composables';
-import { IDataItem, TDenom } from '@/components/BjSelect/interface';
+import { TData, TDenom, IDataItem } from '@/components/BjSelect/interface';
 const { ibcChains } = useIbcChains();
 export default class ChainHelper {
     static formatChainId(chainId: any) {
@@ -117,8 +117,17 @@ export default class ChainHelper {
     }
 
     // channels and relayers 选择框是否需要排序
-    static isNeedSort = (chainIdArr: TDenom[], chooseChains: IDataItem[]) => {
+    static isNeedSort = (chainIdArr: TDenom[], chainsArrs: TData) => {
+        // 拍扁数组处理，集合
+        const tempFlats: IDataItem[] = [];
+
+        chainsArrs?.forEach((v) => {
+            if (v.children && v.children.length) {
+                tempFlats.push(...v.children);
+            }
+        });
         /**
+         * 需要判断输入的值是否和选择的值匹配，使用匹配的值判断
          * 1. 选择 All Chains + Other Chain => 相当于选择了一条链，第一个选择的是 All Chains 的需要 sort
          * 2. 选择了两个都不是 All Chains 的 chain
          *      a. 判断选中两条链是否包含 Cosmos Hub 或 IRIS Hub：
@@ -127,7 +136,14 @@ export default class ChainHelper {
          *      b. 其他的根据其对应 chain_name 字母大小写排序
          */
         const isLocaleCompare = ref<boolean>(false);
-        const chainsName = chooseChains.map((chain) => chain.title);
+        const chainsName = chainIdArr.map((id) => {
+            const filterItem = tempFlats.find((v) => v.id === id);
+            if (filterItem) {
+                return filterItem.title;
+            }
+            return undefined;
+        });
+
         if (chainIdArr[0] === CHAIN_DEFAULT_VALUE) {
             isLocaleCompare.value = true;
         } else if (chainsName.indexOf(CHAINNAME.COSMOSHUB) === 0) {

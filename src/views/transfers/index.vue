@@ -38,7 +38,6 @@
                         :badges="['Transfer', 'Receive']"
                         :mode="MODES.double"
                         associate-id="allchain"
-                        :edit-model="true"
                         :input-ctn="{
                             placeholder: 'Search by Chain ID,Chain ID',
                             btnTxt: 'Confirm'
