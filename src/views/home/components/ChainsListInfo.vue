@@ -130,7 +130,7 @@
             }
         }
         &__bottom {
-            margin-top: 8px;
+            margin-top: 16px;
             width: 100%;
             .flex(row, nowrap, flex-start, flex-start);
         }

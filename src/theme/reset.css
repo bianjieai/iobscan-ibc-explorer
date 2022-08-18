@@ -77,13 +77,11 @@ scrollbar-width: thin; */
 }
 html {
     width: 100%;
-    height: 100%;
     -ms-text-size-adjust: 100%;
     -webkit-text-size-adjust: 100%;
 }
 body {
     width: 100%;
-    height: 100%;
     font-size: var(--bj-font-size-normal) !important;
     font-family: GolosUI_Medium, Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;

@@ -1,6 +1,6 @@
 import { getChannelsListAPI } from '@/api/channels';
 import { useResetSearch } from '@/composables';
-import { BASE_PARAMS } from '@/constants';
+import { BASE_PARAMS, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
@@ -16,7 +16,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
 import { CHAIN_ICON } from '@/constants/bjSelect';
-import { CHAIN_DEFAULT_VALUE } from '@/constants/channels';
 
 export const useGetChannelsList = () => {
     const channelsList = ref<IResponseChannelsListItem[]>([]);

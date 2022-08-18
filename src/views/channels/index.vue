@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts">
-    import { PAGE_PARAMETERS } from '@/constants';
+    import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/channels';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
     import { TChannelStatus, BottomStatusType } from '@/types/interface/components/table.interface';
@@ -109,7 +109,6 @@
         useChannelsColumnJump
     } from '@/views/channels/composable';
     import { MODES } from '@/components/BjSelect/constants';
-    import { CHAIN_DEFAULT_VALUE } from '@/constants/channels';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();

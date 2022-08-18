@@ -161,26 +161,13 @@
     import { useInit } from './composable';
     import { getValByMode, closeByMode, inputItemsByMode, getLastArrs } from './helper';
     import { MODES } from './constants';
+    import { ISelectedData } from '@/types/interface/components/selected.interface';
 
     /**
      * defineProps 使用外部引入的interface或者type会报错
      */
-    export interface TProps {
-        data: {
-            groupName?: string;
-            icon?: string;
-            tooltips?: string;
-            children?: {
-                id: number | string;
-                title: string;
-                icon?: string;
-                disabled?: boolean;
-                tooltips?: string;
-                doubleTime?: boolean;
-                metaData?: any;
-                inputFlag?: boolean; // 用来输入还是选择在展示时候有区别
-            }[];
-        }[];
+    export interface IProps {
+        data: ISelectedData[];
         // ux交互：选中时候展示default颜色。
         selectColorDefaultVal?: string | number | (string | number)[];
         value?: string | number | (string | number)[];
@@ -201,7 +188,7 @@
         dropdownProps?: DropdownProps;
     }
 
-    const props = withDefaults(defineProps<TProps>(), {
+    const props = withDefaults(defineProps<IProps>(), {
         data: () => [],
         editModel: false
     });
@@ -244,7 +231,6 @@
      */
     const sumbitTokens = (selectData: IDataItem[], close = false) => {
         let res = getValByMode(selectData, props.mode);
-
         if (
             props.mode !== MODES.double ||
             (props.mode === MODES.double && selectData.length === 2)
@@ -342,7 +328,7 @@
         if (props.editModel) {
             inputItems = inputItemsByMode(tokenInput.value, props.mode);
             // 如果输入的只有一个值，选中all，这里作为配置项传进来。
-            if (inputItems.length === 1) {
+            if (inputItems?.length === 1) {
                 const matchItem = flatData.value.find((v) => v.id === props.associateId);
 
                 if (matchItem) {
@@ -350,7 +336,6 @@
                 }
             }
         }
-
         selectItems.value = getLastArrs([...inputItems, ...selectItems.value]);
     };
 
