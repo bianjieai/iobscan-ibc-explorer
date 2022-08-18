@@ -20,88 +20,10 @@ import { CHAIN_ICON } from '@/constants/bjSelect';
 import { IIbcChains } from '@/types/interface/index.interface';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
-export const useGetRelayersList = (loading: Ref<boolean>, ibcChains: Ref<IIbcChains>) => {
-    const router = useRouter();
-    const route = useRoute();
-    let pageUrl = '/relayers';
+export const useGetRelayersList = () => {
     const relayersList = ref<IResponseRelayerListItem[]>([]);
     const total = ref<number>(0);
-    const chainIdQuery = route.query.chain as string;
-    const statusQuery = route.query.status as TRelayerStatus;
-    const originalChainRef = () => {
-        if (!chainIdQuery) return;
-        if (chainIdQuery.includes(',')) {
-            return `${chainIdQuery}`;
-        } else {
-            return `${chainIdQuery},allchain`;
-        }
-    };
-    const searchChain = ref(originalChainRef());
-    const chainIds = ref<TDenom[]>(searchChain.value ? searchChain.value.split(',') : []);
-    const searchStatus = ref(statusQuery ? statusQuery : undefined);
     const isHaveParams = ref<boolean>(false);
-    const refreshList = () => {
-        getRelayersList({
-            ...BASE_PARAMS,
-            chain: searchChain.value,
-            status: searchStatus.value,
-            loading: loading
-        });
-    };
-    const onSelectedChain = (vals: IDataItem[]) => {
-        const res = vals.map((v) => v.id);
-        if (ChainHelper.isNeedSort(res, chainData.value)) {
-            chainIds.value = [res[1], res[0]];
-        } else {
-            chainIds.value = res;
-        }
-
-        const chain_id = chainIds.value.join(',');
-        searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'chain',
-            value: searchChain.value as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const chainData = computed(() => {
-        return [
-            {
-                children: [
-                    {
-                        title: 'All Chains',
-                        doubleTime: true,
-                        id: CHAIN_DEFAULT_VALUE,
-                        metaData: null
-                    }
-                ]
-            },
-            {
-                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
-                    title: v.chain_name,
-                    id: v.chain_id,
-                    icon: v.icon || CHAIN_ICON,
-                    metaData: v
-                }))
-            }
-        ];
-    });
-
-    const onSelectedStatus = (value?: number | string) => {
-        searchStatus.value = value as TRelayerStatus;
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'status',
-            value: value as TRelayerStatus
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    onMounted(() => {
-        refreshList();
-    });
 
     const getRelayersList = async (params: IRequestRelayerList) => {
         const { loading } = params;
@@ -140,7 +62,7 @@ export const useGetRelayersList = (loading: Ref<boolean>, ibcChains: Ref<IIbcCha
             }
             console.error(error);
         } finally {
-            if (!searchChain.value && !searchStatus.value) {
+            if (!params.chain && !params.status) {
                 isHaveParams.value = false;
             } else {
                 isHaveParams.value = true;
@@ -158,23 +80,104 @@ export const useGetRelayersList = (loading: Ref<boolean>, ibcChains: Ref<IIbcCha
     });
     return {
         relayersList,
-        subtitle,
-        onSelectedChain,
-        onSelectedStatus,
-        chainIds,
-        chainData,
-        statusQuery
+        getRelayersList,
+        subtitle
     };
 };
 
-export const useRelayersRef = () => {
+export const useRelayersSelected = (
+    ibcChains: Ref<IIbcChains>,
+    getRelayersList: (params: IRequestRelayerList) => Promise<void>,
+    loading: Ref<boolean>
+) => {
+    const router = useRouter();
+    const route = useRoute();
+    let pageUrl = '/relayers';
     const chainDropdown = ref();
     const statusDropdown = ref();
+    const chainData = computed(() => {
+        return [
+            {
+                children: [
+                    {
+                        title: 'All Chains',
+                        doubleTime: true,
+                        id: CHAIN_DEFAULT_VALUE,
+                        metaData: null
+                    }
+                ]
+            },
+            {
+                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
+                    title: v.chain_name,
+                    id: v.chain_id,
+                    icon: v.icon || CHAIN_ICON,
+                    metaData: v
+                }))
+            }
+        ];
+    });
+    const chainIdQuery = route.query.chain as string;
+    const statusQuery = route.query.status as TRelayerStatus;
+    const originalChainRef = () => {
+        if (!chainIdQuery) return;
+        if (chainIdQuery.includes(',')) {
+            return `${chainIdQuery}`;
+        } else {
+            return `${chainIdQuery},allchain`;
+        }
+    };
+    const searchChain = ref(originalChainRef());
+    const chainIds = ref<TDenom[]>(searchChain.value ? searchChain.value.split(',') : []);
+    const searchStatus = ref(statusQuery ? statusQuery : undefined);
+    const onSelectedChain = (vals: IDataItem[]) => {
+        const res = vals.map((v) => v.id);
+        if (ChainHelper.isNeedSort(res, chainData.value)) {
+            chainIds.value = [res[1], res[0]];
+        } else {
+            chainIds.value = res;
+        }
+
+        const chain_id = chainIds.value.join(',');
+        searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'chain',
+            value: searchChain.value as string
+        });
+        router.replace(pageUrl);
+        refreshList();
+    };
+    const onSelectedStatus = (value?: number | string) => {
+        searchStatus.value = value as TRelayerStatus;
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'status',
+            value: value as TRelayerStatus
+        });
+        router.replace(pageUrl);
+        refreshList();
+    };
+    const refreshList = () => {
+        getRelayersList({
+            ...BASE_PARAMS,
+            chain: searchChain.value,
+            status: searchStatus.value,
+            loading: loading
+        });
+    };
+    onMounted(() => {
+        refreshList();
+    });
     return {
         chainDropdown,
-        statusDropdown
+        statusDropdown,
+        chainData,
+        chainIds,
+        statusQuery,
+        onSelectedChain,
+        onSelectedStatus
     };
 };
+
 export const useRelayersColumnJump = () => {
     const router = useRouter();
     const goChains = () => {

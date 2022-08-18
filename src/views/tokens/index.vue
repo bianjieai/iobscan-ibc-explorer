@@ -145,7 +145,11 @@
         TOKEN_DEFAULT_VALUE
     } from '@/constants/tokens';
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
-    import { useGetTokenList, useTokensRef, useTokensColumnJump } from '@/views/tokens/composable';
+    import {
+        useGetTokenList,
+        useTokensSelected,
+        useTokensColumnJump
+    } from '@/views/tokens/composable';
     import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
@@ -155,9 +159,12 @@
     const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom, getBaseDenomInfoByDenom } =
         useGetIbcDenoms();
+    const { tokensList, getTokensList, subtitle } = useGetTokenList();
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
     const {
-        tokensList,
-        subtitle,
+        chainDropdown,
+        statusDropdown,
+        tokensDropdown,
         onSelectedToken,
         onSelectedChain,
         onSelectedStatus,
@@ -166,9 +173,7 @@
         searchDenom,
         searchChain,
         statusQuery
-    } = useGetTokenList(loading, ibcChains, ibcBaseDenomsSorted, getIbcBaseDenom);
-    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
-    const { chainDropdown, statusDropdown, tokensDropdown } = useTokensRef();
+    } = useTokensSelected(ibcBaseDenomsSorted, ibcChains, getTokensList, getIbcBaseDenom, loading);
     const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
         useTokensColumnJump(getBaseDenomInfoByDenom);
 

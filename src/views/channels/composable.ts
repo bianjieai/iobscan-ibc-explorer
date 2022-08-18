@@ -18,82 +18,10 @@ import { CHAIN_ICON } from '@/constants/bjSelect';
 import { IIbcChains } from '@/types/interface/index.interface';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
-export const useGetChannelsList = (loading: Ref<boolean>, ibcChains: Ref<IIbcChains>) => {
-    const router = useRouter();
-    const route = useRoute();
-    let pageUrl = '/channels';
+export const useGetChannelsList = () => {
     const channelsList = ref<IResponseChannelsListItem[]>([]);
     const total = ref<number>(0);
     const isHaveParams = ref<boolean>(false);
-    const chainIdQuery = route.query.chain as string;
-    const statusQuery = route.query.status as TChannelStatus;
-
-    const searchChain = ref(chainIdQuery ? chainIdQuery : undefined);
-    const chainIds = ref<TDenom[]>(searchChain.value ? searchChain.value.split(',') : []);
-    const searchStatus = ref(statusQuery ? statusQuery : undefined);
-    const refreshList = () => {
-        getChannelsList({
-            ...BASE_PARAMS,
-            chain: searchChain.value,
-            status: searchStatus.value,
-            loading: loading
-        });
-    };
-    const onSelectedChain = (vals: IDataItem[]) => {
-        const res = vals.map((v) => v.id);
-        if (ChainHelper.isNeedSort(res, chainData.value)) {
-            chainIds.value = [res[1], res[0]];
-        } else {
-            chainIds.value = res;
-        }
-
-        const chain_id = chainIds.value.join(',');
-        searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'chain',
-            value: searchChain.value as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const chainData = computed(() => {
-        return [
-            {
-                children: [
-                    {
-                        title: 'All Chains',
-                        doubleTime: true,
-                        id: CHAIN_DEFAULT_VALUE,
-                        metaData: null
-                    }
-                ]
-            },
-            {
-                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
-                    title: v.chain_name,
-                    id: v.chain_id,
-                    icon: v.icon || CHAIN_ICON,
-                    metaData: v
-                }))
-            }
-        ];
-    });
-
-    const onSelectedStatus = (value?: number | string) => {
-        searchStatus.value = value as TChannelStatus;
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'status',
-            value: value as TChannelStatus
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    onMounted(() => {
-        refreshList();
-    });
-
     const getChannelsList = async (params: IRequestChannelsList) => {
         const { loading } = params;
 
@@ -124,7 +52,7 @@ export const useGetChannelsList = (loading: Ref<boolean>, ibcChains: Ref<IIbcCha
             }
             console.error(error);
         } finally {
-            if (!searchChain.value && !searchStatus.value) {
+            if (!params.chain && !params.status) {
                 isHaveParams.value = false;
             } else {
                 isHaveParams.value = true;
@@ -142,21 +70,95 @@ export const useGetChannelsList = (loading: Ref<boolean>, ibcChains: Ref<IIbcCha
     });
     return {
         channelsList,
-        subtitle,
-        onSelectedChain,
-        onSelectedStatus,
-        chainIds,
-        chainData,
-        statusQuery
+        getChannelsList,
+        subtitle
     };
 };
 
-export const useChannelsRef = () => {
+export const useChannelsSelected = (
+    ibcChains: Ref<IIbcChains>,
+    getChannelsList: (params: IRequestChannelsList) => Promise<void>,
+    loading: Ref<boolean>
+) => {
+    const router = useRouter();
+    const route = useRoute();
+    let pageUrl = '/channels';
     const chainDropdown = ref();
     const statusDropdown = ref();
+    const chainIdQuery = route.query.chain as string;
+    const statusQuery = route.query.status as TChannelStatus;
+    const searchChain = ref(chainIdQuery ? chainIdQuery : undefined);
+    const chainIds = ref<TDenom[]>(searchChain.value ? searchChain.value.split(',') : []);
+    const searchStatus = ref(statusQuery ? statusQuery : undefined);
+    const chainData = computed(() => {
+        return [
+            {
+                children: [
+                    {
+                        title: 'All Chains',
+                        doubleTime: true,
+                        id: CHAIN_DEFAULT_VALUE,
+                        metaData: null
+                    }
+                ]
+            },
+            {
+                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
+                    title: v.chain_name,
+                    id: v.chain_id,
+                    icon: v.icon || CHAIN_ICON,
+                    metaData: v
+                }))
+            }
+        ];
+    });
+    const onSelectedChain = (vals: IDataItem[]) => {
+        const res = vals.map((v) => v.id);
+        if (ChainHelper.isNeedSort(res, chainData.value)) {
+            chainIds.value = [res[1], res[0]];
+        } else {
+            chainIds.value = res;
+        }
+
+        const chain_id = chainIds.value.join(',');
+        searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'chain',
+            value: searchChain.value as string
+        });
+        router.replace(pageUrl);
+        refreshList();
+    };
+
+    const onSelectedStatus = (value?: number | string) => {
+        searchStatus.value = value as TChannelStatus;
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'status',
+            value: value as TChannelStatus
+        });
+        router.replace(pageUrl);
+        refreshList();
+    };
+    const refreshList = () => {
+        getChannelsList({
+            ...BASE_PARAMS,
+            chain: searchChain.value,
+            status: searchStatus.value,
+            loading: loading
+        });
+    };
+
+    onMounted(() => {
+        refreshList();
+    });
     return {
         chainDropdown,
-        statusDropdown
+        statusDropdown,
+        statusQuery,
+        chainIds,
+        chainData,
+        onSelectedChain,
+        onSelectedStatus
     };
 };
 

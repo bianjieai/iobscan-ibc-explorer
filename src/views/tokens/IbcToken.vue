@@ -119,24 +119,34 @@
     import { formatBigNumber, getRestString, rmIbcPrefix } from '@/helper/parseStringHelper';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { useGetIbcDenoms } from '../home/composable';
-    import { useGetIbcTokenList, useIbcTokenRef, useIbcTokenColumnJump } from './ibccomposable';
+    import {
+        useGetIbcTokenList,
+        useIbcTokenSelected,
+        useIbcTokenColumnJump
+    } from './ibccomposable';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
+    const { ibcTokenList, getIbcTokenList, subtitle, baseDenomQuery } = useGetIbcTokenList();
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
     const {
-        ibcTokenList,
-        subtitle,
+        chainDropdown,
+        statusDropdown,
         searchChain,
         chainData,
         onSelectedChain,
         onSelectedStatus,
         baseDenomInfo,
-        baseDenomQuery,
         statusQuery
-    } = useGetIbcTokenList(loading, ibcChains, getIbcBaseDenom, ibcBaseDenoms);
-    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
-    const { chainDropdown, statusDropdown } = useIbcTokenRef();
+    } = useIbcTokenSelected(
+        ibcChains,
+        baseDenomQuery,
+        getIbcBaseDenom,
+        getIbcTokenList,
+        ibcBaseDenoms,
+        loading
+    );
     const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump(baseDenomQuery);
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
 </script>

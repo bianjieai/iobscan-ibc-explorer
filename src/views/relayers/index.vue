@@ -115,22 +115,22 @@
     import { formatLastUpdated } from '@/utils/timeTools';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
-    import { useGetRelayersList, useRelayersRef, useRelayersColumnJump } from './composable';
+    import { useGetRelayersList, useRelayersSelected, useRelayersColumnJump } from './composable';
     import { MODES } from '@/components/BjSelect/constants';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
-    const {
-        relayersList,
-        subtitle,
-        onSelectedChain,
-        onSelectedStatus,
-        chainIds,
-        chainData,
-        statusQuery
-    } = useGetRelayersList(loading, ibcChains);
+    const { relayersList, getRelayersList, subtitle } = useGetRelayersList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
-    const { chainDropdown, statusDropdown } = useRelayersRef();
+    const {
+        chainDropdown,
+        statusDropdown,
+        chainData,
+        chainIds,
+        statusQuery,
+        onSelectedChain,
+        onSelectedStatus
+    } = useRelayersSelected(ibcChains, getRelayersList, loading);
     const { goChains, resetSearchCondition } = useRelayersColumnJump();
 
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;

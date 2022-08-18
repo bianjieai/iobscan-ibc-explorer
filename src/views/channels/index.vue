@@ -101,24 +101,24 @@
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
     import {
         useGetChannelsList,
-        useChannelsRef,
+        useChannelsSelected,
         useChannelsColumnJump
     } from '@/views/channels/composable';
     import { MODES } from '@/components/BjSelect/constants';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
+    const { channelsList, getChannelsList, subtitle } = useGetChannelsList();
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channels);
     const {
-        channelsList,
-        subtitle,
-        onSelectedChain,
-        onSelectedStatus,
+        chainDropdown,
+        statusDropdown,
+        statusQuery,
         chainIds,
         chainData,
-        statusQuery
-    } = useGetChannelsList(loading, ibcChains);
-    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channels);
-    const { chainDropdown, statusDropdown } = useChannelsRef();
+        onSelectedChain,
+        onSelectedStatus
+    } = useChannelsSelected(ibcChains, getChannelsList, loading);
     const { goChains, resetSearchCondition } = useChannelsColumnJump();
 
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
