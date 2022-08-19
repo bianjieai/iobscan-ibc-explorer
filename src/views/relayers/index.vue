@@ -115,25 +115,22 @@
     import { formatLastUpdated } from '@/utils/timeTools';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
-    import {
-        useGetRelayersList,
-        useRelayersQuery,
-        useRelayersSelected,
-        useRelayersRef,
-        useSubTitleComputed,
-        useRelayersColumnJump
-    } from './composable';
+    import { useGetRelayersList, useRelayersSelected, useRelayersColumnJump } from './composable';
     import { MODES } from '@/components/BjSelect/constants';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
-    const { relayersList, getRelayersList, total } = useGetRelayersList();
+    const { relayersList, getRelayersList, subtitle } = useGetRelayersList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
-    const { chainIdQuery, statusQuery } = useRelayersQuery();
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus, chainIds, chainData } =
-        useRelayersSelected(chainIdQuery, statusQuery, getRelayersList, loading, ibcChains);
-    const { chainDropdown, statusDropdown } = useRelayersRef();
-    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, relayersList);
+    const {
+        chainDropdown,
+        statusDropdown,
+        chainData,
+        chainIds,
+        statusQuery,
+        onSelectedChain,
+        onSelectedStatus
+    } = useRelayersSelected(ibcChains, getRelayersList, loading);
     const { goChains, resetSearchCondition } = useRelayersColumnJump();
 
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;

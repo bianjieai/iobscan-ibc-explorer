@@ -121,32 +121,32 @@
     import { useGetIbcDenoms } from '../home/composable';
     import {
         useGetIbcTokenList,
-        useIbcTokenQuery,
         useIbcTokenSelected,
-        useIbcTokenRef,
-        useSubTitleComputed,
-        useIbcTokenColumnJump,
-        useBaseDenomInfoComputed
+        useIbcTokenColumnJump
     } from './ibccomposable';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
-    const { baseDenomQuery, chainIdQuery, statusQuery } = useIbcTokenQuery();
-    const { ibcTokenList, total, getIbcTokenList } = useGetIbcTokenList(baseDenomQuery);
-    const { baseDenomInfo } = useBaseDenomInfoComputed(ibcBaseDenoms, baseDenomQuery);
+    const { ibcTokenList, getIbcTokenList, subtitle, baseDenomQuery } = useGetIbcTokenList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus, chainData } =
-        useIbcTokenSelected(
-            chainIdQuery,
-            statusQuery,
-            getIbcTokenList,
-            getIbcBaseDenom,
-            loading,
-            ibcChains
-        );
-    const { chainDropdown, statusDropdown } = useIbcTokenRef();
-    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, ibcTokenList);
+    const {
+        chainDropdown,
+        statusDropdown,
+        searchChain,
+        chainData,
+        onSelectedChain,
+        onSelectedStatus,
+        baseDenomInfo,
+        statusQuery
+    } = useIbcTokenSelected(
+        ibcChains,
+        baseDenomQuery,
+        getIbcBaseDenom,
+        getIbcTokenList,
+        ibcBaseDenoms,
+        loading
+    );
     const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump(baseDenomQuery);
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
 </script>

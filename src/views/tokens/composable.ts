@@ -1,9 +1,9 @@
 import { getTokensListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
-import { BASE_PARAMS } from '@/constants';
+import { BASE_PARAMS, PAGE_PARAMETERS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
-import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
+import { getRestString } from '@/helper/parseStringHelper';
 import {
     IResponseTokensList,
     IRequestTokensList,
@@ -14,15 +14,17 @@ import { urlPageParser } from '@/utils/urlTools';
 import { computed, ComputedRef, onMounted, ref, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { IDataItem } from '@/components/BjSelect/interface';
-import { IBaseDenom } from '@/types/interface/index.interface';
+import { IBaseDenom, IIbcChains } from '@/types/interface/index.interface';
 import { axiosCancel } from '@/utils/axios';
 import { CHAIN_ICON, Token_ICON } from '@/constants/bjSelect';
 import ChainHelper from '@/helper/chainHelper';
 import { CHAIN_DEFAULT_VALUE, TOKEN_DEFAULT_VALUE } from '@/constants/tokens';
+import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
     const total = ref<number>(0);
+    const isHaveParams = ref<boolean>(false);
 
     const getTokensList = async (params: IRequestTokensList) => {
         const { loading } = params;
@@ -61,87 +63,49 @@ export const useGetTokenList = () => {
                 loading && (loading.value = false);
             }
             console.log(error);
+        } finally {
+            if (!params.chain && !params.token_type && !params.base_denom) {
+                isHaveParams.value = false;
+            } else {
+                isHaveParams.value = true;
+            }
         }
     };
     getTokensList({ ...BASE_PARAMS, use_count: true });
+    const subtitle = computed(() => {
+        return formatSubTitle(
+            isHaveParams.value,
+            total.value,
+            tokensList.value.length,
+            PAGE_PARAMETERS.tokens
+        );
+    });
     return {
         tokensList,
-        total,
-        getTokensList
-    };
-};
-
-export const useTokensQuery = () => {
-    const route = useRoute();
-    const chainIdQuery = route.query.chain as string;
-    const denomQuery = route.query.denom as string;
-    const statusQuery = route.query.status as TTokenType;
-    return {
-        chainIdQuery,
-        denomQuery,
-        statusQuery
+        getTokensList,
+        subtitle
     };
 };
 
 export const useTokensSelected = (
-    denomQuery: string,
-    chainIdQuery: string,
-    statusQuery: TTokenType,
+    ibcBaseDenomsSorted: ComputedRef<IBaseDenom[]>,
+    ibcChains: Ref<IIbcChains>,
     getTokensList: (params: IRequestTokensList) => Promise<void>,
     getIbcBaseDenom: () => Promise<void>,
-    loading: Ref<boolean>,
-    ibcBaseDenomsSorted: ComputedRef<IBaseDenom[]>,
-    ibcChains: any
+    loading: Ref<boolean>
 ) => {
-    let pageUrl = '/tokens';
     const router = useRouter();
+    const route = useRoute();
+    let pageUrl = '/tokens';
+    const chainDropdown = ref();
+    const statusDropdown = ref();
+    const tokensDropdown = ref();
+    const chainIdQuery = route.query.chain as string;
+    const denomQuery = route.query.denom as string;
+    const statusQuery = route.query.status as TTokenType;
     const searchDenom = ref(denomQuery);
     const searchChain = ref<string | undefined>(chainIdQuery);
     const searchStatus = ref<TTokenType>(statusQuery);
-    const refreshList = () => {
-        getTokensList({
-            ...BASE_PARAMS,
-            base_denom: searchDenom.value,
-            chain: searchChain.value,
-            token_type: searchStatus.value,
-            loading: loading
-        });
-    };
-    const onSelectedToken = (val?: IDataItem) => {
-        const denom = val?.id;
-        if (denom) {
-            searchDenom.value = denom as string;
-        } else {
-            searchDenom.value = '';
-        }
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'denom',
-            value: denom as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-    const onSelectedChain = (val?: IDataItem) => {
-        const chain = val?.id;
-        searchChain.value = chain !== undefined ? String(chain) : undefined;
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'chain',
-            value: chain as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const onSelectedStatus = (status?: string | number) => {
-        searchStatus.value = status as TTokenType;
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'status',
-            value: status as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
     const tokenData = computed(() => {
         return [
             {
@@ -198,52 +162,65 @@ export const useTokensSelected = (
         ];
     });
 
+    const onSelectedToken = (val?: IDataItem) => {
+        const denom = val?.id;
+        if (denom) {
+            searchDenom.value = denom as string;
+        } else {
+            searchDenom.value = '';
+        }
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'denom',
+            value: denom as string
+        });
+        router.replace(pageUrl);
+        refreshList();
+    };
+    const onSelectedChain = (val?: IDataItem) => {
+        const chain = val?.id;
+        searchChain.value = chain !== undefined ? String(chain) : undefined;
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'chain',
+            value: chain as string
+        });
+        router.replace(pageUrl);
+        refreshList();
+    };
+
+    const onSelectedStatus = (status?: string | number) => {
+        searchStatus.value = status as TTokenType;
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'status',
+            value: status as string
+        });
+        router.replace(pageUrl);
+        refreshList();
+    };
+    const refreshList = () => {
+        getTokensList({
+            ...BASE_PARAMS,
+            base_denom: searchDenom.value,
+            chain: searchChain.value,
+            token_type: searchStatus.value,
+            loading: loading
+        });
+    };
     onMounted(() => {
         getIbcBaseDenom();
         refreshList();
     });
     return {
-        searchChain,
-        searchDenom,
-        searchStatus,
+        chainDropdown,
+        statusDropdown,
+        tokensDropdown,
         onSelectedToken,
         onSelectedChain,
         onSelectedStatus,
         tokenData,
-        chainData
-    };
-};
-
-export const useTokensRef = () => {
-    const chainDropdown = ref();
-    const statusDropdown = ref();
-    const tokensDropdown = ref();
-    return {
-        chainDropdown,
-        statusDropdown,
-        tokensDropdown
-    };
-};
-
-export const useSubTitleComputed = (
-    searchChain: Ref<string | undefined>,
-    searchDenom: Ref<string>,
-    searchStatus: Ref<TTokenType>,
-    total: Ref<number>,
-    tokensList: Ref<ITokensListItem[]>
-) => {
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value && !searchDenom.value) {
-            return `${formatBigNumber(total.value, 0)} tokens found`;
-        } else {
-            return `${formatBigNumber(tokensList.value.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} tokens found`;
-        }
-    });
-    return {
-        subtitle
+        chainData,
+        searchDenom,
+        searchChain,
+        statusQuery
     };
 };
 

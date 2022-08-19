@@ -3,8 +3,8 @@ import { getIbcTokenListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
 import { BASE_PARAMS, PAGE_PARAMETERS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
-import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
-import { IBaseDenom } from '@/types/interface/index.interface';
+import { getRestString } from '@/helper/parseStringHelper';
+import { IBaseDenom, IIbcChains } from '@/types/interface/index.interface';
 import {
     IRequestIbcTokenList,
     IResponseIbcTokenList,
@@ -17,11 +17,14 @@ import { Ref } from 'vue';
 import { IDataItem } from '@/components/BjSelect/interface';
 import ChainHelper from '@/helper/chainHelper';
 import { CHAIN_ICON } from '@/constants/bjSelect';
+import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
-export const useGetIbcTokenList = (base_denom: string) => {
+export const useGetIbcTokenList = () => {
+    const route = useRoute();
+    const baseDenomQuery = route.query.denom as string;
     const ibcTokenList = ref<IResponseIbcTokenListItem[]>([]);
     const total = ref<number>(0);
-
+    const isHaveParams = ref<boolean>(false);
     const getIbcTokenList = async (params: IRequestIbcTokenList) => {
         const { loading } = params;
         if (loading) {
@@ -29,7 +32,7 @@ export const useGetIbcTokenList = (base_denom: string) => {
             delete params.loading;
         }
         try {
-            const result = await getIbcTokenListAPI(base_denom, {
+            const result = await getIbcTokenListAPI(baseDenomQuery, {
                 ...BASE_PARAMS,
                 ...params
             });
@@ -50,117 +53,48 @@ export const useGetIbcTokenList = (base_denom: string) => {
                 loading && (loading.value = false);
             }
             console.log(error);
+        } finally {
+            if (!params.chain && !params.token_type) {
+                isHaveParams.value = false;
+            } else {
+                isHaveParams.value = true;
+            }
         }
     };
     getIbcTokenList({ ...BASE_PARAMS, use_count: true });
+    const subtitle = computed(() => {
+        return formatSubTitle(
+            isHaveParams.value,
+            total.value,
+            ibcTokenList.value.length,
+            PAGE_PARAMETERS.tokens
+        );
+    });
     return {
         ibcTokenList,
-        total,
-        getIbcTokenList
-    };
-};
-
-export const useIbcTokenQuery = () => {
-    const route = useRoute();
-    const baseDenomQuery = route.query.denom as string;
-    const chainIdQuery = route.query.chain as string;
-    const statusQuery = route.query.status as TIbcTokenType;
-    return {
-        baseDenomQuery,
-        chainIdQuery,
-        statusQuery
+        getIbcTokenList,
+        subtitle,
+        baseDenomQuery
     };
 };
 
 export const useIbcTokenSelected = (
-    chainIdQuery: string,
-    statusQuery: TIbcTokenType,
-    getIbcTokenList: (params: IRequestIbcTokenList) => Promise<void>,
+    ibcChains: Ref<IIbcChains>,
+    baseDenomQuery: string,
     getIbcBaseDenom: () => Promise<void>,
-    loading: Ref<boolean>,
-    ibcChains: any
+    getIbcTokenList: (params: IRequestIbcTokenList) => Promise<void>,
+    ibcBaseDenoms: Ref<IBaseDenom[]>,
+    loading: Ref<boolean>
 ) => {
-    let pageUrl = '/tokens/details';
     const router = useRouter();
-    const searchChain = ref<string | undefined>(chainIdQuery ?? undefined);
-    const searchStatus = ref<TIbcTokenType | undefined>(statusQuery);
-    const refreshList = () => {
-        getIbcTokenList({
-            ...BASE_PARAMS,
-            chain: searchChain.value,
-            token_type: searchStatus.value,
-            loading: loading
-        });
-    };
-    const onSelectedChain = (val?: IDataItem) => {
-        const chain = val?.id;
-        searchChain.value = chain as string;
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'chain',
-            value: chain as string
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    const chainData = computed(() => {
-        return [
-            {
-                children: [
-                    {
-                        title: 'All Chains',
-                        id: '',
-                        metaData: null
-                    }
-                ]
-            },
-            {
-                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v: any) => ({
-                    title: v.chain_name,
-                    id: v.chain_id,
-                    icon: v.icon || CHAIN_ICON,
-                    metaData: v
-                }))
-            }
-        ];
-    });
-
-    const onSelectedStatus = (status?: string | number) => {
-        searchStatus.value = status as TIbcTokenType;
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'status',
-            value: status as TIbcTokenType
-        });
-        router.replace(pageUrl);
-        refreshList();
-    };
-
-    onMounted(() => {
-        getIbcBaseDenom();
-        refreshList();
-    });
-    return {
-        searchChain,
-        chainData,
-        searchStatus,
-        onSelectedChain,
-        onSelectedStatus
-    };
-};
-
-export const useIbcTokenRef = () => {
+    const route = useRoute();
+    let pageUrl = '/tokens/details';
     const chainDropdown = ref();
     const statusDropdown = ref();
-    return {
-        chainDropdown,
-        statusDropdown
-    };
-};
-
-export const useBaseDenomInfoComputed = (
-    ibcBaseDenoms: Ref<IBaseDenom[]>,
-    baseDenomQuery: string
-) => {
+    const chainIdQuery = route.query.chain as string;
+    const statusQuery = route.query.status as TIbcTokenType;
+    const searchChain = ref<string | undefined>(chainIdQuery ?? undefined);
+    const searchStatus = ref<TIbcTokenType | undefined>(statusQuery);
     const baseDenomInfo = computed(() => {
         const filterData = ibcBaseDenoms.value.filter(
             (item: IBaseDenom) => item.denom === baseDenomQuery
@@ -185,28 +119,67 @@ export const useBaseDenomInfoComputed = (
                 : new URL('../../assets/token-default.png', import.meta.url).href
         };
     });
-    return {
-        baseDenomInfo
+    const chainData = computed(() => {
+        return [
+            {
+                children: [
+                    {
+                        title: 'All Chains',
+                        id: '',
+                        metaData: null
+                    }
+                ]
+            },
+            {
+                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v: any) => ({
+                    title: v.chain_name,
+                    id: v.chain_id,
+                    icon: v.icon || CHAIN_ICON,
+                    metaData: v
+                }))
+            }
+        ];
+    });
+    const onSelectedChain = (val?: IDataItem) => {
+        const chain = val?.id;
+        searchChain.value = chain as string;
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'chain',
+            value: chain as string
+        });
+        router.replace(pageUrl);
+        refreshList();
     };
-};
-export const useSubTitleComputed = (
-    searchChain: Ref<string | undefined>,
-    searchStatus: Ref<TIbcTokenType | undefined>,
-    total: Ref<number>,
-    ibcTokenList: Ref<IResponseIbcTokenListItem[]>
-) => {
-    const subtitle = computed(() => {
-        if (!searchChain.value && !searchStatus.value) {
-            return `${formatBigNumber(total.value, 0)} tokens found`;
-        } else {
-            return `${formatBigNumber(ibcTokenList.value.length, 0)} of the ${formatBigNumber(
-                total.value,
-                0
-            )} tokens found`;
-        }
+    const onSelectedStatus = (status?: string | number) => {
+        searchStatus.value = status as TIbcTokenType;
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'status',
+            value: status as TIbcTokenType
+        });
+        router.replace(pageUrl);
+        refreshList();
+    };
+    const refreshList = () => {
+        getIbcTokenList({
+            ...BASE_PARAMS,
+            chain: searchChain.value,
+            token_type: searchStatus.value,
+            loading: loading
+        });
+    };
+    onMounted(() => {
+        getIbcBaseDenom();
+        refreshList();
     });
     return {
-        subtitle
+        chainDropdown,
+        statusDropdown,
+        searchChain,
+        chainData,
+        onSelectedChain,
+        onSelectedStatus,
+        baseDenomInfo,
+        statusQuery
     };
 };
 

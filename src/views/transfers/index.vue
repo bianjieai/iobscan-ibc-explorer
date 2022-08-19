@@ -352,7 +352,8 @@
         // PAGE_PARAMETERS,
         txStatusNumber,
         CHAINNAME,
-        CHAIN_DEFAULT_VALUE
+        CHAIN_DEFAULT_VALUE,
+        TOTAL_BOUND
     } from '@/constants';
     import chainDefaultImg from '@/assets/home/chain-default.png';
     import tokenDefaultImg from '@/assets/token-default.png';
@@ -395,7 +396,6 @@
         startTimestamp = 0,
         endTimestamp = 0;
     const dateRange = reactive({ value: [] });
-    const maxTableLength = ref(500000);
     let isHashFilterParams = ref(false);
     let ibcTxTotalMoreThan500k = ref(false);
     let pageNum = 1,
@@ -556,7 +556,7 @@
     const isIbcTxTotalAndHashFilter = computed(() => {
         if (ibcTxTotalMoreThan500k.value) {
             if (isHashFilterParams.value) {
-                if (pagination.total === maxTableLength.value) {
+                if (pagination.total === TOTAL_BOUND) {
                     return 'Last 500k transfers found';
                 }
                 return `${pagination.total} of the last 500k transfers found`;
@@ -882,7 +882,7 @@
     };
 
     watch(ibcStatisticsTxs, (newValue) => {
-        if (newValue?.tx_all?.count <= maxTableLength.value) {
+        if (newValue?.tx_all?.count <= TOTAL_BOUND) {
             ibcTxTotalMoreThan500k.value = false;
         } else {
             ibcTxTotalMoreThan500k.value = true;
