@@ -6,7 +6,9 @@ import '@vue/runtime-core'
 declare module '@vue/runtime-core' {
   export interface GlobalComponents {
     404: typeof import('./../components/errorpage/404.vue')['default']
+    AButton: typeof import('ant-design-vue/es')['Button']
     AConfigProvider: typeof import('ant-design-vue/es')['ConfigProvider']
+    ADropdown: typeof import('ant-design-vue/es')['Dropdown']
     AInput: typeof import('ant-design-vue/es')['Input']
     AMenu: typeof import('ant-design-vue/es')['Menu']
     AMenuItem: typeof import('ant-design-vue/es')['MenuItem']
@@ -43,6 +45,7 @@ declare module '@vue/runtime-core' {
     StatusImg: typeof import('./../components/responsive/table/StatusImg.vue')['default']
     Table: typeof import('./../components/responsive/table/index.vue')['default']
     TableCommon: typeof import('./../components/responsive/table/TableCommon.vue')['default']
+    Toke1nIcon: typeof import('./../components/responsive/table/toke1nIcon.vue')['default']
     TokenIcon: typeof import('./../components/responsive/table/TokenIcon.vue')['default']
     Tokens: typeof import('./../components/responsive/dropdown/tokens.vue')['default']
     TokensDropdown: typeof import('./../components/responsive/dropdown/TokensDropdown.vue')['default']
