@@ -1,44 +1,84 @@
 {
-  "name": "new-iobscan-ibc-explorer",
-  "private": true,
-  "version": "0.0.0",
-  "scripts": {
-    "dev": "vite",
-    "build:qa": "vue-tsc --noEmit && vite build --mode qa",
-    "build:staging": "vue-tsc --noEmit && vite build --mode staging",
-    "build": "vue-tsc --noEmit && vite build --mode production",
-    "preview": "vite preview",
-    "params": "node config.js"
-  },
-  "dependencies": {
-    "@ant-design/icons-vue": "^6.1.0",
-    "ant-design-vue": "^3.2.7",
-    "axios": "^0.27.2",
-    "bignumber.js": "^9.0.2",
-    "clipboard": "^2.0.11",
-    "dayjs": "^1.11.3",
-    "lodash-es": "^4.17.21",
-    "move-decimal-point": "^0.0.4",
-    "nprogress": "^0.2.0",
-    "pinia": "^2.0.14",
-    "tailwindcss": "^3.1.3",
-    "vue": "^3.2.25",
-    "vue-router": "^4.0.16"
-  },
-  "devDependencies": {
-    "@tailwindcss/line-clamp": "^0.4.0",
-    "@types/lodash-es": "^4.17.6",
-    "@types/node": "^17.0.43",
-    "@types/nprogress": "^0.2.0",
-    "@vitejs/plugin-vue": "^2.3.3",
-    "@vitejs/plugin-vue-jsx": "^1.3.10",
-    "autoprefixer": "^10.4.7",
-    "less": "^4.1.3",
-    "postcss": "^8.4.14",
-    "typescript": "^4.5.4",
-    "unplugin-vue-components": "^0.19.6",
-    "vite": "^2.9.9",
-    "vite-plugin-compression": "^0.5.1",
-    "vue-tsc": "^0.34.7"
-  }
+    "name": "new-iobscan-ibc-explorer",
+    "private": true,
+    "version": "0.0.0",
+    "scripts": {
+        "dev": "vite",
+        "qa": "vite --mode qa",
+        "stage": "vite --mode staging",
+        "prod": "vite --mode production",
+        "vue:tsc": "vue-tsc --noEmit",
+        "build:dev": "vue-tsc --noEmit && vite build --mode development",
+        "build:qa": "vue-tsc --noEmit && vite build --mode qa",
+        "build:staging": "vue-tsc --noEmit && vite build --mode staging",
+        "build": "vue-tsc --noEmit && vite build --mode production",
+        "preview": "vite preview",
+        "params": "node config.js",
+        "eslint:comment": "使用 ESLint 检查并自动修复 src 目录下所有扩展名为 .js 和 .vue 的文件",
+        "eslint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src --max-warnings 0",
+        "prettier:comment": "自动格式化当前目录下的所有文件",
+        "prettier": "prettier .  --write",
+        "commit:comment": "引导设置规范化的提交信息",
+        "commit": "git-cz",
+        "prepare": "husky install"
+    },
+    "lint-staged": {
+        "*.{js,ts,vue}": [
+            "npm run eslint",
+            "npm run prettier"
+        ]
+    },
+    "config": {
+        "commitizen": {
+            "path": "node_modules/cz-customizable"
+        }
+    },
+    "dependencies": {
+        "@ant-design/icons-vue": "^6.1.0",
+        "ant-design-vue": "^3.2.7",
+        "axios": "^0.27.2",
+        "bignumber.js": "^9.0.2",
+        "clipboard": "^2.0.11",
+        "dayjs": "^1.11.3",
+        "json-bigint": "^1.0.0",
+        "lodash-es": "^4.17.21",
+        "move-decimal-point": "^0.0.4",
+        "nprogress": "^0.2.0",
+        "pinia": "^2.0.14",
+        "tailwindcss": "^3.1.3",
+        "vue": "^3.2.25",
+        "vue-router": "^4.0.16"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^17.0.3",
+        "@commitlint/config-conventional": "^17.0.3",
+        "@tailwindcss/line-clamp": "^0.4.0",
+        "@types/lodash-es": "^4.17.6",
+        "@types/node": "^17.0.43",
+        "@types/nprogress": "^0.2.0",
+        "@typescript-eslint/eslint-plugin": "^5.30.7",
+        "@typescript-eslint/parser": "^5.30.7",
+        "@vitejs/plugin-vue": "^2.3.3",
+        "@vitejs/plugin-vue-jsx": "^1.3.10",
+        "autoprefixer": "^10.4.7",
+        "commitizen": "^4.2.5",
+        "commitlint-config-cz": "^0.13.3",
+        "cz-conventional-changelog": "^3.3.0",
+        "cz-customizable": "^6.9.1",
+        "eslint": "^8.20.0",
+        "eslint-config-prettier": "^8.5.0",
+        "eslint-plugin-prettier": "^4.2.1",
+        "eslint-plugin-vue": "^9.3.0",
+        "husky": "^8.0.1",
+        "less": "^4.1.3",
+        "lint-staged": "^13.0.3",
+        "postcss": "^8.4.14",
+        "prettier": "^2.7.1",
+        "typescript": "^4.5.4",
+        "unplugin-auto-import": "^0.10.1",
+        "unplugin-vue-components": "^0.19.6",
+        "vite": "^2.9.9",
+        "vite-plugin-compression": "^0.5.1",
+        "vue-tsc": "^0.34.7"
+    }
 }

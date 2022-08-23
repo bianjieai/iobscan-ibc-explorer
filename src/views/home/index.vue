@@ -1,189 +1,215 @@
 <template>
     <div class="home">
-        <header-input class="header_input_layout" @pressedEnter="onPressEnter" disabled />
-        <layer-block class="home_top" title="Chains" type="dark">
-            <div class="home_top_slot">
-                <div class="home_top_left">
-                    <chains-info :msg="ibcStatisticsChains.chains_24hr" @click="onClickViewAll(pageParameters.chains)" />
-                    <chains-info :msg="ibcStatisticsChains.chain_all" style="margin-top: 18px;"
-                        @click="onClickViewAll(pageParameters.chains)" />
+        <header-input class="home__header_input_layout" disabled @pressed-enter="onPressEnter" />
+        <layer-block class="home__top" title="Chains" type="dark">
+            <div class="home__top__slot">
+                <div class="home__top__left">
+                    <chains-info
+                        :msg="ibcStatisticsChains.chains_24hr"
+                        @click="onClickViewAll(PAGE_PARAMETERS.chains)"
+                    />
+                    <chains-info
+                        :msg="ibcStatisticsChains.chain_all"
+                        style="margin-top: 18px"
+                        @click="onClickViewAll(PAGE_PARAMETERS.chains)"
+                    />
                 </div>
-                <div class="home_top_right">
-                    <chains-list-info :chainList="ibcChains" @onMenuSelected="onMenuSelected" @clickItem="onClickViewAll" />
+                <div class="home__top__right">
+                    <chains-list-info
+                        :chain-list="ibcChains"
+                        @on-menu-selected="onMenuSelected"
+                        @click-item="onClickViewAll"
+                    />
                 </div>
             </div>
         </layer-block>
-        <div class="home_bottom">
-            <div class="home_bottom_left">
+        <div class="home__bottom">
+            <div class="home__bottom__left">
                 <layer-block title="Channel Pairs">
-                    <statistic-list type="vertical" :msg="ibcStatisticsChannels" @clickItem="onClickViewAll" />
+                    <statistic-list
+                        type="vertical"
+                        :msg="ibcStatisticsChannels"
+                        @click-item="onClickViewAll"
+                    />
                 </layer-block>
 
-                <layer-block title="IBC Tokens" style="margin-top: 47px" showTip :tipMsg="tipMsg">
-                    <statistic-list  type="vertical" :msg="ibcStatisticsDenoms" @clickItem="onClickViewAll" />
+                <layer-block title="IBC Tokens" style="margin-top: 47px" show-tip :tip-msg="tipMsg">
+                    <statistic-list
+                        type="vertical"
+                        :msg="ibcStatisticsDenoms"
+                        @click-item="onClickViewAll"
+                    />
                 </layer-block>
             </div>
-            <layer-block class="home_bottom_right" title="IBC Token Transfer">
-                <statistic-list type="horizontal" :msg="ibcStatisticsTxs" @clickItem="onClickViewAll" />
-                <transfer-list :ibcChains="ibcChains" :transferList="ibcTxs.value" @clickViewAll="onClickViewAll(ibcStatisticsTxsDefault.tx_all.statistics_name)"
-                    @clickItem="onClickViewAll" @itemDidExpand="setExpandByIndex"/>
+            <layer-block class="home__bottom__right" title="IBC Token Transfers">
+                <statistic-list
+                    type="horizontal"
+                    :msg="ibcStatisticsTxs"
+                    @click-item="onClickViewAll"
+                />
+                <transfer-list
+                    :ibc-chains="ibcChains"
+                    :transfer-list="homeIbcTxs"
+                    @click-view-all="onClickViewAll(ibcStatisticsTxsDefault.tx_all.statistics_name)"
+                    @click-item="onClickViewAll"
+                    @item-did-expand="setExpandByIndex"
+                />
             </layer-block>
         </div>
     </div>
 </template>
 
-<script setup>
-import HeaderInput from '../../components/HeaderInput.vue';
-import LayerBlock from '../../components/LayerBlock.vue';
-import ChainsInfo from './components/ChainsInfo.vue';
-import ChainsListInfo from './components/ChainsListInfo.vue';
-import StatisticList from './components/StatisticList.vue';
-import TransferList from './components/TransferList.vue';
-import { useIbcStatistics, useIbcChains, useIbcTxs, useInterfaceActive, useClearInterval, useGetIbcDenoms } from './composable';
-import { useOnPressEnter } from '../../layout/hooks/useStarAnimation';
-import { onMounted,onBeforeUnmount } from 'vue';
-import { pageParameters, ibcStatisticsTxsDefault } from '../../constants';
-const {
-    ibcStatisticsChains,
-    ibcStatisticsChannels,
-    ibcStatisticsDenoms,
-    ibcStatisticsTxs,
-    getIbcStatistics 
-} = useIbcStatistics();
-const { ibcChains, getIbcChains } = useIbcChains();
-const { limitIbcTxs, ibcTxs, getIbcTxs, setExpandByIndex } = useIbcTxs();
-const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
-const { getIbcDenoms, getIbcBaseDenom } = useGetIbcDenoms();
-useClearInterval();
-const { onPressEnter } = useOnPressEnter();
-onMounted(() => {
-    getIbcStatistics();
-    !sessionStorage.getItem('allChains') && getIbcChains();
-    getIbcTxs({page_num: 1, page_size: 100, use_count: false});
-    getIbcDenoms();
-    !sessionStorage.getItem('ibcBaseDenom') && getIbcBaseDenom();
-})
-onBeforeUnmount(() => {
-    limitIbcTxs();
-})
+<script setup lang="ts">
+    import LayerBlock from './components/LayerBlock.vue';
+    import ChainsInfo from './components/ChainsInfo.vue';
+    import ChainsListInfo from './components/ChainsListInfo.vue';
+    import StatisticList from './components/StatisticList.vue';
+    import TransferList from './components/TransferList.vue';
+    import { useIbcChains } from '@/composables';
+    import { useIbcTxs, useInterfaceActive } from './composable';
+    import { useOnPressEnter } from '@/composables/useStarAnimation';
+    import { PAGE_PARAMETERS, ibcStatisticsTxsDefault } from '@/constants/index';
+    import { useIbcStatistics } from '@/composables/home';
+    import { DATA_REFRESH_GAP } from '@/constants/home';
+    const { ibcStatisticsChains, ibcStatisticsChannels, ibcStatisticsDenoms, ibcStatisticsTxs } =
+        useIbcStatistics(DATA_REFRESH_GAP);
+
+    const { ibcChains } = useIbcChains(DATA_REFRESH_GAP);
+    const { homeIbcTxs, setExpandByIndex } = useIbcTxs(DATA_REFRESH_GAP);
+    const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
+    const { onPressEnter } = useOnPressEnter();
 </script>
 
 <style lang="less">
-.home {
-    box-sizing: border-box;
-    padding: 48px 0 100px 0;
-    width: 100%;
-    max-width: 1200px;
-    & .header_input_layout {
-        display: none;
-    }
-
-    &_top {
-        width: 100%;
-
-        &_slot {
-            .flex(row, nowrap, space-between, center);
-            box-sizing: border-box;
-            padding: 24px;
-            width: 100%;
-            max-width: 1200px;
-        }
-        &_left {}
-        &_right {
-            margin-left: 17px;
-            width: 100%;
-        }
-    }
-    &_bottom {
-        .flex(row, nowrap, space-between, flex-start);
-        margin-top: 24px;
-        width: 100%;
-        &_left {
-        }
-        &_right {
-            flex: 1;
-            margin-left: 24px;
-        }
-    }
-}
-
-@media screen and (max-width: 1200px) {
     .home {
-        padding: 48px 32px 100px 32px;
-        &_top {
+        box-sizing: border-box;
+        padding: 48px 0 100px 0;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        &__header_input_layout {
+            display: none;
+        }
+
+        &__top {
             width: 100%;
-            &_slot {
-                .flex(column, nowrap, center, center);
+
+            &__slot {
+                .flex(row, nowrap, space-between, center);
+                box-sizing: border-box;
+                padding: 24px;
+                width: 100%;
+                max-width: 1200px;
+            }
+            &__left {
+            }
+            &__right {
+                margin-left: 17px;
                 width: 100%;
             }
-            &_left {
+        }
+        &__bottom {
+            .flex(row, nowrap, space-between, flex-start);
+            margin-top: 24px;
+            width: 100%;
+            &__left {
+                margin-right: 24px;
+                width: 274px;
+            }
+            &__right {
+                flex: 1;
+                max-width: 902px;
+            }
+        }
+    }
+
+    @media screen and (max-width: 1200px) {
+        .home {
+            padding: 48px 48px 100px 48px;
+            &__top {
                 width: 100%;
-                .ibc_selected_title {
+                &__slot {
+                    .flex(column, nowrap, center, center);
+                    width: 100%;
+                }
+                &__left {
+                    width: 100%;
+                    .ibc_selected_title {
+                        width: 100%;
+                    }
+                }
+                &__right {
+                    margin-top: 24px;
+                    margin-left: 0;
                     width: 100%;
                 }
             }
-            &_right {
+            &__bottom {
+                .flex(column, nowrap, flex-start, flex-start);
                 margin-top: 24px;
-                margin-left: 0;
                 width: 100%;
-            }
-        }
-        &_bottom {
-            .flex(column, nowrap, flex-start, flex-start);
-            margin-top: 24px;
-            width: 100%;
-            &_left {
-                width: 100%;
-            }
-            &_right {
-                margin-top: 24px;
-                margin-left: 0;
-                width: 100%;
+                &__left {
+                    margin-right: 0;
+                    width: 100%;
+                }
+                &__right {
+                    margin-top: 40px !important;
+                    width: 100%;
+                    max-width: 100%;
+                }
             }
         }
     }
-}
-@media screen and (max-width: 768px) {
-    .home {
-        padding: 36px 16px 48px 16px;
-        &_top {
-            &_slot {
-                .flex(column, nowrap, center, center);
+    @media screen and (max-width: 768px) {
+        .home {
+            padding: 40px 32px 60px 32px;
+            &__top {
+                &__slot {
+                    .flex(column, nowrap, center, center);
+                }
+                &__left {
+                    .ibc_selected_title {
+                    }
+                }
+                &__right {
+                    margin-top: 24px;
+                    margin-left: 0;
+                    width: 100%;
+                }
             }
-            &_left {
-                .ibc_selected_title {}
+            &__bottom {
+                &__left {
+                }
+                &__right {
+                }
             }
-            &_right {
-                margin-top: 24px;
-                margin-left: 0;
-                width: 100%;
-            }
-        }
-        &_bottom {
-            &_left {}
-            &_right {}
         }
     }
-}
-@media screen and (max-width: 530px) {
-    .home {
-        padding: 16px 16px 48px 16px;
-        & .header_input_layout {
-            display: inline-block;
-            .flex(row, nowrap, flex-start, center);
-        }
-        &_top {
-            margin-top: 48px;
-            &_slot {}
-            &_left {
-                .ibc_selected_title {}
+    @media screen and (max-width: 530px) {
+        .home {
+            padding: 24px 16px 60px 16px;
+            &__header_input_layout {
+                display: inline-block;
+                .flex(row, nowrap, flex-start, center);
             }
-            &_right {}
-        }
-        &_bottom {
-            &_left {}
-            &_right {}
+            &__top {
+                margin-top: 48px !important;
+                &__slot {
+                    padding: 16px;
+                }
+                &__left {
+                    .ibc_selected_title {
+                    }
+                }
+                &__right {
+                }
+            }
+            &__bottom {
+                &__left {
+                }
+                &__right {
+                }
+            }
         }
     }
-}
 </style>

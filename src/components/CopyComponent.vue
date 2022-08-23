@@ -1,67 +1,60 @@
 <template>
-    <div class="copy_component_content" id="tag_copy" :data-clipboard-text="copyText" @click="handleCopy($event,copyText)">
+    <div
+        id="tag_copy"
+        class="copy_component_content cursor"
+        :data-clipboard-text="copyText"
+        @click="handleCopy()"
+    >
         <span v-show="!isShowCopied" class="copied iconfont icon-fuzhi"></span>
-        <span v-show="isShowCopied" class="copied iconfont icon-fuzhichenggong1"> <span class="text">Copied</span></span>
+        <span v-show="isShowCopied" class="copied iconfont icon-fuzhichenggong1">
+            <span class="text">Copied</span></span
+        >
     </div>
 </template>
 
-<script>
-import Clipboard from 'clipboard'
-import {ref} from 'vue'
-export default {
-    name: "CopyComponent",
-    props:{
-        copyText :{
-            type: String
-        }
-    },
-    setup(){
-        let isShowCopied = ref(false)
-        let copyTimer = ref(null)
-        const handleCopy = () => {
-            clearTimeout(copyTimer)
-            if(isShowCopied.value) return
-            const clipboard = new Clipboard('#tag_copy')
-            clipboard.on('success', e => {
-                // 释放内存
-                isShowCopied.value = true
-                clipboard.destroy()
-                copyTimer.value = setTimeout(() => {
-                    isShowCopied.value = false
-                },3000)
-            })
-            clipboard.on('error', e => {
-                // 不支持复制
-                // 释放内存
-                isShowCopied.value = false
-                clipboard.destroy()
-            })
-        }
-        return {
-            handleCopy,
-            isShowCopied
-        }
+<script setup lang="ts">
+    import Clipboard from 'clipboard';
+    import { ref } from 'vue';
+    interface IProps {
+        copyText: string;
     }
-
-
-}
+    defineProps<IProps>();
+    let isShowCopied = ref<boolean>(false);
+    let copyTimer = ref<number>(0);
+    const handleCopy = () => {
+        clearTimeout(copyTimer.value);
+        if (isShowCopied.value) return;
+        const clipboard = new Clipboard('#tag_copy');
+        clipboard.on('success', () => {
+            // 释放内存
+            isShowCopied.value = true;
+            clipboard.destroy();
+            copyTimer.value = setTimeout(() => {
+                isShowCopied.value = false;
+            }, 3000);
+        });
+        clipboard.on('error', () => {
+            // 不支持复制
+            // 释放内存
+            isShowCopied.value = false;
+            clipboard.destroy();
+        });
+    };
 </script>
 
 <style scoped lang="less">
-    .copy_component_content{
+    .copy_component_content {
         margin-left: 7px;
         display: inline-block;
         align-items: center;
-        cursor: pointer;
         user-select: none;
-        .copied{
+        .copied {
             font-size: 14px;
             color: rgba(151, 151, 151, 1);
-            cursor: pointer;
             padding-bottom: 2px;
-            .text{
+            .text {
                 margin-left: 7px;
-                color:rgba(151, 151, 151, 1);
+                color: rgba(151, 151, 151, 1);
                 font-size: 14px;
                 font-weight: 400;
             }

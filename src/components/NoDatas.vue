@@ -1,32 +1,24 @@
 <template>
     <div class="nodatas">
-        <img class="nodatas_icon" src="../assets/noDatas.png" />
-        <p class="nodatas_title">No Data</p>
+        <img class="nodatas__icon" src="../assets/no_datas.png" />
+        <p class="nodatas__title">No Data</p>
     </div>
 </template>
 
-<script>
-export default {
-  setup() {
-
-  },
-};
-</script>
+<script setup lang="ts"></script>
 
 <style lang="less" scoped>
-
-.nodatas {
-    .flex(column, nowrap, center, center);
-    min-height: 210px; // 适应table min-height: 300px
-    &_icon {
-        width: 120px;
+    .nodatas {
+        .flex(column, nowrap, center, center);
+        margin: 30px 0 20px;
+        &__icon {
+            width: 120px;
+        }
+        &__title {
+            margin-top: 16px;
+            font-size: var(--bj-font-size-normal);
+            font-weight: 400;
+            color: var(--bj-font-color-65);
+        }
     }
-    &_title {
-        margin-top: 16px;
-        font-size: var(--bj-font-size-normal);
-        font-family: Montserrat-Regular, Montserrat;
-        font-weight: 400;
-        color: @font-color2;
-    }
-}
 </style>

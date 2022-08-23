@@ -1,145 +1,145 @@
 <template>
-  <a-menu
-    :class="isShowNav?'header_menu': 'header_menu_hide header_menu'"
-    :selectedKeys="currentMenu"
-    mode="horizontal"
-    @click="clickMenuItem"
-  >
-    <a-menu-item class="header_menu_item" v-for="item of menus" :key="item.value">
-      <img v-show="isShowNav" src="../assets/tips_icon.png" alt="" class="header_menu_item_img">
-      {{ item.label }}
-    </a-menu-item>
-  </a-menu>
+    <a-menu
+        :class="isShowNav ? 'header_menu' : 'header_menu_hide header_menu'"
+        :selected-keys="currentMenu"
+        mode="horizontal"
+        @click="clickMenuItem"
+    >
+        <a-menu-item v-for="item of menus" :key="item.value" class="header_menu__item">
+            <img
+                v-show="isShowNav"
+                src="../assets/nav/tips_icon.png"
+                alt=""
+                class="header_menu__item__img"
+            />
+            {{ item.label }}
+        </a-menu-item>
+    </a-menu>
 </template>
 
-<script>
-import { reactive, onBeforeUnmount } from 'vue';
-
-export default {
-  props: {
-    menus: Array,
-    currentMenu: Array,
-    isShowNav:Boolean
-  },
-  setup(props, context) {
-    const timeOuter = reactive({ value: null });
-    const clickMenuItem = ({ key }) => {
-      context.emit('clickMenu', key);
+<script lang="ts" setup>
+    import { MenuClickEventHandler } from 'ant-design-vue/lib/menu/src/interface.js';
+    type Key = string | number;
+    interface IMenu {
+        label: string;
+        value: string;
+    }
+    interface IProps {
+        menus: IMenu[];
+        currentMenu: Key[];
+        isShowNav: boolean;
+    }
+    defineProps<IProps>();
+    const emits = defineEmits<{
+        (e: 'clickMenu', key: string): MenuClickEventHandler;
+    }>();
+    const clickMenuItem = (e: { key: string }): MenuClickEventHandler => {
+        return emits('clickMenu', e.key);
     };
-    onBeforeUnmount(() => {
-      clearTimeout(timeOuter.value);
-    });
-
-    return {
-      clickMenuItem,
-    };
-  },
-};
 </script>
 
 <style lang="less">
-
-.header_menu {
-    flex: 1;
-    .flex(row, nowrap, center, center);
-  height: @nav-height;
-  line-height: @nav-height;
-  background-color: transparent;
-  border: 0;
-  &_item {
-    width: 110px;
-    padding: 0 !important;
-    text-align: center;
-  }
-  .ant-menu-item {
-    line-height: @nav-height;
-  }
-  .ant-menu-title-content {
-    font-size: @font-size4;
-    color: rgba(#ffffff, 0.65);
-    font-weight: @nav-font-weight;
-    font-family: Montserrat-Regular, Montserrat;
-  }
-  .ant-menu-item-selected {
-    background-image: url("../assets/NavSelected.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: 50% 90%;
-    .ant-menu-title-content {
-      color: #ffffff !important;
-    }
-    &::after {
-      display: none;
-    }
-  }
-  .ant-menu-item-active {
-    background-image: url("../assets/NavSelected.png");
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: 50% 90%;
-    .ant-menu-title-content {
-      color: #ffffff !important;
-    }
-    &::after {
-      display: none;
-    }
-  }
-  .header_menu_item_img{
-    display: none;
-  }
-}
-
-@media screen and (max-width: 1200px) {
     .header_menu {
-        &_item {
-            width: 90px;
+        flex: 1;
+        .flex(row, nowrap, center, center);
+        height: var(--bj-nav-height);
+        line-height: var(--bj-nav-height);
+        background-color: transparent;
+        border: 0;
+        &__item {
+            width: 110px;
+            padding: 0 !important;
+            text-align: center;
+            &__img {
+                display: none;
+            }
+        }
+        .ant-menu-item {
+            line-height: var(--bj-nav-height);
+            transition: border-color 0.3s linear;
+        }
+        .ant-menu-title-content {
+            font-size: var(--bj-font-size-sub-title);
+            color: rgba(#ffffff, 0.65);
+            font-weight: var(--bj-font-weight-normal);
+        }
+        .ant-menu-item-active {
+            background-image: url('../assets/nav/innovation_bar_bg.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: 50% 90%;
+            .ant-menu-title-content {
+                color: #ffffff !important;
+            }
+            &::after {
+                display: none;
+            }
+        }
+        .ant-menu-item-selected {
+            background-image: url('../assets/nav/selected.png');
+            background-repeat: no-repeat;
+            background-size: contain;
+            background-position: 50% 90%;
+            .ant-menu-title-content {
+                color: #ffffff !important;
+            }
+            &::after {
+                display: none;
+            }
         }
     }
-}
-@media screen and (max-width: 1030px) {
-    .header_menu_hide{
-      visibility: hidden;
+
+    @media screen and (max-width: 1200px) {
+        .header_menu {
+            &__item {
+                width: 90px;
+            }
+        }
     }
-    .header_menu {
-        position: absolute;
-        top: 80px;
-        background-color:#0E1232;
-        width:100%;
-        height: 245px;
-        border-top: 4px solid #3D50FF;
-        flex-direction: column;
-        align-items: baseline;
-        justify-content: space-around;
-        padding: 20px 0 0 2px;
-        &_item {
-          margin-left: 32px;
-          width: 40px;
-          height: 15px;
-          line-height: 15px !important;
-          text-align: left;
-          margin-bottom: 24px !important;
-          &_img{
+    @media screen and (max-width: 1030px) {
+        .header_menu_hide {
             visibility: hidden;
-            height: 8px;
-          }
         }
-        .header_menu_item_img{
-          display: inline-block;
+        .header_menu {
+            position: absolute;
+            top: 80px;
+            background-color: #0e1232;
+            width: 100%;
+            height: 245px;
+            border-top: 4px solid #3d50ff;
+            flex-direction: column;
+            align-items: baseline;
+            justify-content: space-around;
+            padding: 20px 0 0 2px;
+            &__item {
+                margin-left: 32px;
+                width: 40px;
+                height: 15px;
+                line-height: 15px !important;
+                text-align: left;
+                margin-bottom: 24px !important;
+                &__img {
+                    display: inline-block;
+                    visibility: hidden;
+                    height: 8px;
+                }
+            }
+        }
+        .ant-menu-item-selected {
+            background-image: none !important;
+            .header_menu__item__img {
+                visibility: visible;
+            }
+        }
+        .ant-menu-item-active {
+            background-image: none !important;
         }
     }
-    .ant-menu-item-selected{
-      background-image: none !important;
-      .header_menu_item_img{
-        visibility: visible;
+    @media screen and (max-width: 768px) {
+        .header_menu {
+            &__item {
+                margin-left: 16px;
+            }
         }
     }
-    .ant-menu-item-active {
-      background-image: none !important;
-    }
-}
-@media screen and (max-width: 768px){
-  .header_menu_item{
-    margin-left: 16px;
-  }
-}
 </style>

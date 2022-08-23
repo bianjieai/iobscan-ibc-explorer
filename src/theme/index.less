@@ -1,23 +1,47 @@
 @import './reset.css';
-@import './index.css';
 @import './override.antd.css';
 @import './override.tailwind.css';
+@import '../assets/font/font.css';
 
-
-html {
-    width: 100%;
-    height: auto;
-    body {
-        width: 100%;
-        height: auto;
-    }
+:root {
+    --bj-primary-color: #3d50ff;
+    --bj-background-color: #f5f7fc;
+    --bj-background-color-second: #eaecf3;
+    --bj-background-color-third: #eaeaea;
+    --bj-border-color: rgba(217, 223, 238, 1);
+    --bj-text-normal: #000;
+    --bj-text-second: rgba(0, 0, 0, 0.75);
+    --bj-text-second-white: rgba(255, 255, 255, 0.75);
+    --bj-text-third: rgba(0, 0, 0, 0.35);
+    --bj-font-color-65: rgba(0, 0, 0, 0.65);
+    --bj-success: #00c853;
+    --bj-processing: #ffc400;
+    --bj-failed: #ff5a5a;
+    --bj-nav-height: 80px;
+    --bj-font-size-home-title: 40px;
+    --bj-font-size-home-number: 24px;
+    --bj-font-size-title: 20px;
+    --bj-font-size-sub-title: 16px;
+    --bj-font-size-normal: 14px;
+    --bj-font-size-small: 12px;
+    --bj-font-weight-normal: 400;
+    /* border-radius */
+    --border-radius-normal: 4px;
 }
 
-// // pc
-// @media screen and (min-width: 768px) {}
+@keyframes flicker {
+    0% {
+        opacity: 0;
+        transform: scale(1);
+    }
 
-// // tablet
-// @media screen and (min-width: 414px) and (max-width: 768px) {}
+    50% {
+        opacity: 1;
+        transform: scale(2);
+    }
 
-// // mobile
-// @media screen and (max-width: 414px) {}
+    100% {
+        opacity: 0;
+        transform: scale(1);
+    }
+}
