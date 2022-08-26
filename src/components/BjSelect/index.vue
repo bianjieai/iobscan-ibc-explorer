@@ -315,7 +315,6 @@
                 } else if (inputItems.length === 0) {
                     res = [matchItem, matchItem] as IDataItem[];
                 }
-                console.log(res);
                 break;
             default:
                 // 单选时候，清空选择框
