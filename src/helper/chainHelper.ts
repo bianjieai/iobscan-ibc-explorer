@@ -128,7 +128,7 @@ export default class ChainHelper {
         });
         /**
          * 需要判断输入的值是否和选择的值匹配，使用匹配的值判断
-         * 1. 选择 All Chains + Other Chain => 相当于选择了一条链，第一个选择的是 All Chains 的需要 sort
+         * 1. 选择 All Chains + Other Chain => 相当于选择了一条链，第一个选择的是 All Chains 的需要 sort，第二个选择的是 All Chains 的不需要 sort
          * 2. 选择了两个都不是 All Chains 的 chain
          *      a. 判断选中两条链是否包含 Cosmos Hub 或 IRIS Hub：
          *          包含 Cosmos Hub：左边不需要，右边需要
@@ -146,6 +146,8 @@ export default class ChainHelper {
 
         if (chainIdArr[0] === CHAIN_DEFAULT_VALUE) {
             isLocaleCompare.value = true;
+        } else if (chainIdArr[1] === CHAIN_DEFAULT_VALUE) {
+            isLocaleCompare.value = false;
         } else if (chainsName.indexOf(CHAINNAME.COSMOSHUB) === 0) {
             isLocaleCompare.value = false;
         } else if (chainsName.indexOf(CHAINNAME.COSMOSHUB) === 1) {
