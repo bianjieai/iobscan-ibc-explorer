@@ -70,7 +70,7 @@ export const useGetIbcTokenList = () => {
                 ibcTokenList.value = allData;
                 console.log(error);
             } finally {
-                if (!allParams.chain && !allParams.token_type) {
+                if (!params.chain && !params.token_type) {
                     isHaveParams.value = false;
                 } else {
                     isHaveParams.value = true;

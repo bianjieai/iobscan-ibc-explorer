@@ -70,7 +70,7 @@ export const useGetTokenList = () => {
                 tokensList.value = await ChainHelper.getBaseDenom(allData);
                 console.log(error);
             } finally {
-                if (!allParams.chain && !allParams.token_type && !allParams.base_denom) {
+                if (!params.chain && !params.token_type && !params.base_denom) {
                     isHaveParams.value = false;
                 } else {
                     isHaveParams.value = true;
