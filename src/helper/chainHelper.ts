@@ -1,6 +1,17 @@
 import { isArray } from '@/utils/objectTools';
-import { CHAINNAME, CHAIN_DEFAULT_VALUE } from '@/constants';
+import { BASE_PARAMS, CHAINNAME, UNKNOWN, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { useIbcChains } from '@/composables';
+import { IResponseChainsListItem } from '@/types/interface/chains.interface';
+import { IResponseTokensListItem, ITokensListItem } from '@/types/interface/tokens.interface';
+import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
+import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
+import { getRestString } from '@/helper/parseStringHelper';
+import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
+import {
+    IRelayersListItem,
+    IRequestRelayerList,
+    IResponseRelayerListItem
+} from '@/types/interface/relayers.interface';
 import { TData, TDenom, IDataItem } from '@/components/BjSelect/interface';
 const { ibcChains } = useIbcChains();
 export default class ChainHelper {
@@ -114,6 +125,59 @@ export default class ChainHelper {
         res.push(...excludes);
 
         return res;
+    }
+
+    static async getChainName(data: IResponseChainsListItem[]): Promise<IResponseChainsListItem[]> {
+        if (data.length === 0) {
+            return [];
+        }
+        const { ibcChains, getIbcChains } = useIbcChains();
+        if (Object.keys(ibcChains.value).length <= 0) {
+            try {
+                await getIbcChains();
+            } catch (error) {
+                console.log('getIbcChains', error);
+            }
+        }
+        const ibcChainsAllMap: IIbcchainMap = {};
+        (ibcChains.value?.all || []).forEach((ibcChain: IIbcchain) => {
+            ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
+        });
+        const chainsList = ref<IResponseChainsListItem[]>([]);
+        chainsList.value = data.map((item: IResponseChainsListItem) => {
+            const chainName = ibcChainsAllMap[item.chain_id];
+            item.chainName = chainName ? chainName : UNKNOWN;
+            return item;
+        });
+        return chainsList.value;
+    }
+
+    static async getBaseDenom(data: IResponseTokensListItem[]) {
+        const temp: ITokensListItem[] = [];
+        for (let i = 0; i < (data ?? []).length; i++) {
+            const item: ITokensListItem = data[i];
+            const baseDenom = await getBaseDenomByKey(item.chain_id, item.base_denom);
+            item['name'] = baseDenom
+                ? getRestString(baseDenom.symbol, 6, 0)
+                : getRestString(item.base_denom, 6, 0);
+            temp.push(item);
+        }
+        return temp;
+    }
+
+    static formatTransfer(data: IResponseRelayerListItem[], params: IRequestRelayerList) {
+        const relayersList = ref<IResponseRelayerListItem[]>([]);
+        const allParams = { ...BASE_PARAMS, ...params };
+        relayersList.value = ChainHelper.sortByChainName(data, allParams.chain)?.map(
+            (item: IRelayersListItem) => {
+                item.txs_success_rate = formatTransfer_success_txs(
+                    item.transfer_success_txs,
+                    item.transfer_total_txs
+                );
+                return item;
+            }
+        );
+        return relayersList.value;
     }
 
     // channels and relayers 选择框是否需要排序
