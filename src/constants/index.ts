@@ -380,7 +380,7 @@ export const NEED_CUSTOM_COLUMN = {
 export const BASE_PARAMS: IRequestPagination = {
     use_count: false,
     page_num: 1,
-    page_size: 3000
+    page_size: 1000
 };
 
 export const AxiosTimeout = 15000;

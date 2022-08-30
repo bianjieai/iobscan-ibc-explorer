@@ -31,35 +31,53 @@ export const useGetIbcTokenList = () => {
             loading.value = true;
             delete params.loading;
         }
-        try {
-            const result = await getIbcTokenListAPI(baseDenomQuery, {
-                ...BASE_PARAMS,
-                ...params
-            });
-            loading && (loading.value = false);
-            const { code, data, message } = result;
-            if (code === API_CODE.success) {
-                if (!params.use_count) {
-                    const { items } = data as IResponseIbcTokenList;
-                    ibcTokenList.value = items;
+        let allData = [] as IResponseIbcTokenListItem[];
+        const allParams = { ...BASE_PARAMS, ...params };
+        const getAllIbcTokenData = async () => {
+            try {
+                const result = await getIbcTokenListAPI(baseDenomQuery, allParams);
+                const { code, data, message } = result;
+                if (code === API_CODE.success) {
+                    if (!allParams.use_count) {
+                        const { items } = data as IResponseIbcTokenList;
+                        if (items?.length) {
+                            if (items.length < allParams.page_size) {
+                                allData = [...(allData || []), ...items];
+                                loading && (loading.value = false);
+                                ibcTokenList.value = allData;
+                            } else {
+                                allData = [...(allData || []), ...items];
+                                allParams.page_num++;
+                                getAllIbcTokenData();
+                            }
+                        } else {
+                            loading && (loading.value = false);
+                            ibcTokenList.value = allData;
+                            return;
+                        }
+                    } else {
+                        total.value = (data as number) || 0;
+                    }
                 } else {
-                    total.value = data as number;
+                    loading && (loading.value = false);
+                    ibcTokenList.value = allData;
+                    console.log(message);
                 }
-            } else {
-                console.error(message);
+            } catch (error) {
+                if (!axiosCancel(error)) {
+                    loading && (loading.value = false);
+                }
+                ibcTokenList.value = allData;
+                console.log(error);
+            } finally {
+                if (!params.chain && !params.token_type) {
+                    isHaveParams.value = false;
+                } else {
+                    isHaveParams.value = true;
+                }
             }
-        } catch (error) {
-            if (!axiosCancel(error)) {
-                loading && (loading.value = false);
-            }
-            console.log(error);
-        } finally {
-            if (!params.chain && !params.token_type) {
-                isHaveParams.value = false;
-            } else {
-                isHaveParams.value = true;
-            }
-        }
+        };
+        getAllIbcTokenData();
     };
     getIbcTokenList({ ...BASE_PARAMS, use_count: true });
     const subtitle = computed(() => {
