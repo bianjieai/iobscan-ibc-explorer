@@ -1,9 +1,8 @@
+import { IResponseTokensListItem } from './../../types/interface/tokens.interface';
 import { getTokensListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
 import { BASE_PARAMS, PAGE_PARAMETERS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
-import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
-import { getRestString } from '@/helper/parseStringHelper';
 import {
     IResponseTokensList,
     IRequestTokensList,
@@ -32,44 +31,53 @@ export const useGetTokenList = () => {
             loading.value = true;
             delete params.loading;
         }
-        try {
-            const result = await getTokensListAPI({
-                ...BASE_PARAMS,
-                ...params
-            });
-            loading && (loading.value = false);
-            const { code, data, message } = result;
-            if (code === API_CODE.success) {
-                if (!params.use_count) {
-                    const { items } = data as IResponseTokensList;
-                    const temp: ITokensListItem[] = [];
-                    for (let i = 0; i < (items ?? []).length; i++) {
-                        const item: ITokensListItem = items[i];
-                        const baseDenom = await getBaseDenomByKey(item.chain_id, item.base_denom);
-                        item['name'] = baseDenom
-                            ? getRestString(baseDenom.symbol, 6, 0)
-                            : getRestString(item.base_denom, 6, 0);
-                        temp.push(item);
+        let allData = [] as IResponseTokensListItem[];
+        const allParams = { ...BASE_PARAMS, ...params };
+        const getAllData = async () => {
+            try {
+                const result = await getTokensListAPI(allParams);
+                const { code, data, message } = result;
+                if (code === API_CODE.success) {
+                    if (!allParams.use_count) {
+                        const items = (data as IResponseTokensList).items;
+                        if (items && items.length > 0) {
+                            if (items.length < allParams.page_size) {
+                                allData = [...(allData || []), ...items];
+                                loading && (loading.value = false);
+                                tokensList.value = await ChainHelper.getBaseDenom(allData);
+                            } else {
+                                allData = [...(allData || []), ...items];
+                                allParams.page_num++;
+                                getAllData();
+                            }
+                        } else {
+                            loading && (loading.value = false);
+                            tokensList.value = allData;
+                            return;
+                        }
+                    } else {
+                        total.value = (data as number) || 0;
                     }
-                    tokensList.value = temp;
                 } else {
-                    total.value = data as number;
+                    loading && (loading.value = false);
+                    tokensList.value = await ChainHelper.getBaseDenom(allData);
+                    console.error(message);
                 }
-            } else {
-                console.error(message);
+            } catch (error) {
+                if (!axiosCancel(error)) {
+                    loading && (loading.value = false);
+                }
+                tokensList.value = await ChainHelper.getBaseDenom(allData);
+                console.log(error);
+            } finally {
+                if (!params.chain && !params.token_type && !params.base_denom) {
+                    isHaveParams.value = false;
+                } else {
+                    isHaveParams.value = true;
+                }
             }
-        } catch (error) {
-            if (!axiosCancel(error)) {
-                loading && (loading.value = false);
-            }
-            console.log(error);
-        } finally {
-            if (!params.chain && !params.token_type && !params.base_denom) {
-                isHaveParams.value = false;
-            } else {
-                isHaveParams.value = true;
-            }
-        }
+        };
+        getAllData();
     };
     getTokensList({ ...BASE_PARAMS, use_count: true });
     const subtitle = computed(() => {

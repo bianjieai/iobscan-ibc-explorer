@@ -326,7 +326,7 @@ export const SYMBOL = {
     IRIS: 'IRIS'
 };
 
-export const COPYRIGHT = 'Copyright © 2022 IRIS Foundation Ltd. All Rights Reserved.';
+export const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan Ltd. All Rights Reserved.`;
 export const ICON_LINK = [
     {
         iconName: 'icon-github',
@@ -380,7 +380,7 @@ export const NEED_CUSTOM_COLUMN = {
 export const BASE_PARAMS: IRequestPagination = {
     use_count: false,
     page_num: 1,
-    page_size: 3000
+    page_size: 1000
 };
 
 export const AxiosTimeout = 15000;

@@ -31,6 +31,6 @@ export interface IRelayersListItem extends IResponseRelayerListItem {
 }
 
 export interface IResponseRelayerList {
-    items: IResponseRelayerListItem;
+    items: IResponseRelayerListItem[];
     page_info: IResponsePageInfo;
 }

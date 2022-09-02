@@ -24,40 +24,63 @@ export const useGetChannelsList = () => {
     const isHaveParams = ref<boolean>(false);
     const getChannelsList = async (params: IRequestChannelsList) => {
         const { loading } = params;
-
         if (loading) {
             loading.value = true;
             delete params.loading;
         }
-        try {
-            const result = await getChannelsListAPI({
-                ...BASE_PARAMS,
-                ...params
-            });
-            loading && (loading.value = false);
-            const { code, data, message } = result;
-            if (code === API_CODE.success) {
-                if (!params.use_count) {
-                    const { items } = data as IResponseChannelsList;
-                    channelsList.value = ChainHelper.sortByChainName(items, params.chain);
+        let allData: IResponseChannelsListItem[] = [];
+        const allParams = { ...BASE_PARAMS, ...params };
+        const getAllData = async () => {
+            try {
+                const result = await getChannelsListAPI(allParams);
+                const { code, data, message } = result;
+                if (code === API_CODE.success) {
+                    if (!allParams.use_count) {
+                        const items = (data as IResponseChannelsList).items;
+                        if (items && items.length > 0) {
+                            if (items.length < allParams.page_size) {
+                                allData = [...(allData || []), ...items];
+                                loading && (loading.value = false);
+                                channelsList.value = ChainHelper.sortByChainName(
+                                    allData,
+                                    allParams.chain
+                                );
+                            } else {
+                                allData = [...(allData || []), ...items];
+                                allParams.page_num++;
+                                getAllData();
+                            }
+                        } else {
+                            loading && (loading.value = false);
+                            channelsList.value = ChainHelper.sortByChainName(
+                                allData,
+                                allParams.chain
+                            );
+                            return;
+                        }
+                    } else {
+                        total.value = data as number;
+                    }
                 } else {
-                    total.value = data as number;
+                    loading && (loading.value = false);
+                    channelsList.value = ChainHelper.sortByChainName(allData, allParams.chain);
+                    console.error(message);
                 }
-            } else {
-                console.error(message);
+            } catch (error) {
+                if (!axiosCancel(error)) {
+                    loading && (loading.value = false);
+                }
+                channelsList.value = ChainHelper.sortByChainName(allData, allParams.chain);
+                console.error(error);
+            } finally {
+                if (!params.chain && !params.status) {
+                    isHaveParams.value = false;
+                } else {
+                    isHaveParams.value = true;
+                }
             }
-        } catch (error) {
-            if (!axiosCancel(error)) {
-                loading && (loading.value = false);
-            }
-            console.error(error);
-        } finally {
-            if (!params.chain && !params.status) {
-                isHaveParams.value = false;
-            } else {
-                isHaveParams.value = true;
-            }
-        }
+        };
+        getAllData();
     };
     getChannelsList({ ...BASE_PARAMS, use_count: true });
     const subtitle = computed(() => {
