@@ -137,7 +137,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { thousandDecimal, PAGE_PARAMETERS } from '@/constants';
+    import { thousandDecimal, PAGE_PARAMETERS, TIP_ICON } from '@/constants';
     import {
         COLUMNS,
         STATUS_OPTIONS,
@@ -153,7 +153,6 @@
     import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
-    import { TIP_ICON } from '@/constants/bjSelect';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();

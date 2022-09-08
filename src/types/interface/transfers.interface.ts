@@ -33,88 +33,181 @@ export interface IIbcTx {
     end_time: string;
     expanded?: boolean;
 }
-
-export interface IIbcTxDetail {
+interface ITxInfo {
+    addr: string;
+    chain_id: string;
+    channel_id: string;
+    port_id: string;
+    connect_id: string;
+    client_id: string;
+}
+export interface ITokenInfo {
     base_denom: string;
     base_denom_chain_id: string;
-    dc_addr: string;
-    dc_chain_id: string;
-    dc_channel: string;
-    dc_port: string;
-    denoms: IDenomTrace;
-    sc_addr: string;
-    sc_chain_id: string;
-    sc_channel: string;
-    sc_port: string;
-    sc_tx_info: {
-        hash: string;
-        status: number;
-        time: number;
-        height: number;
-        fee: {
-            amount: IAmountDenom;
-            gas: number;
-        };
-        msg_amount: {
-            denom: string;
-            amount: string;
-        };
-        msg: {
-            type: string;
-            msg: {
-                packet_id: string;
-                source_port: string;
-                source_channel: string;
-                token: IAmountDenom;
-                sender: string;
-                receiver: string;
-                timeout_height: {
-                    revision_number: number;
-                    revision_height: number;
-                };
-                timeout_timestamp: number;
-            };
-        };
+    send_token: {
+        denom: string;
+        denom_path: string;
     };
+    recv_token: {
+        denom: string;
+        denom_path: string;
+    };
+    amount: string;
+}
+export interface IIbcTxDetail {
+    sc_info: ITxInfo;
+    dc_info: ITxInfo;
     sequence: string;
     status: number;
-    tx_time: number;
-    dc_tx_info: {
-        hash?: string;
-        status?: number;
-        time?: number;
-        height?: number;
-        fee?: {
-            amount: IAmountDenom;
-            gas: number;
-        };
-        msg_amount?: {
-            denom: string;
-            amount: string;
-        };
-        msg?: {
+    token_info: ITokenInfo;
+    relayer_info: {
+        relayer_name: string;
+        sc_relayer_addr: string;
+        dc_relayer_addr: string;
+        icon: string;
+    };
+    ibc_tx_info: {
+        sc_tx_info: {
+            time: number;
+            height: number;
+            tx_hash: string;
+            status: number;
+            memo: string;
             type: string;
-            msg: {
-                packet_id: string;
-                source_port: string;
-                source_channel: string;
-                token: IAmountDenom;
-                sender: string;
-                receiver: string;
-                timeout_height: {
-                    revision_number: number;
-                    revision_height: number;
+            signers?: string[];
+            fee: {
+                amount?: {
+                    denom: string;
+                    amount: string;
                 };
+                gas?: number;
+                timeout_height: string;
                 timeout_timestamp: number;
             };
         };
+        dc_tx_info: {
+            time: number;
+            height: number;
+            tx_hash: string;
+            status: number;
+            memo: string;
+            type: string;
+            signers?: string[];
+            fee: {
+                amount?: {
+                    denom: string;
+                    amount: string;
+                };
+                gas?: number;
+                ack: string;
+                proof_height: string;
+            };
+        };
+        refund_tx_info: {
+            time: number;
+            height: number;
+            tx_hash: string;
+            status: number;
+            memo: string;
+            type: string;
+            signers?: string[];
+            fee: {
+                amount?: {
+                    denom: string;
+                    amount: string;
+                };
+                gas?: number;
+                ack?: string;
+                proof_height: string;
+                next_sequence_recv?: number;
+            };
+        };
     };
-    sc_signers: string[];
-    dc_signers: string[];
-    dc_connect: string;
-    sc_connect: string;
-    ack: string;
+    error_log: string;
+    is_list: boolean;
+    items?: object[];
 }
+// export interface IIbcTxDetail {
+//     base_denom: string;
+//     base_denom_chain_id: string;
+//     dc_addr: string;
+//     dc_chain_id: string;
+//     dc_channel: string;
+//     dc_port: string;
+//     denoms: IDenomTrace;
+//     sc_addr: string;
+//     sc_chain_id: string;
+//     sc_channel: string;
+//     sc_port: string;
+//     sc_tx_info: {
+//         hash: string;
+//         status: number;
+//         time: number;
+//         height: number;
+//         fee: {
+//             amount: IAmountDenom;
+//             gas: number;
+//         };
+//         msg_amount: {
+//             denom: string;
+//             amount: string;
+//         };
+//         msg: {
+//             type: string;
+//             msg: {
+//                 packet_id: string;
+//                 source_port: string;
+//                 source_channel: string;
+//                 token: IAmountDenom;
+//                 sender: string;
+//                 receiver: string;
+//                 timeout_height: {
+//                     revision_number: number;
+//                     revision_height: number;
+//                 };
+//                 timeout_timestamp: number;
+//             };
+//         };
+//     };
+//     sequence: string;
+//     status: number;
+//     tx_time: number;
+//     dc_tx_info: {
+//         hash?: string;
+//         status?: number;
+//         time?: number;
+//         height?: number;
+//         fee?: {
+//             amount: IAmountDenom;
+//             gas: number;
+//         };
+//         msg_amount?: {
+//             denom: string;
+//             amount: string;
+//         };
+//         msg?: {
+//             type: string;
+//             msg: {
+//                 packet_id: string;
+//                 source_port: string;
+//                 source_channel: string;
+//                 token: IAmountDenom;
+//                 sender: string;
+//                 receiver: string;
+//                 timeout_height: {
+//                     revision_number: number;
+//                     revision_height: number;
+//                 };
+//                 timeout_timestamp: number;
+//             };
+//         };
+//     };
+//     sc_signers: string[];
+//     dc_signers: string[];
+//     dc_connect: string;
+//     sc_connect: string;
+//     ack: string;
+// }
 
 export interface ITransfersDetails {
     label: string;
@@ -137,4 +230,11 @@ export interface ITransfersExpandDetails {
     isExpand: boolean;
     isAck?: boolean | undefined;
     isFormatHeight?: boolean | undefined;
+}
+
+export interface ITokenInfoList {
+    label: string;
+    dataKey?: string;
+    value: string;
+    isAmount?: boolean;
 }

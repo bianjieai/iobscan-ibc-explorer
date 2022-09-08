@@ -13,7 +13,7 @@
                 <div class="list_item__link">
                     <img
                         class="list_item__icon"
-                        :src="item.symbolIcon || tokenDefaultImg"
+                        :src="item.symbolIcon || TOKEN_DEFAULT_ICON"
                         alt="icon"
                     />
                 </div>
@@ -52,7 +52,7 @@
 <script setup lang="ts">
     import HashAddrIcon from './HashAddrIcon.vue';
     import { prefixInteger, formatNum } from '@/helper/parseStringHelper';
-    import tokenDefaultImg from '@/assets/token-default.png';
+    import { TOKEN_DEFAULT_ICON } from '@/constants';
     import expandImg from '@/assets/expand.png';
     import packUpImg from '@/assets/pack_up.png';
     import { useIsExpand } from '../composable/useTransferList';

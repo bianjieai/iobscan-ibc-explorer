@@ -29,7 +29,7 @@
                             <a-card class="menu_card">
                                 <img
                                     class="menu_card__img"
-                                    :src="item.icon ? item.icon : chainDefaultImg"
+                                    :src="item.icon ? item.icon : CHAIN_DEFAULT_ICON"
                                 />
                                 <p class="menu_card__title">{{ item.chain_name }}</p>
                                 <p class="menu_card__value">{{ formatChainID(item.chain_id) }}</p>
@@ -64,10 +64,10 @@
 
 <script setup lang="ts">
     import { useAnchors } from '../composable/useChainsListInfo';
+    import { CHAIN_DEFAULT_ICON } from '@/constants';
     import ChainHelper from '@/helper/chainHelper';
     import { IIbcChains } from '@/types/interface/index.interface';
     import { Ref } from 'vue';
-    const chainDefaultImg = new URL('../../../assets/home/chain-default.png', import.meta.url).href;
     interface IProps {
         chainList: IIbcChains;
     }

@@ -1,4 +1,8 @@
-import { ITransfersDetails, ITransfersExpandDetails } from '@/types/interface/transfers.interface';
+import {
+    ITokenInfoList,
+    ITransfersDetails,
+    ITransfersExpandDetails
+} from '@/types/interface/transfers.interface';
 export enum IBC_TX_STATUS {
     'default' = 1000, // web custom staus
     'success' = 1,
@@ -185,5 +189,35 @@ export const TRANSFERS_IN_EXPAND_DETAILS: ITransfersExpandDetails[] = [
         dataKey: 'dc_tx_info.msg.msg.proof_height',
         isExpand: true,
         isFormatHeight: true
+    }
+];
+
+// 新的 TokenInfo
+export const TOKEN_INFO_LIST: ITokenInfoList[] = [
+    {
+        label: 'Amount',
+        value: ''
+    }
+];
+export const TOKEN_INFO_LIST_EXPAND: ITokenInfoList[] = [
+    {
+        label: 'Send Token Path',
+        dataKey: 'send_token.denom_path',
+        value: ''
+    },
+    {
+        label: 'Send Token Hash',
+        dataKey: 'send_token.denom',
+        value: ''
+    },
+    {
+        label: 'Received Token Path',
+        dataKey: 'recv_token.denom_path',
+        value: ''
+    },
+    {
+        label: 'Received Token Hash',
+        dataKey: 'recv_token.denom',
+        value: ''
     }
 ];
