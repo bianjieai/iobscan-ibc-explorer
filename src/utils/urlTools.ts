@@ -42,12 +42,17 @@ export const urlParser = (url = document.location.toString()) => {
         return {};
     }
 };
-// 计算文本宽度
+// 计算文本宽度 --> TextMetrics.width 是只读属性，chain_id 长度判断时需加 Icon 长度和间距
 export const getTextWidth = (text: string, font = 'GolosUI_Medium') => {
     if (!text) return 0;
-    const canvas = document.createElement('canvas');
-    const context: any = canvas.getContext('2d');
-    font && (context.font = font);
-    const metrics = context.measureText(text);
-    return Math.ceil(metrics.width);
+    const canvas: HTMLCanvasElement = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    font && context && (context.font = font);
+    const metrics = context && context.measureText(text);
+    context && context.clearRect(0, 0, canvas.width, canvas.height);
+    return metrics && Math.ceil(metrics.width);
+};
+
+export const drawDefaultIcon = (path: string) => {
+    return new URL(`${path}`, import.meta.url).href;
 };

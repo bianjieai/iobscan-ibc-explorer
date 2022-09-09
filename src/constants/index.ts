@@ -1,9 +1,10 @@
 import { IRequestPagination } from '@/types/interface/index.interface';
+import { drawDefaultIcon } from '@/utils/urlTools';
 import { TableColumnsType } from 'ant-design-vue';
 
-export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.meta.url).href;
-export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', import.meta.url).href;
-export const TIP_ICON = new URL('../assets/tip.png', import.meta.url).href;
+export const TOKEN_DEFAULT_ICON = drawDefaultIcon('../assets/token-default.png');
+export const CHAIN_DEFAULT_ICON = drawDefaultIcon('../assets/home/chain-default.png');
+export const TIP_ICON = drawDefaultIcon('../assets/tip.png');
 
 export const menus = [
     {
@@ -390,6 +391,7 @@ export const BASE_PARAMS: IRequestPagination = {
 export const AxiosTimeout = 15000;
 
 export const CHAIN_DEFAULT_VALUE = 'allchain';
-export const TOTAL_BOUND = 500000;
 
+export const TOTAL_BOUND = 500000;
+// todo shan 待设计给出具体方案再考虑是固定值还是需要计算获取
 export const BACK_TOP_NUM = 1964;
