@@ -11,12 +11,11 @@ import {
 import { API_CODE } from '@/constants/apiCode';
 import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
-import { BASE_PARAMS, CHAIN_DEFAULT_VALUE, PAGE_PARAMETERS } from '@/constants';
+import { BASE_PARAMS, CHAIN_DEFAULT_VALUE, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON } from '@/constants';
 import { useResetSearch } from '@/composables';
 import { useRoute, useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
-import { CHAIN_ICON } from '@/constants/bjSelect';
 import { IIbcChains } from '@/types/interface/index.interface';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
@@ -129,7 +128,7 @@ export const useRelayersSelected = (
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
                     title: v.chain_name,
                     id: v.chain_id,
-                    icon: v.icon || CHAIN_ICON,
+                    icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
             }

@@ -7,7 +7,7 @@
                 <a-typography-text class="title">{{ title }}</a-typography-text>
                 <div class="background" :style="{ bottom: hasIcon ? '3px' : '-3px' }"></div>
             </div>
-            <a-typography-text class="number"
+            <a-typography-text v-if="subtitle" class="number"
                 ><i class="iconfont icon-shujuliebiao"></i>{{ subtitle }}</a-typography-text
             >
         </div>
@@ -18,7 +18,7 @@
     interface IProps {
         hasIcon?: boolean;
         title: string;
-        subtitle: string;
+        subtitle?: string;
         imgSrc?: string;
     }
 

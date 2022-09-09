@@ -19,6 +19,7 @@
             <div class="layout__footer">
                 <ibc-footer :type="footerType" />
             </div>
+            <back-to-top></back-to-top>
         </div>
         <template #renderEmpty>
             <no-datas />

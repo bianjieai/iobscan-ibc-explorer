@@ -1,4 +1,8 @@
-import { ITransfersDetails, ITransfersExpandDetails } from '@/types/interface/transfers.interface';
+import type {
+    ITokenInfoList,
+    ITransfersDetails,
+    ITransfersExpandDetails
+} from '@/types/interface/transfers.interface';
 export enum IBC_TX_STATUS {
     'default' = 1000, // web custom staus
     'success' = 1,
@@ -13,6 +17,10 @@ export enum IBC_SC_AND_DC_TX_STATUS {
     'success' = 1,
     'failed' = 0
 }
+
+// 交易详情判断是否超出最大宽度所需
+export const CHAIN_ID_ICON_WIDTH = 28;
+export const CHAIN_ID_LABEL = 'Chain ID';
 
 export const TRANSFERS_OUT_DETAILS: ITransfersDetails[] = [
     {
@@ -185,5 +193,35 @@ export const TRANSFERS_IN_EXPAND_DETAILS: ITransfersExpandDetails[] = [
         dataKey: 'dc_tx_info.msg.msg.proof_height',
         isExpand: true,
         isFormatHeight: true
+    }
+];
+
+// 新的 TokenInfo
+export const TOKEN_INFO_LIST: ITokenInfoList[] = [
+    {
+        label: 'Amount',
+        value: ''
+    }
+];
+export const TOKEN_INFO_LIST_EXPAND: ITokenInfoList[] = [
+    {
+        label: 'Send Token Path',
+        dataKey: 'send_token.denom_path',
+        value: ''
+    },
+    {
+        label: 'Send Token Hash',
+        dataKey: 'send_token.denom',
+        value: ''
+    },
+    {
+        label: 'Received Token Path',
+        dataKey: 'recv_token.denom_path',
+        value: ''
+    },
+    {
+        label: 'Received Token Hash',
+        dataKey: 'recv_token.denom',
+        value: ''
     }
 ];

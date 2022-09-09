@@ -123,7 +123,7 @@
                                 </p>
                             </div>
                         </template>
-                        <img class="tip cursor" src="../../assets/tip.png" />
+                        <img class="tip cursor" :src="TIP_ICON" />
                     </a-popover>
                     <!-- todo duanjie 看能不能复用 ResetButton -->
                     <a-button type="primary" @click="onClickReset">
@@ -199,7 +199,7 @@
                             >
                                 <img
                                     class="token__icon"
-                                    :src="record.symbolIcon || tokenDefaultImg"
+                                    :src="record.symbolIcon || TOKEN_DEFAULT_ICON"
                                 />
                                 <span class="token__info">
                                     <span class="token__info__num">{{
@@ -353,10 +353,11 @@
         txStatusNumber,
         CHAINNAME,
         CHAIN_DEFAULT_VALUE,
-        TOTAL_BOUND
+        TOTAL_BOUND,
+        CHAIN_DEFAULT_ICON,
+        TOKEN_DEFAULT_ICON,
+        TIP_ICON
     } from '@/constants';
-    import chainDefaultImg from '@/assets/home/chain-default.png';
-    import tokenDefaultImg from '@/assets/token-default.png';
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
     import { useGetIbcDenoms } from '@/views/home/composable';
@@ -374,7 +375,6 @@
     import { IIbcTx } from '@/types/interface/transfers.interface';
     import { axiosCancel } from '@/utils/axios';
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
-    import { CHAIN_ICON } from '@/constants/bjSelect';
     import { MODES } from '@/components/BjSelect/constants';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
@@ -615,10 +615,10 @@
         if (ibcChains && ibcChains.value.all) {
             const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
             if (result) {
-                return result.icon || chainDefaultImg;
+                return result.icon || CHAIN_DEFAULT_ICON;
             }
         }
-        return chainDefaultImg;
+        return CHAIN_DEFAULT_ICON;
     };
     const onClickDropdownItem = (item: any, custom: any) => {
         pagination.current = 1;
@@ -825,7 +825,7 @@
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
                     title: v.chain_name,
                     id: v.chain_id,
-                    icon: v.icon || CHAIN_ICON,
+                    icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
             }

@@ -19,7 +19,12 @@
             <div class="header_input_wrapper">
                 <header-input class="header_input_layout" disabled />
                 <div class="header_input_icon_wrapper">
-                    <a href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
+                    <a
+                        class="header_input__iobscan_io"
+                        href="https://www.iobscan.io/#/"
+                        target="_blank"
+                        rel="noreferrer noopener"
+                    >
                         <img
                             class="header_input_icon"
                             src="/src/assets/nav/iob_link.png"
