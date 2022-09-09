@@ -1,4 +1,4 @@
-import {
+import type {
     IInfoList,
     ITransfersDetails,
     ITransfersExpandDetails
@@ -17,6 +17,10 @@ export enum IBC_SC_AND_DC_TX_STATUS {
     'success' = 1,
     'failed' = 0
 }
+
+// 交易详情判断是否超出最大宽度所需
+export const CHAIN_ID_ICON_WIDTH = 28;
+export const CHAIN_ID_LABEL = 'Chain ID';
 
 export const TRANSFERS_OUT_DETAILS: ITransfersDetails[] = [
     {

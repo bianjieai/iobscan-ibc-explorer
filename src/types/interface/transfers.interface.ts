@@ -10,6 +10,10 @@ export interface IRequestIbcTxs extends IRequestPagination2 {
     start_time?: string;
 }
 
+export interface ITxStatus {
+    status: number;
+}
+
 export interface IIbcTx {
     record_id: string;
     sc_addr: string;

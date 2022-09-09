@@ -1,20 +1,14 @@
 <template>
     <div class="tx_status">
-        <span v-show="status === IBC_TX_STATUS.success" class="tx_status__icon tx_status__success">
+        <span v-show="isShowSuccess" class="tx_status__icon tx_status__success">
             <i class="iconfont icon-chenggong"></i>
             Success
         </span>
-        <span
-            v-show="status === IBC_TX_STATUS.failed || status === IBC_TX_STATUS.refund"
-            class="tx_status__icon tx_status__failed"
-        >
+        <span v-show="isShowFailed" class="tx_status__icon tx_status__failed">
             <i class="iconfont icon-shibai"></i>
             Failed
         </span>
-        <span
-            v-show="status === IBC_TX_STATUS.processing"
-            class="tx_status__icon tx_status__processing"
-        >
+        <span v-show="isShowProcessing" class="tx_status__icon tx_status__processing">
             <i class="iconfont icon-dengdai"></i>
             Processing
         </span>
@@ -22,12 +16,13 @@
 </template>
 
 <script setup lang="ts">
-    import { IBC_TX_STATUS } from '@/constants/transfers';
+    import { useJudgeStatus } from '../composable';
 
     interface IProps {
         status: number;
     }
-    defineProps<IProps>();
+    const props = defineProps<IProps>();
+    const { isShowSuccess, isShowProcessing, isShowFailed } = useJudgeStatus(props);
 </script>
 
 <style lang="less" scoped>

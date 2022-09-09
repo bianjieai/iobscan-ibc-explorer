@@ -12,8 +12,8 @@ import {
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { useIbcStatisticsChains } from '@/store';
-import { IBaseDenom } from '@/types/interface/index.interface';
-import {
+import type { IBaseDenom } from '@/types/interface/index.interface';
+import type {
     ITxInfo,
     ITokenInfo,
     IInfoList,
@@ -24,13 +24,30 @@ import {
 import moveDecimal from 'move-decimal-point';
 import { useRouter } from 'vue-router';
 
+export const useJudgeStatus = (props: Readonly<ITxStatus>) => {
+    const isShowSuccess = computed(() => {
+        return props.status === IBC_TX_STATUS.success;
+    });
+    const isShowProcessing = computed(() => {
+        return props.status === IBC_TX_STATUS.processing;
+    });
+    const isShowFailed = computed(() => {
+        return props.status === IBC_TX_STATUS.failed || props.status === IBC_TX_STATUS.refund;
+    });
+    return {
+        isShowSuccess,
+        isShowProcessing,
+        isShowFailed
+    };
+};
+
 export const useTransfersDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const router = useRouter();
     // const route = useRoute();
     // 界面所需数据
     const ibcTxStatus = ref<number>(IBC_TX_STATUS.default);
-    const errorLog = ref<string>('--');
+    const errorLog = ref<string>('No error message feedback.');
     const tokenInfo = ref<ITokenInfo>();
     const scInfo = ref<ITxInfo>();
     const dcInfo = ref<ITxInfo>();
@@ -42,9 +59,7 @@ export const useTransfersDetailsInfo = () => {
         // todo shan 需要切换到正确的参数及请求
         // const hash: string = (route?.query?.hash || '') as string;
         try {
-            const { code, data, message } = await getTxDetailsByTxHashAPI(
-                '1A3EAEFF281FDC349DCD2F38293C83B8F67C21A2AA2E65FB4C20349876DE62B4'
-            );
+            const { code, data, message } = await getTxDetailsByTxHashAPI('%7Bhash%7D?a=1');
             // const {code, data, message} = await getTxDetailsByTxHashAPI(hash);
             ibcStatisticsChainsStore.isShowLoading = false;
             if (code === API_CODE.success) {
