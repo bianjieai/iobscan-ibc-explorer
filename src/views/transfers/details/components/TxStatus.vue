@@ -2,15 +2,15 @@
     <div class="tx_status">
         <span v-show="isShowSuccess" class="tx_status__icon tx_status__success">
             <i class="iconfont icon-chenggong"></i>
-            Success
+            <span class="tx_status__text">Success</span>
         </span>
         <span v-show="isShowFailed" class="tx_status__icon tx_status__failed">
             <i class="iconfont icon-shibai"></i>
-            Failed
+            <span class="tx_status__text">Failed</span>
         </span>
         <span v-show="isShowProcessing" class="tx_status__icon tx_status__processing">
             <i class="iconfont icon-dengdai"></i>
-            Processing
+            <span class="tx_status__text">Processing</span>
         </span>
     </div>
 </template>
@@ -43,6 +43,10 @@
         &__failed {
             color: var(--bj-failed);
             background: rgba(255, 90, 90, 0.1);
+        }
+        &__text {
+            margin-left: 4px;
+            font-size: var(--bj-font-size-normal);
         }
     }
     @media screen and (max-width: 414px) {
