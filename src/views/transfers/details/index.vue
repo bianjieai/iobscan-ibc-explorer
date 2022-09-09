@@ -8,6 +8,9 @@
         <div class="info_container">
             <TxCard icon="icon-a-baseinfo" title="Base Info">
                 <TokenBaseInfo :token-info="tokenInfo"></TokenBaseInfo>
+                <div class="info_container__bottom">
+                    <ChainBaseInfo :chain-info="scInfo"></ChainBaseInfo>
+                </div>
             </TxCard>
         </div>
     </PageContainer>
@@ -18,8 +21,9 @@
     import TxTip from './components/TxTip.vue';
     import TxCard from './components/TxCard.vue';
     import TokenBaseInfo from './components/TokenBaseInfo.vue';
+    import ChainBaseInfo from './components/ChainBaseInfo.vue';
     import { useTransfersDetailsInfo } from './composable';
-    const { ibcTxStatus, errorLog, tokenInfo } = useTransfersDetailsInfo();
+    const { ibcTxStatus, errorLog, tokenInfo, scInfo } = useTransfersDetailsInfo();
 </script>
 
 <style scoped lang="less">
@@ -28,6 +32,9 @@
     }
     .info_container {
         margin-top: 6px;
+        &__bottom {
+            margin-top: 24px;
+        }
     }
     @media screen and (max-width: 414px) {
         .title_container {

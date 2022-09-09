@@ -1,12 +1,26 @@
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { TOKEN_DEFAULT_ICON } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
-import { IBC_TX_STATUS, TOKEN_INFO_LIST, TOKEN_INFO_LIST_EXPAND } from '@/constants/transfers';
+import {
+    CHAIN_ADDRESS,
+    CHAIN_INFO_LIST,
+    CHAIN_INFO_LIST_EXPAND,
+    IBC_TX_STATUS,
+    TOKEN_INFO_LIST,
+    TOKEN_INFO_LIST_EXPAND
+} from '@/constants/transfers';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { useIbcStatisticsChains } from '@/store';
 import { IBaseDenom } from '@/types/interface/index.interface';
-import { ITokenInfo, ITokenInfoList } from '@/types/interface/transfers.interface';
+import {
+    ITxInfo,
+    ITokenInfo,
+    IInfoList,
+    IRelayerInfo,
+    IUseTokenInfo,
+    IUseChainIfo
+} from '@/types/interface/transfers.interface';
 import moveDecimal from 'move-decimal-point';
 import { useRouter } from 'vue-router';
 
@@ -18,6 +32,10 @@ export const useTransfersDetailsInfo = () => {
     const ibcTxStatus = ref<number>(IBC_TX_STATUS.default);
     const errorLog = ref<string>('--');
     const tokenInfo = ref<ITokenInfo>();
+    const scInfo = ref<ITxInfo>();
+    const dcInfo = ref<ITxInfo>();
+    const relayerInfo = ref<IRelayerInfo>();
+    const sequence = ref<string>('--');
 
     const getTransferDetails = async () => {
         ibcStatisticsChainsStore.isShowLoading = true;
@@ -34,6 +52,10 @@ export const useTransfersDetailsInfo = () => {
                     ibcTxStatus.value = data.status;
                     data.error_log && (errorLog.value = data.error_log);
                     tokenInfo.value = data.token_info;
+                    scInfo.value = data.sc_info;
+                    dcInfo.value = data.dc_info;
+                    relayerInfo.value = data.relayer_info;
+                    sequence.value = data.sequence;
                 } else {
                     router.push('/transfers');
                 }
@@ -53,17 +75,34 @@ export const useTransfersDetailsInfo = () => {
         getTransferDetails,
         ibcTxStatus,
         errorLog,
-        tokenInfo
+        tokenInfo,
+        scInfo,
+        dcInfo,
+        relayerInfo,
+        sequence
     };
 };
-
+const handleTransferDetails = (item: any, infoList: any, callback?: Function) => {
+    let result: any = infoList;
+    if (item?.dataKey?.includes('.')) {
+        const keys = item.dataKey.split('.');
+        if (keys?.length) {
+            keys.forEach((key: string) => {
+                result = result[key] || result[key] === 0 ? result[key] : '';
+                item.value = result;
+            });
+        }
+        callback && callback(item);
+    } else {
+        if (item.dataKey) {
+            item.value = result[item.dataKey];
+        }
+    }
+};
 // token_info
-interface IProps {
-    tokenInfo: ITokenInfo | undefined;
-}
-export const useTokenInfo = (props: Readonly<IProps>) => {
-    const tokenInfoList = ref<ITokenInfoList[]>(TOKEN_INFO_LIST);
-    const tokenInfoListExpand = ref<ITokenInfoList[]>(TOKEN_INFO_LIST_EXPAND);
+export const useTokenInfo = (props: Readonly<IUseTokenInfo>) => {
+    const tokenInfoList = ref<IInfoList>(TOKEN_INFO_LIST);
+    const tokenInfoListExpand = ref<IInfoList[]>(TOKEN_INFO_LIST_EXPAND);
     // 是否展示 Token 缩略
     const isShowTokenDetailsInfo = ref<boolean>(false);
     const getMatchBaseDenom = async (chain_id: string, base_denom: string) => {
@@ -81,30 +120,14 @@ export const useTokenInfo = (props: Readonly<IProps>) => {
                 );
 
                 if (matchBaseDenom.value) {
-                    tokenInfoList.value[0].value = `${formatBigNumber(
+                    tokenInfoList.value.value = `${formatBigNumber(
                         moveDecimal(newTokenInfo.amount, -matchBaseDenom.value.scale),
                         undefined
                     )} ${matchBaseDenom.value.symbol || newTokenInfo.base_denom}`;
                 }
-                const handleTransferDetails = (item: any, callback?: Function) => {
-                    let result: any = newTokenInfo;
-                    if (item?.dataKey?.includes('.')) {
-                        const keys = item.dataKey.split('.');
-                        if (keys?.length) {
-                            keys.forEach((key: string) => {
-                                result = result[key] || result[key] === 0 ? result[key] : '';
-                                item.value = result;
-                            });
-                        }
-                        callback && callback(item);
-                    } else {
-                        if (item.dataKey) {
-                            item.value = result[item.dataKey];
-                        }
-                    }
-                };
+
                 tokenInfoListExpand.value.forEach((item) => {
-                    handleTransferDetails(item);
+                    handleTransferDetails(item, newTokenInfo);
                 });
             }
         }
@@ -115,9 +138,8 @@ export const useTokenInfo = (props: Readonly<IProps>) => {
     const tokenName = computed(() => {
         return matchBaseDenom.value?.symbol || props.tokenInfo?.base_denom;
     });
-
-    const expandInfo = () => {
-        isShowTokenDetailsInfo.value = !isShowTokenDetailsInfo.value;
+    const updateIsShowDetailsInfo = (newIsShow: boolean) => {
+        isShowTokenDetailsInfo.value = newIsShow;
     };
 
     return {
@@ -126,6 +148,34 @@ export const useTokenInfo = (props: Readonly<IProps>) => {
         tokenInfoList,
         tokenInfoListExpand,
         isShowTokenDetailsInfo,
-        expandInfo
+        updateIsShowDetailsInfo
+    };
+};
+
+// sc_info dc_info
+export const useChainInfo = (props: Readonly<IUseChainIfo>) => {
+    const chainAddress = ref<IInfoList>(CHAIN_ADDRESS);
+    const chainInfoList = ref<IInfoList>(CHAIN_INFO_LIST);
+    const chainInfoListExpand = ref<IInfoList[]>(CHAIN_INFO_LIST_EXPAND);
+    // 是否展示 Token 缩略
+    const isShowChainDetailsInfo = ref<boolean>(false);
+    watch(
+        () => props.chainInfo,
+        (newChainInfo) => {
+            if (newChainInfo) {
+                chainAddress.value.value = newChainInfo.address;
+                chainInfoList.value.value = newChainInfo.chain_id;
+                chainInfoListExpand.value.forEach((item) => {
+                    handleTransferDetails(item, newChainInfo);
+                });
+            }
+        }
+    );
+
+    return {
+        chainAddress,
+        chainInfoList,
+        chainInfoListExpand,
+        isShowChainDetailsInfo
     };
 };

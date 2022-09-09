@@ -1,5 +1,5 @@
 import {
-    ITokenInfoList,
+    IInfoList,
     ITransfersDetails,
     ITransfersExpandDetails
 } from '@/types/interface/transfers.interface';
@@ -193,31 +193,61 @@ export const TRANSFERS_IN_EXPAND_DETAILS: ITransfersExpandDetails[] = [
 ];
 
 // 新的 TokenInfo
-export const TOKEN_INFO_LIST: ITokenInfoList[] = [
-    {
-        label: 'Amount',
-        value: ''
-    }
-];
-export const TOKEN_INFO_LIST_EXPAND: ITokenInfoList[] = [
+export const TOKEN_INFO_LIST: IInfoList = {
+    label: 'Amount',
+    value: '--'
+};
+export const TOKEN_INFO_LIST_EXPAND: IInfoList[] = [
     {
         label: 'Send Token Path',
         dataKey: 'send_token.denom_path',
-        value: ''
+        value: '--'
     },
     {
         label: 'Send Token Hash',
         dataKey: 'send_token.denom',
-        value: ''
+        value: '--'
     },
     {
         label: 'Received Token Path',
         dataKey: 'recv_token.denom_path',
-        value: ''
+        value: '--'
     },
     {
         label: 'Received Token Hash',
         dataKey: 'recv_token.denom',
-        value: ''
+        value: '--'
+    }
+];
+
+// sc_info
+export const CHAIN_ADDRESS: IInfoList = {
+    label: 'Address',
+    value: '--'
+};
+export const CHAIN_INFO_LIST: IInfoList = {
+    label: 'Chain ID',
+    value: '--'
+};
+export const CHAIN_INFO_LIST_EXPAND: IInfoList[] = [
+    {
+        label: 'Port',
+        dataKey: 'port_id',
+        value: '--'
+    },
+    {
+        label: 'Channel ID',
+        dataKey: 'channel_id',
+        value: '--'
+    },
+    {
+        label: 'Connection ID',
+        dataKey: 'connection_id',
+        value: '--'
+    },
+    {
+        label: 'Client ID',
+        dataKey: 'client_id',
+        value: '--'
     }
 ];

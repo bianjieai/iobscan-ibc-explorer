@@ -33,13 +33,19 @@ export interface IIbcTx {
     end_time: string;
     expanded?: boolean;
 }
-interface ITxInfo {
-    addr: string;
+export interface ITxInfo {
+    address: string;
     chain_id: string;
     channel_id: string;
     port_id: string;
     connect_id: string;
     client_id: string;
+}
+export interface IRelayerInfo {
+    relayer_name: string;
+    sc_relayer_addr: string;
+    dc_relayer_addr: string;
+    icon: string;
 }
 export interface ITokenInfo {
     base_denom: string;
@@ -54,18 +60,19 @@ export interface ITokenInfo {
     };
     amount: string;
 }
+export interface IUseTokenInfo {
+    tokenInfo: ITokenInfo | undefined;
+}
+export interface IUseChainIfo {
+    chainInfo: ITxInfo | undefined;
+}
 export interface IIbcTxDetail {
     sc_info: ITxInfo;
     dc_info: ITxInfo;
     sequence: string;
     status: number;
     token_info: ITokenInfo;
-    relayer_info: {
-        relayer_name: string;
-        sc_relayer_addr: string;
-        dc_relayer_addr: string;
-        icon: string;
-    };
+    relayer_info: IRelayerInfo;
     ibc_tx_info: {
         sc_tx_info: {
             time: number;
@@ -232,9 +239,8 @@ export interface ITransfersExpandDetails {
     isFormatHeight?: boolean | undefined;
 }
 
-export interface ITokenInfoList {
+export interface IInfoList {
     label: string;
     dataKey?: string;
     value: string;
-    isAmount?: boolean;
 }
