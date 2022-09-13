@@ -129,7 +129,7 @@
             margin-left: 24px;
             width: 100%;
             font-size: var(--bj-font-size-normal);
-            color: var(--bj-text-normal);
+            color: var(--bj-text-second);
             word-break: break-all;
         }
         &__expand {

@@ -47,11 +47,10 @@
         margin-left: 8px;
         display: inline-block;
         align-items: center;
+        font-size: var(--bj-font-size-sub-title);
         color: var(--bj-primary-color);
         user-select: none;
         .copied {
-            padding-bottom: 2px;
-            font-size: var(--bj-font-size-normal);
             .text {
                 margin-left: 3px;
                 font-size: var(--bj-font-size-normal);

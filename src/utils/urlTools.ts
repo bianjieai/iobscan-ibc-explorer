@@ -53,7 +53,6 @@ export const getTextWidth = (text: string, font = 'GolosUI_Medium') => {
     context && context.clearRect(0, 0, canvas.width, canvas.height);
     return textWidth;
 };
-console.log(getTextWidth('cosmos-4'));
 
 export const drawDefaultIcon = (path: string) => {
     return new URL(`${path}`, import.meta.url).href;

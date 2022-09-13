@@ -42,7 +42,7 @@ export interface ITxInfo {
     chain_id: string;
     channel_id: string;
     port_id: string;
-    connect_id: string;
+    connection_id: string;
     client_id: string;
 }
 export interface IRelayerInfo {
@@ -64,11 +64,82 @@ export interface ITokenInfo {
     };
     amount: string;
 }
+export interface IIbcTxInfo {
+    sc_tx_info: {
+        time: number;
+        height: number;
+        tx_hash: string;
+        status: number;
+        memo: string;
+        type: string;
+        signers?: string[];
+        fee: {
+            amount?: {
+                denom: string;
+                amount: string;
+            };
+            gas?: number;
+            timeout_height: string;
+            timeout_timestamp: number;
+        };
+    };
+    dc_tx_info: {
+        time: number;
+        height: number;
+        tx_hash: string;
+        status: number;
+        memo: string;
+        type: string;
+        signers?: string[];
+        fee: {
+            amount?: {
+                denom: string;
+                amount: string;
+            };
+            gas?: number;
+            ack: string;
+            proof_height: string;
+        };
+    };
+    refund_tx_info: {
+        time: number;
+        height: number;
+        tx_hash: string;
+        status: number;
+        memo: string;
+        type: string;
+        signers?: string[];
+        fee: {
+            amount?: {
+                denom: string;
+                amount: string;
+            };
+            gas?: number;
+            ack?: string;
+            proof_height: string;
+            next_sequence_recv?: number;
+        };
+    };
+}
 export interface IUseTokenInfo {
     tokenInfo: ITokenInfo | undefined;
 }
 export interface IUseChainIfo {
     chainInfo: ITxInfo | undefined;
+}
+export interface IUseRelayer {
+    title: string;
+    relayerInfo: IRelayerInfo | undefined;
+    scInfo: ITxInfo | undefined;
+    dcInfo: ITxInfo | undefined;
+}
+export interface IUseSequence {
+    sequence: string;
+}
+export interface IUseTxImg {
+    ibcTxStatus: number;
+    ibcTxInfo: IIbcTxInfo | undefined;
+    txImg: string;
 }
 export interface IIbcTxDetail {
     sc_info: ITxInfo;
@@ -77,67 +148,12 @@ export interface IIbcTxDetail {
     status: number;
     token_info: ITokenInfo;
     relayer_info: IRelayerInfo;
-    ibc_tx_info: {
-        sc_tx_info: {
-            time: number;
-            height: number;
-            tx_hash: string;
-            status: number;
-            memo: string;
-            type: string;
-            signers?: string[];
-            fee: {
-                amount?: {
-                    denom: string;
-                    amount: string;
-                };
-                gas?: number;
-                timeout_height: string;
-                timeout_timestamp: number;
-            };
-        };
-        dc_tx_info: {
-            time: number;
-            height: number;
-            tx_hash: string;
-            status: number;
-            memo: string;
-            type: string;
-            signers?: string[];
-            fee: {
-                amount?: {
-                    denom: string;
-                    amount: string;
-                };
-                gas?: number;
-                ack: string;
-                proof_height: string;
-            };
-        };
-        refund_tx_info: {
-            time: number;
-            height: number;
-            tx_hash: string;
-            status: number;
-            memo: string;
-            type: string;
-            signers?: string[];
-            fee: {
-                amount?: {
-                    denom: string;
-                    amount: string;
-                };
-                gas?: number;
-                ack?: string;
-                proof_height: string;
-                next_sequence_recv?: number;
-            };
-        };
-    };
+    ibc_tx_info: IIbcTxInfo;
     error_log: string;
     is_list: boolean;
     items?: object[];
 }
+
 // export interface IIbcTxDetail {
 //     base_denom: string;
 //     base_denom_chain_id: string;

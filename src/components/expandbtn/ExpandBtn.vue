@@ -34,7 +34,7 @@
         &__icon {
             display: inline-block;
             margin-left: 6px;
-            font-size: 8px;
+            font-size: var(--bj-font-size-normal);
         }
         &__more {
             transform: rotate(180deg);

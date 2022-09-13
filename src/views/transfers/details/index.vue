@@ -9,7 +9,27 @@
             <TxCard icon="icon-a-baseinfo" title="Base Info">
                 <TokenBaseInfo :token-info="tokenInfo"></TokenBaseInfo>
                 <div class="info_container__bottom">
-                    <ChainBaseInfo :chain-info="scInfo"></ChainBaseInfo>
+                    <ChainBaseInfo title="From" :chain-info="scInfo"></ChainBaseInfo>
+                    <ChainProgress
+                        :ibc-tx-status="ibcTxStatus"
+                        :ibc-tx-info="ibcTxInfo"
+                        :tx-img="leftTxImg"
+                    ></ChainProgress>
+                    <div class="info_container__center">
+                        <ChainRelayer
+                            title="Relayer"
+                            :relayer-info="relayerInfo"
+                            :sc-info="scInfo"
+                            :dc-info="dcInfo"
+                        ></ChainRelayer>
+                        <ChainSequence title="Packet Sequence" :sequence="sequence"></ChainSequence>
+                    </div>
+                    <ChainProgress
+                        :ibc-tx-status="ibcTxStatus"
+                        :ibc-tx-info="ibcTxInfo"
+                        :tx-img="rightTxImg"
+                    ></ChainProgress>
+                    <ChainBaseInfo title="To" :chain-info="dcInfo"></ChainBaseInfo>
                 </div>
             </TxCard>
         </div>
@@ -22,8 +42,13 @@
     import TxCard from './components/TxCard.vue';
     import TokenBaseInfo from './components/TokenBaseInfo.vue';
     import ChainBaseInfo from './components/ChainBaseInfo.vue';
-    import { useTransfersDetailsInfo } from './composable';
-    const { ibcTxStatus, errorLog, tokenInfo, scInfo } = useTransfersDetailsInfo();
+    import ChainProgress from './components/ChainProgress.vue';
+    import ChainRelayer from './components/ChainRelayer.vue';
+    import ChainSequence from './components/ChainSequence.vue';
+    import { useIbcTxInfo, useTransfersDetailsInfo } from './composable';
+    const { ibcTxStatus, errorLog, tokenInfo, scInfo, dcInfo, relayerInfo, sequence, ibcTxInfo } =
+        useTransfersDetailsInfo();
+    const { leftTxImg, rightTxImg } = useIbcTxInfo(ibcTxStatus, ibcTxInfo);
 </script>
 
 <style scoped lang="less">
@@ -33,10 +58,24 @@
     .info_container {
         margin-top: 6px;
         &__bottom {
+            .flex(row, nowrap, space-between, flex-start);
             margin-top: 24px;
         }
     }
-    @media screen and (max-width: 414px) {
+    @media screen and (max-width: 1160px) {
+        .title_container {
+        }
+        .info_container {
+            &__bottom {
+                .flex(column, nowrap, space-between, flex-start);
+                margin-top: 24px;
+            }
+            &__center {
+                width: 100%;
+            }
+        }
+    }
+    @media screen and (max-width: 450px) {
         .title_container {
             .flex(column, nowrap, flex-start, flex-start);
         }

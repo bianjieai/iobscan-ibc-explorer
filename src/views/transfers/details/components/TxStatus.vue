@@ -49,10 +49,10 @@
             font-size: var(--bj-font-size-normal);
         }
     }
-    @media screen and (max-width: 414px) {
+    @media screen and (max-width: 450px) {
         .tx_status {
+            margin-top: 8px;
             &__icon {
-                margin-top: 8px;
                 margin-left: 0;
             }
         }

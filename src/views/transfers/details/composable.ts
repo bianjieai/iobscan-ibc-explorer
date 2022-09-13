@@ -1,11 +1,16 @@
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
-import { TOKEN_DEFAULT_ICON } from '@/constants';
+import { useMatchChainInfo } from '@/composables';
+import { CHAIN_DEFAULT_ICON, RELAYER_DEFAULT_ICON, TOKEN_DEFAULT_ICON } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import {
     CHAIN_ADDRESS,
     CHAIN_INFO_LIST,
     CHAIN_INFO_LIST_EXPAND,
+    DEFAULT_HEIGHT,
+    IBC_TX_INFO_STATUS,
     IBC_TX_STATUS,
+    RELAYER_INFO,
+    SEQUENCE_INFO,
     TOKEN_INFO_LIST,
     TOKEN_INFO_LIST_EXPAND
 } from '@/constants/transfers';
@@ -19,9 +24,15 @@ import type {
     IInfoList,
     IRelayerInfo,
     IUseTokenInfo,
-    IUseChainIfo
+    IUseChainIfo,
+    IUseSequence,
+    ITxStatus,
+    IUseRelayer,
+    IIbcTxInfo,
+    IUseTxImg
 } from '@/types/interface/transfers.interface';
 import moveDecimal from 'move-decimal-point';
+import { Ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export const useJudgeStatus = (props: Readonly<ITxStatus>) => {
@@ -53,6 +64,7 @@ export const useTransfersDetailsInfo = () => {
     const dcInfo = ref<ITxInfo>();
     const relayerInfo = ref<IRelayerInfo>();
     const sequence = ref<string>('--');
+    const ibcTxInfo = ref<IIbcTxInfo>();
 
     const getTransferDetails = async () => {
         ibcStatisticsChainsStore.isShowLoading = true;
@@ -71,6 +83,7 @@ export const useTransfersDetailsInfo = () => {
                     dcInfo.value = data.dc_info;
                     relayerInfo.value = data.relayer_info;
                     sequence.value = data.sequence;
+                    ibcTxInfo.value = data.ibc_tx_info;
                 } else {
                     router.push('/transfers');
                 }
@@ -94,7 +107,8 @@ export const useTransfersDetailsInfo = () => {
         scInfo,
         dcInfo,
         relayerInfo,
-        sequence
+        sequence,
+        ibcTxInfo
     };
 };
 const handleTransferDetails = (item: any, infoList: any, callback?: Function) => {
@@ -172,25 +186,180 @@ export const useChainInfo = (props: Readonly<IUseChainIfo>) => {
     const chainAddress = ref<IInfoList>(CHAIN_ADDRESS);
     const chainInfoList = ref<IInfoList>(CHAIN_INFO_LIST);
     const chainInfoListExpand = ref<IInfoList[]>(CHAIN_INFO_LIST_EXPAND);
+    const searchChainIcon = ref<string>(CHAIN_DEFAULT_ICON);
     // 是否展示 Token 缩略
     const isShowChainDetailsInfo = ref<boolean>(false);
     watch(
         () => props.chainInfo,
         (newChainInfo) => {
             if (newChainInfo) {
-                chainAddress.value.value = newChainInfo.address;
-                chainInfoList.value.value = newChainInfo.chain_id;
-                chainInfoListExpand.value.forEach((item) => {
-                    handleTransferDetails(item, newChainInfo);
-                });
+                chainAddress.value = {
+                    label: 'Address',
+                    value: newChainInfo.address
+                };
+                chainInfoList.value = {
+                    label: 'Chain ID',
+                    value: newChainInfo.chain_id
+                };
+                chainInfoListExpand.value = [
+                    {
+                        label: 'Port',
+                        value: newChainInfo.port_id
+                    },
+                    {
+                        label: 'Channel ID',
+                        value: newChainInfo.channel_id
+                    },
+                    {
+                        label: 'Connection ID',
+                        value: newChainInfo.connection_id
+                    },
+                    {
+                        label: 'Client ID',
+                        value: newChainInfo.client_id
+                    }
+                ];
+                const { chainIcon } = useMatchChainInfo(chainInfoList.value.value);
+                searchChainIcon.value = chainIcon.value;
             }
         }
     );
+    const updateIsShowDetailsInfo = (newIsShow: boolean) => {
+        isShowChainDetailsInfo.value = newIsShow;
+    };
 
     return {
         chainAddress,
         chainInfoList,
         chainInfoListExpand,
-        isShowChainDetailsInfo
+        isShowChainDetailsInfo,
+        searchChainIcon,
+        updateIsShowDetailsInfo
+    };
+};
+
+export const useRequenceInfo = (props: Readonly<IUseRelayer>) => {
+    const relayerInfoList = ref<IInfoList>(RELAYER_INFO);
+    const relayerIcon = ref<string>(RELAYER_DEFAULT_ICON);
+    const fromAddressInfo = ref<IInfoList>(CHAIN_ADDRESS);
+    const toAddressInfo = ref<IInfoList>(CHAIN_ADDRESS);
+    watch(
+        () => props.relayerInfo,
+        (newRelayerInfo) => {
+            if (newRelayerInfo) {
+                relayerInfoList.value.value = newRelayerInfo.relayer_name;
+                if (newRelayerInfo.icon) {
+                    relayerIcon.value = newRelayerInfo.icon;
+                }
+                fromAddressInfo.value = {
+                    label: 'Address',
+                    value: newRelayerInfo.sc_relayer_addr
+                };
+                toAddressInfo.value = {
+                    label: 'Address',
+                    value: newRelayerInfo.dc_relayer_addr
+                };
+            }
+        }
+    );
+    return {
+        relayerInfoList,
+        relayerIcon,
+        fromAddressInfo,
+        toAddressInfo
+    };
+};
+
+export const useSequenceInfo = (props: Readonly<IUseSequence>) => {
+    const sequenceInfo = ref<IInfoList>(SEQUENCE_INFO);
+    watch(
+        () => props.sequence,
+        (newSequence) => {
+            sequenceInfo.value.value = newSequence;
+        }
+    );
+    return {
+        sequenceInfo
+    };
+};
+
+export const useChainName = (fromChainId: string, toChainId: string) => {
+    const fromChainName = computed(() => {
+        const { chainName } = useMatchChainInfo(fromChainId);
+        return chainName.value;
+    });
+    const toChainName = computed(() => {
+        const { chainName } = useMatchChainInfo(toChainId);
+        return chainName.value;
+    });
+    return {
+        fromChainName,
+        toChainName
+    };
+};
+
+// ibc_tx_info
+export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo | undefined>) => {
+    const leftTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
+    const rightTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
+    watch(ibcTxStatus, (newIbcTxStatus) => {
+        console.log(newIbcTxStatus, 'newVal');
+        switch (newIbcTxStatus) {
+            case IBC_TX_STATUS.success:
+                leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                rightTxImg.value = IBC_TX_INFO_STATUS.success;
+                break;
+            case IBC_TX_STATUS.processing:
+                leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                rightTxImg.value = IBC_TX_INFO_STATUS.proccessing;
+                break;
+            case IBC_TX_STATUS.failed:
+                leftTxImg.value = IBC_TX_INFO_STATUS.failed;
+                rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
+                break;
+            case IBC_TX_STATUS.refund:
+                if (ibcTxInfo.value?.dc_tx_info.height === DEFAULT_HEIGHT.default) {
+                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                    rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
+                    break;
+                }
+                if (ibcTxInfo.value?.dc_tx_info.status === IBC_TX_STATUS.success) {
+                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                    rightTxImg.value = IBC_TX_INFO_STATUS.success;
+                    break;
+                }
+                if (
+                    ibcTxInfo.value?.dc_tx_info.status === IBC_TX_STATUS.failed &&
+                    ibcTxInfo.value?.dc_tx_info.height > DEFAULT_HEIGHT.default
+                ) {
+                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                    rightTxImg.value = IBC_TX_INFO_STATUS.failed;
+                    break;
+                }
+                break;
+        }
+    });
+    return {
+        leftTxImg,
+        rightTxImg
+    };
+};
+
+// progress
+export const useTxImg = (props: Readonly<IUseTxImg>) => {
+    const searchTxImg = computed(() => {
+        if (props.txImg !== '--') {
+            return new URL(`../../../assets/transfers/${props.txImg}.png`, import.meta.url).href;
+        }
+    });
+    const searchTxAdaptorImg = computed(() => {
+        if (props.txImg !== '--') {
+            return new URL(`../../../assets/transfers/${props.txImg}_small.png`, import.meta.url)
+                .href;
+        }
+    });
+    return {
+        searchTxImg,
+        searchTxAdaptorImg
     };
 };

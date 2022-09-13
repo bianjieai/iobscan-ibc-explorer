@@ -1,7 +1,8 @@
 import type {
     IInfoList,
     ITransfersDetails,
-    ITransfersExpandDetails
+    ITransfersExpandDetails,
+    ITxInfo
 } from '@/types/interface/transfers.interface';
 export enum IBC_TX_STATUS {
     'default' = 1000, // web custom staus
@@ -12,10 +13,8 @@ export enum IBC_TX_STATUS {
     'setting' = 5
 }
 
-export enum IBC_SC_AND_DC_TX_STATUS {
-    'default' = 1000, // web custom staus
-    'success' = 1,
-    'failed' = 0
+export enum DEFAULT_HEIGHT {
+    'default' = 0
 }
 
 // 交易详情判断是否超出最大宽度所需
@@ -255,3 +254,28 @@ export const CHAIN_INFO_LIST_EXPAND: IInfoList[] = [
         value: '--'
     }
 ];
+
+export const RELAYER_INFO: IInfoList = {
+    label: 'Name',
+    value: '--'
+};
+export const SEQUENCE_INFO: IInfoList = {
+    label: 'Number',
+    value: '--'
+};
+
+export const CHAIN_INFO: ITxInfo = {
+    address: '--',
+    chain_id: '--',
+    channel_id: '--',
+    port_id: '--',
+    connection_id: '--',
+    client_id: '--'
+};
+
+export const IBC_TX_INFO_STATUS = {
+    success: 'success',
+    failed: 'failed',
+    proccessing: 'proccessing',
+    unknown: 'unknown'
+};
