@@ -1,15 +1,19 @@
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { useMatchChainInfo } from '@/composables';
-import { CHAIN_DEFAULT_ICON, RELAYER_DEFAULT_ICON, TOKEN_DEFAULT_ICON } from '@/constants';
+import { CHAIN_DEFAULT_ICON, RELAYER_DEFAULT_ICON, TOKEN_DEFAULT_ICON, UNKNOWN } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import {
     CHAIN_ADDRESS,
+    ICON_MARGIN_RIGHT_WIDTH,
+    CHAIN_ID_LABEL,
     CHAIN_INFO_LIST,
     CHAIN_INFO_LIST_EXPAND,
     DEFAULT_HEIGHT,
     IBC_TX_INFO_STATUS,
     IBC_TX_STATUS,
+    MAX_ALLOW_WIDTH,
     RELAYER_INFO,
+    RELAYER_LABEL,
     SEQUENCE_INFO,
     TOKEN_INFO_LIST,
     TOKEN_INFO_LIST_EXPAND
@@ -31,6 +35,7 @@ import type {
     IIbcTxInfo,
     IUseTxImg
 } from '@/types/interface/transfers.interface';
+import { getTextWidth } from '@/utils/urlTools';
 import moveDecimal from 'move-decimal-point';
 import { Ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -65,6 +70,8 @@ export const useTransfersDetailsInfo = () => {
     const relayerInfo = ref<IRelayerInfo>();
     const sequence = ref<string>('--');
     const ibcTxInfo = ref<IIbcTxInfo>();
+    // 是否需要换行
+    const isFlexColumn = ref<boolean>(false);
 
     const getTransferDetails = async () => {
         ibcStatisticsChainsStore.isShowLoading = true;
@@ -99,6 +106,9 @@ export const useTransfersDetailsInfo = () => {
     onMounted(() => {
         getTransferDetails();
     });
+    const updateIsFlexColumn = (newIsFlexCoumn: boolean) => {
+        isFlexColumn.value = newIsFlexCoumn;
+    };
     return {
         getTransferDetails,
         ibcTxStatus,
@@ -108,7 +118,9 @@ export const useTransfersDetailsInfo = () => {
         dcInfo,
         relayerInfo,
         sequence,
-        ibcTxInfo
+        ibcTxInfo,
+        isFlexColumn,
+        updateIsFlexColumn
     };
 };
 const handleTransferDetails = (item: any, infoList: any, callback?: Function) => {
@@ -125,6 +137,27 @@ const handleTransferDetails = (item: any, infoList: any, callback?: Function) =>
     } else {
         if (item.dataKey) {
             item.value = result[item.dataKey];
+        }
+    }
+};
+
+const calculateTextLength = (
+    text: string,
+    emits: (e: 'updateIsFlexColumn', newIsFlexColumn: boolean) => void,
+    label?: string
+) => {
+    let textLength = getTextWidth(text);
+    if (textLength) {
+        if (label) {
+            if (label === CHAIN_ID_LABEL) {
+                textLength += ICON_MARGIN_RIGHT_WIDTH;
+            }
+            if (label === RELAYER_LABEL) {
+                textLength += ICON_MARGIN_RIGHT_WIDTH;
+            }
+        }
+        if (textLength > MAX_ALLOW_WIDTH) {
+            emits('updateIsFlexColumn', true);
         }
     }
 };
@@ -168,7 +201,9 @@ export const useTokenInfo = (props: Readonly<IUseTokenInfo>) => {
         return matchBaseDenom.value?.symbol || props.tokenInfo?.base_denom;
     });
     const updateIsShowDetailsInfo = (newIsShow: boolean) => {
-        isShowTokenDetailsInfo.value = newIsShow;
+        if (!newIsShow) {
+            isShowTokenDetailsInfo.value = newIsShow;
+        }
     };
 
     return {
@@ -182,7 +217,10 @@ export const useTokenInfo = (props: Readonly<IUseTokenInfo>) => {
 };
 
 // sc_info dc_info
-export const useChainInfo = (props: Readonly<IUseChainIfo>) => {
+export const useChainInfo = (
+    props: Readonly<IUseChainIfo>,
+    emits: (e: 'updateIsFlexColumn', newIsFlexColumn: boolean) => void
+) => {
     const chainAddress = ref<IInfoList>(CHAIN_ADDRESS);
     const chainInfoList = ref<IInfoList>(CHAIN_INFO_LIST);
     const chainInfoListExpand = ref<IInfoList[]>(CHAIN_INFO_LIST_EXPAND);
@@ -221,6 +259,10 @@ export const useChainInfo = (props: Readonly<IUseChainIfo>) => {
                 ];
                 const { chainIcon } = useMatchChainInfo(chainInfoList.value.value);
                 searchChainIcon.value = chainIcon.value;
+                calculateTextLength(chainInfoList.value.value, emits, CHAIN_ID_LABEL);
+                chainInfoListExpand.value.forEach((item) => {
+                    calculateTextLength(item.value, emits);
+                });
             }
         }
     );
@@ -238,7 +280,10 @@ export const useChainInfo = (props: Readonly<IUseChainIfo>) => {
     };
 };
 
-export const useRequenceInfo = (props: Readonly<IUseRelayer>) => {
+export const useRequenceInfo = (
+    props: Readonly<IUseRelayer>,
+    emits: (e: 'updateIsFlexColumn', newIsFlexColumn: boolean) => void
+) => {
     const relayerInfoList = ref<IInfoList>(RELAYER_INFO);
     const relayerIcon = ref<string>(RELAYER_DEFAULT_ICON);
     const fromAddressInfo = ref<IInfoList>(CHAIN_ADDRESS);
@@ -247,7 +292,9 @@ export const useRequenceInfo = (props: Readonly<IUseRelayer>) => {
         () => props.relayerInfo,
         (newRelayerInfo) => {
             if (newRelayerInfo) {
-                relayerInfoList.value.value = newRelayerInfo.relayer_name;
+                relayerInfoList.value.value = newRelayerInfo.relayer_name || UNKNOWN;
+                calculateTextLength(relayerInfoList.value.value, emits, RELAYER_LABEL);
+
                 if (newRelayerInfo.icon) {
                     relayerIcon.value = newRelayerInfo.icon;
                 }
@@ -270,12 +317,16 @@ export const useRequenceInfo = (props: Readonly<IUseRelayer>) => {
     };
 };
 
-export const useSequenceInfo = (props: Readonly<IUseSequence>) => {
+export const useSequenceInfo = (
+    props: Readonly<IUseSequence>,
+    emits: (e: 'updateIsFlexColumn', newIsFlexColumn: boolean) => void
+) => {
     const sequenceInfo = ref<IInfoList>(SEQUENCE_INFO);
     watch(
         () => props.sequence,
         (newSequence) => {
             sequenceInfo.value.value = newSequence;
+            calculateTextLength(sequenceInfo.value.value, emits);
         }
     );
     return {
@@ -303,7 +354,6 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
     const leftTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
     const rightTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
     watch(ibcTxStatus, (newIbcTxStatus) => {
-        console.log(newIbcTxStatus, 'newVal');
         switch (newIbcTxStatus) {
             case IBC_TX_STATUS.success:
                 leftTxImg.value = IBC_TX_INFO_STATUS.success;

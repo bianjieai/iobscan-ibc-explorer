@@ -18,8 +18,10 @@ export enum DEFAULT_HEIGHT {
 }
 
 // 交易详情判断是否超出最大宽度所需
-export const CHAIN_ID_ICON_WIDTH = 28;
+export const ICON_MARGIN_RIGHT_WIDTH = 28;
+export const MAX_ALLOW_WIDTH = 152;
 export const CHAIN_ID_LABEL = 'Chain ID';
+export const RELAYER_LABEL = 'Name';
 
 export const TRANSFERS_OUT_DETAILS: ITransfersDetails[] = [
     {

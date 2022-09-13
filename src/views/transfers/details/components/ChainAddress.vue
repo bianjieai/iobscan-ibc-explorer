@@ -50,7 +50,7 @@
     }
     @media screen and (max-width: 1160px) {
         .address {
-            .flex(row, nowrap, flex-start, center);
+            .flex(row, nowrap, flex-start, flex-start);
             &__label {
                 width: 140px;
             }

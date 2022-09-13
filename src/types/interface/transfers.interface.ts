@@ -125,16 +125,20 @@ export interface IUseTokenInfo {
     tokenInfo: ITokenInfo | undefined;
 }
 export interface IUseChainIfo {
+    title: string;
     chainInfo: ITxInfo | undefined;
+    isFlexColumn: boolean;
 }
 export interface IUseRelayer {
     title: string;
     relayerInfo: IRelayerInfo | undefined;
     scInfo: ITxInfo | undefined;
     dcInfo: ITxInfo | undefined;
+    isFlexColumn: boolean;
 }
 export interface IUseSequence {
     sequence: string;
+    isFlexColumn: boolean;
 }
 export interface IUseTxImg {
     ibcTxStatus: number;

@@ -9,7 +9,12 @@
             <TxCard icon="icon-a-baseinfo" title="Base Info">
                 <TokenBaseInfo :token-info="tokenInfo"></TokenBaseInfo>
                 <div class="info_container__bottom">
-                    <ChainBaseInfo title="From" :chain-info="scInfo"></ChainBaseInfo>
+                    <ChainBaseInfo
+                        title="From"
+                        :chain-info="scInfo"
+                        :is-flex-column="isFlexColumn"
+                        @update-is-flex-column="updateIsFlexColumn"
+                    ></ChainBaseInfo>
                     <ChainProgress
                         :ibc-tx-status="ibcTxStatus"
                         :ibc-tx-info="ibcTxInfo"
@@ -21,15 +26,27 @@
                             :relayer-info="relayerInfo"
                             :sc-info="scInfo"
                             :dc-info="dcInfo"
+                            :is-flex-column="isFlexColumn"
+                            @update-is-flex-column="updateIsFlexColumn"
                         ></ChainRelayer>
-                        <ChainSequence title="Packet Sequence" :sequence="sequence"></ChainSequence>
+                        <ChainSequence
+                            title="Packet Sequence"
+                            :sequence="sequence"
+                            :is-flex-column="isFlexColumn"
+                            @update-is-flex-column="updateIsFlexColumn"
+                        ></ChainSequence>
                     </div>
                     <ChainProgress
                         :ibc-tx-status="ibcTxStatus"
                         :ibc-tx-info="ibcTxInfo"
                         :tx-img="rightTxImg"
                     ></ChainProgress>
-                    <ChainBaseInfo title="To" :chain-info="dcInfo"></ChainBaseInfo>
+                    <ChainBaseInfo
+                        title="To"
+                        :chain-info="dcInfo"
+                        :is-flex-column="isFlexColumn"
+                        @update-is-flex-column="updateIsFlexColumn"
+                    ></ChainBaseInfo>
                 </div>
             </TxCard>
         </div>
@@ -46,8 +63,18 @@
     import ChainRelayer from './components/ChainRelayer.vue';
     import ChainSequence from './components/ChainSequence.vue';
     import { useIbcTxInfo, useTransfersDetailsInfo } from './composable';
-    const { ibcTxStatus, errorLog, tokenInfo, scInfo, dcInfo, relayerInfo, sequence, ibcTxInfo } =
-        useTransfersDetailsInfo();
+    const {
+        ibcTxStatus,
+        errorLog,
+        tokenInfo,
+        scInfo,
+        dcInfo,
+        relayerInfo,
+        sequence,
+        ibcTxInfo,
+        isFlexColumn,
+        updateIsFlexColumn
+    } = useTransfersDetailsInfo();
     const { leftTxImg, rightTxImg } = useIbcTxInfo(ibcTxStatus, ibcTxInfo);
 </script>
 

@@ -2,7 +2,7 @@
     <div class="relayer_info">
         <TitleCard :title="title"></TitleCard>
         <div class="relayer_info__content">
-            <div class="relayer_info__name">
+            <div class="relayer_info__name" :class="{ relayer_info__column: isFlexColumn }">
                 <span class="relayer_info__label">{{ relayerInfoList.label }}</span>
                 <span class="relayer_info__value">
                     <img :src="relayerIcon" alt="" />
@@ -33,10 +33,17 @@
         relayerInfo: IRelayerInfo | undefined;
         scInfo: ITxInfo | undefined;
         dcInfo: ITxInfo | undefined;
+        isFlexColumn: boolean;
     }
     const props = defineProps<IProps>();
+    const emits = defineEmits<{
+        (e: 'updateIsFlexColumn', newIsFlexColumn: boolean): void;
+    }>();
 
-    const { relayerInfoList, relayerIcon, fromAddressInfo, toAddressInfo } = useRequenceInfo(props);
+    const { relayerInfoList, relayerIcon, fromAddressInfo, toAddressInfo } = useRequenceInfo(
+        props,
+        emits
+    );
 </script>
 
 <style lang="less" scoped>
@@ -79,6 +86,13 @@
                 margin-top: 11px;
             }
         }
+        &__column {
+            .flex(column, nowrap, flex-start, flex-start);
+            .relayer_info__value {
+                margin-top: 2px;
+                margin-left: 0;
+            }
+        }
     }
     @media screen and (max-width: 1160px) {
         .relayer_info {
@@ -97,6 +111,13 @@
             }
             &__address {
                 &:first-child {
+                }
+            }
+            &__column {
+                .flex(row, nowrap, flex-start, center);
+                .relayer_info__value {
+                    margin-top: 0;
+                    margin-left: 24px;
                 }
             }
         }
@@ -121,6 +142,12 @@
             }
             &__address {
                 &:first-child {
+                }
+            }
+            &__column {
+                .relayer_info__value {
+                    margin-top: 2px;
+                    margin-left: 0;
                 }
             }
         }

@@ -3,7 +3,7 @@
         <TitleCard :title="title"></TitleCard>
         <div class="chain_info__details">
             <ChainAddress :chain-address="chainAddress"></ChainAddress>
-            <div class="chain_info__chain_id">
+            <div class="chain_info__chain_id" :class="{ chain_info__column: isFlexColumn }">
                 <span class="chain_info__label">{{ chainInfoList.label }}</span>
                 <span class="chain_info__value chain_info__chain_id_value">
                     <span class="chain_info__icon">
@@ -17,6 +17,7 @@
                     v-for="(item, index) in chainInfoListExpand"
                     :key="index"
                     class="chain_info__list_expand__item"
+                    :class="{ chain_info__column: isFlexColumn }"
                 >
                     <span class="chain_info__label">{{ item.label }}</span>
                     <span class="chain_info__value">{{ item.value }}</span>
@@ -50,9 +51,13 @@
     interface IProps {
         title: string;
         chainInfo: ITxInfo | undefined;
+        isFlexColumn: boolean;
     }
-    const props = defineProps<IProps>();
 
+    const props = defineProps<IProps>();
+    const emits = defineEmits<{
+        (e: 'updateIsFlexColumn', newIsFlexColumn: boolean): void;
+    }>();
     const {
         chainAddress,
         chainInfoList,
@@ -60,7 +65,7 @@
         isShowChainDetailsInfo,
         searchChainIcon,
         updateIsShowDetailsInfo
-    } = useChainInfo(props);
+    } = useChainInfo(props, emits);
 </script>
 
 <style lang="less" scoped>
@@ -94,7 +99,7 @@
             display: none;
         }
         &__list_expand__item {
-            .flex(row, nowrap, flex-start, center);
+            .flex(row, nowrap, flex-start, flex-start);
             margin-top: 16px;
         }
         &__label {
@@ -114,6 +119,13 @@
         }
         &__expand {
             display: none;
+        }
+        &__column {
+            .flex(column, nowrap, flex-start, flex-start);
+            .chain_info__value {
+                margin-top: 2px;
+                margin-left: 0;
+            }
         }
     }
     @media screen and (max-width: 1160px) {
@@ -140,6 +152,13 @@
             &__value {
             }
             &__expand {
+            }
+            &__column {
+                .flex(row, nowrap, flex-start, center);
+                .chain_info__value {
+                    margin-top: 0;
+                    margin-left: 24px;
+                }
             }
         }
     }
@@ -176,6 +195,12 @@
             }
             &__expand {
                 display: block;
+            }
+            &__column {
+                .chain_info__value {
+                    margin-top: 2px;
+                    margin-left: 0;
+                }
             }
         }
     }
