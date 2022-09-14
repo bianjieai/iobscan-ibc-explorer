@@ -1,7 +1,8 @@
 import type {
-    ITokenInfoList,
+    IInfoList,
     ITransfersDetails,
-    ITransfersExpandDetails
+    ITransfersExpandDetails,
+    ITxInfo
 } from '@/types/interface/transfers.interface';
 export enum IBC_TX_STATUS {
     'default' = 1000, // web custom staus
@@ -12,15 +13,15 @@ export enum IBC_TX_STATUS {
     'setting' = 5
 }
 
-export enum IBC_SC_AND_DC_TX_STATUS {
-    'default' = 1000, // web custom staus
-    'success' = 1,
-    'failed' = 0
+export enum DEFAULT_HEIGHT {
+    'default' = 0
 }
 
 // 交易详情判断是否超出最大宽度所需
-export const CHAIN_ID_ICON_WIDTH = 28;
+export const ICON_MARGIN_RIGHT_WIDTH = 28;
+export const MAX_ALLOW_WIDTH = 152;
 export const CHAIN_ID_LABEL = 'Chain ID';
+export const RELAYER_LABEL = 'Name';
 
 export const TRANSFERS_OUT_DETAILS: ITransfersDetails[] = [
     {
@@ -197,31 +198,86 @@ export const TRANSFERS_IN_EXPAND_DETAILS: ITransfersExpandDetails[] = [
 ];
 
 // 新的 TokenInfo
-export const TOKEN_INFO_LIST: ITokenInfoList[] = [
-    {
-        label: 'Amount',
-        value: ''
-    }
-];
-export const TOKEN_INFO_LIST_EXPAND: ITokenInfoList[] = [
+export const TOKEN_INFO_LIST: IInfoList = {
+    label: 'Amount',
+    value: '--'
+};
+export const TOKEN_INFO_LIST_EXPAND: IInfoList[] = [
     {
         label: 'Send Token Path',
         dataKey: 'send_token.denom_path',
-        value: ''
+        value: '--'
     },
     {
         label: 'Send Token Hash',
         dataKey: 'send_token.denom',
-        value: ''
+        value: '--'
     },
     {
         label: 'Received Token Path',
         dataKey: 'recv_token.denom_path',
-        value: ''
+        value: '--'
     },
     {
         label: 'Received Token Hash',
         dataKey: 'recv_token.denom',
-        value: ''
+        value: '--'
     }
 ];
+
+// sc_info
+export const CHAIN_ADDRESS: IInfoList = {
+    label: 'Address',
+    value: '--'
+};
+export const CHAIN_INFO_LIST: IInfoList = {
+    label: 'Chain ID',
+    value: '--'
+};
+export const CHAIN_INFO_LIST_EXPAND: IInfoList[] = [
+    {
+        label: 'Port',
+        dataKey: 'port_id',
+        value: '--'
+    },
+    {
+        label: 'Channel ID',
+        dataKey: 'channel_id',
+        value: '--'
+    },
+    {
+        label: 'Connection ID',
+        dataKey: 'connection_id',
+        value: '--'
+    },
+    {
+        label: 'Client ID',
+        dataKey: 'client_id',
+        value: '--'
+    }
+];
+
+export const RELAYER_INFO: IInfoList = {
+    label: 'Name',
+    value: '--'
+};
+export const SEQUENCE_INFO: IInfoList = {
+    label: 'Number',
+    value: '--'
+};
+
+export const CHAIN_INFO: ITxInfo = {
+    address: '--',
+    chain_id: '--',
+    channel_id: '--',
+    port_id: '--',
+    connection_id: '--',
+    client_id: '--'
+};
+
+export const IBC_TX_INFO_STATUS = {
+    success: 'success',
+    failed: 'failed',
+    proccessing: 'proccessing',
+    unknown: 'unknown'
+};

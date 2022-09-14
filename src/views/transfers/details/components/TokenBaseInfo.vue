@@ -12,16 +12,12 @@
                 <div class="token_info__name"> {{ tokenName }} </div>
             </router-link>
             <div class="token_info__right">
-                <div
-                    v-for="(item, index) in tokenInfoList"
-                    :key="index"
-                    class="token_info__label_value"
-                >
+                <div class="token_info__label_value">
                     <span class="token_info__label">
-                        {{ item.label }}
+                        {{ tokenInfoList.label }}
                     </span>
                     <span class="token_info__value">
-                        {{ item.value }}
+                        {{ tokenInfoList.value }}
                     </span>
                 </div>
                 <div class="token_info__label_value_wrap">
@@ -52,14 +48,11 @@
                         </span>
                     </div>
                 </div>
-                <div class="token_info__expand" @click="expandInfo">
-                    <span class="token_info__expand_btn">Click to see More</span>
-                    <i
-                        class="token_info__expand_icon iconfont icon-shouqi"
-                        :class="isShowTokenDetailsInfo ? '' : 'token_info__expand_more'"
-                    >
-                    </i>
-                </div>
+                <ExpandBtn
+                    class="token_info__expand"
+                    :is-show-details-info="isShowTokenDetailsInfo"
+                    @update-is-show-details-info="updateIsShowDetailsInfo"
+                ></ExpandBtn>
             </div>
         </div>
     </div>
@@ -79,7 +72,7 @@
         tokenInfoList,
         tokenInfoListExpand,
         isShowTokenDetailsInfo,
-        expandInfo
+        updateIsShowDetailsInfo
     } = useTokenInfo(props);
 </script>
 
@@ -136,7 +129,7 @@
             margin-left: 24px;
             width: 100%;
             font-size: var(--bj-font-size-normal);
-            color: var(--bj-text-normal);
+            color: var(--bj-text-second);
             word-break: break-all;
         }
         &__expand {
@@ -222,21 +215,6 @@
             }
             &__expand {
                 display: block;
-                margin-top: 16px;
-                font-size: var(--bj-font-size-normal);
-                font-weight: 400;
-                color: var(--bj-primary-color);
-                line-height: 14px;
-            }
-            &__expand_btn {
-            }
-            &__expand_icon {
-                display: inline-block;
-                margin-left: 6px;
-                font-size: 8px;
-            }
-            &__expand_more {
-                transform: rotate(180deg);
             }
         }
     }

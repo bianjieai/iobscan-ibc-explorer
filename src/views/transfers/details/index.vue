@@ -8,6 +8,46 @@
         <div class="info_container">
             <TxCard icon="icon-a-baseinfo" title="Base Info">
                 <TokenBaseInfo :token-info="tokenInfo"></TokenBaseInfo>
+                <div class="info_container__bottom">
+                    <ChainBaseInfo
+                        title="From"
+                        :chain-info="scInfo"
+                        :is-flex-column="isFlexColumn"
+                        @update-is-flex-column="updateIsFlexColumn"
+                    ></ChainBaseInfo>
+                    <ChainProgress
+                        :ibc-tx-status="ibcTxStatus"
+                        :ibc-tx-info="ibcTxInfo"
+                        :tx-img="leftTxImg"
+                    ></ChainProgress>
+                    <div class="info_container__center">
+                        <ChainRelayer
+                            title="Relayer"
+                            :relayer-info="relayerInfo"
+                            :sc-info="scInfo"
+                            :dc-info="dcInfo"
+                            :is-flex-column="isFlexColumn"
+                            @update-is-flex-column="updateIsFlexColumn"
+                        ></ChainRelayer>
+                        <ChainSequence
+                            title="Packet Sequence"
+                            :sequence="sequence"
+                            :is-flex-column="isFlexColumn"
+                            @update-is-flex-column="updateIsFlexColumn"
+                        ></ChainSequence>
+                    </div>
+                    <ChainProgress
+                        :ibc-tx-status="ibcTxStatus"
+                        :ibc-tx-info="ibcTxInfo"
+                        :tx-img="rightTxImg"
+                    ></ChainProgress>
+                    <ChainBaseInfo
+                        title="To"
+                        :chain-info="dcInfo"
+                        :is-flex-column="isFlexColumn"
+                        @update-is-flex-column="updateIsFlexColumn"
+                    ></ChainBaseInfo>
+                </div>
             </TxCard>
         </div>
     </PageContainer>
@@ -18,8 +58,24 @@
     import TxTip from './components/TxTip.vue';
     import TxCard from './components/TxCard.vue';
     import TokenBaseInfo from './components/TokenBaseInfo.vue';
-    import { useTransfersDetailsInfo } from './composable';
-    const { ibcTxStatus, errorLog, tokenInfo } = useTransfersDetailsInfo();
+    import ChainBaseInfo from './components/ChainBaseInfo.vue';
+    import ChainProgress from './components/ChainProgress.vue';
+    import ChainRelayer from './components/ChainRelayer.vue';
+    import ChainSequence from './components/ChainSequence.vue';
+    import { useIbcTxInfo, useTransfersDetailsInfo } from './composable';
+    const {
+        ibcTxStatus,
+        errorLog,
+        tokenInfo,
+        scInfo,
+        dcInfo,
+        relayerInfo,
+        sequence,
+        ibcTxInfo,
+        isFlexColumn,
+        updateIsFlexColumn
+    } = useTransfersDetailsInfo();
+    const { leftTxImg, rightTxImg } = useIbcTxInfo(ibcTxStatus, ibcTxInfo);
 </script>
 
 <style scoped lang="less">
@@ -28,8 +84,25 @@
     }
     .info_container {
         margin-top: 6px;
+        &__bottom {
+            .flex(row, nowrap, space-between, flex-start);
+            margin-top: 24px;
+        }
     }
-    @media screen and (max-width: 414px) {
+    @media screen and (max-width: 1160px) {
+        .title_container {
+        }
+        .info_container {
+            &__bottom {
+                .flex(column, nowrap, space-between, flex-start);
+                margin-top: 24px;
+            }
+            &__center {
+                width: 100%;
+            }
+        }
+    }
+    @media screen and (max-width: 450px) {
         .title_container {
             .flex(column, nowrap, flex-start, flex-start);
         }

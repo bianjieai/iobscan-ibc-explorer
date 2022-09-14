@@ -4,6 +4,7 @@ import { TableColumnsType } from 'ant-design-vue';
 
 export const TOKEN_DEFAULT_ICON = drawDefaultIcon('../assets/token-default.png');
 export const CHAIN_DEFAULT_ICON = drawDefaultIcon('../assets/home/chain-default.png');
+export const RELAYER_DEFAULT_ICON = drawDefaultIcon('../assets/relayers/default.png');
 export const TIP_ICON = drawDefaultIcon('../assets/tip.png');
 
 export const menus = [

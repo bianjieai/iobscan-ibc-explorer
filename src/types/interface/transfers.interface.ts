@@ -37,13 +37,19 @@ export interface IIbcTx {
     end_time: string;
     expanded?: boolean;
 }
-interface ITxInfo {
-    addr: string;
+export interface ITxInfo {
+    address: string;
     chain_id: string;
     channel_id: string;
     port_id: string;
-    connect_id: string;
+    connection_id: string;
     client_id: string;
+}
+export interface IRelayerInfo {
+    relayer_name: string;
+    sc_relayer_addr: string;
+    dc_relayer_addr: string;
+    icon: string;
 }
 export interface ITokenInfo {
     base_denom: string;
@@ -58,79 +64,100 @@ export interface ITokenInfo {
     };
     amount: string;
 }
+export interface IIbcTxInfo {
+    sc_tx_info: {
+        time: number;
+        height: number;
+        tx_hash: string;
+        status: number;
+        memo: string;
+        type: string;
+        signers?: string[];
+        fee: {
+            amount?: {
+                denom: string;
+                amount: string;
+            };
+            gas?: number;
+            timeout_height: string;
+            timeout_timestamp: number;
+        };
+    };
+    dc_tx_info: {
+        time: number;
+        height: number;
+        tx_hash: string;
+        status: number;
+        memo: string;
+        type: string;
+        signers?: string[];
+        fee: {
+            amount?: {
+                denom: string;
+                amount: string;
+            };
+            gas?: number;
+            ack: string;
+            proof_height: string;
+        };
+    };
+    refund_tx_info: {
+        time: number;
+        height: number;
+        tx_hash: string;
+        status: number;
+        memo: string;
+        type: string;
+        signers?: string[];
+        fee: {
+            amount?: {
+                denom: string;
+                amount: string;
+            };
+            gas?: number;
+            ack?: string;
+            proof_height: string;
+            next_sequence_recv?: number;
+        };
+    };
+}
+export interface IUseTokenInfo {
+    tokenInfo: ITokenInfo | undefined;
+}
+export interface IUseChainIfo {
+    title: string;
+    chainInfo: ITxInfo | undefined;
+    isFlexColumn: boolean;
+}
+export interface IUseRelayer {
+    title: string;
+    relayerInfo: IRelayerInfo | undefined;
+    scInfo: ITxInfo | undefined;
+    dcInfo: ITxInfo | undefined;
+    isFlexColumn: boolean;
+}
+export interface IUseSequence {
+    sequence: string;
+    isFlexColumn: boolean;
+}
+export interface IUseTxImg {
+    ibcTxStatus: number;
+    ibcTxInfo: IIbcTxInfo | undefined;
+    txImg: string;
+}
 export interface IIbcTxDetail {
     sc_info: ITxInfo;
     dc_info: ITxInfo;
     sequence: string;
     status: number;
     token_info: ITokenInfo;
-    relayer_info: {
-        relayer_name: string;
-        sc_relayer_addr: string;
-        dc_relayer_addr: string;
-        icon: string;
-    };
-    ibc_tx_info: {
-        sc_tx_info: {
-            time: number;
-            height: number;
-            tx_hash: string;
-            status: number;
-            memo: string;
-            type: string;
-            signers?: string[];
-            fee: {
-                amount?: {
-                    denom: string;
-                    amount: string;
-                };
-                gas?: number;
-                timeout_height: string;
-                timeout_timestamp: number;
-            };
-        };
-        dc_tx_info: {
-            time: number;
-            height: number;
-            tx_hash: string;
-            status: number;
-            memo: string;
-            type: string;
-            signers?: string[];
-            fee: {
-                amount?: {
-                    denom: string;
-                    amount: string;
-                };
-                gas?: number;
-                ack: string;
-                proof_height: string;
-            };
-        };
-        refund_tx_info: {
-            time: number;
-            height: number;
-            tx_hash: string;
-            status: number;
-            memo: string;
-            type: string;
-            signers?: string[];
-            fee: {
-                amount?: {
-                    denom: string;
-                    amount: string;
-                };
-                gas?: number;
-                ack?: string;
-                proof_height: string;
-                next_sequence_recv?: number;
-            };
-        };
-    };
+    relayer_info: IRelayerInfo;
+    ibc_tx_info: IIbcTxInfo;
     error_log: string;
     is_list: boolean;
     items?: object[];
 }
+
 // export interface IIbcTxDetail {
 //     base_denom: string;
 //     base_denom_chain_id: string;
@@ -236,9 +263,8 @@ export interface ITransfersExpandDetails {
     isFormatHeight?: boolean | undefined;
 }
 
-export interface ITokenInfoList {
+export interface IInfoList {
     label: string;
     dataKey?: string;
     value: string;
-    isAmount?: boolean;
 }

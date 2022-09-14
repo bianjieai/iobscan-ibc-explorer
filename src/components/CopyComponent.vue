@@ -44,19 +44,18 @@
 
 <style scoped lang="less">
     .copy_component_content {
-        margin-left: 7px;
+        margin-left: 8px;
         display: inline-block;
         align-items: center;
+        font-size: var(--bj-font-size-sub-title);
+        color: var(--bj-primary-color);
         user-select: none;
         .copied {
-            font-size: 14px;
-            color: rgba(151, 151, 151, 1);
-            padding-bottom: 2px;
             .text {
-                margin-left: 7px;
-                color: rgba(151, 151, 151, 1);
-                font-size: 14px;
+                margin-left: 3px;
+                font-size: var(--bj-font-size-normal);
                 font-weight: 400;
+                line-height: 18px;
             }
         }
     }
