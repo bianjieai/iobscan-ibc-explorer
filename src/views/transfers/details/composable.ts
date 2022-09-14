@@ -35,7 +35,7 @@ import type {
     IIbcTxInfo,
     IUseTxImg
 } from '@/types/interface/transfers.interface';
-import { getTextWidth } from '@/utils/urlTools';
+import { drawDefaultIcon, getTextWidth } from '@/utils/urlTools';
 import moveDecimal from 'move-decimal-point';
 import { Ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -175,7 +175,7 @@ export const useTokenInfo = (props: Readonly<IUseTokenInfo>) => {
     watch(
         () => props.tokenInfo,
         async (newTokenInfo) => {
-            if (newTokenInfo !== undefined) {
+            if (newTokenInfo) {
                 matchBaseDenom.value = await getMatchBaseDenom(
                     newTokenInfo.base_denom_chain_id,
                     newTokenInfo.base_denom
@@ -399,13 +399,12 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
 export const useTxImg = (props: Readonly<IUseTxImg>) => {
     const searchTxImg = computed(() => {
         if (props.txImg !== '--') {
-            return new URL(`../../../assets/transfers/${props.txImg}.png`, import.meta.url).href;
+            return drawDefaultIcon(`../../../assets/transfers/${props.txImg}.png`);
         }
     });
     const searchTxAdaptorImg = computed(() => {
         if (props.txImg !== '--') {
-            return new URL(`../../../assets/transfers/${props.txImg}_small.png`, import.meta.url)
-                .href;
+            return drawDefaultIcon(`../../../assets/transfers/${props.txImg}_small.png`);
         }
     });
     return {

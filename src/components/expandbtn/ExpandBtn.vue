@@ -1,10 +1,7 @@
 <template>
     <div class="expand" @click="expandInfo">
         <span class="expand__btn">Click to see More</span>
-        <i
-            class="expand__icon iconfont icon-shouqi"
-            :class="isShowDetailsInfo ? '' : 'expand__more'"
-        >
+        <i class="expand__icon iconfont icon-shouqi" :class="{ expand__more: !isShowDetailsInfo }">
         </i>
     </div>
 </template>
