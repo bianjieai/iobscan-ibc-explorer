@@ -4,10 +4,13 @@
         <div class="relayer_info__content">
             <div class="relayer_info__name" :class="{ relayer_info__column: isFlexColumn }">
                 <span class="relayer_info__label">{{ relayerInfoList.label }}</span>
-                <span class="relayer_info__value">
+                <router-link
+                    :to="`/relayers/chain=${scInfo?.chain_id},${dcInfo?.chain_id}`"
+                    class="relayer_info__value"
+                >
                     <img :src="relayerIcon" alt="" />
                     <span>{{ relayerInfoList.value }}</span>
-                </span>
+                </router-link>
             </div>
             <ChainAddress
                 class="relayer_info__address"
@@ -25,7 +28,7 @@
 
 <script setup lang="ts">
     import type { IRelayerInfo, ITxInfo } from '@/types/interface/transfers.interface';
-    import { useRequenceInfo } from '../composable';
+    import { useRelayerInfo } from '../composable';
     import TitleCard from './TitleCard.vue';
     import ChainAddress from './ChainAddress.vue';
     interface IProps {
@@ -40,7 +43,7 @@
         (e: 'updateIsFlexColumn', newIsFlexColumn: boolean): void;
     }>();
 
-    const { relayerInfoList, relayerIcon, fromAddressInfo, toAddressInfo } = useRequenceInfo(
+    const { relayerInfoList, relayerIcon, fromAddressInfo, toAddressInfo } = useRelayerInfo(
         props,
         emits
     );

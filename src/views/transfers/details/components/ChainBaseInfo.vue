@@ -5,12 +5,12 @@
             <ChainAddress :chain-address="chainAddress"></ChainAddress>
             <div class="chain_info__chain_id" :class="{ chain_info__column: isFlexColumn }">
                 <span class="chain_info__label">{{ chainInfoList.label }}</span>
-                <span class="chain_info__value chain_info__chain_id_value">
+                <router-link :to="`/chains`" class="chain_info__value chain_info__chain_id_value">
                     <span class="chain_info__icon">
                         <img :src="searchChainIcon" alt="" />
                     </span>
                     <span>{{ ChainHelper.formatChainId(chainInfoList.value) }}</span>
-                </span>
+                </router-link>
             </div>
             <div class="chain_info__list">
                 <div

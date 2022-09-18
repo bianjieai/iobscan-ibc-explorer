@@ -1,9 +1,4 @@
-import type {
-    IInfoList,
-    ITransfersDetails,
-    ITransfersExpandDetails,
-    ITxInfo
-} from '@/types/interface/transfers.interface';
+import type { IInfoList, IProgress, ITxInfo } from '@/types/interface/transfers.interface';
 export enum IBC_TX_STATUS {
     'default' = 1000, // web custom staus
     'success' = 1,
@@ -17,185 +12,28 @@ export enum DEFAULT_HEIGHT {
     'default' = 0
 }
 
+export const PROGRESS_STEP = {
+    1: 'Transfer',
+    2: 'Receive',
+    3: 'Acknowledge',
+    4: 'Timeout'
+};
+export const TRANSFER_DETAILS_STATUS = {
+    FAILED: {
+        value: 0,
+        label: 'Failed'
+    },
+    SUCCESS: {
+        value: 1,
+        label: 'Success'
+    }
+};
+
 // 交易详情判断是否超出最大宽度所需
 export const ICON_MARGIN_RIGHT_WIDTH = 28;
 export const MAX_ALLOW_WIDTH = 152;
 export const CHAIN_ID_LABEL = 'Chain ID';
 export const RELAYER_LABEL = 'Name';
-
-export const TRANSFERS_OUT_DETAILS: ITransfersDetails[] = [
-    {
-        label: 'MsgType:',
-        value: 'IBC Transfer Out'
-    },
-    {
-        label: 'Chain ID:',
-        value: '--',
-        dataKey: 'sc_chain_id',
-        isFormatChainID: true
-    },
-    {
-        label: 'Port:',
-        value: '--',
-        dataKey: 'sc_port'
-    },
-    {
-        label: 'Channel ID:',
-        value: '--',
-        dataKey: 'sc_channel',
-        isChannelID: true
-    },
-    {
-        label: 'Send Token:',
-        value: '--',
-        dataKey: 'sc_tx_info.msg_amount',
-        isFormatToken: true
-    },
-    {
-        label: 'From Address:',
-        value: '--',
-        dataKey: 'sc_tx_info.msg.msg.sender',
-        isAddress: true
-    },
-    {
-        label: 'Block:',
-        value: '--',
-        dataKey: 'sc_tx_info.height'
-    },
-    {
-        label: 'Status:',
-        value: '--',
-        dataKey: 'sc_tx_info.status',
-        isFormatStatus: true
-    },
-    {
-        label: 'Timestamp:',
-        value: '--',
-        dataKey: 'tx_time',
-        isFormatDate: true
-    },
-    {
-        label: 'Fee:',
-        value: '--',
-        dataKey: 'sc_tx_info.fee.amount',
-        isFormatFee: true
-    },
-    {
-        label: 'Signer:',
-        value: '--',
-        dataKey: 'sc_signers',
-        isAddress: true,
-        isNotLink: true
-    }
-];
-export const TRANSFERS_OUT_EXPAND_DETAILS: ITransfersExpandDetails[] = [
-    {
-        label: 'Connection:',
-        value: '--',
-        dataKey: 'sc_connect',
-        isExpand: false
-    },
-    {
-        label: 'Time Out Height:',
-        value: '--',
-        dataKey: 'sc_tx_info.msg.msg.timeout_height',
-        isExpand: false,
-        isFormatHeight: true
-    },
-    {
-        label: 'Time Out Timestamp:',
-        value: '--',
-        dataKey: 'sc_tx_info.msg.msg.timeout_timestamp',
-        isExpand: false
-    }
-];
-export const TRANSFERS_IN_DETAILS: ITransfersDetails[] = [
-    {
-        label: 'MsgType:',
-        value: 'IBC Transfer In'
-    },
-    {
-        label: 'Chain ID:',
-        value: '--',
-        dataKey: 'dc_chain_id',
-        isFormatChainID: true
-    },
-    {
-        label: 'Port:',
-        value: '--',
-        dataKey: 'dc_port'
-    },
-    {
-        label: 'Channel ID:',
-        value: '--',
-        dataKey: 'dc_channel',
-        isChannelID: true
-    },
-    {
-        label: 'Received Token:',
-        value: '--',
-        dataKey: 'dc_tx_info.msg.msg.packet.data',
-        isFormatToken: true
-    },
-    {
-        label: 'To Address:',
-        value: '--',
-        dataKey: 'sc_tx_info.msg.msg.receiver',
-        isAddress: true
-    },
-    {
-        label: 'Block:',
-        value: '--',
-        dataKey: 'dc_tx_info.height'
-    },
-    {
-        label: 'Status:',
-        value: '--',
-        dataKey: 'dc_tx_info.status',
-        isFormatStatus: true
-    },
-    {
-        label: 'Timestamp:',
-        value: '--',
-        dataKey: 'dc_tx_info.time',
-        isFormatDate: true
-    },
-    {
-        label: 'Fee:',
-        value: '--',
-        dataKey: 'dc_tx_info.fee.amount',
-        isFormatFee: true
-    },
-    {
-        label: 'Signer:',
-        value: '--',
-        dataKey: 'dc_signers',
-        isAddress: true
-    }
-];
-
-export const TRANSFERS_IN_EXPAND_DETAILS: ITransfersExpandDetails[] = [
-    {
-        label: 'Connection:',
-        value: '--',
-        dataKey: 'dc_connect',
-        isExpand: true
-    },
-    {
-        label: 'Packet Ack:',
-        value: '--',
-        dataKey: 'ack',
-        isExpand: true,
-        isAck: true
-    },
-    {
-        label: 'Proof Height:',
-        value: '--',
-        dataKey: 'dc_tx_info.msg.msg.proof_height',
-        isExpand: true,
-        isFormatHeight: true
-    }
-];
 
 // 新的 TokenInfo
 export const TOKEN_INFO_LIST: IInfoList = {
@@ -281,3 +119,175 @@ export const IBC_TX_INFO_STATUS = {
     proccessing: 'proccessing',
     unknown: 'unknown'
 };
+
+// 定义 TxProgress 所需源数据
+export const SUCCESS_ARRIVE: IProgress[] = [
+    {
+        progress: 'Transfer',
+        badge: 'From',
+        step: PROGRESS_STEP[1]
+    },
+    {
+        progress: 'Receive',
+        badge: 'To',
+        step: PROGRESS_STEP[2]
+    },
+    {
+        progress: 'Acknowledge',
+        badge: 'Result',
+        step: PROGRESS_STEP[3]
+    }
+];
+export const SUCCESS_NO_ACK: IProgress[] = [
+    {
+        progress: 'Transfer',
+        badge: 'From',
+        step: PROGRESS_STEP[1]
+    },
+    {
+        progress: 'Receive',
+        badge: 'To',
+        step: PROGRESS_STEP[2]
+    }
+];
+export const PROCCESSING_FIRST_ERROR: IProgress[] = [
+    {
+        progress: 'Transfer',
+        badge: 'From',
+        step: PROGRESS_STEP[1]
+    }
+];
+export const SECOND_ERROR: IProgress[] = [
+    {
+        progress: 'Transfer',
+        badge: 'From',
+        step: PROGRESS_STEP[1]
+    },
+    {
+        progress: 'Receive',
+        badge: 'To',
+        step: PROGRESS_STEP[2]
+    },
+    {
+        progress: 'Timeout',
+        badge: 'Result',
+        step: PROGRESS_STEP[4]
+    }
+];
+export const NO_SECOND: IProgress[] = [
+    {
+        progress: 'Transfer',
+        badge: 'From',
+        step: PROGRESS_STEP[1]
+    },
+    {
+        progress: 'Timeout',
+        badge: 'Result',
+        step: PROGRESS_STEP[4]
+    }
+];
+
+// Progress List
+export const PROGRESS_LIST: IInfoList[] = [
+    {
+        label: 'TxHash',
+        dataKey: 'tx_hash',
+        value: '--'
+    },
+    {
+        label: 'Status',
+        dataKey: 'status',
+        value: '--',
+        isFormatStatus: true
+    },
+    {
+        label: 'Fee',
+        dataKey: 'fee.amount',
+        value: '--',
+        isFormatFee: true
+    },
+    {
+        label: 'Signer',
+        dataKey: 'signers',
+        value: '--',
+        isFormatSigner: true
+    },
+    {
+        label: 'Memo',
+        dataKey: 'memo',
+        value: '--'
+    },
+    {
+        label: 'Block',
+        dataKey: 'height',
+        value: '--'
+    },
+    {
+        label: 'Timestamp',
+        dataKey: 'time',
+        value: '--',
+        isFormatTimestamp: true
+    }
+];
+
+export const PROGRESS_TRANSFER_LIST: IInfoList[] = [
+    {
+        label: 'Timeout Height',
+        dataKey: 'timeout_height',
+        value: '--'
+    },
+    {
+        label: 'Timeout Timestamp',
+        dataKey: 'timeout_timestamp',
+        value: '--',
+        isFormatTimestamp: true
+    }
+];
+export const PROGRESS_RECEIVE_LIST: IInfoList[] = [
+    {
+        label: 'Packet Ack',
+        dataKey: 'ack',
+        value: '--'
+    },
+    {
+        label: 'Proof Height',
+        dataKey: 'proof_height',
+        value: '--'
+    }
+];
+export const PROGRESS_ACKNOWLEDGE_LIST: IInfoList[] = [
+    {
+        label: 'Acknowledgement',
+        dataKey: 'ack',
+        value: '--'
+    },
+    {
+        label: 'Proof Height',
+        dataKey: 'proof_height',
+        value: '--'
+    }
+];
+export const PROGRESS_TIMEOUT_LIST: IInfoList[] = [
+    {
+        label: 'Next Sequence Recv',
+        dataKey: 'next_sequence_recv',
+        value: '--'
+    },
+    {
+        label: 'Proof Height',
+        dataKey: 'proof_height',
+        value: '--'
+    }
+];
+
+export const TRANSFER_DETAILS_TABLE = [
+    {
+        title: 'Data Name',
+        dataIndex: 'key'
+        // width: '35%'
+    },
+    {
+        title: 'Content',
+        dataIndex: 'value'
+    }
+];

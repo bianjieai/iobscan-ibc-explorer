@@ -49,6 +49,14 @@
                     ></ChainBaseInfo>
                 </div>
             </TxCard>
+            <TxCard icon="icon-Message" title="Messages">
+                <TxProgress
+                    :ibc-tx-status="ibcTxStatus"
+                    :ibc-tx-info="ibcTxInfo"
+                    :sc-info="scInfo"
+                    :dc-info="scInfo"
+                ></TxProgress>
+            </TxCard>
         </div>
     </PageContainer>
 </template>
@@ -62,6 +70,7 @@
     import ChainProgress from './components/ChainProgress.vue';
     import ChainRelayer from './components/ChainRelayer.vue';
     import ChainSequence from './components/ChainSequence.vue';
+    import TxProgress from './components/TxProgress.vue';
     import { useIbcTxInfo, useTransfersDetailsInfo } from './composable';
     const {
         ibcTxStatus,

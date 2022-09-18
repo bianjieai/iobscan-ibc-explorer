@@ -191,16 +191,7 @@ export const ibcTxStatusDesc = [
         status: 2
     }
 ];
-export const transfersDetailStatus = {
-    FAILED: {
-        value: 0,
-        label: 'Failed'
-    },
-    SUCCESS: {
-        value: 1,
-        label: 'Success'
-    }
-};
+
 export const ackConnectStatus = {
     CORRECT: 'correct',
     ERROR: 'error'
