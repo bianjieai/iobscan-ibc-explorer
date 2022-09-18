@@ -80,18 +80,6 @@ export const anchorsDatas = [
         collection: ['#']
     }
 ];
-export const chainIDs = {
-    irishub: 'irishub_1',
-    cosmoshub: 'cosmoshub_4'
-};
-export const tableChainIDs = {
-    irishub: 'irishub-1',
-    cosmoshub: 'cosmoshub-4'
-};
-export const chainAddressPrefix = {
-    irishubPrefix: 'iaa',
-    cosmoshubPrefix: 'cos'
-};
 export const statisticsName = {
     chains_24hr: 'Active IBC Chains',
     chain_all: 'All IBC Chains',
@@ -192,10 +180,6 @@ export const ibcTxStatusDesc = [
     }
 ];
 
-export const ackConnectStatus = {
-    CORRECT: 'correct',
-    ERROR: 'error'
-};
 export const channelsStatus = {
     channelOpenedStatus: '1',
     channelClosedStatus: '2'
