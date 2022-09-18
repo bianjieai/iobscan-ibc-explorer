@@ -3,13 +3,23 @@
         <TitleCard :title="title"></TitleCard>
         <div class="relayer_info__content">
             <div class="relayer_info__name" :class="{ relayer_info__column: isFlexColumn }">
-                <span class="relayer_info__label">{{ relayerInfoList.label }}</span>
+                <span class="relayer_info__label">{{ relayerScInfoList.label }}</span>
                 <router-link
                     :to="`/relayers/chain=${scInfo?.chain_id},${dcInfo?.chain_id}`"
                     class="relayer_info__value"
                 >
-                    <img :src="relayerIcon" alt="" />
-                    <span>{{ relayerInfoList.value }}</span>
+                    <img :src="relayerScIcon" alt="" />
+                    <span>{{ relayerScInfoList.value }}</span>
+                </router-link>
+            </div>
+            <div class="relayer_info__name" :class="{ relayer_info__column: isFlexColumn }">
+                <span class="relayer_info__label">{{ relayerDcInfoList.label }}</span>
+                <router-link
+                    :to="`/relayers/chain=${scInfo?.chain_id},${dcInfo?.chain_id}`"
+                    class="relayer_info__value"
+                >
+                    <img :src="relayerDcIcon" alt="" />
+                    <span>{{ relayerDcInfoList.value }}</span>
                 </router-link>
             </div>
             <ChainAddress
@@ -43,10 +53,14 @@
         (e: 'updateIsFlexColumn', newIsFlexColumn: boolean): void;
     }>();
 
-    const { relayerInfoList, relayerIcon, fromAddressInfo, toAddressInfo } = useRelayerInfo(
-        props,
-        emits
-    );
+    const {
+        relayerScInfoList,
+        relayerDcInfoList,
+        relayerScIcon,
+        relayerDcIcon,
+        fromAddressInfo,
+        toAddressInfo
+    } = useRelayerInfo(props, emits);
 </script>
 
 <style lang="less" scoped>
@@ -55,12 +69,15 @@
             margin-top: 16px;
             padding: 16px;
             width: 300px;
-            min-height: 192px;
+            min-height: 228px;
             background: #f8fafd;
             border-radius: var(--border-radius-normal);
         }
         &__name {
             .flex(row, nowrap, flex-start, center);
+            &:nth-of-type(2) {
+                margin-top: 8px;
+            }
         }
         &__label {
             width: 92px;
@@ -84,7 +101,7 @@
             }
         }
         &__address {
-            margin-top: 16px;
+            margin-top: 12px;
             &:first-child {
                 margin-top: 11px;
             }

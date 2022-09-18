@@ -49,11 +49,14 @@ export interface ITxInfo {
     connection_id: string;
     client_id: string;
 }
-export interface IRelayerInfo {
+export interface IRelayer {
     relayer_name: string;
-    sc_relayer_addr: string;
-    dc_relayer_addr: string;
+    relayer_addr: string;
     icon: string;
+}
+export interface IRelayerInfo {
+    sc_relayer: IRelayer;
+    dc_relayer: IRelayer;
 }
 export interface ITokenInfo {
     base_denom: string;

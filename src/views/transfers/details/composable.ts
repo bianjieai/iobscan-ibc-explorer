@@ -1,6 +1,6 @@
 import { getTxDetailsByTxHashAPI, getTxDetailsViewSourceByTxHashAPI } from '@/api/transfers';
 import { useMatchChainInfo } from '@/composables';
-import { CHAIN_DEFAULT_ICON, RELAYER_DEFAULT_ICON, TOKEN_DEFAULT_ICON, UNKNOWN } from '@/constants';
+import { CHAIN_DEFAULT_ICON, RELAYER_DEFAULT_ICON, TOKEN_DEFAULT_ICON } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import {
     CHAIN_ADDRESS,
@@ -314,34 +314,39 @@ export const useRelayerInfo = (
     props: Readonly<IUseRelayer>,
     emits: (e: 'updateIsFlexColumn', newIsFlexColumn: boolean) => void
 ) => {
-    const relayerInfoList = ref<IInfoList>(RELAYER_INFO);
-    const relayerIcon = ref<string>(RELAYER_DEFAULT_ICON);
+    const relayerScInfoList = ref<IInfoList>(RELAYER_INFO);
+    const relayerDcInfoList = ref<IInfoList>(RELAYER_INFO);
+    const relayerScIcon = ref<string>(RELAYER_DEFAULT_ICON);
+    const relayerDcIcon = ref<string>(RELAYER_DEFAULT_ICON);
     const fromAddressInfo = ref<IInfoList>(CHAIN_ADDRESS);
     const toAddressInfo = ref<IInfoList>(CHAIN_ADDRESS);
     watch(
         () => props.relayerInfo,
         (newRelayerInfo) => {
             if (newRelayerInfo) {
-                relayerInfoList.value.value = newRelayerInfo.relayer_name || UNKNOWN;
-                calculateTextLength(relayerInfoList.value.value, emits, RELAYER_LABEL);
+                relayerScInfoList.value.value = newRelayerInfo.sc_relayer.relayer_name;
+                relayerDcInfoList.value.value = newRelayerInfo.dc_relayer.relayer_name;
+                calculateTextLength(relayerScInfoList.value.value, emits, RELAYER_LABEL);
+                calculateTextLength(relayerDcInfoList.value.value, emits, RELAYER_LABEL);
+                relayerScIcon.value = newRelayerInfo.sc_relayer.icon || RELAYER_DEFAULT_ICON;
+                relayerDcIcon.value = newRelayerInfo.dc_relayer.icon || RELAYER_DEFAULT_ICON;
 
-                if (newRelayerInfo.icon) {
-                    relayerIcon.value = newRelayerInfo.icon;
-                }
                 fromAddressInfo.value = {
                     label: 'Address',
-                    value: newRelayerInfo.sc_relayer_addr
+                    value: newRelayerInfo.sc_relayer.relayer_addr
                 };
                 toAddressInfo.value = {
                     label: 'Address',
-                    value: newRelayerInfo.dc_relayer_addr
+                    value: newRelayerInfo.dc_relayer.relayer_addr
                 };
             }
         }
     );
     return {
-        relayerInfoList,
-        relayerIcon,
+        relayerScInfoList,
+        relayerDcInfoList,
+        relayerScIcon,
+        relayerDcIcon,
         fromAddressInfo,
         toAddressInfo
     };

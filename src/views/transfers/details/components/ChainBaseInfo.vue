@@ -72,13 +72,13 @@
     .chain_info {
         .flex(column, nowrap, flex-start, flex-start);
         width: 300px;
-        min-height: 326px;
         &__details {
             flex: 1;
             margin-top: 16px;
             padding: 16px;
             width: 100%;
             min-width: 300px;
+            min-height: 326px;
             background: #f8fafd;
             border-radius: var(--border-radius-normal);
         }
@@ -131,8 +131,8 @@
     @media screen and (max-width: 1160px) {
         .chain_info {
             width: 100%;
-            min-height: auto;
             &__details {
+                min-height: auto;
             }
             &__chain_id {
             }

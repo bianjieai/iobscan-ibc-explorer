@@ -20,6 +20,7 @@
                                     }
                                 "
                             >
+                                <!-- 更换收起扩展图片 -->
                                 <img class="view_source__table_icon" :src="tableExpand" alt="" />
                             </div>
                             <div

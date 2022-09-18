@@ -49,12 +49,33 @@
         &__value {
             flex: 1;
             margin-left: 40px;
+            word-break: break-word;
         }
         &__success {
             color: var(--bj-success);
         }
         &__failed {
             color: var(--bj-failed);
+        }
+    }
+    @media screen and (max-width: 768px) {
+        .progress_list {
+            &__item {
+                .flex(column, nowrap, flex-start, flex-start);
+                &:first-child {
+                }
+            }
+            &__label {
+                width: 100%;
+            }
+            &__value {
+                margin-top: 2;
+                margin-left: 0;
+            }
+            &__success {
+            }
+            &__failed {
+            }
         }
     }
 </style>
