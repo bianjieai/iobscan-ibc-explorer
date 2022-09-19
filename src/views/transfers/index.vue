@@ -1,9 +1,9 @@
 <template>
-    <!-- todo 页面组件重构，后续再处理 -->
-    <!-- todo duanjie class="transfer"  设置了样式，看能不能复用 PageContainer 保持统一 -->
+    <!-- todo 页面组件重构 -->
+    <!-- todo duanjie 此处使用了class="transfer"  设置了样式，看能否复用 PageContainer 保持统一 -->
     <div class="transfer">
         <div class="transfer__header">
-            <!-- todo duanjie 看能不能复用 PageTitle -->
+            <!-- todo duanjie 看能否复用 PageTitle -->
             <div class="transfer__header__container">
                 <div class="transfer__header__line">
                     <p class="transfer__header__title">
@@ -19,7 +19,7 @@
         <div class="transfer__middle relative">
             <div class="transfer__middle__top">
                 <div class="transfer__middle__left">
-                    <!-- todo duanjie 看能否使用 TokensDropDown 复用 -->
+                    <!-- todo duanjie  看能否复用 BjSelect，可参考token页面  -->
                     <drop-down
                         class="dropdown_token"
                         :ibc-base-denoms="ibcBaseDenomsSorted"
@@ -48,7 +48,7 @@
                         }"
                         @on-change="onSelectedChain"
                     />
-                    <!-- todo duanjie 看能否使用 BaseDropdown 复用  -->
+                    <!-- todo duanjie  看能否复用  BaseDropdown，可参考token页面  -->
                     <a-select
                         class="status_select"
                         default-active-first-option
@@ -150,7 +150,7 @@
                 </div>
             </div>
             <div class="transfer__middle__bottom">
-                <!-- todo duanjie 表格看能否复用  -->
+                <!-- todo duanjie 表格看能否复用 TableCommon，可参考channels页面  -->
                 <a-table
                     class="transfer__table"
                     style="width: 100%"
@@ -318,7 +318,7 @@
                 <div class="thead_border_bottom"></div>
             </div>
         </div>
-        <!-- todo duanjie 状态和分页看能否复用  -->
+        <!-- todo duanjie 如果复用了TableCommon， 状态和分页是否可以在TableCommon组件中实现，可参考channels页面  -->
         <div v-if="pagination.total" class="transfer__bottom">
             <span class="status_tips">
                 <span class="status_log">Status:</span>
