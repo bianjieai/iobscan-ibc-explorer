@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-    import { statisticsName, ibcStatisticsDenomsDefault, dayTime } from '@/constants/index';
+    import { statisticsName, ibcStatisticsDenomsDefault, dayTime } from '@/constants';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     defineProps({
         type: {

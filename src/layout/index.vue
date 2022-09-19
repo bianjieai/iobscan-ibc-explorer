@@ -1,5 +1,5 @@
 <template>
-    <a-config-provider class="bj_root">
+    <a-config-provider>
         <loading v-show="ibcStatisticsChainsStore.isShowLoading"></loading>
         <div ref="layout" class="layout">
             <div class="layout__header">
@@ -19,6 +19,7 @@
             <div class="layout__footer">
                 <ibc-footer :type="footerType" />
             </div>
+            <back-to-top></back-to-top>
         </div>
         <template #renderEmpty>
             <no-datas />
@@ -50,10 +51,6 @@
 </script>
 
 <style lang="less" scoped>
-    .bj_root {
-        flex: 1;
-        display: flex;
-    }
     :deep(.ant-pagination-item) {
         cursor: pointer;
         &-link {
@@ -61,17 +58,17 @@
         }
     }
     .layout {
+        display: flex;
+        flex-direction: column;
         width: 100%;
-        height: 100%;
+        min-height: 100vh;
+        padding-top: 80px;
         background-image: url('../assets/iobscan_home_bg.png');
         background-repeat: no-repeat;
         background-size: 1920px 396px;
         background-position: top center;
         background-color: #f5f7fc;
-        .flex(column, nowrap, flex-start, center);
-        flex: 1;
         position: relative;
-        min-height: auto;
         &__header {
             box-sizing: border-box;
             padding: 0;
@@ -86,20 +83,15 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 6;
+            z-index: 1100; // 下拉框和
         }
         &__content {
-            margin-top: 80px;
-            box-sizing: border-box;
-            .flex(column, nowrap, flex-start, center);
             flex: 1;
-            width: 100%;
+            box-sizing: border-box;
             &__router_container {
                 width: 100%;
             }
             &__error_container {
-                width: 100%;
-                height: 100%;
             }
         }
         &__footer {

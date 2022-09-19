@@ -29,7 +29,7 @@ export const COLUMNS: TableColumnsType = [
         dataIndex: 'last_updated',
         key: 'last_updated',
         title: 'Last Updated',
-        sorter: (a, b) => b.last_updated - a.last_updated,
+        sorter: (a, b) => a.last_updated - b.last_updated,
         align: 'right'
     },
     {
@@ -68,5 +68,3 @@ export const CHANNEL_STATUS = {
     OPEN: 'Open',
     CLOSED: 'Closed'
 };
-
-export const CHAIN_DEFAULT_VALUE = 'allchain';

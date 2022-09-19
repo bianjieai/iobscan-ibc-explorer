@@ -1,9 +1,9 @@
 <template>
-    <!-- todo 页面组件重构，后续再处理 -->
-    <!-- todo duanjie class="transfer"  设置了样式，看能不能复用 PageContainer 保持统一 -->
+    <!-- todo 页面组件重构 -->
+    <!-- todo duanjie 此处使用了class="transfer"  设置了样式，看能否复用 PageContainer 保持统一 -->
     <div class="transfer">
         <div class="transfer__header">
-            <!-- todo duanjie 看能不能复用 PageTitle -->
+            <!-- todo duanjie 看能否复用 PageTitle -->
             <div class="transfer__header__container">
                 <div class="transfer__header__line">
                     <p class="transfer__header__title">
@@ -19,7 +19,7 @@
         <div class="transfer__middle relative">
             <div class="transfer__middle__top">
                 <div class="transfer__middle__left">
-                    <!-- todo duanjie 看能否使用 TokensDropDown 复用 -->
+                    <!-- todo duanjie  看能否复用 BjSelect，可参考token页面  -->
                     <drop-down
                         class="dropdown_token"
                         :ibc-base-denoms="ibcBaseDenomsSorted"
@@ -38,18 +38,17 @@
                         :badges="['Transfer', 'Receive']"
                         :mode="MODES.double"
                         associate-id="allchain"
-                        :edit-model="true"
                         :input-ctn="{
                             placeholder: 'Search by Chain ID,Chain ID',
                             btnTxt: 'Confirm'
                         }"
-                        :default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
+                        :select-color-default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
                         :dropdown-props="{
                             getPopupContainer: chainGetPopupContainer
                         }"
                         @on-change="onSelectedChain"
                     />
-                    <!-- todo duanjie 看能否使用 BaseDropdown 复用  -->
+                    <!-- todo duanjie  看能否复用  BaseDropdown，可参考token页面  -->
                     <a-select
                         class="status_select"
                         default-active-first-option
@@ -124,7 +123,7 @@
                                 </p>
                             </div>
                         </template>
-                        <img class="tip cursor" src="../../assets/tip.png" />
+                        <img class="tip cursor" :src="TIP_ICON" />
                     </a-popover>
                     <!-- todo duanjie 看能不能复用 ResetButton -->
                     <a-button type="primary" @click="onClickReset">
@@ -151,7 +150,7 @@
                 </div>
             </div>
             <div class="transfer__middle__bottom">
-                <!-- todo duanjie 表格看能否复用  -->
+                <!-- todo duanjie 表格看能否复用 TableCommon，可参考channels页面  -->
                 <a-table
                     class="transfer__table"
                     style="width: 100%"
@@ -200,7 +199,7 @@
                             >
                                 <img
                                     class="token__icon"
-                                    :src="record.symbolIcon || tokenDefaultImg"
+                                    :src="record.symbolIcon || TOKEN_DEFAULT_ICON"
                                 />
                                 <span class="token__info">
                                     <span class="token__info__num">{{
@@ -319,8 +318,8 @@
                 <div class="thead_border_bottom"></div>
             </div>
         </div>
-        <!-- todo duanjie 状态和分页看能否复用  -->
-        <div v-if="tableCount" class="transfer__bottom">
+        <!-- todo duanjie 如果复用了TableCommon， 状态和分页是否可以在TableCommon组件中实现，可参考channels页面  -->
+        <div v-if="pagination.total" class="transfer__bottom">
             <span class="status_tips">
                 <span class="status_log">Status:</span>
                 <span v-for="(item, index) in ibcTxStatusDesc" :key="index" class="status_tip">
@@ -352,10 +351,13 @@
         unknownSymbol,
         // PAGE_PARAMETERS,
         txStatusNumber,
-        CHAINNAME
+        CHAINNAME,
+        CHAIN_DEFAULT_VALUE,
+        TOTAL_BOUND,
+        CHAIN_DEFAULT_ICON,
+        TOKEN_DEFAULT_ICON,
+        TIP_ICON
     } from '@/constants';
-    import chainDefaultImg from '@/assets/home/chain-default.png';
-    import tokenDefaultImg from '@/assets/token-default.png';
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
     import { useGetIbcDenoms } from '@/views/home/composable';
@@ -373,9 +375,7 @@
     import { IIbcTx } from '@/types/interface/transfers.interface';
     import { axiosCancel } from '@/utils/axios';
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
-    import { CHAIN_ICON } from '@/constants/bjSelect';
     import { MODES } from '@/components/BjSelect/constants';
-    import { CHAIN_DEFAULT_VALUE } from '@/constants/chains';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
@@ -383,8 +383,7 @@
     const { selectedSymbol, isShowSymbolIcon, clearInput, isShowChainIcon } = useSelectedSymbol();
     const { pagination } = usePagination();
     const { ibcChains } = useIbcChains();
-    const { tableColumns, showTransferLoading, tableDatas, tableCount, getIbcTxs } =
-        useGetTableColumns();
+    const { tableColumns, showTransferLoading, tableDatas, getIbcTxs } = useGetTableColumns();
     const chainDropdown = ref();
     // const selectedDouble = ref(true);
     // const needBadge = ref(true);
@@ -397,9 +396,8 @@
         startTimestamp = 0,
         endTimestamp = 0;
     const dateRange = reactive({ value: [] });
-    const maxTableLength = ref(500000);
     let isHashFilterParams = ref(false);
-    let ibcTxTotalMoreThan500k = ref(true);
+    let ibcTxTotalMoreThan500k = ref(false);
     let pageNum = 1,
         pageSize = 10;
     let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
@@ -418,7 +416,7 @@
         url += `&denom=${route.query.denom}`;
         paramsDenom = route?.query.denom;
     }
-    if (route?.query?.symbol && (route?.query?.symbol as any)?.toLowerCase() !== unknownSymbol) {
+    if (route?.query?.symbol && (route?.query?.symbol as string)?.toLowerCase() !== unknownSymbol) {
         url += `&symbol=${route.query.symbol}`;
         paramsSymbol = route?.query.symbol as string;
         watch(ibcDenoms, (newValue) => {
@@ -501,16 +499,6 @@
             symbol: queryParam.symbol,
             denom: queryParam.denom
         };
-        isHashFilterParams.value = false;
-        if (
-            !params.chain_id &&
-            !params.denom &&
-            !params.symbol &&
-            params.status === txStatusNumber.defaultStatus &&
-            isDateDefaultValue
-        ) {
-            isHashFilterParams.value = true;
-        }
 
         getIbcTxs({
             use_count: true,
@@ -519,11 +507,23 @@
             page_size: 10
         })
             .then((data) => {
-                tableCount.value = data as number;
                 pagination.total = data as number;
             })
             .catch((error) => {
                 console.log(error);
+            })
+            .finally(() => {
+                if (
+                    !params.chain_id &&
+                    !params.denom &&
+                    !params.symbol &&
+                    params.status === txStatusNumber.defaultStatus &&
+                    isDateDefaultValue
+                ) {
+                    isHashFilterParams.value = false;
+                } else {
+                    isHashFilterParams.value = true;
+                }
             });
 
         getIbcTxs({
@@ -543,6 +543,7 @@
                 console.log(error);
             });
     };
+
     queryDatas();
     const startTime = (time: any) => {
         const nowTimeDate = new Date(time);
@@ -553,16 +554,19 @@
         current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
 
     const isIbcTxTotalAndHashFilter = computed(() => {
-        if (!ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
-            return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
-        } else if (!ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
-            return `${tableCount.value} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
-        } else if (ibcTxTotalMoreThan500k.value && isHashFilterParams.value) {
+        if (ibcTxTotalMoreThan500k.value) {
+            if (isHashFilterParams.value) {
+                if (pagination.total === TOTAL_BOUND) {
+                    return 'Last 500k transfers found';
+                }
+                return `${pagination.total} of the last 500k transfers found`;
+            }
             return 'Last 500k transfers found';
-        } else if (ibcTxTotalMoreThan500k.value && !isHashFilterParams.value) {
-            return `${tableCount.value} of the last 500k transfers found`;
         } else {
-            return '';
+            if (isHashFilterParams.value) {
+                return `${pagination.total} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
+            }
+            return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
         }
     });
     const setAllChains = (ibcChains: any) => {
@@ -611,10 +615,10 @@
         if (ibcChains && ibcChains.value.all) {
             const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
             if (result) {
-                return result.icon || chainDefaultImg;
+                return result.icon || CHAIN_DEFAULT_ICON;
             }
         }
-        return chainDefaultImg;
+        return CHAIN_DEFAULT_ICON;
     };
     const onClickDropdownItem = (item: any, custom: any) => {
         pagination.current = 1;
@@ -821,7 +825,7 @@
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
                     title: v.chain_name,
                     id: v.chain_id,
-                    icon: v.icon || CHAIN_ICON,
+                    icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
             }
@@ -878,10 +882,11 @@
     };
 
     watch(ibcStatisticsTxs, (newValue) => {
-        if (newValue?.tx_all?.count < maxTableLength.value) {
+        if (newValue?.tx_all?.count <= TOTAL_BOUND) {
             ibcTxTotalMoreThan500k.value = false;
+        } else {
+            ibcTxTotalMoreThan500k.value = true;
         }
-        ibcTxTotalMoreThan500k.value = true;
     });
 </script>
 
@@ -1071,8 +1076,8 @@
                 }
             }
             & :deep(.table_pagination) {
-                text-align: right;
                 li {
+                    margin-bottom: 8px;
                     width: initial;
                     height: 24px;
                     min-width: 24px;
@@ -1144,6 +1149,9 @@
         margin-right: 8px;
         width: 250px;
         height: 36px;
+        &:hover {
+            border-color: var(--bj-primary-color);
+        }
         :deep(.ant-picker-input > input) {
             color: var(--bj-primary-color);
             text-align: center;
@@ -1204,28 +1212,6 @@
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
-                }
-                :deep(.ant-table-content) {
-                    &::-webkit-scrollbar {
-                        height: 4px;
-                    }
-
-                    &::-webkit-scrollbar-track {
-                        box-shadow: inset006pxrgba(0, 0, 0, 0.3);
-                        border-radius: 2px;
-                        height: 6px;
-                        background: rgba(61, 80, 255, 0.1);
-                    }
-
-                    &::-webkit-scrollbar-thumb {
-                        border-radius: 4px;
-                        box-shadow: inset006pxrgba(0, 0, 0, 0.5);
-                        background: rgba(61, 80, 255, 0.5);
-                    }
-
-                    &::-webkit-scrollbar-thumb:window-inactive {
-                        background: rgba(61, 80, 255, 0.9);
-                    }
                 }
                 :deep(table) {
                     width: 1200px;

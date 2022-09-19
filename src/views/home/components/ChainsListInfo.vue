@@ -15,7 +15,7 @@
                 v-show="isHaveData"
                 id="card_list"
                 ref="scrollListRef"
-                class="card_list ibc_scrollbar"
+                class="card_list"
                 :grid="{ gutter: 16, xs: 1, sm: 2, md: 3, lg: 4, xl: 4, xxl: 4 }"
                 :data-source="sortChainList[currentMenu[0]]"
             >
@@ -29,7 +29,7 @@
                             <a-card class="menu_card">
                                 <img
                                     class="menu_card__img"
-                                    :src="item.icon ? item.icon : chainDefaultImg"
+                                    :src="item.icon ? item.icon : CHAIN_DEFAULT_ICON"
                                 />
                                 <p class="menu_card__title">{{ item.chain_name }}</p>
                                 <p class="menu_card__value">{{ formatChainID(item.chain_id) }}</p>
@@ -44,7 +44,7 @@
                     v-for="item of anchors"
                     :id="`a-link${item.title}`"
                     :key="item.title"
-                    class="list_anchor__item"
+                    class="list_anchor__item cursor"
                     @click="onClickAnchor(item.title)"
                 >
                     <div class="custom_title">
@@ -64,10 +64,10 @@
 
 <script setup lang="ts">
     import { useAnchors } from '../composable/useChainsListInfo';
+    import { CHAIN_DEFAULT_ICON } from '@/constants';
     import ChainHelper from '@/helper/chainHelper';
     import { IIbcChains } from '@/types/interface/index.interface';
     import { Ref } from 'vue';
-    const chainDefaultImg = new URL('../../../assets/home/chain-default.png', import.meta.url).href;
     interface IProps {
         chainList: IIbcChains;
     }
@@ -130,7 +130,7 @@
             }
         }
         &__bottom {
-            margin-top: 8px;
+            margin-top: 16px;
             width: 100%;
             .flex(row, nowrap, flex-start, flex-start);
         }
@@ -180,7 +180,7 @@
             &__value {
                 margin: 4px 0 6px;
                 font-size: var(--bj-font-size-normal);
-                line-height: 16px;
+                line-height: 17px;
                 font-weight: 400;
                 color: var(--bj-font-color-65);
                 word-break: break-all;
@@ -216,6 +216,7 @@
         }
         .nodatas {
             margin: 0;
+            padding-right: 0;
             &__icon {
                 width: 120px;
                 margin-top: 24px;

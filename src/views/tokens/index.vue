@@ -14,7 +14,7 @@
                     btnTxt: 'Confirm',
                     icon: TIP_ICON
                 }"
-                :default-val="TOKEN_DEFAULT_VALUE"
+                :select-color-default-val="TOKEN_DEFAULT_VALUE"
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
                 }"
@@ -30,7 +30,7 @@
                     placeholder: 'Search by Chain ID',
                     btnTxt: 'Confirm'
                 }"
-                :default-val="CHAIN_DEFAULT_VALUE"
+                :select-color-default-val="CHAIN_DEFAULT_VALUE"
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
                 }"
@@ -137,7 +137,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { thousandDecimal, PAGE_PARAMETERS } from '@/constants';
+    import { thousandDecimal, PAGE_PARAMETERS, TIP_ICON } from '@/constants';
     import {
         COLUMNS,
         STATUS_OPTIONS,
@@ -147,56 +147,32 @@
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
     import {
         useGetTokenList,
-        useTokensQuery,
         useTokensSelected,
-        useTokensRef,
-        useSubTitleComputed,
         useTokensColumnJump
     } from '@/views/tokens/composable';
     import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
-    import { TIP_ICON } from '@/constants/bjSelect';
 
     const { loading } = useLoading();
-    const { chainIdQuery, denomQuery, statusQuery } = useTokensQuery();
     const { ibcChains } = useIbcChains();
-    const {
-        ibcBaseDenoms,
-        ibcBaseDenomsSorted,
-        // ibcBaseDenomsSymbolKeyMapGetter,
-        getIbcBaseDenom,
-        getBaseDenomInfoByDenom
-    } = useGetIbcDenoms();
-    const { tokensList, getTokensList, total } = useGetTokenList();
+    const { ibcBaseDenoms, ibcBaseDenomsSorted, getIbcBaseDenom, getBaseDenomInfoByDenom } =
+        useGetIbcDenoms();
+    const { tokensList, getTokensList, subtitle } = useGetTokenList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.tokens);
     const {
-        searchChain,
-        searchDenom,
-        searchStatus,
+        chainDropdown,
+        statusDropdown,
+        tokensDropdown,
         onSelectedToken,
         onSelectedChain,
         onSelectedStatus,
         tokenData,
-        chainData
-    } = useTokensSelected(
-        denomQuery,
-        chainIdQuery,
-        statusQuery,
-        getTokensList,
-        getIbcBaseDenom,
-        loading,
-        ibcBaseDenomsSorted,
-        ibcChains
-    );
-    const { chainDropdown, statusDropdown, tokensDropdown } = useTokensRef();
-    const { subtitle } = useSubTitleComputed(
-        searchChain,
+        chainData,
         searchDenom,
-        searchStatus,
-        total,
-        tokensList
-    );
+        searchChain,
+        statusQuery
+    } = useTokensSelected(ibcBaseDenomsSorted, ibcChains, getTokensList, getIbcBaseDenom, loading);
     const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
         useTokensColumnJump(getBaseDenomInfoByDenom);
 

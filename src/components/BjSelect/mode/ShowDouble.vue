@@ -2,24 +2,24 @@
     <div class="chain_wrap">
         <div class="mr-8 ml-8" :class="showInputClass[0]">
             <img
-                v-if="!hideIcon && doubleSelectItems[0]?.icon?.length"
+                v-if="!hideIcon && selectItems[0]?.icon?.length"
                 width="18"
                 height="18"
                 class="mr-4"
-                :src="doubleSelectItems[0]?.icon"
+                :src="selectItems[0]?.icon"
             />
-            {{ doubleSelectItems[0]?.title || placeholders?.[0] }}
+            {{ selectItems[0]?.title || placeholders?.[0] }}
         </div>
         <div>-</div>
         <div class="mr-8 ml-8" :class="showInputClass[1]">
             <img
-                v-if="!hideIcon && doubleSelectItems[1]?.icon?.length"
+                v-if="!hideIcon && selectItems[1]?.icon?.length"
                 width="18"
                 height="18"
                 class="mr-4"
-                :src="doubleSelectItems[1]?.icon"
+                :src="selectItems[1]?.icon"
             />
-            {{ doubleSelectItems[1]?.title || placeholders?.[1] }}
+            {{ selectItems[1]?.title || placeholders?.[1] }}
         </div>
     </div>
 </template>
@@ -28,17 +28,17 @@
     import { IDataItem, TDenom } from '../interface';
     interface TProps {
         visible: boolean;
-        doubleSelectItems: any; // IDataItem[]
+        selectItems: any; // IDataItem[]
         placeholders?: [string, string];
         hideIcon?: boolean;
-        defaultVal?: string | number | (string | number)[];
+        selectColorDefaultVal?: string | number | (string | number)[];
     }
 
     const props = withDefaults(defineProps<TProps>(), {
-        doubleSelectItems: () => []
+        selectItems: () => []
     });
 
-    const { visible, placeholders, doubleSelectItems, defaultVal } = toRefs(props);
+    const { visible, placeholders, selectItems, selectColorDefaultVal } = toRefs(props);
 
     const getClassStr = (selectVal: IDataItem, vals: TDenom[]) => {
         // 没有选择时，展开为 selected_color__third，关闭为 selected_color__default
@@ -55,14 +55,14 @@
     const showInputClass = computed(() => {
         const res: string[] = [];
         const vals =
-            defaultVal?.value !== undefined
-                ? Array.isArray(defaultVal.value)
-                    ? defaultVal.value
-                    : [defaultVal.value]
+            selectColorDefaultVal?.value !== undefined
+                ? Array.isArray(selectColorDefaultVal.value)
+                    ? selectColorDefaultVal.value
+                    : [selectColorDefaultVal.value]
                 : [];
 
-        res[0] = getClassStr(doubleSelectItems.value[0], vals);
-        res[1] = getClassStr(doubleSelectItems.value[1], vals);
+        res[0] = getClassStr(selectItems.value[0], vals);
+        res[1] = getClassStr(selectItems.value[1], vals);
 
         return res;
     });
@@ -75,6 +75,7 @@
     }
     .selected_color {
         color: var(--bj-primary-color);
+        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         padding-left: 8px;

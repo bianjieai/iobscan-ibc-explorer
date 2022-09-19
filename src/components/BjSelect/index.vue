@@ -16,25 +16,24 @@
                 <show-base
                     :visible="visible"
                     :select-items="selectItems"
-                    :input-items="inputItems"
                     :placeholder="placeholder"
                     :hide-icon="hideIcon"
                     :mode="props.mode"
-                    :default-val="defaultVal"
+                    :select-color-default-val="selectColorDefaultVal"
                 />
             </template>
             <!--            多选单选的展示 end-->
-            <!--            多选单选的展示 start-->
+            <!--            只选择两个时候的展示 start-->
             <template v-else>
                 <show-double
                     :visible="visible"
-                    :double-select-items="doubleSelectItems"
+                    :select-items="selectItems"
                     :placeholders="props.placeholders"
                     :hide-icon="hideIcon"
-                    :default-val="defaultVal"
+                    :select-color-default-val="selectColorDefaultVal"
                 />
             </template>
-            <!--            多选单选的展示 end-->
+            <!--            只选择两个时候的展示 end-->
             <span class="button_icon flex justify-between items-center">
                 <i
                     :class="[visible ? 'visible_color' : '']"
@@ -47,11 +46,10 @@
         </div>
 
         <template #overlay>
-            <div class="overlay ibc_scrollbar">
+            <div class="overlay">
                 <div
                     v-for="(group, ind) in props.data"
                     :key="group.groupName"
-                    class="relative"
                     :class="[group.groupName ? 'mb-20' : 'mb-12']"
                 >
                     <div v-if="group.groupName" class="flex items-center">
@@ -74,43 +72,50 @@
                             />
                         </a-popover>
                     </div>
-                    <div
-                        :class="{
-                            top_shadow: !isBoundary[ind]?.top
-                        }"
-                    ></div>
-                    <div class="chains_wrap ibc_scrollbar">
+                    <div class="relative">
                         <div
-                            v-for="item in group?.children"
-                            :key="item.id"
-                            :class="[
-                                'chains_tag',
-                                'cursor',
-                                {
-                                    'visible_color visible_border selected': isSelected(item.id),
-                                    disabled: item.disabled
-                                }
-                            ]"
-                            @click="onSelected(item)"
-                        >
-                            <img
-                                v-if="item?.icon"
-                                :src="item.icon"
-                                width="24"
-                                height="24"
-                                class="mr-8"
-                            />
-                            <span class="symbol">{{ item.title }}</span>
-                            <div v-if="badges && getBadgeStr(item.id)" class="chains_tag__badge">
-                                {{ getBadgeStr(item.id) }}
+                            :class="{
+                                top_shadow: isBoundary[ind]?.top
+                            }"
+                        ></div>
+                        <div class="chains_wrap ibc_scrollbar">
+                            <div
+                                v-for="item in group?.children"
+                                :key="item.id"
+                                :class="[
+                                    'chains_tag',
+                                    'cursor',
+                                    {
+                                        'visible_color visible_border selected': isSelected(
+                                            item.id
+                                        ),
+                                        disabled: item.disabled
+                                    }
+                                ]"
+                                @click="onSelected(item)"
+                            >
+                                <img
+                                    v-if="item?.icon"
+                                    :src="item.icon"
+                                    width="24"
+                                    height="24"
+                                    class="mr-8"
+                                />
+                                <span class="symbol">{{ item.title }}</span>
+                                <div
+                                    v-if="badges && getBadgeStr(item.id)"
+                                    class="chains_tag__badge"
+                                >
+                                    {{ getBadgeStr(item.id) }}
+                                </div>
                             </div>
                         </div>
+                        <div
+                            :class="{
+                                bottom_shadow: isBoundary[ind]?.bottom
+                            }"
+                        ></div>
                     </div>
-                    <div
-                        :class="{
-                            bottom_shadow: !isBoundary[ind]?.bottom
-                        }"
-                    ></div>
                 </div>
                 <div v-if="inputCtn" class="mt-24">
                     <div v-if="inputCtn?.title" class="flex items-center">
@@ -152,35 +157,22 @@
 </template>
 <script lang="ts" setup>
     import { DropdownProps } from 'ant-design-vue/es/dropdown';
-    import { IDataItem, TDenom } from './interface';
+    import { IDataItem, TDenom, TData } from './interface';
     import { useInit } from './composable';
-    import { getValByMode, closeByMode, inputItemsByMode } from './helper';
+    import { getValByMode, closeByMode, inputItemsByMode, getLastArrs } from './helper';
     import { MODES } from './constants';
 
     /**
      * defineProps 使用外部引入的interface或者type会报错
      */
-    export interface TProps {
-        data: {
-            groupName?: string;
-            icon?: string;
-            tooltips?: string;
-            children?: {
-                id: number | string;
-                title: string;
-                icon?: string;
-                disabled?: boolean;
-                tooltips?: string;
-                doubleTime?: boolean;
-                metaData?: any;
-            }[];
-        }[];
-        defaultVal?: string | number | (string | number)[];
+    export interface IProps {
+        data: TData;
+        // ux交互：选中时候展示default颜色。
+        selectColorDefaultVal?: string | number | (string | number)[];
         value?: string | number | (string | number)[];
         mode?: MODES.multiple | MODES.double;
         placeholder?: string;
         hideIcon?: boolean;
-        editModel?: boolean; // 修改时候是否展示框变化，默认false
         associateId?: string | number; // 双选时候，input输入时候一个值时候，另外展示的值
         badges?: [string, string];
         placeholders?: [string, string];
@@ -194,44 +186,36 @@
         dropdownProps?: DropdownProps;
     }
 
-    const props = withDefaults(defineProps<TProps>(), {
-        data: () => [],
-        editModel: false
+    const props = withDefaults(defineProps<IProps>(), {
+        data: () => []
     });
 
-    const { inputCtn, placeholder, hideIcon, badges, defaultVal, dropdownProps } = { ...props };
+    const { inputCtn, placeholder, hideIcon, badges, selectColorDefaultVal, dropdownProps } = {
+        ...props
+    };
 
-    const { visible, selectItems, tokenInput, inputItems, flatData, resetVal } = useInit(props);
+    const { visible, selectItems, tokenInput, flatData, resetVal } = useInit(props);
 
     // 是否选中
     const isSelected = (val: TDenom) => selectItems.value.some((v) => v.id === val);
 
     // 获取badges
     const getBadgeStr = (val: TDenom) => {
-        const isDouble = doubleSelectItems.value.filter((v) => v.id === val)?.length === 2;
+        const isDouble = selectItems.value.filter((v) => v.id === val)?.length === 2;
 
         if (isDouble) {
             return props.badges!.join('-');
         }
 
-        const index = doubleSelectItems.value.findIndex((v) => v.id === val);
+        const index = selectItems.value.findIndex((v) => v.id === val);
         if (index !== -1) {
             return props.badges![index];
         }
     };
 
-    // 目前多选和输入互斥，只选择其中一个
-    const doubleSelectItems = computed(() => {
-        return [...inputItems.value, ...selectItems.value];
-    });
-
-    defineExpose({
-        selectItems,
-        tokenInput
-    });
-
     const emit = defineEmits<{
-        (e: 'onChange', res: IDataItem | IDataItem[]): void;
+        // (e: 'onChange', res?: IDataItem | IDataItem[]): void;
+        (e: 'onChange', res: any): void;
     }>();
 
     /**
@@ -240,7 +224,6 @@
      */
     const sumbitTokens = (selectData: IDataItem[], close = false) => {
         let res = getValByMode(selectData, props.mode);
-
         if (
             props.mode !== MODES.double ||
             (props.mode === MODES.double && selectData.length === 2)
@@ -254,36 +237,19 @@
 
     // 确认confirm时候
     const confirmChains = () => {
-        let res: IDataItem[] = [];
-        inputItems.value = inputItemsByMode(tokenInput.value, props);
+        const inputItems = inputItemsByMode(tokenInput.value, props.mode);
 
-        switch (props.mode) {
-            // 多选时候都输出
-            case MODES.multiple:
-                res = [...inputItems.value, ...selectItems.value];
-                break;
-            // 只选择两个时候
-            case MODES.double:
-                res = [...inputItems.value, ...selectItems.value].slice(0, 2);
-                // 如果确定时候，输入为空时候需要填充
-                if (inputItems.value.length === 0) {
-                    const matchItem: IDataItem | undefined = flatData.value.find(
-                        (v) => v.id === props.associateId
-                    );
+        // 双选时候，如果选择框没有值时候希望填充
+        if (props.mode === MODES.double && inputItems.length === 0) {
+            const matchItem: IDataItem | undefined = flatData.value.find(
+                (v) => v.id === props.associateId
+            );
 
-                    if (matchItem) {
-                        res = [matchItem, matchItem];
-                    }
-                }
-                break;
-            default:
-                // 单选时候，清空选择框
-                selectItems.value = [];
-                res = [...inputItems.value];
-                break;
+            if (matchItem) {
+                selectItems.value = [matchItem, matchItem];
+            }
         }
-
-        sumbitTokens(res, true);
+        sumbitTokens(selectItems.value, true);
     };
 
     // 监听滚动
@@ -296,24 +262,22 @@
     const eleRef = ref();
     const scrollFn = (visible: boolean) => {
         if (visible) {
+            isBoundary.value = [];
+            // 加上延迟是因为，打开之后就直接返回visible了，但是收起来之后才会返回visible。
             setTimeout(() => {
                 eleRef.value = document.querySelectorAll('.chains_wrap');
-                isBoundary.value = [];
                 Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement, ind: number) => {
-                    isBoundary.value[ind] = {
-                        top: true,
-                        bottom: true
-                    };
+                    isBoundary.value[ind] = {};
                     ele.addEventListener('scroll', () => {
-                        isBoundary.value[ind].top = ele.scrollTop === 0;
+                        isBoundary.value[ind].top = ele.scrollTop !== 0;
                         if (ele.scrollHeight === ele.scrollTop + ele.clientHeight) {
-                            isBoundary.value[ind].bottom = true;
-                        } else {
                             isBoundary.value[ind].bottom = false;
+                        } else {
+                            isBoundary.value[ind].bottom = true;
                         }
                     });
                 });
-            });
+            }, 600);
         } else {
             Array.prototype.forEach.call(eleRef.value, (ele: HTMLElement) => {
                 ele.removeEventListener('scroll', () => {});
@@ -330,22 +294,35 @@
     };
 
     const onInputChange = () => {
-        // 选两个时候，清空选择框
-        if (props.mode === MODES.double) {
-            selectItems.value = [];
-        }
-        // 修改时候是否展示框变化
-        if (props.editModel) {
-            inputItems.value = inputItemsByMode(tokenInput.value, props);
-            // 如果输入的只有一个值，选中all，这里作为配置项传进来。
-            if (inputItems.value.length === 1) {
-                const matchItem = flatData.value.find((v) => v.id === props.associateId);
+        let res: IDataItem[] = [];
+        const inputItems = inputItemsByMode(tokenInput.value, props.mode);
 
-                if (matchItem) {
-                    selectItems.value = [matchItem as IDataItem];
+        switch (props.mode) {
+            // 多选时候都输出
+            case MODES.multiple:
+                res = getLastArrs([...selectItems.value, ...inputItems]);
+                break;
+            // 只选择两个时候
+            case MODES.double:
+                // 输入框作为选择项
+                res = getLastArrs(inputItems).slice(0, 2);
+                const matchItem = flatData.value.find((v) => v.id === props.associateId);
+                // 填充选项，选中all，这里作为配置项传进来。
+                if (inputItems.length === 1) {
+                    if (matchItem) {
+                        res = [...inputItems, matchItem] as IDataItem[];
+                    }
+                } else if (inputItems.length === 0) {
+                    res = [matchItem, matchItem] as IDataItem[];
                 }
-            }
+                break;
+            default:
+                // 单选时候，清空选择框
+                res = getLastArrs(inputItems);
+                break;
         }
+
+        selectItems.value = res;
     };
 
     const onSelected = (item: IDataItem) => {
@@ -355,7 +332,7 @@
 
         selectByMode();
 
-        sumbitTokens([...inputItems.value, ...selectItems.value]);
+        sumbitTokens(selectItems.value);
 
         // 写成内联函数形式，只是为了减少onSelected主体代码。
         function selectByMode() {
@@ -372,12 +349,11 @@
                             ...selectItems.value.slice(index + 1)
                         ];
                     }
-                    return;
+                    break;
                 // 只选择两个时候, 清空input, 超过两个重选
                 case MODES.double:
-                    if (inputItems.value.length + selectItems.value.length >= 2) {
+                    if (selectItems.value.length >= 2) {
                         selectItems.value = [item];
-                        inputItems.value = [];
                         tokenInput.value = '';
                     } else {
                         index = selectItems.value.findIndex((v) => v.id === item.id);
@@ -386,11 +362,11 @@
                             selectItems.value.push(item);
                         }
                     }
-                    return;
+                    break;
                 default:
                     // 单选时候，选择和输入只能有一个，所以清除input输入
                     selectItems.value = [item];
-                    inputItems.value = [];
+                    tokenInput.value = '';
             }
         }
     };
@@ -403,8 +379,9 @@
         height: 30px;
         pointer-events: none;
         z-index: 1;
-        box-shadow: inset 0 10px 8px -8px #00000026;
-        margin-top: -10px;
+        background: linear-gradient(180deg, rgba(17, 22, 77, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+        // box-shadow: inset 0 10px 8px -8px #00000026;
+        // margin-top: -10px;
     }
     .bottom_shadow {
         position: absolute;
@@ -429,7 +406,7 @@
         transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
         padding: 0 2px;
         border-left: 1px solid var(--bj-border-color);
-        height: 36px;
+        height: 34px;
 
         .iconfont {
             font-size: 18px;
@@ -448,6 +425,9 @@
 
     .default_color {
         color: var(--bj-text-second);
+        &:hover {
+            border-color: var(--bj-primary-color);
+        }
     }
 
     .multiple {

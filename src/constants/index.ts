@@ -1,5 +1,11 @@
 import { IRequestPagination } from '@/types/interface/index.interface';
+import { drawDefaultIcon } from '@/utils/urlTools';
 import { TableColumnsType } from 'ant-design-vue';
+
+export const TOKEN_DEFAULT_ICON = drawDefaultIcon('../assets/token-default.png');
+export const CHAIN_DEFAULT_ICON = drawDefaultIcon('../assets/home/chain-default.png');
+export const RELAYER_DEFAULT_ICON = drawDefaultIcon('../assets/relayers/default.png');
+export const TIP_ICON = drawDefaultIcon('../assets/tip.png');
 
 export const menus = [
     {
@@ -326,7 +332,7 @@ export const SYMBOL = {
     IRIS: 'IRIS'
 };
 
-export const COPYRIGHT = 'Copyright © 2022 IRIS Foundation Ltd. All Rights Reserved.';
+export const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan Ltd. All Rights Reserved.`;
 export const ICON_LINK = [
     {
         iconName: 'icon-github',
@@ -380,7 +386,13 @@ export const NEED_CUSTOM_COLUMN = {
 export const BASE_PARAMS: IRequestPagination = {
     use_count: false,
     page_num: 1,
-    page_size: 10
+    page_size: 1000
 };
 
 export const AxiosTimeout = 15000;
+
+export const CHAIN_DEFAULT_VALUE = 'allchain';
+
+export const TOTAL_BOUND = 500000;
+// todo shan 待设计给出具体方案再考虑是固定值还是需要计算获取
+export const BACK_TOP_NUM = 1964;

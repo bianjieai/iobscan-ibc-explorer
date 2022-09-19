@@ -3,18 +3,6 @@
         class="flex flex-1 overflow-auto flex-wrap text-center mr-8 ml-8 justify-center items-center"
         :class="showInputClass"
     >
-        <!--        输入的渲染-->
-        <div
-            v-for="item in inputItems"
-            :key="item.id"
-            class="flex items-center"
-            :class="{ multiple: props.mode === MODES.multiple }"
-        >
-            <span class="selected_info_title" :title="item.title">{{
-                getRestString(item.title, 4, 4)
-            }}</span>
-        </div>
-        <!--        选择的渲染-->
         <div
             v-for="item in selectItems"
             :key="item.id"
@@ -28,10 +16,12 @@
                 class="mr-4"
                 :src="item.icon"
             />
-            <span class="selected_info_title" :title="item.title">{{ item.title }}</span>
+            <span class="selected_info_title" :title="item.title">{{
+                !item.inputFlag ? item.title : getRestString(item.title, 4, 4)
+            }}</span>
         </div>
         <!--        都没有选的时候展示，类似placeholder-->
-        <div v-if="!inputItems.length && !selectItems.length">
+        <div v-if="!selectItems.length">
             <span class="selected_info_title">{{ placeholder }}</span>
         </div>
     </div>
@@ -47,37 +37,32 @@
     interface TProps {
         visible: boolean;
         selectItems: any; // IDataItem[]
-        inputItems: any; // IDataItem[]
         placeholder?: string;
         mode: ModeType;
         hideIcon?: boolean;
-        defaultVal?: string | number | (string | number)[];
+        selectColorDefaultVal?: string | number | (string | number)[];
     }
 
     const props = withDefaults(defineProps<TProps>(), {
-        selectItems: () => [],
-        inputItems: () => []
+        selectItems: () => []
     });
 
-    const { visible, selectItems, inputItems, placeholder, hideIcon, defaultVal } = toRefs(props);
+    const { visible, selectItems, placeholder, hideIcon, selectColorDefaultVal } = toRefs(props);
 
     const showInputClass = computed(() => {
         const vals =
-            defaultVal?.value !== undefined
-                ? Array.isArray(defaultVal.value)
-                    ? defaultVal.value
-                    : [defaultVal.value]
+            selectColorDefaultVal?.value !== undefined
+                ? Array.isArray(selectColorDefaultVal.value)
+                    ? selectColorDefaultVal.value
+                    : [selectColorDefaultVal.value]
                 : [];
         // 没有选择时，展开为 selected_color__third，关闭为 selected_color__default
         // 选择的时候，包含默认值时候 selected_color__default，非默认值高亮 selected_color
-        if (!selectItems.value.length && !inputItems.value.length) {
+        if (!selectItems.value.length) {
             return visible.value ? 'selected_color__third' : 'selected_color__default';
         }
 
-        // const selectData = [...selectItems.value, ...inputItems.value];
-        const includeDefault =
-            selectItems.value.some((v: IDataItem) => vals.includes(v.id)) ||
-            inputItems.value.some((v: IDataItem) => vals.includes(v.id));
+        const includeDefault = selectItems.value.some((v: IDataItem) => vals.includes(v.id));
 
         return includeDefault ? 'selected_color__default' : 'selected_color';
     });
@@ -93,8 +78,9 @@
 
     .selected_color {
         color: var(--bj-primary-color);
-        //overflow: hidden;
-        //text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
         padding-left: 8px;
         //max-width: 118px;
         &__default {

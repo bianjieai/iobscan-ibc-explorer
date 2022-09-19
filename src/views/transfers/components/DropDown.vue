@@ -53,7 +53,7 @@
                                 top_shadow: !isBoundary?.[0]?.top
                             }"
                         ></div>
-                        <div class="overlay__item__content ibc_scrollbar chains_wrap">
+                        <div class="overlay__item__content chains_wrap">
                             <template v-for="item in ibcBaseDenoms" :key="item.denom">
                                 <div
                                     class="content_item cursor"
@@ -66,7 +66,7 @@
                                 >
                                     <img
                                         class="content_item__icon"
-                                        :src="item.icon || tokenDefaultImg"
+                                        :src="item.icon || TOKEN_DEFAULT_ICON"
                                     />
                                     <span class="content_item__title">{{ item?.symbol }}</span>
                                 </div>
@@ -83,7 +83,7 @@
                         <h2 class="overlay__item__title">Other IBC Tokens</h2>
                         <div class="overlay__item__content">
                             <div class="content_item cursor" @click="onClickItem(unAuthed)">
-                                <img class="content_item__icon" :src="tokenDefaultImg" />
+                                <img class="content_item__icon" :src="TOKEN_DEFAULT_ICON" />
                                 <span class="content_item__title">Others</span>
                             </div>
                         </div>
@@ -101,11 +101,7 @@
                                         </p>
                                     </div>
                                 </template>
-                                <img
-                                    class="tip cursor"
-                                    style="margin-left: 8px"
-                                    src="/src/assets/tip.png"
-                                />
+                                <img class="tip cursor" style="margin-left: 8px" :src="TIP_ICON" />
                             </a-popover>
                         </h2>
                         <div class="overlay__item__content">
@@ -128,23 +124,35 @@
     import { rmIbcPrefix } from '@/helper/parseStringHelper';
     import { useFindIcon, useIsVisible } from '@/views/transfers/composable';
     import { ref, watch } from 'vue';
-    import { defaultTitle, unAuthed } from '@/constants';
-    const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
-    const props = defineProps({
-        ibcBaseDenoms: {
-            type: Array,
-            default: () => []
-        },
-        selectedSymbol: {
-            type: String,
-            default: ''
-        },
-        clearInput: {
-            type: Number,
-            required: true
-        },
-        showIcon: Boolean
-    });
+    import { defaultTitle, unAuthed, TOKEN_DEFAULT_ICON, TIP_ICON } from '@/constants';
+    import { IBaseDenom } from '@/types/interface/index.interface';
+    const props = withDefaults(
+        defineProps<{
+            ibcBaseDenoms?: IBaseDenom[];
+            selectedSymbol?: string;
+            clearInput: number;
+            showIcon?: boolean;
+        }>(),
+        {
+            ibcBaseDenoms: () => [],
+            selectedSymbol: ''
+        }
+    );
+    // const props = defineProps({
+    //     ibcBaseDenoms: {
+    //         type: Array,
+    //         default: () => []
+    //     },
+    //     selectedSymbol: {
+    //         type: String,
+    //         default: ''
+    //     },
+    //     clearInput: {
+    //         type: Number,
+    //         required: true
+    //     },
+    //     showIcon: Boolean
+    // });
     const emits = defineEmits(['clickItem', 'clickSearch']);
     const { findSymbolIcon } = useFindIcon(props);
     const { isVisible, visibleChange } = useIsVisible();
@@ -221,7 +229,8 @@
         height: 30px;
         pointer-events: none;
         z-index: 1;
-        box-shadow: inset 0 10px 8px -8px #00000026;
+        background: linear-gradient(180deg, rgba(17, 22, 77, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+        // box-shadow: inset 0 10px 8px -8px #00000026;
     }
     .bottom_shadow {
         position: absolute;
@@ -283,7 +292,7 @@
         }
     }
     .overlay {
-        max-width: 854px;
+        max-width: 872px;
         background-color: #fff;
         box-shadow: 0px 2px 8px 0px #d9deec;
         border-radius: 4px;
@@ -406,26 +415,6 @@
             &__wrap {
                 height: 454px;
                 overflow: auto;
-                &::-webkit-scrollbar {
-                    width: 4px;
-                }
-
-                &::-webkit-scrollbar-track {
-                    box-shadow: inset006pxrgba(0, 0, 0, 0.3);
-                    border-radius: 2px;
-                    width: 8px;
-                    background: rgba(61, 80, 255, 0.1);
-                }
-
-                &::-webkit-scrollbar-thumb {
-                    border-radius: 4px;
-                    box-shadow: inset006pxrgba(0, 0, 0, 0.5);
-                    background: rgba(61, 80, 255, 0.5);
-                }
-
-                &::-webkit-scrollbar-thumb:window-inactive {
-                    background: rgba(61, 80, 255, 0.9);
-                }
             }
             &__title {
                 &:hover {

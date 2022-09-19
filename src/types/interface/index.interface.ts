@@ -54,13 +54,13 @@ export interface IIbcChains {
 export type TIbcChainsKeys = keyof IIbcChains;
 export interface IBaseDenom {
     chain_id: string;
-    create_at: number;
+    // create_at: number;
     denom: string;
     icon: string;
-    is_main_token: boolean;
+    // is_main_token: boolean;
     scale: number;
     symbol: string;
-    update_at: number;
+    // update_at: number;
 }
 
 export interface IAmountDenom {

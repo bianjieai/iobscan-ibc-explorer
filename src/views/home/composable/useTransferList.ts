@@ -1,4 +1,4 @@
-import chainDefaultImg from '@/assets/home/chain-default.png';
+import { CHAIN_DEFAULT_ICON } from '@/constants';
 
 export const useInterfaceActive = (emits: any) => {
     const onClickViewAll = () => {
@@ -30,10 +30,10 @@ export const useFindIbcChainIcon = (props: any) => {
         if (props.ibcChains && props.ibcChains.all) {
             const result = props.ibcChains.all.find((item: any) => item.chain_id === chainId);
             if (result) {
-                return result.icon || chainDefaultImg;
+                return result.icon || CHAIN_DEFAULT_ICON;
             }
         }
-        return chainDefaultImg;
+        return CHAIN_DEFAULT_ICON;
     };
     return {
         findIbcChainIcon

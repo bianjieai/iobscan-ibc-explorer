@@ -1,4 +1,4 @@
-import { IDataItem, ModeType, TProps } from './interface';
+import { IDataItem, ModeType, TDenom } from './interface';
 import { MODES } from './constants';
 /**
  * 根据不同类型返回对应的数据：单选返回单值，多选返回数组集合
@@ -38,7 +38,7 @@ export const closeByMode = (selectData: IDataItem[], mode: ModeType) => {
  * @param inputVal
  * @param mode
  */
-export const inputItemsByMode = (inputVal: string | undefined, props: TProps): IDataItem[] => {
+export const inputItemsByMode = (inputVal: string | undefined, mode: ModeType): IDataItem[] => {
     let tokens;
     const res: IDataItem[] = [];
 
@@ -46,7 +46,7 @@ export const inputItemsByMode = (inputVal: string | undefined, props: TProps): I
         return res;
     }
 
-    switch (props.mode) {
+    switch (mode) {
         case MODES.multiple:
             tokens = inputVal?.split(',').filter((v) => v);
             break;
@@ -60,9 +60,30 @@ export const inputItemsByMode = (inputVal: string | undefined, props: TProps): I
 
     tokens?.forEach((v) => {
         res.push({
-            id: v,
-            title: v
+            id: v.replace(/-/, '_'),
+            title: v,
+            inputFlag: true
         });
+    });
+
+    return res;
+};
+
+// 去重 || 可以重复多选的
+export const getLastArrs = (data?: IDataItem[]): IDataItem[] => {
+    const res: IDataItem[] = [];
+
+    if (!data?.length) {
+        return res;
+    }
+
+    const ids: TDenom[] = [];
+
+    data.forEach((v) => {
+        if (!ids.includes(v.id) || v.doubleTime) {
+            res.push(v);
+            ids.push(v.id);
+        }
     });
 
     return res;

@@ -10,12 +10,11 @@
                 :hide-icon="true"
                 :mode="MODES.double"
                 associate-id="allchain"
-                :edit-model="true"
                 :input-ctn="{
                     placeholder: 'Search by Chain ID,Chain ID',
                     btnTxt: 'Confirm'
                 }"
-                :default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
+                :select-color-default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
                 }"
@@ -95,31 +94,31 @@
 </template>
 
 <script setup lang="ts">
-    import { PAGE_PARAMETERS } from '@/constants';
+    import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/channels';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
     import { TChannelStatus, BottomStatusType } from '@/types/interface/components/table.interface';
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
     import {
         useGetChannelsList,
-        useChannelsQuery,
         useChannelsSelected,
-        useChannelsRef,
-        useSubTitleComputed,
         useChannelsColumnJump
     } from '@/views/channels/composable';
     import { MODES } from '@/components/BjSelect/constants';
-    import { CHAIN_DEFAULT_VALUE } from '@/constants/channels';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
-    const { chainIdQuery, statusQuery } = useChannelsQuery();
-    const { channelsList, total, getChannelsList } = useGetChannelsList();
+    const { channelsList, getChannelsList, subtitle } = useGetChannelsList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.channels);
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus, chainIds, chainData } =
-        useChannelsSelected(chainIdQuery, statusQuery, getChannelsList, loading, ibcChains);
-    const { chainDropdown, statusDropdown } = useChannelsRef();
-    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, channelsList);
+    const {
+        chainDropdown,
+        statusDropdown,
+        statusQuery,
+        chainIds,
+        chainData,
+        onSelectedChain,
+        onSelectedStatus
+    } = useChannelsSelected(ibcChains, getChannelsList, loading);
     const { goChains, resetSearchCondition } = useChannelsColumnJump();
 
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;

@@ -10,12 +10,11 @@
                 :hide-icon="true"
                 :mode="MODES.double"
                 associate-id="allchain"
-                :edit-model="true"
                 :input-ctn="{
                     placeholder: 'Search by Chain ID,Chain ID',
                     btnTxt: 'Confirm'
                 }"
-                :default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
+                :select-color-default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
                 }"
@@ -111,31 +110,27 @@
 
 <script setup lang="ts">
     import NamePopover from './components/NamePopover.vue';
-    import { PAGE_PARAMETERS } from '@/constants';
+    import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
     import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
-    import {
-        useGetRelayersList,
-        useRelayersQuery,
-        useRelayersSelected,
-        useRelayersRef,
-        useSubTitleComputed,
-        useRelayersColumnJump
-    } from './composable';
+    import { useGetRelayersList, useRelayersSelected, useRelayersColumnJump } from './composable';
     import { MODES } from '@/components/BjSelect/constants';
-    import { CHAIN_DEFAULT_VALUE } from '@/constants/relayers';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
-    const { relayersList, getRelayersList, total } = useGetRelayersList();
+    const { relayersList, getRelayersList, subtitle } = useGetRelayersList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
-    const { chainIdQuery, statusQuery } = useRelayersQuery();
-    const { searchChain, searchStatus, onSelectedChain, onSelectedStatus, chainIds, chainData } =
-        useRelayersSelected(chainIdQuery, statusQuery, getRelayersList, loading, ibcChains);
-    const { chainDropdown, statusDropdown } = useRelayersRef();
-    const { subtitle } = useSubTitleComputed(searchChain, searchStatus, total, relayersList);
+    const {
+        chainDropdown,
+        statusDropdown,
+        chainData,
+        chainIds,
+        statusQuery,
+        onSelectedChain,
+        onSelectedStatus
+    } = useRelayersSelected(ibcChains, getRelayersList, loading);
     const { goChains, resetSearchCondition } = useRelayersColumnJump();
 
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
@@ -153,6 +148,11 @@
         }
     }
 
+    :deep(.ant-table-cell) {
+        &:nth-of-type(3) {
+            padding-left: 16px;
+        }
+    }
     :deep(.ant-table-cell) {
         &:nth-of-type(4) {
             padding-right: 26px !important;

@@ -1,9 +1,17 @@
 import { AxiosTimeout } from '@/constants/index';
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
+import jsonBig from 'json-bigint';
 
 const service = axios.create({
     baseURL: import.meta.env.VITE_BASE_GO_API,
-    timeout: AxiosTimeout
+    timeout: AxiosTimeout,
+    transformResponse: (data) => {
+        try {
+            return jsonBig.parse(data);
+        } catch {
+            return data;
+        }
+    }
 });
 
 // Request interceptors

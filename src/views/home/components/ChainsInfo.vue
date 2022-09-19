@@ -22,9 +22,8 @@
 <script setup lang="ts">
     import chains24hrImg from '@/assets/home/chains_24hr.png';
     import chainsAllImg from '@/assets/home/chains_all.png';
-    import { statisticsName } from '@/constants/index';
+    import { statisticsName, dayTime } from '@/constants';
     import { formatBigNumber } from '@/helper/parseStringHelper';
-    import { dayTime } from '@/constants';
 
     defineProps({
         msg: {

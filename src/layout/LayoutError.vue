@@ -18,19 +18,19 @@
 
 <style lang="less" scoped>
     .layout_error_container {
-        flex: 1;
         display: flex;
         flex-direction: column;
+        height: 100%;
+        min-height: 100vh;
         &__header_container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            height: 80px;
         }
         &__content_container {
             flex: 1;
+            display: flex;
         }
         &__footer_container {
+            height: auto;
         }
     }
     @media screen and (max-width: 800px) {

@@ -31,7 +31,7 @@ export const COLUMNS: TableColumnsType = [
         dataIndex: 'last_updated',
         key: 'update_time',
         align: 'right',
-        sorter: (a, b) => b.update_time - a.update_time,
+        sorter: (a, b) => a.update_time - b.update_time,
         width: 70
     },
     {
@@ -71,5 +71,3 @@ export const RELAYER_STATUS = {
     RUNNING: 'Running',
     UNKNOWN: 'Unknown'
 };
-
-export const CHAIN_DEFAULT_VALUE = 'allchain';
