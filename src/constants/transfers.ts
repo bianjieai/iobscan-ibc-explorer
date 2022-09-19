@@ -240,7 +240,7 @@ export const PROGRESS_TRANSFER_LIST: IInfoList[] = [
         label: 'Timeout Timestamp',
         dataKey: 'timeout_timestamp',
         value: '--',
-        isFormatTimestamp: true
+        isFormatTimeoutTimestamp: true
     }
 ];
 export const PROGRESS_RECEIVE_LIST: IInfoList[] = [

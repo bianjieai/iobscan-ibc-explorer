@@ -168,4 +168,5 @@ export interface IInfoList {
     isFormatFee?: boolean;
     isFormatSigner?: boolean;
     isFormatTimestamp?: boolean;
+    isFormatTimeoutTimestamp?: boolean;
 }

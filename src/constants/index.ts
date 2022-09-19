@@ -307,7 +307,7 @@ export const SYMBOL = {
     IRIS: 'IRIS'
 };
 
-export const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan Ltd. All Rights Reserved.`;
+export const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan. All Rights Reserved.`;
 export const ICON_LINK = [
     {
         iconName: 'icon-github',
@@ -371,3 +371,6 @@ export const CHAIN_DEFAULT_VALUE = 'allchain';
 export const TOTAL_BOUND = 500000;
 // todo shan 待设计给出具体方案再考虑是固定值还是需要计算获取
 export const BACK_TOP_NUM = 1964;
+
+// 默认情况下展示的文案
+export const DEFAULT_DISPLAY_TEXT = '--';

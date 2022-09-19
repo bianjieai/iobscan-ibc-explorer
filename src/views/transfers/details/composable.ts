@@ -1,6 +1,11 @@
 import { getTxDetailsByTxHashAPI, getTxDetailsViewSourceByTxHashAPI } from '@/api/transfers';
 import { useMatchChainInfo } from '@/composables';
-import { CHAIN_DEFAULT_ICON, RELAYER_DEFAULT_ICON, TOKEN_DEFAULT_ICON } from '@/constants';
+import {
+    CHAIN_DEFAULT_ICON,
+    DEFAULT_DISPLAY_TEXT,
+    RELAYER_DEFAULT_ICON,
+    TOKEN_DEFAULT_ICON
+} from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import {
     CHAIN_ADDRESS,
@@ -57,7 +62,7 @@ import { drawDefaultIcon, getTextWidth } from '@/utils/urlTools';
 import moveDecimal from 'move-decimal-point';
 import * as djs from 'dayjs';
 import { Ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { getJSONData } from '@/helper/jsonHelper';
 
 export const useJudgeStatus = (props: Readonly<ITxStatus>) => {
@@ -80,7 +85,7 @@ export const useJudgeStatus = (props: Readonly<ITxStatus>) => {
 export const useTransfersDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const router = useRouter();
-    // const route = useRoute();
+    const route = useRoute();
     // 界面所需数据
     const ibcTxStatus = ref<number>(IBC_TX_STATUS.default);
     const errorLog = ref<string>('No error message feedback.');
@@ -88,18 +93,16 @@ export const useTransfersDetailsInfo = () => {
     const scInfo = ref<ITxInfo>();
     const dcInfo = ref<ITxInfo>();
     const relayerInfo = ref<IRelayerInfo>();
-    const sequence = ref<string>('--');
+    const sequence = ref<string>(DEFAULT_DISPLAY_TEXT);
     const ibcTxInfo = ref<IIbcTxInfo>();
     // 是否需要换行
     const isFlexColumn = ref<boolean>(false);
 
     const getTransferDetails = async () => {
         ibcStatisticsChainsStore.isShowLoading = true;
-        // todo shan 需要切换到正确的参数及请求
-        // const hash: string = (route?.query?.hash || '') as string;
+        const hash: string = (route?.query?.hash || '') as string;
         try {
-            const { code, data, message } = await getTxDetailsByTxHashAPI('%7Bhash%7D?a=1');
-            // const {code, data, message} = await getTxDetailsByTxHashAPI(hash);
+            const { code, data, message } = await getTxDetailsByTxHashAPI(hash);
             ibcStatisticsChainsStore.isShowLoading = false;
             if (code === API_CODE.success) {
                 if (!data.is_list) {
@@ -149,7 +152,7 @@ const handleTransferDetails = (item: any, infoList: any, callback?: Function) =>
         const keys = item.dataKey.split('.');
         if (keys?.length) {
             keys.forEach((key: string) => {
-                result = result[key] || result[key] === 0 ? result[key] : '';
+                result = result[key] || result[key] === 0 ? result[key] : DEFAULT_DISPLAY_TEXT;
                 item.value = result;
             });
         }
@@ -183,15 +186,15 @@ const calculateTextLength = (
 };
 
 const getMatchBaseDenom = async (chainId: string, denom: string, amount: string) => {
-    let feeAmount = '';
+    let feeAmount = amount;
     let tokenIcon = TOKEN_DEFAULT_ICON;
-    let symbol = '';
+    let symbol = denom;
     const matchBaseDenom = await getBaseDenomByKey(chainId, denom);
     if (matchBaseDenom) {
         feeAmount = `${formatBigNumber(
             moveDecimal(amount || 0, -matchBaseDenom.scale),
             undefined
-        )} ${matchBaseDenom.symbol || denom}`;
+        )}`;
         tokenIcon = matchBaseDenom.icon;
         symbol = matchBaseDenom.symbol;
     }
@@ -217,7 +220,9 @@ export const useTokenInfo = (props: Readonly<IUseTokenInfo>) => {
                     newTokenInfo.base_denom,
                     newTokenInfo.amount
                 );
-                tokenInfoList.value.value = matchInfo.value?.feeAmount;
+                tokenInfoList.value.value =
+                    `${matchInfo.value.feeAmount} ${matchInfo.value.symbol}` ||
+                    DEFAULT_DISPLAY_TEXT;
                 tokenInfoListExpand.value.forEach((item) => {
                     handleTransferDetails(item, newTokenInfo);
                 });
@@ -263,28 +268,28 @@ export const useChainInfo = (
             if (newChainInfo) {
                 chainAddress.value = {
                     label: 'Address',
-                    value: newChainInfo.address
+                    value: newChainInfo.address || DEFAULT_DISPLAY_TEXT
                 };
                 chainInfoList.value = {
                     label: 'Chain ID',
-                    value: newChainInfo.chain_id
+                    value: newChainInfo.chain_id || DEFAULT_DISPLAY_TEXT
                 };
                 chainInfoListExpand.value = [
                     {
                         label: 'Port',
-                        value: newChainInfo.port_id
+                        value: newChainInfo.port_id || DEFAULT_DISPLAY_TEXT
                     },
                     {
                         label: 'Channel ID',
-                        value: newChainInfo.channel_id
+                        value: newChainInfo.channel_id || DEFAULT_DISPLAY_TEXT
                     },
                     {
                         label: 'Connection ID',
-                        value: newChainInfo.connection_id
+                        value: newChainInfo.connection_id || DEFAULT_DISPLAY_TEXT
                     },
                     {
                         label: 'Client ID',
-                        value: newChainInfo.client_id
+                        value: newChainInfo.client_id || DEFAULT_DISPLAY_TEXT
                     }
                 ];
                 const { chainIcon } = useMatchChainInfo(chainInfoList.value.value);
@@ -324,8 +329,10 @@ export const useRelayerInfo = (
         () => props.relayerInfo,
         (newRelayerInfo) => {
             if (newRelayerInfo) {
-                relayerScInfoList.value.value = newRelayerInfo.sc_relayer.relayer_name;
-                relayerDcInfoList.value.value = newRelayerInfo.dc_relayer.relayer_name;
+                relayerScInfoList.value.value =
+                    newRelayerInfo.sc_relayer.relayer_name || DEFAULT_DISPLAY_TEXT;
+                relayerDcInfoList.value.value =
+                    newRelayerInfo.dc_relayer.relayer_name || DEFAULT_DISPLAY_TEXT;
                 calculateTextLength(relayerScInfoList.value.value, emits, RELAYER_LABEL);
                 calculateTextLength(relayerDcInfoList.value.value, emits, RELAYER_LABEL);
                 relayerScIcon.value = newRelayerInfo.sc_relayer.icon || RELAYER_DEFAULT_ICON;
@@ -333,11 +340,11 @@ export const useRelayerInfo = (
 
                 fromAddressInfo.value = {
                     label: 'Address',
-                    value: newRelayerInfo.sc_relayer.relayer_addr
+                    value: newRelayerInfo.sc_relayer.relayer_addr || DEFAULT_DISPLAY_TEXT
                 };
                 toAddressInfo.value = {
                     label: 'Address',
-                    value: newRelayerInfo.dc_relayer.relayer_addr
+                    value: newRelayerInfo.dc_relayer.relayer_addr || DEFAULT_DISPLAY_TEXT
                 };
             }
         }
@@ -360,7 +367,7 @@ export const useSequenceInfo = (
     watch(
         () => props.sequence,
         (newSequence) => {
-            sequenceInfo.value.value = newSequence;
+            sequenceInfo.value.value = newSequence || DEFAULT_DISPLAY_TEXT;
             calculateTextLength(sequenceInfo.value.value, emits);
         }
     );
@@ -395,7 +402,7 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
             case IBC_TX_STATUS.success:
                 leftTxImg.value = IBC_TX_INFO_STATUS.success;
                 rightTxImg.value = IBC_TX_INFO_STATUS.success;
-                ibcTxInfo.value?.refund_tx_info.ack
+                ibcTxInfo.value?.refund_tx_info?.ack
                     ? (progressData.value = SUCCESS_ARRIVE)
                     : (progressData.value = SUCCESS_NO_ACK);
                 break;
@@ -457,12 +464,12 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
 // progress
 export const useTxImg = (props: Readonly<IUseTxImg>) => {
     const searchTxImg = computed(() => {
-        if (props.txImg !== '--') {
+        if (props.txImg !== DEFAULT_DISPLAY_TEXT) {
             return drawDefaultIcon(`../assets/transfers/${props.txImg}.png`);
         }
     });
     const searchTxAdaptorImg = computed(() => {
-        if (props.txImg !== '--') {
+        if (props.txImg !== DEFAULT_DISPLAY_TEXT) {
             return drawDefaultIcon(`../assets/transfers/${props.txImg}_small.png`);
         }
     });
@@ -495,6 +502,11 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                 item.value = formatSigner(item.value);
             } else if (item.isFormatTimestamp) {
                 item.value = formatTimestamp(item.value);
+            } else if (item.isFormatTimeoutTimestamp) {
+                item.value = formatTimeoutTimestamp(item.value);
+            }
+            if (!item.value) {
+                item.value = DEFAULT_DISPLAY_TEXT;
             }
         });
         progressListAll.value = progressList.value;
@@ -507,7 +519,7 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
             case TRANSFER_DETAILS_STATUS.FAILED.value:
                 return TRANSFER_DETAILS_STATUS.FAILED.label;
             default:
-                return '--';
+                return DEFAULT_DISPLAY_TEXT;
         }
     };
     const formatFee = async (amount: IAmountDenom[] | string) => {
@@ -524,7 +536,7 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                         feeDenom,
                         feeAmount
                     );
-                    return result.feeAmount;
+                    return `${result.feeAmount} ${result.symbol}`;
                 }
             case PROGRESS_STEP[2]:
                 if (dcInfo.value) {
@@ -533,15 +545,15 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                         feeDenom,
                         feeAmount
                     );
-                    return result.feeAmount;
+                    return `${result.feeAmount} ${result.symbol}`;
                 }
             default:
-                return '--';
+                return DEFAULT_DISPLAY_TEXT;
         }
     };
     const formatSigner = (signers: string[] | string) => {
         if (typeof signers === 'string') return signers;
-        return signers[0];
+        return (signers && signers[0]) || DEFAULT_DISPLAY_TEXT;
     };
     const formatTimestamp = (timestamp: number | string) => {
         if (typeof timestamp === 'string') return timestamp;
@@ -563,9 +575,18 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                 )})`;
             }, 1000);
         } else {
-            date.value = '--';
+            date.value = DEFAULT_DISPLAY_TEXT;
         }
         return date.value;
+    };
+    const formatTimeoutTimestamp = (timeoutStamp: string) => {
+        if (timeoutStamp) {
+            if (timeoutStamp !== DEFAULT_DISPLAY_TEXT) {
+                return formatTimestamp(Number(timeoutStamp.substring(0, 14)));
+            }
+            console.log(timeoutStamp.substring(0, 14), 'timeoutStamp');
+        }
+        return DEFAULT_DISPLAY_TEXT;
     };
     watch(mark, (newMark) => {
         switch (newMark.step) {
@@ -623,60 +644,9 @@ export const useViewSource = (props: IUseViewSOurce) => {
     const tableExpand = drawDefaultIcon('../assets/transfers/table_expand.png');
     const tablePackUp = drawDefaultIcon('../assets/transfers/table_packup.png');
     const activeKey = ref<string>('1');
-    // 根据 chain_id 和 msg_type 发请求获取 JSON 数据；
-    let chainId: string | undefined = '--';
-    let msgType: string | undefined = '--';
     const JSONSource = ref<IIbcSource | undefined>();
     const sourceCode = ref();
-    const { scInfo, dcInfo, ibcTxInfo } = toRefs(props);
-    watch(
-        () => props.mark,
-        async (newMark) => {
-            if (newMark && scInfo && dcInfo && ibcTxInfo) {
-                switch (newMark.step) {
-                    case PROGRESS_STEP[1]:
-                        msgType = ibcTxInfo.value?.sc_tx_info.type;
-                    case PROGRESS_STEP[3]:
-                        msgType = ibcTxInfo.value?.refund_tx_info.type;
-                    case PROGRESS_STEP[4]:
-                        chainId = scInfo.value?.chain_id;
-                        msgType = ibcTxInfo.value?.refund_tx_info.type;
-                        break;
-                    case PROGRESS_STEP[2]:
-                        chainId = dcInfo.value?.chain_id;
-                        msgType = ibcTxInfo.value?.dc_tx_info.type;
-                        break;
-                }
-            }
-            if (chainId && msgType && ibcTxInfo?.value) {
-                switch (newMark.step) {
-                    case PROGRESS_STEP[1]:
-                        JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.sc_tx_info.tx_hash,
-                            chainId,
-                            msgType
-                        );
-                        break;
-                    case PROGRESS_STEP[3]:
-                    case PROGRESS_STEP[4]:
-                        JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.refund_tx_info.tx_hash,
-                            chainId,
-                            msgType
-                        );
-                        break;
-                    case PROGRESS_STEP[2]:
-                        JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.dc_tx_info.tx_hash,
-                            chainId,
-                            msgType
-                        );
-                        break;
-                }
-                return JSONSource;
-            }
-        }
-    );
+    const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);
     const getIbcSource = async (hash: string, chainId: string, msgType: string) => {
         ibcStatisticsChainsStore.isShowLoading = true;
         const params = { chain_id: chainId, msg_type: msgType };
@@ -694,6 +664,45 @@ export const useViewSource = (props: IUseViewSOurce) => {
             ibcStatisticsChainsStore.isShowLoading = false;
         }
     };
+    watch(
+        () => mark,
+        async (newMark) => {
+            if (newMark && scInfo?.value && dcInfo?.value && ibcTxInfo?.value) {
+                switch (newMark.value.step) {
+                    case PROGRESS_STEP[1]:
+                        JSONSource.value = await getIbcSource(
+                            ibcTxInfo.value.sc_tx_info.tx_hash,
+                            scInfo.value.chain_id,
+                            ibcTxInfo.value.sc_tx_info.type
+                        );
+                        break;
+                    case PROGRESS_STEP[2]:
+                        JSONSource.value = await getIbcSource(
+                            ibcTxInfo.value.dc_tx_info.tx_hash,
+                            dcInfo.value.chain_id,
+                            ibcTxInfo.value.dc_tx_info.type
+                        );
+                        break;
+                    case PROGRESS_STEP[3]:
+                        JSONSource.value = await getIbcSource(
+                            ibcTxInfo.value.refund_tx_info.tx_hash,
+                            scInfo.value.chain_id,
+                            ibcTxInfo.value.refund_tx_info.type
+                        );
+                        break;
+                    case PROGRESS_STEP[4]:
+                        JSONSource.value = await getIbcSource(
+                            ibcTxInfo.value.refund_tx_info.tx_hash,
+                            scInfo.value.chain_id,
+                            ibcTxInfo.value.refund_tx_info.type
+                        );
+                        break;
+                }
+            }
+        },
+        { immediate: true, deep: true }
+    );
+
     watch(JSONSource, (newJSONSource) => {
         if (newJSONSource) {
             sourceCode.value = getJSONData(newJSONSource);

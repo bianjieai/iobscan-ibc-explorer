@@ -1,59 +1,75 @@
 <template>
     <div class="tx_progress">
-        <div class="tx_progress__top">
-            <div
-                v-if="progressData.length === 1"
-                class="tx_progress__step_wrap tx_progress__step_wrap__single_width"
-            >
+        <div class="tx_progress__wrap">
+            <div class="tx_progress__top">
                 <div
-                    v-for="(item, index) in progressData"
-                    :key="index"
-                    class="tx_progress__step tx_progress__step__single_flex"
-                    :class="{
-                        tx_progress__active: currentProgress === index
-                    }"
+                    v-if="progressData.length === 1"
+                    class="tx_progress__step_wrap tx_progress__step_wrap__single_width tx_progress__step_wrap_mobile"
                 >
-                    <img v-if="ibcTxStatus === 3" :src="selectedSvg" alt="" />
-                    <img v-if="ibcTxStatus === 2" :src="lastUnSelectedSvg" alt="" />
-                    <div class="tx_progress__description">
-                        <span class="tx_progress__progress">{{ item.progress }}</span>
-                        <span class="tx_progress__badge">{{ item.badge }}</span>
+                    <div
+                        v-for="(item, index) in progressData"
+                        :key="index"
+                        class="tx_progress__step tx_progress__step__single_flex"
+                        :class="{
+                            tx_progress__active: currentProgress === index,
+                            tx_progress__diff_active: ibcTxStatus === 3
+                        }"
+                    >
+                        <img
+                            v-if="ibcTxStatus === 3"
+                            class="tx_progress__selected_svg"
+                            :src="selectedSvg"
+                            alt=""
+                        />
+                        <img
+                            v-if="ibcTxStatus === 2"
+                            class="tx_progress__unselected_svg"
+                            :src="lastUnSelectedSvg"
+                            alt=""
+                        />
+                        <div class="tx_progress__description">
+                            <span class="tx_progress__progress">{{ item.progress }}</span>
+                            <span class="tx_progress__badge">{{ item.badge }}</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div
-                v-else
-                class="tx_progress__step_wrap"
-                :class="{ tx_progress__step_wrap__width: progressData.length === 2 }"
-            >
                 <div
-                    v-for="(item, index) in progressData"
-                    :key="index"
-                    class="tx_progress__step cursor"
-                    :class="{
-                        tx_progress__active: currentProgress === index,
-                        tx_progress__step__flex: progressData.length === 2 && currentProgress === 1,
-                        tx_progress__step__width: progressData.length === 2
-                    }"
-                    @click="changeCurrent(index)"
+                    v-else
+                    class="tx_progress__step_wrap"
+                    :class="{ tx_progress__step_wrap__width: progressData.length === 2 }"
                 >
-                    <img
-                        v-if="index !== progressData.length - 1 && currentProgress === index"
-                        :src="selectedSvg"
-                        alt=""
-                    />
-                    <img
-                        v-if="index !== progressData.length - 1 && currentProgress !== index"
-                        :src="unSelectedSvg"
-                        alt=""
-                    />
-                    <div class="tx_progress__description">
-                        <span class="tx_progress__progress">{{ item.progress }}</span>
-                        <span class="tx_progress__badge">{{ item.badge }}</span>
+                    <div
+                        v-for="(item, index) in progressData"
+                        :key="index"
+                        class="tx_progress__step cursor"
+                        :class="{
+                            tx_progress__active: currentProgress === index,
+                            tx_progress__step__flex:
+                                progressData.length === 2 && currentProgress === 1,
+                            tx_progress__step__width: progressData.length === 2,
+                            tx_progress__step__mobile_two: progressData.length === 2
+                        }"
+                        @click="changeCurrent(index)"
+                    >
+                        <img
+                            v-if="index !== progressData.length - 1 && currentProgress === index"
+                            :src="selectedSvg"
+                            alt=""
+                        />
+                        <img
+                            v-if="index !== progressData.length - 1 && currentProgress !== index"
+                            :src="unSelectedSvg"
+                            alt=""
+                        />
+                        <div class="tx_progress__description">
+                            <span class="tx_progress__progress">{{ item.progress }}</span>
+                            <span class="tx_progress__badge">{{ item.badge }}</span>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
         <TxProgressList
             :ibc-tx-info="ibcTxInfo"
             :mark="progressData[currentProgress]"
@@ -108,9 +124,6 @@
             &__single_width {
                 width: 33%;
             }
-            img {
-                height: 60px;
-            }
         }
         &__step {
             position: relative;
@@ -134,6 +147,9 @@
             }
             &__flex {
                 flex: 1;
+            }
+            img {
+                height: 60px;
             }
         }
         &__description {
@@ -172,6 +188,13 @@
                 }
             }
         }
+        &__diff_active {
+            width: 50%;
+            background: #f8fafd;
+            img {
+                transform: translateX(-15%);
+            }
+        }
         &__content {
             margin-top: 24px;
         }
@@ -186,6 +209,16 @@
                 &__single_width {
                 }
                 img {
+                }
+            }
+            &__step_wrap_mobile {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        left: 0;
+                        .tx_progress__description {
+                            left: 0;
+                        }
+                    }
                 }
             }
             &__step {
@@ -210,6 +243,14 @@
                 }
                 &__flex {
                 }
+                &__mobile_two {
+                    &:nth-of-type(2) {
+                        left: 0;
+                        .tx_progress__description {
+                            left: 10%;
+                        }
+                    }
+                }
             }
             &__description {
             }
@@ -223,6 +264,11 @@
                     }
                     .tx_progress__badge {
                     }
+                }
+            }
+            &__diff_active {
+                img {
+                    transform: translateX(-23%);
                 }
             }
             &__content {
@@ -241,6 +287,14 @@
                 img {
                 }
             }
+            &__step_wrap_mobile {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
             &__step {
                 &__width {
                 }
@@ -248,7 +302,7 @@
                 }
 
                 &:nth-of-type(1) {
-                    left: -8%;
+                    left: -5%;
                     .tx_progress__description {
                         left: 60%;
                     }
@@ -263,6 +317,20 @@
                 }
                 &__flex {
                 }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -10%;
+                        .tx_progress__description {
+                            left: 60%;
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        left: 0;
+                        .tx_progress__description {
+                            left: 10%;
+                        }
+                    }
+                }
             }
             &__description {
             }
@@ -276,6 +344,14 @@
                     }
                     .tx_progress__badge {
                     }
+                }
+            }
+            &__diff_active {
+                img {
+                    transform: translateX(-32%);
+                }
+                .tx_progress__description {
+                    left: -5%;
                 }
             }
             &__content {
@@ -316,6 +392,20 @@
                 }
                 &__flex {
                 }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -16%;
+                        .tx_progress__description {
+                            left: 80%;
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        left: 0;
+                        .tx_progress__description {
+                            left: 10%;
+                        }
+                    }
+                }
             }
             &__description {
             }
@@ -329,6 +419,13 @@
                     }
                     .tx_progress__badge {
                     }
+                }
+            }
+            &__diff_active {
+                img {
+                    transform: translateX(-38%);
+                }
+                .tx_progress__description {
                 }
             }
             &__content {
@@ -369,6 +466,17 @@
                 }
                 &__flex {
                 }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -26%;
+                    }
+                    &:nth-of-type(2) {
+                        left: 0;
+                        .tx_progress__description {
+                            left: 10%;
+                        }
+                    }
+                }
             }
             &__description {
             }
@@ -384,25 +492,46 @@
                     }
                 }
             }
+            &__diff_active {
+                img {
+                    transform: translateX(-41%);
+                }
+                .tx_progress__description {
+                }
+            }
             &__content {
             }
         }
     }
     @media screen and (max-width: 880px) {
         .tx_progress {
-            &__top {
+            &__wrap {
                 overflow-x: auto;
                 &::-webkit-scrollbar {
                     display: none;
                 }
             }
-            &__step_wrap {
+            &__top {
                 width: 730px;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+            }
+            &__step_wrap {
                 &__width {
                 }
                 &__single_width {
                 }
                 img {
+                }
+            }
+            &__step_wrap_mobile {
+                width: 33%;
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
                 }
             }
             &__step {
@@ -427,6 +556,20 @@
                 }
                 &__flex {
                 }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -30%;
+                        .tx_progress__description {
+                            left: 115%;
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        left: 0;
+                        .tx_progress__description {
+                            left: 15%;
+                        }
+                    }
+                }
             }
             &__description {
             }
@@ -440,6 +583,12 @@
                     }
                     .tx_progress__badge {
                     }
+                }
+            }
+            &__diff_active {
+                img {
+                }
+                .tx_progress__description {
                 }
             }
             &__content {

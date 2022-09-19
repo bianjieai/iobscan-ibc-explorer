@@ -7,7 +7,11 @@
                 <span class="chain_info__label">{{ chainInfoList.label }}</span>
                 <router-link :to="`/chains`" class="chain_info__value chain_info__chain_id_value">
                     <span class="chain_info__icon">
-                        <img :src="searchChainIcon" alt="" />
+                        <img
+                            v-if="chainInfoList.value !== DEFAULT_DISPLAY_TEXT"
+                            :src="searchChainIcon"
+                            alt=""
+                        />
                     </span>
                     <span>{{ ChainHelper.formatChainId(chainInfoList.value) }}</span>
                 </router-link>
@@ -46,6 +50,7 @@
     import { ITxInfo } from '@/types/interface/transfers.interface';
     import ChainHelper from '@/helper/chainHelper';
     import { useChainInfo } from '@/views/transfers/details/composable';
+    import { DEFAULT_DISPLAY_TEXT } from '@/constants';
     import TitleCard from './TitleCard.vue';
     import ChainAddress from './ChainAddress.vue';
     interface IProps {

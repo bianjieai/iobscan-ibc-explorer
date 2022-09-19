@@ -8,7 +8,11 @@
                     :to="`/relayers/chain=${scInfo?.chain_id},${dcInfo?.chain_id}`"
                     class="relayer_info__value"
                 >
-                    <img :src="relayerScIcon" alt="" />
+                    <img
+                        v-if="relayerScInfoList.value !== DEFAULT_DISPLAY_TEXT"
+                        :src="relayerScIcon"
+                        alt=""
+                    />
                     <span>{{ relayerScInfoList.value }}</span>
                 </router-link>
             </div>
@@ -18,7 +22,11 @@
                     :to="`/relayers/chain=${scInfo?.chain_id},${dcInfo?.chain_id}`"
                     class="relayer_info__value"
                 >
-                    <img :src="relayerDcIcon" alt="" />
+                    <img
+                        v-if="relayerDcInfoList.value !== DEFAULT_DISPLAY_TEXT"
+                        :src="relayerDcIcon"
+                        alt=""
+                    />
                     <span>{{ relayerDcInfoList.value }}</span>
                 </router-link>
             </div>
@@ -38,6 +46,7 @@
 
 <script setup lang="ts">
     import type { IRelayerInfo, ITxInfo } from '@/types/interface/transfers.interface';
+    import { DEFAULT_DISPLAY_TEXT } from '@/constants';
     import { useRelayerInfo } from '../composable';
     import TitleCard from './TitleCard.vue';
     import ChainAddress from './ChainAddress.vue';

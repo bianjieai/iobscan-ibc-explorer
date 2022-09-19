@@ -2,7 +2,7 @@
     <div class="view_source">
         <div class="view_source__label">View Source</div>
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane key="1" tab="View Source">
+            <a-tab-pane key="1" tab="Raw Data">
                 <a-table
                     v-if="sourceCode"
                     :columns="TRANSFER_DETAILS_TABLE"
@@ -20,7 +20,6 @@
                                     }
                                 "
                             >
-                                <!-- 更换收起扩展图片 -->
                                 <img class="view_source__table_icon" :src="tableExpand" alt="" />
                             </div>
                             <div
