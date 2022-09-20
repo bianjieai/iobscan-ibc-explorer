@@ -5,12 +5,16 @@
             <ChainAddress :chain-address="chainAddress"></ChainAddress>
             <div class="chain_info__chain_id" :class="{ chain_info__column: isFlexColumn }">
                 <span class="chain_info__label">{{ chainInfoList.label }}</span>
-                <span class="chain_info__value chain_info__chain_id_value">
+                <router-link :to="`/chains`" class="chain_info__value chain_info__chain_id_value">
                     <span class="chain_info__icon">
-                        <img :src="searchChainIcon" alt="" />
+                        <img
+                            v-if="chainInfoList.value !== DEFAULT_DISPLAY_TEXT"
+                            :src="searchChainIcon"
+                            alt=""
+                        />
                     </span>
                     <span>{{ ChainHelper.formatChainId(chainInfoList.value) }}</span>
-                </span>
+                </router-link>
             </div>
             <div class="chain_info__list">
                 <div
@@ -46,6 +50,7 @@
     import { ITxInfo } from '@/types/interface/transfers.interface';
     import ChainHelper from '@/helper/chainHelper';
     import { useChainInfo } from '@/views/transfers/details/composable';
+    import { DEFAULT_DISPLAY_TEXT } from '@/constants';
     import TitleCard from './TitleCard.vue';
     import ChainAddress from './ChainAddress.vue';
     interface IProps {
@@ -72,13 +77,13 @@
     .chain_info {
         .flex(column, nowrap, flex-start, flex-start);
         width: 300px;
-        min-height: 326px;
         &__details {
             flex: 1;
             margin-top: 16px;
             padding: 16px;
             width: 100%;
             min-width: 300px;
+            min-height: 326px;
             background: #f8fafd;
             border-radius: var(--border-radius-normal);
         }
@@ -131,8 +136,8 @@
     @media screen and (max-width: 1160px) {
         .chain_info {
             width: 100%;
-            min-height: auto;
             &__details {
+                min-height: auto;
             }
             &__chain_id {
             }

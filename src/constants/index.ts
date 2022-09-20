@@ -80,18 +80,6 @@ export const anchorsDatas = [
         collection: ['#']
     }
 ];
-export const chainIDs = {
-    irishub: 'irishub_1',
-    cosmoshub: 'cosmoshub_4'
-};
-export const tableChainIDs = {
-    irishub: 'irishub-1',
-    cosmoshub: 'cosmoshub-4'
-};
-export const chainAddressPrefix = {
-    irishubPrefix: 'iaa',
-    cosmoshubPrefix: 'cos'
-};
 export const statisticsName = {
     chains_24hr: 'Active IBC Chains',
     chain_all: 'All IBC Chains',
@@ -191,20 +179,7 @@ export const ibcTxStatusDesc = [
         status: 2
     }
 ];
-export const transfersDetailStatus = {
-    FAILED: {
-        value: 0,
-        label: 'Failed'
-    },
-    SUCCESS: {
-        value: 1,
-        label: 'Success'
-    }
-};
-export const ackConnectStatus = {
-    CORRECT: 'correct',
-    ERROR: 'error'
-};
+
 export const channelsStatus = {
     channelOpenedStatus: '1',
     channelClosedStatus: '2'
@@ -332,7 +307,7 @@ export const SYMBOL = {
     IRIS: 'IRIS'
 };
 
-export const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan Ltd. All Rights Reserved.`;
+export const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan. All Rights Reserved.`;
 export const ICON_LINK = [
     {
         iconName: 'icon-github',
@@ -396,3 +371,6 @@ export const CHAIN_DEFAULT_VALUE = 'allchain';
 export const TOTAL_BOUND = 500000;
 // todo shan 待设计给出具体方案再考虑是固定值还是需要计算获取
 export const BACK_TOP_NUM = 1964;
+
+// 默认情况下展示的文案
+export const DEFAULT_DISPLAY_TEXT = '--';
