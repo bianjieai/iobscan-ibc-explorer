@@ -53,7 +53,3 @@ export const getTextWidth = (text: string, font = '14px GolosUI_Medium') => {
     context && context.clearRect(0, 0, canvas.width, canvas.height);
     return textWidth;
 };
-
-export const drawDefaultIcon = (path: string) => {
-    return new URL(`${path}`, import.meta.url).href;
-};

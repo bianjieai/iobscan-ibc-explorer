@@ -75,8 +75,7 @@
     import ChainHelper from '@/helper/chainHelper';
     import { IIbcChains } from '@/types/interface/index.interface';
     import { Ref } from 'vue';
-    import { drawDefaultIcon } from '@/utils/urlTools';
-    const inActiveMask = drawDefaultIcon('../assets/home/mask.png');
+    const inActiveMask = new URL('../../../assets/home/mask.png', import.meta.url).href;
     interface IProps {
         chainList: IIbcChains;
     }
