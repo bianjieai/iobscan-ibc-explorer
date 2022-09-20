@@ -19,15 +19,23 @@
         <div class="transfer__middle relative">
             <div class="transfer__middle__top">
                 <div class="transfer__middle__left">
-                    <!-- todo duanjie  看能否复用 BjSelect，可参考token页面  -->
-                    <drop-down
-                        class="dropdown_token"
-                        :ibc-base-denoms="ibcBaseDenomsSorted"
-                        :selected-symbol="selectedSymbol"
-                        :show-icon="isShowSymbolIcon"
-                        :clear-input="clearInput"
-                        @click-item="onClickDropdownItem"
-                        @click-search="(item) => onClickDropdownItem(item, 'customToken')"
+                    <BjSelect
+                        ref="tokensDropdown"
+                        :data="tokenData"
+                        :value="searchDenom"
+                        placeholder="All Tokens"
+                        :input-ctn="{
+                            title: 'Custom IBC Tokens',
+                            toolTip: 'Hash (in hex format) of the denomination trace information.',
+                            placeholder: 'Search by ibc/hash',
+                            btnTxt: 'Confirm',
+                            icon: TIP_ICON
+                        }"
+                        :select-color-default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
+                        :dropdown-props="{
+                            getPopupContainer: chainGetPopupContainer
+                        }"
+                        @on-change="onSelectedTransfer"
                     />
                     <BjSelect
                         ref="chainDropdown"
@@ -341,7 +349,6 @@
 </template>
 
 <script setup lang="ts">
-    import DropDown from './components/DropDown.vue';
     import {
         ibcTxStatusSelectOptions,
         transfersStatusOptions,
@@ -376,6 +383,7 @@
     import { axiosCancel } from '@/utils/axios';
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
     import { MODES } from '@/components/BjSelect/constants';
+    import { urlPageParser } from '@/utils/urlTools';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs } = useIbcStatistics();
@@ -620,55 +628,55 @@
         }
         return CHAIN_DEFAULT_ICON;
     };
-    const onClickDropdownItem = (item: any, custom: any) => {
-        pagination.current = 1;
-        isShowSymbolIcon.value = !custom;
-        selectedSymbol.value = item || defaultTitle.defaultTokens;
-        if (item === defaultTitle.defaultTokens) {
-            queryParam.symbol = undefined;
-        } else if (custom) {
-            if (item && item.length && item.length > 8) {
-                selectedSymbol.value = getRestString(item, 4, 4);
-            }
-            queryParam.symbol = undefined;
-            queryParam.denom = item ? `ibc/${item.toUpperCase()}` : undefined;
-        } else {
-            queryParam.symbol = item;
-            queryParam.denom = undefined;
-        }
-        queryDatas();
+    // const onClickDropdownItem = (item: any, custom: any) => {
+    //     pagination.current = 1;
+    //     isShowSymbolIcon.value = !custom;
+    //     selectedSymbol.value = item || defaultTitle.defaultTokens;
+    //     if (item === defaultTitle.defaultTokens) {
+    //         queryParam.symbol = undefined;
+    //     } else if (custom) {
+    //         if (item && item.length && item.length > 8) {
+    //             selectedSymbol.value = getRestString(item, 4, 4);
+    //         }
+    //         queryParam.symbol = undefined;
+    //         queryParam.denom = item ? `ibc/${item.toUpperCase()}` : undefined;
+    //     } else {
+    //         queryParam.symbol = item;
+    //         queryParam.denom = undefined;
+    //     }
+    //     queryDatas();
 
-        url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
-        if (queryParam?.chain_id) {
-            url += `&chain=${queryParam.chain_id}`;
-        }
-        if (queryParam?.denom) {
-            url += `&denom=${queryParam.denom}`;
-        }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
-            url += `&symbol=${queryParam.symbol}`;
-        }
-        if (queryParam?.status) {
-            url += `&status=${queryParam.status.join(',')}`;
-        }
-        if (queryParam?.date_range?.length) {
-            if (queryParam?.date_range.length === 1) {
-                const timeStamp = queryParam.date_range[0];
-                const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=&endTime=${endTime}`;
-            }
-            if (queryParam?.date_range.length === 2) {
-                const startTimeStamp = queryParam.date_range[0];
-                const entTimeStamp = queryParam.date_range[1];
-                const startTime = startTimeStamp
-                    ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
-                    : '';
-                const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=${startTime}&endTime=${endTime}`;
-            }
-        }
-        router.replace(url);
-    };
+    //     url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
+    //     if (queryParam?.chain_id) {
+    //         url += `&chain=${queryParam.chain_id}`;
+    //     }
+    //     if (queryParam?.denom) {
+    //         url += `&denom=${queryParam.denom}`;
+    //     }
+    //     if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
+    //         url += `&symbol=${queryParam.symbol}`;
+    //     }
+    //     if (queryParam?.status) {
+    //         url += `&status=${queryParam.status.join(',')}`;
+    //     }
+    //     if (queryParam?.date_range?.length) {
+    //         if (queryParam?.date_range.length === 1) {
+    //             const timeStamp = queryParam.date_range[0];
+    //             const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
+    //             url += `&startTime=&endTime=${endTime}`;
+    //         }
+    //         if (queryParam?.date_range.length === 2) {
+    //             const startTimeStamp = queryParam.date_range[0];
+    //             const entTimeStamp = queryParam.date_range[1];
+    //             const startTime = startTimeStamp
+    //                 ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
+    //                 : '';
+    //             const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
+    //             url += `&startTime=${startTime}&endTime=${endTime}`;
+    //         }
+    //     }
+    //     router.replace(url);
+    // };
     const handleSelectChange = (item: any) => {
         pagination.current = 1;
         queryParam.status = JSONparse(item);
@@ -807,6 +815,39 @@
         chainIds.value = [];
         queryDatas();
     };
+    const tokenData = computed(() => {
+        return [
+            {
+                groupName: '',
+                children: [
+                    {
+                        title: 'All Tokens',
+                        id: '',
+                        metaData: null
+                    }
+                ]
+            },
+            {
+                groupName: 'Authed IBC Tokens',
+                children: ibcBaseDenomsSorted.value.map((v) => ({
+                    title: v.symbol,
+                    id: v.denom,
+                    icon: v.icon || TOKEN_DEFAULT_ICON,
+                    metaData: v
+                }))
+            },
+            {
+                groupName: 'Custom IBC Tokens',
+                children: [
+                    {
+                        id: 'others',
+                        title: 'Others',
+                        icon: TOKEN_DEFAULT_ICON
+                    }
+                ]
+            }
+        ];
+    });
 
     const chainIds = ref<TDenom[]>(chainId ? (chainId as string).split(',') : []);
     const chainData = computed(() => {
@@ -832,6 +873,24 @@
         ];
     });
     const chainGetPopupContainer = (): HTMLElement => document.querySelector('.transfer__middle')!;
+
+    const denomQuery = route.query.denom as string;
+    const searchDenom = ref(denomQuery);
+    let pageUrl = '/transfers';
+    const onSelectedTransfer = (val?: IDataItem) => {
+        const denom = val?.id;
+        if (denom) {
+            searchDenom.value = denom as string;
+        } else {
+            searchDenom.value = '';
+        }
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'denom',
+            value: denom as string
+        });
+        router.replace(pageUrl);
+        queryDatas();
+    };
 
     const onSelectedChain = (vals: IDataItem[]) => {
         chainIds.value = vals?.map((v) => v.id);
