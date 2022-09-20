@@ -584,7 +584,6 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
             if (timeoutStamp !== DEFAULT_DISPLAY_TEXT) {
                 return formatTimestamp(Number(timeoutStamp.substring(0, 14)));
             }
-            console.log(timeoutStamp.substring(0, 14), 'timeoutStamp');
         }
         return DEFAULT_DISPLAY_TEXT;
     };

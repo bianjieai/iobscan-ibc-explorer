@@ -1,5 +1,6 @@
 export enum API_URL {
     ibcChainsUrl = '/ibc/chains',
+    ibcSearchPointUrl = '/ibc/searchPoint',
     ibcBaseDenomsUrl = '/ibc/baseDenoms',
     ibcDenomsUrl = '/ibc/denoms',
     ibcStatisticsUrl = '/ibc/statistics',

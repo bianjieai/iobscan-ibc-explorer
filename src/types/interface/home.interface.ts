@@ -11,3 +11,8 @@ export interface IResponseIbcStatisticItem {
     statistics_name: string;
     count: number;
 }
+
+export interface ISearchPoint {
+    ip: string;
+    content: string;
+}

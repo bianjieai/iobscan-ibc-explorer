@@ -54,7 +54,7 @@
                     :ibc-tx-status="ibcTxStatus"
                     :ibc-tx-info="ibcTxInfo"
                     :sc-info="scInfo"
-                    :dc-info="scInfo"
+                    :dc-info="dcInfo"
                 ></TxProgress>
             </TxCard>
         </div>
