@@ -57,7 +57,7 @@
                         @on-change="onSelectedChain"
                     />
                     <!-- todo duanjie  看能否复用  BaseDropdown，可参考token页面  -->
-                    <a-select
+                    <!-- <a-select
                         class="status_select"
                         default-active-first-option
                         :value="JSON.stringify(queryParam.status)"
@@ -77,7 +77,19 @@
                                 >{{ item.title }}</span
                             >
                         </a-select-option>
-                    </a-select>
+                    </a-select> -->
+                    <!-- <BaseDropdown
+                        ref="statusDropdown"
+                        :status="JSON.stringify(queryParam.status)"
+                        :option="ibcTxStatusSelectOptions"
+                        @on-selected-change="handleSelectChange"
+                    /> -->
+                    <BaseDropdown
+                        ref="statusDropdown"
+                        :status="JSON.stringify(queryParam.status)"
+                        :options="statusOptions"
+                        @on-selected-change="onSelectedStatus"
+                    />
                 </div>
                 <div class="transfer__middle__right">
                     <a-range-picker
@@ -350,7 +362,7 @@
 
 <script setup lang="ts">
     import {
-        ibcTxStatusSelectOptions,
+        // ibcTxStatusSelectOptions,
         transfersStatusOptions,
         ibcTxStatus,
         ibcTxStatusDesc,
@@ -365,7 +377,7 @@
         TOKEN_DEFAULT_ICON,
         TIP_ICON
     } from '@/constants';
-    import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
+    import { getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
     import { useGetIbcDenoms } from '@/views/home/composable';
     import { dayjsFormatDate } from '@/utils/timeTools';
@@ -393,6 +405,29 @@
     const { ibcChains } = useIbcChains();
     const { tableColumns, showTransferLoading, tableDatas, getIbcTxs } = useGetTableColumns();
     const chainDropdown = ref();
+    const statusDropdown = ref('');
+    const route = useRoute();
+    const router = useRouter();
+    const denomQuery = route.query.denom as string;
+    const searchStatus = ref<string | number>();
+    const statusOptions = ref([
+        {
+            value: undefined,
+            key: 'All Status'
+        },
+        {
+            value: 'Success',
+            key: 'Success'
+        },
+        {
+            value: 'Processing',
+            key: 'Processing'
+        },
+        {
+            value: 'Other',
+            key: 'Other'
+        }
+    ]);
     // const selectedDouble = ref(true);
     // const needBadge = ref(true);
 
@@ -409,8 +444,6 @@
     let pageNum = 1,
         pageSize = 10;
     let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
-    const route = useRoute();
-    const router = useRouter();
 
     const getImageUrl = (status: string | number) => {
         return new URL(`../../assets/home/status${status}.png`, import.meta.url).href;
@@ -677,42 +710,50 @@
     //     }
     //     router.replace(url);
     // };
-    const handleSelectChange = (item: any) => {
-        pagination.current = 1;
-        queryParam.status = JSONparse(item);
-        url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
-        if (queryParam?.chain_id) {
-            url += `&chain=${queryParam.chain_id}`;
-        }
-        if (queryParam?.denom) {
-            url += `&denom=${queryParam.denom}`;
-        }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
-            url += `&symbol=${queryParam.symbol}`;
-        }
-        if (queryParam?.status) {
-            url += `&status=${queryParam.status.join(',')}`;
-        }
-        if (queryParam?.date_range?.length) {
-            if (queryParam?.date_range.length === 1) {
-                const timeStamp = queryParam.date_range[0];
-                const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=&endTime=${endTime}`;
-            }
-            if (queryParam?.date_range.length === 2) {
-                const startTimeStamp = queryParam.date_range[0];
-                const entTimeStamp = queryParam.date_range[1];
-                const startTime = startTimeStamp
-                    ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
-                    : '';
-                const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=${startTime}&endTime=${endTime}`;
-            }
-        }
-        router.replace(url);
+    // const handleSelectChange = (item: any) => {
+    //     pagination.current = 1;
+    //     queryParam.status = JSONparse(item);
+    //     url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
+    //     if (queryParam?.chain_id) {
+    //         url += `&chain=${queryParam.chain_id}`;
+    //     }
+    //     if (queryParam?.denom) {
+    //         url += `&denom=${queryParam.denom}`;
+    //     }
+    //     if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
+    //         url += `&symbol=${queryParam.symbol}`;
+    //     }
+    //     if (queryParam?.status) {
+    //         url += `&status=${queryParam.status.join(',')}`;
+    //     }
+    //     if (queryParam?.date_range?.length) {
+    //         if (queryParam?.date_range.length === 1) {
+    //             const timeStamp = queryParam.date_range[0];
+    //             const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
+    //             url += `&startTime=&endTime=${endTime}`;
+    //         }
+    //         if (queryParam?.date_range.length === 2) {
+    //             const startTimeStamp = queryParam.date_range[0];
+    //             const entTimeStamp = queryParam.date_range[1];
+    //             const startTime = startTimeStamp
+    //                 ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
+    //                 : '';
+    //             const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
+    //             url += `&startTime=${startTime}&endTime=${endTime}`;
+    //         }
+    //     }
+    //     router.replace(url);
+    //     queryDatas();
+    // };
+    const onSelectedStatus = (status?: string | number) => {
+        searchStatus.value = status;
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'status',
+            value: status as string
+        });
+        router.replace(pageUrl);
         queryDatas();
     };
-
     const onOpenChangeRangePicker = (open: boolean) => {
         pickerPlaceholderColor.value = open ? 'var(--bj-text-third)' : 'var(--bj-text-second)';
     };
@@ -874,7 +915,6 @@
     });
     const chainGetPopupContainer = (): HTMLElement => document.querySelector('.transfer__middle')!;
 
-    const denomQuery = route.query.denom as string;
     const searchDenom = ref(denomQuery);
     let pageUrl = '/transfers';
     const onSelectedTransfer = (val?: IDataItem) => {
