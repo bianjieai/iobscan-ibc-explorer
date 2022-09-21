@@ -8,6 +8,7 @@
         @focus="setInputBorderStyle"
         @blur="removeInputBorderStyle"
         @press-enter="searchInput"
+        @change="changeValue"
     >
         <template #suffix>
             <div class="input_prefix cursor" @click="searchInput">
@@ -19,10 +20,8 @@
 
 <script setup lang="ts">
     import { getIP, getIbcSearchPoint } from '@/api';
-    import { useNoResult } from '@/views/transfers/composable';
     import { ref } from 'vue';
     import router from '../router';
-    const { searchInputValue } = useNoResult();
     interface IProps {
         disabled: boolean;
     }
@@ -30,6 +29,7 @@
     let inputValue = ref('');
     let isActiveInputStyle = ref(false);
     const IP = ref<string>('');
+    const content = ref<string>('');
     const getIPFunc = async () => {
         const ipInfo = await getIP();
         if (ipInfo) {
@@ -46,6 +46,9 @@
     const removeInputBorderStyle = () => {
         isActiveInputStyle.value = false;
     };
+    const changeValue = (e: { target: { value: string } }) => {
+        content.value = e.target.value;
+    };
     const searchInput = () => {
         if (inputValue.value !== '') {
             if (/^[A-F0-9]{64}$/.test(inputValue.value)) {
@@ -59,7 +62,7 @@
         // 调取埋点接口
         const params = {
             ip: IP.value,
-            content: searchInputValue.value[0]
+            content: content.value
         };
         getIbcSearchPoint(params);
     };
