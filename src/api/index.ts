@@ -29,7 +29,7 @@ export const getIP = () => {
     });
 };
 
-export const getIbcSearchPoint = (params: ISearchPoint) => {
+export const postIPAndInput = (params: ISearchPoint) => {
     return request({
         url: API_URL.ibcSearchPointUrl,
         method: 'post',

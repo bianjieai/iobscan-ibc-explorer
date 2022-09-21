@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-    import { getIP, getIbcSearchPoint } from '@/api';
+    import { getIP, postIPAndInput } from '@/api';
     import { ref } from 'vue';
     import router from '../router';
     interface IProps {
@@ -28,12 +28,13 @@
     defineProps<IProps>();
     let inputValue = ref('');
     let isActiveInputStyle = ref(false);
-    const IP = ref<string>('');
-    const content = ref<string>('');
+    let IP = '';
+    let content = '';
     const getIPFunc = async () => {
         const ipInfo = await getIP();
         if (ipInfo) {
-            IP.value = ipInfo.split('=')[1].split(',')[0].split(':')[1].substring(2, 12);
+            const JSONStr = ipInfo.split('=')[1].split(';')[0];
+            IP = JSON.parse(JSONStr).cip;
         }
     };
     onMounted(async () => {
@@ -47,7 +48,7 @@
         isActiveInputStyle.value = false;
     };
     const changeValue = (e: { target: { value: string } }) => {
-        content.value = e.target.value;
+        content = e.target.value;
     };
     const searchInput = () => {
         if (inputValue.value !== '') {
@@ -61,10 +62,10 @@
         }
         // 调取埋点接口
         const params = {
-            ip: IP.value,
-            content: content.value
+            ip: IP,
+            content: content
         };
-        getIbcSearchPoint(params);
+        postIPAndInput(params);
     };
 </script>
 
