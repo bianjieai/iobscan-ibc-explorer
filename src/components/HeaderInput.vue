@@ -18,14 +18,28 @@
 </template>
 
 <script setup lang="ts">
+    import { getIP, getIbcSearchPoint } from '@/api';
+    import { useNoResult } from '@/views/transfers/composable';
     import { ref } from 'vue';
     import router from '../router';
+    const { searchInputValue } = useNoResult();
     interface IProps {
         disabled: boolean;
     }
     defineProps<IProps>();
     let inputValue = ref('');
     let isActiveInputStyle = ref(false);
+    const IP = ref<string>('');
+    const getIPFunc = async () => {
+        const ipInfo = await getIP();
+        if (ipInfo) {
+            IP.value = ipInfo.split('=')[1].split(',')[0].split(':')[1].substring(2, 12);
+        }
+    };
+    onMounted(async () => {
+        await getIPFunc();
+    });
+
     const setInputBorderStyle = () => {
         isActiveInputStyle.value = true;
     };
@@ -42,6 +56,12 @@
                 inputValue.value = '';
             }
         }
+        // 调取埋点接口
+        const params = {
+            ip: IP.value,
+            content: searchInputValue.value[0]
+        };
+        getIbcSearchPoint(params);
     };
 </script>
 

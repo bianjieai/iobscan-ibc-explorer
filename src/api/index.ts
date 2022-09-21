@@ -1,11 +1,12 @@
 import { API_URL } from '@/constants/apiUrl';
 import request from '@/utils/axios';
-import {
+import type {
     IResponse,
     IIbcChains,
     IBaseDenom,
     IResponseData
 } from '@/types/interface/index.interface';
+import type { ISearchPoint } from '@/types/interface/home.interface';
 
 export const getIbcChainsAPI = () => {
     return request<IResponse<IResponseData<IIbcChains[]>>>({
@@ -18,5 +19,20 @@ export const getIbcBaseDenomsAPI = () => {
     return request<IResponse<IResponseData<IBaseDenom[]>>>({
         url: API_URL.ibcBaseDenomsUrl,
         method: 'get'
+    });
+};
+
+export const getIP = () => {
+    return request({
+        url: 'http://pv.sohu.com/cityjson?ie=utf-8',
+        method: 'get'
+    });
+};
+
+export const getIbcSearchPoint = (params: ISearchPoint) => {
+    return request({
+        url: API_URL.ibcSearchPointUrl,
+        method: 'post',
+        params: params
     });
 };
