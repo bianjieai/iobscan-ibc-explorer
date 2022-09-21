@@ -8,6 +8,7 @@
         @focus="setInputBorderStyle"
         @blur="removeInputBorderStyle"
         @press-enter="searchInput"
+        @change="changeValue"
     >
         <template #suffix>
             <div class="input_prefix cursor" @click="searchInput">
@@ -18,6 +19,7 @@
 </template>
 
 <script setup lang="ts">
+    import { getIP, postIPAndInput } from '@/api';
     import { ref } from 'vue';
     import router from '../router';
     interface IProps {
@@ -26,11 +28,27 @@
     defineProps<IProps>();
     let inputValue = ref('');
     let isActiveInputStyle = ref(false);
+    let IP = '';
+    let content = '';
+    const getIPFunc = async () => {
+        const ipInfo = await getIP();
+        if (ipInfo) {
+            const JSONStr = ipInfo.split('=')[1].split(';')[0];
+            IP = JSON.parse(JSONStr).cip;
+        }
+    };
+    onMounted(async () => {
+        await getIPFunc();
+    });
+
     const setInputBorderStyle = () => {
         isActiveInputStyle.value = true;
     };
     const removeInputBorderStyle = () => {
         isActiveInputStyle.value = false;
+    };
+    const changeValue = (e: { target: { value: string } }) => {
+        content = e.target.value;
     };
     const searchInput = () => {
         if (inputValue.value !== '') {
@@ -42,6 +60,12 @@
                 inputValue.value = '';
             }
         }
+        // 调取埋点接口
+        const params = {
+            ip: IP,
+            content: content
+        };
+        postIPAndInput(params);
     };
 </script>
 

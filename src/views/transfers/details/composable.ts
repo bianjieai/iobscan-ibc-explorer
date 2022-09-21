@@ -58,7 +58,7 @@ import type {
     IIbcSource
 } from '@/types/interface/transfers.interface';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
-import { drawDefaultIcon, getTextWidth } from '@/utils/urlTools';
+import { getTextWidth } from '@/utils/urlTools';
 import moveDecimal from 'move-decimal-point';
 import * as djs from 'dayjs';
 import { Ref } from 'vue';
@@ -463,14 +463,49 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
 
 // progress
 export const useTxImg = (props: Readonly<IUseTxImg>) => {
+    const successImg = new URL('../../../assets/transfers/success.png', import.meta.url).href;
+    const successSmallImg = new URL('../../../assets/transfers/success_small.png', import.meta.url)
+        .href;
+    const proccessingImg = new URL('../../../assets/transfers/proccessing.png', import.meta.url)
+        .href;
+    const proccessingSmallImg = new URL(
+        '../../../assets/transfers/proccessing_small.png',
+        import.meta.url
+    ).href;
+    const failedImg = new URL('../../../assets/transfers/failed.png', import.meta.url).href;
+    const failedSmallImg = new URL('../../../assets/transfers/failed_small.png', import.meta.url)
+        .href;
+    const unknownImg = new URL('../../../assets/transfers/unknown.png', import.meta.url).href;
+    const unknownSmallImg = new URL('../../../assets/transfers/unknown_small.png', import.meta.url)
+        .href;
     const searchTxImg = computed(() => {
         if (props.txImg !== DEFAULT_DISPLAY_TEXT) {
-            return drawDefaultIcon(`../assets/transfers/${props.txImg}.png`);
+            switch (props.txImg) {
+                case IBC_TX_INFO_STATUS.success:
+                    return successImg;
+                case IBC_TX_INFO_STATUS.proccessing:
+                    return proccessingImg;
+                case IBC_TX_INFO_STATUS.failed:
+                    return failedImg;
+                case IBC_TX_INFO_STATUS.unknown:
+                    return unknownImg;
+            }
         }
     });
     const searchTxAdaptorImg = computed(() => {
         if (props.txImg !== DEFAULT_DISPLAY_TEXT) {
-            return drawDefaultIcon(`../assets/transfers/${props.txImg}_small.png`);
+            if (props.txImg !== DEFAULT_DISPLAY_TEXT) {
+                switch (props.txImg) {
+                    case IBC_TX_INFO_STATUS.success:
+                        return successSmallImg;
+                    case IBC_TX_INFO_STATUS.proccessing:
+                        return proccessingSmallImg;
+                    case IBC_TX_INFO_STATUS.failed:
+                        return failedSmallImg;
+                    case IBC_TX_INFO_STATUS.unknown:
+                        return unknownSmallImg;
+                }
+            }
         }
     });
     return {
@@ -640,8 +675,8 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
 
 export const useViewSource = (props: IUseViewSOurce) => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const tableExpand = drawDefaultIcon('../assets/transfers/table_expand.png');
-    const tablePackUp = drawDefaultIcon('../assets/transfers/table_packup.png');
+    const tableExpand = new URL('../../../assets/transfers/table_expand.png', import.meta.url).href;
+    const tablePackUp = new URL('../../../assets/transfers/table_packup.png', import.meta.url).href;
     const activeKey = ref<string>('1');
     const JSONSource = ref<IIbcSource | undefined>();
     const sourceCode = ref();

@@ -89,14 +89,17 @@
 
 <script setup lang="ts">
     import type { IIbcTxInfo, ITxInfo } from '@/types/interface/transfers.interface';
-    import { drawDefaultIcon } from '@/utils/urlTools';
     import { toRefs } from 'vue';
     import { useIbcTxInfo } from '../composable';
     import TxProgressList from './TxProgressList.vue';
     import TxSource from './TxSource.vue';
-    const selectedSvg = drawDefaultIcon('../assets/transfers/selected.svg');
-    const unSelectedSvg = drawDefaultIcon('../assets/transfers/unselected.svg');
-    const lastUnSelectedSvg = drawDefaultIcon('../assets/transfers/last_unselected.svg');
+    const selectedSvg = new URL('../../../../assets/transfers/selected.svg', import.meta.url).href;
+    const unSelectedSvg = new URL('../../../../assets/transfers/unselected.svg', import.meta.url)
+        .href;
+    const lastUnSelectedSvg = new URL(
+        '../../../../assets/transfers/last_unselected.svg',
+        import.meta.url
+    ).href;
 
     interface IProps {
         ibcTxStatus: number;
