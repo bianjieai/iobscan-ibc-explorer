@@ -145,8 +145,10 @@
         &__step_proccessing {
             border-left: 1px solid rgba(61, 80, 255, 0.2);
             .tx_progress__step {
-                .tx_progress__description {
-                    left: -10%;
+                &:nth-of-type(1) {
+                    .tx_progress__description {
+                        left: -10%;
+                    }
                 }
             }
         }
@@ -249,6 +251,15 @@
                         left: 0;
                         .tx_progress__description {
                             left: 0;
+                        }
+                    }
+                }
+            }
+            &__step_proccessing {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                            left: -10%;
                         }
                     }
                 }
@@ -854,6 +865,7 @@
                         }
                     }
                     &:nth-of-type(2) {
+                        left: 0;
                         .tx_progress__description {
                             left: 0;
                         }
@@ -931,7 +943,7 @@
                 &:nth-of-type(2) {
                     left: -40%;
                     .tx_progress__description {
-                        left: 175%;
+                        left: 180%;
                     }
                 }
                 &:nth-of-type(3) {
@@ -948,6 +960,7 @@
                         }
                     }
                     &:nth-of-type(2) {
+                        left: 0;
                         .tx_progress__description {
                             left: 10%;
                         }
@@ -1016,11 +1029,12 @@
                 &:nth-of-type(2) {
                     left: -45%;
                     .tx_progress__description {
-                        left: 190%;
+                        left: 200%;
                     }
                 }
                 &:nth-of-type(3) {
                     .tx_progress__description {
+                        left: 15%;
                     }
                 }
                 &__flex {
@@ -1033,6 +1047,7 @@
                         }
                     }
                     &:nth-of-type(2) {
+                        left: 0;
                         .tx_progress__description {
                             left: 10%;
                         }
@@ -1093,19 +1108,20 @@
                 }
 
                 &:nth-of-type(1) {
-                    left: -60%;
+                    left: -55%;
                     .tx_progress__description {
-                        left: 230%;
+                        left: 210%;
                     }
                 }
                 &:nth-of-type(2) {
-                    left: -60%;
+                    left: -55%;
                     .tx_progress__description {
-                        left: 230%;
+                        left: 210%;
                     }
                 }
                 &:nth-of-type(3) {
                     .tx_progress__description {
+                        left: -5%;
                     }
                 }
                 &__flex {
@@ -1118,6 +1134,7 @@
                         }
                     }
                     &:nth-of-type(2) {
+                        left: 0;
                         .tx_progress__description {
                             left: 10%;
                         }
@@ -1141,6 +1158,87 @@
             &__diff_active {
                 img {
                     transform: translateX(-68%);
+                }
+                .tx_progress__description {
+                }
+            }
+            &__content {
+            }
+        }
+    }
+    @media screen and (max-width: 560px) {
+        .tx_progress {
+            &__wrap {
+            }
+            &__top {
+            }
+            &__step_wrap {
+                &__width {
+                }
+                &__single_width {
+                }
+                img {
+                }
+            }
+            &__step_wrap_mobile {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__step {
+                &__width {
+                }
+                &__single_flex {
+                }
+
+                &:nth-of-type(1) {
+                    left: -60%;
+                    .tx_progress__description {
+                        left: 230%;
+                    }
+                }
+                &:nth-of-type(2) {
+                    left: -60%;
+                    .tx_progress__description {
+                        left: 230%;
+                    }
+                }
+                &:nth-of-type(3) {
+                    .tx_progress__description {
+                    }
+                }
+                &__flex {
+                }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__description {
+            }
+            &__progress {
+            }
+            &__badge {
+            }
+            &__active {
+                .tx_progress__description {
+                    .tx_progress__progress {
+                    }
+                    .tx_progress__badge {
+                    }
+                }
+            }
+            &__diff_active {
+                img {
                 }
                 .tx_progress__description {
                 }
@@ -1201,6 +1299,7 @@
                         }
                     }
                     &:nth-of-type(2) {
+                        left: 0;
                         .tx_progress__description {
                             left: 10%;
                         }
@@ -1262,20 +1361,20 @@
                 }
 
                 &:nth-of-type(1) {
-                    left: -68%;
+                    left: -66%;
                     .tx_progress__description {
                         left: 245%;
                     }
                 }
                 &:nth-of-type(2) {
-                    left: -68%;
+                    left: -66%;
                     .tx_progress__description {
                         left: 245%;
                     }
                 }
                 &:nth-of-type(3) {
                     .tx_progress__description {
-                        left: 20%;
+                        left: -5%;
                     }
                 }
                 &__flex {
@@ -1287,6 +1386,7 @@
                         }
                     }
                     &:nth-of-type(2) {
+                        left: 0;
                         .tx_progress__description {
                             left: 10%;
                         }
@@ -1341,6 +1441,16 @@
                 .tx_progress__step {
                     &:nth-of-type(1) {
                         .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__step_proccessing {
+                width: 44%;
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                            left: -30%;
                         }
                     }
                 }
