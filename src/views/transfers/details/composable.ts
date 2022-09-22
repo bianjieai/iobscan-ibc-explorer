@@ -509,6 +509,11 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
     const { ibcTxInfo, mark, scInfo, dcInfo } = toRefs(props);
     const progressListAll = ref<IInfoList[]>([]);
     const progressList = ref<IInfoList[]>([]);
+    let timestampTimer: number;
+    let timeoutstampTimer: number;
+    const clearTimestampTimer = (timer: number) => {
+        timer && clearInterval(timer);
+    };
     const changeProgressListAll = (
         scProgressList: IInfoList[],
         differenceFileds: IInfoList[],
@@ -519,14 +524,30 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
             handleTransferDetails(item, sourceInfo);
         });
         progressList.value.forEach(async (item) => {
-            if (item.value && item.value !== DEFAULT_DISPLAY_TEXT) {
+            if (item.value !== '' && item.value !== DEFAULT_DISPLAY_TEXT) {
                 if (item.isFormatStatus) {
                     item.value = formatStatus(item.value);
                 } else if (item.isFormatFee) {
                     item.value = await formatFee(item.value);
                 } else if (item.isFormatSigner) {
                     item.value = formatSigner(item.value);
+                } else if (item.isFormatTimestamp) {
+                    const saveTimestamp = item.value;
+                    item.value = formatTimestamp(item.value);
+                    clearTimestampTimer(timestampTimer);
+                    timestampTimer = setInterval(() => {
+                        item.value = formatTimestamp(saveTimestamp);
+                    }, 1000);
+                } else if (item.isFormatTimeoutTimestamp) {
+                    const saveTimestamp = item.value;
+                    item.value = formatTimeoutTimestamp(item.value);
+                    clearTimestampTimer(timeoutstampTimer);
+                    timeoutstampTimer = setInterval(() => {
+                        item.value = formatTimeoutTimestamp(saveTimestamp);
+                    }, 1000);
                 }
+            } else {
+                item.value = DEFAULT_DISPLAY_TEXT;
             }
         });
         progressListAll.value = progressList.value;
@@ -577,27 +598,19 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
     };
     const formatTimestamp = (timestamp: number | string) => {
         const dayjs = djs?.default || djs;
-        const date = ref('');
+        let date = '';
         const time = Number(timestamp);
         if (timestamp > 0) {
-            date.value = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
+            date = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
                 getTimestamp(),
                 time * 1000,
                 'ago',
                 '>'
             )})`;
-            setTimeout(() => {
-                date.value = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
-                    getTimestamp(),
-                    time * 1000,
-                    'ago',
-                    '>'
-                )})`;
-            }, 1000);
         } else {
-            date.value = DEFAULT_DISPLAY_TEXT;
+            date = DEFAULT_DISPLAY_TEXT;
         }
-        return date.value;
+        return date;
     };
     const formatTimeoutTimestamp = (timeoutStamp: number | string) => {
         if (typeof timeoutStamp === 'string') return timeoutStamp;
@@ -648,6 +661,10 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
             }
         };
     });
+    onBeforeUnmount(() => {
+        timestampTimer && clearTimestampTimer(timestampTimer);
+        timeoutstampTimer && clearTimestampTimer(timeoutstampTimer);
+    });
 
     return {
         progressListAll,
@@ -657,8 +674,7 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
     };
 };
 
-export const useViewSource = (props: IUseViewSOurce) => {
-    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const tableExpand = new URL('../../../assets/transfers/table_expand.png', import.meta.url).href;
     const tablePackUp = new URL('../../../assets/transfers/table_packup.png', import.meta.url).href;
     const activeKey = ref<string>('1');
@@ -666,12 +682,11 @@ export const useViewSource = (props: IUseViewSOurce) => {
     const sourceCode = ref();
     const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);
     const getIbcSource = async (hash: string, chainId: string, msgType: string) => {
-        ibcStatisticsChainsStore.isShowLoading = true;
+        loading && (loading.value = true);
         const params = { chain_id: chainId, msg_type: msgType };
-
         try {
             const { code, message, data } = await getTxDetailsViewSourceByTxHashAPI(hash, params);
-            ibcStatisticsChainsStore.isShowLoading = false;
+            loading && (loading.value = false);
             if (code === API_CODE.success) {
                 return data;
             } else {
@@ -679,7 +694,7 @@ export const useViewSource = (props: IUseViewSOurce) => {
             }
         } catch (error) {
             console.log(error);
-            ibcStatisticsChainsStore.isShowLoading = false;
+            loading && (loading.value = false);
         }
     };
     watch(

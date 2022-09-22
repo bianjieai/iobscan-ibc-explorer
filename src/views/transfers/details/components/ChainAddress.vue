@@ -26,7 +26,7 @@
     const chainName = computed(() => {
         if (props.chainInfo) {
             const { chainName } = useMatchChainInfo(props.chainInfo.chain_id);
-            return chainName;
+            return chainName || DEFAULT_DISPLAY_TEXT;
         }
     });
 </script>

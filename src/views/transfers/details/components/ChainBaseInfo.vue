@@ -79,13 +79,12 @@
 <style lang="less" scoped>
     .chain_info {
         .flex(column, nowrap, flex-start, flex-start);
-        width: 300px;
+        min-width: 300px;
         &__details {
             flex: 1;
             margin-top: 16px;
             padding: 16px;
             width: 100%;
-            min-width: 300px;
             min-height: 290px;
             background: #f8fafd;
             border-radius: var(--border-radius-normal);

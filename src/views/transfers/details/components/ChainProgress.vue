@@ -21,6 +21,7 @@
 <style lang="less" scoped>
     .progress {
         align-self: center;
+        margin: 0 40px;
         &__img {
             display: inline-block;
             width: 46px;
@@ -28,6 +29,33 @@
         }
         &__img_adaptor {
             display: none;
+        }
+    }
+    @media screen and (max-width: 1296px) {
+        .progress {
+            margin: 0 24px;
+            &__img {
+            }
+            &__img_adaptor {
+            }
+        }
+    }
+    @media screen and (max-width: 1232px) {
+        .progress {
+            margin: 0 16px;
+            &__img {
+            }
+            &__img_adaptor {
+            }
+        }
+    }
+    @media screen and (max-width: 1200px) {
+        .progress {
+            margin: 0 8px;
+            &__img {
+            }
+            &__img_adaptor {
+            }
         }
     }
     @media screen and (max-width: 1160px) {
