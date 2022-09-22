@@ -53,18 +53,16 @@ export const getJSONData = (jsonData: IIbcSource) => {
         const result = [];
         if (data && Object.keys(data).length) {
             for (const key in data) {
-                let keyPath = `${superKey}/${key}`;
+                const keyPath = superKey ? `${superKey}/${key}` : `${key}`;
                 let displayKey = '';
                 const v = data[key];
                 let r: DataItem;
                 if (typeof v == 'object') {
-                    if (Array.isArray(data)) {
-                        keyPath = `${superKey}/__item`;
-                    } else {
+                    if (!Array.isArray(data)) {
                         displayKey = getKeyNameByJSONPath(keyPath, JSONSchemaKeys) || key;
                     }
                     r = {
-                        key: displayKey,
+                        key: displayKey || keyPath,
                         value: ''
                     };
                     r.children = format(v, keyPath);
