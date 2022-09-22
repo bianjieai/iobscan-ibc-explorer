@@ -66,7 +66,7 @@
             }
         }
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 500px) {
         .address {
             .flex(column, nowrap, flex-start, flex-start);
             &__label {

@@ -6,8 +6,23 @@
                 v-if="item.isFormatStatus"
                 class="progress_list__value"
                 :class="changeColor(item.value)"
-                >{{ item.value }}</span
             >
+                {{ item.value }}
+            </span>
+            <span
+                v-else-if="item.isFormatTimestamp"
+                class="progress_list__value"
+                :class="changeColor(item.value)"
+            >
+                {{ formatTimestamp(item.value) }}
+            </span>
+            <span
+                v-else-if="item.isFormatTimeoutTimestamp"
+                class="progress_list__value"
+                :class="changeColor(item.value)"
+            >
+                {{ formatTimeoutTimestamp(item.value) }}
+            </span>
             <span v-else class="progress_list__value">{{ item.value }}</span>
         </li>
     </ul>
@@ -25,7 +40,8 @@
         dcInfo: ITxInfo | undefined;
     }
     const props = defineProps<IProps>();
-    const { progressListAll, changeColor } = useProgressList(props);
+    const { progressListAll, changeColor, formatTimestamp, formatTimeoutTimestamp } =
+        useProgressList(props);
 </script>
 
 <style lang="less" scoped>
@@ -58,7 +74,7 @@
             color: var(--bj-failed);
         }
     }
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 556px) {
         .progress_list {
             &__item {
                 .flex(column, nowrap, flex-start, flex-start);

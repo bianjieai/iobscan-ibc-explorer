@@ -38,4 +38,15 @@
             padding: 24px;
         }
     }
+    @media screen and(max-width: 500px) {
+        .tx_card {
+            &__title {
+            }
+            &__text {
+            }
+            &__primary {
+                padding: 16px;
+            }
+        }
+    }
 </style>

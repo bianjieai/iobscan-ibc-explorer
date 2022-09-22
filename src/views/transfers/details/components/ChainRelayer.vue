@@ -1,34 +1,20 @@
 <template>
     <div class="relayer_info">
         <TitleCard :title="title"></TitleCard>
-        <div class="relayer_info__content">
+        <div class="relayer_info__content" :class="{ relayer_info__cotent_column: isFlexColumn }">
             <div class="relayer_info__name" :class="{ relayer_info__column: isFlexColumn }">
                 <span class="relayer_info__label">{{ relayerScInfoList.label }}</span>
                 <router-link
-                    :to="`/relayers/chain=${scInfo?.chain_id},${dcInfo?.chain_id}`"
+                    v-if="relayerScInfoList.value !== DEFAULT_DISPLAY_TEXT"
+                    :to="`/relayers?chain=${scInfo?.chain_id},${dcInfo?.chain_id}`"
                     class="relayer_info__value"
                 >
-                    <img
-                        v-if="relayerScInfoList.value !== DEFAULT_DISPLAY_TEXT"
-                        :src="relayerScIcon"
-                        alt=""
-                    />
+                    <img :src="relayerScIcon" alt="" />
                     <span>{{ relayerScInfoList.value }}</span>
                 </router-link>
-            </div>
-            <div class="relayer_info__name" :class="{ relayer_info__column: isFlexColumn }">
-                <span class="relayer_info__label">{{ relayerDcInfoList.label }}</span>
-                <router-link
-                    :to="`/relayers/chain=${scInfo?.chain_id},${dcInfo?.chain_id}`"
-                    class="relayer_info__value"
-                >
-                    <img
-                        v-if="relayerDcInfoList.value !== DEFAULT_DISPLAY_TEXT"
-                        :src="relayerDcIcon"
-                        alt=""
-                    />
-                    <span>{{ relayerDcInfoList.value }}</span>
-                </router-link>
+                <span v-else class="relayer_info__value">
+                    <span>{{ DEFAULT_DISPLAY_TEXT }}</span>
+                </span>
             </div>
             <ChainAddress
                 class="relayer_info__address"
@@ -62,14 +48,10 @@
         (e: 'updateIsFlexColumn', newIsFlexColumn: boolean): void;
     }>();
 
-    const {
-        relayerScInfoList,
-        relayerDcInfoList,
-        relayerScIcon,
-        relayerDcIcon,
-        fromAddressInfo,
-        toAddressInfo
-    } = useRelayerInfo(props, emits);
+    const { relayerScInfoList, relayerScIcon, fromAddressInfo, toAddressInfo } = useRelayerInfo(
+        props,
+        emits
+    );
 </script>
 
 <style lang="less" scoped>
@@ -78,9 +60,12 @@
             margin-top: 16px;
             padding: 16px;
             width: 300px;
-            min-height: 228px;
+            min-height: 192px;
             background: #f8fafd;
             border-radius: var(--border-radius-normal);
+        }
+        &__cotent_column {
+            min-height: 228px;
         }
         &__name {
             .flex(row, nowrap, flex-start, center);
@@ -97,7 +82,7 @@
         }
         &__value {
             flex: 1;
-            .flex(row, nowrap, flex-start, center);
+            .flex(row, nowrap, flex-start, flex-start);
             margin-left: 24px;
             font-size: var(--bj-font-size-normal);
             font-weight: 400;
@@ -110,7 +95,7 @@
             }
         }
         &__address {
-            margin-top: 12px;
+            margin-top: 14px;
             &:first-child {
                 margin-top: 11px;
             }
@@ -151,7 +136,7 @@
             }
         }
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 500px) {
         .relayer_info {
             &__content {
                 width: 100%;
