@@ -1,12 +1,19 @@
 <template>
     <div class="relayer_info">
         <TitleCard :title="title"></TitleCard>
-        <div class="relayer_info__content">
+        <div class="relayer_info__content" :class="{ relayer_info__cotent_column: isFlexColumn }">
             <div class="relayer_info__name" :class="{ relayer_info__column: isFlexColumn }">
-                <span class="relayer_info__label">{{ relayerInfoList.label }}</span>
-                <span class="relayer_info__value">
-                    <img :src="relayerIcon" alt="" />
-                    <span>{{ relayerInfoList.value }}</span>
+                <span class="relayer_info__label">{{ relayerScInfoList.label }}</span>
+                <router-link
+                    v-if="relayerScInfoList.value !== DEFAULT_DISPLAY_TEXT"
+                    :to="`/relayers?chain=${scInfo?.chain_id},${dcInfo?.chain_id}`"
+                    class="relayer_info__value"
+                >
+                    <img :src="relayerScIcon" alt="" />
+                    <span>{{ relayerScInfoList.value }}</span>
+                </router-link>
+                <span v-else class="relayer_info__value">
+                    <span>{{ DEFAULT_DISPLAY_TEXT }}</span>
                 </span>
             </div>
             <ChainAddress
@@ -25,7 +32,8 @@
 
 <script setup lang="ts">
     import type { IRelayerInfo, ITxInfo } from '@/types/interface/transfers.interface';
-    import { useRequenceInfo } from '../composable';
+    import { DEFAULT_DISPLAY_TEXT } from '@/constants';
+    import { useRelayerInfo } from '../composable';
     import TitleCard from './TitleCard.vue';
     import ChainAddress from './ChainAddress.vue';
     interface IProps {
@@ -40,7 +48,7 @@
         (e: 'updateIsFlexColumn', newIsFlexColumn: boolean): void;
     }>();
 
-    const { relayerInfoList, relayerIcon, fromAddressInfo, toAddressInfo } = useRequenceInfo(
+    const { relayerScInfoList, relayerScIcon, fromAddressInfo, toAddressInfo } = useRelayerInfo(
         props,
         emits
     );
@@ -56,8 +64,14 @@
             background: #f8fafd;
             border-radius: var(--border-radius-normal);
         }
+        &__cotent_column {
+            min-height: 228px;
+        }
         &__name {
             .flex(row, nowrap, flex-start, center);
+            &:nth-of-type(2) {
+                margin-top: 8px;
+            }
         }
         &__label {
             width: 92px;
@@ -68,7 +82,7 @@
         }
         &__value {
             flex: 1;
-            .flex(row, nowrap, flex-start, center);
+            .flex(row, nowrap, flex-start, flex-start);
             margin-left: 24px;
             font-size: var(--bj-font-size-normal);
             font-weight: 400;
@@ -81,7 +95,7 @@
             }
         }
         &__address {
-            margin-top: 16px;
+            margin-top: 14px;
             &:first-child {
                 margin-top: 11px;
             }
@@ -122,7 +136,7 @@
             }
         }
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 500px) {
         .relayer_info {
             &__content {
                 width: 100%;

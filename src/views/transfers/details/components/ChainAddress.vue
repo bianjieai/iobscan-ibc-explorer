@@ -6,7 +6,10 @@
         </span>
         <span class="address__value">
             <span>{{ chainAddress.value }}</span>
-            <CopyComponent :copy-text="chainAddress.value"></CopyComponent>
+            <CopyComponent
+                v-if="chainAddress.value !== DEFAULT_DISPLAY_TEXT"
+                :copy-text="chainAddress.value"
+            ></CopyComponent>
         </span>
     </div>
 </template>
@@ -14,6 +17,7 @@
 <script setup lang="ts">
     import { useMatchChainInfo } from '@/composables';
     import type { IInfoList, ITxInfo } from '@/types/interface/transfers.interface';
+    import { DEFAULT_DISPLAY_TEXT } from '@/constants';
     interface IProps {
         chainAddress: IInfoList;
         chainInfo?: ITxInfo;
@@ -22,7 +26,7 @@
     const chainName = computed(() => {
         if (props.chainInfo) {
             const { chainName } = useMatchChainInfo(props.chainInfo.chain_id);
-            return chainName.value;
+            return chainName;
         }
     });
 </script>
@@ -62,7 +66,7 @@
             }
         }
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 500px) {
         .address {
             .flex(column, nowrap, flex-start, flex-start);
             &__label {

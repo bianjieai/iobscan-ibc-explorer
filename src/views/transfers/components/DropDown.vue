@@ -138,21 +138,6 @@
             selectedSymbol: ''
         }
     );
-    // const props = defineProps({
-    //     ibcBaseDenoms: {
-    //         type: Array,
-    //         default: () => []
-    //     },
-    //     selectedSymbol: {
-    //         type: String,
-    //         default: ''
-    //     },
-    //     clearInput: {
-    //         type: Number,
-    //         required: true
-    //     },
-    //     showIcon: Boolean
-    // });
     const emits = defineEmits(['clickItem', 'clickSearch']);
     const { findSymbolIcon } = useFindIcon(props);
     const { isVisible, visibleChange } = useIsVisible();
@@ -310,7 +295,7 @@
             font-weight: 400;
             color: var(--bj-font-color-65);
             margin-bottom: 16px;
-            width: 140px;
+            width: 158px;
             transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
             &:hover {
                 border: 1px solid var(--bj-primary-color);
@@ -417,6 +402,7 @@
                 overflow: auto;
             }
             &__title {
+                width: 120px;
                 &:hover {
                 }
             }

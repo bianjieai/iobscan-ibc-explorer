@@ -133,13 +133,13 @@ export const useBoundary = (ele: HTMLElement) => {
 
 // 获取对应 ChainInfo
 export const useMatchChainInfo = (chainId: string) => {
-    const chainIcon = ref<string>(CHAIN_DEFAULT_ICON);
-    const chainName = ref<string>('--');
+    let chainIcon = CHAIN_DEFAULT_ICON;
+    let chainName = '';
     const { ibcChains } = useIbcChains(DATA_REFRESH_GAP);
     const matchChain = ibcChains.value.all.find((item) => item.chain_id === chainId);
     if (matchChain) {
-        chainIcon.value = matchChain.icon;
-        chainName.value = matchChain.chain_name;
+        chainIcon = matchChain.icon;
+        chainName = matchChain.chain_name;
     }
     return {
         chainIcon,

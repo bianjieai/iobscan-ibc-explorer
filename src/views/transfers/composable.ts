@@ -1,6 +1,8 @@
 import { useIbcStatisticsChains } from '@/store/index';
 import { transferTableColumn, defaultTitle, TOKEN_DEFAULT_ICON } from '@/constants';
 import { IPaginationParams } from '@/types/interface/index.interface';
+import { getTxDetailsByTxHashAPI } from '@/api/transfers';
+import { API_CODE } from '@/constants/apiCode';
 
 export const useIbcDenoms = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -120,44 +122,43 @@ export const useIsVisible = () => {
     };
 };
 
-// noresult todo shan 导航输入框输入 hash 的情况
-// export const useNoResult = () => {
-//     const route = useRoute();
-//     const router = useRouter();
-//     watch(route, (newValue) => {
-//         if (newValue?.query) {
-//             searchInputValue.value = Object.keys(route.query);
-//         }
-//     });
-//     const searchInputValue = reactive({
-//         value: ['']
-//     });
-//     if (route?.query) {
-//         if (/^[A-F0-9]{64}$/.test(Object.keys(route.query).join(''))) {
-//             getTxDetailsByTxHashAPI(Object.keys(route.query).join(''))
-//                 .then((result) => {
-//                     const { code, data } = result;
-//                     if (code === API_CODE.success) {
-//                         if (data?.items?.length === 1) {
-//                             router.push(
-//                                 `/transfers/details?hash=${Object.keys(route.query).join('')}`
-//                             );
-//                         }
-//                     }
-//                 })
-//                 .catch((error) => {
-//                     console.log('getTxDetailsByTxHashAPI', error);
-//                 });
-//         } else {
-//             router.push(`/searchResult?${Object.keys(route.query).join('')}`);
-//         }
-//         searchInputValue.value = Object.keys(route.query);
-//     }
-//     const toHome = () => {
-//         router.push('/home');
-//     };
-//     return {
-//         searchInputValue,
-//         toHome
-//     };
-// };
+export const useNoResult = () => {
+    const route = useRoute();
+    const router = useRouter();
+    watch(route, (newValue) => {
+        if (newValue?.query) {
+            searchInputValue.value = Object.keys(route.query);
+        }
+    });
+    const searchInputValue = reactive({
+        value: ['']
+    });
+    if (route?.query) {
+        if (/^[A-F0-9]{64}$/.test(Object.keys(route.query).join(''))) {
+            getTxDetailsByTxHashAPI(Object.keys(route.query).join(''))
+                .then((result) => {
+                    const { code, data } = result;
+                    if (code === API_CODE.success) {
+                        if (data?.items?.length === 1) {
+                            router.push(
+                                `/transfers/details?hash=${Object.keys(route.query).join('')}`
+                            );
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.log('getTxDetailsByTxHashAPI', error);
+                });
+        } else {
+            router.push(`/searchResult?${Object.keys(route.query).join('')}`);
+        }
+        searchInputValue.value = Object.keys(route.query);
+    }
+    const toHome = () => {
+        router.push('/home');
+    };
+    return {
+        searchInputValue,
+        toHome
+    };
+};

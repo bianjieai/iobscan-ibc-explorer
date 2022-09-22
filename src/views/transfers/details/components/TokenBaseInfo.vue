@@ -9,7 +9,18 @@
                 <div class="token_info__icon">
                     <img :src="tokenLogo" alt="" />
                 </div>
-                <div class="token_info__name"> {{ tokenName }} </div>
+                <a-popover
+                    v-if="tokenName?.length > 18"
+                    destroy-tooltip-on-hide
+                    class="token_info__name_popover"
+                >
+                    <template #content>{{ tokenName }}</template>
+                    <span class="token_info__name">{{ getRestString(tokenName, 6, 0) }}</span>
+                </a-popover>
+                <span v-else class="token_info__name token_info__name_max">{{
+                    getRestString(tokenName, 6, 0)
+                }}</span>
+                <span class="token_info__name token_info__name_mobile">{{ tokenName }}</span>
             </router-link>
             <div class="token_info__right">
                 <div class="token_info__label_value">
@@ -49,7 +60,7 @@
                     </div>
                 </div>
                 <ExpandBtn
-                    class="token_info__expand"
+                    class="token_info__expand cursor"
                     :is-show-details-info="isShowTokenDetailsInfo"
                     @update-is-show-details-info="updateIsShowDetailsInfo"
                 ></ExpandBtn>
@@ -61,6 +72,8 @@
 <script setup lang="ts">
     import { ITokenInfo } from '@/types/interface/transfers.interface';
     import { useTokenInfo } from '@/views/transfers/details/composable';
+    import { getRestString } from '@/helper/parseStringHelper';
+
     import TitleCard from './TitleCard.vue';
     interface IProps {
         tokenInfo: ITokenInfo | undefined;
@@ -96,8 +109,13 @@
             }
         }
         &__name {
+            display: inline-block;
             padding: 5px 16px;
+            width: 100%;
             background: #ebedff;
+        }
+        &__name_mobile {
+            display: none;
         }
         &__right {
             flex: 1;
@@ -169,13 +187,13 @@
             }
         }
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 680px) {
         .token_info {
             &__details {
                 .flex(column, nowrap, flex-start, flex-start);
             }
             &__left {
-                .flex(row, nowrap, flex-start, center);
+                .flex(row, nowrap, flex-start, flex-start);
                 width: 100%;
                 text-align: left;
             }
@@ -191,12 +209,22 @@
                 padding: 0;
                 background: #fff;
             }
+            &__name_popover {
+                display: none;
+            }
+            &__name_max {
+                display: none;
+            }
+            &__name_mobile {
+                display: inline-block;
+                flex: 1;
+                word-break: break-all;
+            }
             &__right {
                 margin-top: 16px;
                 margin-left: 0;
             }
             &__label_value_wrap {
-                display: none;
             }
             &__label_value_expand {
                 display: block;
@@ -212,6 +240,39 @@
             &__value {
                 margin-top: 2px;
                 margin-left: 0;
+            }
+            &__expand {
+            }
+        }
+    }
+    @media screen and (max-width: 500px) {
+        .token_info {
+            &__details {
+            }
+            &__left {
+            }
+            &__icon {
+                img {
+                }
+            }
+            &__name {
+            }
+            &__right {
+            }
+            &__label_value_wrap {
+                display: none;
+            }
+            &__label_value_expand {
+                display: block;
+                margin-top: 16px;
+            }
+            &__label_value {
+                &:first-child {
+                }
+            }
+            &__label {
+            }
+            &__value {
             }
             &__expand {
                 display: block;
