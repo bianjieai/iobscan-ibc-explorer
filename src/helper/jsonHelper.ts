@@ -20,25 +20,6 @@ const parseObjJsonData = (_d: any) => {
     return data;
 };
 
-const getKeyNameByJSONPath = (path: string, src: object | string) => {
-    if (!path || !src) {
-        return '';
-    }
-    let c: any = src;
-    if (typeof src == 'string') {
-        try {
-            c = JSON.parse(src);
-        } catch (e) {
-            c = {};
-        }
-    }
-    path.split('/').forEach((k) => {
-        if (c && k) {
-            c = c[k];
-        }
-    });
-    return (c && c.__keyName) || '';
-};
 interface DataItem {
     key: string;
     value: string;
@@ -48,7 +29,6 @@ interface DataItem {
 export const getJSONData = (jsonData: IIbcSource) => {
     const keys = [];
     const enumMap: any = {};
-    const JSONSchemaKeys = {};
     const format = (data: any, superKey: string) => {
         const result = [];
         if (data && Object.keys(data).length) {
@@ -59,7 +39,7 @@ export const getJSONData = (jsonData: IIbcSource) => {
                 let r: DataItem;
                 if (typeof v == 'object') {
                     if (!Array.isArray(data)) {
-                        displayKey = getKeyNameByJSONPath(keyPath, JSONSchemaKeys) || key;
+                        displayKey = key;
                     }
                     r = {
                         key: displayKey || keyPath,
@@ -69,7 +49,7 @@ export const getJSONData = (jsonData: IIbcSource) => {
                 } else {
                     let dataEnum;
                     if (!Array.isArray(data)) {
-                        displayKey = getKeyNameByJSONPath(keyPath, JSONSchemaKeys) || key;
+                        displayKey = key;
                         dataEnum = enumMap[key];
                     } else {
                         const keyList = superKey.split('/') || [];
