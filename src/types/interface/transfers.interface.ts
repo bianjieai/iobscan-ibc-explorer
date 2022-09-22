@@ -96,8 +96,8 @@ export interface IIbcTxSourceInfo {
 }
 export interface IIbcTxInfo {
     sc_tx_info: IIbcTxSourceInfo;
-    dc_tx_info: IIbcTxSourceInfo;
-    refund_tx_info: IIbcTxSourceInfo;
+    dc_tx_info: IIbcTxSourceInfo | null;
+    refund_tx_info: IIbcTxSourceInfo | null;
 }
 export interface IUseTokenInfo {
     tokenInfo: ITokenInfo | undefined;

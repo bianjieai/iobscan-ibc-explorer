@@ -105,17 +105,21 @@ export const useTransfersDetailsInfo = () => {
             const { code, data, message } = await getTxDetailsByTxHashAPI(hash);
             ibcStatisticsChainsStore.isShowLoading = false;
             if (code === API_CODE.success) {
-                if (!data.is_list) {
-                    ibcTxStatus.value = data.status;
-                    data.error_log && (errorLog.value = data.error_log);
-                    tokenInfo.value = data.token_info;
-                    scInfo.value = data.sc_info;
-                    dcInfo.value = data.dc_info;
-                    relayerInfo.value = data.relayer_info;
-                    sequence.value = data.sequence;
-                    ibcTxInfo.value = data.ibc_tx_info;
+                if (data) {
+                    if (!data.is_list) {
+                        ibcTxStatus.value = data.status;
+                        data.error_log && (errorLog.value = data.error_log);
+                        tokenInfo.value = data.token_info;
+                        scInfo.value = data.sc_info;
+                        dcInfo.value = data.dc_info;
+                        relayerInfo.value = data.relayer_info;
+                        sequence.value = data.sequence;
+                        ibcTxInfo.value = data.ibc_tx_info;
+                    } else {
+                        router.push('/transfers');
+                    }
                 } else {
-                    router.push('/transfers');
+                    router.replace(`/searchResult?${hash}`);
                 }
             } else {
                 console.error(message);
@@ -411,33 +415,39 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
                 progressData.value = PROCCESSING_FIRST_ERROR;
                 break;
             case IBC_TX_STATUS.refund:
-                if (
-                    ibcTxInfo.value?.sc_tx_info.status === TRANSFER_DETAILS_STATUS.SUCCESS.value &&
-                    ibcTxInfo.value?.dc_tx_info.height === DEFAULT_HEIGHT.default
-                ) {
-                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                    rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
-                    progressData.value = NO_SECOND;
-
-                    break;
+                if (ibcTxInfo.value?.sc_tx_info && ibcTxInfo.value?.dc_tx_info) {
+                    if (
+                        ibcTxInfo.value.sc_tx_info.status ===
+                            TRANSFER_DETAILS_STATUS.SUCCESS.value &&
+                        ibcTxInfo.value.dc_tx_info.height === DEFAULT_HEIGHT.default
+                    ) {
+                        leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                        rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
+                        progressData.value = NO_SECOND;
+                        break;
+                    }
                 }
-                if (
-                    ibcTxInfo.value?.dc_tx_info.status === TRANSFER_DETAILS_STATUS.SUCCESS.value &&
-                    ibcTxInfo.value?.dc_tx_info.ack?.includes('error')
-                ) {
-                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                    rightTxImg.value = IBC_TX_INFO_STATUS.success;
-                    progressData.value = SUCCESS_ARRIVE;
-                    break;
-                }
-                if (
-                    ibcTxInfo.value?.dc_tx_info.status === TRANSFER_DETAILS_STATUS.FAILED.value &&
-                    ibcTxInfo.value?.dc_tx_info.height > DEFAULT_HEIGHT.default
-                ) {
-                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                    rightTxImg.value = IBC_TX_INFO_STATUS.failed;
-                    progressData.value = SECOND_ERROR;
-                    break;
+                if (ibcTxInfo.value?.dc_tx_info) {
+                    if (
+                        ibcTxInfo.value.dc_tx_info.status ===
+                            TRANSFER_DETAILS_STATUS.SUCCESS.value &&
+                        ibcTxInfo.value.dc_tx_info.ack?.includes('error')
+                    ) {
+                        leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                        rightTxImg.value = IBC_TX_INFO_STATUS.success;
+                        progressData.value = SUCCESS_ARRIVE;
+                        break;
+                    }
+                    if (
+                        ibcTxInfo.value.dc_tx_info.status ===
+                            TRANSFER_DETAILS_STATUS.FAILED.value &&
+                        ibcTxInfo.value.dc_tx_info.height > DEFAULT_HEIGHT.default
+                    ) {
+                        leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                        rightTxImg.value = IBC_TX_INFO_STATUS.failed;
+                        progressData.value = SECOND_ERROR;
+                        break;
+                    }
                 }
                 break;
         }
@@ -605,12 +615,16 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
         let date = '';
         const time = Number(timestamp);
         if (timestamp > 0) {
-            date = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
-                getTimestamp(),
-                time * 1000,
-                'ago',
-                '>'
-            )})`;
+            if (time * 1000 > Date.now()) {
+                date = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')}`;
+            } else {
+                date = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
+                    getTimestamp(),
+                    time * 1000,
+                    'ago',
+                    '>'
+                )})`;
+            }
         } else {
             date = DEFAULT_DISPLAY_TEXT;
         }
@@ -631,25 +645,31 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                 );
                 break;
             case PROGRESS_STEP[2]:
-                changeProgressListAll(
-                    PROGRESS_LIST,
-                    PROGRESS_RECEIVE_LIST,
-                    ibcTxInfo.value?.dc_tx_info
-                );
+                if (ibcTxInfo.value?.dc_tx_info) {
+                    changeProgressListAll(
+                        PROGRESS_LIST,
+                        PROGRESS_RECEIVE_LIST,
+                        ibcTxInfo.value.dc_tx_info
+                    );
+                }
                 break;
             case PROGRESS_STEP[3]:
-                changeProgressListAll(
-                    PROGRESS_LIST,
-                    PROGRESS_ACKNOWLEDGE_LIST,
-                    ibcTxInfo.value?.refund_tx_info
-                );
+                if (ibcTxInfo.value?.refund_tx_info) {
+                    changeProgressListAll(
+                        PROGRESS_LIST,
+                        PROGRESS_ACKNOWLEDGE_LIST,
+                        ibcTxInfo.value.refund_tx_info
+                    );
+                }
                 break;
             case PROGRESS_STEP[4]:
-                changeProgressListAll(
-                    PROGRESS_LIST,
-                    PROGRESS_TIMEOUT_LIST,
-                    ibcTxInfo.value?.refund_tx_info
-                );
+                if (ibcTxInfo.value?.refund_tx_info) {
+                    changeProgressListAll(
+                        PROGRESS_LIST,
+                        PROGRESS_TIMEOUT_LIST,
+                        ibcTxInfo.value.refund_tx_info
+                    );
+                }
                 break;
         }
     });
@@ -714,25 +734,31 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
                         );
                         break;
                     case PROGRESS_STEP[2]:
-                        JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.dc_tx_info.tx_hash,
-                            dcInfo.value.chain_id,
-                            ibcTxInfo.value.dc_tx_info.type
-                        );
+                        if (ibcTxInfo.value.dc_tx_info) {
+                            JSONSource.value = await getIbcSource(
+                                ibcTxInfo.value.dc_tx_info.tx_hash,
+                                dcInfo.value.chain_id,
+                                ibcTxInfo.value.dc_tx_info.type
+                            );
+                        }
                         break;
                     case PROGRESS_STEP[3]:
-                        JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.refund_tx_info.tx_hash,
-                            scInfo.value.chain_id,
-                            ibcTxInfo.value.refund_tx_info.type
-                        );
+                        if (ibcTxInfo.value.refund_tx_info) {
+                            JSONSource.value = await getIbcSource(
+                                ibcTxInfo.value.refund_tx_info.tx_hash,
+                                scInfo.value.chain_id,
+                                ibcTxInfo.value.refund_tx_info.type
+                            );
+                        }
                         break;
                     case PROGRESS_STEP[4]:
-                        JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.refund_tx_info.tx_hash,
-                            scInfo.value.chain_id,
-                            ibcTxInfo.value.refund_tx_info.type
-                        );
+                        if (ibcTxInfo.value.refund_tx_info) {
+                            JSONSource.value = await getIbcSource(
+                                ibcTxInfo.value.refund_tx_info.tx_hash,
+                                scInfo.value.chain_id,
+                                ibcTxInfo.value.refund_tx_info.type
+                            );
+                        }
                         break;
                 }
             }

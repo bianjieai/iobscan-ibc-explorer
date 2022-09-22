@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-    import { getIP, postIPAndInput } from '@/api';
+    import { postIPAndInput } from '@/api';
     import { ref } from 'vue';
     import router from '../router';
     interface IProps {
@@ -28,18 +28,8 @@
     defineProps<IProps>();
     let inputValue = ref('');
     let isActiveInputStyle = ref(false);
-    let IP = '';
+    const IP = (window as any).returnCitySN.cip;
     let content = '';
-    const getIPFunc = async () => {
-        const ipInfo = await getIP();
-        if (ipInfo) {
-            const JSONStr = ipInfo.split('=')[1].split(';')[0];
-            IP = JSON.parse(JSONStr).cip;
-        }
-    };
-    onMounted(async () => {
-        await getIPFunc();
-    });
 
     const setInputBorderStyle = () => {
         isActiveInputStyle.value = true;
