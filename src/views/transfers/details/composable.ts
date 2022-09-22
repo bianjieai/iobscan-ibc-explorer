@@ -125,7 +125,11 @@ export const useTransfersDetailsInfo = () => {
             console.log(error);
         }
     };
-
+    watch(route, (newValue) => {
+        if (newValue?.query?.hash) {
+            getTransferDetails();
+        }
+    });
     onMounted(() => {
         getTransferDetails();
     });
