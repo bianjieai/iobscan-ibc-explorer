@@ -63,6 +63,7 @@
     }
     const props = defineProps<IProps>();
     const { loading } = useLoading();
+    // todo shan 明确入参 需要优化
     const { activeKey, JSONSource, sourceCode, tableExpand, tablePackUp, uniKey } = useViewSource(
         props,
         loading
