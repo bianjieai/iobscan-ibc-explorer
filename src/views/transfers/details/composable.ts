@@ -233,12 +233,10 @@ export const useTokenInfo = (props: Readonly<IUseTokenInfo>) => {
         return matchInfo.value?.tokenIcon || TOKEN_DEFAULT_ICON;
     });
     const tokenName = computed(() => {
-        return matchInfo.value?.symbol || props.tokenInfo?.base_denom;
+        return matchInfo.value?.symbol || props.tokenInfo?.base_denom || DEFAULT_DISPLAY_TEXT;
     });
     const updateIsShowDetailsInfo = (newIsShow: boolean) => {
-        if (!newIsShow) {
-            isShowTokenDetailsInfo.value = newIsShow;
-        }
+        isShowTokenDetailsInfo.value = newIsShow;
     };
 
     return {
@@ -320,9 +318,7 @@ export const useRelayerInfo = (
     emits: (e: 'updateIsFlexColumn', newIsFlexColumn: boolean) => void
 ) => {
     const relayerScInfoList = ref<IInfoList>(RELAYER_INFO);
-    const relayerDcInfoList = ref<IInfoList>(RELAYER_INFO);
     const relayerScIcon = ref<string>(RELAYER_DEFAULT_ICON);
-    const relayerDcIcon = ref<string>(RELAYER_DEFAULT_ICON);
     const fromAddressInfo = ref<IInfoList>(CHAIN_ADDRESS);
     const toAddressInfo = ref<IInfoList>(CHAIN_ADDRESS);
     watch(
@@ -331,12 +327,8 @@ export const useRelayerInfo = (
             if (newRelayerInfo) {
                 relayerScInfoList.value.value =
                     newRelayerInfo.sc_relayer.relayer_name || DEFAULT_DISPLAY_TEXT;
-                relayerDcInfoList.value.value =
-                    newRelayerInfo.dc_relayer.relayer_name || DEFAULT_DISPLAY_TEXT;
                 calculateTextLength(relayerScInfoList.value.value, emits, RELAYER_LABEL);
-                calculateTextLength(relayerDcInfoList.value.value, emits, RELAYER_LABEL);
                 relayerScIcon.value = newRelayerInfo.sc_relayer.icon || RELAYER_DEFAULT_ICON;
-                relayerDcIcon.value = newRelayerInfo.dc_relayer.icon || RELAYER_DEFAULT_ICON;
 
                 fromAddressInfo.value = {
                     label: 'Address',
@@ -351,9 +343,7 @@ export const useRelayerInfo = (
     );
     return {
         relayerScInfoList,
-        relayerDcInfoList,
         relayerScIcon,
-        relayerDcIcon,
         fromAddressInfo,
         toAddressInfo
     };
@@ -529,19 +519,14 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
             handleTransferDetails(item, sourceInfo);
         });
         progressList.value.forEach(async (item) => {
-            if (item.isFormatStatus) {
-                item.value = formatStatus(item.value);
-            } else if (item.isFormatFee) {
-                item.value = await formatFee(item.value);
-            } else if (item.isFormatSigner) {
-                item.value = formatSigner(item.value);
-            } else if (item.isFormatTimestamp) {
-                item.value = formatTimestamp(item.value);
-            } else if (item.isFormatTimeoutTimestamp) {
-                item.value = formatTimeoutTimestamp(item.value);
-            }
-            if (!item.value) {
-                item.value = DEFAULT_DISPLAY_TEXT;
+            if (item.value && item.value !== DEFAULT_DISPLAY_TEXT) {
+                if (item.isFormatStatus) {
+                    item.value = formatStatus(item.value);
+                } else if (item.isFormatFee) {
+                    item.value = await formatFee(item.value);
+                } else if (item.isFormatSigner) {
+                    item.value = formatSigner(item.value);
+                }
             }
         });
         progressListAll.value = progressList.value;
@@ -591,20 +576,20 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
         return (signers && signers[0]) || DEFAULT_DISPLAY_TEXT;
     };
     const formatTimestamp = (timestamp: number | string) => {
-        if (typeof timestamp === 'string') return timestamp;
         const dayjs = djs?.default || djs;
         const date = ref('');
+        const time = Number(timestamp);
         if (timestamp > 0) {
-            date.value = `${dayjs(timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
+            date.value = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
                 getTimestamp(),
-                timestamp * 1000,
+                time * 1000,
                 'ago',
                 '>'
             )})`;
             setTimeout(() => {
-                date.value = `${dayjs(timestamp * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
+                date.value = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
                     getTimestamp(),
-                    timestamp * 1000,
+                    time * 1000,
                     'ago',
                     '>'
                 )})`;
@@ -614,13 +599,10 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
         }
         return date.value;
     };
-    const formatTimeoutTimestamp = (timeoutStamp: string) => {
-        if (timeoutStamp) {
-            if (timeoutStamp !== DEFAULT_DISPLAY_TEXT) {
-                return formatTimestamp(Number(timeoutStamp.substring(0, 14)));
-            }
-        }
-        return DEFAULT_DISPLAY_TEXT;
+    const formatTimeoutTimestamp = (timeoutStamp: number | string) => {
+        if (typeof timeoutStamp === 'string') return timeoutStamp;
+        const formatTimeoutStamp = (timeoutStamp / 1000000000).toFixed();
+        return formatTimestamp(formatTimeoutStamp);
     };
     watch(mark, (newMark) => {
         switch (newMark.step) {
@@ -669,7 +651,9 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
 
     return {
         progressListAll,
-        changeColor
+        changeColor,
+        formatTimestamp,
+        formatTimeoutTimestamp
     };
 };
 

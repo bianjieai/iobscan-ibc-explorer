@@ -5,6 +5,10 @@
                 <div
                     v-if="progressData.length === 1"
                     class="tx_progress__step_wrap tx_progress__step_wrap__single_width tx_progress__step_wrap_mobile"
+                    :class="{
+                        tx_progress__step_failed: ibcTxStatus === 2,
+                        tx_progress__step_proccessing: ibcTxStatus === 3
+                    }"
                 >
                     <div
                         v-for="(item, index) in progressData"
@@ -36,7 +40,10 @@
                 <div
                     v-else
                     class="tx_progress__step_wrap"
-                    :class="{ tx_progress__step_wrap__width: progressData.length === 2 }"
+                    :class="{
+                        tx_progress__step_wrap__width: progressData.length === 2,
+                        tx_progress__first: currentProgress === 0
+                    }"
                 >
                     <div
                         v-for="(item, index) in progressData"
@@ -53,12 +60,19 @@
                     >
                         <img
                             v-if="index !== progressData.length - 1 && currentProgress === index"
+                            class="tx_progress__first"
                             :src="selectedSvg"
                             alt=""
                         />
                         <img
                             v-if="index !== progressData.length - 1 && currentProgress !== index"
                             :src="unSelectedSvg"
+                            alt=""
+                        />
+                        <img
+                            v-if="index === progressData.length - 1 && currentProgress === index"
+                            class="tx_progress__last"
+                            :src="lastUnSelectedSvg"
                             alt=""
                         />
                         <div class="tx_progress__description">
@@ -128,6 +142,12 @@
                 width: 33%;
             }
         }
+        &__step_proccessing {
+            border-left: 1px solid rgba(61, 80, 255, 0.2);
+        }
+        &__step_failed {
+            border-right: 1px solid rgba(61, 80, 255, 0.2);
+        }
         &__step {
             position: relative;
             width: 33%;
@@ -166,7 +186,7 @@
         &__progress {
             font-size: var(--bj-font-size-sub-title);
             font-weight: 600;
-            color: var(--bj-text-normal);
+            color: rgba(0, 0, 0, 0.49);
             line-height: 20px;
         }
         &__badge {
@@ -174,20 +194,21 @@
             padding: 1px 8px;
             font-size: var(--bj-font-size-normal);
             font-weight: 400;
-            color: var(--bj-primary-color);
+            color: rgba(61, 80, 255, 0.49);
             line-height: 14px;
             background: rgba(61, 80, 255, 0.1);
             border-radius: 8px;
         }
         &__active {
-            background: var(--bj-primary-color);
+            background: #fff;
+
             .tx_progress__description {
                 .tx_progress__progress {
-                    color: #fff;
+                    color: var(--bj-text-normal);
                 }
                 .tx_progress__badge {
-                    color: #fff;
-                    background: rgba(255, 255, 255, 0.2);
+                    color: var(--bj-primary-color);
+                    background: rgba(61, 80, 255, 0.2);
                 }
             }
         }
@@ -200,6 +221,10 @@
         }
         &__content {
             margin-top: 24px;
+        }
+        &__last {
+            position: absolute;
+            right: 0;
         }
     }
     @media screen and (max-width: 1200px) {
@@ -276,6 +301,10 @@
             }
             &__content {
             }
+            &__first {
+                border-left: 1px solid rgba(61, 80, 255, 0.2);
+                border-radius: 4px 0 0 4px;
+            }
         }
     }
     @media screen and (max-width: 1100px) {
@@ -307,13 +336,13 @@
                 &:nth-of-type(1) {
                     left: -5%;
                     .tx_progress__description {
-                        left: 60%;
+                        left: 50%;
                     }
                 }
                 &:nth-of-type(2) {
                     left: -8%;
                     .tx_progress__description {
-                        left: 60%;
+                        left: 70%;
                     }
                 }
                 &:nth-of-type(3) {
@@ -351,7 +380,7 @@
             }
             &__diff_active {
                 img {
-                    transform: translateX(-32%);
+                    transform: translateX(-31%);
                 }
                 .tx_progress__description {
                     left: -5%;
@@ -509,16 +538,8 @@
     @media screen and (max-width: 880px) {
         .tx_progress {
             &__wrap {
-                overflow-x: auto;
-                &::-webkit-scrollbar {
-                    display: none;
-                }
             }
             &__top {
-                width: 730px;
-                &::-webkit-scrollbar {
-                    display: none;
-                }
             }
             &__step_wrap {
                 &__width {
@@ -529,7 +550,94 @@
                 }
             }
             &__step_wrap_mobile {
-                width: 33%;
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                            // left: -15%;
+                        }
+                    }
+                }
+            }
+            &__step {
+                &__width {
+                }
+                &__single_flex {
+                }
+
+                &:nth-of-type(1) {
+                    left: -20%;
+                    .tx_progress__description {
+                        left: 120%;
+                    }
+                }
+                &:nth-of-type(2) {
+                    left: -20%;
+                    .tx_progress__description {
+                        left: 120%;
+                    }
+                }
+                &:nth-of-type(3) {
+                    .tx_progress__description {
+                        left: 10%;
+                    }
+                }
+                &__flex {
+                }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -28%;
+                        .tx_progress__description {
+                            left: 110%;
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        left: 0;
+                        .tx_progress__description {
+                            left: 5%;
+                        }
+                    }
+                }
+            }
+            &__description {
+            }
+            &__progress {
+            }
+            &__badge {
+            }
+            &__active {
+                .tx_progress__description {
+                    .tx_progress__progress {
+                    }
+                    .tx_progress__badge {
+                    }
+                }
+            }
+            &__diff_active {
+                img {
+                    transform: translateX(-48%);
+                }
+                .tx_progress__description {
+                }
+            }
+            &__content {
+            }
+        }
+    }
+    @media screen and (max-width: 790px) {
+        .tx_progress {
+            &__wrap {
+            }
+            &__top {
+            }
+            &__step_wrap {
+                &__width {
+                }
+                &__single_width {
+                }
+                img {
+                }
+            }
+            &__step_wrap_mobile {
                 .tx_progress__step {
                     &:nth-of-type(1) {
                         .tx_progress__description {
@@ -544,32 +652,731 @@
                 }
 
                 &:nth-of-type(1) {
-                    left: -18%;
+                    left: -30%;
                     .tx_progress__description {
-                        left: 110%;
+                        left: 150%;
                     }
                 }
                 &:nth-of-type(2) {
-                    left: -17%;
+                    left: -30%;
                     .tx_progress__description {
-                        left: 110%;
+                        left: 150%;
                     }
                 }
                 &:nth-of-type(3) {
+                    .tx_progress__description {
+                        left: 5%;
+                    }
                 }
                 &__flex {
                 }
                 &__mobile_two {
                     &:nth-of-type(1) {
-                        left: -30%;
+                        left: -38%;
+
                         .tx_progress__description {
-                            left: 115%;
+                            left: 130%;
                         }
                     }
                     &:nth-of-type(2) {
                         left: 0;
                         .tx_progress__description {
-                            left: 15%;
+                            left: 5%;
+                        }
+                    }
+                }
+            }
+            &__description {
+            }
+            &__progress {
+            }
+            &__badge {
+            }
+            &__active {
+                .tx_progress__description {
+                    .tx_progress__progress {
+                    }
+                    .tx_progress__badge {
+                    }
+                }
+            }
+            &__diff_active {
+                img {
+                }
+                .tx_progress__description {
+                }
+            }
+            &__content {
+            }
+        }
+    }
+    @media screen and (max-width: 760px) {
+        .tx_progress {
+            &__wrap {
+            }
+            &__top {
+            }
+            &__step_wrap {
+                &__width {
+                }
+                &__single_width {
+                }
+                img {
+                }
+            }
+            &__step_wrap_mobile {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__step {
+                &__width {
+                }
+                &__single_flex {
+                }
+
+                &:nth-of-type(1) {
+                    left: -30%;
+                    .tx_progress__description {
+                        left: 150%;
+                    }
+                }
+                &:nth-of-type(2) {
+                    left: -30%;
+                    .tx_progress__description {
+                        left: 150%;
+                    }
+                }
+                &:nth-of-type(3) {
+                    .tx_progress__description {
+                        left: 5%;
+                    }
+                }
+                &__flex {
+                }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -40%;
+                        .tx_progress__description {
+                            left: 135%;
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        left: 0;
+                        .tx_progress__description {
+                            left: 0;
+                        }
+                    }
+                }
+            }
+            &__description {
+            }
+            &__progress {
+            }
+            &__badge {
+            }
+            &__active {
+                .tx_progress__description {
+                    .tx_progress__progress {
+                    }
+                    .tx_progress__badge {
+                    }
+                }
+            }
+            &__diff_active {
+                img {
+                    transform: translateX(-54%);
+                }
+                .tx_progress__description {
+                }
+            }
+            &__content {
+            }
+        }
+    }
+    @media screen and (max-width: 680px) {
+        .tx_progress {
+            &__wrap {
+            }
+            &__top {
+            }
+            &__step_wrap {
+                &__width {
+                }
+                &__single_width {
+                }
+                img {
+                }
+            }
+            &__step_wrap_mobile {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__step {
+                &__width {
+                }
+                &__single_flex {
+                }
+
+                &:nth-of-type(1) {
+                    left: -35%;
+                    .tx_progress__description {
+                        left: 160%;
+                    }
+                }
+                &:nth-of-type(2) {
+                    left: -35%;
+                    .tx_progress__description {
+                        left: 160%;
+                    }
+                }
+                &:nth-of-type(3) {
+                    .tx_progress__description {
+                    }
+                }
+                &__flex {
+                }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -55%;
+                        .tx_progress__description {
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        .tx_progress__description {
+                            left: 0;
+                        }
+                    }
+                }
+            }
+            &__description {
+            }
+            &__progress {
+            }
+            &__badge {
+            }
+            &__active {
+                .tx_progress__description {
+                    .tx_progress__progress {
+                    }
+                    .tx_progress__badge {
+                    }
+                }
+            }
+            &__diff_active {
+                img {
+                    transform: translateX(-56%);
+                }
+                .tx_progress__description {
+                }
+            }
+            &__content {
+            }
+        }
+    }
+    @media screen and (max-width: 650px) {
+        .tx_progress {
+            &__wrap {
+            }
+            &__top {
+            }
+            &__step_wrap {
+                &__width {
+                }
+                &__single_width {
+                }
+                img {
+                }
+            }
+            &__step_wrap_mobile {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__step_proccessing {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                            left: -15%;
+                        }
+                    }
+                }
+            }
+            &__step {
+                &__width {
+                }
+                &__single_flex {
+                }
+
+                &:nth-of-type(1) {
+                    left: -40%;
+                    .tx_progress__description {
+                        left: 175%;
+                    }
+                }
+                &:nth-of-type(2) {
+                    left: -40%;
+                    .tx_progress__description {
+                        left: 175%;
+                    }
+                }
+                &:nth-of-type(3) {
+                    .tx_progress__description {
+                    }
+                }
+                &__flex {
+                }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -55%;
+                        .tx_progress__description {
+                            left: 170%;
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        .tx_progress__description {
+                            left: 10%;
+                        }
+                    }
+                }
+            }
+            &__description {
+            }
+            &__progress {
+            }
+            &__badge {
+            }
+            &__active {
+                .tx_progress__description {
+                    .tx_progress__progress {
+                    }
+                    .tx_progress__badge {
+                    }
+                }
+            }
+            &__diff_active {
+                img {
+                    transform: translateX(-59%);
+                }
+                .tx_progress__description {
+                }
+            }
+            &__content {
+            }
+        }
+    }
+    @media screen and (max-width: 620px) {
+        .tx_progress {
+            &__wrap {
+            }
+            &__top {
+            }
+            &__step_wrap {
+                &__width {
+                }
+                &__single_width {
+                }
+                img {
+                }
+            }
+            &__step_wrap_mobile {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__step {
+                &__width {
+                }
+                &__single_flex {
+                }
+
+                &:nth-of-type(1) {
+                    left: -45%;
+                    .tx_progress__description {
+                        left: 190%;
+                    }
+                }
+                &:nth-of-type(2) {
+                    left: -45%;
+                    .tx_progress__description {
+                        left: 190%;
+                    }
+                }
+                &:nth-of-type(3) {
+                    .tx_progress__description {
+                    }
+                }
+                &__flex {
+                }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -65%;
+                        .tx_progress__description {
+                            left: 180%;
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        .tx_progress__description {
+                            left: 10%;
+                        }
+                    }
+                }
+            }
+            &__description {
+            }
+            &__progress {
+            }
+            &__badge {
+            }
+            &__active {
+                .tx_progress__description {
+                    .tx_progress__progress {
+                    }
+                    .tx_progress__badge {
+                    }
+                }
+            }
+            &__diff_active {
+                img {
+                    transform: translateX(-63%);
+                }
+                .tx_progress__description {
+                }
+            }
+            &__content {
+            }
+        }
+    }
+    @media screen and (max-width: 580px) {
+        .tx_progress {
+            &__wrap {
+            }
+            &__top {
+            }
+            &__step_wrap {
+                &__width {
+                }
+                &__single_width {
+                }
+                img {
+                }
+            }
+            &__step_wrap_mobile {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__step {
+                &__width {
+                }
+                &__single_flex {
+                }
+
+                &:nth-of-type(1) {
+                    left: -60%;
+                    .tx_progress__description {
+                        left: 230%;
+                    }
+                }
+                &:nth-of-type(2) {
+                    left: -60%;
+                    .tx_progress__description {
+                        left: 230%;
+                    }
+                }
+                &:nth-of-type(3) {
+                    .tx_progress__description {
+                    }
+                }
+                &__flex {
+                }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -80%;
+                        .tx_progress__description {
+                            left: 210%;
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        .tx_progress__description {
+                            left: 10%;
+                        }
+                    }
+                }
+            }
+            &__description {
+            }
+            &__progress {
+            }
+            &__badge {
+            }
+            &__active {
+                .tx_progress__description {
+                    .tx_progress__progress {
+                    }
+                    .tx_progress__badge {
+                    }
+                }
+            }
+            &__diff_active {
+                img {
+                    transform: translateX(-68%);
+                }
+                .tx_progress__description {
+                }
+            }
+            &__content {
+            }
+        }
+    }
+    @media screen and (max-width: 480px) {
+        .tx_progress {
+            &__wrap {
+            }
+            &__top {
+            }
+            &__step_wrap {
+                &__width {
+                }
+                &__single_width {
+                }
+                img {
+                }
+            }
+            &__step_wrap_mobile {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__step {
+                &__width {
+                }
+                &__single_flex {
+                }
+
+                &:nth-of-type(1) {
+                    .tx_progress__description {
+                        left: 235%;
+                    }
+                }
+                &:nth-of-type(2) {
+                    .tx_progress__description {
+                        left: 240%;
+                    }
+                }
+                &:nth-of-type(3) {
+                    .tx_progress__description {
+                        left: 20%;
+                    }
+                }
+                &__flex {
+                }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -90%;
+                        .tx_progress__description {
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        .tx_progress__description {
+                            left: 10%;
+                        }
+                    }
+                }
+            }
+            &__description {
+            }
+            &__progress {
+            }
+            &__badge {
+            }
+            &__active {
+                .tx_progress__description {
+                    .tx_progress__progress {
+                    }
+                    .tx_progress__badge {
+                    }
+                }
+            }
+            &__diff_active {
+                width: 126px;
+                img {
+                    transform: translateX(-67%);
+                }
+                .tx_progress__description {
+                }
+            }
+            &__content {
+            }
+        }
+    }
+    @media screen and (max-width: 468px) {
+        .tx_progress {
+            &__wrap {
+            }
+            &__top {
+            }
+            &__step_wrap {
+                &__width {
+                }
+                &__single_width {
+                }
+                img {
+                }
+            }
+            &__step_wrap_mobile {
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__step {
+                &__width {
+                }
+                &__single_flex {
+                }
+
+                &:nth-of-type(1) {
+                    left: -68%;
+                    .tx_progress__description {
+                        left: 245%;
+                    }
+                }
+                &:nth-of-type(2) {
+                    left: -68%;
+                    .tx_progress__description {
+                        left: 245%;
+                    }
+                }
+                &:nth-of-type(3) {
+                    .tx_progress__description {
+                        left: 20%;
+                    }
+                }
+                &__flex {
+                }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -100%;
+                        .tx_progress__description {
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        .tx_progress__description {
+                            left: 10%;
+                        }
+                    }
+                }
+            }
+            &__description {
+            }
+            &__progress {
+            }
+            &__badge {
+            }
+            &__active {
+                .tx_progress__description {
+                    .tx_progress__progress {
+                    }
+                    .tx_progress__badge {
+                    }
+                }
+            }
+            &__diff_active {
+                img {
+                }
+                .tx_progress__description {
+                }
+            }
+            &__content {
+            }
+        }
+    }
+    @media screen and (max-width: 448px) {
+        .tx_progress {
+            &__wrap {
+                overflow-x: auto;
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+            }
+            &__top {
+                width: 384px;
+            }
+            &__step_wrap {
+                &__width {
+                }
+                &__single_width {
+                }
+                img {
+                }
+            }
+            &__step_wrap_mobile {
+                width: 44%;
+                .tx_progress__step {
+                    &:nth-of-type(1) {
+                        .tx_progress__description {
+                        }
+                    }
+                }
+            }
+            &__step {
+                &__width {
+                }
+                &__single_flex {
+                }
+
+                &:nth-of-type(1) {
+                    left: -65%;
+                    .tx_progress__description {
+                        left: 250%;
+                    }
+                }
+                &:nth-of-type(2) {
+                    left: -65%;
+                    .tx_progress__description {
+                        left: 260%;
+                    }
+                }
+                &:nth-of-type(3) {
+                    .tx_progress__description {
+                        left: 20%;
+                    }
+                }
+                &__flex {
+                }
+                &__mobile_two {
+                    &:nth-of-type(1) {
+                        left: -100%;
+                        .tx_progress__description {
+                            left: 255%;
+                        }
+                    }
+                    &:nth-of-type(2) {
+                        left: 0;
+                        .tx_progress__description {
+                            left: 10%;
                         }
                     }
                 }

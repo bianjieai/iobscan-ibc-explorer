@@ -21,5 +21,6 @@
         color: var(--bj-failed);
         background: rgba(255, 90, 90, 0.1);
         border-radius: 8px;
+        word-break: break-all;
     }
 </style>

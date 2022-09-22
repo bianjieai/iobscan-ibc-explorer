@@ -2,7 +2,7 @@
     <div class="view_source">
         <div class="view_source__label">View Source</div>
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane key="1" tab="Raw Data">
+            <a-tab-pane key="1" tab="Raw Data" class="view_source__first_tab">
                 <a-table
                     v-if="sourceCode"
                     :columns="TRANSFER_DETAILS_TABLE"
@@ -96,6 +96,32 @@
         }
         :deep(.ant-tabs-nav-wrap) {
             border-bottom: rgba(61, 80, 255, 0.1);
+        }
+    }
+    @media screen and (max-width: 874px) {
+        .view_source {
+            &__label {
+            }
+            &__bottom {
+            }
+            &__table_icon {
+            }
+            &__json {
+            }
+            :deep(th .ant-table-cell) {
+            }
+            :deep(td) {
+            }
+            :deep(.ant-table-cell-with-append) {
+            }
+            :deep(.ant-tabs-nav-wrap) {
+            }
+            :deep(.ant-tabs-content-top) {
+                overflow-x: auto;
+            }
+            &__first_tab {
+                width: 746px;
+            }
         }
     }
 </style>

@@ -1,20 +1,23 @@
 <template>
     <div class="chain_info">
         <TitleCard :title="title"></TitleCard>
-        <div class="chain_info__details">
+        <div class="chain_info__details" :class="{ chain_info__details_column: isFlexColumn }">
             <ChainAddress :chain-address="chainAddress"></ChainAddress>
             <div class="chain_info__chain_id" :class="{ chain_info__column: isFlexColumn }">
                 <span class="chain_info__label">{{ chainInfoList.label }}</span>
-                <router-link :to="`/chains`" class="chain_info__value chain_info__chain_id_value">
+                <router-link
+                    v-if="chainInfoList.value !== DEFAULT_DISPLAY_TEXT"
+                    :to="`/chains`"
+                    class="chain_info__value chain_info__chain_id_value"
+                >
                     <span class="chain_info__icon">
-                        <img
-                            v-if="chainInfoList.value !== DEFAULT_DISPLAY_TEXT"
-                            :src="searchChainIcon"
-                            alt=""
-                        />
+                        <img :src="searchChainIcon" alt="" />
                     </span>
                     <span>{{ ChainHelper.formatChainId(chainInfoList.value) }}</span>
                 </router-link>
+                <span v-else class="chain_info__value chain_info__chain_id_value">
+                    <span>{{ DEFAULT_DISPLAY_TEXT }}</span>
+                </span>
             </div>
             <div class="chain_info__list">
                 <div
@@ -38,7 +41,7 @@
                 </div>
             </div>
             <ExpandBtn
-                class="chain_info__expand"
+                class="chain_info__expand cursor"
                 :is-show-details-info="isShowChainDetailsInfo"
                 @update-is-show-details-info="updateIsShowDetailsInfo"
             ></ExpandBtn>
@@ -83,9 +86,12 @@
             padding: 16px;
             width: 100%;
             min-width: 300px;
-            min-height: 326px;
+            min-height: 290px;
             background: #f8fafd;
             border-radius: var(--border-radius-normal);
+        }
+        &__details_column {
+            min-height: 362px;
         }
         &__chain_id {
             .flex(row, nowrap, flex-start, center);
@@ -167,7 +173,7 @@
             }
         }
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 500px) {
         .chain_info {
             &__details {
                 min-width: auto;

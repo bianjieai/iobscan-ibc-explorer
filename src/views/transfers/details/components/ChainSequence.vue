@@ -57,9 +57,9 @@
         }
     }
     .sequence_info__container {
-        margin-top: 32px;
+        margin-top: 28px;
         .sequence_info__content {
-            margin-top: 25px;
+            margin-top: 24px;
         }
     }
     @media screen and (max-width: 1160px) {
@@ -86,14 +86,16 @@
             }
         }
     }
-    @media screen and (max-width: 600px) {
+    @media screen and (max-width: 500px) {
         .sequence_info {
             &__content {
+                .flex(column, nowrap, flex-start, flex-start);
             }
             &__label {
-                width: 100%;
             }
             &__value {
+                margin-top: 2px;
+                margin-left: 0;
             }
             &__column {
                 .flex(column, nowrap, flex-start, flex-start);
