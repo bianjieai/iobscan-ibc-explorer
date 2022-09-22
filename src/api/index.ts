@@ -33,6 +33,6 @@ export const postIPAndInput = (params: ISearchPoint) => {
     return request({
         url: API_URL.ibcSearchPointUrl,
         method: 'post',
-        params: params
+        data: params
     });
 };

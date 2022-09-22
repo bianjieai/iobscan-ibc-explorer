@@ -56,10 +56,10 @@
 
 <style lang="less" scoped>
     .relayer_info {
+        min-width: 300px;
         &__content {
             margin-top: 16px;
             padding: 16px;
-            width: 300px;
             min-height: 192px;
             background: #f8fafd;
             border-radius: var(--border-radius-normal);
@@ -105,6 +105,7 @@
             .relayer_info__value {
                 margin-top: 2px;
                 margin-left: 0;
+                word-break: break-all;
             }
         }
     }
