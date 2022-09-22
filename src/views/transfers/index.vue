@@ -27,7 +27,7 @@
                         :show-icon="isShowSymbolIcon"
                         :clear-input="clearInput"
                         @click-item="onClickDropdownItem"
-                        @click-search="(item) => onClickDropdownItem(item, 'customToken')"
+                        @click-search="(item:any) => onClickDropdownItem(item, 'customToken')"
                     />
                     <BjSelect
                         ref="chainDropdown"
