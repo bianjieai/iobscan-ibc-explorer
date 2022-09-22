@@ -51,9 +51,11 @@
         color: var(--bj-primary-color);
         user-select: none;
         .copied {
+            .flex(row, nowrap, flex-start, center);
             .text {
                 margin-left: 3px;
                 font-size: var(--bj-font-size-normal);
+                font-family: GolosUI-Regular, GolosUI;
                 font-weight: 400;
                 line-height: 18px;
             }

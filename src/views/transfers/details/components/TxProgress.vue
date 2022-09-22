@@ -144,6 +144,11 @@
         }
         &__step_proccessing {
             border-left: 1px solid rgba(61, 80, 255, 0.2);
+            .tx_progress__step {
+                .tx_progress__description {
+                    left: -10%;
+                }
+            }
         }
         &__step_failed {
             border-right: 1px solid rgba(61, 80, 255, 0.2);
@@ -185,8 +190,8 @@
         }
         &__progress {
             font-size: var(--bj-font-size-sub-title);
-            font-weight: 600;
-            color: rgba(0, 0, 0, 0.49);
+            font-weight: 400;
+            color: #00000080;
             line-height: 20px;
         }
         &__badge {
@@ -201,7 +206,6 @@
         }
         &__active {
             background: #fff;
-
             .tx_progress__description {
                 .tx_progress__progress {
                     color: var(--bj-text-normal);
@@ -1348,20 +1352,20 @@
                 }
 
                 &:nth-of-type(1) {
-                    left: -65%;
+                    left: -68%;
                     .tx_progress__description {
                         left: 250%;
                     }
                 }
                 &:nth-of-type(2) {
-                    left: -65%;
+                    left: -68%;
                     .tx_progress__description {
                         left: 260%;
                     }
                 }
                 &:nth-of-type(3) {
                     .tx_progress__description {
-                        left: 20%;
+                        left: 14%;
                     }
                 }
                 &__flex {
