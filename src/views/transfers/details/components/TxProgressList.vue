@@ -43,13 +43,14 @@
         &__label {
             width: 164px;
             font-size: var(--bj-font-size-normal);
-            font-weight: 600;
+            font-weight: 500;
             color: var(--bj-text-normal);
             line-height: 18px;
         }
         &__value {
             flex: 1;
             margin-left: 40px;
+            font-family: GolosUIWebRegular;
             color: var(--bj-text-second);
             word-break: break-word;
         }
