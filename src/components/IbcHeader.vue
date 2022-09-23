@@ -24,6 +24,7 @@
                         href="https://www.iobscan.io/#/"
                         target="_blank"
                         rel="noreferrer noopener"
+                        @click="buriedPoint"
                     >
                         <img
                             class="header_input_icon"
@@ -58,12 +59,18 @@
     const route = useRoute();
 
     const clickMenu = (val: string) => {
+        (window as any).gtag('event', '导航栏-点击页面标签', {
+            menuName: val
+        });
+
         router.push({
             name: val
         });
     };
 
     const onClickLogo = () => {
+        (window as any).gtag('event', '导航栏-Logo');
+
         router.push({
             name: 'Home'
         });
@@ -92,6 +99,9 @@
             //不是该选择器的class
             isShowNav.value = false;
         }
+    };
+    const buriedPoint = () => {
+        (window as any).gtag('event', '点击跨链门户');
     };
     onMounted(() => {
         currentMenu.value = getCurrentRouterNames(route) as Key[];

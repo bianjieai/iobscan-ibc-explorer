@@ -46,6 +46,19 @@ export const PAGE_PARAMETERS = {
     denom: 'denom'
 };
 
+export const MSG_DESC = {
+    chains: 'Chains',
+    channels_24hr: 'Channel Pairs - Active(24hr)',
+    channel_all: 'Channel Pairs - All',
+    channel_opened: 'Channel Pairs - Open',
+    channel_closed: 'Channel Pairs - Closed',
+    base_denom_all: 'IBC Tokens - Tokens by Base Denom',
+    tx_24hr_all: 'IBC Token Transfers - Recent(24hr)',
+    tx_all: 'IBC Token Transfers - All',
+    tx_success: 'IBC Token Transfers - Success',
+    tx_failed: 'IBC Token Transfers - Failed'
+};
+
 export const txStatusNumber = {
     defaultStatus: '1,2,3,4',
     successStatus: '1',
@@ -309,18 +322,22 @@ export const SYMBOL = {
 export const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan. All Rights Reserved.`;
 export const ICON_LINK = [
     {
+        groupName: 'Github',
         iconName: 'icon-github',
         iconLink: 'https://github.com/irisnet'
     },
     {
+        groupName: 'Telegram',
         iconName: 'icon-telegram',
         iconLink: 'https://t.me/irisnetwork'
     },
     {
+        groupName: 'Medium',
         iconName: 'icon-medium',
         iconLink: 'https://medium.com/irisnet-blog'
     },
     {
+        groupName: 'Twitter',
         iconName: 'icon-tweeter',
         iconLink: 'https://twitter.com/irisnetwork'
     }

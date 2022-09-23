@@ -51,6 +51,8 @@
         content = e.target.value;
     };
     const searchInput = () => {
+        (window as any).gtag('event', '导航栏-点击搜索');
+
         if (inputValue.value !== '') {
             if (/^[A-F0-9]{64}$/.test(inputValue.value)) {
                 router.push(`/transfers/details?hash=${inputValue.value}`);

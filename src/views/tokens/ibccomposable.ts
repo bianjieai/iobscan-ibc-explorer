@@ -168,6 +168,11 @@ export const useIbcTokenSelected = (
         refreshList();
     };
     const onSelectedStatus = (status?: string | number) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Token Type`
+        );
+
         searchStatus.value = status as TIbcTokenType;
         pageUrl = urlPageParser(pageUrl, {
             key: 'status',

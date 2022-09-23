@@ -621,6 +621,8 @@
         return CHAIN_DEFAULT_ICON;
     };
     const onClickDropdownItem = (item: any, custom: any) => {
+        (window as any).gtag('event', 'Transfers-点击过滤条件Token');
+
         pagination.current = 1;
         isShowSymbolIcon.value = !custom;
         selectedSymbol.value = item || defaultTitle.defaultTokens;
@@ -670,6 +672,8 @@
         router.replace(url);
     };
     const handleSelectChange = (item: any) => {
+        (window as any).gtag('event', 'Transfers-点击过滤条件Status');
+
         pagination.current = 1;
         queryParam.status = JSONparse(item);
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
@@ -710,6 +714,8 @@
     };
 
     const onChangeRangePicker = (dates: any) => {
+        (window as any).gtag('event', 'Transfers-点击过滤条件Date');
+
         pagination.current = 1;
         dateRange.value = dates;
         queryParam.date_range[0] = Math.floor(startTime(dayjs(dates[0]).valueOf()) / 1000);
@@ -748,6 +754,8 @@
         queryDatas();
     };
     const onPaginationChange = (page: number) => {
+        (window as any).gtag('event', 'Transfers-点击翻页器');
+
         pagination.current = page;
         const params: any = urlParser(url);
         url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
@@ -834,6 +842,8 @@
     const chainGetPopupContainer = (): HTMLElement => document.querySelector('.transfer__middle')!;
 
     const onSelectedChain = (vals: IDataItem[]) => {
+        (window as any).gtag('event', 'Transfers-点击过滤条件Chain');
+
         chainIds.value = vals?.map((v) => v.id);
         const chain_id = chainIds.value.join(',');
 

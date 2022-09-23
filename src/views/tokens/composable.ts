@@ -170,6 +170,11 @@ export const useTokensSelected = (
     });
 
     const onSelectedToken = (val?: IDataItem) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Token`
+        );
+
         const denom = val?.id;
         if (denom) {
             searchDenom.value = denom as string;
@@ -184,6 +189,11 @@ export const useTokensSelected = (
         refreshList();
     };
     const onSelectedChain = (val?: IDataItem) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Chain`
+        );
+
         const chain = val?.id;
         searchChain.value = chain !== undefined ? String(chain) : undefined;
         pageUrl = urlPageParser(pageUrl, {
@@ -195,6 +205,11 @@ export const useTokensSelected = (
     };
 
     const onSelectedStatus = (status?: string | number) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Token Type`
+        );
+
         searchStatus.value = status as TTokenType;
         pageUrl = urlPageParser(pageUrl, {
             key: 'status',

@@ -135,6 +135,11 @@ export const useChannelsSelected = (
         ];
     });
     const onSelectedChain = (vals: IDataItem[]) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Chain`
+        );
+
         const res = vals.map((v) => v.id);
         if (ChainHelper.isNeedSort(res, chainData.value)) {
             chainIds.value = [res[1], res[0]];
@@ -153,6 +158,11 @@ export const useChannelsSelected = (
     };
 
     const onSelectedStatus = (value?: number | string) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Status`
+        );
+
         searchStatus.value = value as TChannelStatus;
         pageUrl = urlPageParser(pageUrl, {
             key: 'status',
