@@ -106,17 +106,21 @@ export const useTransfersDetailsInfo = () => {
             const { code, data, message } = await getTxDetailsByTxHashAPI(hash);
             ibcStatisticsChainsStore.isShowLoading = false;
             if (code === API_CODE.success) {
-                if (!data.is_list) {
-                    ibcTxStatus.value = data.status;
-                    data.error_log && (errorLog.value = data.error_log);
-                    tokenInfo.value = data.token_info;
-                    scInfo.value = data.sc_info;
-                    dcInfo.value = data.dc_info;
-                    relayerInfo.value = data.relayer_info;
-                    sequence.value = data.sequence;
-                    ibcTxInfo.value = data.ibc_tx_info;
+                if (data) {
+                    if (!data.is_list) {
+                        ibcTxStatus.value = data.status;
+                        data.error_log && (errorLog.value = data.error_log);
+                        tokenInfo.value = data.token_info;
+                        scInfo.value = data.sc_info;
+                        dcInfo.value = data.dc_info;
+                        relayerInfo.value = data.relayer_info;
+                        sequence.value = data.sequence;
+                        ibcTxInfo.value = data.ibc_tx_info;
+                    } else {
+                        router.push('/transfers');
+                    }
                 } else {
-                    router.push('/transfers');
+                    router.replace(`/searchResult?${hash}`);
                 }
             } else {
                 console.error(message);
@@ -126,7 +130,11 @@ export const useTransfersDetailsInfo = () => {
             console.log(error);
         }
     };
-
+    watch(route, (newValue) => {
+        if (newValue?.query?.hash) {
+            getTransferDetails();
+        }
+    });
     onMounted(() => {
         getTransferDetails();
     });
@@ -189,7 +197,7 @@ const calculateTextLength = (
 const getMatchBaseDenom = async (chainId: string, denom: string, amount: string) => {
     let feeAmount = amount;
     let tokenIcon = TOKEN_DEFAULT_ICON;
-    let symbol = denom;
+    let symbol = denom || DEFAULT_DISPLAY_TEXT;
     const matchBaseDenom = await getBaseDenomByKey(chainId, denom);
     if (matchBaseDenom) {
         feeAmount = `${formatBigNumber(
@@ -388,57 +396,65 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
     const rightTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
     const progressData = ref<IProgress[]>(SUCCESS_ARRIVE);
     const currentProgress = ref<number>(0);
-    watch(ibcTxStatus, (newIbcTxStatus) => {
-        switch (newIbcTxStatus) {
-            case IBC_TX_STATUS.success:
-                leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                rightTxImg.value = IBC_TX_INFO_STATUS.success;
-                ibcTxInfo.value?.refund_tx_info?.ack
-                    ? (progressData.value = SUCCESS_ARRIVE)
-                    : (progressData.value = SUCCESS_NO_ACK);
-                break;
-            case IBC_TX_STATUS.processing:
-                leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                rightTxImg.value = IBC_TX_INFO_STATUS.proccessing;
-                progressData.value = PROCCESSING_FIRST_ERROR;
-                break;
-            case IBC_TX_STATUS.failed:
-                leftTxImg.value = IBC_TX_INFO_STATUS.failed;
-                rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
-                progressData.value = PROCCESSING_FIRST_ERROR;
-                break;
-            case IBC_TX_STATUS.refund:
-                if (
-                    ibcTxInfo.value?.sc_tx_info.status === TRANSFER_DETAILS_STATUS.SUCCESS.value &&
-                    ibcTxInfo.value?.dc_tx_info.height === DEFAULT_HEIGHT.default
-                ) {
-                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                    rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
-                    progressData.value = NO_SECOND;
-
-                    break;
-                }
-                if (
-                    ibcTxInfo.value?.dc_tx_info.status === TRANSFER_DETAILS_STATUS.SUCCESS.value &&
-                    ibcTxInfo.value?.dc_tx_info.ack?.includes('error')
-                ) {
+    watch([ibcTxStatus, ibcTxInfo], ([newIbcTxStatus, newIbcTxInfo]) => {
+        if (newIbcTxStatus || newIbcTxInfo) {
+            switch (newIbcTxStatus) {
+                case IBC_TX_STATUS.success:
                     leftTxImg.value = IBC_TX_INFO_STATUS.success;
                     rightTxImg.value = IBC_TX_INFO_STATUS.success;
-                    progressData.value = SUCCESS_ARRIVE;
+                    newIbcTxInfo?.refund_tx_info?.ack
+                        ? (progressData.value = SUCCESS_ARRIVE)
+                        : (progressData.value = SUCCESS_NO_ACK);
                     break;
-                }
-                if (
-                    ibcTxInfo.value?.dc_tx_info.status === TRANSFER_DETAILS_STATUS.FAILED.value &&
-                    ibcTxInfo.value?.dc_tx_info.height > DEFAULT_HEIGHT.default
-                ) {
+                case IBC_TX_STATUS.processing:
                     leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                    rightTxImg.value = IBC_TX_INFO_STATUS.failed;
-                    progressData.value = SECOND_ERROR;
+                    rightTxImg.value = IBC_TX_INFO_STATUS.proccessing;
+                    progressData.value = PROCCESSING_FIRST_ERROR;
                     break;
-                }
-                break;
+                case IBC_TX_STATUS.failed:
+                    leftTxImg.value = IBC_TX_INFO_STATUS.failed;
+                    rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
+                    progressData.value = PROCCESSING_FIRST_ERROR;
+                    break;
+                case IBC_TX_STATUS.refund:
+                    if (newIbcTxInfo?.sc_tx_info && newIbcTxInfo?.dc_tx_info) {
+                        if (
+                            newIbcTxInfo.sc_tx_info.status ===
+                                TRANSFER_DETAILS_STATUS.SUCCESS.value &&
+                            newIbcTxInfo.dc_tx_info.height === DEFAULT_HEIGHT.default
+                        ) {
+                            leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                            rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
+                            progressData.value = NO_SECOND;
+                            break;
+                        }
+                    }
+                    if (newIbcTxInfo?.dc_tx_info) {
+                        if (
+                            newIbcTxInfo.dc_tx_info.status ===
+                                TRANSFER_DETAILS_STATUS.SUCCESS.value &&
+                            newIbcTxInfo.dc_tx_info.ack?.includes('error')
+                        ) {
+                            leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                            rightTxImg.value = IBC_TX_INFO_STATUS.success;
+                            progressData.value = SUCCESS_ARRIVE;
+                            break;
+                        }
+                        if (
+                            newIbcTxInfo.dc_tx_info.status ===
+                                TRANSFER_DETAILS_STATUS.FAILED.value &&
+                            newIbcTxInfo.dc_tx_info.height > DEFAULT_HEIGHT.default
+                        ) {
+                            leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                            rightTxImg.value = IBC_TX_INFO_STATUS.failed;
+                            progressData.value = SECOND_ERROR;
+                            break;
+                        }
+                    }
+                    break;
+            }
+            currentProgress.value = progressData.value.length - 1;
         }
-        currentProgress.value = progressData.value.length - 1;
     });
     const changeCurrent = (index: number) => {
         (window as any).gtag('event', `${router.currentRoute.value.name as string}-点击进度条`);
@@ -512,6 +528,11 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
     const { ibcTxInfo, mark, scInfo, dcInfo } = toRefs(props);
     const progressListAll = ref<IInfoList[]>([]);
     const progressList = ref<IInfoList[]>([]);
+    let timestampTimer: number;
+    let timeoutstampTimer: number;
+    const clearTimestampTimer = (timer: number) => {
+        timer && clearInterval(timer);
+    };
     const changeProgressListAll = (
         scProgressList: IInfoList[],
         differenceFileds: IInfoList[],
@@ -522,14 +543,30 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
             handleTransferDetails(item, sourceInfo);
         });
         progressList.value.forEach(async (item) => {
-            if (item.value && item.value !== DEFAULT_DISPLAY_TEXT) {
+            if (item.value !== '' && item.value !== DEFAULT_DISPLAY_TEXT) {
                 if (item.isFormatStatus) {
                     item.value = formatStatus(item.value);
                 } else if (item.isFormatFee) {
                     item.value = await formatFee(item.value);
                 } else if (item.isFormatSigner) {
                     item.value = formatSigner(item.value);
+                } else if (item.isFormatTimestamp) {
+                    const saveTimestamp = item.value;
+                    item.value = formatTimestamp(item.value);
+                    clearTimestampTimer(timestampTimer);
+                    timestampTimer = setInterval(() => {
+                        item.value = formatTimestamp(saveTimestamp);
+                    }, 1000);
+                } else if (item.isFormatTimeoutTimestamp) {
+                    const saveTimestamp = item.value;
+                    item.value = formatTimeoutTimestamp(item.value);
+                    clearTimestampTimer(timeoutstampTimer);
+                    timeoutstampTimer = setInterval(() => {
+                        item.value = formatTimeoutTimestamp(saveTimestamp);
+                    }, 1000);
                 }
+            } else {
+                item.value = DEFAULT_DISPLAY_TEXT;
             }
         });
         progressListAll.value = progressList.value;
@@ -580,27 +617,23 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
     };
     const formatTimestamp = (timestamp: number | string) => {
         const dayjs = djs?.default || djs;
-        const date = ref('');
+        let date = '';
         const time = Number(timestamp);
         if (timestamp > 0) {
-            date.value = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
-                getTimestamp(),
-                time * 1000,
-                'ago',
-                '>'
-            )})`;
-            setTimeout(() => {
-                date.value = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
+            if (time * 1000 > Date.now()) {
+                date = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')}`;
+            } else {
+                date = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
                     getTimestamp(),
                     time * 1000,
                     'ago',
                     '>'
                 )})`;
-            }, 1000);
+            }
         } else {
-            date.value = DEFAULT_DISPLAY_TEXT;
+            date = DEFAULT_DISPLAY_TEXT;
         }
-        return date.value;
+        return date;
     };
     const formatTimeoutTimestamp = (timeoutStamp: number | string) => {
         if (typeof timeoutStamp === 'string') return timeoutStamp;
@@ -617,25 +650,31 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                 );
                 break;
             case PROGRESS_STEP[2]:
-                changeProgressListAll(
-                    PROGRESS_LIST,
-                    PROGRESS_RECEIVE_LIST,
-                    ibcTxInfo.value?.dc_tx_info
-                );
+                if (ibcTxInfo.value?.dc_tx_info) {
+                    changeProgressListAll(
+                        PROGRESS_LIST,
+                        PROGRESS_RECEIVE_LIST,
+                        ibcTxInfo.value.dc_tx_info
+                    );
+                }
                 break;
             case PROGRESS_STEP[3]:
-                changeProgressListAll(
-                    PROGRESS_LIST,
-                    PROGRESS_ACKNOWLEDGE_LIST,
-                    ibcTxInfo.value?.refund_tx_info
-                );
+                if (ibcTxInfo.value?.refund_tx_info) {
+                    changeProgressListAll(
+                        PROGRESS_LIST,
+                        PROGRESS_ACKNOWLEDGE_LIST,
+                        ibcTxInfo.value.refund_tx_info
+                    );
+                }
                 break;
             case PROGRESS_STEP[4]:
-                changeProgressListAll(
-                    PROGRESS_LIST,
-                    PROGRESS_TIMEOUT_LIST,
-                    ibcTxInfo.value?.refund_tx_info
-                );
+                if (ibcTxInfo.value?.refund_tx_info) {
+                    changeProgressListAll(
+                        PROGRESS_LIST,
+                        PROGRESS_TIMEOUT_LIST,
+                        ibcTxInfo.value.refund_tx_info
+                    );
+                }
                 break;
         }
     });
@@ -651,6 +690,10 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
             }
         };
     });
+    onBeforeUnmount(() => {
+        timestampTimer && clearTimestampTimer(timestampTimer);
+        timeoutstampTimer && clearTimestampTimer(timeoutstampTimer);
+    });
 
     return {
         progressListAll,
@@ -660,8 +703,7 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
     };
 };
 
-export const useViewSource = (props: IUseViewSOurce) => {
-    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const tableExpand = new URL('../../../assets/transfers/table_expand.png', import.meta.url).href;
     const tablePackUp = new URL('../../../assets/transfers/table_packup.png', import.meta.url).href;
     const activeKey = ref<string>('1');
@@ -669,12 +711,11 @@ export const useViewSource = (props: IUseViewSOurce) => {
     const sourceCode = ref();
     const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);
     const getIbcSource = async (hash: string, chainId: string, msgType: string) => {
-        ibcStatisticsChainsStore.isShowLoading = true;
+        loading && (loading.value = true);
         const params = { chain_id: chainId, msg_type: msgType };
-
         try {
             const { code, message, data } = await getTxDetailsViewSourceByTxHashAPI(hash, params);
-            ibcStatisticsChainsStore.isShowLoading = false;
+            loading && (loading.value = false);
             if (code === API_CODE.success) {
                 return data;
             } else {
@@ -682,7 +723,7 @@ export const useViewSource = (props: IUseViewSOurce) => {
             }
         } catch (error) {
             console.log(error);
-            ibcStatisticsChainsStore.isShowLoading = false;
+            loading && (loading.value = false);
         }
     };
     watch(
@@ -698,25 +739,31 @@ export const useViewSource = (props: IUseViewSOurce) => {
                         );
                         break;
                     case PROGRESS_STEP[2]:
-                        JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.dc_tx_info.tx_hash,
-                            dcInfo.value.chain_id,
-                            ibcTxInfo.value.dc_tx_info.type
-                        );
+                        if (ibcTxInfo.value.dc_tx_info) {
+                            JSONSource.value = await getIbcSource(
+                                ibcTxInfo.value.dc_tx_info.tx_hash,
+                                dcInfo.value.chain_id,
+                                ibcTxInfo.value.dc_tx_info.type
+                            );
+                        }
                         break;
                     case PROGRESS_STEP[3]:
-                        JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.refund_tx_info.tx_hash,
-                            scInfo.value.chain_id,
-                            ibcTxInfo.value.refund_tx_info.type
-                        );
+                        if (ibcTxInfo.value.refund_tx_info) {
+                            JSONSource.value = await getIbcSource(
+                                ibcTxInfo.value.refund_tx_info.tx_hash,
+                                scInfo.value.chain_id,
+                                ibcTxInfo.value.refund_tx_info.type
+                            );
+                        }
                         break;
                     case PROGRESS_STEP[4]:
-                        JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.refund_tx_info.tx_hash,
-                            scInfo.value.chain_id,
-                            ibcTxInfo.value.refund_tx_info.type
-                        );
+                        if (ibcTxInfo.value.refund_tx_info) {
+                            JSONSource.value = await getIbcSource(
+                                ibcTxInfo.value.refund_tx_info.tx_hash,
+                                scInfo.value.chain_id,
+                                ibcTxInfo.value.refund_tx_info.type
+                            );
+                        }
                         break;
                 }
             }

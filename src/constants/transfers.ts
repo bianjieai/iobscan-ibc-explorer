@@ -283,11 +283,13 @@ export const PROGRESS_TIMEOUT_LIST: IInfoList[] = [
 export const TRANSFER_DETAILS_TABLE = [
     {
         title: 'Data Name',
-        dataIndex: 'key'
+        dataIndex: 'name',
+        key: 'name'
         // width: '35%'
     },
     {
         title: 'Content',
-        dataIndex: 'value'
+        dataIndex: 'value',
+        key: 'value'
     }
 ];

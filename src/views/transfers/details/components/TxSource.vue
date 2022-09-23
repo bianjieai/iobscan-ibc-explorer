@@ -8,6 +8,7 @@
                     :columns="TRANSFER_DETAILS_TABLE"
                     :data-source="sourceCode"
                     :pagination="false"
+                    :loading="loading"
                 >
                     <template #expandIcon="props">
                         <span v-if="props.record.children?.length">
@@ -15,7 +16,7 @@
                                 v-if="props.expanded"
                                 style="display: inline-block; margin-right: 8px"
                                 @click="
-                                    (e) => {
+                                    (e:any) => {
                                         props.onExpand(props.record, e);
                                     }
                                 "
@@ -26,7 +27,7 @@
                                 v-else
                                 style="display: inline-block; margin-right: 8px"
                                 @click="
-                                    (e) => {
+                                    (e:any) => {
                                         props.onExpand(props.record, e);
                                     }
                                 "
@@ -51,6 +52,7 @@
     import type { IIbcTxInfo, IProgress, ITxInfo } from '@/types/interface/transfers.interface';
     import { TRANSFER_DETAILS_TABLE } from '@/constants/transfers';
     import { useViewSource } from '../composable';
+    import { useLoading } from '@/composables';
 
     interface IProps {
         ibcTxInfo: IIbcTxInfo | undefined;
@@ -59,7 +61,12 @@
         dcInfo: ITxInfo | undefined;
     }
     const props = defineProps<IProps>();
-    const { activeKey, JSONSource, sourceCode, tableExpand, tablePackUp } = useViewSource(props);
+    const { loading } = useLoading();
+    // todo shan 明确入参 需要优化
+    const { activeKey, JSONSource, sourceCode, tableExpand, tablePackUp } = useViewSource(
+        props,
+        loading
+    );
 </script>
 
 <style lang="less" scoped>
@@ -85,7 +92,7 @@
             color: var(--bj-text-normal);
             line-height: 18px;
         }
-        :deep(th .ant-table-cell) {
+        :deep(thead tr .ant-table-cell) {
             background: #f8fafd;
         }
         :deep(td) {

@@ -22,17 +22,10 @@ export const getIbcBaseDenomsAPI = () => {
     });
 };
 
-export const getIP = () => {
-    return request({
-        url: 'http://pv.sohu.com/cityjson?ie=utf-8',
-        method: 'get'
-    });
-};
-
 export const postIPAndInput = (params: ISearchPoint) => {
     return request({
         url: API_URL.ibcSearchPointUrl,
         method: 'post',
-        params: params
+        data: params
     });
 };

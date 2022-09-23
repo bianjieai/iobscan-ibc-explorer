@@ -41,6 +41,7 @@
     @media screen and(max-width: 500px) {
         .tx_card {
             &__title {
+                padding: 12px 16px;
             }
             &__text {
             }
