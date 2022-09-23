@@ -196,7 +196,7 @@ const calculateTextLength = (
 const getMatchBaseDenom = async (chainId: string, denom: string, amount: string) => {
     let feeAmount = amount;
     let tokenIcon = TOKEN_DEFAULT_ICON;
-    let symbol = denom || DEFAULT_DISPLAY_TEXT;
+    let symbol = denom;
     const matchBaseDenom = await getBaseDenomByKey(chainId, denom);
     if (matchBaseDenom) {
         feeAmount = `${formatBigNumber(
@@ -637,42 +637,44 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
         const formatTimeoutStamp = (timeoutStamp / 1000000000).toFixed();
         return formatTimestamp(formatTimeoutStamp);
     };
-    watch(mark, (newMark) => {
-        switch (newMark.step) {
-            case PROGRESS_STEP[1]:
-                changeProgressListAll(
-                    PROGRESS_LIST,
-                    PROGRESS_TRANSFER_LIST,
-                    ibcTxInfo.value?.sc_tx_info
-                );
-                break;
-            case PROGRESS_STEP[2]:
-                if (ibcTxInfo.value?.dc_tx_info) {
+    watch([mark, ibcTxInfo], ([newMark]) => {
+        if (newMark) {
+            switch (newMark.step) {
+                case PROGRESS_STEP[1]:
                     changeProgressListAll(
                         PROGRESS_LIST,
-                        PROGRESS_RECEIVE_LIST,
-                        ibcTxInfo.value.dc_tx_info
+                        PROGRESS_TRANSFER_LIST,
+                        ibcTxInfo.value?.sc_tx_info
                     );
-                }
-                break;
-            case PROGRESS_STEP[3]:
-                if (ibcTxInfo.value?.refund_tx_info) {
-                    changeProgressListAll(
-                        PROGRESS_LIST,
-                        PROGRESS_ACKNOWLEDGE_LIST,
-                        ibcTxInfo.value.refund_tx_info
-                    );
-                }
-                break;
-            case PROGRESS_STEP[4]:
-                if (ibcTxInfo.value?.refund_tx_info) {
-                    changeProgressListAll(
-                        PROGRESS_LIST,
-                        PROGRESS_TIMEOUT_LIST,
-                        ibcTxInfo.value.refund_tx_info
-                    );
-                }
-                break;
+                    break;
+                case PROGRESS_STEP[2]:
+                    if (ibcTxInfo.value?.dc_tx_info) {
+                        changeProgressListAll(
+                            PROGRESS_LIST,
+                            PROGRESS_RECEIVE_LIST,
+                            ibcTxInfo.value.dc_tx_info
+                        );
+                    }
+                    break;
+                case PROGRESS_STEP[3]:
+                    if (ibcTxInfo.value?.refund_tx_info) {
+                        changeProgressListAll(
+                            PROGRESS_LIST,
+                            PROGRESS_ACKNOWLEDGE_LIST,
+                            ibcTxInfo.value.refund_tx_info
+                        );
+                    }
+                    break;
+                case PROGRESS_STEP[4]:
+                    if (ibcTxInfo.value?.refund_tx_info) {
+                        changeProgressListAll(
+                            PROGRESS_LIST,
+                            PROGRESS_TIMEOUT_LIST,
+                            ibcTxInfo.value.refund_tx_info
+                        );
+                    }
+                    break;
+            }
         }
     });
     const changeColor = computed(() => {
@@ -723,50 +725,46 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
             loading && (loading.value = false);
         }
     };
-    watch(
-        () => mark,
-        async (newMark) => {
-            if (newMark && scInfo?.value && dcInfo?.value && ibcTxInfo?.value) {
-                switch (newMark.value.step) {
-                    case PROGRESS_STEP[1]:
+    watch([mark, () => ibcTxInfo?.value], async ([newMark]) => {
+        if (newMark && scInfo?.value && dcInfo?.value && ibcTxInfo?.value) {
+            switch (newMark.step) {
+                case PROGRESS_STEP[1]:
+                    JSONSource.value = await getIbcSource(
+                        ibcTxInfo.value.sc_tx_info.tx_hash,
+                        scInfo.value.chain_id,
+                        ibcTxInfo.value.sc_tx_info.type
+                    );
+                    break;
+                case PROGRESS_STEP[2]:
+                    if (ibcTxInfo.value.dc_tx_info) {
                         JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.sc_tx_info.tx_hash,
-                            scInfo.value.chain_id,
-                            ibcTxInfo.value.sc_tx_info.type
+                            ibcTxInfo.value.dc_tx_info.tx_hash,
+                            dcInfo.value.chain_id,
+                            ibcTxInfo.value.dc_tx_info.type
                         );
-                        break;
-                    case PROGRESS_STEP[2]:
-                        if (ibcTxInfo.value.dc_tx_info) {
-                            JSONSource.value = await getIbcSource(
-                                ibcTxInfo.value.dc_tx_info.tx_hash,
-                                dcInfo.value.chain_id,
-                                ibcTxInfo.value.dc_tx_info.type
-                            );
-                        }
-                        break;
-                    case PROGRESS_STEP[3]:
-                        if (ibcTxInfo.value.refund_tx_info) {
-                            JSONSource.value = await getIbcSource(
-                                ibcTxInfo.value.refund_tx_info.tx_hash,
-                                scInfo.value.chain_id,
-                                ibcTxInfo.value.refund_tx_info.type
-                            );
-                        }
-                        break;
-                    case PROGRESS_STEP[4]:
-                        if (ibcTxInfo.value.refund_tx_info) {
-                            JSONSource.value = await getIbcSource(
-                                ibcTxInfo.value.refund_tx_info.tx_hash,
-                                scInfo.value.chain_id,
-                                ibcTxInfo.value.refund_tx_info.type
-                            );
-                        }
-                        break;
-                }
+                    }
+                    break;
+                case PROGRESS_STEP[3]:
+                    if (ibcTxInfo.value.refund_tx_info) {
+                        JSONSource.value = await getIbcSource(
+                            ibcTxInfo.value.refund_tx_info.tx_hash,
+                            scInfo.value.chain_id,
+                            ibcTxInfo.value.refund_tx_info.type
+                        );
+                    }
+                    break;
+                case PROGRESS_STEP[4]:
+                    if (ibcTxInfo.value.refund_tx_info) {
+                        JSONSource.value = await getIbcSource(
+                            ibcTxInfo.value.refund_tx_info.tx_hash,
+                            scInfo.value.chain_id,
+                            ibcTxInfo.value.refund_tx_info.type
+                        );
+                    }
+                    break;
             }
-        },
-        { immediate: true, deep: true }
-    );
+        }
+    });
 
     watch(JSONSource, (newJSONSource) => {
         if (newJSONSource) {
