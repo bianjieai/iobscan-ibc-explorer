@@ -74,7 +74,7 @@
         margin-top: 16px;
         &__label {
             font-size: var(--bj-font-size-normal);
-            font-weight: 600;
+            font-weight: 500;
             color: var(--bj-text-normal);
             line-height: 18px;
         }

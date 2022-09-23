@@ -115,7 +115,7 @@
         &__label {
             width: 92px;
             font-size: var(--bj-font-size-normal);
-            font-weight: 600;
+            font-weight: 500;
             color: var(--bj-text-normal);
             line-height: 18px;
         }
@@ -123,6 +123,7 @@
             flex: 1;
             margin-left: 24px;
             font-size: var(--bj-font-size-normal);
+            font-family: GolosUIWebRegular;
             font-weight: 400;
             color: var(--bj-text-second);
             line-height: 18px;

@@ -3,6 +3,7 @@
         <TitleCard title="Token"></TitleCard>
         <div class="token_info__details">
             <router-link
+                v-if="tokenName !== DEFAULT_DISPLAY_TEXT"
                 class="token_info__left"
                 :to="`/tokens/details?denom=${tokenInfo?.base_denom}`"
             >
@@ -22,6 +23,14 @@
                 }}</span>
                 <span class="token_info__name token_info__name_mobile">{{ tokenName }}</span>
             </router-link>
+            <span v-else class="token_info__left">
+                <div class="token_info__icon">
+                    <img :src="tokenLogo" alt="" />
+                </div>
+                <span class="token_info__name">
+                    {{ DEFAULT_DISPLAY_TEXT }}
+                </span>
+            </span>
             <div class="token_info__right">
                 <div class="token_info__label_value">
                     <span class="token_info__label">
@@ -73,6 +82,7 @@
     import { ITokenInfo } from '@/types/interface/transfers.interface';
     import { useTokenInfo } from '@/views/transfers/details/composable';
     import { getRestString } from '@/helper/parseStringHelper';
+    import { DEFAULT_DISPLAY_TEXT } from '@/constants';
 
     import TitleCard from './TitleCard.vue';
     interface IProps {
@@ -139,7 +149,7 @@
             display: inline-block;
             width: 164px;
             font-size: var(--bj-font-size-normal);
-            font-weight: 600;
+            font-weight: 500;
             color: var(--bj-text-normal);
         }
         &__value {
@@ -147,6 +157,7 @@
             margin-left: 24px;
             width: 100%;
             font-size: var(--bj-font-size-normal);
+            font-family: GolosUIWebRegular;
             color: var(--bj-text-second);
             word-break: break-all;
         }

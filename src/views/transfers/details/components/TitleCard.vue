@@ -12,7 +12,7 @@
 <style lang="less" scoped>
     .title {
         font-size: var(--bj-font-size-sub-title);
-        font-weight: 600;
+        font-weight: 500;
         color: var(--bj-text-normal);
         line-height: 16px;
     }
