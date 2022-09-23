@@ -684,6 +684,7 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const activeKey = ref<string>('1');
     const JSONSource = ref<IIbcSource | undefined>();
     const sourceCode = ref();
+    const uniKey = ref<number>(0);
     const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);
     const getIbcSource = async (hash: string, chainId: string, msgType: string) => {
         loading && (loading.value = true);
@@ -743,6 +744,7 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     watch(JSONSource, (newJSONSource) => {
         if (newJSONSource) {
             sourceCode.value = getJSONData(newJSONSource);
+            uniKey.value++;
         }
     });
 
@@ -750,6 +752,7 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
         activeKey,
         JSONSource,
         sourceCode,
+        uniKey,
         tableExpand,
         tablePackUp
     };
