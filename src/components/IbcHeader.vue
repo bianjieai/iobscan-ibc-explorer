@@ -101,7 +101,7 @@
         }
     };
     const buriedPoint = () => {
-        (window as any).gtag('event', '点击跨链门户');
+        (window as any).gtag('event', '导航栏-点击跨链门户');
     };
     onMounted(() => {
         currentMenu.value = getCurrentRouterNames(route) as Key[];

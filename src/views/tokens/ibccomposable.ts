@@ -158,6 +158,11 @@ export const useIbcTokenSelected = (
         ];
     });
     const onSelectedChain = (val?: IDataItem) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Chain`
+        );
+
         const chain = val?.id;
         searchChain.value = chain as string;
         pageUrl = urlPageParser(pageUrl, {
