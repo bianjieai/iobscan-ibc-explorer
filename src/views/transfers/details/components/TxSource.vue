@@ -5,7 +5,6 @@
             <a-tab-pane key="1" tab="Raw Data" class="view_source__first_tab">
                 <a-table
                     v-if="sourceCode"
-                    :key="uniKey"
                     :columns="TRANSFER_DETAILS_TABLE"
                     :data-source="sourceCode"
                     :pagination="false"
@@ -64,7 +63,7 @@
     const props = defineProps<IProps>();
     const { loading } = useLoading();
     // todo shan 明确入参 需要优化
-    const { activeKey, JSONSource, sourceCode, tableExpand, tablePackUp, uniKey } = useViewSource(
+    const { activeKey, JSONSource, sourceCode, tableExpand, tablePackUp } = useViewSource(
         props,
         loading
     );
