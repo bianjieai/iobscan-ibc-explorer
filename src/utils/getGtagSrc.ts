@@ -13,7 +13,10 @@ const src = url + GID;
 
 // 挂载gtag方法
 (window as any).dataLayer = (window as any).dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
+function gtag() {
+    // eslint-disable-next-line prefer-rest-params
+    (window as any).dataLayer.push(arguments);
+}
 (window as any).gtag = gtag;
 (window as any).gtag('js', new Date());
 (window as any).gtag('config', GID);
