@@ -26,7 +26,7 @@
                         class="ibc_selected_border card_list_item"
                     >
                         <router-link :to="`/chains`">
-                            <a-card class="menu_card">
+                            <a-card class="menu_card" @click="buriedPoint(item)">
                                 <img
                                     class="menu_card__img"
                                     :src="item.icon ? item.icon : CHAIN_DEFAULT_ICON"
@@ -114,6 +114,11 @@
             chainList.value[currentMenu.value[0]] && chainList.value[currentMenu.value[0]].length
         );
     });
+    const buriedPoint = (param: any) => {
+        (window as any).gtag('event', 'Home-点击链接', {
+            clickLink: `点击${currentMenu.value[0]}列表中的${param.chain_name}`
+        });
+    };
 </script>
 
 <style lang="less" scoped>
