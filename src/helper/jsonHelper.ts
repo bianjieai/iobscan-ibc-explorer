@@ -1,3 +1,4 @@
+import { getUUID } from '@/utils/baseTools';
 import type { IIbcSource } from '@/types/interface/transfers.interface';
 
 const secureParse = (JSONString: any) => {
@@ -22,6 +23,7 @@ const parseObjJsonData = (_d: any) => {
 
 interface DataItem {
     key: string;
+    name: string;
     value: string;
     children?: DataItem[];
 }
@@ -42,7 +44,8 @@ export const getJSONData = (jsonData: IIbcSource) => {
                         displayKey = key;
                     }
                     r = {
-                        key: displayKey || keyPath,
+                        key: getUUID(),
+                        name: displayKey || keyPath,
                         value: ''
                     };
                     r.children = format(v, keyPath);
@@ -56,7 +59,8 @@ export const getJSONData = (jsonData: IIbcSource) => {
                         dataEnum = enumMap[keyList[keyList.length - 1]];
                     }
                     r = {
-                        key: displayKey,
+                        key: getUUID(),
+                        name: displayKey || keyPath,
                         value: dataEnum && dataEnum[v] ? dataEnum[v] : String(v)
                     };
                 }
