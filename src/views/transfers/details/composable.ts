@@ -13,7 +13,6 @@ import {
     CHAIN_ID_LABEL,
     CHAIN_INFO_LIST,
     CHAIN_INFO_LIST_EXPAND,
-    DEFAULT_HEIGHT,
     IBC_TX_INFO_STATUS,
     IBC_TX_STATUS,
     MAX_ALLOW_WIDTH,
@@ -33,7 +32,8 @@ import {
     PROGRESS_RECEIVE_LIST,
     PROGRESS_ACKNOWLEDGE_LIST,
     PROGRESS_TIMEOUT_LIST,
-    TRANSFER_DETAILS_STATUS
+    TRANSFER_DETAILS_STATUS,
+    REFUND_TX_TYPE
 } from '@/constants/transfers';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
@@ -396,13 +396,13 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
     const rightTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
     const progressData = ref<IProgress[]>(SUCCESS_ARRIVE);
     const currentProgress = ref<number>(0);
-    watch([ibcTxStatus, ibcTxInfo], ([newIbcTxStatus, newIbcTxInfo]) => {
-        if (newIbcTxStatus || newIbcTxInfo) {
+    watch([ibcTxStatus, () => ibcTxInfo], ([newIbcTxStatus]) => {
+        if (newIbcTxStatus || ibcTxInfo) {
             switch (newIbcTxStatus) {
                 case IBC_TX_STATUS.success:
                     leftTxImg.value = IBC_TX_INFO_STATUS.success;
                     rightTxImg.value = IBC_TX_INFO_STATUS.success;
-                    newIbcTxInfo?.refund_tx_info?.ack
+                    ibcTxInfo.value?.refund_tx_info?.ack
                         ? (progressData.value = SUCCESS_ARRIVE)
                         : (progressData.value = SUCCESS_NO_ACK);
                     break;
@@ -417,38 +417,24 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
                     progressData.value = PROCCESSING_FIRST_ERROR;
                     break;
                 case IBC_TX_STATUS.refund:
-                    if (newIbcTxInfo?.sc_tx_info && newIbcTxInfo?.dc_tx_info) {
-                        if (
-                            newIbcTxInfo.sc_tx_info.status ===
-                                TRANSFER_DETAILS_STATUS.SUCCESS.value &&
-                            newIbcTxInfo.dc_tx_info.height === DEFAULT_HEIGHT.default
-                        ) {
-                            leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                            rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
-                            progressData.value = NO_SECOND;
-                            break;
-                        }
-                    }
-                    if (newIbcTxInfo?.dc_tx_info) {
-                        if (
-                            newIbcTxInfo.dc_tx_info.status ===
-                                TRANSFER_DETAILS_STATUS.SUCCESS.value &&
-                            newIbcTxInfo.dc_tx_info.ack?.includes('error')
-                        ) {
-                            leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                            rightTxImg.value = IBC_TX_INFO_STATUS.success;
-                            progressData.value = SUCCESS_ARRIVE;
-                            break;
-                        }
-                        if (
-                            newIbcTxInfo.dc_tx_info.status ===
-                                TRANSFER_DETAILS_STATUS.FAILED.value &&
-                            newIbcTxInfo.dc_tx_info.height > DEFAULT_HEIGHT.default
-                        ) {
-                            leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                            rightTxImg.value = IBC_TX_INFO_STATUS.failed;
-                            progressData.value = SECOND_ERROR;
-                            break;
+                    if (ibcTxInfo.value?.refund_tx_info) {
+                        switch (ibcTxInfo.value?.refund_tx_info.type) {
+                            case REFUND_TX_TYPE.acknowledge_packet:
+                                leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                                rightTxImg.value = IBC_TX_INFO_STATUS.success;
+                                progressData.value = SUCCESS_ARRIVE;
+                                break;
+                            case REFUND_TX_TYPE.timeout_packet:
+                                if (ibcTxInfo.value?.dc_tx_info) {
+                                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                                    rightTxImg.value = IBC_TX_INFO_STATUS.failed;
+                                    progressData.value = SECOND_ERROR;
+                                } else {
+                                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                                    rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
+                                    progressData.value = NO_SECOND;
+                                }
+                                break;
                         }
                     }
                     break;
