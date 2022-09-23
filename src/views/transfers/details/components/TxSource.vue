@@ -16,7 +16,7 @@
                                 v-if="props.expanded"
                                 style="display: inline-block; margin-right: 8px"
                                 @click="
-                                    (e) => {
+                                    (e:any) => {
                                         props.onExpand(props.record, e);
                                     }
                                 "
@@ -27,7 +27,7 @@
                                 v-else
                                 style="display: inline-block; margin-right: 8px"
                                 @click="
-                                    (e) => {
+                                    (e:any) => {
                                         props.onExpand(props.record, e);
                                     }
                                 "
