@@ -196,7 +196,7 @@ const calculateTextLength = (
 const getMatchBaseDenom = async (chainId: string, denom: string, amount: string) => {
     let feeAmount = amount;
     let tokenIcon = TOKEN_DEFAULT_ICON;
-    let symbol = denom;
+    let symbol = denom || DEFAULT_DISPLAY_TEXT;
     const matchBaseDenom = await getBaseDenomByKey(chainId, denom);
     if (matchBaseDenom) {
         feeAmount = `${formatBigNumber(
@@ -395,63 +395,65 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
     const rightTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
     const progressData = ref<IProgress[]>(SUCCESS_ARRIVE);
     const currentProgress = ref<number>(0);
-    watch(ibcTxStatus, (newIbcTxStatus) => {
-        switch (newIbcTxStatus) {
-            case IBC_TX_STATUS.success:
-                leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                rightTxImg.value = IBC_TX_INFO_STATUS.success;
-                ibcTxInfo.value?.refund_tx_info?.ack
-                    ? (progressData.value = SUCCESS_ARRIVE)
-                    : (progressData.value = SUCCESS_NO_ACK);
-                break;
-            case IBC_TX_STATUS.processing:
-                leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                rightTxImg.value = IBC_TX_INFO_STATUS.proccessing;
-                progressData.value = PROCCESSING_FIRST_ERROR;
-                break;
-            case IBC_TX_STATUS.failed:
-                leftTxImg.value = IBC_TX_INFO_STATUS.failed;
-                rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
-                progressData.value = PROCCESSING_FIRST_ERROR;
-                break;
-            case IBC_TX_STATUS.refund:
-                if (ibcTxInfo.value?.sc_tx_info && ibcTxInfo.value?.dc_tx_info) {
-                    if (
-                        ibcTxInfo.value.sc_tx_info.status ===
-                            TRANSFER_DETAILS_STATUS.SUCCESS.value &&
-                        ibcTxInfo.value.dc_tx_info.height === DEFAULT_HEIGHT.default
-                    ) {
-                        leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                        rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
-                        progressData.value = NO_SECOND;
-                        break;
+    watch([ibcTxStatus, ibcTxInfo], ([newIbcTxStatus, newIbcTxInfo]) => {
+        if (newIbcTxStatus || newIbcTxInfo) {
+            switch (newIbcTxStatus) {
+                case IBC_TX_STATUS.success:
+                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                    rightTxImg.value = IBC_TX_INFO_STATUS.success;
+                    newIbcTxInfo?.refund_tx_info?.ack
+                        ? (progressData.value = SUCCESS_ARRIVE)
+                        : (progressData.value = SUCCESS_NO_ACK);
+                    break;
+                case IBC_TX_STATUS.processing:
+                    leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                    rightTxImg.value = IBC_TX_INFO_STATUS.proccessing;
+                    progressData.value = PROCCESSING_FIRST_ERROR;
+                    break;
+                case IBC_TX_STATUS.failed:
+                    leftTxImg.value = IBC_TX_INFO_STATUS.failed;
+                    rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
+                    progressData.value = PROCCESSING_FIRST_ERROR;
+                    break;
+                case IBC_TX_STATUS.refund:
+                    if (newIbcTxInfo?.sc_tx_info && newIbcTxInfo?.dc_tx_info) {
+                        if (
+                            newIbcTxInfo.sc_tx_info.status ===
+                                TRANSFER_DETAILS_STATUS.SUCCESS.value &&
+                            newIbcTxInfo.dc_tx_info.height === DEFAULT_HEIGHT.default
+                        ) {
+                            leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                            rightTxImg.value = IBC_TX_INFO_STATUS.unknown;
+                            progressData.value = NO_SECOND;
+                            break;
+                        }
                     }
-                }
-                if (ibcTxInfo.value?.dc_tx_info) {
-                    if (
-                        ibcTxInfo.value.dc_tx_info.status ===
-                            TRANSFER_DETAILS_STATUS.SUCCESS.value &&
-                        ibcTxInfo.value.dc_tx_info.ack?.includes('error')
-                    ) {
-                        leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                        rightTxImg.value = IBC_TX_INFO_STATUS.success;
-                        progressData.value = SUCCESS_ARRIVE;
-                        break;
+                    if (newIbcTxInfo?.dc_tx_info) {
+                        if (
+                            newIbcTxInfo.dc_tx_info.status ===
+                                TRANSFER_DETAILS_STATUS.SUCCESS.value &&
+                            newIbcTxInfo.dc_tx_info.ack?.includes('error')
+                        ) {
+                            leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                            rightTxImg.value = IBC_TX_INFO_STATUS.success;
+                            progressData.value = SUCCESS_ARRIVE;
+                            break;
+                        }
+                        if (
+                            newIbcTxInfo.dc_tx_info.status ===
+                                TRANSFER_DETAILS_STATUS.FAILED.value &&
+                            newIbcTxInfo.dc_tx_info.height > DEFAULT_HEIGHT.default
+                        ) {
+                            leftTxImg.value = IBC_TX_INFO_STATUS.success;
+                            rightTxImg.value = IBC_TX_INFO_STATUS.failed;
+                            progressData.value = SECOND_ERROR;
+                            break;
+                        }
                     }
-                    if (
-                        ibcTxInfo.value.dc_tx_info.status ===
-                            TRANSFER_DETAILS_STATUS.FAILED.value &&
-                        ibcTxInfo.value.dc_tx_info.height > DEFAULT_HEIGHT.default
-                    ) {
-                        leftTxImg.value = IBC_TX_INFO_STATUS.success;
-                        rightTxImg.value = IBC_TX_INFO_STATUS.failed;
-                        progressData.value = SECOND_ERROR;
-                        break;
-                    }
-                }
-                break;
+                    break;
+            }
+            currentProgress.value = progressData.value.length - 1;
         }
-        currentProgress.value = progressData.value.length - 1;
     });
     const changeCurrent = (index: number) => {
         currentProgress.value = index;
