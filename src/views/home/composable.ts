@@ -9,7 +9,8 @@ import {
     SYMBOL,
     PAGE_PARAMETERS,
     ibcStatisticsTxsDefault,
-    txStatusNumber
+    txStatusNumber,
+    MSG_DESC
 } from '@/constants';
 import { useTimeInterval } from '@/composables';
 
@@ -124,6 +125,10 @@ export const useInterfaceActive = () => {
     const tipMsg =
         'Denom is the token denomination to be transferred, base denomination of the relayed fungible token.';
     const onClickViewAll = (msg: string) => {
+        (window as any).gtag('event', 'Home-点击链接', {
+            clickLink: (MSG_DESC as any)[msg]
+        });
+
         if (msg?.includes && msg.includes(PAGE_PARAMETERS.chains)) {
             router.push({
                 name: 'Chains'

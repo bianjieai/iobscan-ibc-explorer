@@ -56,6 +56,9 @@
     import { IResponseIbcTokenListItem, ITokensListItem } from '@/types/interface/tokens.interface';
     import { IResponseRelayerListItem } from '@/types/interface/relayers.interface';
     import { IResponseChannelsListItem } from '@/types/interface/channels.interface';
+    import { useRouter } from 'vue-router';
+
+    const router = useRouter();
     const { ibcBaseDenoms } = useGetIbcDenoms();
     type TData =
         | IResponseChainsListItem[]
@@ -158,6 +161,8 @@
         return data;
     };
     const onPageChange = (page: number, pageSize: number) => {
+        (window as any).gtag('event', `${router.currentRoute.value.name as string}-点击翻页器`);
+
         pageInfo.current = page;
         pageInfo.pageSize = pageSize;
         const p = (page - 1) * pageSize;
