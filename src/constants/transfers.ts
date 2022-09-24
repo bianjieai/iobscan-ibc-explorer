@@ -292,5 +292,5 @@ export const TRANSFER_DETAILS_TABLE = [
 
 export const REFUND_TX_TYPE = {
     acknowledge_packet: 'acknowledge_packet',
-    timeout_packet: 'acknowledge_packet'
+    timeout_packet: 'timeout_packet'
 };
