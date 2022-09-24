@@ -65,8 +65,6 @@ import { Ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { getJSONData } from '@/helper/jsonHelper';
 
-const router = useRouter();
-
 export const useJudgeStatus = (props: Readonly<ITxStatus>) => {
     const isShowSuccess = computed(() => {
         return props.status === IBC_TX_STATUS.success;
@@ -86,6 +84,7 @@ export const useJudgeStatus = (props: Readonly<ITxStatus>) => {
 
 export const useTransfersDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    const router = useRouter();
     const route = useRoute();
     // 界面所需数据
     const ibcTxStatus = ref<number>(IBC_TX_STATUS.default);
