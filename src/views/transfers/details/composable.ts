@@ -397,8 +397,8 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
     const rightTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
     const progressData = ref<IProgress[]>(SUCCESS_ARRIVE);
     const currentProgress = ref<number>(0);
-    watch([ibcTxStatus, () => ibcTxInfo], ([newIbcTxStatus]) => {
-        if (newIbcTxStatus || ibcTxInfo) {
+    watch([ibcTxStatus, ibcTxInfo], ([newIbcTxStatus]) => {
+        if (newIbcTxStatus) {
             switch (newIbcTxStatus) {
                 case IBC_TX_STATUS.success:
                     leftTxImg.value = IBC_TX_INFO_STATUS.success;
