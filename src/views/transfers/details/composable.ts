@@ -332,19 +332,19 @@ export const useRelayerInfo = (
     watch(
         () => props.relayerInfo,
         (newRelayerInfo) => {
-            if (newRelayerInfo) {
+            if (typeof newRelayerInfo !== undefined) {
                 relayerScInfoList.value.value =
-                    newRelayerInfo.sc_relayer.relayer_name || DEFAULT_DISPLAY_TEXT;
+                    newRelayerInfo?.sc_relayer.relayer_name || DEFAULT_DISPLAY_TEXT;
                 calculateTextLength(relayerScInfoList.value.value, emits, RELAYER_LABEL);
-                relayerScIcon.value = newRelayerInfo.sc_relayer.icon || RELAYER_DEFAULT_ICON;
+                relayerScIcon.value = newRelayerInfo?.sc_relayer.icon || RELAYER_DEFAULT_ICON;
 
                 fromAddressInfo.value = {
                     label: 'Address',
-                    value: newRelayerInfo.sc_relayer.relayer_addr || DEFAULT_DISPLAY_TEXT
+                    value: newRelayerInfo?.sc_relayer.relayer_addr || DEFAULT_DISPLAY_TEXT
                 };
                 toAddressInfo.value = {
                     label: 'Address',
-                    value: newRelayerInfo.dc_relayer.relayer_addr || DEFAULT_DISPLAY_TEXT
+                    value: newRelayerInfo?.dc_relayer.relayer_addr || DEFAULT_DISPLAY_TEXT
                 };
             }
         }
