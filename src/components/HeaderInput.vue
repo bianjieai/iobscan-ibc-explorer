@@ -28,7 +28,10 @@
     defineProps<IProps>();
     let inputValue = ref('');
     let isActiveInputStyle = ref(false);
-    const IP = (window as any).returnCitySN.cip;
+    const IP = (window as any)?.returnCitySN?.cip || '';
+    if (!IP) {
+        console.log('IP Not found');
+    }
     let content = '';
 
     const setInputBorderStyle = () => {
