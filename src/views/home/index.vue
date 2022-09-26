@@ -74,10 +74,11 @@
     const { ibcStatisticsChains, ibcStatisticsChannels, ibcStatisticsDenoms, ibcStatisticsTxs } =
         useIbcStatistics(DATA_REFRESH_GAP);
 
-    const { ibcChains } = useIbcChains(DATA_REFRESH_GAP);
+    const { ibcChains, lifeFunction } = useIbcChains(DATA_REFRESH_GAP);
     const { homeIbcTxs, setExpandByIndex } = useIbcTxs(DATA_REFRESH_GAP);
     const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
     const { onPressEnter } = useOnPressEnter();
+    lifeFunction();
 </script>
 
 <style lang="less">

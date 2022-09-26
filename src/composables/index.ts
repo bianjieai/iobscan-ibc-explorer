@@ -74,21 +74,24 @@ export const useIbcChains = (timerInterval?: number) => {
     const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
     let timer: number;
-    onMounted(() => {
-        getIbcChains();
-        if (Number(timerInterval) > 0) {
-            timer = setInterval(() => {
-                console.log('getIbcChains', timerInterval);
-                getIbcChains(false);
-            }, timerInterval);
-        }
-    });
-    onBeforeUnmount(() => {
-        timer && clearInterval(timer);
-    });
+    const lifeFunction = () => {
+        onMounted(() => {
+            getIbcChains();
+            if (Number(timerInterval) > 0) {
+                timer = setInterval(() => {
+                    console.log('getIbcChains', timerInterval);
+                    getIbcChains(false);
+                }, timerInterval);
+            }
+        });
+        onBeforeUnmount(() => {
+            timer && clearInterval(timer);
+        });
+    };
     return {
         ibcChains,
-        getIbcChains
+        getIbcChains,
+        lifeFunction
     };
 };
 
