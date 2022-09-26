@@ -89,17 +89,29 @@
         &__json {
             font-size: var(--bj-font-size-normal);
             font-weight: 400;
-            color: var(--bj-text-normal);
+            color: var(--bj-text-second);
             line-height: 18px;
         }
+        :deep(.ant-tabs-tab) {
+            padding: 16px 0 8px;
+            color: var(--bj-text-second);
+        }
         :deep(thead tr .ant-table-cell) {
+            font-family: GolosUI_Medium;
+            color: var(--bj-text-normal);
             background: #f8fafd;
+        }
+        :deep(.ant-table-cell) {
+            font-family: GolosUIWebRegular;
+            color: var(--bj-text-second);
         }
         :deep(td) {
             overflow-wrap: anywhere;
         }
         :deep(.ant-table-cell-with-append) {
             min-width: 250px;
+            font-family: GolosUI_Medium;
+            color: var(--bj-text-normal);
         }
         :deep(.ant-tabs-nav-wrap) {
             border-bottom: rgba(61, 80, 255, 0.1);
