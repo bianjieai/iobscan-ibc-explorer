@@ -47,12 +47,12 @@
 </template>
 
 <script setup lang="ts">
-    import { menus } from '@/constants/index';
+    import { MENUS } from '@/constants';
     import { RouteLocationNormalized } from 'vue-router';
     type Key = string | number;
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
     const logoName = new URL(import.meta.env.VITE_LOGO_NAME, import.meta.url).href;
-    const headerMenus = reactive(menus);
+    const headerMenus = reactive(MENUS);
     const currentMenu = ref<Key[]>([]);
     const isShowNav = ref(false);
     const router = useRouter();

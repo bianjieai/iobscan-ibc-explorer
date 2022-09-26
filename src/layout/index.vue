@@ -34,20 +34,6 @@
     const footerType = computed(() => {
         return ibcStatisticsChainsStore.isShow500 ? FooterMode.dark : FooterMode.light;
     });
-    let timer1: number, timer2: number;
-    // const { setStar1, setStar2 } = useStarAnimation(layout);
-    onMounted(() => {
-        // timer1 = setInterval(() => {
-        //   setStar1()
-        // }, 3200)
-        // timer2 = setInterval(() => {
-        //   setStar2()
-        // }, 4200)
-    });
-    onUnmounted(() => {
-        if (timer1) clearInterval(timer1);
-        if (timer2) clearInterval(timer2);
-    });
 </script>
 
 <style lang="less" scoped>

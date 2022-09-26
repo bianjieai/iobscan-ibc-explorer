@@ -9,7 +9,7 @@
                 :class="{
                     selected_color: selectOption.length > 0,
                     selected_color_default:
-                        selectedText === defaultTitle.defaultStatus ||
+                        selectedText === DEFAULT_TITLE.defaultStatus ||
                         selectedText === options[0].key,
                     visible_color: selectOption.length > 0 && visible
                 }"
@@ -50,7 +50,7 @@
 </template>
 
 <script setup lang="ts">
-    import { defaultTitle } from '../../../constants/index';
+    import { DEFAULT_TITLE } from '@/constants';
     // todo clippers => 向下箭头换个清晰的svg
     import { computed, onMounted, ref } from 'vue';
     type TKey = string;
@@ -75,7 +75,7 @@
         if (selectOption.value.length > 0) {
             return selectOption.value[0].key;
         } else {
-            return props.options[0]?.key ?? defaultTitle.defaultStatus;
+            return props.options[0]?.key ?? DEFAULT_TITLE.defaultStatus;
         }
     });
 

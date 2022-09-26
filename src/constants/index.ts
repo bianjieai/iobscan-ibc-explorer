@@ -6,7 +6,7 @@ export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', im
 export const RELAYER_DEFAULT_ICON = new URL('../assets/relayers/default.png', import.meta.url).href;
 export const TIP_ICON = new URL('../assets/tip.png', import.meta.url).href;
 
-export const menus = [
+export const MENUS = [
     {
         label: 'Home',
         value: 'Home'
@@ -39,7 +39,7 @@ export const PAGE_PARAMETERS = {
     transfers: 'transfers',
     tokens: 'tokens',
     ibcToken: 'ibcToken',
-    // home 页跳转参数中判断 包含的是 channel， 非 channels，[ibcStatisticsChannelsDefault]
+    // home 页跳转参数中判断 包含的是 channel， 非 channels，[IBC_STATISTICS_CHANNELS_DEFAULT]
     channel: 'channel',
     channels: 'channels',
     relayers: 'relayers',
@@ -59,14 +59,14 @@ export const MSG_DESC = {
     tx_failed: 'IBC Token Transfers - Failed'
 };
 
-export const txStatusNumber = {
+export const TX_STATUS_NUMBER = {
     defaultStatus: '1,2,3,4',
     successStatus: '1',
     failedStatus: '2,4'
 };
-export const dayTime = '24';
+export const DAY_TIME = '24';
 
-export const anchorsDatas = [
+export const ANCHORS_DATAS = [
     {
         title: 'A-E',
         collection: ['A', 'B', 'C', 'D', 'E']
@@ -92,7 +92,7 @@ export const anchorsDatas = [
         collection: ['#']
     }
 ];
-export const statisticsName = {
+export const STATISTICS_NAME = {
     chains_24hr: 'Active IBC Chains',
     chain_all: 'All IBC Chains',
     channels_24hr: 'Active',
@@ -107,7 +107,7 @@ export const statisticsName = {
     tx_failed: 'Failed'
 };
 
-export const ibcStatisticsChainsDefault = {
+export const IBC_STATISTICS_CHAINS_DEFAULT = {
     chains_24hr: {
         statistics_name: 'chains_24hr',
         count: 0
@@ -118,7 +118,7 @@ export const ibcStatisticsChainsDefault = {
     }
 };
 
-export const ibcStatisticsChannelsDefault = {
+export const IBC_STATISTICS_CHANNELS_DEFAULT = {
     channels_24hr: {
         statistics_name: 'channels_24hr',
         count: 0
@@ -137,7 +137,7 @@ export const ibcStatisticsChannelsDefault = {
     }
 };
 
-export const ibcStatisticsDenomsDefault = {
+export const IBC_STATISTICS_DENOMS_DEFAULT = {
     denom_all: {
         statistics_name: 'denom_all',
         count: 0
@@ -148,7 +148,7 @@ export const ibcStatisticsDenomsDefault = {
     }
 };
 
-export const ibcStatisticsTxsDefault = {
+export const IBC_STATISTICS_TXS_DEFAULT = {
     tx_24hr_all: {
         statistics_name: 'tx_24hr_all',
         count: 0
@@ -167,9 +167,9 @@ export const ibcStatisticsTxsDefault = {
     }
 };
 
-export const ageTimerInterval = 1000;
+export const AGE_TIMER_INTERVAL = 1000;
 
-export const ibcTxStatus = {
+export const IBC_TX_STATUS = {
     SUCCESS: 1,
     FAILED: 2,
     PROCESSING: 3,
@@ -177,7 +177,7 @@ export const ibcTxStatus = {
     SETTING: 5
 };
 
-export const ibcTxStatusDesc = [
+export const IBC_TX_STATUS_DESC = [
     {
         label: 'Success',
         status: 1
@@ -192,63 +192,63 @@ export const ibcTxStatusDesc = [
     }
 ];
 
-export const channelsStatus = {
+export const CHANNELS_STATUS = {
     channelOpenedStatus: '1',
     channelClosedStatus: '2'
 };
 
-export enum currentMenuType {
+export enum CURRENT_MENU_TYPE {
     active = 'active',
     inactive = 'inactive',
     all = 'all'
 }
 
-export const chainMenus: { label: string; value: currentMenuType }[] = [
+export const CHAINS_MENUS: { label: string; value: CURRENT_MENU_TYPE }[] = [
     {
         label: 'Active',
-        value: currentMenuType.active
+        value: CURRENT_MENU_TYPE.active
     },
     {
         label: 'Inactive',
-        value: currentMenuType.inactive
+        value: CURRENT_MENU_TYPE.inactive
     },
     {
         label: 'All',
-        value: currentMenuType.all
+        value: CURRENT_MENU_TYPE.all
     }
 ];
 
-export const ibcTxStatusSelectOptions = [
-    {
-        title: 'All Status',
-        value: JSON.stringify(['1', '2', '3', '4'])
-    },
-    {
-        title: 'Success',
-        value: JSON.stringify(['1'])
-    },
-    {
-        title: 'Processing',
-        value: JSON.stringify(['3'])
-    },
-    {
-        title: 'Failed',
-        value: JSON.stringify(['2', '4'])
-    }
-];
-export const transfersStatusOptions = {
+export const TRANSFERS_STATUS_OPTIONS = {
     DEFAULT_OPTIONS: ['1', '2', '3', '4'],
     SUCCESS_OPTIONS: ['1'],
     FAILED_OPTIONS: ['2', '4'],
     PROCESSING_OPTIONS: ['3']
 };
 
-export const transferTableColumn: TableColumnsType = [
+export const IBC_TX_STATUS_SELECT_OPTIONS = [
+    {
+        title: 'All Status',
+        value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS)
+    },
+    {
+        title: 'Success',
+        value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.SUCCESS_OPTIONS)
+    },
+    {
+        title: 'Processing',
+        value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.PROCESSING_OPTIONS)
+    },
+    {
+        title: 'Failed',
+        value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.FAILED_OPTIONS)
+    }
+];
+
+export const TRANSFER_TABLE_COLUMN: TableColumnsType = [
     {
         dataIndex: 'token',
         slots: { customRender: 'token', title: 'customTitle' },
         width: 200
-        // ellipsis: true,
     },
     {
         title: 'From TxHash',
@@ -293,18 +293,15 @@ export const transferTableColumn: TableColumnsType = [
     }
 ];
 
-export const unAuthed = 'Others';
+export const UNAUTHED = 'Others';
 
-export const defaultTitle = {
+export const DEFAULT_TITLE = {
     defaultStatus: 'All Status',
     defaultChains: 'All Chains',
     defaultTokens: 'All Tokens'
 };
 
-export const selectedType = {
-    chain: 'chain'
-};
-export const unknownSymbol = 'unknown';
+export const UNKNOWN_SYMBOL = 'unknown';
 
 export const CHAINNAME = {
     COSMOSHUB: 'Cosmos Hub',
@@ -312,7 +309,7 @@ export const CHAINNAME = {
 };
 
 export const UNKNOWN = 'Unknown';
-export const thousandDecimal = 0.0001;
+export const THOUSAND_DECIMAL = 0.0001;
 
 export const SYMBOL = {
     ATOM: 'ATOM',
@@ -380,7 +377,7 @@ export const BASE_PARAMS: IRequestPagination = {
     page_size: 1000
 };
 
-export const AxiosTimeout = 15000;
+export const AXIOS_TIMEOUT = 15000;
 
 export const CHAIN_DEFAULT_VALUE = 'allchain';
 

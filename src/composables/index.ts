@@ -1,6 +1,6 @@
 import { onMounted, onBeforeUnmount } from 'vue';
 import {
-    ageTimerInterval,
+    AGE_TIMER_INTERVAL,
     PAGE_PARAMETERS,
     NEED_CUSTOM_COLUMN,
     CHAIN_DEFAULT_ICON
@@ -8,7 +8,7 @@ import {
 import { useIbcStatisticsChains } from '@/store';
 import { DATA_REFRESH_GAP } from '@/constants/home';
 
-export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerInterval) => {
+export const useTimeInterval = (intervalCallBack: Function, interval = AGE_TIMER_INTERVAL) => {
     let timer: number | null = null;
     intervalCallBack();
     onMounted(() => {
@@ -157,5 +157,14 @@ export const useMatchChainInfo = (chainId: string) => {
     return {
         chainIcon,
         chainName
+    };
+};
+
+export const useOnPressEnter = () => {
+    const onPressEnter = (val: any) => {
+        console.log(val);
+    };
+    return {
+        onPressEnter
     };
 };

@@ -50,7 +50,9 @@
                 <transfer-list
                     :ibc-chains="ibcChains"
                     :transfer-list="homeIbcTxs"
-                    @click-view-all="onClickViewAll(ibcStatisticsTxsDefault.tx_all.statistics_name)"
+                    @click-view-all="
+                        onClickViewAll(IBC_STATISTICS_TXS_DEFAULT.tx_all.statistics_name)
+                    "
                     @click-item="onClickViewAll"
                     @item-did-expand="setExpandByIndex"
                 />
@@ -65,10 +67,9 @@
     import ChainsListInfo from './components/ChainsListInfo.vue';
     import StatisticList from './components/StatisticList.vue';
     import TransferList from './components/TransferList.vue';
-    import { useIbcChains } from '@/composables';
+    import { useIbcChains, useOnPressEnter } from '@/composables';
     import { useIbcTxs, useInterfaceActive } from './composable';
-    import { useOnPressEnter } from '@/composables/useStarAnimation';
-    import { PAGE_PARAMETERS, ibcStatisticsTxsDefault } from '@/constants/index';
+    import { PAGE_PARAMETERS, IBC_STATISTICS_TXS_DEFAULT } from '@/constants/index';
     import { useIbcStatistics } from '@/composables/home';
     import { DATA_REFRESH_GAP } from '@/constants/home';
     const { ibcStatisticsChains, ibcStatisticsChannels, ibcStatisticsDenoms, ibcStatisticsTxs } =

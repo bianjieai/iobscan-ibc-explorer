@@ -1,4 +1,4 @@
-import type { IInfoList, IProgress, ITxInfo } from '@/types/interface/transfers.interface';
+import type { IInfoList, IProgress } from '@/types/interface/transfers.interface';
 export enum IBC_TX_STATUS {
     'default' = 1000, // web custom staus
     'success' = 1,
@@ -98,15 +98,6 @@ export const RELAYER_INFO: IInfoList = {
 export const SEQUENCE_INFO: IInfoList = {
     label: 'Number',
     value: '--'
-};
-
-export const CHAIN_INFO: ITxInfo = {
-    address: '--',
-    chain_id: '--',
-    channel_id: '--',
-    port_id: '--',
-    connection_id: '--',
-    client_id: '--'
 };
 
 export const IBC_TX_INFO_STATUS = {
@@ -281,7 +272,6 @@ export const TRANSFER_DETAILS_TABLE = [
         title: 'Data Name',
         dataIndex: 'name',
         key: 'name'
-        // width: '35%'
     },
     {
         title: 'Content',

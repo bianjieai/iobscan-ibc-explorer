@@ -3,13 +3,13 @@ import { formatAge, getTimestamp } from '@/utils/timeTools';
 import { IBaseDenom } from '@/types/interface/index.interface';
 import { useIbcStatisticsChains } from '@/store/index';
 import {
-    ibcStatisticsChannelsDefault,
-    ibcStatisticsDenomsDefault,
-    channelsStatus,
+    IBC_STATISTICS_CHANNELS_DEFAULT,
+    IBC_STATISTICS_DENOMS_DEFAULT,
+    CHANNELS_STATUS,
     SYMBOL,
     PAGE_PARAMETERS,
-    ibcStatisticsTxsDefault,
-    txStatusNumber,
+    IBC_STATISTICS_TXS_DEFAULT,
+    TX_STATUS_NUMBER,
     MSG_DESC
 } from '@/constants';
 import { useTimeInterval } from '@/composables';
@@ -144,18 +144,18 @@ export const useInterfaceActive = () => {
                 name: 'Chains'
             });
         } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.channel)) {
-            if (msg === ibcStatisticsChannelsDefault.channel_opened.statistics_name) {
+            if (msg === IBC_STATISTICS_CHANNELS_DEFAULT.channel_opened.statistics_name) {
                 router.push({
                     name: 'Channels',
                     query: {
-                        status: channelsStatus.channelOpenedStatus
+                        status: CHANNELS_STATUS.channelOpenedStatus
                     }
                 });
-            } else if (msg === ibcStatisticsChannelsDefault.channel_closed.statistics_name) {
+            } else if (msg === IBC_STATISTICS_CHANNELS_DEFAULT.channel_closed.statistics_name) {
                 router.push({
                     name: 'Channels',
                     query: {
-                        status: channelsStatus.channelClosedStatus
+                        status: CHANNELS_STATUS.channelClosedStatus
                     }
                 });
             } else {
@@ -164,37 +164,37 @@ export const useInterfaceActive = () => {
                 });
             }
         } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.tx)) {
-            if (msg === ibcStatisticsTxsDefault.tx_all.statistics_name) {
+            if (msg === IBC_STATISTICS_TXS_DEFAULT.tx_all.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber.defaultStatus
+                        status: TX_STATUS_NUMBER.defaultStatus
                     }
                 });
-            } else if (msg === ibcStatisticsTxsDefault.tx_24hr_all.statistics_name) {
+            } else if (msg === IBC_STATISTICS_TXS_DEFAULT.tx_24hr_all.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber.defaultStatus
+                        status: TX_STATUS_NUMBER.defaultStatus
                     }
                 });
-            } else if (msg === ibcStatisticsTxsDefault.tx_success.statistics_name) {
+            } else if (msg === IBC_STATISTICS_TXS_DEFAULT.tx_success.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber.successStatus
+                        status: TX_STATUS_NUMBER.successStatus
                     }
                 });
-            } else if (msg === ibcStatisticsTxsDefault.tx_failed.statistics_name) {
+            } else if (msg === IBC_STATISTICS_TXS_DEFAULT.tx_failed.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber.failedStatus
+                        status: TX_STATUS_NUMBER.failedStatus
                     }
                 });
             }
         } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.denom)) {
-            if (msg !== ibcStatisticsDenomsDefault.denom_all.statistics_name) {
+            if (msg !== IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name) {
                 router.push({
                     name: 'Tokens'
                 });

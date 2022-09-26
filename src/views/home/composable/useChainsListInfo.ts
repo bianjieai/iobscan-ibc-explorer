@@ -1,14 +1,14 @@
 import { Ref, ComputedRef } from 'vue';
 import { IIbcChains, IIbcchain, TIbcChainsKeys } from '@/types/interface/index.interface';
-import { anchorsDatas, chainMenus, currentMenuType } from '@/constants';
+import { ANCHORS_DATAS, CHAINS_MENUS, CURRENT_MENU_TYPE } from '@/constants';
 
 export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
-    const menus = reactive(chainMenus);
-    const currentMenu = ref<currentMenuType[]>([menus[0].value as currentMenuType]);
+    const menus = reactive(CHAINS_MENUS);
+    const currentMenu = ref<CURRENT_MENU_TYPE[]>([menus[0].value as CURRENT_MENU_TYPE]);
     const scrollListRef = ref();
     const linkListRef = ref();
     const lock = ref(false);
-    const anchors = reactive(anchorsDatas);
+    const anchors = reactive(ANCHORS_DATAS);
     let once = true;
 
     const highlightedLabel = (label: string) => {
@@ -115,7 +115,7 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
             clickLink: `Active、InActive、All区域点击${key}`
         });
 
-        highlightedLabel(anchorsDatas[0].title);
+        highlightedLabel(ANCHORS_DATAS[0].title);
         const currentChainList = chainList.value[currentMenu.value[0]];
         currentChainList.sort((a: IIbcchain, b: IIbcchain) => {
             return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
@@ -141,21 +141,21 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
         const currentChainNameList = currentChainList.map((chain) =>
             chain.chain_name[0].toUpperCase()
         );
-        let findIndex = anchorsDatas.findIndex((item) => item.title === label);
+        let findIndex = ANCHORS_DATAS.findIndex((item) => item.title === label);
         let isSuccess = false;
-        let sureChainNameList = anchorsDatas[findIndex].collection;
+        let sureChainNameList = ANCHORS_DATAS[findIndex].collection;
         // 终止条件 isSuccess 成功  或者 findIndex <= 0
         while (!(isSuccess || findIndex <= 0)) {
             for (let i = 0; i < sureChainNameList.length; i++) {
                 if (currentChainNameList.includes(sureChainNameList[i])) {
-                    label = anchorsDatas[findIndex].title;
+                    label = ANCHORS_DATAS[findIndex].title;
                     isSuccess = true;
                     break;
                 }
             }
             if (!isSuccess) {
                 findIndex--;
-                sureChainNameList = anchorsDatas[findIndex].collection;
+                sureChainNameList = ANCHORS_DATAS[findIndex].collection;
             }
         }
         // 如果没找到，以列表中第一个数据，来确定高亮的标签

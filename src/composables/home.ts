@@ -2,19 +2,19 @@ import { API_CODE } from '@/constants/apiCode';
 import { getIbcStatisticsAPI } from '@/api/home';
 import { findStatistics } from '@/helper/findStatisticsHelper';
 import {
-    ibcStatisticsChannelsDefault,
-    ibcStatisticsDenomsDefault,
-    ibcStatisticsTxsDefault,
-    ibcStatisticsChainsDefault
+    IBC_STATISTICS_CHANNELS_DEFAULT,
+    IBC_STATISTICS_DENOMS_DEFAULT,
+    IBC_STATISTICS_TXS_DEFAULT,
+    IBC_STATISTICS_CHAINS_DEFAULT
 } from '@/constants/index';
 import { IResponseIbcStatisticItem } from '@/types/interface/home.interface';
 import { useIbcStatisticsChains } from '@/store';
 
 export const useIbcStatistics = (timerInterval?: number) => {
-    const ibcStatisticsChains = reactive(ibcStatisticsChainsDefault);
-    const ibcStatisticsChannels = reactive(ibcStatisticsChannelsDefault);
-    const ibcStatisticsDenoms = reactive(ibcStatisticsDenomsDefault);
-    const ibcStatisticsTxs = reactive(ibcStatisticsTxsDefault);
+    const ibcStatisticsChains = reactive(IBC_STATISTICS_CHAINS_DEFAULT);
+    const ibcStatisticsChannels = reactive(IBC_STATISTICS_CHANNELS_DEFAULT);
+    const ibcStatisticsDenoms = reactive(IBC_STATISTICS_DENOMS_DEFAULT);
+    const ibcStatisticsTxs = reactive(IBC_STATISTICS_TXS_DEFAULT);
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const isDocumentVisibility = storeToRefs(ibcStatisticsChainsStore).isDocumentVisibility;
     const getIbcStatistics = async () => {

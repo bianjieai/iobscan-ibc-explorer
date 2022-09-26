@@ -15,7 +15,7 @@
                 />
                 <span
                     :class="
-                        selectedSymbol === defaultTitle.defaultTokens
+                        selectedSymbol === DEFAULT_TITLE.defaultTokens
                             ? 'button__title_default'
                             : 'button__title'
                     "
@@ -82,7 +82,7 @@
                     <div class="overlay__item">
                         <h2 class="overlay__item__title">Other IBC Tokens</h2>
                         <div class="overlay__item__content">
-                            <div class="content_item cursor" @click="onClickItem(unAuthed)">
+                            <div class="content_item cursor" @click="onClickItem(UNAUTHED)">
                                 <img class="content_item__icon" :src="TOKEN_DEFAULT_ICON" />
                                 <span class="content_item__title">Others</span>
                             </div>
@@ -124,7 +124,7 @@
     import { rmIbcPrefix } from '@/helper/parseStringHelper';
     import { useFindIcon, useIsVisible } from '@/views/transfers/composable';
     import { ref, watch } from 'vue';
-    import { defaultTitle, unAuthed, TOKEN_DEFAULT_ICON, TIP_ICON } from '@/constants';
+    import { DEFAULT_TITLE, UNAUTHED, TOKEN_DEFAULT_ICON, TIP_ICON } from '@/constants';
     import { IBaseDenom } from '@/types/interface/index.interface';
     const props = withDefaults(
         defineProps<{
