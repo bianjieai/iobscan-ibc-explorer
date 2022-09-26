@@ -8,10 +8,6 @@ export enum IBC_TX_STATUS {
     'setting' = 5
 }
 
-export enum DEFAULT_HEIGHT {
-    'default' = 0
-}
-
 export const PROGRESS_STEP = {
     1: 'Transfer',
     2: 'Receive',
@@ -293,3 +289,8 @@ export const TRANSFER_DETAILS_TABLE = [
         key: 'value'
     }
 ];
+
+export const REFUND_TX_TYPE = {
+    acknowledge_packet: 'acknowledge_packet',
+    timeout_packet: 'timeout_packet'
+};

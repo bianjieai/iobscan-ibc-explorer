@@ -44,7 +44,9 @@
         content = e.target.value;
     };
     const searchInput = () => {
-        (window as any).gtag('event', '导航栏-点击搜索');
+        (window as any).gtag('event', '导航栏-点击搜索', {
+            searchValue: content
+        });
 
         if (inputValue.value !== '') {
             if (/^[A-F0-9]{64}$/.test(inputValue.value)) {
