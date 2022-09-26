@@ -15,6 +15,15 @@
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     ibcStatisticsChainsStore.initStateAction();
     useChangeTitleAndIcon();
+
+    // 判断是否聚焦到本页签
+    const watchDocument = () => {
+        ibcStatisticsChainsStore.isDocumentVisibility = document.hidden;
+    };
+    document.addEventListener('visibilitychange', watchDocument);
+    onBeforeUnmount(() => {
+        document.removeEventListener('visibilitychange', watchDocument);
+    });
 </script>
 
 <style>

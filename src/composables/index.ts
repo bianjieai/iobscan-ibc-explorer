@@ -71,22 +71,32 @@ export const useLoading = () => {
 
 export const useIbcChains = (timerInterval?: number) => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
+    const { ibcChains, isDocumentVisibility } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
     let timer: number;
+    const intervalIbcChains = () => {
+        timer = setInterval(() => {
+            console.log('getIbcChains', timerInterval);
+            getIbcChains(false);
+        }, timerInterval);
+    };
+
     const lifeFunction = () => {
         onMounted(() => {
             getIbcChains();
             if (Number(timerInterval) > 0) {
-                timer = setInterval(() => {
-                    console.log('getIbcChains', timerInterval);
-                    getIbcChains(false);
-                }, timerInterval);
+                intervalIbcChains();
             }
         });
         onBeforeUnmount(() => {
             timer && clearInterval(timer);
         });
+        watch(
+            () => isDocumentVisibility.value,
+            (newVisibility) => {
+                newVisibility && timer ? clearInterval(timer) : intervalIbcChains();
+            }
+        );
     };
     return {
         ibcChains,

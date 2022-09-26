@@ -24,7 +24,8 @@ export const useIbcStatisticsChains = defineStore('global', {
             ibcDenoms: [],
             isShowLoading: false,
             isShow500: false,
-            ibcTxs: []
+            ibcTxs: [],
+            isDocumentVisibility: false
         };
     },
     getters: {

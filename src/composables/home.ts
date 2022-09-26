@@ -8,12 +8,15 @@ import {
     ibcStatisticsChainsDefault
 } from '@/constants/index';
 import { IResponseIbcStatisticItem } from '@/types/interface/home.interface';
+import { useIbcStatisticsChains } from '@/store';
 
 export const useIbcStatistics = (timerInterval?: number) => {
     const ibcStatisticsChains = reactive(ibcStatisticsChainsDefault);
     const ibcStatisticsChannels = reactive(ibcStatisticsChannelsDefault);
     const ibcStatisticsDenoms = reactive(ibcStatisticsDenomsDefault);
     const ibcStatisticsTxs = reactive(ibcStatisticsTxsDefault);
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    const isDocumentVisibility = storeToRefs(ibcStatisticsChainsStore).isDocumentVisibility;
     const getIbcStatistics = async () => {
         try {
             const { code, data } = await getIbcStatisticsAPI();
@@ -37,18 +40,27 @@ export const useIbcStatistics = (timerInterval?: number) => {
         }
     };
     let timer: number;
+    const intervalIbcStatistics = () => {
+        timer = setInterval(() => {
+            console.log('getIbcStatistics', timerInterval);
+            getIbcStatistics();
+        }, timerInterval);
+    };
     onMounted(() => {
         getIbcStatistics();
         if (Number(timerInterval) > 0) {
-            timer = setInterval(() => {
-                console.log('getIbcStatistics', timerInterval);
-                getIbcStatistics();
-            }, timerInterval);
+            intervalIbcStatistics();
         }
     });
     onBeforeUnmount(() => {
         timer && clearInterval(timer);
     });
+    watch(
+        () => isDocumentVisibility.value,
+        (newVisibility) => {
+            newVisibility && timer ? clearInterval(timer) : intervalIbcStatistics();
+        }
+    );
     return {
         ibcStatisticsChains,
         ibcStatisticsChannels,

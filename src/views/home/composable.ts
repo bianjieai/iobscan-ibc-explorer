@@ -17,6 +17,7 @@ import { useTimeInterval } from '@/composables';
 export const useIbcTxs = (timerInterval?: number) => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
+    const isDocumentVisibility = storeToRefs(ibcStatisticsChainsStore).isDocumentVisibility;
     const homeIbcTxs = ref([...ibcTxs]);
     const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
     const expandedId = ref<string | null>();
@@ -68,19 +69,28 @@ export const useIbcTxs = (timerInterval?: number) => {
         }
     };
     let timer: number;
+    const intervalIbcTxs = () => {
+        timer = setInterval(() => {
+            console.log('initGetIbcTxs', timerInterval);
+            initGetIbcTxs(false);
+        }, timerInterval);
+    };
     onMounted(async () => {
         await ibcStatisticsChainsStore.getIbcDenomsAction();
         initGetIbcTxs();
         if (Number(timerInterval) > 0) {
-            timer = setInterval(() => {
-                console.log('initGetIbcTxs', timerInterval);
-                initGetIbcTxs(false);
-            }, timerInterval);
+            intervalIbcTxs();
         }
     });
     onBeforeUnmount(() => {
         timer && clearInterval(timer);
     });
+    watch(
+        () => isDocumentVisibility.value,
+        (newVisibility) => {
+            newVisibility && timer ? clearInterval(timer) : intervalIbcTxs();
+        }
+    );
     return {
         homeIbcTxs,
         getIbcTxs,
