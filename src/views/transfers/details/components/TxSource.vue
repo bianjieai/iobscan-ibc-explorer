@@ -88,6 +88,7 @@
         }
         &__json {
             font-size: var(--bj-font-size-normal);
+            font-family: GolosUIWebRegular;
             font-weight: 400;
             color: var(--bj-text-second);
             line-height: 18px;
