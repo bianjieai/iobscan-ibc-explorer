@@ -698,20 +698,30 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const JSONSource = ref<IIbcSource | undefined>();
     const sourceCode = ref();
     const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);
+    const sourceMap = new Map();
     const getIbcSource = async (hash: string, chainId: string, msgType: string) => {
         loading && (loading.value = true);
-        const params = { chain_id: chainId, msg_type: msgType };
-        try {
-            const { code, message, data } = await getTxDetailsViewSourceByTxHashAPI(hash, params);
+        if (sourceMap.get(hash)) {
             loading && (loading.value = false);
-            if (code === API_CODE.success) {
-                return data;
-            } else {
-                console.error(message);
+            return sourceMap.get(hash);
+        } else {
+            const params = { chain_id: chainId, msg_type: msgType };
+            try {
+                const { code, message, data } = await getTxDetailsViewSourceByTxHashAPI(
+                    hash,
+                    params
+                );
+                loading && (loading.value = false);
+                if (code === API_CODE.success) {
+                    sourceMap.set(hash, data);
+                    return data;
+                } else {
+                    console.error(message);
+                }
+            } catch (error) {
+                console.log(error);
+                loading && (loading.value = false);
             }
-        } catch (error) {
-            console.log(error);
-            loading && (loading.value = false);
         }
     };
     watch([mark, () => ibcTxInfo?.value], async ([newMark]) => {
