@@ -43,6 +43,9 @@
                 </div>
             </div>
         </div>
+        <div class="header_container__input">
+            <header-input class="header_container__input_layout" disabled />
+        </div>
     </div>
 </template>
 
@@ -121,7 +124,6 @@
         box-sizing: border-box;
         padding: 0;
         width: 100%;
-        height: 80px;
         line-height: 80px;
         background-image: url('../assets/iobscan_home_bg.png');
         background-repeat: no-repeat;
@@ -177,6 +179,9 @@
                     }
                 }
             }
+        }
+        &__input {
+            display: none;
         }
     }
     @media screen and (max-width: 1200px) {
@@ -284,6 +289,10 @@
                         }
                     }
                 }
+            }
+            &__input {
+                display: block;
+                padding: 0 16px;
             }
         }
     }

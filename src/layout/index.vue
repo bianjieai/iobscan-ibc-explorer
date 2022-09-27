@@ -59,7 +59,6 @@
             box-sizing: border-box;
             padding: 0;
             width: 100%;
-            height: 80px;
             line-height: 80px;
             background-image: url('../assets/iobscan_home_bg.png');
             background-repeat: no-repeat;
@@ -82,6 +81,21 @@
         }
         &__footer {
             width: 100%;
+        }
+    }
+    @media screen and (max-width: 530px) {
+        .layout {
+            padding-top: 160px;
+            &__header {
+            }
+            &__content {
+                &__router_container {
+                }
+                &__error_container {
+                }
+            }
+            &__footer {
+            }
         }
     }
 </style>

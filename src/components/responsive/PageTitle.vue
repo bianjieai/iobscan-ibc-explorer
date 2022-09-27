@@ -83,7 +83,7 @@
     }
 
     // mobile
-    @media screen and (max-width: 414px) {
+    @media screen and (max-width: 580px) {
         .page_title_container {
             display: inline-flex;
             text-align: left;
