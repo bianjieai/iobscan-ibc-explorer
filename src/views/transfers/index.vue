@@ -1,9 +1,9 @@
 <template>
-    <!-- todo 页面组件重构，后续再处理 -->
-    <!-- todo duanjie class="transfer"  设置了样式，看能不能复用 PageContainer 保持统一 -->
+    <!-- todo 页面组件重构 -->
+    <!-- todo duanjie 此处使用了class="transfer"  设置了样式，看能否复用 PageContainer 保持统一 -->
     <div class="transfer">
         <div class="transfer__header">
-            <!-- todo duanjie 看能不能复用 PageTitle -->
+            <!-- todo duanjie 看能否复用 PageTitle -->
             <div class="transfer__header__container">
                 <div class="transfer__header__line">
                     <p class="transfer__header__title">
@@ -19,7 +19,7 @@
         <div class="transfer__middle relative">
             <div class="transfer__middle__top">
                 <div class="transfer__middle__left">
-                    <!-- todo duanjie 看能否使用 TokensDropDown 复用 -->
+                    <!-- todo duanjie  看能否复用 BjSelect，可参考token页面  -->
                     <drop-down
                         class="dropdown_token"
                         :ibc-base-denoms="ibcBaseDenomsSorted"
@@ -27,7 +27,7 @@
                         :show-icon="isShowSymbolIcon"
                         :clear-input="clearInput"
                         @click-item="onClickDropdownItem"
-                        @click-search="(item) => onClickDropdownItem(item, 'customToken')"
+                        @click-search="(item:any) => onClickDropdownItem(item, 'customToken')"
                     />
                     <BjSelect
                         ref="chainDropdown"
@@ -48,7 +48,7 @@
                         }"
                         @on-change="onSelectedChain"
                     />
-                    <!-- todo duanjie 看能否使用 BaseDropdown 复用  -->
+                    <!-- todo duanjie  看能否复用  BaseDropdown，可参考token页面  -->
                     <a-select
                         class="status_select"
                         default-active-first-option
@@ -123,7 +123,7 @@
                                 </p>
                             </div>
                         </template>
-                        <img class="tip cursor" src="../../assets/tip.png" />
+                        <img class="tip cursor" :src="TIP_ICON" />
                     </a-popover>
                     <!-- todo duanjie 看能不能复用 ResetButton -->
                     <a-button type="primary" @click="onClickReset">
@@ -150,7 +150,7 @@
                 </div>
             </div>
             <div class="transfer__middle__bottom">
-                <!-- todo duanjie 表格看能否复用  -->
+                <!-- todo duanjie 表格看能否复用 TableCommon，可参考channels页面  -->
                 <a-table
                     class="transfer__table"
                     style="width: 100%"
@@ -199,7 +199,7 @@
                             >
                                 <img
                                     class="token__icon"
-                                    :src="record.symbolIcon || tokenDefaultImg"
+                                    :src="record.symbolIcon || TOKEN_DEFAULT_ICON"
                                 />
                                 <span class="token__info">
                                     <span class="token__info__num">{{
@@ -318,7 +318,7 @@
                 <div class="thead_border_bottom"></div>
             </div>
         </div>
-        <!-- todo duanjie 状态和分页看能否复用  -->
+        <!-- todo duanjie 如果复用了TableCommon， 状态和分页是否可以在TableCommon组件中实现，可参考channels页面  -->
         <div v-if="pagination.total" class="transfer__bottom">
             <span class="status_tips">
                 <span class="status_log">Status:</span>
@@ -353,10 +353,11 @@
         txStatusNumber,
         CHAINNAME,
         CHAIN_DEFAULT_VALUE,
-        TOTAL_BOUND
+        TOTAL_BOUND,
+        CHAIN_DEFAULT_ICON,
+        TOKEN_DEFAULT_ICON,
+        TIP_ICON
     } from '@/constants';
-    import chainDefaultImg from '@/assets/home/chain-default.png';
-    import tokenDefaultImg from '@/assets/token-default.png';
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
     import { useGetIbcDenoms } from '@/views/home/composable';
@@ -374,7 +375,6 @@
     import { IIbcTx } from '@/types/interface/transfers.interface';
     import { axiosCancel } from '@/utils/axios';
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
-    import { CHAIN_ICON } from '@/constants/bjSelect';
     import { MODES } from '@/components/BjSelect/constants';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
@@ -615,12 +615,14 @@
         if (ibcChains && ibcChains.value.all) {
             const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
             if (result) {
-                return result.icon || chainDefaultImg;
+                return result.icon || CHAIN_DEFAULT_ICON;
             }
         }
-        return chainDefaultImg;
+        return CHAIN_DEFAULT_ICON;
     };
     const onClickDropdownItem = (item: any, custom: any) => {
+        (window as any).gtag('event', 'Transfers-点击过滤条件Token');
+
         pagination.current = 1;
         isShowSymbolIcon.value = !custom;
         selectedSymbol.value = item || defaultTitle.defaultTokens;
@@ -670,6 +672,8 @@
         router.replace(url);
     };
     const handleSelectChange = (item: any) => {
+        (window as any).gtag('event', 'Transfers-点击过滤条件Status');
+
         pagination.current = 1;
         queryParam.status = JSONparse(item);
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
@@ -710,6 +714,8 @@
     };
 
     const onChangeRangePicker = (dates: any) => {
+        (window as any).gtag('event', 'Transfers-点击过滤条件Date');
+
         pagination.current = 1;
         dateRange.value = dates;
         queryParam.date_range[0] = Math.floor(startTime(dayjs(dates[0]).valueOf()) / 1000);
@@ -748,6 +754,8 @@
         queryDatas();
     };
     const onPaginationChange = (page: number) => {
+        (window as any).gtag('event', 'Transfers-点击翻页器');
+
         pagination.current = page;
         const params: any = urlParser(url);
         url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
@@ -825,7 +833,7 @@
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
                     title: v.chain_name,
                     id: v.chain_id,
-                    icon: v.icon || CHAIN_ICON,
+                    icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
             }
@@ -834,6 +842,8 @@
     const chainGetPopupContainer = (): HTMLElement => document.querySelector('.transfer__middle')!;
 
     const onSelectedChain = (vals: IDataItem[]) => {
+        (window as any).gtag('event', 'Transfers-点击过滤条件Chain');
+
         chainIds.value = vals?.map((v) => v.id);
         const chain_id = chainIds.value.join(',');
 

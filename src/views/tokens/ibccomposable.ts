@@ -1,7 +1,7 @@
 import { axiosCancel } from '@/utils/axios';
 import { getIbcTokenListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
-import { BASE_PARAMS, PAGE_PARAMETERS } from '@/constants';
+import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { getRestString } from '@/helper/parseStringHelper';
 import { IBaseDenom, IIbcChains } from '@/types/interface/index.interface';
@@ -16,7 +16,6 @@ import { urlPageParser } from '@/utils/urlTools';
 import { Ref } from 'vue';
 import { IDataItem } from '@/components/BjSelect/interface';
 import ChainHelper from '@/helper/chainHelper';
-import { CHAIN_ICON } from '@/constants/bjSelect';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
 export const useGetIbcTokenList = () => {
@@ -152,13 +151,18 @@ export const useIbcTokenSelected = (
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v: any) => ({
                     title: v.chain_name,
                     id: v.chain_id,
-                    icon: v.icon || CHAIN_ICON,
+                    icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
             }
         ];
     });
     const onSelectedChain = (val?: IDataItem) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Chain`
+        );
+
         const chain = val?.id;
         searchChain.value = chain as string;
         pageUrl = urlPageParser(pageUrl, {
@@ -169,6 +173,11 @@ export const useIbcTokenSelected = (
         refreshList();
     };
     const onSelectedStatus = (status?: string | number) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Token Type`
+        );
+
         searchStatus.value = status as TIbcTokenType;
         pageUrl = urlPageParser(pageUrl, {
             key: 'status',

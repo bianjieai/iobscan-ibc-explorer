@@ -66,7 +66,7 @@
                                 >
                                     <img
                                         class="content_item__icon"
-                                        :src="item.icon || tokenDefaultImg"
+                                        :src="item.icon || TOKEN_DEFAULT_ICON"
                                     />
                                     <span class="content_item__title">{{ item?.symbol }}</span>
                                 </div>
@@ -83,7 +83,7 @@
                         <h2 class="overlay__item__title">Other IBC Tokens</h2>
                         <div class="overlay__item__content">
                             <div class="content_item cursor" @click="onClickItem(unAuthed)">
-                                <img class="content_item__icon" :src="tokenDefaultImg" />
+                                <img class="content_item__icon" :src="TOKEN_DEFAULT_ICON" />
                                 <span class="content_item__title">Others</span>
                             </div>
                         </div>
@@ -101,11 +101,7 @@
                                         </p>
                                     </div>
                                 </template>
-                                <img
-                                    class="tip cursor"
-                                    style="margin-left: 8px"
-                                    src="/src/assets/tip.png"
-                                />
+                                <img class="tip cursor" style="margin-left: 8px" :src="TIP_ICON" />
                             </a-popover>
                         </h2>
                         <div class="overlay__item__content">
@@ -128,9 +124,8 @@
     import { rmIbcPrefix } from '@/helper/parseStringHelper';
     import { useFindIcon, useIsVisible } from '@/views/transfers/composable';
     import { ref, watch } from 'vue';
-    import { defaultTitle, unAuthed } from '@/constants';
+    import { defaultTitle, unAuthed, TOKEN_DEFAULT_ICON, TIP_ICON } from '@/constants';
     import { IBaseDenom } from '@/types/interface/index.interface';
-    const tokenDefaultImg = new URL('../../../assets/token-default.png', import.meta.url).href;
     const props = withDefaults(
         defineProps<{
             ibcBaseDenoms?: IBaseDenom[];
@@ -143,21 +138,6 @@
             selectedSymbol: ''
         }
     );
-    // const props = defineProps({
-    //     ibcBaseDenoms: {
-    //         type: Array,
-    //         default: () => []
-    //     },
-    //     selectedSymbol: {
-    //         type: String,
-    //         default: ''
-    //     },
-    //     clearInput: {
-    //         type: Number,
-    //         required: true
-    //     },
-    //     showIcon: Boolean
-    // });
     const emits = defineEmits(['clickItem', 'clickSearch']);
     const { findSymbolIcon } = useFindIcon(props);
     const { isVisible, visibleChange } = useIsVisible();
@@ -315,7 +295,7 @@
             font-weight: 400;
             color: var(--bj-font-color-65);
             margin-bottom: 16px;
-            width: 140px;
+            width: 158px;
             transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
             &:hover {
                 border: 1px solid var(--bj-primary-color);
@@ -422,6 +402,7 @@
                 overflow: auto;
             }
             &__title {
+                width: 120px;
                 &:hover {
                 }
             }

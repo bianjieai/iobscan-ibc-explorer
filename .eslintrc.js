@@ -53,6 +53,7 @@ module.exports = {
         'space-before-function-paren': 'off',
         quotes: ['error', 'single'],
         'comma-dangle': ['error', 'never'],
-        'vue/require-default-prop': 'off'
+        'vue/require-default-prop': 'off',
+        'vue/no-template-shadow': 'off'
     }
 };

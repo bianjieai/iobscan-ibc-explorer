@@ -13,7 +13,7 @@
                 <template #title
                     ><span class="popover_c">{{ tipMsg }}</span></template
                 >
-                <img v-if="showTip" class="tip_icon cursor" src="@/assets/tip.png" />
+                <img v-if="showTip" class="tip_icon cursor" :src="TIP_ICON" />
             </a-tooltip>
         </div>
         <div class="block__content">
@@ -23,6 +23,7 @@
 </template>
 
 <script setup lang="ts">
+    import { TIP_ICON } from '@/constants';
     defineProps({
         type: {
             type: String,

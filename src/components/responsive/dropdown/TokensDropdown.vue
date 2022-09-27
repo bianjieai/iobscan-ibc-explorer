@@ -92,11 +92,7 @@
                                     denomination trace information.
                                 </p>
                             </template>
-                            <img
-                                class="tip cursor"
-                                style="margin-left: 8px"
-                                src="/src/assets/tip.png"
-                            />
+                            <img class="tip cursor" style="margin-left: 8px" :src="TIP_ICON" />
                         </a-popover>
                     </div>
                     <div class="flex items-center mt-12 flex-wrap">
@@ -120,7 +116,7 @@
 <script lang="ts" setup>
     import { getRestString } from '@/helper/parseStringHelper';
     import { onMounted, computed, ref } from 'vue';
-    import { defaultTitle } from '@/constants/index';
+    import { defaultTitle, TIP_ICON } from '@/constants';
     import { IBaseDenom } from '@/types/interface/index.interface';
     const imgSrc = new URL('../../../assets/token-default.png', import.meta.url).href;
 
