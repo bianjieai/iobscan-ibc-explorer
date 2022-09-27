@@ -173,7 +173,6 @@
         return formatSupply(item[key], item.base_denom, ibcBaseDenoms.value, 2, false);
     };
     let tempColumn: any;
-    // todo clippers => 后端分页序号处理
     const onTableChange = (pagination: any, filters: any, sorter: any) => {
         let { columnKey, column, order } = sorter;
         column ? (tempColumn = column) : null;
@@ -248,7 +247,7 @@
         font-size: 14px;
     }
     :deep(.ant-table-container) {
-        width: 1150px; // TODO clippers => 宽度待定
+        width: 1150px;
         min-height: 300px;
     }
     :deep(div.ant-table-body) {
