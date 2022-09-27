@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'iconfont'; /* Project id 2812235 */
-    src: url('iconfont.woff2?t=1661243368482') format('woff2'),
-        url('iconfont.woff?t=1661243368482') format('woff'),
-        url('iconfont.ttf?t=1661243368482') format('truetype');
+    src: url('iconfont.woff2?t=1663053040175') format('woff2'),
+        url('iconfont.woff?t=1663053040175') format('woff'),
+        url('iconfont.ttf?t=1663053040175') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,26 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-zhankai1:before {
+    content: '\e78e';
+}
+
+.icon-shouqi1:before {
+    content: '\e78f';
+}
+
+.icon-zhiding:before {
+    content: '\e78a';
+}
+
+.icon-a-baseinfo:before {
+    content: '\e77c';
+}
+
+.icon-Message:before {
+    content: '\e77d';
 }
 
 .icon-zhankai-copy-icon:before {
@@ -51,10 +71,6 @@
 
 .icon-fuzhi:before {
     content: '\e6cf';
-}
-
-.icon-fuzhichenggong:before {
-    content: '\e6cd';
 }
 
 .icon-address1:before {

@@ -40,6 +40,7 @@ export interface IIbcchain {
     chain_id: string;
     chain_name: string;
     icon: string;
+    isInActive?: boolean;
 }
 export interface IIbcchainMap {
     [propName: string]: string;
@@ -54,13 +55,10 @@ export interface IIbcChains {
 export type TIbcChainsKeys = keyof IIbcChains;
 export interface IBaseDenom {
     chain_id: string;
-    create_at: number;
     denom: string;
     icon: string;
-    is_main_token: boolean;
     scale: number;
     symbol: string;
-    update_at: number;
 }
 
 export interface IAmountDenom {

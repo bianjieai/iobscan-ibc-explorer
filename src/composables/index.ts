@@ -1,6 +1,12 @@
 import { onMounted, onBeforeUnmount } from 'vue';
-import { ageTimerInterval, PAGE_PARAMETERS, NEED_CUSTOM_COLUMN } from '@/constants';
+import {
+    ageTimerInterval,
+    PAGE_PARAMETERS,
+    NEED_CUSTOM_COLUMN,
+    CHAIN_DEFAULT_ICON
+} from '@/constants';
 import { useIbcStatisticsChains } from '@/store';
+import { DATA_REFRESH_GAP } from '@/constants/home';
 
 export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerInterval) => {
     let timer: number | null = null;
@@ -123,4 +129,20 @@ export const useBoundary = (ele: HTMLElement) => {
     });
 
     return res;
+};
+
+// 获取对应 ChainInfo
+export const useMatchChainInfo = (chainId: string) => {
+    let chainIcon = CHAIN_DEFAULT_ICON;
+    let chainName = '';
+    const { ibcChains } = useIbcChains(DATA_REFRESH_GAP);
+    const matchChain = ibcChains.value.all.find((item) => item.chain_id === chainId);
+    if (matchChain) {
+        chainIcon = matchChain.icon;
+        chainName = matchChain.chain_name;
+    }
+    return {
+        chainIcon,
+        chainName
+    };
 };

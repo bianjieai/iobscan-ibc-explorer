@@ -1,6 +1,6 @@
 import { getChannelsListAPI } from '@/api/channels';
 import { useResetSearch } from '@/composables';
-import { BASE_PARAMS, CHAIN_DEFAULT_VALUE, PAGE_PARAMETERS } from '@/constants';
+import { BASE_PARAMS, CHAIN_DEFAULT_VALUE, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import ChainHelper from '@/helper/chainHelper';
 import {
@@ -14,7 +14,6 @@ import { computed, onMounted, ref, Ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
-import { CHAIN_ICON } from '@/constants/bjSelect';
 import { IIbcChains } from '@/types/interface/index.interface';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
@@ -129,13 +128,18 @@ export const useChannelsSelected = (
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
                     title: v.chain_name,
                     id: v.chain_id,
-                    icon: v.icon || CHAIN_ICON,
+                    icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
             }
         ];
     });
     const onSelectedChain = (vals: IDataItem[]) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Chain`
+        );
+
         const res = vals.map((v) => v.id);
         if (ChainHelper.isNeedSort(res, chainData.value)) {
             chainIds.value = [res[1], res[0]];
@@ -154,6 +158,11 @@ export const useChannelsSelected = (
     };
 
     const onSelectedStatus = (value?: number | string) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Status`
+        );
+
         searchStatus.value = value as TChannelStatus;
         pageUrl = urlPageParser(pageUrl, {
             key: 'status',

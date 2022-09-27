@@ -1,7 +1,7 @@
 import { IResponseTokensListItem } from './../../types/interface/tokens.interface';
 import { getTokensListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
-import { BASE_PARAMS, PAGE_PARAMETERS } from '@/constants';
+import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON, TOKEN_DEFAULT_ICON } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import {
     IResponseTokensList,
@@ -15,7 +15,6 @@ import { useRouter } from 'vue-router';
 import { IDataItem } from '@/components/BjSelect/interface';
 import { IBaseDenom, IIbcChains } from '@/types/interface/index.interface';
 import { axiosCancel } from '@/utils/axios';
-import { CHAIN_ICON, Token_ICON } from '@/constants/bjSelect';
 import ChainHelper from '@/helper/chainHelper';
 import { CHAIN_DEFAULT_VALUE, TOKEN_DEFAULT_VALUE } from '@/constants/tokens';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
@@ -131,7 +130,7 @@ export const useTokensSelected = (
                 children: ibcBaseDenomsSorted.value.map((v) => ({
                     title: v.symbol,
                     id: v.denom,
-                    icon: v.icon || Token_ICON,
+                    icon: v.icon || TOKEN_DEFAULT_ICON,
                     metaData: v
                 }))
             },
@@ -141,7 +140,7 @@ export const useTokensSelected = (
                     {
                         id: 'others',
                         title: 'Others',
-                        icon: Token_ICON
+                        icon: TOKEN_DEFAULT_ICON
                     }
                 ]
             }
@@ -163,7 +162,7 @@ export const useTokensSelected = (
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v: any) => ({
                     title: v.chain_name,
                     id: v.chain_id,
-                    icon: v.icon || CHAIN_ICON,
+                    icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
             }
@@ -171,6 +170,11 @@ export const useTokensSelected = (
     });
 
     const onSelectedToken = (val?: IDataItem) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Token`
+        );
+
         const denom = val?.id;
         if (denom) {
             searchDenom.value = denom as string;
@@ -185,6 +189,11 @@ export const useTokensSelected = (
         refreshList();
     };
     const onSelectedChain = (val?: IDataItem) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Chain`
+        );
+
         const chain = val?.id;
         searchChain.value = chain !== undefined ? String(chain) : undefined;
         pageUrl = urlPageParser(pageUrl, {
@@ -196,6 +205,11 @@ export const useTokensSelected = (
     };
 
     const onSelectedStatus = (status?: string | number) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Token Type`
+        );
+
         searchStatus.value = status as TTokenType;
         pageUrl = urlPageParser(pageUrl, {
             key: 'status',

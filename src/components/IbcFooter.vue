@@ -6,7 +6,7 @@
                     v-for="(item, index) in ICON_LINK"
                     :key="index"
                     class="content__left__icon cursor"
-                    @click="onClickIcon(item.iconLink)"
+                    @click="onClickIcon(item.iconLink, item.groupName)"
                 >
                     <i class="iconfont content__left__iconfont" :class="item.iconName"></i>
                 </span>
@@ -34,7 +34,11 @@
     const isLight = computed(() => {
         return props.type === FooterMode.light;
     });
-    const onClickIcon = (item: string) => {
+    const onClickIcon = (item: string, groupName: string) => {
+        (window as any).gtag('event', '点击社群链接', {
+            groupName: groupName
+        });
+
         window.open(item);
     };
 </script>
