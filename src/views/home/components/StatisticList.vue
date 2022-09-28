@@ -159,6 +159,7 @@
             transition: color 0.3s;
             transition-timing-function: ease;
             font-size: var(--bj-font-size-home-number);
+            font-family: GolosUI_Medium;
             color: var(--bj-text-normal);
             line-height: var(--bj-font-size-home-number);
         }

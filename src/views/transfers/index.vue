@@ -144,12 +144,18 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="popover_c"
-                                        >Sent Token: {{ record.denoms.sc_denom || '--' }}</p
-                                    >
-                                    <p class="popover_c"
-                                        >Received Token: {{ record.denoms.dc_denom || '--' }}</p
-                                    >
+                                    <p class="popover_c">
+                                        <span class="tip_label">Sent Token:</span>
+                                        <span class="tip_value">{{
+                                            record.denoms.sc_denom || '--'
+                                        }}</span>
+                                    </p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Received Token:</span>
+                                        <span class="tip_value">{{
+                                            record.denoms.dc_denom || '--'
+                                        }}</span>
+                                    </p>
                                 </div>
                             </template>
                             <router-link
@@ -202,14 +208,22 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="popover_c"
-                                        >Chain ID:
-                                        {{ ChainHelper.formatChainId(record.sc_chain_id) }}</p
-                                    >
-                                    <p class="popover_c"
-                                        >Channel ID: {{ record.sc_channel || '--' }}</p
-                                    >
-                                    <p class="popover_c">Sequence: {{ record.sequence || '--' }}</p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Chain ID:</span>
+                                        <span class="tip_value">{{
+                                            ChainHelper.formatChainId(record.sc_chain_id)
+                                        }}</span>
+                                    </p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Channel ID:</span>
+                                        <span class="tip_value">{{
+                                            record.sc_channel || '--'
+                                        }}</span>
+                                    </p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Sequence:</span>
+                                        <span class="tip_value">{{ record.sequence || '--' }}</span>
+                                    </p>
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
@@ -227,14 +241,22 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="popover_c"
-                                        >Chain ID:
-                                        {{ ChainHelper.formatChainId(record.dc_chain_id) }}</p
-                                    >
-                                    <p class="popover_c"
-                                        >Channel ID: {{ record.dc_channel || '--' }}</p
-                                    >
-                                    <p class="popover_c">Sequence: {{ record.sequence || '--' }}</p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Chain ID:</span>
+                                        <span class="tip_value">{{
+                                            ChainHelper.formatChainId(record.dc_chain_id)
+                                        }}</span>
+                                    </p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Channel ID:</span>
+                                        <span class="tip_value">{{
+                                            record.dc_channel || '--'
+                                        }}</span>
+                                    </p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Sequence:</span>
+                                        <span class="tip_value">{{ record.sequence || '--' }}</span>
+                                    </p>
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
@@ -949,6 +971,7 @@
                 }
                 &__info {
                     .flex(column, nowrap, center, flex-start);
+                    font-family: GolosUI_Medium;
                     &__num {
                         font-size: var(--bj-font-size-sub-title);
                         color: var(--bj-text-normal);
@@ -981,6 +1004,7 @@
             margin: 0 auto;
             padding: 16px 24px;
             max-width: 1200px;
+            font-family: GolosUI_Medium;
             background: #ffffff;
             border-radius: var(--border-radius-normal);
             & .status_tips {
@@ -1026,10 +1050,17 @@
 
                 .ant-pagination-item {
                     border: none;
+                    a {
+                        font-family: GolosUI_Medium;
+                        color: var(--bj-text-third);
+                    }
                 }
 
                 .ant-pagination-item-active {
                     border: 1px solid var(--bj-primary-color);
+                    a {
+                        color: var(--bj-font-color-65);
+                    }
                 }
 
                 .ant-pagination-options {
@@ -1083,6 +1114,7 @@
             border-color: var(--bj-primary-color);
         }
         :deep(.ant-picker-input > input) {
+            font-family: GolosUIWebRegular;
             color: var(--bj-primary-color);
             text-align: center;
             &::placeholder {
@@ -1108,6 +1140,13 @@
         .ant-table-cell {
             vertical-align: middle;
         }
+    }
+
+    .tip_label {
+        font-family: GolosUI_Medium;
+    }
+    .tip_value {
+        margin-left: 4px;
     }
     @media screen and (max-width: 1260px) {
         .transfer {

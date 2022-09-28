@@ -117,6 +117,7 @@
                     width: 100%;
                     text-align: left;
                     font-size: var(--bj-font-size-sub-title);
+                    font-family: GolosUI_Medium;
                     color: var(--bj-text-normal);
                     line-height: var(--bj-font-size-normal);
                 }
@@ -125,6 +126,7 @@
                     text-align: left;
                     margin-top: 4px;
                     font-size: var(--bj-font-size-normal);
+                    font-family: GolosUI_Medium;
                     font-weight: 400;
                     color: var(--bj-text-third);
                     line-height: 18px;
@@ -147,6 +149,7 @@
         }
         &__number {
             font-size: var(--bj-font-size-normal);
+            font-family: GolosUI_Medium;
             font-weight: 400;
             color: var(--bj-text-third);
             line-height: var(--bj-font-size-normal);

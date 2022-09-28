@@ -31,6 +31,7 @@
         &__text {
             margin-left: 8px;
             font-size: var(--bj-font-size-sub-title);
+            font-family: GolosUI_Medium;
             font-weight: 500;
             color: var(--bj-text-normal);
         }

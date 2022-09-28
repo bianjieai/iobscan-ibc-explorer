@@ -311,17 +311,24 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-    }
-    :deep(.ant-pagination li button) {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        a {
+            font-family: GolosUI_Medium;
+            color: var(--bj-text-third);
+        }
     }
     :deep(.ant-pagination-item) {
         border: none;
     }
     :deep(.ant-pagination-item-active) {
         border: 1px solid var(--bj-primary-color);
+        a {
+            color: var(--bj-font-color-65) !important;
+        }
     }
     :deep(.ant-pagination-options) {
         display: none !important;

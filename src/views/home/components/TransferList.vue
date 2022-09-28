@@ -64,6 +64,7 @@
             .flex(row, nowrap, space-between, center);
             &__name {
                 font-size: var(--bj-font-size-normal);
+                font-family: GolosUI_Medium;
                 color: var(--bj-font-color-65);
                 line-height: var(--bj-font-size-normal);
             }
@@ -74,6 +75,7 @@
                 background-color: #3d50ff;
                 color: #ffffff;
                 font-size: var(--bj-font-size-normal);
+                font-family: GolosUI_Medium;
                 .flex(row, nowrap, center, center);
                 &:hover {
                     color: #fff;
@@ -107,6 +109,7 @@
                 padding: 7px 9px;
                 width: 396px;
                 font-size: 14px;
+                font-family: GolosUI_Medium;
                 font-weight: 400;
                 color: var(--bj-text-third);
                 line-height: 14px;

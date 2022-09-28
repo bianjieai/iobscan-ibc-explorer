@@ -84,6 +84,7 @@
         background: #f8f9fc;
         border-radius: 14px;
         line-height: 28px;
+        font-family: GolosUI_Medium;
         color: var(--bj-text-third);
         padding: 0 16px 0 8px;
         display: inline-block;
