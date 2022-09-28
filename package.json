@@ -1,7 +1,7 @@
 {
-    "name": "new-iobscan-ibc-explorer",
+    "name": "iobscan-ibc-explorer",
     "private": true,
-    "version": "0.0.0",
+    "version": "0.6.0",
     "scripts": {
         "dev": "vite",
         "qa": "vite --mode qa",

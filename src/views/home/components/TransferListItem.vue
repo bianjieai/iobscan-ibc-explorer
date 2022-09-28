@@ -5,10 +5,15 @@
                 <img :src="!item.expanded ? expandImg : packUpImg" alt="" />
             </div>
             <router-link
+                v-ga="{
+                    gaEventName: 'Home-点击链接',
+                    params: {
+                        clickLink: '点击表格中的数据链接'
+                    }
+                }"
                 class="list_item__info"
                 :class="{ list_item__line: !item.expanded }"
                 :to="`/transfers/details?hash=${item.sc_tx_info.hash}`"
-                @click="buriedPoint"
             >
                 <span class="list_item__number">{{ prefixInteger(index + 1, 3) }}</span>
                 <div class="list_item__link">
@@ -75,12 +80,6 @@
     });
     const emits = defineEmits(['clickItem', 'clickViewAll', 'itemDidExpand']);
     const { onClickExpandBtn } = useIsExpand(emits, props.item.record_id);
-
-    const buriedPoint = () => {
-        (window as any).gtag('event', 'Home-点击链接', {
-            clickLink: '点击表格中的数据链接'
-        });
-    };
 </script>
 
 <style lang="less" scoped>
