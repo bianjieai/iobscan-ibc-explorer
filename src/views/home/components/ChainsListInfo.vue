@@ -26,7 +26,15 @@
                         class="ibc_selected_border card_list_item"
                     >
                         <router-link :to="`/chains`">
-                            <a-card class="menu_card" @click="buriedPoint(item)">
+                            <a-card
+                                v-ga="{
+                                    gaEventName: 'Home-点击链接',
+                                    params: {
+                                        clickLink: `点击${currentMenu[0]}列表中的${item.chain_name}`
+                                    }
+                                }"
+                                class="menu_card"
+                            >
                                 <img
                                     class="menu_card__img"
                                     :src="item.icon ? item.icon : CHAIN_DEFAULT_ICON"
@@ -50,6 +58,12 @@
                     v-for="item of anchors"
                     :id="`a-link${item.title}`"
                     :key="item.title"
+                    v-ga="{
+                        gaEventName: 'Home-点击链接',
+                        params: {
+                            clickLink: `点击${currentMenu[0]}拦${item.title}区域`
+                        }
+                    }"
                     class="list_anchor__item cursor"
                     @click="onClickAnchor(item.title)"
                 >
@@ -113,11 +127,6 @@
             chainList.value[currentMenu.value[0]] && chainList.value[currentMenu.value[0]].length
         );
     });
-    const buriedPoint = (param: any) => {
-        (window as any).gtag('event', 'Home-点击链接', {
-            clickLink: `点击${currentMenu.value[0]}列表中的${param.chain_name}`
-        });
-    };
 </script>
 
 <style lang="less" scoped>

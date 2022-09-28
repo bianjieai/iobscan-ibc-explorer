@@ -38,7 +38,7 @@
     import { computed } from 'vue';
     import { BottomStatusType, TBottomStatus } from '@/types/interface/components/table.interface';
     import { RELAYER_STATUS } from '@/constants/relayers';
-    import { CHANNEL_STATUS } from '../../../constants/channels';
+    import { CHANNEL_STATUS } from '@/constants/channels';
 
     interface IProps {
         type: TBottomStatus; // 目前支持 channels 和 relayers

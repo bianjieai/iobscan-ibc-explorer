@@ -48,6 +48,7 @@
                     <div
                         v-for="(item, index) in progressData"
                         :key="index"
+                        v-ga="`${router.currentRoute.value.name as string}-点击进度条`"
                         class="tx_progress__step cursor"
                         :class="{
                             tx_progress__active: currentProgress === index,
@@ -123,6 +124,7 @@
     }
     const props = defineProps<IProps>();
     const { ibcTxStatus, ibcTxInfo } = toRefs(props);
+    const router = useRouter();
     const { progressData, currentProgress, changeCurrent } = useIbcTxInfo(ibcTxStatus, ibcTxInfo);
 </script>
 

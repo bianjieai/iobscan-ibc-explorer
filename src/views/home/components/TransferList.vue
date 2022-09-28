@@ -4,7 +4,7 @@
         <div class="list__top">
             <span class="list__top__name">Latest 100 IBC Token Transfers</span>
             <router-link :to="'/transfers'">
-                <span class="list__top__button" @click="buriedPoint">View All</span>
+                <span v-ga="'Home-点击View All'" class="list__top__button">View All</span>
             </router-link>
         </div>
         <div class="list__middle">
@@ -53,10 +53,6 @@
     const { clickListItem, itemDidExpand } = useInterfaceActive(emits);
     const getImageUrl = (status: string | number) => {
         return new URL(`../../../assets/home/status${status}.png`, import.meta.url).href;
-    };
-
-    const buriedPoint = () => {
-        (window as any).gtag('event', 'Home-点击View All');
     };
 </script>
 

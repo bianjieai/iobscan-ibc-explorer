@@ -42,7 +42,7 @@
 </template>
 
 <script setup lang="ts">
-    import { defaultTitle } from '../../../constants/index';
+    import { defaultTitle } from '@/constants/index';
     import { computed, onMounted, ref } from 'vue';
     type TKey = string;
     type TValue = number | undefined | string;
