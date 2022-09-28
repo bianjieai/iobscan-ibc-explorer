@@ -71,13 +71,19 @@
     import { PAGE_PARAMETERS, IBC_STATISTICS_TXS_DEFAULT } from '@/constants/index';
     import { useIbcStatistics } from '@/composables/home';
     import { DATA_REFRESH_GAP } from '@/constants/home';
-    const { ibcStatisticsChains, ibcStatisticsChannels, ibcStatisticsDenoms, ibcStatisticsTxs } =
-        useIbcStatistics(DATA_REFRESH_GAP);
+    const {
+        ibcStatisticsChains,
+        ibcStatisticsChannels,
+        ibcStatisticsDenoms,
+        ibcStatisticsTxs,
+        intervalFunction
+    } = useIbcStatistics(DATA_REFRESH_GAP);
 
     const { ibcChains, lifeFunction } = useIbcChains(DATA_REFRESH_GAP);
     const { homeIbcTxs, setExpandByIndex } = useIbcTxs(DATA_REFRESH_GAP);
     const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
     lifeFunction();
+    intervalFunction();
 </script>
 
 <style lang="less">

@@ -39,30 +39,33 @@ export const useIbcStatistics = (timerInterval?: number) => {
             console.log('getIbcStatisticsAPI', error);
         }
     };
-    let timer: number;
-    const intervalIbcStatistics = () => {
-        timer = setInterval(() => {
-            console.log('getIbcStatistics', timerInterval);
+    const intervalFunction = () => {
+        let timer: number;
+        const intervalIbcStatistics = () => {
+            timer = setInterval(() => {
+                console.log('getIbcStatistics', timerInterval);
+                getIbcStatistics();
+            }, timerInterval);
+        };
+        onMounted(() => {
             getIbcStatistics();
-        }, timerInterval);
+            if (Number(timerInterval) > 0) {
+                intervalIbcStatistics();
+            }
+        });
+        onBeforeUnmount(() => {
+            timer && clearInterval(timer);
+        });
+        watch(isDocumentHidden, (newDocumentHidden) => {
+            newDocumentHidden ? timer && clearInterval(timer) : intervalIbcStatistics();
+        });
     };
-    onMounted(() => {
-        getIbcStatistics();
-        if (Number(timerInterval) > 0) {
-            intervalIbcStatistics();
-        }
-    });
-    onBeforeUnmount(() => {
-        timer && clearInterval(timer);
-    });
-    watch(isDocumentHidden, (newVisibility) => {
-        newVisibility && timer ? clearInterval(timer) : intervalIbcStatistics();
-    });
     return {
         ibcStatisticsChains,
         ibcStatisticsChannels,
         ibcStatisticsDenoms,
         ibcStatisticsTxs,
-        getIbcStatistics
+        getIbcStatistics,
+        intervalFunction
     };
 };

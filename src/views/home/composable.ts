@@ -1,12 +1,10 @@
 import { IIbcTx } from './../../types/interface/transfers.interface';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
-import { IBaseDenom } from '@/types/interface/index.interface';
 import { useIbcStatisticsChains } from '@/store/index';
 import {
     IBC_STATISTICS_CHANNELS_DEFAULT,
     IBC_STATISTICS_DENOMS_DEFAULT,
     CHANNELS_STATUS,
-    SYMBOL,
     PAGE_PARAMETERS,
     IBC_STATISTICS_TXS_DEFAULT,
     TX_STATUS_NUMBER,
@@ -85,45 +83,13 @@ export const useIbcTxs = (timerInterval?: number) => {
     onBeforeUnmount(() => {
         timer && clearInterval(timer);
     });
-    watch(isDocumentHidden, (newVisibility) => {
-        newVisibility && timer ? clearInterval(timer) : intervalIbcTxs();
+    watch(isDocumentHidden, (newDocumentHidden) => {
+        newDocumentHidden && timer ? clearInterval(timer) : intervalIbcTxs();
     });
     return {
         homeIbcTxs,
         getIbcTxs,
         setExpandByIndex
-    };
-};
-
-export const useGetIbcDenoms = () => {
-    const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcBaseDenoms, ibcBaseDenomsSymbolKeyMapGetter } =
-        storeToRefs(ibcStatisticsChainsStore);
-    const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
-    const getBaseDenomInfoByDenom = (denom: string, chainId: string) => {
-        return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain_id == chainId);
-    };
-    const ibcBaseDenomsSorted = computed(() => {
-        const tokens: IBaseDenom[] = [];
-        const customs = ibcBaseDenoms.value.filter((item) => {
-            return item.symbol == SYMBOL.ATOM || item.symbol == SYMBOL.IRIS;
-        });
-        customs.sort((a, b) => a.symbol.localeCompare(b.symbol));
-        ibcBaseDenoms.value
-            .sort((a, b) => a.symbol.localeCompare(b.symbol))
-            .forEach((item) => {
-                if (item.symbol != SYMBOL.ATOM && item.symbol != SYMBOL.IRIS) {
-                    tokens.push(item);
-                }
-            });
-        return [...customs, ...tokens];
-    });
-    return {
-        ibcBaseDenoms,
-        ibcBaseDenomsSymbolKeyMapGetter,
-        ibcBaseDenomsSorted,
-        getIbcBaseDenom,
-        getBaseDenomInfoByDenom
     };
 };
 
