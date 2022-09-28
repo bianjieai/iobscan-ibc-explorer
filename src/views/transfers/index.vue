@@ -624,7 +624,7 @@
         (window as any).gtag('event', 'Transfers-点击过滤条件Status');
 
         pagination.current = 1;
-        queryParam.status = JSONparse(item);
+        queryParam.status = item ? JSONparse(item) : item;
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
         if (queryParam?.chain_id) {
             url += `&chain=${queryParam.chain_id}`;
@@ -1030,37 +1030,6 @@
             }
         }
     }
-    .status_select {
-        width: 146px;
-        margin: 0 8px;
-        color: var(--bj-text-second);
-        :deep(.ant-select-arrow) {
-            right: 8px;
-            color: rgba(164, 171, 192, 1);
-        }
-        :deep(.ant-select-selector) {
-            height: 36px !important;
-            border: 1px solid var(--bj-border-color);
-            .ant-select-selection-item {
-                text-align: center;
-                line-height: 34px;
-            }
-            .ant-select-selection-search {
-                border-right: 1px solid var(--bj-border-color);
-            }
-
-            &_default {
-                color: var(--bj-text-second);
-            }
-            .status_select_title {
-                color: var(--bj-primary-color);
-            }
-        }
-        .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
-            .ant-select-selector {
-            box-shadow: none;
-        }
-    }
 
     .date_range {
         margin-right: 8px;
@@ -1148,16 +1117,6 @@
                 }
             }
         }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
-            }
-        }
     }
     @media screen and (max-width: 970px) {
         .transfer {
@@ -1210,16 +1169,6 @@
                     :deep(.ant-pagination-options) {
                     }
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
     }
@@ -1303,16 +1252,6 @@
                 }
             }
         }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
-            }
-        }
     }
     @media screen and (max-width: 582px) {
         .transfer {
@@ -1380,16 +1319,6 @@
                     :deep(.ant-pagination-options) {
                     }
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
     }
@@ -1463,16 +1392,6 @@
                 }
             }
         }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
-            }
-        }
         .date_range {
             width: 210px;
         }
@@ -1532,16 +1451,6 @@
                     :deep(.ant-pagination-options) {
                     }
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
         .date_range {

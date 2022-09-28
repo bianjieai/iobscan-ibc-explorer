@@ -219,7 +219,7 @@ export const CHAINS_MENUS: { label: string; value: CURRENT_MENU_TYPE }[] = [
 ];
 
 export const TRANSFERS_STATUS_OPTIONS = {
-    DEFAULT_OPTIONS: ['1', '2', '3', '4'],
+    DEFAULT_OPTIONS: undefined,
     SUCCESS_OPTIONS: ['1'],
     FAILED_OPTIONS: ['2', '4'],
     PROCESSING_OPTIONS: ['3']
@@ -228,7 +228,7 @@ export const TRANSFERS_STATUS_OPTIONS = {
 export const IBC_TX_STATUS_SELECT_OPTIONS = [
     {
         key: 'All Status',
-        value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS)
+        value: undefined
     },
     {
         key: 'Success',
