@@ -3,10 +3,12 @@ import {
     AGE_TIMER_INTERVAL,
     PAGE_PARAMETERS,
     NEED_CUSTOM_COLUMN,
-    CHAIN_DEFAULT_ICON
+    CHAIN_DEFAULT_ICON,
+    SYMBOL
 } from '@/constants';
 import { useIbcStatisticsChains } from '@/store';
 import { DATA_REFRESH_GAP } from '@/constants/home';
+import { IBaseDenom } from '@/types/interface/index.interface';
 
 export const useTimeInterval = (intervalCallBack: Function, interval = AGE_TIMER_INTERVAL) => {
     let timer: number | null = null;
@@ -91,8 +93,8 @@ export const useIbcChains = (timerInterval?: number) => {
         onBeforeUnmount(() => {
             timer && clearInterval(timer);
         });
-        watch(isDocumentHidden, (newVisibility) => {
-            newVisibility && timer ? clearInterval(timer) : intervalIbcChains();
+        watch(isDocumentHidden, (newDocumentHidden) => {
+            newDocumentHidden && timer ? clearInterval(timer) : intervalIbcChains();
         });
     };
     return {
@@ -163,6 +165,38 @@ export const useOnPressEnter = () => {
     };
     return {
         onPressEnter
+    };
+};
+
+export const useGetIbcDenoms = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    const { ibcBaseDenoms, ibcBaseDenomsSymbolKeyMapGetter } =
+        storeToRefs(ibcStatisticsChainsStore);
+    const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
+    const getBaseDenomInfoByDenom = (denom: string, chainId: string) => {
+        return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain_id == chainId);
+    };
+    const ibcBaseDenomsSorted = computed(() => {
+        const tokens: IBaseDenom[] = [];
+        const customs = ibcBaseDenoms.value.filter((item) => {
+            return item.symbol == SYMBOL.ATOM || item.symbol == SYMBOL.IRIS;
+        });
+        customs.sort((a, b) => a.symbol.localeCompare(b.symbol));
+        ibcBaseDenoms.value
+            .sort((a, b) => a.symbol.localeCompare(b.symbol))
+            .forEach((item) => {
+                if (item.symbol != SYMBOL.ATOM && item.symbol != SYMBOL.IRIS) {
+                    tokens.push(item);
+                }
+            });
+        return [...customs, ...tokens];
+    });
+    return {
+        ibcBaseDenoms,
+        ibcBaseDenomsSymbolKeyMapGetter,
+        ibcBaseDenomsSorted,
+        getIbcBaseDenom,
+        getBaseDenomInfoByDenom
     };
 };
 

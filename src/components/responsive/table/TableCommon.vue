@@ -46,11 +46,10 @@
 <script setup lang="ts">
     import { TableColumnsType } from 'ant-design-vue';
     import { computed, onMounted, reactive, ref, watch } from 'vue';
-    import { useTimeInterval } from '@/composables';
+    import { useGetIbcDenoms, useTimeInterval } from '@/composables';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { CompareOrder } from '@/types/interface/components/table.interface';
     import BigNumber from 'bignumber.js';
-    import { useGetIbcDenoms } from '@/views/home/composable';
     import { formatSupply } from '@/helper/tableCellHelper';
     import { IResponseChainsListItem } from '@/types/interface/chains.interface';
     import { IResponseIbcTokenListItem, ITokensListItem } from '@/types/interface/tokens.interface';
