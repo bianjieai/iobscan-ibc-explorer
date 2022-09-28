@@ -83,6 +83,22 @@
             width: 100%;
         }
     }
+    @media screen and (min-width: 1920px) {
+        .layout {
+            background-size: 100% 396px;
+            &__header {
+                background-size: 100% 396px;
+            }
+            &__content {
+                &__router_container {
+                }
+                &__error_container {
+                }
+            }
+            &__footer {
+            }
+        }
+    }
     @media screen and (max-width: 530px) {
         .layout {
             padding-top: 160px;

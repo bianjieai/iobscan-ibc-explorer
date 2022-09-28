@@ -58,7 +58,7 @@
         TTableCellIconSize
     } from '@/types/interface/components/table.interface';
     import ChainHelper from '@/helper/chainHelper';
-    import { UNKNOWN } from '../../../constants';
+    import { UNKNOWN } from '@/constants';
 
     interface IProps {
         iconSize?: TTableCellIconSize;

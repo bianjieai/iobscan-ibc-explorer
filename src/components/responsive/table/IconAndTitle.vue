@@ -41,7 +41,7 @@
         TableCellIconSize,
         TTableCellIconSize
     } from '@/types/interface/components/table.interface';
-    import { UNKNOWN } from '../../../constants';
+    import { UNKNOWN } from '@/constants';
 
     // 说明 现已将 token chain 拆除。 仅剩relayer
     interface IProps {

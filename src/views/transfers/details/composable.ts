@@ -392,7 +392,6 @@ export const useChainName = (fromChainId: string, toChainId: string) => {
 
 // ibc_tx_info
 export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo | undefined>) => {
-    const router = useRouter();
     const leftTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
     const rightTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
     const progressData = ref<IProgress[]>(SUCCESS_ARRIVE);
@@ -445,7 +444,6 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
     });
 
     const changeCurrent = (index: number) => {
-        (window as any).gtag('event', `${router.currentRoute.value.name as string}-点击进度条`);
         currentProgress.value = index;
     };
     return {

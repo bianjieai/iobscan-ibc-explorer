@@ -1,7 +1,7 @@
 <template>
     <div class="header_container">
         <div class="header_content">
-            <div class="logo cursor" @click="onClickLogo">
+            <div v-ga="'导航栏-Logo'" class="logo cursor" @click="onClickLogo">
                 <div class="logo__icon">
                     <img :src="logoIcon" alt="logo" />
                 </div>
@@ -20,11 +20,11 @@
                 <header-input class="header_input_layout" disabled />
                 <div class="header_input_icon_wrapper">
                     <a
+                        v-ga="'导航栏-点击跨链门户'"
                         class="header_input__iobscan_io"
                         href="https://www.iobscan.io/#/"
                         target="_blank"
                         rel="noreferrer noopener"
-                        @click="buriedPoint"
                     >
                         <img
                             class="header_input_icon"
@@ -72,8 +72,6 @@
     };
 
     const onClickLogo = () => {
-        (window as any).gtag('event', '导航栏-Logo');
-
         router.push({
             name: 'Home'
         });
@@ -102,9 +100,6 @@
             //不是该选择器的class
             isShowNav.value = false;
         }
-    };
-    const buriedPoint = () => {
-        (window as any).gtag('event', '导航栏-点击跨链门户');
     };
     onMounted(() => {
         currentMenu.value = getCurrentRouterNames(route) as Key[];
@@ -182,6 +177,31 @@
         }
         &__input {
             display: none;
+        }
+    }
+    @media screen and (min-width: 1920px) {
+        .header_container {
+            background-size: 100% 396px;
+            .header_content {
+                .logo {
+                    &__icon {
+                    }
+                }
+                .header_navigation {
+                }
+                .header_input_wrapper {
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {
+                            }
+                        }
+                        .header_btn_mobile {
+                            img {
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
     @media screen and (max-width: 1200px) {

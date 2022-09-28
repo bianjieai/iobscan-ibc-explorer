@@ -5,8 +5,14 @@
                 <span
                     v-for="(item, index) in ICON_LINK"
                     :key="index"
+                    v-ga="{
+                        gaEventName: '点击社群链接',
+                        params: {
+                            groupName: item.groupName
+                        }
+                    }"
                     class="content__left__icon cursor"
-                    @click="onClickIcon(item.iconLink, item.groupName)"
+                    @click="onClickIcon(item.iconLink)"
                 >
                     <i class="iconfont content__left__iconfont" :class="item.iconName"></i>
                 </span>
@@ -34,11 +40,7 @@
     const isLight = computed(() => {
         return props.type === FooterMode.light;
     });
-    const onClickIcon = (item: string, groupName: string) => {
-        (window as any).gtag('event', '点击社群链接', {
-            groupName: groupName
-        });
-
+    const onClickIcon = (item: string) => {
         window.open(item);
     };
 </script>

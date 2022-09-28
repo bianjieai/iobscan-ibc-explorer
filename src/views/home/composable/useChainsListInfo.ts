@@ -43,10 +43,6 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
 
     // 点击高亮标签,滚动到合适的位置
     const onClickAnchor = (label: string) => {
-        (window as any).gtag('event', 'Home-点击链接', {
-            clickLink: `点击${currentMenu.value[0]}拦${label}区域`
-        });
-
         highlightedLabel(label);
         const scrollDom = scrollListRef.value.$el;
         if (!scrollDom) return;
