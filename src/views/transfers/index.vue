@@ -33,28 +33,11 @@
                         }"
                         @on-change="onSelectedChain"
                     />
-                    <!-- todo duanjie  看能否复用  BaseDropdown，可参考token页面  -->
-                    <a-select
-                        class="status_select"
-                        default-active-first-option
-                        :value="JSON.stringify(queryParam.status)"
-                        :get-popup-container="(triggerNode: any) => triggerNode.parentNode"
-                        @change="handleSelectChange"
-                    >
-                        <a-select-option
-                            v-for="item of IBC_TX_STATUS_SELECT_OPTIONS"
-                            :key="item.title"
-                            :value="item.value"
-                            ><span
-                                :class="
-                                    item.title === DEFAULT_TITLE.defaultStatus
-                                        ? 'status_select_default'
-                                        : 'status_select_title'
-                                "
-                                >{{ item.title }}</span
-                            >
-                        </a-select-option>
-                    </a-select>
+                    <BaseDropdown
+                        :status="JSON.stringify(queryParam.status)"
+                        :options="IBC_TX_STATUS_SELECT_OPTIONS"
+                        @on-selected-change="handleSelectChange"
+                    />
                 </div>
                 <div class="transfer__middle__right">
                     <a-range-picker
@@ -877,6 +860,9 @@
                 .flex(row, nowrap, flex-start, center);
                 .ant-select {
                     width: 146px;
+                }
+                :deep(.ant-dropdown-trigger) {
+                    margin-right: 8px;
                 }
             }
             &__right {

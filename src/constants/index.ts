@@ -227,19 +227,19 @@ export const TRANSFERS_STATUS_OPTIONS = {
 
 export const IBC_TX_STATUS_SELECT_OPTIONS = [
     {
-        title: 'All Status',
+        key: 'All Status',
         value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS)
     },
     {
-        title: 'Success',
+        key: 'Success',
         value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.SUCCESS_OPTIONS)
     },
     {
-        title: 'Processing',
+        key: 'Processing',
         value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.PROCESSING_OPTIONS)
     },
     {
-        title: 'Failed',
+        key: 'Failed',
         value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.FAILED_OPTIONS)
     }
 ];
