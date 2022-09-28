@@ -1,21 +1,6 @@
 <template>
-    <!-- todo 页面组件重构 -->
-    <!-- todo duanjie 此处使用了class="transfer"  设置了样式，看能否复用 PageContainer 保持统一 -->
-    <div class="transfer">
-        <div class="transfer__header">
-            <!-- todo duanjie 看能否复用 PageTitle -->
-            <div class="transfer__header__container">
-                <div class="transfer__header__line">
-                    <p class="transfer__header__title">
-                        <span class="transfer__header__title_content">IBC Token Transfers</span>
-                        <span class="transfer__header__num">
-                            <i class="iconfont icon-shujuliebiao"></i>
-                            {{ `${isIbcTxTotalAndHashFilter}` }}
-                        </span>
-                    </p>
-                </div>
-            </div>
-        </div>
+    <PageContainer class="transfer">
+        <PageTitle title="IBC Token Transfers" :subtitle="isIbcTxTotalAndHashFilter" />
         <div class="transfer__middle relative">
             <div class="transfer__middle__top">
                 <div class="transfer__middle__left">
@@ -125,28 +110,7 @@
                         </template>
                         <img class="tip cursor" :src="TIP_ICON" />
                     </a-popover>
-                    <!-- todo duanjie 看能不能复用 ResetButton -->
-                    <a-button type="primary" @click="onClickReset">
-                        <template #icon>
-                            <svg
-                                t="1635235094959"
-                                class="icon"
-                                viewBox="0 0 1137 1024"
-                                version="1.1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                p-id="1018"
-                                width="20"
-                                height="20"
-                                style="margin: 3px 0 0 0"
-                            >
-                                <path
-                                    d="M187.443357 408.766317a400.463607 400.463607 0 0 0 84.448801 365.489861 392.957046 392.957046 0 0 0 348.315761 132.274687 56.469804 56.469804 0 0 1 62.554667 49.020112 56.754144 56.754144 0 0 1-47.769018 63.692025 505.271108 505.271108 0 0 1-447.83455-169.978092 514.824912 514.824912 0 0 1-108.61765-469.842419l-67.331569-18.197721a15.240592 15.240592 0 0 1-7.392824-24.794396l187.038455-212.572133a14.956252 14.956252 0 0 1 25.988621 6.994749l56.469804 278.425138a15.240592 15.240592 0 0 1-4.435695 14.046366 14.956252 14.956252 0 0 1-14.103234 3.639544l-67.331569-18.197721z m762.484527 206.089195a400.463607 400.463607 0 0 0-84.448801-365.489861 392.957046 392.957046 0 0 0-348.315761-132.274687 56.185465 56.185465 0 0 1-52.716525-21.439191 57.265955 57.265955 0 0 1-7.392824-56.811011 56.469804 56.469804 0 0 1 45.380568-34.461935 505.271108 505.271108 0 0 1 447.777682 169.978091 514.824912 514.824912 0 0 1 108.61765 469.842419l67.331569 18.197722a15.240592 15.240592 0 0 1 7.392824 24.794395l-187.038455 212.572133a14.956252 14.956252 0 0 1-25.988621-6.994749l-56.469804-278.425137a15.240592 15.240592 0 0 1 4.435694-14.046366 14.956252 14.956252 0 0 1 14.103234-3.639545l67.33157 18.197722z"
-                                    p-id="1019"
-                                    fill="#ffffff"
-                                ></path>
-                            </svg>
-                        </template>
-                    </a-button>
+                    <ResetButton @on-reset="onClickReset" />
                 </div>
             </div>
             <div class="transfer__middle__bottom">
@@ -337,7 +301,7 @@
                 @change="onPaginationChange"
             />
         </div>
-    </div>
+    </PageContainer>
 </template>
 
 <script setup lang="ts">
@@ -904,53 +868,8 @@
 
 <style lang="less" scoped>
     .transfer {
-        flex: 1;
-        padding: 48px 48px 100px;
-        width: 100%;
-        text-align: left;
-        background-color: #f5f7fc;
-        &__header {
-            width: 100%;
-            &__container {
-                position: relative;
-                margin: 0 auto;
-                width: 100%;
-                max-width: 1200px;
-            }
-            &__line {
-                position: absolute;
-                top: 11px;
-                display: inline-block;
-                height: 12px;
-                background: linear-gradient(
-                    90deg,
-                    rgba(112, 136, 255, 0) 0%,
-                    rgba(61, 80, 255, 0.15) 100%
-                );
-                border-radius: 5px;
-            }
-            &__title {
-                position: relative;
-                top: -11px;
-                padding-right: 16px;
-                font-size: var(--bj-font-size-title);
-                font-weight: 400;
-                color: #000000;
-                line-height: 20px;
-            }
-            &__title_content {
-                font-family: Eurocine-regular;
-                font-weight: 600;
-            }
-            &__num {
-                margin-left: 8px;
-                font-size: var(--bj-font-size-normal);
-                color: var(--bj-font-color-65);
-            }
-        }
         &__middle {
-            margin: 58px auto 0;
-            max-width: 1200px;
+            margin-top: 32px;
             &__top {
                 .flex(row, nowrap, flex-start, center);
             }
@@ -1193,16 +1112,6 @@
     }
     @media screen and (max-width: 1260px) {
         .transfer {
-            &__header {
-                &__container {
-                }
-                &__line {
-                }
-                &__title {
-                }
-                &__num {
-                }
-            }
             &__middle {
                 &__top {
                 }
@@ -1266,16 +1175,6 @@
     }
     @media screen and (max-width: 970px) {
         .transfer {
-            &__header {
-                &__container {
-                }
-                &__line {
-                }
-                &__title {
-                }
-                &__num {
-                }
-            }
             &__middle {
                 &__top {
                     .flex(column, nowrap, flex-start, flex-start);
@@ -1340,22 +1239,35 @@
     }
     @media screen and (max-width: 768px) {
         .transfer {
-            padding: 40px 32px 60px;
-            &__header {
-                &__container {
+            :deep(.page_title_container) {
+                display: inline-flex;
+                text-align: left;
+
+                .flex {
+                    display: block;
                 }
-                &__line {
+
+                .icon {
+                    display: none;
                 }
-                &__title {
-                    .flex(column, nowrap, flex-start, flex-start);
+
+                .inline_icon {
+                    display: block;
                 }
-                &__num {
-                    margin-top: 12px;
-                    margin-left: 0;
+
+                .title_p {
+                    position: relative;
+                    display: inline-flex;
+                    align-items: center;
+                    margin-right: 0;
+                    margin-bottom: 8px;
+                }
+                .number {
+                    display: block;
                 }
             }
             &__middle {
-                margin-top: 72px;
+                margin-top: 24px;
                 &__top {
                 }
                 &__left {
@@ -1419,16 +1331,6 @@
     @media screen and (max-width: 582px) {
         .transfer {
             padding: 24px 16px 60px;
-            &__header {
-                &__container {
-                }
-                &__line {
-                }
-                &__title {
-                }
-                &__num {
-                }
-            }
             &__middle {
                 &__top {
                 }
@@ -1507,16 +1409,6 @@
     }
     @media screen and (max-width: 420px) {
         .transfer {
-            &__header {
-                &__container {
-                }
-                &__line {
-                }
-                &__title {
-                }
-                &__num {
-                }
-            }
             &__middle {
                 &__top {
                 }
@@ -1601,16 +1493,6 @@
     }
     @media screen and (max-width: 340px) {
         .transfer {
-            &__header {
-                &__container {
-                }
-                &__line {
-                }
-                &__title {
-                }
-                &__num {
-                }
-            }
             &__middle {
                 &__top {
                 }

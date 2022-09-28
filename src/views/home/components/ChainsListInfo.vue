@@ -45,7 +45,6 @@
                     </a-list-item>
                 </template>
             </a-list>
-            <!-- todo duanjie 样式待调整 -->
             <div v-show="isHaveData" ref="linkListRef" class="list_anchor">
                 <div
                     v-for="item of anchors"
@@ -231,6 +230,7 @@
                 font-size: var(--bj-font-size-normal);
                 font-weight: 400;
                 color: var(--bj-text-third);
+                transition: background-color 0.2s ease-in-out;
             }
             .self_link_active {
                 color: #ffffff;

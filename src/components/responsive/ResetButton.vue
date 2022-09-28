@@ -18,7 +18,6 @@
                     fill="#ffffff"
                 ></path>
             </svg>
-            <!-- <img style="width: 20px;" src="../assets/reset.png" /> -->
         </template>
     </a-button>
 </template>
