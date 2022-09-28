@@ -18,9 +18,9 @@
 }
 
 .ant-table-column-title {
-    font-size: 16px;
+    font-size: var(--bj-font-size-sub-title);
     font-weight: 400;
-    color: #000000;
+    color: var(--bj-text-normal);
 }
 
 .ant-table-thead th.ant-table-column-has-sorters:hover {
