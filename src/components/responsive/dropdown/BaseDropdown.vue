@@ -43,7 +43,6 @@
 
 <script setup lang="ts">
     import { DEFAULT_TITLE } from '@/constants';
-    // todo clippers => 向下箭头换个清晰的svg
     import { computed, onMounted, ref } from 'vue';
     type TKey = string;
     type TValue = number | undefined | string;
