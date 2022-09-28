@@ -2,13 +2,13 @@
     <div class="card ibc_selected_title cursor">
         <img
             class="card__img"
-            :src="msg.statistics_name.indexOf(dayTime) !== -1 ? chains24hrImg : chainsAllImg"
+            :src="msg.statistics_name.indexOf(DAY_TIME) !== -1 ? chains24hrImg : chainsAllImg"
             alt="chains_all"
         />
         <div class="card__content">
             <span class="card__content__name">
-                {{ (statisticsName as any)[msg.statistics_name] }}
-                <span v-if="msg.statistics_name.indexOf(dayTime) !== -1" class="card__content__tip"
+                {{ (STATISTICS_NAME as any)[msg.statistics_name] }}
+                <span v-if="msg.statistics_name.indexOf(DAY_TIME) !== -1" class="card__content__tip"
                     >24hr</span
                 >
             </span>
@@ -22,7 +22,7 @@
 <script setup lang="ts">
     import chains24hrImg from '@/assets/home/chains_24hr.png';
     import chainsAllImg from '@/assets/home/chains_all.png';
-    import { statisticsName, dayTime } from '@/constants';
+    import { STATISTICS_NAME, DAY_TIME } from '@/constants';
     import { formatBigNumber } from '@/helper/parseStringHelper';
 
     defineProps({

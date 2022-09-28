@@ -2,7 +2,11 @@
     <div class="view_source">
         <div class="view_source__label">View Source</div>
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane key="1" tab="Raw Data" class="view_source__first_tab">
+            <a-tab-pane
+                :key="TRANSFER_DETAILS_TAB.tableData"
+                :tab="TRANSFER_DETAILS_TAB.tableData"
+                class="view_source__first_tab"
+            >
                 <a-table
                     v-if="sourceCode"
                     :columns="TRANSFER_DETAILS_TABLE"
@@ -40,7 +44,11 @@
                 </a-table>
                 <no-datas v-if="!sourceCode"></no-datas>
             </a-tab-pane>
-            <a-tab-pane key="2" tab="JSON" force-render>
+            <a-tab-pane
+                :key="TRANSFER_DETAILS_TAB.json"
+                :tab="TRANSFER_DETAILS_TAB.json"
+                force-render
+            >
                 <pre v-if="JSONSource" class="view_source__json">{{ JSONSource }}</pre>
                 <no-datas v-if="!JSONSource" />
             </a-tab-pane>
@@ -50,7 +58,7 @@
 
 <script setup lang="ts">
     import type { IIbcTxInfo, IProgress, ITxInfo } from '@/types/interface/transfers.interface';
-    import { TRANSFER_DETAILS_TABLE } from '@/constants/transfers';
+    import { TRANSFER_DETAILS_TABLE, TRANSFER_DETAILS_TAB } from '@/constants/transfers';
     import { useViewSource } from '../composable';
     import { useLoading } from '@/composables';
 

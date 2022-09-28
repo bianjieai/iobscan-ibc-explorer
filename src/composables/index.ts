@@ -1,6 +1,6 @@
 import { onMounted, onBeforeUnmount } from 'vue';
 import {
-    ageTimerInterval,
+    AGE_TIMER_INTERVAL,
     PAGE_PARAMETERS,
     NEED_CUSTOM_COLUMN,
     CHAIN_DEFAULT_ICON
@@ -8,7 +8,7 @@ import {
 import { useIbcStatisticsChains } from '@/store';
 import { DATA_REFRESH_GAP } from '@/constants/home';
 
-export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerInterval) => {
+export const useTimeInterval = (intervalCallBack: Function, interval = AGE_TIMER_INTERVAL) => {
     let timer: number | null = null;
     intervalCallBack();
     onMounted(() => {
@@ -71,24 +71,34 @@ export const useLoading = () => {
 
 export const useIbcChains = (timerInterval?: number) => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
+    const { ibcChains, isDocumentHidden } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
     let timer: number;
-    onMounted(() => {
-        getIbcChains();
-        if (Number(timerInterval) > 0) {
-            timer = setInterval(() => {
-                console.log('getIbcChains', timerInterval);
-                getIbcChains(false);
-            }, timerInterval);
-        }
-    });
-    onBeforeUnmount(() => {
-        timer && clearInterval(timer);
-    });
+    const intervalIbcChains = () => {
+        timer = setInterval(() => {
+            console.log('getIbcChains', timerInterval);
+            getIbcChains(false);
+        }, timerInterval);
+    };
+
+    const lifeFunction = () => {
+        onMounted(() => {
+            getIbcChains();
+            if (Number(timerInterval) > 0) {
+                intervalIbcChains();
+            }
+        });
+        onBeforeUnmount(() => {
+            timer && clearInterval(timer);
+        });
+        watch(isDocumentHidden, (newVisibility) => {
+            newVisibility && timer ? clearInterval(timer) : intervalIbcChains();
+        });
+    };
     return {
         ibcChains,
-        getIbcChains
+        getIbcChains,
+        lifeFunction
     };
 };
 
@@ -145,4 +155,25 @@ export const useMatchChainInfo = (chainId: string) => {
         chainIcon,
         chainName
     };
+};
+
+export const useOnPressEnter = () => {
+    const onPressEnter = (val: any) => {
+        console.log(val);
+    };
+    return {
+        onPressEnter
+    };
+};
+
+export const useDocumentVisibility = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    // 判断是否聚焦到本页签
+    const watchDocument = () => {
+        ibcStatisticsChainsStore.isDocumentHidden = document.hidden;
+    };
+    document.addEventListener('visibilitychange', watchDocument);
+    onBeforeUnmount(() => {
+        document.removeEventListener('visibilitychange', watchDocument);
+    });
 };

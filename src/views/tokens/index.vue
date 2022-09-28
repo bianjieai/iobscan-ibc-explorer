@@ -70,8 +70,8 @@
                             `${record.currency} ${formatPrice(record[column.key], undefined)}`
                         }}</div>
                     </template>
-                    <div v-if="record[column.key] < thousandDecimal">
-                        {{ `< ${record.currency} ${thousandDecimal}` }}
+                    <div v-if="record[column.key] < THOUSAND_DECIMAL">
+                        {{ `< ${record.currency} ${THOUSAND_DECIMAL}` }}
                     </div>
                     <div v-else>
                         {{ `${record.currency} ${formatPrice(record[column.key])}` }}
@@ -137,7 +137,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { thousandDecimal, PAGE_PARAMETERS, TIP_ICON } from '@/constants';
+    import { THOUSAND_DECIMAL, PAGE_PARAMETERS, TIP_ICON } from '@/constants';
     import {
         COLUMNS,
         STATUS_OPTIONS,
