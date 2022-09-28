@@ -34,7 +34,7 @@ import {
     PROGRESS_TIMEOUT_LIST,
     TRANSFER_DETAILS_STATUS,
     REFUND_TX_TYPE,
-    TRANSFER_DETAILS_TAB_ACTIVEKEY
+    TRANSFER_DETAILS_TAB
 } from '@/constants/transfers';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
@@ -695,7 +695,7 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
 export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const tableExpand = new URL('../../../assets/transfers/table_expand.png', import.meta.url).href;
     const tablePackUp = new URL('../../../assets/transfers/table_packup.png', import.meta.url).href;
-    const activeKey = ref<string>(TRANSFER_DETAILS_TAB_ACTIVEKEY);
+    const activeKey = ref<TRANSFER_DETAILS_TAB>(TRANSFER_DETAILS_TAB.tableData);
     const JSONSource = ref<IIbcSource | undefined>();
     const sourceCode = ref();
     const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);

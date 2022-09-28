@@ -8,6 +8,11 @@ export enum IBC_TX_STATUS {
     'setting' = 5
 }
 
+export enum TRANSFER_DETAILS_TAB {
+    tableData = 'Raw Data',
+    json = 'JSON'
+}
+
 export const PROGRESS_STEP = {
     1: 'Transfer',
     2: 'Receive',
@@ -284,5 +289,3 @@ export const REFUND_TX_TYPE = {
     acknowledge_packet: 'acknowledge_packet',
     timeout_packet: 'timeout_packet'
 };
-
-export const TRANSFER_DETAILS_TAB_ACTIVEKEY = '1';
