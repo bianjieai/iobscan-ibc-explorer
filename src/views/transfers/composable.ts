@@ -1,5 +1,5 @@
 import { useIbcStatisticsChains } from '@/store/index';
-import { transferTableColumn, defaultTitle, TOKEN_DEFAULT_ICON } from '@/constants';
+import { TRANSFER_TABLE_COLUMN, DEFAULT_TITLE, TOKEN_DEFAULT_ICON } from '@/constants';
 import { IPaginationParams } from '@/types/interface/index.interface';
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { API_CODE } from '@/constants/apiCode';
@@ -16,7 +16,7 @@ export const useIbcDenoms = () => {
 };
 
 export const useSelectedSymbol = () => {
-    const selectedSymbol = ref(defaultTitle.defaultTokens);
+    const selectedSymbol = ref(DEFAULT_TITLE.defaultTokens);
     const isShowSymbolIcon = ref(false);
     const clearInput = ref(0);
     const selectedChain = reactive({
@@ -88,7 +88,7 @@ export const useFindIcon = (props: any) => {
 
 export const useGetTableColumns = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const tableColumns = reactive(transferTableColumn);
+    const tableColumns = reactive(TRANSFER_TABLE_COLUMN);
     const showTransferLoading = ref(true);
     const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
     const tableDatas = ref([...ibcTxs]);

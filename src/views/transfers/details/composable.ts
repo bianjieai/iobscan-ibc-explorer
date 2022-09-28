@@ -33,7 +33,8 @@ import {
     PROGRESS_ACKNOWLEDGE_LIST,
     PROGRESS_TIMEOUT_LIST,
     TRANSFER_DETAILS_STATUS,
-    REFUND_TX_TYPE
+    REFUND_TX_TYPE,
+    TRANSFER_DETAILS_TAB
 } from '@/constants/transfers';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
@@ -692,24 +693,34 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
 export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const tableExpand = new URL('../../../assets/transfers/table_expand.png', import.meta.url).href;
     const tablePackUp = new URL('../../../assets/transfers/table_packup.png', import.meta.url).href;
-    const activeKey = ref<string>('1');
+    const activeKey = ref<TRANSFER_DETAILS_TAB>(TRANSFER_DETAILS_TAB.tableData);
     const JSONSource = ref<IIbcSource | undefined>();
     const sourceCode = ref();
     const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);
+    const sourceMap = new Map();
     const getIbcSource = async (hash: string, chainId: string, msgType: string) => {
         loading && (loading.value = true);
-        const params = { chain_id: chainId, msg_type: msgType };
-        try {
-            const { code, message, data } = await getTxDetailsViewSourceByTxHashAPI(hash, params);
+        if (sourceMap.get(hash)) {
             loading && (loading.value = false);
-            if (code === API_CODE.success) {
-                return data;
-            } else {
-                console.error(message);
+            return sourceMap.get(hash);
+        } else {
+            const params = { chain_id: chainId, msg_type: msgType };
+            try {
+                const { code, message, data } = await getTxDetailsViewSourceByTxHashAPI(
+                    hash,
+                    params
+                );
+                loading && (loading.value = false);
+                if (code === API_CODE.success) {
+                    sourceMap.set(hash, data);
+                    return data;
+                } else {
+                    console.error(message);
+                }
+            } catch (error) {
+                console.log(error);
+                loading && (loading.value = false);
             }
-        } catch (error) {
-            console.log(error);
-            loading && (loading.value = false);
         }
     };
     watch([mark, () => ibcTxInfo?.value], async ([newMark]) => {

@@ -3,12 +3,13 @@
 </template>
 
 <script setup lang="ts">
-    import { useIbcStatisticsChains } from '@/store/index';
-    import { useChangeTitleAndIcon } from '@/composables/index';
+    import { useIbcStatisticsChains } from '@/store';
+    import { useChangeTitleAndIcon, useDocumentVisibility } from '@/composables';
 
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     ibcStatisticsChainsStore.initStateAction();
     useChangeTitleAndIcon();
+    useDocumentVisibility();
 </script>
 
 <style>

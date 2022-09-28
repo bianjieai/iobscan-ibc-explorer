@@ -34,20 +34,6 @@
     const footerType = computed(() => {
         return ibcStatisticsChainsStore.isShow500 ? FooterMode.dark : FooterMode.light;
     });
-    let timer1: number, timer2: number;
-    // const { setStar1, setStar2 } = useStarAnimation(layout);
-    onMounted(() => {
-        // timer1 = setInterval(() => {
-        //   setStar1()
-        // }, 3200)
-        // timer2 = setInterval(() => {
-        //   setStar2()
-        // }, 4200)
-    });
-    onUnmounted(() => {
-        if (timer1) clearInterval(timer1);
-        if (timer2) clearInterval(timer2);
-    });
 </script>
 
 <style lang="less" scoped>
@@ -73,7 +59,6 @@
             box-sizing: border-box;
             padding: 0;
             width: 100%;
-            height: 80px;
             line-height: 80px;
             background-image: url('../assets/iobscan_home_bg.png');
             background-repeat: no-repeat;
@@ -103,6 +88,21 @@
             background-size: 100% 396px;
             &__header {
                 background-size: 100% 396px;
+            }
+            &__content {
+                &__router_container {
+                }
+                &__error_container {
+                }
+            }
+            &__footer {
+            }
+        }
+    }
+    @media screen and (max-width: 530px) {
+        .layout {
+            padding-top: 160px;
+            &__header {
             }
             &__content {
                 &__router_container {

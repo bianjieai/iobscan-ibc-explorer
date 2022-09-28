@@ -26,7 +26,7 @@
         <div class="list__bottom">
             <span class="list__bottom__status_tips">
                 <span class="status_log">Status:</span>
-                <span v-for="(item, index) in ibcTxStatusDesc" :key="index" class="status_tip">
+                <span v-for="(item, index) in IBC_TX_STATUS_DESC" :key="index" class="status_tip">
                     <img :src="getImageUrl(item.status)" alt="" />
                     <span>{{ item.label }}</span>
                 </span>
@@ -38,7 +38,7 @@
 <script setup lang="ts">
     import TransferListItem from './TransferListItem.vue';
     import { useInterfaceActive } from '../composable/useTransferList';
-    import { ibcTxStatusDesc } from '@/constants';
+    import { IBC_TX_STATUS_DESC } from '@/constants';
     defineProps({
         transferList: {
             type: Array,

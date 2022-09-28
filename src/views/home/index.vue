@@ -1,6 +1,5 @@
 <template>
     <div class="home">
-        <header-input class="home__header_input_layout" disabled @pressed-enter="onPressEnter" />
         <layer-block class="home__top" title="Chains" type="dark">
             <div class="home__top__slot">
                 <div class="home__top__left">
@@ -50,7 +49,9 @@
                 <transfer-list
                     :ibc-chains="ibcChains"
                     :transfer-list="homeIbcTxs"
-                    @click-view-all="onClickViewAll(ibcStatisticsTxsDefault.tx_all.statistics_name)"
+                    @click-view-all="
+                        onClickViewAll(IBC_STATISTICS_TXS_DEFAULT.tx_all.statistics_name)
+                    "
                     @click-item="onClickViewAll"
                     @item-did-expand="setExpandByIndex"
                 />
@@ -67,17 +68,16 @@
     import TransferList from './components/TransferList.vue';
     import { useIbcChains } from '@/composables';
     import { useIbcTxs, useInterfaceActive } from './composable';
-    import { useOnPressEnter } from '@/composables/useStarAnimation';
-    import { PAGE_PARAMETERS, ibcStatisticsTxsDefault } from '@/constants/index';
+    import { PAGE_PARAMETERS, IBC_STATISTICS_TXS_DEFAULT } from '@/constants/index';
     import { useIbcStatistics } from '@/composables/home';
     import { DATA_REFRESH_GAP } from '@/constants/home';
     const { ibcStatisticsChains, ibcStatisticsChannels, ibcStatisticsDenoms, ibcStatisticsTxs } =
         useIbcStatistics(DATA_REFRESH_GAP);
 
-    const { ibcChains } = useIbcChains(DATA_REFRESH_GAP);
+    const { ibcChains, lifeFunction } = useIbcChains(DATA_REFRESH_GAP);
     const { homeIbcTxs, setExpandByIndex } = useIbcTxs(DATA_REFRESH_GAP);
     const { tipMsg, onClickViewAll, onMenuSelected } = useInterfaceActive();
-    const { onPressEnter } = useOnPressEnter();
+    lifeFunction();
 </script>
 
 <style lang="less">
@@ -87,9 +87,6 @@
         width: 100%;
         max-width: 1200px;
         margin: 0 auto;
-        &__header_input_layout {
-            display: none;
-        }
 
         &__top {
             width: 100%;
@@ -187,11 +184,7 @@
     }
     @media screen and (max-width: 530px) {
         .home {
-            padding: 24px 16px 60px 16px;
-            &__header_input_layout {
-                display: inline-block;
-                .flex(row, nowrap, flex-start, center);
-            }
+            padding: 0 16px 60px 16px;
             &__top {
                 margin-top: 48px !important;
                 &__slot {

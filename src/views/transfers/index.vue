@@ -42,12 +42,12 @@
                         @change="handleSelectChange"
                     >
                         <a-select-option
-                            v-for="item of ibcTxStatusSelectOptions"
+                            v-for="item of IBC_TX_STATUS_SELECT_OPTIONS"
                             :key="item.title"
                             :value="item.value"
                             ><span
                                 :class="
-                                    item.title === defaultTitle.defaultStatus
+                                    item.title === DEFAULT_TITLE.defaultStatus
                                         ? 'status_select_default'
                                         : 'status_select_title'
                                 "
@@ -155,7 +155,7 @@
                             <router-link
                                 class="token__link hover"
                                 :to="
-                                    record.status === ibcTxStatus.SUCCESS
+                                    record.status === IBC_TX_STATUS.SUCCESS
                                         ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}`
                                         : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`
                                 "
@@ -286,7 +286,7 @@
         <div v-if="pagination.total" class="transfer__bottom">
             <span class="status_tips">
                 <span class="status_log">Status:</span>
-                <span v-for="(item, index) in ibcTxStatusDesc" :key="index" class="status_tip">
+                <span v-for="(item, index) in IBC_TX_STATUS_DESC" :key="index" class="status_tip">
                     <img :src="getImageUrl(item.status)" alt="" />
                     <span>{{ item.label }}</span>
                 </span>
@@ -307,14 +307,13 @@
 <script setup lang="ts">
     import DropDown from './components/DropDown.vue';
     import {
-        ibcTxStatusSelectOptions,
-        transfersStatusOptions,
-        ibcTxStatus,
-        ibcTxStatusDesc,
-        defaultTitle,
-        unknownSymbol,
-        // PAGE_PARAMETERS,
-        txStatusNumber,
+        IBC_TX_STATUS_SELECT_OPTIONS,
+        TRANSFERS_STATUS_OPTIONS,
+        IBC_TX_STATUS,
+        IBC_TX_STATUS_DESC,
+        DEFAULT_TITLE,
+        UNKNOWN_SYMBOL,
+        TX_STATUS_NUMBER,
         CHAINNAME,
         CHAIN_DEFAULT_VALUE,
         TOTAL_BOUND,
@@ -380,7 +379,10 @@
         url += `&denom=${route.query.denom}`;
         paramsDenom = route?.query.denom;
     }
-    if (route?.query?.symbol && (route?.query?.symbol as string)?.toLowerCase() !== unknownSymbol) {
+    if (
+        route?.query?.symbol &&
+        (route?.query?.symbol as string)?.toLowerCase() !== UNKNOWN_SYMBOL
+    ) {
         url += `&symbol=${route.query.symbol}`;
         paramsSymbol = route?.query.symbol as string;
         watch(ibcDenoms, (newValue) => {
@@ -397,10 +399,10 @@
         selectedSymbol.value = getRestString(rmIbcPrefix(paramsDenom as string), 4, 4);
     }
     if (route?.query?.status) {
-        const defaultOptions = transfersStatusOptions.DEFAULT_OPTIONS;
-        const successOptions = transfersStatusOptions.SUCCESS_OPTIONS;
-        const failedOptions = transfersStatusOptions.FAILED_OPTIONS;
-        const processingOptions = transfersStatusOptions.PROCESSING_OPTIONS;
+        const defaultOptions = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
+        const successOptions = TRANSFERS_STATUS_OPTIONS.SUCCESS_OPTIONS;
+        const failedOptions = TRANSFERS_STATUS_OPTIONS.FAILED_OPTIONS;
+        const processingOptions = TRANSFERS_STATUS_OPTIONS.PROCESSING_OPTIONS;
         paramsStatus = (route?.query?.status as string).split(',');
         switch (JSON.stringify(paramsStatus)) {
             case JSON.stringify(successOptions):
@@ -439,7 +441,7 @@
             startTimestamp && endTimestamp
                 ? [startTimestamp, endTimestamp]
                 : [0, Math.floor(new Date().getTime() / 1000)],
-        status: paramsStatus || transfersStatusOptions.DEFAULT_OPTIONS,
+        status: paramsStatus || TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS,
         chain_id: chainId || undefined,
         symbol: paramsSymbol || undefined,
         denom: paramsDenom || undefined
@@ -481,7 +483,7 @@
                     !params.chain_id &&
                     !params.denom &&
                     !params.symbol &&
-                    params.status === txStatusNumber.defaultStatus &&
+                    params.status === TX_STATUS_NUMBER.defaultStatus &&
                     isDateDefaultValue
                 ) {
                     isHashFilterParams.value = false;
@@ -589,8 +591,8 @@
 
         pagination.current = 1;
         isShowSymbolIcon.value = !custom;
-        selectedSymbol.value = item || defaultTitle.defaultTokens;
-        if (item === defaultTitle.defaultTokens) {
+        selectedSymbol.value = item || DEFAULT_TITLE.defaultTokens;
+        if (item === DEFAULT_TITLE.defaultTokens) {
             queryParam.symbol = undefined;
         } else if (custom) {
             if (item && item.length && item.length > 8) {
@@ -611,7 +613,7 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
+        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
             url += `&symbol=${queryParam.symbol}`;
         }
         if (queryParam?.status) {
@@ -647,7 +649,7 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
+        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
             url += `&symbol=${queryParam.symbol}`;
         }
         if (queryParam?.status) {
@@ -694,7 +696,7 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
+        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
             url += `&symbol=${queryParam.symbol}`;
         }
         if (queryParam?.status) {
@@ -766,10 +768,10 @@
         isShowSymbolIcon.value = false;
         clearInput.value += 1;
         chainDropdown.value.selectedChain = [];
-        selectedSymbol.value = defaultTitle.defaultTokens;
+        selectedSymbol.value = DEFAULT_TITLE.defaultTokens;
         dateRange.value = [];
         queryParam.date_range = [];
-        queryParam.status = transfersStatusOptions.DEFAULT_OPTIONS;
+        queryParam.status = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
         queryParam.chain_id = undefined;
         queryParam.symbol = undefined;
         queryParam.denom = undefined;
@@ -821,7 +823,7 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
+        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
             url += `&symbol=${queryParam.symbol}`;
         }
         if (queryParam?.status) {
