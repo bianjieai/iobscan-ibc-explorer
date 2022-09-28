@@ -71,7 +71,7 @@ export const useLoading = () => {
 
 export const useIbcChains = (timerInterval?: number) => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcChains, isDocumentVisibility } = storeToRefs(ibcStatisticsChainsStore);
+    const { ibcChains, isDocumentHidden } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
     let timer: number;
     const intervalIbcChains = () => {
@@ -91,12 +91,9 @@ export const useIbcChains = (timerInterval?: number) => {
         onBeforeUnmount(() => {
             timer && clearInterval(timer);
         });
-        watch(
-            () => isDocumentVisibility.value,
-            (newVisibility) => {
-                newVisibility && timer ? clearInterval(timer) : intervalIbcChains();
-            }
-        );
+        watch(isDocumentHidden, (newVisibility) => {
+            newVisibility && timer ? clearInterval(timer) : intervalIbcChains();
+        });
     };
     return {
         ibcChains,
@@ -167,4 +164,16 @@ export const useOnPressEnter = () => {
     return {
         onPressEnter
     };
+};
+
+export const useDocumentVisibility = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    // 判断是否聚焦到本页签
+    const watchDocument = () => {
+        ibcStatisticsChainsStore.isDocumentHidden = document.hidden;
+    };
+    document.addEventListener('visibilitychange', watchDocument);
+    onBeforeUnmount(() => {
+        document.removeEventListener('visibilitychange', watchDocument);
+    });
 };

@@ -16,7 +16,7 @@ export const useIbcStatistics = (timerInterval?: number) => {
     const ibcStatisticsDenoms = reactive(IBC_STATISTICS_DENOMS_DEFAULT);
     const ibcStatisticsTxs = reactive(IBC_STATISTICS_TXS_DEFAULT);
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const isDocumentVisibility = storeToRefs(ibcStatisticsChainsStore).isDocumentVisibility;
+    const { isDocumentHidden } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcStatistics = async () => {
         try {
             const { code, data } = await getIbcStatisticsAPI();
@@ -55,12 +55,9 @@ export const useIbcStatistics = (timerInterval?: number) => {
     onBeforeUnmount(() => {
         timer && clearInterval(timer);
     });
-    watch(
-        () => isDocumentVisibility.value,
-        (newVisibility) => {
-            newVisibility && timer ? clearInterval(timer) : intervalIbcStatistics();
-        }
-    );
+    watch(isDocumentHidden, (newVisibility) => {
+        newVisibility && timer ? clearInterval(timer) : intervalIbcStatistics();
+    });
     return {
         ibcStatisticsChains,
         ibcStatisticsChannels,

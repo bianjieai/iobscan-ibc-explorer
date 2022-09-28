@@ -17,7 +17,7 @@ import { useTimeInterval } from '@/composables';
 export const useIbcTxs = (timerInterval?: number) => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
-    const isDocumentVisibility = storeToRefs(ibcStatisticsChainsStore).isDocumentVisibility;
+    const { isDocumentHidden } = storeToRefs(ibcStatisticsChainsStore);
     const homeIbcTxs = ref([...ibcTxs]);
     const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
     const expandedId = ref<string | null>();
@@ -85,12 +85,9 @@ export const useIbcTxs = (timerInterval?: number) => {
     onBeforeUnmount(() => {
         timer && clearInterval(timer);
     });
-    watch(
-        () => isDocumentVisibility.value,
-        (newVisibility) => {
-            newVisibility && timer ? clearInterval(timer) : intervalIbcTxs();
-        }
-    );
+    watch(isDocumentHidden, (newVisibility) => {
+        newVisibility && timer ? clearInterval(timer) : intervalIbcTxs();
+    });
     return {
         homeIbcTxs,
         getIbcTxs,

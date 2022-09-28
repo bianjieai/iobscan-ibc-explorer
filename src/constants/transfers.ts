@@ -284,3 +284,5 @@ export const REFUND_TX_TYPE = {
     acknowledge_packet: 'acknowledge_packet',
     timeout_packet: 'timeout_packet'
 };
+
+export const TRANSFER_DETAILS_TAB_ACTIVEKEY = '1';
