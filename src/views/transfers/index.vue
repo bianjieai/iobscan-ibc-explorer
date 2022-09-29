@@ -1256,7 +1256,6 @@
                 }
             }
             &__bottom {
-                padding: 16px;
                 & .status_tips {
                     .status_log {
                     }
@@ -1321,7 +1320,6 @@
                 }
             }
             &__bottom {
-                padding: 16px;
                 & .status_tips {
                     width: 100%;
                     justify-content: flex-start;
