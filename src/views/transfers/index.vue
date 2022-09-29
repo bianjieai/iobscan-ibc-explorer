@@ -5,7 +5,6 @@
             <div class="transfer__middle__top">
                 <div class="transfer__middle__left">
                     <BjSelect
-                        ref="tokensDropdown"
                         :data="tokenData"
                         :value="searchToken"
                         placeholder="All Tokens"
