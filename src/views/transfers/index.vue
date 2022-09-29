@@ -306,7 +306,6 @@
     } from '@/constants';
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
-    import { useGetIbcDenoms } from '@/views/home/composable';
     import { dayjsFormatDate } from '@/utils/timeTools';
     import {
         useIbcDenoms,
@@ -317,7 +316,7 @@
     import { useIbcStatistics } from '@/composables/home';
     import dayjs from 'dayjs';
     import { urlParser } from '@/utils/urlTools';
-    import { useIbcChains } from '@/composables';
+    import { useGetIbcDenoms, useIbcChains } from '@/composables';
     import { IIbcTx } from '@/types/interface/transfers.interface';
     import { axiosCancel } from '@/utils/axios';
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';

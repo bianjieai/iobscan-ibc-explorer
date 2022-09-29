@@ -144,13 +144,12 @@
         CHAIN_DEFAULT_VALUE,
         TOKEN_DEFAULT_VALUE
     } from '@/constants/tokens';
-    import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
+    import { useIbcChains, useNeedCustomColumns, useLoading, useGetIbcDenoms } from '@/composables';
     import {
         useGetTokenList,
         useTokensSelected,
         useTokensColumnJump
     } from '@/views/tokens/composable';
-    import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
 
