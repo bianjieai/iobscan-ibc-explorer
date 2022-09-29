@@ -147,9 +147,15 @@
             margin-right: 8px;
         }
     }
+    :deep(.title) {
+        font-family: GolosUIWebRegular;
+    }
     :deep(.ant-table-tbody tr .ant-table-cell) {
-        &:nth-of-type(1) {
-            font-family: GolosUI_Medium;
+        &:nth-of-type(1),
+        &:nth-of-type(2) {
+            .title {
+                font-family: GolosUI_Medium;
+            }
         }
     }
 

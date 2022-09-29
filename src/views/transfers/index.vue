@@ -369,8 +369,6 @@
     const { ibcChains } = useIbcChains();
     const { tableColumns, showTransferLoading, tableDatas, getIbcTxs } = useGetTableColumns();
     const chainDropdown = ref();
-    // const selectedDouble = ref(true);
-    // const needBadge = ref(true);
 
     const pickerPlaceholderColor = ref('var(--bj-text-second)');
 
@@ -1047,30 +1045,6 @@
                     align-items: center;
                     justify-content: center;
                 }
-
-                .ant-pagination-item {
-                    border: none;
-                    a {
-                        font-family: GolosUI_Medium;
-                        color: var(--bj-text-third);
-                    }
-                }
-
-                .ant-pagination-item-active {
-                    border: 1px solid var(--bj-primary-color);
-                    a {
-                        color: var(--bj-font-color-65);
-                    }
-                }
-
-                .ant-pagination-options {
-                    display: none !important;
-                }
-            }
-            & :deep(.disable_table_pagination) {
-                .ant-pagination-item-active {
-                    border: none;
-                }
             }
         }
     }
@@ -1195,8 +1169,6 @@
                     }
                 }
                 & .table_pagination {
-                    :deep(.ant-pagination-options) {
-                    }
                 }
             }
         }
@@ -1259,8 +1231,6 @@
                 }
                 & .table_pagination {
                     margin-top: 16px;
-                    :deep(.ant-pagination-options) {
-                    }
                 }
             }
         }
@@ -1350,8 +1320,6 @@
                     }
                 }
                 & .table_pagination {
-                    :deep(.ant-pagination-options) {
-                    }
                 }
             }
         }
@@ -1429,8 +1397,6 @@
                     }
                 }
                 & .table_pagination {
-                    :deep(.ant-pagination-options) {
-                    }
                 }
             }
         }
@@ -1510,8 +1476,6 @@
                     }
                 }
                 & .table_pagination {
-                    :deep(.ant-pagination-options) {
-                    }
                 }
             }
         }
@@ -1581,8 +1545,6 @@
                     }
                 }
                 & .table_pagination {
-                    :deep(.ant-pagination-options) {
-                    }
                 }
             }
         }

@@ -297,45 +297,10 @@
     :deep(.ant-table-column-has-sorters) {
         cursor: pointer;
     }
-    :deep(.ant-pagination) {
-        // margin: 16px;
-        text-align: right;
-    }
     :deep(.ant-pagination li) {
         margin-bottom: 8px;
-        width: initial;
-        height: 24px;
-        min-width: 24px;
-        line-height: 24px;
-        box-sizing: border-box;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        button {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        a {
-            font-family: GolosUI_Medium;
-            color: var(--bj-text-third);
-        }
     }
-    :deep(.ant-pagination-item) {
-        border: none;
-    }
-    :deep(.ant-pagination-item-active) {
-        border: 1px solid var(--bj-primary-color);
-        a {
-            color: var(--bj-font-color-65) !important;
-        }
-    }
-    :deep(.ant-pagination-options) {
-        display: none !important;
-    }
-    :deep(.ant-pagination-item-container > span > svg) {
-        // margin-bottom: 6px;
-    }
+
     :deep(td.ant-table-column-sort) {
         background: transparent;
     }
