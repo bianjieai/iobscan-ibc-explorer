@@ -76,6 +76,7 @@
             }
         }
         .ant-menu-item-selected {
+            font-family: GolosUI_Medium;
             background-image: url('../assets/nav/selected.png');
             background-repeat: no-repeat;
             background-size: contain;

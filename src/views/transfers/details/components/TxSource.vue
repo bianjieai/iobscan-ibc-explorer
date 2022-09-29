@@ -82,6 +82,7 @@
         margin-top: 16px;
         &__label {
             font-size: var(--bj-font-size-normal);
+            font-family: GolosUI_Medium;
             font-weight: 500;
             color: var(--bj-text-normal);
             line-height: 18px;
@@ -111,7 +112,6 @@
             background: #f8fafd;
         }
         :deep(.ant-table-cell) {
-            font-family: GolosUIWebRegular;
             color: var(--bj-text-second);
         }
         :deep(td) {
@@ -124,6 +124,9 @@
         }
         :deep(.ant-tabs-nav-wrap) {
             border-bottom: rgba(61, 80, 255, 0.1);
+        }
+        :deep(.ant-tabs-tab-active) {
+            font-family: GolosUI_Medium;
         }
     }
     @media screen and (max-width: 874px) {

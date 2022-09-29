@@ -139,14 +139,10 @@
                 font-size: var(--bj-font-size-normal);
                 font-weight: 400;
             }
-            .ant-menu-item-active {
+            :deep(.ant-menu-item-selected) {
                 .ant-menu-title-content {
-                    color: var(--bj-text-third);
-                }
-            }
-            .ant-menu-item-selected {
-                .ant-menu-title-content {
-                    color: var(--bj-text-normal);
+                    font-family: GolosUI_Medium;
+                    color: var(--bj-primary-color);
                 }
             }
         }
@@ -192,6 +188,7 @@
                 margin: 6px auto 0;
                 max-width: 152px;
                 font-size: var(--bj-font-size-sub-title);
+                font-family: GolosUI_Medium;
                 line-height: 20px;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -269,6 +266,7 @@
     }
     .custom_title {
         .flex(row, nowrap, space-between, center);
+        font-family: GolosUI_Medium;
         color: var(--bj-text-third);
         &__left {
             width: 10px;

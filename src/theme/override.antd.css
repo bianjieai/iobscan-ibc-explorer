@@ -10,6 +10,19 @@
 .ant-picker-focused {
     border-color: var(--bj-primary-color) !important;
 }
+
+.ant-table-thead tr th {
+    font-size: var(--bj-font-size-sub-title);
+    color: var(--bj-text-normal) !important;
+    background: #ffffff !important;
+}
+
+.ant-table-column-title {
+    font-size: var(--bj-font-size-sub-title);
+    font-weight: 400;
+    color: var(--bj-text-normal);
+}
+
 .ant-table-thead th.ant-table-column-has-sorters:hover {
     background: #fff !important;
 }
@@ -59,20 +72,6 @@
 
 .ibc_selected_title:hover .card_content_value {
     color: #3d50ff;
-}
-
-.transfer__table .ant-table-thead tr th {
-    font-size: var(--bj-font-size-sub-title);
-    background-color: #ffffff;
-}
-
-.transfer__table .ant-table-column-title {
-    font-size: 16px;
-    font-weight: 400;
-    color: #000000;
-}
-
-.ant-select-item-option {
 }
 
 .ant-select-item-option-selected {
@@ -146,4 +145,35 @@
 }
 .ant-tooltip-arrow-content {
     background: #3d50ff;
+}
+
+.ant-pagination {
+    display: flex;
+}
+.ant-pagination li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 24px !important;
+    height: 24px !important;
+    line-height: 24px !important;
+}
+.ant-pagination-item {
+    border: none !important;
+}
+.ant-pagination-item a {
+    font-family: GolosUIWebRegular;
+    color: var(--bj-text-third) !important;
+}
+.ant-pagination-item a:hover {
+    color: var(--bj-primary-color) !important;
+}
+.ant-pagination-item-active {
+    border: 1px solid var(--bj-primary-color) !important;
+}
+.ant-pagination-item-active a {
+    color: var(--bj-primary-color) !important;
+}
+.ant-pagination-options {
+    display: none !important;
 }

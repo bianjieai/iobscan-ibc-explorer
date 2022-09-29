@@ -91,6 +91,7 @@
         :deep(.ant-input) {
             background-color: transparent;
             color: #ffffff;
+            font-family: GolosUIWebRegular;
         }
         :deep(.anticon) {
             color: #fff;

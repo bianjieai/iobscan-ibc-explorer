@@ -208,6 +208,13 @@
             }
         }
     }
+    :deep(tbody tr) {
+        .ant-table-cell {
+            &:nth-of-type(1) {
+                font-family: GolosUI_Medium;
+            }
+        }
+    }
 
     // tablet
     @media screen and (max-width: 768px) {

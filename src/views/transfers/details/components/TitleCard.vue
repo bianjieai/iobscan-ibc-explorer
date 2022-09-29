@@ -12,6 +12,7 @@
 <style lang="less" scoped>
     .title {
         font-size: var(--bj-font-size-sub-title);
+        font-family: GolosUI_Medium;
         font-weight: 500;
         color: var(--bj-text-normal);
         line-height: 16px;

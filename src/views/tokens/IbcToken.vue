@@ -161,6 +161,12 @@
             margin-right: 8px;
         }
     }
+    :deep(.ant-table-tbody tr .ant-table-cell) {
+        &:nth-of-type(1),
+        &:nth-of-type(2) {
+            font-family: GolosUI_Medium;
+        }
+    }
     :deep(.ant-table-cell) {
         &:nth-of-type(3) {
             .ant-table-column-sorters {

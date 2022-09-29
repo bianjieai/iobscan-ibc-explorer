@@ -297,38 +297,10 @@
     :deep(.ant-table-column-has-sorters) {
         cursor: pointer;
     }
-    :deep(.ant-pagination) {
-        // margin: 16px;
-        text-align: right;
-    }
     :deep(.ant-pagination li) {
         margin-bottom: 8px;
-        width: initial;
-        height: 24px;
-        min-width: 24px;
-        line-height: 24px;
-        box-sizing: border-box;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
     }
-    :deep(.ant-pagination li button) {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    :deep(.ant-pagination-item) {
-        border: none;
-    }
-    :deep(.ant-pagination-item-active) {
-        border: 1px solid var(--bj-primary-color);
-    }
-    :deep(.ant-pagination-options) {
-        display: none !important;
-    }
-    :deep(.ant-pagination-item-container > span > svg) {
-        // margin-bottom: 6px;
-    }
+
     :deep(td.ant-table-column-sort) {
         background: transparent;
     }
