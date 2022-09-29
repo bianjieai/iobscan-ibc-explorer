@@ -306,7 +306,6 @@
             <a-pagination
                 v-model:current="pagination.current"
                 class="table_pagination"
-                :class="{ disable_table_pagination: showTransferLoading }"
                 :total="pagination.total"
                 :show-title="false"
                 :disabled="showTransferLoading"
