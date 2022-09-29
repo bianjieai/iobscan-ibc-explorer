@@ -32,10 +32,12 @@
 <style lang="less">
     .title {
         font-size: var(--bj-font-size-sub-title);
+        font-family: GolosUI_Medium;
         color: var(--bj-text-normal);
     }
 
     .subtitle {
+        font-family: GolosUI_Medium;
         color: var(--bj-text-third);
     }
 </style>

@@ -10,6 +10,19 @@
 .ant-picker-focused {
     border-color: var(--bj-primary-color) !important;
 }
+
+.ant-table-thead tr th {
+    font-size: var(--bj-font-size-sub-title);
+    color: var(--bj-text-normal) !important;
+    background-color: #ffffff;
+}
+
+.ant-table-column-title {
+    font-size: var(--bj-font-size-sub-title);
+    font-weight: 400;
+    color: var(--bj-text-normal);
+}
+
 .ant-table-thead th.ant-table-column-has-sorters:hover {
     background: #fff !important;
 }
@@ -59,17 +72,6 @@
 
 .ibc_selected_title:hover .card_content_value {
     color: #3d50ff;
-}
-
-.transfer__table .ant-table-thead tr th {
-    font-size: var(--bj-font-size-sub-title);
-    background-color: #ffffff;
-}
-
-.transfer__table .ant-table-column-title {
-    font-size: 16px;
-    font-weight: 400;
-    color: #000000;
 }
 
 .ant-select-item-option {

@@ -2,9 +2,18 @@
     <a-popover placement="topLeft">
         <template #content>
             <div class="popover_c">
-                <div>Relayer Name: {{ relayerName ? relayerName : UNKNOWN }}</div>
-                <div>{{ `${chain_a_name} Address` }}: {{ chainAAddress }}</div>
-                <div>{{ `${chain_b_name} Address` }}: {{ chainBAddress }}</div>
+                <div>
+                    <span class="tip_label">Relayer Name:</span>
+                    <span class="tip_value">{{ relayerName ? relayerName : UNKNOWN }}</span>
+                </div>
+                <div>
+                    <span class="tip_label">{{ `${chain_a_name} Address` }}:</span>
+                    <span class="tip_value">{{ chainAAddress }}</span>
+                </div>
+                <div>
+                    <span class="tip_label">{{ `${chain_b_name} Address` }}:</span>
+                    <span class="tip_value">{{ chainBAddress }}</span>
+                </div>
             </div>
         </template>
         <IconAndTitle :title="relayerName" :img-src="imgSrc" relayer icon-size="small" />
@@ -50,3 +59,11 @@
         return findChainName(props.chainB);
     });
 </script>
+<style lang="less" scoped>
+    .tip_label {
+        font-family: GolosUI_Medium;
+    }
+    .tip_value {
+        margin-left: 4px;
+    }
+</style>

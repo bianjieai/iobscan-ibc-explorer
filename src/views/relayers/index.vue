@@ -147,13 +147,16 @@
             margin-right: 8px;
         }
     }
+    :deep(.ant-table-tbody tr .ant-table-cell) {
+        &:nth-of-type(1) {
+            font-family: GolosUI_Medium;
+        }
+    }
 
     :deep(.ant-table-cell) {
         &:nth-of-type(3) {
             padding-left: 16px;
         }
-    }
-    :deep(.ant-table-cell) {
         &:nth-of-type(4) {
             padding-right: 26px !important;
         }

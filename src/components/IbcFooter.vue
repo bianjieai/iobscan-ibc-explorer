@@ -63,6 +63,7 @@
             width: 100%;
             max-width: 1200px;
             .flex(row, nowrap, space-between, center);
+            font-family: GolosUI_Medium;
 
             &__left {
                 .flex(row, nowrap, flex-start, center);
