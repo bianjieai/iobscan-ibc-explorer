@@ -174,7 +174,6 @@ export const useTokensSelected = (
             'event',
             `${router.currentRoute.value.name as string}-点击过滤条件Token`
         );
-
         const denom = val?.id;
         if (denom) {
             searchDenom.value = denom as string;

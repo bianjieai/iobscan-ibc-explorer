@@ -1,5 +1,5 @@
 import { useIbcStatisticsChains } from '@/store/index';
-import { TRANSFER_TABLE_COLUMN, DEFAULT_TITLE, TOKEN_DEFAULT_ICON } from '@/constants';
+import { TRANSFER_TABLE_COLUMN, TOKEN_DEFAULT_ICON } from '@/constants';
 import { IPaginationParams } from '@/types/interface/index.interface';
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { API_CODE } from '@/constants/apiCode';
@@ -12,25 +12,6 @@ export const useIbcDenoms = () => {
     });
     return {
         ibcDenoms
-    };
-};
-
-export const useSelectedSymbol = () => {
-    const selectedSymbol = ref(DEFAULT_TITLE.defaultTokens);
-    const isShowSymbolIcon = ref(false);
-    const clearInput = ref(0);
-    const selectedChain = reactive({
-        value: {
-            chain_name: undefined
-        }
-    });
-    const isShowChainIcon = ref(false);
-    return {
-        selectedSymbol,
-        isShowSymbolIcon,
-        clearInput,
-        selectedChain,
-        isShowChainIcon
     };
 };
 

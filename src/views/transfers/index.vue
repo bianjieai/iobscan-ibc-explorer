@@ -4,15 +4,22 @@
         <div class="transfer__middle relative">
             <div class="transfer__middle__top">
                 <div class="transfer__middle__left">
-                    <!-- todo duanjie  看能否复用 BjSelect，可参考token页面  -->
-                    <drop-down
-                        class="dropdown_token"
-                        :ibc-base-denoms="ibcBaseDenomsSorted"
-                        :selected-symbol="selectedSymbol"
-                        :show-icon="isShowSymbolIcon"
-                        :clear-input="clearInput"
-                        @click-item="onClickDropdownItem"
-                        @click-search="(item:any) => onClickDropdownItem(item, 'customToken')"
+                    <BjSelect
+                        :data="tokenData"
+                        :value="searchToken"
+                        placeholder="All Tokens"
+                        :input-ctn="{
+                            title: 'Custom IBC Tokens',
+                            toolTip: 'Hash (in hex format) of the denomination trace information.',
+                            placeholder: 'Search by ibc/hash',
+                            btnTxt: 'Confirm',
+                            icon: TIP_ICON
+                        }"
+                        :select-color-default-val="TRANSFERS_TOKEN_DEFAULT_VALUE"
+                        :dropdown-props="{
+                            getPopupContainer: chainGetPopupContainer
+                        }"
+                        @on-change="onSelectedToken"
                     />
                     <BjSelect
                         ref="chainDropdown"
@@ -33,28 +40,11 @@
                         }"
                         @on-change="onSelectedChain"
                     />
-                    <!-- todo duanjie  看能否复用  BaseDropdown，可参考token页面  -->
-                    <a-select
-                        class="status_select"
-                        default-active-first-option
-                        :value="JSON.stringify(queryParam.status)"
-                        :get-popup-container="(triggerNode: any) => triggerNode.parentNode"
-                        @change="handleSelectChange"
-                    >
-                        <a-select-option
-                            v-for="item of IBC_TX_STATUS_SELECT_OPTIONS"
-                            :key="item.title"
-                            :value="item.value"
-                            ><span
-                                :class="
-                                    item.title === DEFAULT_TITLE.defaultStatus
-                                        ? 'status_select_default'
-                                        : 'status_select_title'
-                                "
-                                >{{ item.title }}</span
-                            >
-                        </a-select-option>
-                    </a-select>
+                    <BaseDropdown
+                        :status="JSON.stringify(queryParam.status)"
+                        :options="IBC_TX_STATUS_SELECT_OPTIONS"
+                        @on-selected-change="handleSelectChange"
+                    />
                 </div>
                 <div class="transfer__middle__right">
                     <a-range-picker
@@ -316,7 +306,6 @@
             <a-pagination
                 v-model:current="pagination.current"
                 class="table_pagination"
-                :class="{ disable_table_pagination: showTransferLoading }"
                 :total="pagination.total"
                 :show-title="false"
                 :disabled="showTransferLoading"
@@ -327,13 +316,11 @@
 </template>
 
 <script setup lang="ts">
-    import DropDown from './components/DropDown.vue';
     import {
         IBC_TX_STATUS_SELECT_OPTIONS,
         TRANSFERS_STATUS_OPTIONS,
         IBC_TX_STATUS,
         IBC_TX_STATUS_DESC,
-        DEFAULT_TITLE,
         UNKNOWN_SYMBOL,
         TX_STATUS_NUMBER,
         CHAINNAME,
@@ -346,12 +333,7 @@
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
     import { dayjsFormatDate } from '@/utils/timeTools';
-    import {
-        useIbcDenoms,
-        useSelectedSymbol,
-        usePagination,
-        useGetTableColumns
-    } from './composable';
+    import { usePagination, useGetTableColumns } from './composable';
     import { useIbcStatistics } from '@/composables/home';
     import dayjs from 'dayjs';
     import { urlParser } from '@/utils/urlTools';
@@ -360,21 +342,21 @@
     import { axiosCancel } from '@/utils/axios';
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
     import { MODES } from '@/components/BjSelect/constants';
+    import { TRANSFERS_TOKEN_DEFAULT_VALUE } from '@/constants/transfers';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
-    const { ibcStatisticsTxs } = useIbcStatistics();
-    const { ibcDenoms } = useIbcDenoms();
-    const { selectedSymbol, isShowSymbolIcon, clearInput, isShowChainIcon } = useSelectedSymbol();
+    const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
     const { pagination } = usePagination();
     const { ibcChains } = useIbcChains();
     const { tableColumns, showTransferLoading, tableDatas, getIbcTxs } = useGetTableColumns();
     const chainDropdown = ref();
+    getIbcStatistics();
 
     const pickerPlaceholderColor = ref('var(--bj-text-second)');
 
     let paramsStatus = null,
         paramsSymbol: string | null = null,
-        paramsDenom = null,
+        paramsDenom: string | null = null,
         startTimestamp = 0,
         endTimestamp = 0;
     const dateRange = reactive({ value: [] });
@@ -390,13 +372,14 @@
         return new URL(`../../assets/home/status${status}.png`, import.meta.url).href;
     };
 
+    const searchToken = ref<string | undefined>();
     let chainId = route?.query.chain;
     if (chainId) {
         url += `&chain=${chainId}`;
     }
     if (route?.query?.denom) {
         url += `&denom=${route.query.denom}`;
-        paramsDenom = route?.query.denom;
+        paramsDenom = route?.query.denom as string;
     }
     if (
         route?.query?.symbol &&
@@ -404,18 +387,9 @@
     ) {
         url += `&symbol=${route.query.symbol}`;
         paramsSymbol = route?.query.symbol as string;
-        watch(ibcDenoms, (newValue) => {
-            if (newValue?.length) {
-                newValue?.forEach((item: any) => {
-                    if (item?.symbol === paramsSymbol) {
-                        selectedSymbol.value = item.symbol;
-                        isShowSymbolIcon.value = true;
-                    }
-                });
-            }
-        });
+        searchToken.value = paramsSymbol;
     } else if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
-        selectedSymbol.value = getRestString(rmIbcPrefix(paramsDenom as string), 4, 4);
+        searchToken.value = rmIbcPrefix(paramsDenom as string);
     }
     if (route?.query?.status) {
         const defaultOptions = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
@@ -605,62 +579,11 @@
         }
         return CHAIN_DEFAULT_ICON;
     };
-    const onClickDropdownItem = (item: any, custom: any) => {
-        (window as any).gtag('event', 'Transfers-点击过滤条件Token');
-
-        pagination.current = 1;
-        isShowSymbolIcon.value = !custom;
-        selectedSymbol.value = item || DEFAULT_TITLE.defaultTokens;
-        if (item === DEFAULT_TITLE.defaultTokens) {
-            queryParam.symbol = undefined;
-        } else if (custom) {
-            if (item && item.length && item.length > 8) {
-                selectedSymbol.value = getRestString(item, 4, 4);
-            }
-            queryParam.symbol = undefined;
-            queryParam.denom = item ? `ibc/${item.toUpperCase()}` : undefined;
-        } else {
-            queryParam.symbol = item;
-            queryParam.denom = undefined;
-        }
-        queryDatas();
-
-        url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
-        if (queryParam?.chain_id) {
-            url += `&chain=${queryParam.chain_id}`;
-        }
-        if (queryParam?.denom) {
-            url += `&denom=${queryParam.denom}`;
-        }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
-            url += `&symbol=${queryParam.symbol}`;
-        }
-        if (queryParam?.status) {
-            url += `&status=${queryParam.status.join(',')}`;
-        }
-        if (queryParam?.date_range?.length) {
-            if (queryParam?.date_range.length === 1) {
-                const timeStamp = queryParam.date_range[0];
-                const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=&endTime=${endTime}`;
-            }
-            if (queryParam?.date_range.length === 2) {
-                const startTimeStamp = queryParam.date_range[0];
-                const entTimeStamp = queryParam.date_range[1];
-                const startTime = startTimeStamp
-                    ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
-                    : '';
-                const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=${startTime}&endTime=${endTime}`;
-            }
-        }
-        router.replace(url);
-    };
     const handleSelectChange = (item: any) => {
         (window as any).gtag('event', 'Transfers-点击过滤条件Status');
 
         pagination.current = 1;
-        queryParam.status = JSONparse(item);
+        queryParam.status = item ? JSONparse(item) : item;
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
         if (queryParam?.chain_id) {
             url += `&chain=${queryParam.chain_id}`;
@@ -783,11 +706,7 @@
             });
     };
     const onClickReset = () => {
-        isShowChainIcon.value = false;
-        isShowSymbolIcon.value = false;
-        clearInput.value += 1;
         chainDropdown.value.selectedChain = [];
-        selectedSymbol.value = DEFAULT_TITLE.defaultTokens;
         dateRange.value = [];
         queryParam.date_range = [];
         queryParam.status = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
@@ -798,6 +717,7 @@
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
         router.replace(url);
         chainIds.value = [];
+        searchToken.value = undefined;
         queryDatas();
     };
 
@@ -883,6 +803,85 @@
             ibcTxTotalMoreThan500k.value = true;
         }
     });
+
+    const tokenData = computed(() => {
+        return [
+            {
+                groupName: '',
+                children: [
+                    {
+                        title: 'All Tokens',
+                        id: '',
+                        metaData: null
+                    }
+                ]
+            },
+            {
+                groupName: 'Authed IBC Tokens',
+                children: ibcBaseDenomsSorted.value.map((v) => ({
+                    title: v.symbol,
+                    id: v.symbol,
+                    icon: v.icon || TOKEN_DEFAULT_ICON,
+                    metaData: v
+                }))
+            },
+            {
+                groupName: 'Custom IBC Tokens',
+                children: [
+                    {
+                        id: 'Others',
+                        title: 'Others',
+                        icon: TOKEN_DEFAULT_ICON
+                    }
+                ]
+            }
+        ];
+    });
+
+    const onSelectedToken = (val?: IDataItem) => {
+        (window as any).gtag('event', 'Transfers-点击过滤条件Token');
+        pagination.current = 1;
+        const id = String(val?.id || '');
+        searchToken.value = id;
+        if (val?.inputFlag) {
+            queryParam.symbol = undefined;
+            queryParam.denom = id ? `ibc/${id.toUpperCase()}` : undefined;
+        } else {
+            queryParam.symbol = id || undefined;
+            queryParam.denom = undefined;
+        }
+        url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
+        if (queryParam?.chain_id) {
+            url += `&chain=${queryParam.chain_id}`;
+        }
+        if (queryParam?.denom) {
+            url += `&denom=${queryParam.denom}`;
+        }
+        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
+            url += `&symbol=${queryParam.symbol}`;
+        }
+        if (queryParam?.status) {
+            url += `&status=${queryParam.status.join(',')}`;
+        }
+        if (queryParam?.date_range?.length) {
+            if (queryParam?.date_range.length === 1) {
+                const timeStamp = queryParam.date_range[0];
+                const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
+                url += `&startTime=&endTime=${endTime}`;
+            }
+            if (queryParam?.date_range.length === 2) {
+                const startTimeStamp = queryParam.date_range[0];
+                const entTimeStamp = queryParam.date_range[1];
+                const startTime = startTimeStamp
+                    ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
+                    : '';
+                const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
+                url += `&startTime=${startTime}&endTime=${endTime}`;
+            }
+        }
+        router.replace(url);
+        queryDatas();
+    };
 </script>
 
 <style lang="less" scoped>
@@ -896,6 +895,9 @@
                 .flex(row, nowrap, flex-start, center);
                 .ant-select {
                     width: 146px;
+                }
+                :deep(.ant-dropdown-trigger) {
+                    margin-right: 8px;
                 }
             }
             &__right {
@@ -1048,37 +1050,6 @@
             }
         }
     }
-    .status_select {
-        width: 146px;
-        margin: 0 8px;
-        color: var(--bj-text-second);
-        :deep(.ant-select-arrow) {
-            right: 8px;
-            color: rgba(164, 171, 192, 1);
-        }
-        :deep(.ant-select-selector) {
-            height: 36px !important;
-            border: 1px solid var(--bj-border-color);
-            .ant-select-selection-item {
-                text-align: center;
-                line-height: 34px;
-            }
-            .ant-select-selection-search {
-                border-right: 1px solid var(--bj-border-color);
-            }
-
-            &_default {
-                color: var(--bj-text-second);
-            }
-            .status_select_title {
-                color: var(--bj-primary-color);
-            }
-        }
-        .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
-            .ant-select-selector {
-            box-shadow: none;
-        }
-    }
 
     .date_range {
         margin-right: 8px;
@@ -1172,16 +1143,6 @@
                 }
             }
         }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
-            }
-        }
     }
     @media screen and (max-width: 970px) {
         .transfer {
@@ -1232,16 +1193,6 @@
                 & .table_pagination {
                     margin-top: 16px;
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
     }
@@ -1323,16 +1274,6 @@
                 }
             }
         }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
-            }
-        }
     }
     @media screen and (max-width: 582px) {
         .transfer {
@@ -1398,16 +1339,6 @@
                 }
                 & .table_pagination {
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
     }
@@ -1479,16 +1410,6 @@
                 }
             }
         }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
-            }
-        }
         .date_range {
             width: 210px;
         }
@@ -1546,16 +1467,6 @@
                 }
                 & .table_pagination {
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
         .date_range {

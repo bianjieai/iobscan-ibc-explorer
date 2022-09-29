@@ -289,3 +289,5 @@ export const REFUND_TX_TYPE = {
     acknowledge_packet: 'acknowledge_packet',
     timeout_packet: 'timeout_packet'
 };
+
+export const TRANSFERS_TOKEN_DEFAULT_VALUE = '';

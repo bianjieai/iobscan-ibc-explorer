@@ -219,7 +219,7 @@ export const CHAINS_MENUS: { label: string; value: CURRENT_MENU_TYPE }[] = [
 ];
 
 export const TRANSFERS_STATUS_OPTIONS = {
-    DEFAULT_OPTIONS: ['1', '2', '3', '4'],
+    DEFAULT_OPTIONS: undefined,
     SUCCESS_OPTIONS: ['1'],
     FAILED_OPTIONS: ['2', '4'],
     PROCESSING_OPTIONS: ['3']
@@ -227,19 +227,19 @@ export const TRANSFERS_STATUS_OPTIONS = {
 
 export const IBC_TX_STATUS_SELECT_OPTIONS = [
     {
-        title: 'All Status',
-        value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS)
+        key: 'All Status',
+        value: undefined
     },
     {
-        title: 'Success',
+        key: 'Success',
         value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.SUCCESS_OPTIONS)
     },
     {
-        title: 'Processing',
+        key: 'Processing',
         value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.PROCESSING_OPTIONS)
     },
     {
-        title: 'Failed',
+        key: 'Failed',
         value: JSON.stringify(TRANSFERS_STATUS_OPTIONS.FAILED_OPTIONS)
     }
 ];
@@ -292,8 +292,6 @@ export const TRANSFER_TABLE_COLUMN: TableColumnsType = [
         width: 180
     }
 ];
-
-export const UNAUTHED = 'Others';
 
 export const DEFAULT_TITLE = {
     defaultStatus: 'All Status',
