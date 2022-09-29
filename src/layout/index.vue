@@ -37,12 +37,6 @@
 </script>
 
 <style lang="less" scoped>
-    :deep(.ant-pagination-item) {
-        cursor: pointer;
-        &-link {
-            cursor: pointer;
-        }
-    }
     .layout {
         display: flex;
         flex-direction: column;
