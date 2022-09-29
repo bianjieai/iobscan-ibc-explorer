@@ -293,8 +293,6 @@ export const TRANSFER_TABLE_COLUMN: TableColumnsType = [
     }
 ];
 
-export const UNAUTHED = 'Others';
-
 export const DEFAULT_TITLE = {
     defaultStatus: 'All Status',
     defaultChains: 'All Chains',

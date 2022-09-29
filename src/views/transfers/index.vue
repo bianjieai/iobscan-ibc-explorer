@@ -367,7 +367,6 @@
     let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
     const route = useRoute();
     const router = useRouter();
-    const otherToken = 'Others';
 
     const getImageUrl = (status: string | number) => {
         return new URL(`../../assets/home/status${status}.png`, import.meta.url).href;
@@ -830,8 +829,8 @@
                 groupName: 'Custom IBC Tokens',
                 children: [
                     {
-                        id: otherToken,
-                        title: otherToken,
+                        id: 'Others',
+                        title: 'Others',
                         icon: TOKEN_DEFAULT_ICON
                     }
                 ]
