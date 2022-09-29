@@ -69,7 +69,7 @@ export const useFindIcon = (props: any) => {
 
 export const useGetTableColumns = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const tableColumns = reactive(TRANSFER_TABLE_COLUMN);
+    const tableColumns = TRANSFER_TABLE_COLUMN;
     const showTransferLoading = ref(true);
     const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
     const tableDatas = ref([...ibcTxs]);

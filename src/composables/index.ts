@@ -4,7 +4,8 @@ import {
     PAGE_PARAMETERS,
     NEED_CUSTOM_COLUMN,
     CHAIN_DEFAULT_ICON,
-    SYMBOL
+    SYMBOL,
+    NEED_CUSTOM_HEADER
 } from '@/constants';
 import { useIbcStatisticsChains } from '@/store';
 import { DATA_REFRESH_GAP } from '@/constants/home';
@@ -41,6 +42,7 @@ export const useChangeTitleAndIcon = () => {
 // table 中需要格式化的列
 export const useNeedCustomColumns = (whitePage: string) => {
     const needCustomColumns = ref<string[]>([]);
+    const needCustomHeaders = ref<string[]>([]);
 
     switch (whitePage) {
         case PAGE_PARAMETERS.tokens:
@@ -58,9 +60,14 @@ export const useNeedCustomColumns = (whitePage: string) => {
         case PAGE_PARAMETERS.relayers:
             needCustomColumns.value = NEED_CUSTOM_COLUMN.relayers;
             break;
+        case PAGE_PARAMETERS.transfers:
+            needCustomColumns.value = NEED_CUSTOM_COLUMN.transfers;
+            needCustomHeaders.value = NEED_CUSTOM_HEADER.transfers;
+            break;
     }
     return {
-        needCustomColumns
+        needCustomColumns,
+        needCustomHeaders
     };
 };
 
