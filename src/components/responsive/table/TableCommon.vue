@@ -8,8 +8,14 @@
             :loading="props.loading"
             :show-sorter-tooltip="false"
             :scroll="scroll"
+            :custom-row="customRow"
             @change="onTableChange"
         >
+            <template #headerCell="{ column }">
+                <template v-if="isKeyInNeedCustomHeader(column.title)">
+                    <slot :name="column.title" :column="column"></slot>
+                </template>
+            </template>
             <template #bodyCell="{ column, record, index, text }">
                 <template v-if="isKeyInNeedCustomColumns(column.key)">
                     <slot
@@ -37,6 +43,7 @@
                 :page-size="pageInfo.pageSize"
                 :total="pageInfo.total"
                 :show-title="false"
+                :disabled="props.loading"
                 @change="onPageChange"
             />
         </div>
@@ -44,22 +51,28 @@
 </template>
 
 <script setup lang="ts">
-    import { TableColumnsType } from 'ant-design-vue';
-    import { computed, onMounted, reactive, ref, watch } from 'vue';
-    import { useGetIbcDenoms, useTimeInterval } from '@/composables';
-    import { formatLastUpdated } from '@/utils/timeTools';
+    import type { TableColumnsType } from 'ant-design-vue';
+    import { GetComponentProps } from 'ant-design-vue/lib/vc-table/interface';
+    import type { IIbcTx } from '@/types/interface/transfers.interface';
+    import type { IResponseRelayerListItem } from '@/types/interface/relayers.interface';
+    import type { IResponseChannelsListItem } from '@/types/interface/channels.interface';
+    import type { IResponseChainsListItem } from '@/types/interface/chains.interface';
+    import type {
+        IResponseIbcTokenListItem,
+        ITokensListItem
+    } from '@/types/interface/tokens.interface';
     import { CompareOrder } from '@/types/interface/components/table.interface';
-    import BigNumber from 'bignumber.js';
-    import { formatSupply } from '@/helper/tableCellHelper';
-    import { IResponseChainsListItem } from '@/types/interface/chains.interface';
-    import { IResponseIbcTokenListItem, ITokensListItem } from '@/types/interface/tokens.interface';
-    import { IResponseRelayerListItem } from '@/types/interface/relayers.interface';
-    import { IResponseChannelsListItem } from '@/types/interface/channels.interface';
+    import { computed, onMounted, reactive, ref, watch } from 'vue';
     import { useRouter } from 'vue-router';
+    import BigNumber from 'bignumber.js';
+    import { formatLastUpdated } from '@/utils/timeTools';
+    import { formatSupply } from '@/helper/tableCellHelper';
+    import { useGetIbcDenoms, useTimeInterval } from '@/composables';
 
     const router = useRouter();
     const { ibcBaseDenoms } = useGetIbcDenoms();
     type TData =
+        | IIbcTx[]
         | IResponseChainsListItem[]
         | ITokensListItem[]
         | IResponseIbcTokenListItem[]
@@ -69,14 +82,17 @@
         columns: TableColumnsType;
         data: TData;
         needCustomColumns: string[];
+        needCustomHeaders?: string[];
         needCount?: boolean;
         pageSize?: number | null;
         current?: number | null;
+        total?: number | null;
         noPagination?: boolean;
         scroll?: { x?: number; y?: number } | undefined;
         rowKey?: string;
         realTimeKey?: { scKey: string; dcKey: string }[] | null;
         loading: boolean;
+        customRow?: GetComponentProps<any>;
     }
     let backUpDataSource: any[] = [];
     const props = withDefaults(defineProps<IProps>(), {
@@ -89,7 +105,7 @@
     const pageInfo = reactive({
         pageSize: props.pageSize || 10,
         current: props.current || 1,
-        total: props.data?.length
+        total: props.total || props.data?.length
     });
     const columnsSource = ref(props.columns);
     const dataSource = ref(props.data);
@@ -100,11 +116,21 @@
         () => props.data,
         (_new) => {
             backUpData();
-            pageInfo.total = _new?.length;
-            needPagination.value && onPageChange(1, 10);
+            if (needPagination.value) {
+                pageInfo.total = _new?.length;
+                needPagination.value && onPageChange(1, 10);
+            } else {
+                dataSource.value = props.data;
+            }
             if (_new?.length === 0) {
                 columnsSource.value = columnsSource.value.filter((item) => item.key !== '_count');
             }
+        }
+    );
+    watch(
+        () => props.total,
+        (_new) => {
+            pageInfo.total = _new || 0;
         }
     );
     const needPagination = computed(
@@ -113,6 +139,9 @@
     const isKeyInNeedCustomColumns = computed(
         () => (key: string) => props.needCustomColumns.includes(key)
     ); // 判断key
+    const isKeyInNeedCustomHeader = computed(
+        () => (key: string) => props.needCustomHeaders?.includes(key)
+    );
     const hasData = computed(() => props.data?.length > 0);
     const backUpData = () => {
         const { columns, data, needCount } = props;
@@ -146,7 +175,7 @@
             dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
         }
     };
-    defineEmits<{
+    const emits = defineEmits<{
         (e: 'onPageChange', current: number, pageSize: number): void;
     }>();
     const formatDataSourceWithRealTime = (data: any[]) => {
@@ -159,14 +188,17 @@
         }
         return data;
     };
-    const onPageChange = (page: number, pageSize: number) => {
+    const onPageChange = (pageNum: number, pageSize: number) => {
         (window as any).gtag('event', `${router.currentRoute.value.name as string}-点击翻页器`);
-
-        pageInfo.current = page;
-        pageInfo.pageSize = pageSize;
-        const p = (page - 1) * pageSize;
-        const pSize = page * pageSize;
-        dataSource.value = formatDataSourceWithRealTime(backUpDataSource.slice(p, pSize));
+        if (needPagination.value) {
+            pageInfo.current = pageNum;
+            pageInfo.pageSize = pageSize;
+            const p = (pageNum - 1) * pageSize;
+            const pSize = pageNum * pageSize;
+            dataSource.value = formatDataSourceWithRealTime(backUpDataSource.slice(p, pSize));
+        } else {
+            emits('onPageChange', pageNum, pageSize);
+        }
     };
     const formatDisplayAmount = (item: any, key: string) => {
         return formatSupply(item[key], item.base_denom, ibcBaseDenoms.value, 2, false);
@@ -321,7 +353,7 @@
         z-index: 1;
     }
     // tablet
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 810px) {
         .bottom {
             display: block;
         }

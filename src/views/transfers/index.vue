@@ -104,18 +104,21 @@
                 </div>
             </div>
             <div class="transfer__middle__bottom">
-                <!-- todo duanjie 表格看能否复用 TableCommon，可参考channels页面  -->
-                <a-table
+                <TableCommon
                     class="transfer__table"
-                    style="width: 100%"
-                    :row-key="(record: any) => record.record_id"
-                    :columns="tableColumns"
                     :loading="showTransferLoading"
-                    :data-source="tableDatas"
-                    :pagination="false"
+                    :data="tableDatas"
+                    row-key="record_id"
+                    :need-custom-headers="needCustomHeaders"
+                    :need-custom-columns="needCustomColumns"
+                    :columns="tableColumns"
+                    :current="pagination.current"
+                    :page-size="pagination.pageSize"
+                    :total="pagination.total"
                     :custom-row="handleClickRow"
+                    @on-page-change="onPaginationChange"
                 >
-                    <template #customTitle>
+                    <template #Token>
                         <div class="flex items-center">
                             <span class="cell_name">Token</span>
                             <a-popover destroy-tooltip-on-hide>
@@ -172,7 +175,7 @@
                             </router-link>
                         </a-popover>
                     </template>
-                    <template #hashOut="{ record }">
+                    <template #fromTxhash="{ record }">
                         <a-popover destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
@@ -184,7 +187,7 @@
                             }}</span>
                         </a-popover>
                     </template>
-                    <template #out="{ record }">
+                    <template #from="{ record }">
                         <a-popover destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
@@ -257,7 +260,19 @@
                             </router-link>
                         </a-popover>
                     </template>
-                    <template #hashIn="{ record }">
+                    <template #to="{ record }">
+                        <a-popover destroy-tooltip-on-hide>
+                            <template #content>
+                                <div>
+                                    <p class="popover_c">{{ record.dc_addr || '--' }}</p>
+                                </div>
+                            </template>
+                            <span class="cursor">{{
+                                getRestString(record.dc_addr, 3, 8) || '--'
+                            }}</span>
+                        </a-popover>
+                    </template>
+                    <template #toTxHash="{ record }">
                         <a-popover v-if="record.dc_tx_info.hash" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
@@ -270,19 +285,7 @@
                         </a-popover>
                         <span v-else>--</span>
                     </template>
-                    <template #in="{ record }">
-                        <a-popover destroy-tooltip-on-hide>
-                            <template #content>
-                                <div>
-                                    <p class="popover_c">{{ record.dc_addr || '--' }}</p>
-                                </div>
-                            </template>
-                            <span class="cursor">{{
-                                getRestString(record.dc_addr, 3, 8) || '--'
-                            }}</span>
-                        </a-popover>
-                    </template>
-                    <template #time="{ record }">
+                    <template #createTime="{ record }">
                         <span>{{ dayjsFormatDate(record.tx_time * 1000) }}</span>
                     </template>
                     <template #endTime="{ record }">
@@ -290,27 +293,16 @@
                             record.end_time ? dayjsFormatDate(record.end_time * 1000) : '--'
                         }}</span>
                     </template>
-                </a-table>
-                <div class="thead_border_bottom"></div>
+                    <template v-if="tableDatas?.length !== 0" #table_bottom_status>
+                        <div class="transfer__bottom">
+                            <BottomStatus
+                                :status-data="BOTTOM_STATUS_DATA.transferStatusData"
+                                :height="8"
+                            />
+                        </div>
+                    </template>
+                </TableCommon>
             </div>
-        </div>
-        <!-- todo duanjie 如果复用了TableCommon， 状态和分页是否可以在TableCommon组件中实现，可参考channels页面  -->
-        <div v-if="pagination.total" class="transfer__bottom">
-            <span class="status_tips">
-                <span class="status_log">Status:</span>
-                <span v-for="(item, index) in IBC_TX_STATUS_DESC" :key="index" class="status_tip">
-                    <img :src="getImageUrl(item.status)" alt="" />
-                    <span>{{ item.label }}</span>
-                </span>
-            </span>
-            <a-pagination
-                v-model:current="pagination.current"
-                class="table_pagination"
-                :total="pagination.total"
-                :show-title="false"
-                :disabled="showTransferLoading"
-                @change="onPaginationChange"
-            />
         </div>
     </PageContainer>
 </template>
@@ -320,7 +312,6 @@
         IBC_TX_STATUS_SELECT_OPTIONS,
         TRANSFERS_STATUS_OPTIONS,
         IBC_TX_STATUS,
-        IBC_TX_STATUS_DESC,
         UNKNOWN_SYMBOL,
         TX_STATUS_NUMBER,
         CHAINNAME,
@@ -328,7 +319,9 @@
         TOTAL_BOUND,
         CHAIN_DEFAULT_ICON,
         TOKEN_DEFAULT_ICON,
-        TIP_ICON
+        TIP_ICON,
+        PAGE_PARAMETERS,
+        BOTTOM_STATUS_DATA
     } from '@/constants';
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
@@ -337,7 +330,7 @@
     import { useIbcStatistics } from '@/composables/home';
     import dayjs from 'dayjs';
     import { urlParser } from '@/utils/urlTools';
-    import { useGetIbcDenoms, useIbcChains } from '@/composables';
+    import { useGetIbcDenoms, useIbcChains, useNeedCustomColumns } from '@/composables';
     import { IIbcTx } from '@/types/interface/transfers.interface';
     import { axiosCancel } from '@/utils/axios';
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
@@ -350,6 +343,9 @@
     const { ibcChains } = useIbcChains();
     const { tableColumns, showTransferLoading, tableDatas, getIbcTxs } = useGetTableColumns();
     const chainDropdown = ref();
+    const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(
+        PAGE_PARAMETERS.transfers
+    );
     getIbcStatistics();
 
     const pickerPlaceholderColor = ref('var(--bj-text-second)');
@@ -661,12 +657,12 @@
         router.replace(url);
         queryDatas();
     };
-    const onPaginationChange = (page: number) => {
+    const onPaginationChange = (current: number, pageSize: number) => {
         (window as any).gtag('event', 'Transfers-点击翻页器');
 
-        pagination.current = page;
+        pagination.current = current;
         const params: any = urlParser(url);
-        url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
+        url = `/transfers?pageNum=${current}&pageSize=${pageSize}`;
 
         if (params?.chain) {
             url += `&chain=${params.chain}`;
@@ -920,7 +916,6 @@
             font-size: 14px;
             font-weight: 400;
             :deep(.ant-table-thead tr th) {
-                padding: 11px 16px;
                 border-bottom: 0;
                 &:first-child {
                     padding-left: 0;
@@ -930,10 +925,6 @@
                 &:first-child {
                     padding-left: 0;
                 }
-            }
-            :deep(.ant-table-content) {
-                margin: 0 24px;
-                overflow-x: auto;
             }
             :deep(.ant-table-placeholder) {
                 min-height: 500px;
@@ -1001,9 +992,6 @@
         }
         &__bottom {
             .flex(row, nowrap, space-between, center);
-            margin: 0 auto;
-            padding: 16px 24px;
-            max-width: 1200px;
             font-family: GolosUI_Medium;
             background: #ffffff;
             border-radius: var(--border-radius-normal);
@@ -1247,7 +1235,6 @@
                 }
             }
             &__bottom {
-                padding: 16px;
                 & .status_tips {
                     .status_log {
                     }
@@ -1312,7 +1299,6 @@
                 }
             }
             &__bottom {
-                padding: 16px;
                 & .status_tips {
                     width: 100%;
                     justify-content: flex-start;
