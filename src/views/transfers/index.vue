@@ -369,7 +369,7 @@
     const router = useRouter();
 
     const getImageUrl = (status: string | number) => {
-        return new URL(`../../assets/home/status${status}.png`, import.meta.url).href;
+        return new URL(`../../assets/status/transfer_status${status}.png`, import.meta.url).href;
     };
 
     const searchToken = ref<string | undefined>();
@@ -1032,20 +1032,6 @@
             & :deep(.table_pagination) {
                 li {
                     margin-bottom: 8px;
-                    width: initial;
-                    height: 24px;
-                    min-width: 24px;
-                    line-height: 24px;
-                    box-sizing: border-box;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                li button {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
                 }
             }
         }

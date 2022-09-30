@@ -102,7 +102,11 @@
             </template>
 
             <template v-if="relayersList?.length !== 0" #table_bottom_status>
-                <BottomStatus :type="BottomStatusType.RELAYER" />
+                <BottomStatus
+                    :type="BottomStatusType.RELAYER"
+                    :status-data="BOTTOM_STATUS_DATA.relayerStatusData"
+                    :height="20"
+                />
             </template>
         </TableCommon>
     </PageContainer>
@@ -110,7 +114,7 @@
 
 <script setup lang="ts">
     import NamePopover from './components/NamePopover.vue';
-    import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE } from '@/constants';
+    import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE, BOTTOM_STATUS_DATA } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';

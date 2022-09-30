@@ -385,3 +385,40 @@ export const BACK_TOP_NUM = 2064;
 
 // 默认情况下展示的文案
 export const DEFAULT_DISPLAY_TEXT = '--';
+
+export const BOTTOM_STATUS_DATA = {
+    transferStatusData: [
+        {
+            status: 'Success',
+            statusImg: 'transfer_status1.png'
+        },
+        {
+            status: 'Processing',
+            statusImg: 'transfer_status3.png'
+        },
+        {
+            status: 'Failed',
+            statusImg: 'transfer_status2.png'
+        }
+    ],
+    channelStatusData: [
+        {
+            status: 'Open',
+            statusImg: 'channel_open.png'
+        },
+        {
+            status: 'Closed',
+            statusImg: 'channel_closed.png'
+        }
+    ],
+    relayerStatusData: [
+        {
+            status: 'Running',
+            statusImg: 'relayer_running.png'
+        },
+        {
+            status: 'Unknown',
+            statusImg: 'relayer_stopped.png'
+        }
+    ]
+};

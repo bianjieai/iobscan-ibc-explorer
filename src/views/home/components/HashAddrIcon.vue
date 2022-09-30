@@ -84,7 +84,7 @@
     const { findIbcChainIcon } = useFindIbcChainIcon(props);
 
     const getImageUrl = (name: string | number) => {
-        return new URL(`../../../assets/home/status${name}.png`, import.meta.url).href;
+        return new URL(`../../../assets/status/transfer_status${name}.png`, import.meta.url).href;
     };
 </script>
 

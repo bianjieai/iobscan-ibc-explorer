@@ -24,13 +24,7 @@
             <no-datas v-if="!transferList || !transferList.length" class="transfer_list" />
         </div>
         <div class="list__bottom">
-            <span class="list__bottom__status_tips">
-                <span class="status_log">Status:</span>
-                <span v-for="(item, index) in IBC_TX_STATUS_DESC" :key="index" class="status_tip">
-                    <img :src="getImageUrl(item.status)" alt="" />
-                    <span>{{ item.label }}</span>
-                </span>
-            </span>
+            <BottomStatus :status-data="BOTTOM_STATUS_DATA.transferStatusData" :height="8" />
         </div>
     </div>
 </template>
@@ -38,7 +32,7 @@
 <script setup lang="ts">
     import TransferListItem from './TransferListItem.vue';
     import { useInterfaceActive } from '../composable/useTransferList';
-    import { IBC_TX_STATUS_DESC } from '@/constants';
+    import { BOTTOM_STATUS_DATA } from '@/constants';
     defineProps({
         transferList: {
             type: Array,
@@ -51,9 +45,6 @@
     });
     const emits = defineEmits(['clickViewAll', 'clickItem', 'itemDidExpand']);
     const { clickListItem, itemDidExpand } = useInterfaceActive(emits);
-    const getImageUrl = (status: string | number) => {
-        return new URL(`../../../assets/home/status${status}.png`, import.meta.url).href;
-    };
 </script>
 
 <style lang="less" scoped>
@@ -104,29 +95,6 @@
             max-width: 1200px;
             background: #ffffff;
             border-radius: var(--border-radius-normal);
-            &__status_tips {
-                .flex(row, nowrap, space-between, center);
-                padding: 7px 9px;
-                width: 396px;
-                font-size: 14px;
-                font-family: GolosUI_Medium;
-                font-weight: 400;
-                color: var(--bj-text-third);
-                line-height: 14px;
-                background: #f8f9fc;
-                border-radius: 14px;
-                .status_tip {
-                    .flex(row, wrap, flex-start, center);
-                    img {
-                        margin-right: 8px;
-                        height: 8px;
-                    }
-                }
-                .status_img {
-                    width: 22px;
-                    margin: 0 16px;
-                }
-            }
         }
     }
     @media screen and (max-width: 768px) {
@@ -140,14 +108,6 @@
             &__middle {
             }
             &__bottom {
-                &__status_tips {
-                    .status_tip {
-                        img {
-                        }
-                    }
-                    .status_img {
-                    }
-                }
             }
         }
     }
@@ -170,15 +130,6 @@
             }
             &__bottom {
                 padding: 16px;
-                &__status_tips {
-                    width: 100%;
-                    .status_tip {
-                        img {
-                        }
-                    }
-                    .status_img {
-                    }
-                }
             }
         }
     }
@@ -193,20 +144,6 @@
             &__middle {
             }
             &__bottom {
-                &__status_tips {
-                    flex-wrap: wrap;
-                    text-align: left;
-                    .status_log {
-                        margin-bottom: 8px;
-                        width: 100%;
-                    }
-                    .status_tip {
-                        img {
-                        }
-                    }
-                    .status_img {
-                    }
-                }
             }
         }
     }
@@ -221,21 +158,6 @@
             &__middle {
             }
             &__bottom {
-                &__status_tips {
-                    .status_log {
-                    }
-                    .status_tip {
-                        margin-bottom: 8px;
-                        width: 50%;
-                        &:last-child {
-                            margin-bottom: 0;
-                        }
-                        img {
-                        }
-                    }
-                    .status_img {
-                    }
-                }
             }
         }
     }
