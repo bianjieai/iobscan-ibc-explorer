@@ -246,49 +246,50 @@ export const IBC_TX_STATUS_SELECT_OPTIONS = [
 
 export const TRANSFER_TABLE_COLUMN: TableColumnsType = [
     {
+        title: 'Token',
         dataIndex: 'token',
-        slots: { customRender: 'token', title: 'customTitle' },
+        key: 'token',
         width: 200
     },
     {
         title: 'From TxHash',
-        dataIndex: 'hashOut',
-        slots: { customRender: 'hashOut' },
+        dataIndex: 'fromTxhash',
+        key: 'fromTxhash',
         width: 160
     },
     {
         title: 'From',
-        dataIndex: 'out',
-        slots: { customRender: 'out' }
+        dataIndex: 'from',
+        key: 'from'
     },
     {
         title: 'Status',
         dataIndex: 'status',
-        slots: { customRender: 'status' },
+        key: 'status',
         width: 180,
         align: 'center'
     },
     {
         title: 'To',
-        dataIndex: 'in',
-        slots: { customRender: 'in' }
+        dataIndex: 'to',
+        key: 'to'
     },
     {
         title: 'To TxHash',
-        dataIndex: 'hashIn',
-        slots: { customRender: 'hashIn' },
+        dataIndex: 'toTxHash',
+        key: 'toTxHash',
         width: 160
     },
     {
         title: 'Create Time',
-        dataIndex: 'time',
-        slots: { customRender: 'time' },
+        dataIndex: 'createTime',
+        key: 'createTime',
         width: 180
     },
     {
         title: 'End Time',
         dataIndex: 'endTime',
-        slots: { customRender: 'endTime' },
+        key: 'endTime',
         width: 180
     }
 ];
@@ -366,7 +367,12 @@ export const NEED_CUSTOM_COLUMN = {
         'update_time',
         'txs_success_rate',
         'transfer_total_txs'
-    ]
+    ],
+    transfers: ['token', 'fromTxhash', 'from', 'status', 'to', 'toTxHash', 'createTime', 'endTime']
+};
+
+export const NEED_CUSTOM_HEADER = {
+    transfers: ['Token']
 };
 
 export const BASE_PARAMS: IRequestPagination = {
