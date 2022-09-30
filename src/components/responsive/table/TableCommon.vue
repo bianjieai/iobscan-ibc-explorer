@@ -353,7 +353,7 @@
         z-index: 1;
     }
     // tablet
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 810px) {
         .bottom {
             display: block;
         }

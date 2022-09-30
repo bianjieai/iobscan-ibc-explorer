@@ -295,17 +295,10 @@
                     </template>
                     <template v-if="tableDatas?.length !== 0" #table_bottom_status>
                         <div class="transfer__bottom">
-                            <span class="status_tips">
-                                <span class="status_log">Status:</span>
-                                <span
-                                    v-for="(item, index) in IBC_TX_STATUS_DESC"
-                                    :key="index"
-                                    class="status_tip"
-                                >
-                                    <img :src="getImageUrl(item.status)" alt="" />
-                                    <span>{{ item.label }}</span>
-                                </span>
-                            </span>
+                            <BottomStatus
+                                :status-data="BOTTOM_STATUS_DATA.transferStatusData"
+                                :height="8"
+                            />
                         </div>
                     </template>
                 </TableCommon>
@@ -319,7 +312,6 @@
         IBC_TX_STATUS_SELECT_OPTIONS,
         TRANSFERS_STATUS_OPTIONS,
         IBC_TX_STATUS,
-        IBC_TX_STATUS_DESC,
         UNKNOWN_SYMBOL,
         TX_STATUS_NUMBER,
         CHAINNAME,
@@ -328,7 +320,8 @@
         CHAIN_DEFAULT_ICON,
         TOKEN_DEFAULT_ICON,
         TIP_ICON,
-        PAGE_PARAMETERS
+        PAGE_PARAMETERS,
+        BOTTOM_STATUS_DATA
     } from '@/constants';
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
@@ -372,7 +365,7 @@
     const router = useRouter();
 
     const getImageUrl = (status: string | number) => {
-        return new URL(`../../assets/home/status${status}.png`, import.meta.url).href;
+        return new URL(`../../assets/status/transfer_status${status}.png`, import.meta.url).href;
     };
 
     const searchToken = ref<string | undefined>();
@@ -1027,20 +1020,6 @@
             & :deep(.table_pagination) {
                 li {
                     margin-bottom: 8px;
-                    width: initial;
-                    height: 24px;
-                    min-width: 24px;
-                    line-height: 24px;
-                    box-sizing: border-box;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                li button {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
                 }
             }
         }

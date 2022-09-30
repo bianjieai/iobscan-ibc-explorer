@@ -87,14 +87,18 @@
             </template>
 
             <template v-if="channelsList.length !== 0" #table_bottom_status>
-                <BottomStatus :type="BottomStatusType.CHANNEL" />
+                <BottomStatus
+                    :type="BottomStatusType.CHANNEL"
+                    :status-data="BOTTOM_STATUS_DATA.channelStatusData"
+                    :height="16"
+                />
             </template>
         </TableCommon>
     </PageContainer>
 </template>
 
 <script setup lang="ts">
-    import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE } from '@/constants';
+    import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE, BOTTOM_STATUS_DATA } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/channels';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
     import { TChannelStatus, BottomStatusType } from '@/types/interface/components/table.interface';

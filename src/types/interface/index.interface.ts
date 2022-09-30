@@ -81,3 +81,8 @@ export interface IPaginationParams {
     current: number;
     pageSize: number;
 }
+
+export interface IBottomStatus {
+    statusImg: string;
+    status: string;
+}
