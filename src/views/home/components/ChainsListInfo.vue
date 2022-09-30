@@ -33,13 +33,14 @@
                                 />
                                 <p class="menu_card__title">{{ item.chain_name }}</p>
                                 <p class="menu_card__value">{{ formatChainID(item.chain_id) }}</p>
-                                <div v-if="item.isInActive" class="menu_card__inactive">
+                                <!-- todo remove obscuration and Halted -->
+                                <!-- <div v-if="item.isInActive" class="menu_card__inactive">
                                     <img
                                         class="menu_card__inactive__logo"
                                         :src="inActiveMask"
                                         alt=""
                                     />
-                                </div>
+                                </div> -->
                             </a-card>
                         </router-link>
                     </a-list-item>
@@ -75,7 +76,8 @@
     import ChainHelper from '@/helper/chainHelper';
     import { IIbcChains } from '@/types/interface/index.interface';
     import { Ref } from 'vue';
-    const inActiveMask = new URL('../../../assets/home/mask.png', import.meta.url).href;
+    //  todo remove obscuration and Halted
+    // const inActiveMask = new URL('../../../assets/home/mask.png', import.meta.url).href;
     interface IProps {
         chainList: IIbcChains;
     }
@@ -205,21 +207,22 @@
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
             }
-            &__inactive {
-                position: absolute;
-                top: 0;
-                right: 0;
-                bottom: 0;
-                left: 0;
-                background: rgba(244, 244, 244, 0.5);
-                &__logo {
-                    position: absolute;
-                    top: 0;
-                    right: 0;
-                    width: 50px;
-                    height: 50px;
-                }
-            }
+            // todo remove obscuration and Halted
+            // &__inactive {
+            //     position: absolute;
+            //     top: 0;
+            //     right: 0;
+            //     bottom: 0;
+            //     left: 0;
+            //     background: rgba(244, 244, 244, 0.5);
+            //     &__logo {
+            //         position: absolute;
+            //         top: 0;
+            //         right: 0;
+            //         width: 50px;
+            //         height: 50px;
+            //     }
+            // }
         }
         .list_anchor {
             width: 28px;
