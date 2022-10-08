@@ -47,7 +47,7 @@
                     <template #content>
                         <div class="notice_text">
                             <div>Path: {{ record.denom_path }}</div>
-                            <div>Token Hash: {{ record[column.key] }}</div>
+                            <div>Token Denom: {{ record[column.key] }}</div>
                         </div>
                     </template>
                     <div>{{ getRestString(rmIbcPrefix(record[column.key]), 3, 8) }}</div>
