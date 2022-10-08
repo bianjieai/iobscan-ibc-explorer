@@ -48,7 +48,7 @@ export const TOKEN_INFO_LIST_EXPAND: IInfoList[] = [
         value: '--'
     },
     {
-        label: 'Send Token Hash',
+        label: 'Send Token Denom',
         dataKey: 'send_token.denom',
         value: '--'
     },
@@ -58,7 +58,7 @@ export const TOKEN_INFO_LIST_EXPAND: IInfoList[] = [
         value: '--'
     },
     {
-        label: 'Received Token Hash',
+        label: 'Received Token Denom',
         dataKey: 'recv_token.denom',
         value: '--'
     }
