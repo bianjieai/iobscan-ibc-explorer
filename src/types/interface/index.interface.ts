@@ -1,3 +1,4 @@
+import { CHAIN_STATUS } from '@/constants/index';
 /*************** req ***********************/
 export interface IRequestPagination {
     use_count?: boolean;
@@ -40,7 +41,7 @@ export interface IIbcchain {
     chain_id: string;
     chain_name: string;
     icon: string;
-    isInActive?: boolean;
+    status: CHAIN_STATUS;
 }
 export interface IIbcchainMap {
     [propName: string]: string;

@@ -188,6 +188,11 @@ export enum CURRENT_MENU_TYPE {
     all = 'all'
 }
 
+export enum CHAIN_STATUS {
+    normal = 1,
+    offline = 2
+}
+
 export const CHAINS_MENUS: { label: string; value: CURRENT_MENU_TYPE }[] = [
     {
         label: 'Active',

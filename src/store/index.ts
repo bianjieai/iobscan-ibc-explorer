@@ -79,13 +79,6 @@ export const useIbcStatisticsChains = defineStore('global', {
                 const { code, data } = await getIbcChainsAPI();
                 if (code == API_CODE.success && data && data.items && data.items.length > 0) {
                     this.ibcChains = data.items[0];
-                    //  todo remove obscuration and Halted
-                    // this.ibcChains.inactive.forEach((item) => (item.isInActive = true));
-                    // this.ibcChains.all.forEach((item) => {
-                    //     this.ibcChains.inactive.forEach(
-                    //         (v) => item.chain_id === v.chain_id && (item.isInActive = true)
-                    //     );
-                    // });
                 }
             } catch (error) {
                 if (isNeedJudgeShow500 === true) {
