@@ -133,6 +133,12 @@
             pageInfo.total = _new || 0;
         }
     );
+    watch(
+        () => props.current,
+        (_new) => {
+            pageInfo.current = _new || 1;
+        }
+    );
     const needPagination = computed(
         () => !props.noPagination && !(props.current && props.pageSize)
     ); // 需要前端分页

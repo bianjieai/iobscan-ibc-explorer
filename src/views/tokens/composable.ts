@@ -135,7 +135,7 @@ export const useTokensSelected = (
                 }))
             },
             {
-                groupName: 'Custom IBC Tokens',
+                groupName: 'Other IBC Tokens',
                 children: [
                     {
                         id: 'others',

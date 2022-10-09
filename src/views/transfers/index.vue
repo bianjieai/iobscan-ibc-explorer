@@ -822,7 +822,7 @@
                 }))
             },
             {
-                groupName: 'Custom IBC Tokens',
+                groupName: 'Other IBC Tokens',
                 children: [
                     {
                         id: 'Others',
