@@ -59,11 +59,6 @@ export const MSG_DESC = {
     tx_failed: 'IBC Token Transfers - Failed'
 };
 
-export const TX_STATUS_NUMBER = {
-    defaultStatus: '1,2,3,4',
-    successStatus: '1',
-    failedStatus: '2,4'
-};
 export const DAY_TIME = '24';
 
 export const ANCHORS_DATAS = [
@@ -207,6 +202,12 @@ export const CHAINS_MENUS: { label: string; value: CURRENT_MENU_TYPE }[] = [
         value: CURRENT_MENU_TYPE.all
     }
 ];
+
+export const TX_STATUS_NUMBER = {
+    defaultStatus: undefined,
+    successStatus: '1',
+    failedStatus: '2,4'
+};
 
 export const TRANSFERS_STATUS_OPTIONS = {
     DEFAULT_OPTIONS: undefined,
