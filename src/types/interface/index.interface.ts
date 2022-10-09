@@ -40,7 +40,7 @@ export interface IIbcchain {
     chain_id: string;
     chain_name: string;
     icon: string;
-    isInActive?: boolean;
+    status: number;
 }
 export interface IIbcchainMap {
     [propName: string]: string;
