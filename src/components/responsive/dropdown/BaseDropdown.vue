@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
     import { DEFAULT_TITLE } from '@/constants';
-    import { computed, onMounted, ref } from 'vue';
+    import { computed, ref } from 'vue';
     type TKey = string;
     type TValue = number | undefined | string;
 
@@ -70,15 +70,26 @@
         }
     });
 
-    onMounted(() => {
-        if (props.status) {
+    watch(
+        () => props.status,
+        () => {
             const { options } = props;
             const filterData = options.filter((item) => item.value == props.status);
             if (filterData.length > 0) {
                 selectOption.value = filterData;
             }
         }
-    });
+    );
+
+    // onMounted(() => {
+    //     if (props.status) {
+    //         const { options } = props;
+    //         const filterData = options.filter((item) => item.value == props.status);
+    //         if (filterData.length > 0) {
+    //             selectOption.value = filterData;
+    //         }
+    //     }
+    // });
 
     defineExpose({
         selectOption
