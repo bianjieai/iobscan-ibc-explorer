@@ -109,7 +109,7 @@
         :deep(thead tr .ant-table-cell) {
             font-family: GolosUI_Medium;
             color: var(--bj-text-normal);
-            background: #f8fafd;
+            background: #f8fafd !important;
         }
         :deep(.ant-table-cell) {
             color: var(--bj-text-second);
