@@ -118,7 +118,7 @@
             backUpData();
             if (needPagination.value) {
                 pageInfo.total = _new?.length;
-                needPagination.value && onPageChange(1, 10);
+                needPagination.value && onPageChange(1, 10, false);
             } else {
                 dataSource.value = props.data;
             }
@@ -194,8 +194,10 @@
         }
         return data;
     };
-    const onPageChange = (pageNum: number, pageSize: number) => {
-        (window as any).gtag('event', `${router.currentRoute.value.name as string}-点击翻页器`);
+    const onPageChange = (pageNum: number, pageSize: number, isNeedBuriedPoint = true) => {
+        if (isNeedBuriedPoint) {
+            (window as any).gtag('event', `${router.currentRoute.value.name as string}-点击翻页器`);
+        }
         if (needPagination.value) {
             pageInfo.current = pageNum;
             pageInfo.pageSize = pageSize;
@@ -268,7 +270,7 @@
         if (props.noPagination) {
             dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
         } else {
-            needPagination.value && onPageChange(1, 10); // reset去第一页
+            needPagination.value && onPageChange(1, 10, false); // reset去第一页
         }
     };
     if (props.realTimeKey && props.realTimeKey.length) {
