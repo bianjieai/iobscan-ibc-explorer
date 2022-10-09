@@ -127,6 +127,7 @@
             font-weight: 400;
             color: var(--bj-text-second);
             line-height: 18px;
+            word-break: break-all;
         }
         &__expand {
             display: none;
