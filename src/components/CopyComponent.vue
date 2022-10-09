@@ -55,7 +55,7 @@
             .text {
                 margin-left: 3px;
                 font-size: var(--bj-font-size-normal);
-                font-family: GolosUI-Regular, GolosUI;
+                font-family: GolosUIWebRegular;
                 font-weight: 400;
                 line-height: 18px;
             }
