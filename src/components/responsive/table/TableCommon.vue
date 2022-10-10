@@ -1,33 +1,39 @@
 <template>
     <div class="table_wrapper">
-        <a-table
-            :row-key="rowKey"
-            :columns="columnsSource"
-            :data-source="dataSource"
-            :pagination="false"
-            :loading="props.loading"
-            :show-sorter-tooltip="false"
-            :scroll="scroll"
-            :custom-row="customRow"
-            @change="onTableChange"
-        >
-            <template #headerCell="{ column }">
-                <template v-if="isKeyInNeedCustomHeader(column.title)">
-                    <slot :name="column.title" :column="column"></slot>
+        <a-config-provider>
+            <a-table
+                v-if="dataSource"
+                :row-key="rowKey"
+                :columns="columnsSource"
+                :data-source="dataSource"
+                :pagination="false"
+                :loading="props.loading"
+                :show-sorter-tooltip="false"
+                :scroll="scroll"
+                :custom-row="customRow"
+                @change="onTableChange"
+            >
+                <template #headerCell="{ column }">
+                    <template v-if="isKeyInNeedCustomHeader(column.title)">
+                        <slot :name="column.title" :column="column"></slot>
+                    </template>
                 </template>
-            </template>
-            <template #bodyCell="{ column, record, index, text }">
-                <template v-if="isKeyInNeedCustomColumns(column.key)">
-                    <slot
-                        :name="column.key"
-                        :column="column"
-                        :record="record"
-                        :text="text"
-                        :index="index"
-                    ></slot>
+                <template #bodyCell="{ column, record, index, text }">
+                    <template v-if="isKeyInNeedCustomColumns(column.key)">
+                        <slot
+                            :name="column.key"
+                            :column="column"
+                            :record="record"
+                            :text="text"
+                            :index="index"
+                        ></slot>
+                    </template>
                 </template>
+            </a-table>
+            <template #renderEmpty>
+                <no-datas v-if="!loading && !data.length" />
             </template>
-        </a-table>
+        </a-config-provider>
         <div class="thead_border_bottom"></div>
         <div
             v-if="hasData || $slots.table_bottom_status"

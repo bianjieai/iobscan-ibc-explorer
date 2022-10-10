@@ -1,30 +1,25 @@
 <template>
-    <a-config-provider>
-        <loading v-show="ibcStatisticsChainsStore.isShowLoading"></loading>
-        <div ref="layout" class="layout">
-            <div class="layout__header">
-                <ibc-header />
-            </div>
-            <div class="layout__content">
-                <div
-                    v-if="!ibcStatisticsChainsStore.isShow500"
-                    class="layout__content__router_container"
-                >
-                    <router-view />
-                </div>
-                <div v-else class="layout__content__error_container">
-                    <error-500 />
-                </div>
-            </div>
-            <div class="layout__footer">
-                <ibc-footer :type="footerType" />
-            </div>
-            <back-to-top></back-to-top>
+    <loading v-show="ibcStatisticsChainsStore.isShowLoading"></loading>
+    <div ref="layout" class="layout">
+        <div class="layout__header">
+            <ibc-header />
         </div>
-        <template #renderEmpty>
-            <no-datas />
-        </template>
-    </a-config-provider>
+        <div class="layout__content">
+            <div
+                v-if="!ibcStatisticsChainsStore.isShow500"
+                class="layout__content__router_container"
+            >
+                <router-view />
+            </div>
+            <div v-else class="layout__content__error_container">
+                <error-500 />
+            </div>
+        </div>
+        <div class="layout__footer">
+            <ibc-footer :type="footerType" />
+        </div>
+        <back-to-top></back-to-top>
+    </div>
 </template>
 
 <script setup lang="ts">
