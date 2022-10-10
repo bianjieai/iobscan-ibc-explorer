@@ -22,8 +22,10 @@ export const formatLastUpdated = (time: string | number) => {
     const { seconds, days, months, years, minutes, hours } = obj.$d;
 
     let ago = '';
-    if (days) {
-        ago = `${formatBigNumber(days + months * 30 + years * 365, 0)} days`;
+    if (days || years || months) {
+        ago = `${formatBigNumber(days + months * 30 + years * 365, 0)} ${
+            days === 1 ? 'day' : 'days'
+        }`;
     } else if (hours) {
         ago = `${hours}h`;
     } else if (minutes) {
