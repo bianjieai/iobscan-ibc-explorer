@@ -23,10 +23,7 @@ export const formatLastUpdated = (time: string | number) => {
 
     let ago = '';
     if (days) {
-        ago =
-            days === 1
-                ? (ago = `${formatBigNumber(days + months * 30 + years * 365, 0)} day`)
-                : `${formatBigNumber(days + months * 30 + years * 365, 0)} days`;
+        ago = `${formatBigNumber(days + months * 30 + years * 365, 0)} days`;
     } else if (hours) {
         ago = `${hours}h`;
     } else if (minutes) {

@@ -48,6 +48,7 @@ export const COLUMNS: TableColumnsType = [
         key: 'transfer_total_txs',
         align: 'right',
         sorter: (a, b) => a.transfer_total_txs - b.transfer_total_txs,
+        sortDirections: ['descend', 'ascend'],
         defaultSortOrder: CompareOrder.DESCEND,
         width: 120
     }
