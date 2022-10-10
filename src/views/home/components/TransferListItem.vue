@@ -13,7 +13,7 @@
                 }"
                 class="list_item__info"
                 :class="{ list_item__line: !item.expanded }"
-                :to="`/transfers/details?hash=${item.sc_tx_info.hash}`"
+                :to="`/transfers/details?txhash=${item.sc_tx_info.hash}`"
             >
                 <span class="list_item__number">{{ prefixInteger(index + 1, 3) }}</span>
                 <div class="list_item__link">
@@ -48,7 +48,7 @@
         <router-link
             v-if="item.expanded"
             class="list_item__out_hash_wrap"
-            :to="`/transfers/details?hash=${item.sc_tx_info.hash}`"
+            :to="`/transfers/details?txhash=${item.sc_tx_info.hash}`"
         >
             <hash-addr-icon :item="item" :ibc-chains="ibcChains"></hash-addr-icon>
         </router-link>

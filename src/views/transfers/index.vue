@@ -785,7 +785,7 @@
     const handleClickRow = (record: any) => {
         return {
             onClick: () => {
-                router.push(`/transfers/details?hash=${record.sc_tx_info.hash}`);
+                router.push(`/transfers/details?txhash=${record.sc_tx_info.hash}`);
             }
         };
     };

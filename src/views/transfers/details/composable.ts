@@ -101,7 +101,7 @@ export const useTransfersDetailsInfo = () => {
 
     const getTransferDetails = async () => {
         ibcStatisticsChainsStore.isShowLoading = true;
-        const hash: string = (route?.query?.hash || '') as string;
+        const hash: string = (route?.query?.txhash || '') as string;
         try {
             const { code, data, message } = await getTxDetailsByTxHashAPI(hash);
             ibcStatisticsChainsStore.isShowLoading = false;
@@ -131,7 +131,7 @@ export const useTransfersDetailsInfo = () => {
         }
     };
     watch(route, (newValue) => {
-        if (newValue?.query?.hash) {
+        if (newValue?.query?.txhash) {
             getTransferDetails();
         }
     });
