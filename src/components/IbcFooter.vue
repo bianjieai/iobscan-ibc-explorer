@@ -2,7 +2,7 @@
     <div class="footer_container" :class="{ footer_dark_container: isDark }">
         <div class="content">
             <div class="content__left">
-                <span
+                <a
                     v-for="(item, index) in ICON_LINK"
                     :key="index"
                     v-ga="{
@@ -12,10 +12,11 @@
                         }
                     }"
                     class="content__left__icon cursor"
-                    @click="onClickIcon(item.iconLink)"
+                    :href="item.iconLink"
+                    target="_blank"
                 >
                     <i class="iconfont content__left__iconfont" :class="item.iconName"></i>
-                </span>
+                </a>
                 <span :class="{ dark: isDark, light: isLight }"> Contact us ! </span>
             </div>
             <div class="content__right" :class="{ dark: isDark, light: isLight }">
@@ -40,9 +41,6 @@
     const isLight = computed(() => {
         return props.type === FooterMode.light;
     });
-    const onClickIcon = (item: string) => {
-        window.open(item);
-    };
 </script>
 
 <style lang="less" scoped>

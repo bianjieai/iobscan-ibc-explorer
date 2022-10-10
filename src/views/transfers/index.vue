@@ -658,8 +658,6 @@
         queryDatas();
     };
     const onPaginationChange = (current: number, pageSize: number) => {
-        (window as any).gtag('event', 'Transfers-点击翻页器');
-
         pagination.current = current;
         const params: any = urlParser(url);
         url = `/transfers?pageNum=${current}&pageSize=${pageSize}`;
