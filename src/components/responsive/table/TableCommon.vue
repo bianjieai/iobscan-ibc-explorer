@@ -119,8 +119,6 @@
             if (needPagination.value) {
                 pageInfo.total = _new?.length;
                 needPagination.value && onPageChange(1, 10, false);
-            } else {
-                dataSource.value = props.data;
             }
             if (_new?.length === 0) {
                 columnsSource.value = columnsSource.value.filter((item) => item.key !== '_count');
@@ -176,8 +174,7 @@
                     order: defaultSort.defaultSortOrder
                 }
             );
-        }
-        if (props.noPagination) {
+        } else {
             dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
         }
     };
