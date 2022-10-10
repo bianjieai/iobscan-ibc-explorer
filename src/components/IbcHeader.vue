@@ -22,7 +22,7 @@
                     <a
                         v-ga="'导航栏-点击跨链门户'"
                         class="header_input__iobscan_io"
-                        href="https://www.iobscan.io/#/"
+                        href="https://www.iobscan.io"
                         target="_blank"
                         rel="noreferrer noopener"
                     >
