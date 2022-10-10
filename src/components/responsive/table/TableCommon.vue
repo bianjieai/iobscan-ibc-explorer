@@ -125,8 +125,6 @@
             if (needPagination.value) {
                 pageInfo.total = _new?.length;
                 needPagination.value && onPageChange(1, 10, false);
-            } else {
-                dataSource.value = props.data;
             }
             if (_new?.length === 0) {
                 columnsSource.value = columnsSource.value.filter((item) => item.key !== '_count');
@@ -182,8 +180,7 @@
                     order: defaultSort.defaultSortOrder
                 }
             );
-        }
-        if (props.noPagination) {
+        } else {
             dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
         }
     };
@@ -221,11 +218,11 @@
     const onTableChange = (pagination: any, filters: any, sorter: any) => {
         let { columnKey, column, order } = sorter;
         column ? (tempColumn = column) : null;
-        order = order || 'ascend';
         // 修改默认排序规则，取消 不排序的状态
         columnsSource.value.forEach((item) => {
             if (item.key === columnKey) {
-                item.sortOrder = order || 'ascend';
+                order = order || item.sortDirections?.[0] || 'ascend';
+                item.sortOrder = order;
             } else {
                 item.sortOrder = null;
             }
