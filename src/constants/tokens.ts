@@ -14,28 +14,32 @@ export const COLUMNS: TableColumnsType = [
         key: 'price',
         title: 'Price',
         sorter: (a, b) => a.price - b.price,
-        align: 'right'
+        align: 'right',
+        sortDirections: ['descend', 'ascend']
     },
     {
         dataIndex: 'supply',
         key: 'supply',
         title: 'Supply',
         sorter: true, // =>  new BigNumber(a.supply).comparedTo(new BigNumber(b.supply)),
-        align: 'right'
+        align: 'right',
+        sortDirections: ['descend', 'ascend']
     },
     {
         dataIndex: 'ibc_transfer_amount',
         key: 'ibc_transfer_amount',
         title: 'IBC Transfer Amount',
         sorter: true, // (a, b) => new BigNumber(a.ibc_transfer_amount).comparedTo(new BigNumber(b.ibc_transfer_amount)),
-        align: 'right'
+        align: 'right',
+        sortDirections: ['descend', 'ascend']
     },
     {
         dataIndex: 'ibc_transfer_txs',
         key: 'ibc_transfer_txs',
         title: 'IBC Transfer Txs',
         sorter: (a, b) => a.ibc_transfer_txs - b.ibc_transfer_txs,
-        align: 'right'
+        align: 'right',
+        sortDirections: ['descend', 'ascend']
     },
     {
         dataIndex: 'chains_involved',
@@ -43,7 +47,8 @@ export const COLUMNS: TableColumnsType = [
         title: 'Chains Involved',
         sorter: (a, b) => a.chains_involved - b.chains_involved,
         align: 'right',
-        defaultSortOrder: CompareOrder.DESCEND
+        defaultSortOrder: CompareOrder.DESCEND,
+        sortDirections: ['descend', 'ascend']
     },
     {
         dataIndex: 'chain_id',
