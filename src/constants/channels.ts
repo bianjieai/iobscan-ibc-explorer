@@ -23,6 +23,7 @@ export const COLUMNS: TableColumnsType = [
         key: 'operating_period',
         title: 'Operating Period',
         sorter: (a, b) => a.operating_period - b.operating_period,
+        sortDirections: ['descend', 'ascend'],
         align: 'right'
     },
     {
@@ -30,6 +31,7 @@ export const COLUMNS: TableColumnsType = [
         key: 'last_updated',
         title: 'Last Updated',
         sorter: (a, b) => a.last_updated - b.last_updated,
+        sortDirections: ['descend', 'ascend'],
         align: 'right'
     },
     {
@@ -37,6 +39,7 @@ export const COLUMNS: TableColumnsType = [
         key: 'relayers',
         title: 'Relayers',
         sorter: (a, b) => a.relayers - b.relayers,
+        sortDirections: ['descend', 'ascend'],
         align: 'right'
     },
     {
@@ -44,6 +47,7 @@ export const COLUMNS: TableColumnsType = [
         key: 'ibc_transfer_txs',
         title: 'IBC Transfer Txs',
         sorter: (a, b) => a.ibc_transfer_txs - b.ibc_transfer_txs,
+        sortDirections: ['descend', 'ascend'],
         align: 'right',
         defaultSortOrder: CompareOrder.DESCEND
     }

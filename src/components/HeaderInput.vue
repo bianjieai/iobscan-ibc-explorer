@@ -50,7 +50,7 @@
 
         if (inputValue.value !== '') {
             if (/^[A-F0-9]{64}$/.test(inputValue.value)) {
-                router.push(`/transfers/details?hash=${inputValue.value}`);
+                router.push(`/transfers/details?txhash=${inputValue.value}`);
                 inputValue.value = '';
             } else {
                 router.push(`/searchResult?${inputValue.value}`);
