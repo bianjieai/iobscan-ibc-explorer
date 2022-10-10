@@ -113,12 +113,11 @@
 </template>
 
 <script lang="ts" setup>
-    import { useIbcChains, useLoading, useNeedCustomColumns } from '@/composables';
+    import { useGetIbcDenoms, useIbcChains, useLoading, useNeedCustomColumns } from '@/composables';
     import { PAGE_PARAMETERS } from '@/constants';
     import { IBC_STATUS_OPTIONS, IBC_COLUMNS, SPECIAL_TOKEN_TYPE } from '@/constants/tokens';
     import { formatBigNumber, getRestString, rmIbcPrefix } from '@/helper/parseStringHelper';
     import { formatAmount } from '@/helper/tableCellHelper';
-    import { useGetIbcDenoms } from '../home/composable';
     import {
         useGetIbcTokenList,
         useIbcTokenSelected,
@@ -160,6 +159,12 @@
 
         :deep(.ant-dropdown-trigger) {
             margin-right: 8px;
+        }
+    }
+    :deep(.ant-table-tbody tr .ant-table-cell) {
+        &:nth-of-type(1),
+        &:nth-of-type(2) {
+            font-family: GolosUI_Medium;
         }
     }
     :deep(.ant-table-cell) {

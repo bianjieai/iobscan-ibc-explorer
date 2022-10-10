@@ -70,8 +70,8 @@
                             `${record.currency} ${formatPrice(record[column.key], undefined)}`
                         }}</div>
                     </template>
-                    <div v-if="record[column.key] < thousandDecimal">
-                        {{ `< ${record.currency} ${thousandDecimal}` }}
+                    <div v-if="record[column.key] < THOUSAND_DECIMAL">
+                        {{ `< ${record.currency} ${THOUSAND_DECIMAL}` }}
                     </div>
                     <div v-else>
                         {{ `${record.currency} ${formatPrice(record[column.key])}` }}
@@ -137,20 +137,19 @@
 </template>
 
 <script lang="ts" setup>
-    import { thousandDecimal, PAGE_PARAMETERS, TIP_ICON } from '@/constants';
+    import { THOUSAND_DECIMAL, PAGE_PARAMETERS, TIP_ICON } from '@/constants';
     import {
         COLUMNS,
         STATUS_OPTIONS,
         CHAIN_DEFAULT_VALUE,
         TOKEN_DEFAULT_VALUE
     } from '@/constants/tokens';
-    import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
+    import { useIbcChains, useNeedCustomColumns, useLoading, useGetIbcDenoms } from '@/composables';
     import {
         useGetTokenList,
         useTokensSelected,
         useTokensColumnJump
     } from '@/views/tokens/composable';
-    import { useGetIbcDenoms } from '../home/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
 
@@ -206,6 +205,13 @@
                 .ant-table-column-title {
                     flex: 0;
                 }
+            }
+        }
+    }
+    :deep(tbody tr) {
+        .ant-table-cell {
+            &:nth-of-type(1) {
+                font-family: GolosUI_Medium;
             }
         }
     }

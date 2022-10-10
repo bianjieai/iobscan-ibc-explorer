@@ -73,6 +73,11 @@
     .table_wrapper {
         margin-top: 32px;
     }
+    :deep(.ant-table-tbody tr .ant-table-cell) {
+        &:nth-of-type(1) {
+            font-family: GolosUI_Medium;
+        }
+    }
 
     :deep(.ant-table-cell) {
         &:nth-of-type(2) {

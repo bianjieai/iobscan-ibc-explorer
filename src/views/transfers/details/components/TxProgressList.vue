@@ -43,6 +43,7 @@
         &__label {
             width: 164px;
             font-size: var(--bj-font-size-normal);
+            font-family: GolosUI_Medium;
             font-weight: 500;
             color: var(--bj-text-normal);
             line-height: 18px;
@@ -50,7 +51,7 @@
         &__value {
             flex: 1;
             margin-left: 40px;
-            font-family: GolosUIWebRegular;
+            font-family: GolosUI_Medium;
             color: var(--bj-text-second);
             word-break: break-word;
         }

@@ -13,15 +13,15 @@
                     class="list_item__info"
                     :style="
                         item.statistics_name ===
-                        ibcStatisticsDenomsDefault.denom_all.statistics_name
+                        IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name
                             ? 'cursor: text;'
                             : ''
                     "
                 >
                     <span class="list_item__name"
-                        >{{ (statisticsName as any)[item.statistics_name]
+                        >{{ (STATISTICS_NAME as any)[item.statistics_name]
                         }}<span
-                            v-if="item.statistics_name.indexOf(dayTime) !== -1"
+                            v-if="item.statistics_name.indexOf(DAY_TIME) !== -1"
                             class="list_item__tip"
                             >24hr</span
                         ></span
@@ -30,7 +30,7 @@
                         class="list_item__value"
                         :style="
                             item.statistics_name ===
-                            ibcStatisticsDenomsDefault.denom_all.statistics_name
+                            IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name
                                 ? 'color: var(--bj-text-normal); cursor: text;'
                                 : ''
                         "
@@ -53,15 +53,15 @@
                         class="list_item__info"
                         :style="
                             item.statistics_name ===
-                            ibcStatisticsDenomsDefault.denom_all.statistics_name
+                            IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name
                                 ? 'cursor: text;'
                                 : ''
                         "
                     >
                         <span class="list_item__name"
-                            >{{ (statisticsName as any)[item.statistics_name]
+                            >{{ (STATISTICS_NAME as any)[item.statistics_name]
                             }}<span
-                                v-if="item.statistics_name.indexOf(dayTime) !== -1"
+                                v-if="item.statistics_name.indexOf(DAY_TIME) !== -1"
                                 class="list_item__tip"
                                 >24hr</span
                             ></span
@@ -70,7 +70,7 @@
                             class="list_item__value"
                             :style="
                                 item.statistics_name ===
-                                ibcStatisticsDenomsDefault.denom_all.statistics_name
+                                IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name
                                     ? 'color: var(--bj-text-normal);cursor: text;'
                                     : ''
                             "
@@ -84,7 +84,7 @@
 </template>
 
 <script setup lang="ts">
-    import { statisticsName, ibcStatisticsDenomsDefault, dayTime } from '@/constants';
+    import { STATISTICS_NAME, IBC_STATISTICS_DENOMS_DEFAULT, DAY_TIME } from '@/constants';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     defineProps({
         type: {
@@ -159,6 +159,7 @@
             transition: color 0.3s;
             transition-timing-function: ease;
             font-size: var(--bj-font-size-home-number);
+            font-family: GolosUI_Medium;
             color: var(--bj-text-normal);
             line-height: var(--bj-font-size-home-number);
         }

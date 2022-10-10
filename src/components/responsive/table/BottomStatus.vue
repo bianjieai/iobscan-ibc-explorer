@@ -1,116 +1,105 @@
 <template>
     <div class="status_container">
-        <div class="flex justify-between items-center flex-wrap status_container__content">
-            <div>{{ type }} Status: </div>
-            <div class="flex status_content">
-                <div class="flex items-center ml-16">
-                    <img
-                        :src="activeImgInfo.src"
-                        :width="activeImgInfo.width"
-                        :height="activeImgInfo.height"
-                        class="mr-4"
-                    />
-                    <div>{{
-                        type === BottomStatusType.CHANNEL
-                            ? CHANNEL_STATUS.OPEN
-                            : RELAYER_STATUS.RUNNING
-                    }}</div>
-                </div>
-                <div class="flex items-center ml-24">
-                    <img
-                        :src="inActiveImgInfo.src"
-                        :width="inActiveImgInfo.width"
-                        :height="inActiveImgInfo.height"
-                        class="mr-4"
-                    />
-                    <div>{{
-                        type === BottomStatusType.CHANNEL
-                            ? CHANNEL_STATUS.CLOSED
-                            : RELAYER_STATUS.UNKNOWN
-                    }}</div>
-                </div>
-            </div>
+        <p class="status_container__status_type">
+            <span v-if="type" class="status_container__type">{{ type }}</span>
+            <span>Status:</span>
+        </p>
+        <div class="status_container__status_data">
+            <span v-for="(item, index) in statusData" :key="index" class="status_container__item">
+                <img
+                    class="status_container__img"
+                    :src="getDiffStatusImg(item.statusImg)"
+                    alt=""
+                    :style="{ height: `${height}px` }"
+                />
+                <span>{{ item.status }}</span>
+            </span>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { computed } from 'vue';
-    import { BottomStatusType, TBottomStatus } from '@/types/interface/components/table.interface';
-    import { RELAYER_STATUS } from '@/constants/relayers';
-    import { CHANNEL_STATUS } from '../../../constants/channels';
+    import type { IBottomStatus } from '@/types/interface/index.interface';
 
     interface IProps {
-        type: TBottomStatus; // 目前支持 channels 和 relayers
+        type?: string;
+        statusData: IBottomStatus[];
+        height: number;
     }
-
-    const props = defineProps<IProps>();
-
-    const activeImgInfo = computed(() => {
-        if (props.type === BottomStatusType.CHANNEL) {
-            return {
-                src: new URL('../../../assets/channels/open.png', import.meta.url).href,
-                height: 16,
-                width: 46
-            };
-        } else {
-            return {
-                src: new URL('../../../assets/relayers/running.png', import.meta.url).href,
-                height: 18.5,
-                width: 18.5
-            };
-        }
-    });
-
-    const inActiveImgInfo = computed(() => {
-        if (props.type === BottomStatusType.CHANNEL) {
-            return {
-                src: new URL('../../../assets/channels/closed.png', import.meta.url).href,
-                height: 16,
-                width: 46
-            };
-        } else {
-            return {
-                src: new URL('../../../assets/relayers/stopped.png', import.meta.url).href,
-                height: 18.5,
-                width: 18.5
-            };
-        }
-    });
+    defineProps<IProps>();
+    const getDiffStatusImg = (img: string) => {
+        return new URL(`../../../assets/status/${img}`, import.meta.url).href;
+    };
 </script>
 
 <style lang="less" scoped>
     .status_container {
+        .flex(row, nowrap, flex-start, center);
+        padding: 0 8px;
+        font-size: var(--bj-font-size-normal);
+        font-weight: 400;
+        color: var(--bj-text-third);
+        line-height: 28px;
         background: #f8f9fc;
         border-radius: 14px;
-        line-height: 28px;
-        color: var(--bj-text-third);
-        padding: 0 16px 0 8px;
-        display: inline-block;
-
-        .icon {
-            height: 20px;
-            width: 20px;
-            margin: 0 5px 0 24px;
-            background: salmon;
-            border-radius: 50%;
+        &__status_type {
+            margin-right: 20px;
+        }
+        &__type {
+            margin-right: 4px;
+        }
+        &__status_data {
+            .flex(row, nowrap, flex-start, center);
+        }
+        &__item {
+            .flex(row, nowrap, flex-start, center);
+            margin-left: 24px;
+            &:first-child {
+                margin-left: 0;
+            }
+        }
+        &__img {
+            display: inline-block;
+            margin-right: 4px;
         }
     }
-
-    @media screen and (max-width: 530px) {
+    @media screen and (max-width: 420px) {
         .status_container {
+            .flex(column, nowrap, flex-start, flex-start);
+            padding: 4px 8px;
+            width: 100%;
             line-height: 20px;
-            padding: 8px 16px 8px 8px;
+            &__status_type {
+            }
+            &__type {
+            }
+            &__status_data {
+                width: 100%;
+            }
+            &__item {
+                &:first-child {
+                }
+            }
+            &__img {
+            }
         }
     }
-    @media screen and (max-width: 402px) {
+    @media screen and (max-width: 360px) {
         .status_container {
-            &__content {
-                flex-direction: column;
-                align-items: flex-start;
-                .status_content {
-                    margin-top: 8px;
+            &__status_type {
+            }
+            &__type {
+            }
+            &__status_data {
+                .flex(row, wrap, flex-start, center);
+            }
+            &__item {
+                margin-left: 0;
+                width: 50%;
+                &:first-child {
                 }
+            }
+            &__img {
             }
         }
     }

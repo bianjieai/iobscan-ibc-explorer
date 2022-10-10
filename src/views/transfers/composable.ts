@@ -1,5 +1,5 @@
 import { useIbcStatisticsChains } from '@/store/index';
-import { transferTableColumn, defaultTitle, TOKEN_DEFAULT_ICON } from '@/constants';
+import { TRANSFER_TABLE_COLUMN, TOKEN_DEFAULT_ICON } from '@/constants';
 import { IPaginationParams } from '@/types/interface/index.interface';
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { API_CODE } from '@/constants/apiCode';
@@ -12,25 +12,6 @@ export const useIbcDenoms = () => {
     });
     return {
         ibcDenoms
-    };
-};
-
-export const useSelectedSymbol = () => {
-    const selectedSymbol = ref(defaultTitle.defaultTokens);
-    const isShowSymbolIcon = ref(false);
-    const clearInput = ref(0);
-    const selectedChain = reactive({
-        value: {
-            chain_name: undefined
-        }
-    });
-    const isShowChainIcon = ref(false);
-    return {
-        selectedSymbol,
-        isShowSymbolIcon,
-        clearInput,
-        selectedChain,
-        isShowChainIcon
     };
 };
 
@@ -88,7 +69,7 @@ export const useFindIcon = (props: any) => {
 
 export const useGetTableColumns = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const tableColumns = reactive(transferTableColumn);
+    const tableColumns = TRANSFER_TABLE_COLUMN;
     const showTransferLoading = ref(true);
     const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
     const tableDatas = ref([...ibcTxs]);
@@ -125,6 +106,7 @@ export const useIsVisible = () => {
 export const useNoResult = () => {
     const route = useRoute();
     const router = useRouter();
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     watch(route, (newValue) => {
         if (newValue?.query) {
             searchInputValue.value = Object.keys(route.query);
@@ -135,18 +117,27 @@ export const useNoResult = () => {
     });
     if (route?.query) {
         if (/^[A-F0-9]{64}$/.test(Object.keys(route.query).join(''))) {
+            ibcStatisticsChainsStore.isShowLoading = true;
             getTxDetailsByTxHashAPI(Object.keys(route.query).join(''))
                 .then((result) => {
                     const { code, data } = result;
                     if (code === API_CODE.success) {
-                        if (data?.items?.length === 1) {
-                            router.push(
-                                `/transfers/details?hash=${Object.keys(route.query).join('')}`
-                            );
+                        if (data) {
+                            ibcStatisticsChainsStore.isShowLoading = false;
+                            if (!data.is_list) {
+                                router.push(
+                                    `/transfers/details?txhash=${Object.keys(route.query).join('')}`
+                                );
+                            } else {
+                                router.push('/transfers');
+                            }
+                        } else {
+                            ibcStatisticsChainsStore.isShowLoading = false;
                         }
                     }
                 })
                 .catch((error) => {
+                    ibcStatisticsChainsStore.isShowLoading = false;
                     console.log('getTxDetailsByTxHashAPI', error);
                 });
         } else {

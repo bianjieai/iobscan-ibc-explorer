@@ -2,7 +2,11 @@
     <div class="view_source">
         <div class="view_source__label">View Source</div>
         <a-tabs v-model:activeKey="activeKey">
-            <a-tab-pane key="1" tab="Raw Data" class="view_source__first_tab">
+            <a-tab-pane
+                :key="TRANSFER_DETAILS_TAB.tableData"
+                :tab="TRANSFER_DETAILS_TAB.tableData"
+                class="view_source__first_tab"
+            >
                 <a-table
                     v-if="sourceCode"
                     :columns="TRANSFER_DETAILS_TABLE"
@@ -40,7 +44,11 @@
                 </a-table>
                 <no-datas v-if="!sourceCode"></no-datas>
             </a-tab-pane>
-            <a-tab-pane key="2" tab="JSON" force-render>
+            <a-tab-pane
+                :key="TRANSFER_DETAILS_TAB.json"
+                :tab="TRANSFER_DETAILS_TAB.json"
+                force-render
+            >
                 <pre v-if="JSONSource" class="view_source__json">{{ JSONSource }}</pre>
                 <no-datas v-if="!JSONSource" />
             </a-tab-pane>
@@ -50,7 +58,7 @@
 
 <script setup lang="ts">
     import type { IIbcTxInfo, IProgress, ITxInfo } from '@/types/interface/transfers.interface';
-    import { TRANSFER_DETAILS_TABLE } from '@/constants/transfers';
+    import { TRANSFER_DETAILS_TABLE, TRANSFER_DETAILS_TAB } from '@/constants/transfers';
     import { useViewSource } from '../composable';
     import { useLoading } from '@/composables';
 
@@ -74,6 +82,7 @@
         margin-top: 16px;
         &__label {
             font-size: var(--bj-font-size-normal);
+            font-family: GolosUI_Medium;
             font-weight: 500;
             color: var(--bj-text-normal);
             line-height: 18px;
@@ -100,10 +109,9 @@
         :deep(thead tr .ant-table-cell) {
             font-family: GolosUI_Medium;
             color: var(--bj-text-normal);
-            background: #f8fafd;
+            background: #f8fafd !important;
         }
         :deep(.ant-table-cell) {
-            font-family: GolosUIWebRegular;
             color: var(--bj-text-second);
         }
         :deep(td) {
@@ -116,6 +124,9 @@
         }
         :deep(.ant-tabs-nav-wrap) {
             border-bottom: rgba(61, 80, 255, 0.1);
+        }
+        :deep(.ant-tabs-tab-active) {
+            font-family: GolosUI_Medium;
         }
     }
     @media screen and (max-width: 874px) {

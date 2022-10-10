@@ -1,14 +1,17 @@
 import { onMounted, onBeforeUnmount } from 'vue';
 import {
-    ageTimerInterval,
+    AGE_TIMER_INTERVAL,
     PAGE_PARAMETERS,
     NEED_CUSTOM_COLUMN,
-    CHAIN_DEFAULT_ICON
+    CHAIN_DEFAULT_ICON,
+    SYMBOL,
+    NEED_CUSTOM_HEADER
 } from '@/constants';
 import { useIbcStatisticsChains } from '@/store';
 import { DATA_REFRESH_GAP } from '@/constants/home';
+import { IBaseDenom } from '@/types/interface/index.interface';
 
-export const useTimeInterval = (intervalCallBack: Function, interval = ageTimerInterval) => {
+export const useTimeInterval = (intervalCallBack: Function, interval = AGE_TIMER_INTERVAL) => {
     let timer: number | null = null;
     intervalCallBack();
     onMounted(() => {
@@ -39,6 +42,7 @@ export const useChangeTitleAndIcon = () => {
 // table 中需要格式化的列
 export const useNeedCustomColumns = (whitePage: string) => {
     const needCustomColumns = ref<string[]>([]);
+    const needCustomHeaders = ref<string[]>([]);
 
     switch (whitePage) {
         case PAGE_PARAMETERS.tokens:
@@ -56,9 +60,14 @@ export const useNeedCustomColumns = (whitePage: string) => {
         case PAGE_PARAMETERS.relayers:
             needCustomColumns.value = NEED_CUSTOM_COLUMN.relayers;
             break;
+        case PAGE_PARAMETERS.transfers:
+            needCustomColumns.value = NEED_CUSTOM_COLUMN.transfers;
+            needCustomHeaders.value = NEED_CUSTOM_HEADER.transfers;
+            break;
     }
     return {
-        needCustomColumns
+        needCustomColumns,
+        needCustomHeaders
     };
 };
 
@@ -71,24 +80,34 @@ export const useLoading = () => {
 
 export const useIbcChains = (timerInterval?: number) => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcChains } = storeToRefs(ibcStatisticsChainsStore);
+    const { ibcChains, isDocumentHidden } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcChains = ibcStatisticsChainsStore.getIbcChainsAction;
     let timer: number;
-    onMounted(() => {
-        getIbcChains();
-        if (Number(timerInterval) > 0) {
-            timer = setInterval(() => {
-                console.log('getIbcChains', timerInterval);
-                getIbcChains(false);
-            }, timerInterval);
-        }
-    });
-    onBeforeUnmount(() => {
-        timer && clearInterval(timer);
-    });
+    const intervalIbcChains = () => {
+        timer = setInterval(() => {
+            console.log('getIbcChains', timerInterval);
+            getIbcChains(false);
+        }, timerInterval);
+    };
+
+    const lifeFunction = () => {
+        onMounted(() => {
+            getIbcChains();
+            if (Number(timerInterval) > 0) {
+                intervalIbcChains();
+            }
+        });
+        onBeforeUnmount(() => {
+            timer && clearInterval(timer);
+        });
+        watch(isDocumentHidden, (newDocumentHidden) => {
+            newDocumentHidden && timer ? clearInterval(timer) : intervalIbcChains();
+        });
+    };
     return {
         ibcChains,
-        getIbcChains
+        getIbcChains,
+        lifeFunction
     };
 };
 
@@ -145,4 +164,57 @@ export const useMatchChainInfo = (chainId: string) => {
         chainIcon,
         chainName
     };
+};
+
+export const useOnPressEnter = () => {
+    const onPressEnter = (val: any) => {
+        console.log(val);
+    };
+    return {
+        onPressEnter
+    };
+};
+
+export const useGetIbcDenoms = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    const { ibcBaseDenoms, ibcBaseDenomsSymbolKeyMapGetter } =
+        storeToRefs(ibcStatisticsChainsStore);
+    const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
+    const getBaseDenomInfoByDenom = (denom: string, chainId: string) => {
+        return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain_id == chainId);
+    };
+    const ibcBaseDenomsSorted = computed(() => {
+        const tokens: IBaseDenom[] = [];
+        const customs = ibcBaseDenoms.value.filter((item) => {
+            return item.symbol == SYMBOL.ATOM || item.symbol == SYMBOL.IRIS;
+        });
+        customs.sort((a, b) => a.symbol.localeCompare(b.symbol));
+        ibcBaseDenoms.value
+            .sort((a, b) => a.symbol.localeCompare(b.symbol))
+            .forEach((item) => {
+                if (item.symbol != SYMBOL.ATOM && item.symbol != SYMBOL.IRIS) {
+                    tokens.push(item);
+                }
+            });
+        return [...customs, ...tokens];
+    });
+    return {
+        ibcBaseDenoms,
+        ibcBaseDenomsSymbolKeyMapGetter,
+        ibcBaseDenomsSorted,
+        getIbcBaseDenom,
+        getBaseDenomInfoByDenom
+    };
+};
+
+export const useDocumentVisibility = () => {
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
+    // 判断是否聚焦到本页签
+    const watchDocument = () => {
+        ibcStatisticsChainsStore.isDocumentHidden = document.hidden;
+    };
+    document.addEventListener('visibilitychange', watchDocument);
+    onBeforeUnmount(() => {
+        document.removeEventListener('visibilitychange', watchDocument);
+    });
 };

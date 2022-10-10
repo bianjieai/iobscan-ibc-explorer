@@ -26,32 +26,47 @@
                         class="ibc_selected_border card_list_item"
                     >
                         <router-link :to="`/chains`">
-                            <a-card class="menu_card" @click="buriedPoint(item)">
+                            <a-card
+                                v-ga="{
+                                    gaEventName: 'Home-点击链接',
+                                    params: {
+                                        clickLink: `点击${currentMenu[0]}列表中的${item.chain_name}`
+                                    }
+                                }"
+                                class="menu_card"
+                            >
                                 <img
                                     class="menu_card__img"
                                     :src="item.icon ? item.icon : CHAIN_DEFAULT_ICON"
                                 />
                                 <p class="menu_card__title">{{ item.chain_name }}</p>
                                 <p class="menu_card__value">{{ formatChainID(item.chain_id) }}</p>
-                                <!-- todo remove obscuration and Halted -->
-                                <!-- <div v-if="item.isInActive" class="menu_card__inactive">
+                                <div
+                                    v-if="item.status === CHAIN_STATUS.offline"
+                                    class="menu_card__inactive"
+                                >
                                     <img
                                         class="menu_card__inactive__logo"
                                         :src="inActiveMask"
                                         alt=""
                                     />
-                                </div> -->
+                                </div>
                             </a-card>
                         </router-link>
                     </a-list-item>
                 </template>
             </a-list>
-            <!-- todo duanjie 样式待调整 -->
             <div v-show="isHaveData" ref="linkListRef" class="list_anchor">
                 <div
                     v-for="item of anchors"
                     :id="`a-link${item.title}`"
                     :key="item.title"
+                    v-ga="{
+                        gaEventName: 'Home-点击链接',
+                        params: {
+                            clickLink: `点击${currentMenu[0]}拦${item.title}区域`
+                        }
+                    }"
                     class="list_anchor__item cursor"
                     @click="onClickAnchor(item.title)"
                 >
@@ -72,12 +87,11 @@
 
 <script setup lang="ts">
     import { useAnchors } from '../composable/useChainsListInfo';
-    import { CHAIN_DEFAULT_ICON } from '@/constants';
+    import { CHAIN_DEFAULT_ICON, CHAIN_STATUS } from '@/constants';
     import ChainHelper from '@/helper/chainHelper';
     import { IIbcChains } from '@/types/interface/index.interface';
     import { Ref } from 'vue';
-    //  todo remove obscuration and Halted
-    // const inActiveMask = new URL('../../../assets/home/mask.png', import.meta.url).href;
+    const inActiveMask = new URL('../../../assets/home/mask.png', import.meta.url).href;
     interface IProps {
         chainList: IIbcChains;
     }
@@ -116,11 +130,6 @@
             chainList.value[currentMenu.value[0]] && chainList.value[currentMenu.value[0]].length
         );
     });
-    const buriedPoint = (param: any) => {
-        (window as any).gtag('event', 'Home-点击链接', {
-            clickLink: `点击${currentMenu.value[0]}列表中的${param.chain_name}`
-        });
-    };
 </script>
 
 <style lang="less" scoped>
@@ -133,14 +142,10 @@
                 font-size: var(--bj-font-size-normal);
                 font-weight: 400;
             }
-            .ant-menu-item-active {
+            :deep(.ant-menu-item-selected) {
                 .ant-menu-title-content {
-                    color: var(--bj-text-third);
-                }
-            }
-            .ant-menu-item-selected {
-                .ant-menu-title-content {
-                    color: var(--bj-text-normal);
+                    font-family: GolosUI_Medium;
+                    color: var(--bj-primary-color);
                 }
             }
         }
@@ -186,6 +191,7 @@
                 margin: 6px auto 0;
                 max-width: 152px;
                 font-size: var(--bj-font-size-sub-title);
+                font-family: GolosUI_Medium;
                 line-height: 20px;
                 overflow: hidden;
                 text-overflow: ellipsis;
@@ -207,22 +213,21 @@
                 display: -webkit-box;
                 -webkit-box-orient: vertical;
             }
-            // todo remove obscuration and Halted
-            // &__inactive {
-            //     position: absolute;
-            //     top: 0;
-            //     right: 0;
-            //     bottom: 0;
-            //     left: 0;
-            //     background: rgba(244, 244, 244, 0.5);
-            //     &__logo {
-            //         position: absolute;
-            //         top: 0;
-            //         right: 0;
-            //         width: 50px;
-            //         height: 50px;
-            //     }
-            // }
+            &__inactive {
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+                background: rgba(244, 244, 244, 0.5);
+                &__logo {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 50px;
+                    height: 50px;
+                }
+            }
         }
         .list_anchor {
             width: 28px;
@@ -234,6 +239,7 @@
                 font-size: var(--bj-font-size-normal);
                 font-weight: 400;
                 color: var(--bj-text-third);
+                transition: background-color 0.2s ease-in-out;
             }
             .self_link_active {
                 color: #ffffff;
@@ -263,6 +269,7 @@
     }
     .custom_title {
         .flex(row, nowrap, space-between, center);
+        font-family: GolosUI_Medium;
         color: var(--bj-text-third);
         &__left {
             width: 10px;

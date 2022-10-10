@@ -1,7 +1,7 @@
 <template>
     <div class="header_container">
         <div class="header_content">
-            <div class="logo cursor" @click="onClickLogo">
+            <div v-ga="'导航栏-Logo'" class="logo cursor" @click="onClickLogo">
                 <div class="logo__icon">
                     <img :src="logoIcon" alt="logo" />
                 </div>
@@ -20,11 +20,11 @@
                 <header-input class="header_input_layout" disabled />
                 <div class="header_input_icon_wrapper">
                     <a
+                        v-ga="'导航栏-点击跨链门户'"
                         class="header_input__iobscan_io"
-                        href="https://www.iobscan.io/#/"
+                        href="https://www.iobscan.io"
                         target="_blank"
                         rel="noreferrer noopener"
-                        @click="buriedPoint"
                     >
                         <img
                             class="header_input_icon"
@@ -43,16 +43,19 @@
                 </div>
             </div>
         </div>
+        <div class="header_container__input">
+            <header-input class="header_container__input_layout" disabled />
+        </div>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { menus } from '@/constants/index';
+    import { MENUS } from '@/constants';
     import { RouteLocationNormalized } from 'vue-router';
     type Key = string | number;
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
     const logoName = new URL(import.meta.env.VITE_LOGO_NAME, import.meta.url).href;
-    const headerMenus = reactive(menus);
+    const headerMenus = reactive(MENUS);
     const currentMenu = ref<Key[]>([]);
     const isShowNav = ref(false);
     const router = useRouter();
@@ -69,8 +72,6 @@
     };
 
     const onClickLogo = () => {
-        (window as any).gtag('event', '导航栏-Logo');
-
         router.push({
             name: 'Home'
         });
@@ -100,9 +101,6 @@
             isShowNav.value = false;
         }
     };
-    const buriedPoint = () => {
-        (window as any).gtag('event', '导航栏-点击跨链门户');
-    };
     onMounted(() => {
         currentMenu.value = getCurrentRouterNames(route) as Key[];
         document.addEventListener('click', htmlClickFn);
@@ -121,7 +119,6 @@
         box-sizing: border-box;
         padding: 0;
         width: 100%;
-        height: 80px;
         line-height: 80px;
         background-image: url('../assets/iobscan_home_bg.png');
         background-repeat: no-repeat;
@@ -173,6 +170,34 @@
                         img {
                             width: 32px;
                             height: 32px;
+                        }
+                    }
+                }
+            }
+        }
+        &__input {
+            display: none;
+        }
+    }
+    @media screen and (min-width: 1920px) {
+        .header_container {
+            background-size: 100% 396px;
+            .header_content {
+                .logo {
+                    &__icon {
+                    }
+                }
+                .header_navigation {
+                }
+                .header_input_wrapper {
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {
+                            }
+                        }
+                        .header_btn_mobile {
+                            img {
+                            }
                         }
                     }
                 }
@@ -284,6 +309,10 @@
                         }
                     }
                 }
+            }
+            &__input {
+                display: block;
+                padding: 0 16px;
             }
         }
     }

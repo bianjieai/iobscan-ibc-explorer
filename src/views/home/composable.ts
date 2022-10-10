@@ -1,15 +1,13 @@
 import { IIbcTx } from './../../types/interface/transfers.interface';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
-import { IBaseDenom } from '@/types/interface/index.interface';
 import { useIbcStatisticsChains } from '@/store/index';
 import {
-    ibcStatisticsChannelsDefault,
-    ibcStatisticsDenomsDefault,
-    channelsStatus,
-    SYMBOL,
+    IBC_STATISTICS_CHANNELS_DEFAULT,
+    IBC_STATISTICS_DENOMS_DEFAULT,
+    CHANNELS_STATUS,
     PAGE_PARAMETERS,
-    ibcStatisticsTxsDefault,
-    txStatusNumber,
+    IBC_STATISTICS_TXS_DEFAULT,
+    TX_STATUS_NUMBER,
     MSG_DESC
 } from '@/constants';
 import { useTimeInterval } from '@/composables';
@@ -17,6 +15,7 @@ import { useTimeInterval } from '@/composables';
 export const useIbcTxs = (timerInterval?: number) => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const ibcTxs = ibcStatisticsChainsStore.ibcTxs;
+    const { isDocumentHidden } = storeToRefs(ibcStatisticsChainsStore);
     const homeIbcTxs = ref([...ibcTxs]);
     const getIbcTxs = ibcStatisticsChainsStore.getIbcTxsAction;
     const expandedId = ref<string | null>();
@@ -68,55 +67,29 @@ export const useIbcTxs = (timerInterval?: number) => {
         }
     };
     let timer: number;
+    const intervalIbcTxs = () => {
+        timer = setInterval(() => {
+            console.log('initGetIbcTxs', timerInterval);
+            initGetIbcTxs(false);
+        }, timerInterval);
+    };
     onMounted(async () => {
         await ibcStatisticsChainsStore.getIbcDenomsAction();
         initGetIbcTxs();
         if (Number(timerInterval) > 0) {
-            timer = setInterval(() => {
-                console.log('initGetIbcTxs', timerInterval);
-                initGetIbcTxs(false);
-            }, timerInterval);
+            intervalIbcTxs();
         }
     });
     onBeforeUnmount(() => {
         timer && clearInterval(timer);
     });
+    watch(isDocumentHidden, (newDocumentHidden) => {
+        newDocumentHidden && timer ? clearInterval(timer) : intervalIbcTxs();
+    });
     return {
         homeIbcTxs,
         getIbcTxs,
         setExpandByIndex
-    };
-};
-
-export const useGetIbcDenoms = () => {
-    const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcBaseDenoms, ibcBaseDenomsSymbolKeyMapGetter } =
-        storeToRefs(ibcStatisticsChainsStore);
-    const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
-    const getBaseDenomInfoByDenom = (denom: string, chainId: string) => {
-        return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain_id == chainId);
-    };
-    const ibcBaseDenomsSorted = computed(() => {
-        const tokens: IBaseDenom[] = [];
-        const customs = ibcBaseDenoms.value.filter((item) => {
-            return item.symbol == SYMBOL.ATOM || item.symbol == SYMBOL.IRIS;
-        });
-        customs.sort((a, b) => a.symbol.localeCompare(b.symbol));
-        ibcBaseDenoms.value
-            .sort((a, b) => a.symbol.localeCompare(b.symbol))
-            .forEach((item) => {
-                if (item.symbol != SYMBOL.ATOM && item.symbol != SYMBOL.IRIS) {
-                    tokens.push(item);
-                }
-            });
-        return [...customs, ...tokens];
-    });
-    return {
-        ibcBaseDenoms,
-        ibcBaseDenomsSymbolKeyMapGetter,
-        ibcBaseDenomsSorted,
-        getIbcBaseDenom,
-        getBaseDenomInfoByDenom
     };
 };
 
@@ -134,18 +107,18 @@ export const useInterfaceActive = () => {
                 name: 'Chains'
             });
         } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.channel)) {
-            if (msg === ibcStatisticsChannelsDefault.channel_opened.statistics_name) {
+            if (msg === IBC_STATISTICS_CHANNELS_DEFAULT.channel_opened.statistics_name) {
                 router.push({
                     name: 'Channels',
                     query: {
-                        status: channelsStatus.channelOpenedStatus
+                        status: CHANNELS_STATUS.channelOpenedStatus
                     }
                 });
-            } else if (msg === ibcStatisticsChannelsDefault.channel_closed.statistics_name) {
+            } else if (msg === IBC_STATISTICS_CHANNELS_DEFAULT.channel_closed.statistics_name) {
                 router.push({
                     name: 'Channels',
                     query: {
-                        status: channelsStatus.channelClosedStatus
+                        status: CHANNELS_STATUS.channelClosedStatus
                     }
                 });
             } else {
@@ -154,37 +127,37 @@ export const useInterfaceActive = () => {
                 });
             }
         } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.tx)) {
-            if (msg === ibcStatisticsTxsDefault.tx_all.statistics_name) {
+            if (msg === IBC_STATISTICS_TXS_DEFAULT.tx_all.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber.defaultStatus
+                        status: TX_STATUS_NUMBER.defaultStatus
                     }
                 });
-            } else if (msg === ibcStatisticsTxsDefault.tx_24hr_all.statistics_name) {
+            } else if (msg === IBC_STATISTICS_TXS_DEFAULT.tx_24hr_all.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber.defaultStatus
+                        status: TX_STATUS_NUMBER.defaultStatus
                     }
                 });
-            } else if (msg === ibcStatisticsTxsDefault.tx_success.statistics_name) {
+            } else if (msg === IBC_STATISTICS_TXS_DEFAULT.tx_success.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber.successStatus
+                        status: TX_STATUS_NUMBER.successStatus
                     }
                 });
-            } else if (msg === ibcStatisticsTxsDefault.tx_failed.statistics_name) {
+            } else if (msg === IBC_STATISTICS_TXS_DEFAULT.tx_failed.statistics_name) {
                 router.push({
                     name: 'Transfers',
                     query: {
-                        status: txStatusNumber.failedStatus
+                        status: TX_STATUS_NUMBER.failedStatus
                     }
                 });
             }
         } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.denom)) {
-            if (msg !== ibcStatisticsDenomsDefault.denom_all.statistics_name) {
+            if (msg !== IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name) {
                 router.push({
                     name: 'Tokens'
                 });

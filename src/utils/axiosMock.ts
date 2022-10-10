@@ -1,10 +1,10 @@
-import { AxiosTimeout } from '@/constants/index';
+import { AXIOS_TIMEOUT } from '@/constants';
 import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
 import jsonBig from 'json-bigint';
 
 const serviceMock = axios.create({
     baseURL: 'http://yapi.bianjie.ai/mock/23',
-    timeout: AxiosTimeout,
+    timeout: AXIOS_TIMEOUT,
     transformResponse: (data) => {
         try {
             return jsonBig.parse(data);

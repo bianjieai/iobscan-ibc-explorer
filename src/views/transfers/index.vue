@@ -1,33 +1,25 @@
 <template>
-    <!-- todo 页面组件重构 -->
-    <!-- todo duanjie 此处使用了class="transfer"  设置了样式，看能否复用 PageContainer 保持统一 -->
-    <div class="transfer">
-        <div class="transfer__header">
-            <!-- todo duanjie 看能否复用 PageTitle -->
-            <div class="transfer__header__container">
-                <div class="transfer__header__line">
-                    <p class="transfer__header__title">
-                        <span class="transfer__header__title_content">IBC Token Transfers</span>
-                        <span class="transfer__header__num">
-                            <i class="iconfont icon-shujuliebiao"></i>
-                            {{ `${isIbcTxTotalAndHashFilter}` }}
-                        </span>
-                    </p>
-                </div>
-            </div>
-        </div>
+    <PageContainer class="transfer">
+        <PageTitle title="IBC Token Transfers" :subtitle="isIbcTxTotalAndHashFilter" />
         <div class="transfer__middle relative">
             <div class="transfer__middle__top">
                 <div class="transfer__middle__left">
-                    <!-- todo duanjie  看能否复用 BjSelect，可参考token页面  -->
-                    <drop-down
-                        class="dropdown_token"
-                        :ibc-base-denoms="ibcBaseDenomsSorted"
-                        :selected-symbol="selectedSymbol"
-                        :show-icon="isShowSymbolIcon"
-                        :clear-input="clearInput"
-                        @click-item="onClickDropdownItem"
-                        @click-search="(item:any) => onClickDropdownItem(item, 'customToken')"
+                    <BjSelect
+                        :data="tokenData"
+                        :value="searchToken"
+                        placeholder="All Tokens"
+                        :input-ctn="{
+                            title: 'Custom IBC Tokens',
+                            toolTip: 'Hash (in hex format) of the denomination trace information.',
+                            placeholder: 'Search by ibc/hash',
+                            btnTxt: 'Confirm',
+                            icon: TIP_ICON
+                        }"
+                        :select-color-default-val="TRANSFERS_TOKEN_DEFAULT_VALUE"
+                        :dropdown-props="{
+                            getPopupContainer: chainGetPopupContainer
+                        }"
+                        @on-change="onSelectedToken"
                     />
                     <BjSelect
                         ref="chainDropdown"
@@ -48,28 +40,11 @@
                         }"
                         @on-change="onSelectedChain"
                     />
-                    <!-- todo duanjie  看能否复用  BaseDropdown，可参考token页面  -->
-                    <a-select
-                        class="status_select"
-                        default-active-first-option
-                        :value="JSON.stringify(queryParam.status)"
-                        :get-popup-container="(triggerNode: any) => triggerNode.parentNode"
-                        @change="handleSelectChange"
-                    >
-                        <a-select-option
-                            v-for="item of ibcTxStatusSelectOptions"
-                            :key="item.title"
-                            :value="item.value"
-                            ><span
-                                :class="
-                                    item.title === defaultTitle.defaultStatus
-                                        ? 'status_select_default'
-                                        : 'status_select_title'
-                                "
-                                >{{ item.title }}</span
-                            >
-                        </a-select-option>
-                    </a-select>
+                    <BaseDropdown
+                        :status="JSON.stringify(queryParam.status)"
+                        :options="IBC_TX_STATUS_SELECT_OPTIONS"
+                        @on-selected-change="handleSelectChange"
+                    />
                 </div>
                 <div class="transfer__middle__right">
                     <a-range-picker
@@ -125,43 +100,25 @@
                         </template>
                         <img class="tip cursor" :src="TIP_ICON" />
                     </a-popover>
-                    <!-- todo duanjie 看能不能复用 ResetButton -->
-                    <a-button type="primary" @click="onClickReset">
-                        <template #icon>
-                            <svg
-                                t="1635235094959"
-                                class="icon"
-                                viewBox="0 0 1137 1024"
-                                version="1.1"
-                                xmlns="http://www.w3.org/2000/svg"
-                                p-id="1018"
-                                width="20"
-                                height="20"
-                                style="margin: 3px 0 0 0"
-                            >
-                                <path
-                                    d="M187.443357 408.766317a400.463607 400.463607 0 0 0 84.448801 365.489861 392.957046 392.957046 0 0 0 348.315761 132.274687 56.469804 56.469804 0 0 1 62.554667 49.020112 56.754144 56.754144 0 0 1-47.769018 63.692025 505.271108 505.271108 0 0 1-447.83455-169.978092 514.824912 514.824912 0 0 1-108.61765-469.842419l-67.331569-18.197721a15.240592 15.240592 0 0 1-7.392824-24.794396l187.038455-212.572133a14.956252 14.956252 0 0 1 25.988621 6.994749l56.469804 278.425138a15.240592 15.240592 0 0 1-4.435695 14.046366 14.956252 14.956252 0 0 1-14.103234 3.639544l-67.331569-18.197721z m762.484527 206.089195a400.463607 400.463607 0 0 0-84.448801-365.489861 392.957046 392.957046 0 0 0-348.315761-132.274687 56.185465 56.185465 0 0 1-52.716525-21.439191 57.265955 57.265955 0 0 1-7.392824-56.811011 56.469804 56.469804 0 0 1 45.380568-34.461935 505.271108 505.271108 0 0 1 447.777682 169.978091 514.824912 514.824912 0 0 1 108.61765 469.842419l67.331569 18.197722a15.240592 15.240592 0 0 1 7.392824 24.794395l-187.038455 212.572133a14.956252 14.956252 0 0 1-25.988621-6.994749l-56.469804-278.425137a15.240592 15.240592 0 0 1 4.435694-14.046366 14.956252 14.956252 0 0 1 14.103234-3.639545l67.33157 18.197722z"
-                                    p-id="1019"
-                                    fill="#ffffff"
-                                ></path>
-                            </svg>
-                        </template>
-                    </a-button>
+                    <ResetButton @on-reset="onClickReset" />
                 </div>
             </div>
             <div class="transfer__middle__bottom">
-                <!-- todo duanjie 表格看能否复用 TableCommon，可参考channels页面  -->
-                <a-table
+                <TableCommon
                     class="transfer__table"
-                    style="width: 100%"
-                    :row-key="(record: any) => record.record_id"
-                    :columns="tableColumns"
                     :loading="showTransferLoading"
-                    :data-source="tableDatas"
-                    :pagination="false"
+                    :data="tableDatas"
+                    row-key="record_id"
+                    :need-custom-headers="needCustomHeaders"
+                    :need-custom-columns="needCustomColumns"
+                    :columns="tableColumns"
+                    :current="pagination.current"
+                    :page-size="pagination.pageSize"
+                    :total="pagination.total"
                     :custom-row="handleClickRow"
+                    @on-page-change="onPaginationChange"
                 >
-                    <template #customTitle>
+                    <template #Token>
                         <div class="flex items-center">
                             <span class="cell_name">Token</span>
                             <a-popover destroy-tooltip-on-hide>
@@ -180,18 +137,24 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="popover_c"
-                                        >Sent Token: {{ record.denoms.sc_denom || '--' }}</p
-                                    >
-                                    <p class="popover_c"
-                                        >Received Token: {{ record.denoms.dc_denom || '--' }}</p
-                                    >
+                                    <p class="popover_c">
+                                        <span class="tip_label">Sent Token:</span>
+                                        <span class="tip_value">{{
+                                            record.denoms.sc_denom || '--'
+                                        }}</span>
+                                    </p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Received Token:</span>
+                                        <span class="tip_value">{{
+                                            record.denoms.dc_denom || '--'
+                                        }}</span>
+                                    </p>
                                 </div>
                             </template>
                             <router-link
                                 class="token__link hover"
                                 :to="
-                                    record.status === ibcTxStatus.SUCCESS
+                                    record.status === IBC_TX_STATUS.SUCCESS
                                         ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}`
                                         : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`
                                 "
@@ -212,7 +175,7 @@
                             </router-link>
                         </a-popover>
                     </template>
-                    <template #hashOut="{ record }">
+                    <template #fromTxhash="{ record }">
                         <a-popover destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
@@ -224,7 +187,7 @@
                             }}</span>
                         </a-popover>
                     </template>
-                    <template #out="{ record }">
+                    <template #from="{ record }">
                         <a-popover destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
@@ -238,14 +201,22 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="popover_c"
-                                        >Chain ID:
-                                        {{ ChainHelper.formatChainId(record.sc_chain_id) }}</p
-                                    >
-                                    <p class="popover_c"
-                                        >Channel ID: {{ record.sc_channel || '--' }}</p
-                                    >
-                                    <p class="popover_c">Sequence: {{ record.sequence || '--' }}</p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Chain ID:</span>
+                                        <span class="tip_value">{{
+                                            ChainHelper.formatChainId(record.sc_chain_id)
+                                        }}</span>
+                                    </p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Channel ID:</span>
+                                        <span class="tip_value">{{
+                                            record.sc_channel || '--'
+                                        }}</span>
+                                    </p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Sequence:</span>
+                                        <span class="tip_value">{{ record.sequence || '--' }}</span>
+                                    </p>
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
@@ -263,14 +234,22 @@
                         <a-popover placement="right" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="popover_c"
-                                        >Chain ID:
-                                        {{ ChainHelper.formatChainId(record.dc_chain_id) }}</p
-                                    >
-                                    <p class="popover_c"
-                                        >Channel ID: {{ record.dc_channel || '--' }}</p
-                                    >
-                                    <p class="popover_c">Sequence: {{ record.sequence || '--' }}</p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Chain ID:</span>
+                                        <span class="tip_value">{{
+                                            ChainHelper.formatChainId(record.dc_chain_id)
+                                        }}</span>
+                                    </p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Channel ID:</span>
+                                        <span class="tip_value">{{
+                                            record.dc_channel || '--'
+                                        }}</span>
+                                    </p>
+                                    <p class="popover_c">
+                                        <span class="tip_label">Sequence:</span>
+                                        <span class="tip_value">{{ record.sequence || '--' }}</span>
+                                    </p>
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
@@ -281,7 +260,19 @@
                             </router-link>
                         </a-popover>
                     </template>
-                    <template #hashIn="{ record }">
+                    <template #to="{ record }">
+                        <a-popover destroy-tooltip-on-hide>
+                            <template #content>
+                                <div>
+                                    <p class="popover_c">{{ record.dc_addr || '--' }}</p>
+                                </div>
+                            </template>
+                            <span class="cursor">{{
+                                getRestString(record.dc_addr, 3, 8) || '--'
+                            }}</span>
+                        </a-popover>
+                    </template>
+                    <template #toTxHash="{ record }">
                         <a-popover v-if="record.dc_tx_info.hash" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
@@ -294,19 +285,7 @@
                         </a-popover>
                         <span v-else>--</span>
                     </template>
-                    <template #in="{ record }">
-                        <a-popover destroy-tooltip-on-hide>
-                            <template #content>
-                                <div>
-                                    <p class="popover_c">{{ record.dc_addr || '--' }}</p>
-                                </div>
-                            </template>
-                            <span class="cursor">{{
-                                getRestString(record.dc_addr, 3, 8) || '--'
-                            }}</span>
-                        </a-popover>
-                    </template>
-                    <template #time="{ record }">
+                    <template #createTime="{ record }">
                         <span>{{ dayjsFormatDate(record.tx_time * 1000) }}</span>
                     </template>
                     <template #endTime="{ record }">
@@ -314,85 +293,66 @@
                             record.end_time ? dayjsFormatDate(record.end_time * 1000) : '--'
                         }}</span>
                     </template>
-                </a-table>
-                <div class="thead_border_bottom"></div>
+                    <template v-if="tableDatas?.length !== 0" #table_bottom_status>
+                        <div class="transfer__bottom">
+                            <BottomStatus
+                                :status-data="BOTTOM_STATUS_DATA.transferStatusData"
+                                :height="8"
+                            />
+                        </div>
+                    </template>
+                </TableCommon>
             </div>
         </div>
-        <!-- todo duanjie 如果复用了TableCommon， 状态和分页是否可以在TableCommon组件中实现，可参考channels页面  -->
-        <div v-if="pagination.total" class="transfer__bottom">
-            <span class="status_tips">
-                <span class="status_log">Status:</span>
-                <span v-for="(item, index) in ibcTxStatusDesc" :key="index" class="status_tip">
-                    <img :src="getImageUrl(item.status)" alt="" />
-                    <span>{{ item.label }}</span>
-                </span>
-            </span>
-            <a-pagination
-                v-model:current="pagination.current"
-                class="table_pagination"
-                :class="{ disable_table_pagination: showTransferLoading }"
-                :total="pagination.total"
-                :show-title="false"
-                :disabled="showTransferLoading"
-                @change="onPaginationChange"
-            />
-        </div>
-    </div>
+    </PageContainer>
 </template>
 
 <script setup lang="ts">
-    import DropDown from './components/DropDown.vue';
     import {
-        ibcTxStatusSelectOptions,
-        transfersStatusOptions,
-        ibcTxStatus,
-        ibcTxStatusDesc,
-        defaultTitle,
-        unknownSymbol,
-        // PAGE_PARAMETERS,
-        txStatusNumber,
+        IBC_TX_STATUS_SELECT_OPTIONS,
+        TRANSFERS_STATUS_OPTIONS,
+        IBC_TX_STATUS,
+        UNKNOWN_SYMBOL,
+        TX_STATUS_NUMBER,
         CHAINNAME,
         CHAIN_DEFAULT_VALUE,
         TOTAL_BOUND,
         CHAIN_DEFAULT_ICON,
         TOKEN_DEFAULT_ICON,
-        TIP_ICON
+        TIP_ICON,
+        PAGE_PARAMETERS,
+        BOTTOM_STATUS_DATA
     } from '@/constants';
     import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
-    import { useGetIbcDenoms } from '@/views/home/composable';
     import { dayjsFormatDate } from '@/utils/timeTools';
-    import {
-        useIbcDenoms,
-        useSelectedSymbol,
-        usePagination,
-        useGetTableColumns
-    } from './composable';
+    import { usePagination, useGetTableColumns } from './composable';
     import { useIbcStatistics } from '@/composables/home';
     import dayjs from 'dayjs';
     import { urlParser } from '@/utils/urlTools';
-    import { useIbcChains } from '@/composables';
+    import { useGetIbcDenoms, useIbcChains, useNeedCustomColumns } from '@/composables';
     import { IIbcTx } from '@/types/interface/transfers.interface';
     import { axiosCancel } from '@/utils/axios';
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
     import { MODES } from '@/components/BjSelect/constants';
+    import { TRANSFERS_TOKEN_DEFAULT_VALUE } from '@/constants/transfers';
 
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
-    const { ibcStatisticsTxs } = useIbcStatistics();
-    const { ibcDenoms } = useIbcDenoms();
-    const { selectedSymbol, isShowSymbolIcon, clearInput, isShowChainIcon } = useSelectedSymbol();
+    const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
     const { pagination } = usePagination();
     const { ibcChains } = useIbcChains();
     const { tableColumns, showTransferLoading, tableDatas, getIbcTxs } = useGetTableColumns();
     const chainDropdown = ref();
-    // const selectedDouble = ref(true);
-    // const needBadge = ref(true);
+    const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(
+        PAGE_PARAMETERS.transfers
+    );
+    getIbcStatistics();
 
     const pickerPlaceholderColor = ref('var(--bj-text-second)');
 
     let paramsStatus = null,
         paramsSymbol: string | null = null,
-        paramsDenom = null,
+        paramsDenom: string | null = null,
         startTimestamp = 0,
         endTimestamp = 0;
     const dateRange = reactive({ value: [] });
@@ -405,38 +365,33 @@
     const router = useRouter();
 
     const getImageUrl = (status: string | number) => {
-        return new URL(`../../assets/home/status${status}.png`, import.meta.url).href;
+        return new URL(`../../assets/status/transfer_status${status}.png`, import.meta.url).href;
     };
 
+    const searchToken = ref<string | undefined>();
     let chainId = route?.query.chain;
     if (chainId) {
         url += `&chain=${chainId}`;
     }
     if (route?.query?.denom) {
         url += `&denom=${route.query.denom}`;
-        paramsDenom = route?.query.denom;
+        paramsDenom = route?.query.denom as string;
     }
-    if (route?.query?.symbol && (route?.query?.symbol as string)?.toLowerCase() !== unknownSymbol) {
+    if (
+        route?.query?.symbol &&
+        (route?.query?.symbol as string)?.toLowerCase() !== UNKNOWN_SYMBOL
+    ) {
         url += `&symbol=${route.query.symbol}`;
         paramsSymbol = route?.query.symbol as string;
-        watch(ibcDenoms, (newValue) => {
-            if (newValue?.length) {
-                newValue?.forEach((item: any) => {
-                    if (item?.symbol === paramsSymbol) {
-                        selectedSymbol.value = item.symbol;
-                        isShowSymbolIcon.value = true;
-                    }
-                });
-            }
-        });
+        searchToken.value = paramsSymbol;
     } else if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
-        selectedSymbol.value = getRestString(rmIbcPrefix(paramsDenom as string), 4, 4);
+        searchToken.value = rmIbcPrefix(paramsDenom as string);
     }
     if (route?.query?.status) {
-        const defaultOptions = transfersStatusOptions.DEFAULT_OPTIONS;
-        const successOptions = transfersStatusOptions.SUCCESS_OPTIONS;
-        const failedOptions = transfersStatusOptions.FAILED_OPTIONS;
-        const processingOptions = transfersStatusOptions.PROCESSING_OPTIONS;
+        const defaultOptions = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
+        const successOptions = TRANSFERS_STATUS_OPTIONS.SUCCESS_OPTIONS;
+        const failedOptions = TRANSFERS_STATUS_OPTIONS.FAILED_OPTIONS;
+        const processingOptions = TRANSFERS_STATUS_OPTIONS.PROCESSING_OPTIONS;
         paramsStatus = (route?.query?.status as string).split(',');
         switch (JSON.stringify(paramsStatus)) {
             case JSON.stringify(successOptions):
@@ -475,7 +430,7 @@
             startTimestamp && endTimestamp
                 ? [startTimestamp, endTimestamp]
                 : [0, Math.floor(new Date().getTime() / 1000)],
-        status: paramsStatus || transfersStatusOptions.DEFAULT_OPTIONS,
+        status: paramsStatus || TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS,
         chain_id: chainId || undefined,
         symbol: paramsSymbol || undefined,
         denom: paramsDenom || undefined
@@ -517,7 +472,7 @@
                     !params.chain_id &&
                     !params.denom &&
                     !params.symbol &&
-                    params.status === txStatusNumber.defaultStatus &&
+                    params.status === TX_STATUS_NUMBER.defaultStatus &&
                     isDateDefaultValue
                 ) {
                     isHashFilterParams.value = false;
@@ -620,62 +575,11 @@
         }
         return CHAIN_DEFAULT_ICON;
     };
-    const onClickDropdownItem = (item: any, custom: any) => {
-        (window as any).gtag('event', 'Transfers-点击过滤条件Token');
-
-        pagination.current = 1;
-        isShowSymbolIcon.value = !custom;
-        selectedSymbol.value = item || defaultTitle.defaultTokens;
-        if (item === defaultTitle.defaultTokens) {
-            queryParam.symbol = undefined;
-        } else if (custom) {
-            if (item && item.length && item.length > 8) {
-                selectedSymbol.value = getRestString(item, 4, 4);
-            }
-            queryParam.symbol = undefined;
-            queryParam.denom = item ? `ibc/${item.toUpperCase()}` : undefined;
-        } else {
-            queryParam.symbol = item;
-            queryParam.denom = undefined;
-        }
-        queryDatas();
-
-        url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
-        if (queryParam?.chain_id) {
-            url += `&chain=${queryParam.chain_id}`;
-        }
-        if (queryParam?.denom) {
-            url += `&denom=${queryParam.denom}`;
-        }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
-            url += `&symbol=${queryParam.symbol}`;
-        }
-        if (queryParam?.status) {
-            url += `&status=${queryParam.status.join(',')}`;
-        }
-        if (queryParam?.date_range?.length) {
-            if (queryParam?.date_range.length === 1) {
-                const timeStamp = queryParam.date_range[0];
-                const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=&endTime=${endTime}`;
-            }
-            if (queryParam?.date_range.length === 2) {
-                const startTimeStamp = queryParam.date_range[0];
-                const entTimeStamp = queryParam.date_range[1];
-                const startTime = startTimeStamp
-                    ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
-                    : '';
-                const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=${startTime}&endTime=${endTime}`;
-            }
-        }
-        router.replace(url);
-    };
     const handleSelectChange = (item: any) => {
         (window as any).gtag('event', 'Transfers-点击过滤条件Status');
 
         pagination.current = 1;
-        queryParam.status = JSONparse(item);
+        queryParam.status = item ? JSONparse(item) : item;
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
         if (queryParam?.chain_id) {
             url += `&chain=${queryParam.chain_id}`;
@@ -683,7 +587,7 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
+        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
             url += `&symbol=${queryParam.symbol}`;
         }
         if (queryParam?.status) {
@@ -730,7 +634,7 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
+        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
             url += `&symbol=${queryParam.symbol}`;
         }
         if (queryParam?.status) {
@@ -753,12 +657,10 @@
         router.replace(url);
         queryDatas();
     };
-    const onPaginationChange = (page: number) => {
-        (window as any).gtag('event', 'Transfers-点击翻页器');
-
-        pagination.current = page;
+    const onPaginationChange = (current: number, pageSize: number) => {
+        pagination.current = current;
         const params: any = urlParser(url);
-        url = `/transfers?pageNum=${page}&pageSize=${pageSize}`;
+        url = `/transfers?pageNum=${current}&pageSize=${pageSize}`;
 
         if (params?.chain) {
             url += `&chain=${params.chain}`;
@@ -798,14 +700,10 @@
             });
     };
     const onClickReset = () => {
-        isShowChainIcon.value = false;
-        isShowSymbolIcon.value = false;
-        clearInput.value += 1;
         chainDropdown.value.selectedChain = [];
-        selectedSymbol.value = defaultTitle.defaultTokens;
         dateRange.value = [];
         queryParam.date_range = [];
-        queryParam.status = transfersStatusOptions.DEFAULT_OPTIONS;
+        queryParam.status = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
         queryParam.chain_id = undefined;
         queryParam.symbol = undefined;
         queryParam.denom = undefined;
@@ -813,6 +711,7 @@
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
         router.replace(url);
         chainIds.value = [];
+        searchToken.value = undefined;
         queryDatas();
     };
 
@@ -857,7 +756,7 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== unknownSymbol) {
+        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
             url += `&symbol=${queryParam.symbol}`;
         }
         if (queryParam?.status) {
@@ -886,7 +785,7 @@
     const handleClickRow = (record: any) => {
         return {
             onClick: () => {
-                router.push(`/transfers/details?hash=${record.sc_tx_info.hash}`);
+                router.push(`/transfers/details?txhash=${record.sc_tx_info.hash}`);
             }
         };
     };
@@ -898,57 +797,91 @@
             ibcTxTotalMoreThan500k.value = true;
         }
     });
+
+    const tokenData = computed(() => {
+        return [
+            {
+                groupName: '',
+                children: [
+                    {
+                        title: 'All Tokens',
+                        id: '',
+                        metaData: null
+                    }
+                ]
+            },
+            {
+                groupName: 'Authed IBC Tokens',
+                children: ibcBaseDenomsSorted.value.map((v) => ({
+                    title: v.symbol,
+                    id: v.symbol,
+                    icon: v.icon || TOKEN_DEFAULT_ICON,
+                    metaData: v
+                }))
+            },
+            {
+                groupName: 'Other IBC Tokens',
+                children: [
+                    {
+                        id: 'Others',
+                        title: 'Others',
+                        icon: TOKEN_DEFAULT_ICON
+                    }
+                ]
+            }
+        ];
+    });
+
+    const onSelectedToken = (val?: IDataItem) => {
+        (window as any).gtag('event', 'Transfers-点击过滤条件Token');
+        pagination.current = 1;
+        const id = String(val?.id || '');
+        searchToken.value = id;
+        if (val?.inputFlag) {
+            queryParam.symbol = undefined;
+            queryParam.denom = id ? `ibc/${id.toUpperCase()}` : undefined;
+        } else {
+            queryParam.symbol = id || undefined;
+            queryParam.denom = undefined;
+        }
+        url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
+        if (queryParam?.chain_id) {
+            url += `&chain=${queryParam.chain_id}`;
+        }
+        if (queryParam?.denom) {
+            url += `&denom=${queryParam.denom}`;
+        }
+        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
+            url += `&symbol=${queryParam.symbol}`;
+        }
+        if (queryParam?.status) {
+            url += `&status=${queryParam.status.join(',')}`;
+        }
+        if (queryParam?.date_range?.length) {
+            if (queryParam?.date_range.length === 1) {
+                const timeStamp = queryParam.date_range[0];
+                const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
+                url += `&startTime=&endTime=${endTime}`;
+            }
+            if (queryParam?.date_range.length === 2) {
+                const startTimeStamp = queryParam.date_range[0];
+                const entTimeStamp = queryParam.date_range[1];
+                const startTime = startTimeStamp
+                    ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
+                    : '';
+                const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
+                url += `&startTime=${startTime}&endTime=${endTime}`;
+            }
+        }
+        router.replace(url);
+        queryDatas();
+    };
 </script>
 
 <style lang="less" scoped>
     .transfer {
-        flex: 1;
-        padding: 48px 48px 100px;
-        width: 100%;
-        text-align: left;
-        background-color: #f5f7fc;
-        &__header {
-            width: 100%;
-            &__container {
-                position: relative;
-                margin: 0 auto;
-                width: 100%;
-                max-width: 1200px;
-            }
-            &__line {
-                position: absolute;
-                top: 11px;
-                display: inline-block;
-                height: 12px;
-                background: linear-gradient(
-                    90deg,
-                    rgba(112, 136, 255, 0) 0%,
-                    rgba(61, 80, 255, 0.15) 100%
-                );
-                border-radius: 5px;
-            }
-            &__title {
-                position: relative;
-                top: -11px;
-                padding-right: 16px;
-                font-size: var(--bj-font-size-title);
-                font-weight: 400;
-                color: #000000;
-                line-height: 20px;
-            }
-            &__title_content {
-                font-family: Eurocine-regular;
-                font-weight: 600;
-            }
-            &__num {
-                margin-left: 8px;
-                font-size: var(--bj-font-size-normal);
-                color: var(--bj-font-color-65);
-            }
-        }
         &__middle {
-            margin: 58px auto 0;
-            max-width: 1200px;
+            margin-top: 32px;
             &__top {
                 .flex(row, nowrap, flex-start, center);
             }
@@ -956,6 +889,9 @@
                 .flex(row, nowrap, flex-start, center);
                 .ant-select {
                     width: 146px;
+                }
+                :deep(.ant-dropdown-trigger) {
+                    margin-right: 8px;
                 }
             }
             &__right {
@@ -978,7 +914,6 @@
             font-size: 14px;
             font-weight: 400;
             :deep(.ant-table-thead tr th) {
-                padding: 11px 16px;
                 border-bottom: 0;
                 &:first-child {
                     padding-left: 0;
@@ -988,10 +923,6 @@
                 &:first-child {
                     padding-left: 0;
                 }
-            }
-            :deep(.ant-table-content) {
-                margin: 0 24px;
-                overflow-x: auto;
             }
             :deep(.ant-table-placeholder) {
                 min-height: 500px;
@@ -1029,6 +960,7 @@
                 }
                 &__info {
                     .flex(column, nowrap, center, flex-start);
+                    font-family: GolosUI_Medium;
                     &__num {
                         font-size: var(--bj-font-size-sub-title);
                         color: var(--bj-text-normal);
@@ -1058,9 +990,7 @@
         }
         &__bottom {
             .flex(row, nowrap, space-between, center);
-            margin: 0 auto;
-            padding: 16px 24px;
-            max-width: 1200px;
+            font-family: GolosUI_Medium;
             background: #ffffff;
             border-radius: var(--border-radius-normal);
             & .status_tips {
@@ -1088,70 +1018,8 @@
             & :deep(.table_pagination) {
                 li {
                     margin-bottom: 8px;
-                    width: initial;
-                    height: 24px;
-                    min-width: 24px;
-                    line-height: 24px;
-                    box-sizing: border-box;
-                    display: inline-flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                li button {
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                .ant-pagination-item {
-                    border: none;
-                }
-
-                .ant-pagination-item-active {
-                    border: 1px solid var(--bj-primary-color);
-                }
-
-                .ant-pagination-options {
-                    display: none !important;
                 }
             }
-            & :deep(.disable_table_pagination) {
-                .ant-pagination-item-active {
-                    border: none;
-                }
-            }
-        }
-    }
-    .status_select {
-        width: 146px;
-        margin: 0 8px;
-        color: var(--bj-text-second);
-        :deep(.ant-select-arrow) {
-            right: 8px;
-            color: rgba(164, 171, 192, 1);
-        }
-        :deep(.ant-select-selector) {
-            height: 36px !important;
-            border: 1px solid var(--bj-border-color);
-            .ant-select-selection-item {
-                text-align: center;
-                line-height: 34px;
-            }
-            .ant-select-selection-search {
-                border-right: 1px solid var(--bj-border-color);
-            }
-
-            &_default {
-                color: var(--bj-text-second);
-            }
-            .status_select_title {
-                color: var(--bj-primary-color);
-            }
-        }
-        .ant-select-focused:not(.ant-select-disabled).ant-select:not(.ant-select-customize-input)
-            .ant-select-selector {
-            box-shadow: none;
         }
     }
 
@@ -1163,6 +1031,7 @@
             border-color: var(--bj-primary-color);
         }
         :deep(.ant-picker-input > input) {
+            font-family: GolosUIWebRegular;
             color: var(--bj-primary-color);
             text-align: center;
             &::placeholder {
@@ -1189,18 +1058,15 @@
             vertical-align: middle;
         }
     }
+
+    .tip_label {
+        font-family: GolosUI_Medium;
+    }
+    .tip_value {
+        margin-left: 4px;
+    }
     @media screen and (max-width: 1260px) {
         .transfer {
-            &__header {
-                &__container {
-                }
-                &__line {
-                }
-                &__title {
-                }
-                &__num {
-                }
-            }
             &__middle {
                 &__top {
                 }
@@ -1246,34 +1112,12 @@
                     }
                 }
                 & .table_pagination {
-                    :deep(.ant-pagination-options) {
-                    }
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
     }
     @media screen and (max-width: 970px) {
         .transfer {
-            &__header {
-                &__container {
-                }
-                &__line {
-                }
-                &__title {
-                }
-                &__num {
-                }
-            }
             &__middle {
                 &__top {
                     .flex(column, nowrap, flex-start, flex-start);
@@ -1320,40 +1164,41 @@
                 }
                 & .table_pagination {
                     margin-top: 16px;
-                    :deep(.ant-pagination-options) {
-                    }
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
     }
     @media screen and (max-width: 768px) {
         .transfer {
-            padding: 40px 32px 60px;
-            &__header {
-                &__container {
+            :deep(.page_title_container) {
+                display: inline-flex;
+                text-align: left;
+
+                .flex {
+                    display: block;
                 }
-                &__line {
+
+                .icon {
+                    display: none;
                 }
-                &__title {
-                    .flex(column, nowrap, flex-start, flex-start);
+
+                .inline_icon {
+                    display: block;
                 }
-                &__num {
-                    margin-top: 12px;
-                    margin-left: 0;
+
+                .title_p {
+                    position: relative;
+                    display: inline-flex;
+                    align-items: center;
+                    margin-right: 0;
+                    margin-bottom: 8px;
+                }
+                .number {
+                    display: block;
                 }
             }
             &__middle {
-                margin-top: 72px;
+                margin-top: 24px;
                 &__top {
                 }
                 &__left {
@@ -1388,7 +1233,6 @@
                 }
             }
             &__bottom {
-                padding: 16px;
                 & .status_tips {
                     .status_log {
                     }
@@ -1398,35 +1242,13 @@
                     }
                 }
                 & .table_pagination {
-                    :deep(.ant-pagination-options) {
-                    }
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
     }
     @media screen and (max-width: 582px) {
         .transfer {
             padding: 24px 16px 60px;
-            &__header {
-                &__container {
-                }
-                &__line {
-                }
-                &__title {
-                }
-                &__num {
-                }
-            }
             &__middle {
                 &__top {
                 }
@@ -1475,7 +1297,6 @@
                 }
             }
             &__bottom {
-                padding: 16px;
                 & .status_tips {
                     width: 100%;
                     justify-content: flex-start;
@@ -1487,34 +1308,12 @@
                     }
                 }
                 & .table_pagination {
-                    :deep(.ant-pagination-options) {
-                    }
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
     }
     @media screen and (max-width: 420px) {
         .transfer {
-            &__header {
-                &__container {
-                }
-                &__line {
-                }
-                &__title {
-                }
-                &__num {
-                }
-            }
             &__middle {
                 &__top {
                 }
@@ -1578,19 +1377,7 @@
                     }
                 }
                 & .table_pagination {
-                    :deep(.ant-pagination-options) {
-                    }
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
         .date_range {
@@ -1599,16 +1386,6 @@
     }
     @media screen and (max-width: 340px) {
         .transfer {
-            &__header {
-                &__container {
-                }
-                &__line {
-                }
-                &__title {
-                }
-                &__num {
-                }
-            }
             &__middle {
                 &__top {
                 }
@@ -1659,19 +1436,7 @@
                     }
                 }
                 & .table_pagination {
-                    :deep(.ant-pagination-options) {
-                    }
                 }
-            }
-        }
-        .status_select {
-            :deep(.ant-select-selector) {
-            }
-            :deep(.ant-select-selection-item) {
-            }
-            :deep(.ant-select-selection-search) {
-            }
-            :deep(.ant-select-arrow) {
             }
         }
         .date_range {

@@ -149,6 +149,7 @@
             display: inline-block;
             width: 164px;
             font-size: var(--bj-font-size-normal);
+            font-family: GolosUI_Medium;
             font-weight: 500;
             color: var(--bj-text-normal);
         }
@@ -157,7 +158,6 @@
             margin-left: 24px;
             width: 100%;
             font-size: var(--bj-font-size-normal);
-            font-family: GolosUIWebRegular;
             color: var(--bj-text-second);
             word-break: break-all;
         }

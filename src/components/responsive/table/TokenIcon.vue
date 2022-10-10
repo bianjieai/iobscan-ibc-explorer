@@ -119,10 +119,12 @@
 
     .title {
         font-size: var(--bj-font-size-sub-title);
+        font-family: GolosUI_Medium;
         color: var(--bj-text-second);
     }
 
     .subtitle {
+        font-family: GolosUI_Medium;
         color: var(--bj-text-third);
     }
 

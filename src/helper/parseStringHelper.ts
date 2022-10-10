@@ -1,6 +1,7 @@
 import { floor } from 'lodash-es';
 import { BigNumber } from 'bignumber.js';
 import { isString } from '@/utils/objectTools';
+import { THOUSAND_DECIMAL } from '@/constants';
 
 function getRestString(string: any, left: number, right: number) {
     if (!isString(string)) return;
@@ -43,7 +44,6 @@ function formatNum(numOrigin: any) {
     const billion = 1000000000;
     const million = 1000000;
     const thousand = 1000;
-    const thousandDecimal = 0.0001;
     let result: number | string = 0;
     if (num >= trillion) {
         result = `${formatBigNumber(Math.floor(num / trillion), undefined)} T`;
@@ -53,8 +53,8 @@ function formatNum(numOrigin: any) {
         result = `${formatBigNumber(Math.floor(num / million), undefined)} M`;
     } else if (num >= thousand) {
         result = formatBigNumber(Math.floor(num), undefined);
-    } else if (num < thousandDecimal) {
-        result = `< ${thousandDecimal}`;
+    } else if (num < THOUSAND_DECIMAL) {
+        result = `< ${THOUSAND_DECIMAL}`;
     } else {
         result = floor(num, 4);
     }

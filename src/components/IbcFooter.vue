@@ -2,14 +2,21 @@
     <div class="footer_container" :class="{ footer_dark_container: isDark }">
         <div class="content">
             <div class="content__left">
-                <span
+                <a
                     v-for="(item, index) in ICON_LINK"
                     :key="index"
+                    v-ga="{
+                        gaEventName: '点击社群链接',
+                        params: {
+                            groupName: item.groupName
+                        }
+                    }"
                     class="content__left__icon cursor"
-                    @click="onClickIcon(item.iconLink, item.groupName)"
+                    :href="item.iconLink"
+                    target="_blank"
                 >
                     <i class="iconfont content__left__iconfont" :class="item.iconName"></i>
-                </span>
+                </a>
                 <span :class="{ dark: isDark, light: isLight }"> Contact us ! </span>
             </div>
             <div class="content__right" :class="{ dark: isDark, light: isLight }">
@@ -34,13 +41,6 @@
     const isLight = computed(() => {
         return props.type === FooterMode.light;
     });
-    const onClickIcon = (item: string, groupName: string) => {
-        (window as any).gtag('event', '点击社群链接', {
-            groupName: groupName
-        });
-
-        window.open(item);
-    };
 </script>
 
 <style lang="less" scoped>
@@ -61,6 +61,7 @@
             width: 100%;
             max-width: 1200px;
             .flex(row, nowrap, space-between, center);
+            font-family: GolosUI_Medium;
 
             &__left {
                 .flex(row, nowrap, flex-start, center);

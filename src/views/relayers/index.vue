@@ -102,7 +102,11 @@
             </template>
 
             <template v-if="relayersList?.length !== 0" #table_bottom_status>
-                <BottomStatus :type="BottomStatusType.RELAYER" />
+                <BottomStatus
+                    :type="BottomStatusType.RELAYER"
+                    :status-data="BOTTOM_STATUS_DATA.relayerStatusData"
+                    :height="20"
+                />
             </template>
         </TableCommon>
     </PageContainer>
@@ -110,7 +114,7 @@
 
 <script setup lang="ts">
     import NamePopover from './components/NamePopover.vue';
-    import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE } from '@/constants';
+    import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE, BOTTOM_STATUS_DATA } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
@@ -147,13 +151,22 @@
             margin-right: 8px;
         }
     }
+    :deep(.title) {
+        font-family: GolosUIWebRegular;
+    }
+    :deep(.ant-table-tbody tr .ant-table-cell) {
+        &:nth-of-type(1),
+        &:nth-of-type(2) {
+            .title {
+                font-family: GolosUI_Medium;
+            }
+        }
+    }
 
     :deep(.ant-table-cell) {
         &:nth-of-type(3) {
             padding-left: 16px;
         }
-    }
-    :deep(.ant-table-cell) {
         &:nth-of-type(4) {
             padding-right: 26px !important;
         }

@@ -9,4 +9,5 @@ export interface GlobalState {
     isShowLoading: boolean;
     isShow500: boolean;
     ibcTxs: IIbcTx[];
+    isDocumentHidden: boolean;
 }

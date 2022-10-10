@@ -47,6 +47,7 @@
         &__text {
             margin-left: 4px;
             font-size: var(--bj-font-size-normal);
+            font-family: GolosUI_Medium;
         }
     }
     @media screen and (max-width: 450px) {

@@ -58,7 +58,7 @@
         TTableCellIconSize
     } from '@/types/interface/components/table.interface';
     import ChainHelper from '@/helper/chainHelper';
-    import { UNKNOWN } from '../../../constants';
+    import { UNKNOWN } from '@/constants';
 
     interface IProps {
         iconSize?: TTableCellIconSize;
@@ -136,6 +136,7 @@
     .title {
         padding: 2px;
         font-size: var(--bj-font-size-sub-title);
+        font-family: GolosUI_Medium;
         color: var(--bj-text-second);
         max-width: 150px;
         overflow: hidden;
@@ -145,6 +146,7 @@
 
     .subtitle {
         padding: 2px;
+        font-family: GolosUI_Medium;
         color: var(--bj-text-third);
         overflow: hidden;
         text-overflow: ellipsis;
