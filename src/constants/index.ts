@@ -372,7 +372,7 @@ export const BASE_PARAMS: IRequestPagination = {
     page_size: 1000
 };
 
-export const AXIOS_TIMEOUT = 15000;
+export const AXIOS_TIMEOUT = 50000;
 
 export const CHAIN_DEFAULT_VALUE = 'allchain';
 
