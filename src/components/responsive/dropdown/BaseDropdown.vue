@@ -78,6 +78,9 @@
             if (filterData.length > 0) {
                 selectOption.value = filterData;
             }
+        },
+        {
+            immediate: true
         }
     );
 
