@@ -51,14 +51,15 @@
         &__value {
             flex: 1;
             margin-left: 40px;
-            font-family: GolosUI_Medium;
             color: var(--bj-text-second);
             word-break: break-word;
         }
         &__success {
+            font-family: GolosUI_Medium;
             color: var(--bj-success);
         }
         &__failed {
+            font-family: GolosUI_Medium;
             color: var(--bj-failed);
         }
     }
