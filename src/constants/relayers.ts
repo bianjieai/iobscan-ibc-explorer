@@ -32,6 +32,7 @@ export const COLUMNS: TableColumnsType = [
         key: 'update_time',
         align: 'right',
         sorter: (a, b) => a.update_time - b.update_time,
+        sortDirections: ['descend', 'ascend'],
         width: 70
     },
     {
@@ -40,6 +41,7 @@ export const COLUMNS: TableColumnsType = [
         key: 'txs_success_rate',
         align: 'right',
         sorter: (a, b) => a.txs_success_rate - b.txs_success_rate,
+        sortDirections: ['descend', 'ascend'],
         width: 100
     },
     {
