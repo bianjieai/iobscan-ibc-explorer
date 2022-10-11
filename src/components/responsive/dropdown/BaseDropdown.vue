@@ -75,7 +75,6 @@
         () => {
             const { options } = props;
             const filterData = options.filter((item) => item.value == props.status);
-            console.log(filterData);
             if (filterData.length > 0) {
                 selectOption.value = filterData;
             }
