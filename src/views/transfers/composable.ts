@@ -1,5 +1,5 @@
 import { useIbcStatisticsChains } from '@/store/index';
-import { TRANSFER_TABLE_COLUMN, TOKEN_DEFAULT_ICON } from '@/constants';
+import { TRANSFER_TABLE_COLUMN } from '@/constants';
 import { IPaginationParams } from '@/types/interface/index.interface';
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { API_CODE } from '@/constants/apiCode';
@@ -24,46 +24,6 @@ export const usePagination = () => {
     });
     return {
         pagination
-    };
-};
-
-export const useFindIcon = (props: any) => {
-    const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcBaseDenomsSymbolKeyMapGetter } = storeToRefs(ibcStatisticsChainsStore);
-    const findSymbolIcon = () => {
-        const findSymbolConfig = props.ibcBaseDenoms?.find(
-            (baseDenom: any) => baseDenom.symbol === props.selectedSymbol
-        );
-        if (findSymbolConfig) {
-            return findSymbolConfig.icon || TOKEN_DEFAULT_ICON;
-        }
-        return TOKEN_DEFAULT_ICON;
-    };
-    const findChainIcon = () => {
-        const findChainConfig = props?.options?.find(
-            (item: any) => item.chain_id === props.selectedChain.chain_id
-        );
-        if (findChainConfig) {
-            return findChainConfig.icon || TOKEN_DEFAULT_ICON;
-        }
-        return TOKEN_DEFAULT_ICON;
-    };
-    const isShowSymbol = (key: string) => {
-        const result = {
-            symbolDenom: '',
-            symbolIcon: ''
-        };
-        if (Array.isArray(props.ibcBaseDenoms)) {
-            const findSymbol = ibcBaseDenomsSymbolKeyMapGetter.value[key];
-            result.symbolDenom = findSymbol ? findSymbol.symbol : key;
-            result.symbolIcon = findSymbol ? findSymbol.icon : '';
-        }
-        return result;
-    };
-    return {
-        findSymbolIcon,
-        findChainIcon,
-        isShowSymbol
     };
 };
 

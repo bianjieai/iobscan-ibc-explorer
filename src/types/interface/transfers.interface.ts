@@ -22,7 +22,7 @@ export interface IIbcTx {
     record_id: string;
     sc_addr: string;
     dc_addr: string;
-    status: string;
+    status: number;
     sequence: string;
     dc_channel: string;
     sc_channel: string;
@@ -36,9 +36,10 @@ export interface IIbcTx {
         hash: string;
     };
     base_denom: string;
+    base_denom_chain_id: string;
     denoms: IDenomTrace;
     tx_time: number;
-    end_time: string;
+    end_time: number;
     expanded?: boolean;
 }
 export interface ITxInfo {
