@@ -37,13 +37,6 @@ export const useIbcStatisticsChains = defineStore('global', {
             });
             return ibcBaseDenomsUniqueKeyMap;
         },
-        ibcBaseDenomsSymbolKeyMapGetter(): { [key: string]: IBaseDenom } {
-            const ibcBaseDenomsSymbolKeyMap: { [key: string]: IBaseDenom } = {};
-            this.ibcBaseDenoms.forEach((token: IBaseDenom) => {
-                ibcBaseDenomsSymbolKeyMap[token.symbol] = token;
-            });
-            return ibcBaseDenomsSymbolKeyMap;
-        },
         ibcDenomsMapGetter(): { [key: string]: IResponseIbcDenom } {
             const ibcDenomsMap: { [key: string]: IResponseIbcDenom } = {};
             this.ibcDenoms.forEach((token: IResponseIbcDenom) => {
@@ -131,24 +124,21 @@ export const useIbcStatisticsChains = defineStore('global', {
                         }
                         const getSymbolInfo = (data: IIbcTx[]) => {
                             return data.map((item: IIbcTx) => {
-                                const symbol =
-                                    this.ibcDenomsMapGetter[
-                                        getDenomKey(item.sc_chain_id, item.denoms.sc_denom)
-                                    ]?.symbol;
+                                const unikey = getDenomKey(
+                                    item.base_denom_chain_id,
+                                    item.base_denom
+                                );
+                                const baseDenomsObj = this.ibcBaseDenomsUniqueKeyMapGetter[unikey];
                                 let symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
                                 let symbolDenom = item.base_denom || '';
                                 let symbolIcon = '';
-                                if (symbol) {
-                                    const baseDenomsObj =
-                                        this.ibcBaseDenomsSymbolKeyMapGetter[symbol];
-                                    if (baseDenomsObj) {
-                                        symbolNum = moveDecimal(
-                                            item.sc_tx_info?.msg_amount?.amount || 0,
-                                            0 - baseDenomsObj.scale
-                                        );
-                                        symbolDenom = baseDenomsObj.symbol;
-                                        symbolIcon = baseDenomsObj.icon;
-                                    }
+                                if (baseDenomsObj) {
+                                    symbolNum = moveDecimal(
+                                        item.sc_tx_info?.msg_amount?.amount || 0,
+                                        0 - baseDenomsObj.scale
+                                    );
+                                    symbolDenom = baseDenomsObj.symbol;
+                                    symbolIcon = baseDenomsObj.icon;
                                 }
                                 return {
                                     ...item,
