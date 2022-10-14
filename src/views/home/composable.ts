@@ -74,7 +74,6 @@ export const useIbcTxs = (timerInterval?: number) => {
         }, timerInterval);
     };
     onMounted(async () => {
-        await ibcStatisticsChainsStore.getIbcDenomsAction();
         initGetIbcTxs();
         if (Number(timerInterval) > 0) {
             intervalIbcTxs();
