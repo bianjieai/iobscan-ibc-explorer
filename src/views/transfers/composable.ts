@@ -4,17 +4,6 @@ import { IPaginationParams } from '@/types/interface/index.interface';
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { API_CODE } from '@/constants/apiCode';
 
-export const useIbcDenoms = () => {
-    const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcDenoms } = storeToRefs(ibcStatisticsChainsStore);
-    onMounted(() => {
-        ibcStatisticsChainsStore.getIbcDenomsAction();
-    });
-    return {
-        ibcDenoms
-    };
-};
-
 export const usePagination = () => {
     const route = useRoute();
     const pagination = reactive<IPaginationParams>({
