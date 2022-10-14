@@ -5,10 +5,11 @@
             <a-tab-pane
                 :key="TRANSFER_DETAILS_TAB.tableData"
                 :tab="TRANSFER_DETAILS_TAB.tableData"
-                class="view_source__first_tab"
+                :class="{ view_source__first_tab: sourceCode }"
             >
+                <loading-component v-if="loading" :is-page-loading="false" :height="208" />
                 <a-table
-                    v-if="sourceCode"
+                    v-else-if="sourceCode"
                     :columns="TRANSFER_DETAILS_TABLE"
                     :data-source="sourceCode"
                     :pagination="false"
@@ -42,15 +43,16 @@
                         <span v-else style="margin-right: 24px"></span>
                     </template>
                 </a-table>
-                <no-datas v-if="!sourceCode"></no-datas>
+                <no-datas v-else></no-datas>
             </a-tab-pane>
             <a-tab-pane
                 :key="TRANSFER_DETAILS_TAB.json"
                 :tab="TRANSFER_DETAILS_TAB.json"
                 force-render
             >
-                <pre v-if="JSONSource" class="view_source__json">{{ JSONSource }}</pre>
-                <no-datas v-if="!JSONSource" />
+                <loading-component v-if="loading" :is-page-loading="false" :height="208" />
+                <pre v-else-if="JSONSource" class="view_source__json">{{ JSONSource }}</pre>
+                <no-datas v-else />
             </a-tab-pane>
         </a-tabs>
     </div>

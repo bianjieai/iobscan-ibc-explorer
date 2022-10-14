@@ -11,7 +11,7 @@
                     <img :src="tokenLogo" alt="" />
                 </div>
                 <a-popover
-                    v-if="tokenName?.length > 18"
+                    v-if="tokenName?.length > 6"
                     destroy-tooltip-on-hide
                     class="token_info__name_popover"
                 >

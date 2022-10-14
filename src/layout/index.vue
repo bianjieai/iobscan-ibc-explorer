@@ -1,6 +1,6 @@
 <template>
     <a-config-provider>
-        <loading v-show="ibcStatisticsChainsStore.isShowLoading"></loading>
+        <loading-component v-show="ibcStatisticsChainsStore.isShowLoading" />
         <div ref="layout" class="layout">
             <div class="layout__header">
                 <ibc-header />
@@ -75,6 +75,7 @@
         }
         &__footer {
             width: 100%;
+            z-index: 1100;
         }
     }
     @media screen and (min-width: 1920px) {

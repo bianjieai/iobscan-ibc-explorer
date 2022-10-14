@@ -839,7 +839,8 @@
         searchToken.value = id;
         if (val?.inputFlag) {
             queryParam.symbol = undefined;
-            queryParam.denom = id ? `ibc/${id.toUpperCase()}` : undefined;
+            const transferId = id.replace(/^ibc\//i, '');
+            queryParam.denom = id ? `ibc/${transferId.toUpperCase()}` : undefined;
         } else {
             queryParam.symbol = id || undefined;
             queryParam.denom = undefined;
