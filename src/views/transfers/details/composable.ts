@@ -765,9 +765,7 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     });
 
     watch(JSONSource, (newJSONSource) => {
-        if (newJSONSource) {
-            sourceCode.value = getJSONData(newJSONSource);
-        }
+        sourceCode.value = newJSONSource ? getJSONData(newJSONSource) : newJSONSource;
     });
 
     return {
