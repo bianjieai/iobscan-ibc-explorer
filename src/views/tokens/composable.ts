@@ -109,8 +109,11 @@ export const useTokensSelected = (
     const tokensDropdown = ref();
     const chainIdQuery = route.query.chain as string;
     const denomQuery = route.query.denom as string;
+    const denomChainIdQuery = route.query.denomChainId as string;
     const statusQuery = route.query.status as TTokenType;
     const searchDenom = ref(denomQuery);
+    const searchDenomChainId = ref(denomChainIdQuery);
+    const searchTokenKey = ref((denomQuery || '') + (denomChainIdQuery || ''));
     const searchChain = ref<string | undefined>(chainIdQuery);
     const searchStatus = ref<TTokenType>(statusQuery);
     const tokenData = computed(() => {
@@ -129,7 +132,7 @@ export const useTokensSelected = (
                 groupName: 'Authed IBC Tokens',
                 children: ibcBaseDenomsSorted.value.map((v) => ({
                     title: v.symbol,
-                    id: v.denom,
+                    id: v.denom + v.chain_id,
                     icon: v.icon || TOKEN_DEFAULT_ICON,
                     metaData: v
                 }))
@@ -174,15 +177,25 @@ export const useTokensSelected = (
             'event',
             `${router.currentRoute.value.name as string}-点击过滤条件Token`
         );
-        const denom = val?.id;
-        if (denom) {
-            searchDenom.value = denom as string;
+        const id = val?.id;
+        const denom = val?.metaData?.denom;
+        const denomChainId = val?.metaData?.chain_id;
+        if (id) {
+            searchDenom.value = denom || id;
+            searchDenomChainId.value = denomChainId;
+            searchTokenKey.value = id as string;
         } else {
             searchDenom.value = '';
+            searchDenomChainId.value = '';
+            searchTokenKey.value = '';
         }
         pageUrl = urlPageParser(pageUrl, {
             key: 'denom',
-            value: denom as string
+            value: searchDenom.value
+        });
+        pageUrl = urlPageParser(pageUrl, {
+            key: 'denomChainId',
+            value: searchDenomChainId.value
         });
         router.replace(pageUrl);
         refreshList();
@@ -222,6 +235,7 @@ export const useTokensSelected = (
             ...BASE_PARAMS,
             base_denom: searchDenom.value,
             chain: searchChain.value,
+            base_denom_chain_id: searchDenomChainId.value,
             token_type: searchStatus.value,
             loading: loading
         });
@@ -239,7 +253,7 @@ export const useTokensSelected = (
         onSelectedStatus,
         tokenData,
         chainData,
-        searchDenom,
+        searchTokenKey,
         searchChain,
         statusQuery
     };

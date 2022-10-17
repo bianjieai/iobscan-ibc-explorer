@@ -6,6 +6,7 @@ export type TIbcTokenType = 'Authed' | 'Other' | 'Genesis';
 
 export interface IRequestTokensList extends IRequestPagination {
     base_denom?: string;
+    base_denom_chain_id?: string;
     chain?: string;
     token_type?: TTokenType;
     loading?: Ref<boolean>;
@@ -43,7 +44,6 @@ export interface IResponseIbcTokenListItem {
 
 export interface IResponseTokensList {
     items: IResponseTokensListItem[];
-    page_info: IResponsePageInfo;
 }
 
 export interface IResponseIbcTokenList {

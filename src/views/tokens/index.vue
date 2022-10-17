@@ -5,7 +5,7 @@
             <BjSelect
                 ref="tokensDropdown"
                 :data="tokenData"
-                :value="searchDenom"
+                :value="searchTokenKey"
                 placeholder="All Tokens"
                 :input-ctn="{
                     title: 'Custom IBC Tokens',
@@ -168,7 +168,7 @@
         onSelectedStatus,
         tokenData,
         chainData,
-        searchDenom,
+        searchTokenKey,
         searchChain,
         statusQuery
     } = useTokensSelected(ibcBaseDenomsSorted, ibcChains, getTokensList, getIbcBaseDenom, loading);
