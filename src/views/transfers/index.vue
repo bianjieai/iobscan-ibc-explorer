@@ -155,8 +155,8 @@
                                 class="token__link hover"
                                 :to="
                                     record.status === IBC_TX_STATUS.SUCCESS
-                                        ? `/tokens/details?denom=${record.base_denom}&chain=${record.dc_chain_id}`
-                                        : `/tokens/details?denom=${record.base_denom}&chain=${record.sc_chain_id}`
+                                        ? `/tokens/details?denom=${record.base_denom}&denomChainId=${record.base_denom_chain_id}&chain=${record.dc_chain_id}`
+                                        : `/tokens/details?denom=${record.base_denom}&denomChainId=${record.base_denom_chain_id}&chain=${record.sc_chain_id}`
                                 "
                                 @click.stop=""
                             >

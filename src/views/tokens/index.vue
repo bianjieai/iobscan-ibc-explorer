@@ -5,7 +5,7 @@
             <BjSelect
                 ref="tokensDropdown"
                 :data="tokenData"
-                :value="searchDenom"
+                :value="searchTokenKey"
                 placeholder="All Tokens"
                 :input-ctn="{
                     title: 'Custom IBC Tokens',
@@ -60,7 +60,7 @@
                     :denom="record[column.key]"
                     :chain-id="record.chain_id"
                     :denoms-data="ibcBaseDenoms"
-                    @click-title="goIbcToken(record.base_denom)"
+                    @click-title="goIbcToken(record.base_denom, record.chain_id)"
                 />
             </template>
             <template #price="{ record, column }">
@@ -116,7 +116,7 @@
             </template>
 
             <template #chains_involved="{ record, column }">
-                <div class="hover_cursor" @click="goIbcToken(record.base_denom)">{{
+                <div class="hover_cursor" @click="goIbcToken(record.base_denom, record.chain_id)">{{
                     record[column.key]
                 }}</div>
             </template>
@@ -168,7 +168,7 @@
         onSelectedStatus,
         tokenData,
         chainData,
-        searchDenom,
+        searchTokenKey,
         searchChain,
         statusQuery
     } = useTokensSelected(ibcBaseDenomsSorted, ibcChains, getTokensList, getIbcBaseDenom, loading);

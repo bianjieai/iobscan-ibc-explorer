@@ -1,3 +1,4 @@
+import { API_ERRPR_MESSAGE } from '@/constants/apiCode';
 import { getTxDetailsByTxHashAPI, getTxDetailsViewSourceByTxHashAPI } from '@/api/transfers';
 import { useMatchChainInfo } from '@/composables';
 import {
@@ -698,6 +699,7 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const sourceCode = ref();
     const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);
     const sourceMap = new Map();
+    const errorText = ref('');
     const getIbcSource = async (hash: string, chainId: string, msgType: string) => {
         loading && (loading.value = true);
         if (sourceMap.get(hash)) {
@@ -711,14 +713,26 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
                     params
                 );
                 loading && (loading.value = false);
-                if (code === API_CODE.success) {
-                    sourceMap.set(hash, data);
-                    return data;
-                } else {
-                    console.error(message);
+                switch (code) {
+                    case API_CODE.success:
+                        sourceMap.set(hash, data);
+                        return data;
+                    case API_CODE.wrongRequestParameters:
+                        errorText.value = API_ERRPR_MESSAGE.wrongRequestParameters;
+                        console.error(message);
+                        break;
+                    case API_CODE.systemAbnormality:
+                        errorText.value = API_ERRPR_MESSAGE.systemAbnormality;
+                        console.error(message);
+                        break;
+                    case API_CODE.nodeAccessError:
+                        errorText.value = API_ERRPR_MESSAGE.nodeAccessError;
+                        console.error(message);
+                        break;
                 }
             } catch (error) {
                 console.log(error);
+                errorText.value = API_ERRPR_MESSAGE.networkError;
                 loading && (loading.value = false);
             }
         }
@@ -773,6 +787,7 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
         JSONSource,
         sourceCode,
         tableExpand,
-        tablePackUp
+        tablePackUp,
+        errorText
     };
 };

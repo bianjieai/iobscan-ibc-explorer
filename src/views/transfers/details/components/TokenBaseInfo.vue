@@ -5,7 +5,7 @@
             <router-link
                 v-if="tokenName !== DEFAULT_DISPLAY_TEXT"
                 class="token_info__left"
-                :to="`/tokens/details?denom=${tokenInfo?.base_denom}`"
+                :to="`/tokens/details?denom=${tokenInfo?.base_denom}&denomChainId=${tokenInfo?.base_denom_chain_id}`"
             >
                 <div class="token_info__icon">
                     <img :src="tokenLogo" alt="" />

@@ -8,7 +8,7 @@ export enum API_URL {
     ibcTxDetailsUrl = '/ibc/txs_detail/',
     ibcTxDetailsSourceUrl = '/ibc/trace_source/',
     ibcTokensListUrl = '/ibc/tokenList',
-    ibcIbcTokenListUrl = '/ibcTokenList',
+    ibcIbcTokenListUrl = '/ibc/ibcTokenList',
     ibcChainsListUrl = '/ibc/chainList',
     ibcChannelsListUrl = '/ibc/channelList',
     ibcRelayerListUrl = '/ibc/relayerList'

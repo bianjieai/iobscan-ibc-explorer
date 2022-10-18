@@ -18,11 +18,10 @@ export const getTokensListAPI = async (params: IRequestTokensList) => {
     });
 };
 
-export const getIbcTokenListAPI = async (base_denom: string, params: IRequestIbcTokenList) => {
+export const getIbcTokenListAPI = async (params: IRequestIbcTokenList) => {
     executeCancel(params.use_count);
-    const ibcTokenListUrl = `/ibc/${base_denom.replace('ibc/', '')}${API_URL.ibcIbcTokenListUrl}`;
     return request<IResponse<IResponseIbcTokenList | number>>({
-        url: ibcTokenListUrl,
+        url: API_URL.ibcIbcTokenListUrl,
         method: 'get',
         params: params,
         cancelToken: setExecuteCancel(params.use_count)

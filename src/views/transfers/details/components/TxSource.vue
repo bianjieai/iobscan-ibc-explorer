@@ -43,7 +43,7 @@
                         <span v-else style="margin-right: 24px"></span>
                     </template>
                 </a-table>
-                <no-datas v-else></no-datas>
+                <no-datas v-else :text="errorText"></no-datas>
             </a-tab-pane>
             <a-tab-pane
                 :key="TRANSFER_DETAILS_TAB.json"
@@ -52,7 +52,7 @@
             >
                 <loading-component v-if="loading" :is-page-loading="false" :height="208" />
                 <pre v-else-if="JSONSource" class="view_source__json">{{ JSONSource }}</pre>
-                <no-datas v-else />
+                <no-datas v-else :text="errorText" />
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -73,10 +73,8 @@
     const props = defineProps<IProps>();
     const { loading } = useLoading();
     // todo shan 明确入参 需要优化
-    const { activeKey, JSONSource, sourceCode, tableExpand, tablePackUp } = useViewSource(
-        props,
-        loading
-    );
+    const { activeKey, JSONSource, sourceCode, tableExpand, tablePackUp, errorText } =
+        useViewSource(props, loading);
 </script>
 
 <style lang="less" scoped>
