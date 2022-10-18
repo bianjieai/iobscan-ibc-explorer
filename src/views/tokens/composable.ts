@@ -18,6 +18,7 @@ import { axiosCancel } from '@/utils/axios';
 import ChainHelper from '@/helper/chainHelper';
 import { CHAIN_DEFAULT_VALUE, TOKEN_DEFAULT_VALUE } from '@/constants/tokens';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
+import { rmIbcPrefix } from '@/helper/parseStringHelper';
 
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
@@ -113,7 +114,11 @@ export const useTokensSelected = (
     const statusQuery = route.query.status as TTokenType;
     const searchDenom = ref(baseDenomQuery);
     const searchDenomChainId = ref(baseDenomChainIdQuery);
-    const searchTokenKey = ref((baseDenomQuery || '') + (baseDenomChainIdQuery || ''));
+    let rmIbcPrefixBaseDenomQuery = '';
+    if (baseDenomQuery && rmIbcPrefix(baseDenomQuery as string).length) {
+        rmIbcPrefixBaseDenomQuery = rmIbcPrefix(baseDenomQuery as string);
+    }
+    const searchTokenKey = ref((rmIbcPrefixBaseDenomQuery || '') + (baseDenomChainIdQuery || ''));
     const searchChain = ref<string | undefined>(chainIdQuery);
     const searchStatus = ref<TTokenType>(statusQuery);
     const tokenData = computed(() => {
@@ -181,7 +186,13 @@ export const useTokensSelected = (
         const denom = val?.metaData?.denom;
         const denomChainId = val?.metaData?.chain_id;
         if (id) {
-            searchDenom.value = denom || id;
+            if (val?.inputFlag) {
+                const transferId = (id as string).replace(/^ibc\//i, '');
+                const ibcId = `ibc/${transferId.toUpperCase()}`;
+                searchDenom.value = ibcId;
+            } else {
+                searchDenom.value = denom || id;
+            }
             searchDenomChainId.value = denomChainId;
             searchTokenKey.value = id as string;
         } else {
@@ -234,8 +245,8 @@ export const useTokensSelected = (
         getTokensList({
             ...BASE_PARAMS,
             base_denom: searchDenom.value,
-            chain: searchChain.value,
             base_denom_chain_id: searchDenomChainId.value,
+            chain: searchChain.value,
             token_type: searchStatus.value,
             loading: loading
         });
