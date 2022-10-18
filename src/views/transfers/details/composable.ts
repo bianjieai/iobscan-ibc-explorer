@@ -732,8 +732,7 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
                 }
             } catch (error) {
                 console.log(error);
-                // todo 网络异常展示的文案
-                errorText.value = API_ERRPR_MESSAGE.noData;
+                errorText.value = API_ERRPR_MESSAGE.networkError;
                 loading && (loading.value = false);
             }
         }
