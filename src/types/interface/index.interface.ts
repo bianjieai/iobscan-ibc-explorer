@@ -1,3 +1,4 @@
+import { API_CODE } from '@/constants/apiCode';
 import { CHAIN_STATUS } from '@/constants/index';
 /*************** req ***********************/
 export interface IRequestPagination {
@@ -14,7 +15,7 @@ export interface IRequestPagination2 {
 
 /*************** res *************************/
 export interface IResponse<P = {}> {
-    code: number;
+    code: API_CODE;
     message?: string;
     data: P;
 }
