@@ -134,6 +134,7 @@
         statusDropdown,
         searchChain,
         chainData,
+        baseDenomQuery,
         onSelectedChain,
         onSelectedStatus,
         baseDenomInfo,

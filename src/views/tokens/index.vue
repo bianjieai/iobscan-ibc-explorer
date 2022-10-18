@@ -116,7 +116,7 @@
             </template>
 
             <template #chains_involved="{ record, column }">
-                <div class="hover_cursor" @click="goIbcToken(record.base_denom)">{{
+                <div class="hover_cursor" @click="goIbcToken(record.base_denom, record.chain_id)">{{
                     record[column.key]
                 }}</div>
             </template>

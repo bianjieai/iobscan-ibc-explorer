@@ -202,6 +202,7 @@ export const useIbcTokenSelected = (
         statusDropdown,
         searchChain,
         chainData,
+        baseDenomQuery,
         onSelectedChain,
         onSelectedStatus,
         baseDenomInfo,
