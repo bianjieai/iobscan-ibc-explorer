@@ -127,7 +127,7 @@
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
-    const { ibcTokenList, getIbcTokenList, subtitle, baseDenomQuery } = useGetIbcTokenList();
+    const { ibcTokenList, getIbcTokenList, subtitle } = useGetIbcTokenList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
     const {
         chainDropdown,
@@ -138,15 +138,8 @@
         onSelectedStatus,
         baseDenomInfo,
         statusQuery
-    } = useIbcTokenSelected(
-        ibcChains,
-        baseDenomQuery,
-        getIbcBaseDenom,
-        getIbcTokenList,
-        ibcBaseDenoms,
-        loading
-    );
-    const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump(baseDenomQuery);
+    } = useIbcTokenSelected(ibcChains, getIbcBaseDenom, getIbcTokenList, ibcBaseDenoms, loading);
+    const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump();
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
 </script>
 

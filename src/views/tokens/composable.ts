@@ -108,12 +108,12 @@ export const useTokensSelected = (
     const statusDropdown = ref();
     const tokensDropdown = ref();
     const chainIdQuery = route.query.chain as string;
-    const denomQuery = route.query.denom as string;
-    const denomChainIdQuery = route.query.denomChainId as string;
+    const baseDenomQuery = route.query.denom as string;
+    const baseDenomChainIdQuery = route.query.denomChainId as string;
     const statusQuery = route.query.status as TTokenType;
-    const searchDenom = ref(denomQuery);
-    const searchDenomChainId = ref(denomChainIdQuery);
-    const searchTokenKey = ref((denomQuery || '') + (denomChainIdQuery || ''));
+    const searchDenom = ref(baseDenomQuery);
+    const searchDenomChainId = ref(baseDenomChainIdQuery);
+    const searchTokenKey = ref((baseDenomQuery || '') + (baseDenomChainIdQuery || ''));
     const searchChain = ref<string | undefined>(chainIdQuery);
     const searchStatus = ref<TTokenType>(statusQuery);
     const tokenData = computed(() => {
@@ -264,11 +264,12 @@ export const useTokensColumnJump = (getBaseDenomInfoByDenom: any) => {
     const goChains = () => {
         router.push('/chains');
     };
-    const goIbcToken = (denom: string) => {
+    const goIbcToken = (baseDenom: string, baseDenomChainId: string) => {
         router.push({
             path: '/tokens/details',
             query: {
-                denom
+                denom: baseDenom,
+                denomChainId: baseDenomChainId
             }
         });
     };

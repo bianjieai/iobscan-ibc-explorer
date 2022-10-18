@@ -60,7 +60,7 @@
                     :denom="record[column.key]"
                     :chain-id="record.chain_id"
                     :denoms-data="ibcBaseDenoms"
-                    @click-title="goIbcToken(record.base_denom)"
+                    @click-title="goIbcToken(record.base_denom, record.chain_id)"
                 />
             </template>
             <template #price="{ record, column }">
