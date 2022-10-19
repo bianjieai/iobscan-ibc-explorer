@@ -6,6 +6,8 @@
                 ref="tokensDropdown"
                 :data="tokenData"
                 :value="searchTokenKey"
+                :input-flag="inputFlag"
+                :change-input-flag="changeInputFlag"
                 placeholder="All Tokens"
                 :input-ctn="{
                     title: 'Custom IBC Tokens',
@@ -174,7 +176,9 @@
         chainData,
         searchTokenKey,
         searchChain,
-        statusQuery
+        statusQuery,
+        inputFlag,
+        changeInputFlag
     } = useTokensSelected(ibcBaseDenomsSorted, ibcChains, getTokensList, getIbcBaseDenom, loading);
     const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
         useTokensColumnJump(getBaseDenomInfoByDenom);

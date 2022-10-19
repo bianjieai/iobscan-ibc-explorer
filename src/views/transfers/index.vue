@@ -7,6 +7,8 @@
                     <BjSelect
                         :data="tokenData"
                         :value="searchToken"
+                        :input-flag="inputFlag"
+                        :change-input-flag="changeInputFlag"
                         placeholder="All Tokens"
                         :input-ctn="{
                             title: 'Custom IBC Tokens',
@@ -351,8 +353,9 @@
     const pickerPlaceholderColor = ref('var(--bj-text-second)');
 
     let paramsStatus = null,
-        paramsSymbol: string | null = null,
-        paramsDenom: string | null = null,
+        paramsBaseDenom: string | undefined = undefined,
+        paramsBaseDenomChainId: string | undefined = undefined,
+        paramsDenom: string | undefined = undefined,
         startTimestamp = 0,
         endTimestamp = 0;
     const dateRange = reactive({ value: [] });
@@ -363,6 +366,10 @@
     let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
     const route = useRoute();
     const router = useRouter();
+    const inputFlag = ref(false);
+    const changeInputFlag = (flag: boolean) => {
+        inputFlag.value = flag;
+    };
 
     const getImageUrl = (status: string | number) => {
         return new URL(`../../assets/status/transfer_status${status}.png`, import.meta.url).href;
@@ -378,14 +385,20 @@
         paramsDenom = route?.query.denom as string;
     }
     if (
-        route?.query?.symbol &&
-        (route?.query?.symbol as string)?.toLowerCase() !== UNKNOWN_SYMBOL
+        route?.query?.baseDenom &&
+        (route?.query?.baseDenom as string)?.toLowerCase() !== UNKNOWN_SYMBOL
     ) {
-        url += `&symbol=${route.query.symbol}`;
-        paramsSymbol = route?.query.symbol as string;
-        searchToken.value = paramsSymbol;
-    } else if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
+        url += `&baseDenom=${route.query.baseDenom}`;
+        paramsBaseDenom = route?.query.baseDenom as string | undefined;
+    }
+    if (route?.query?.baseDenomChainId) {
+        url += `&baseDenomChainId=${route.query.baseDenomChainId}`;
+        paramsBaseDenomChainId = route?.query.baseDenomChainId as string | undefined;
+    }
+    searchToken.value = (paramsBaseDenom || '') + (paramsBaseDenomChainId || '');
+    if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
         searchToken.value = rmIbcPrefix(paramsDenom as string);
+        inputFlag.value = true;
     }
     if (route?.query?.status) {
         const defaultOptions = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
@@ -432,7 +445,8 @@
                 : [0, Math.floor(new Date().getTime() / 1000)],
         status: paramsStatus || TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS,
         chain_id: chainId || undefined,
-        symbol: paramsSymbol || undefined,
+        base_denom: paramsBaseDenom || undefined,
+        base_denom_chain_id: paramsBaseDenomChainId || undefined,
         denom: paramsDenom || undefined
     });
 
@@ -451,7 +465,8 @@
             status: queryParam.status?.toString(),
             chain_id: queryParam.chain_id,
             date_range: queryParam.date_range?.toString(),
-            symbol: queryParam.symbol,
+            base_denom: queryParam.base_denom,
+            base_denom_chain_id: queryParam.base_denom_chain_id,
             denom: queryParam.denom
         };
 
@@ -471,7 +486,8 @@
                 if (
                     !params.chain_id &&
                     !params.denom &&
-                    !params.symbol &&
+                    !params.base_denom &&
+                    !params.base_denom_chain_id &&
                     params.status === TX_STATUS_NUMBER.defaultStatus &&
                     isDateDefaultValue
                 ) {
@@ -587,8 +603,14 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
-            url += `&symbol=${queryParam.symbol}`;
+        if (
+            queryParam?.base_denom &&
+            (queryParam?.base_denom as string)?.toLowerCase() !== UNKNOWN_SYMBOL
+        ) {
+            url += `&baseDenom=${queryParam.base_denom}`;
+        }
+        if (queryParam?.base_denom_chain_id) {
+            url += `&baseDenomChainId=${queryParam.base_denom_chain_id}`;
         }
         if (queryParam?.status) {
             url += `&status=${queryParam.status.join(',')}`;
@@ -634,8 +656,14 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
-            url += `&symbol=${queryParam.symbol}`;
+        if (
+            queryParam?.base_denom &&
+            (queryParam?.base_denom as string)?.toLowerCase() !== UNKNOWN_SYMBOL
+        ) {
+            url += `&baseDenom=${queryParam.base_denom}`;
+        }
+        if (queryParam?.base_denom_chain_id) {
+            url += `&baseDenomChainId=${queryParam.base_denom_chain_id}`;
         }
         if (queryParam?.status) {
             url += `&status=${queryParam.status.join(',')}`;
@@ -668,8 +696,11 @@
         if (params?.denom) {
             url += `&denom=${params.denom}`;
         }
-        if (params?.symbol) {
-            url += `&symbol=${params.symbol}`;
+        if (params?.baseDenom && (params?.baseDenom as string)?.toLowerCase() !== UNKNOWN_SYMBOL) {
+            url += `&baseDenom=${params.baseDenom}`;
+        }
+        if (params?.baseDenomChainId) {
+            url += `&baseDenomChainId=${params.baseDenomChainId}`;
         }
         if (params?.status) {
             url += `&status=${params.status}`;
@@ -705,10 +736,11 @@
         queryParam.date_range = [];
         queryParam.status = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
         queryParam.chain_id = undefined;
-        queryParam.symbol = undefined;
+        queryParam.base_denom = undefined;
+        queryParam.base_denom_chain_id = undefined;
         queryParam.denom = undefined;
         pagination.current = 1;
-        url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
+        url = '/transfers';
         router.replace(url);
         chainIds.value = [];
         searchToken.value = undefined;
@@ -756,8 +788,14 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
-            url += `&symbol=${queryParam.symbol}`;
+        if (
+            queryParam?.base_denom &&
+            (queryParam?.base_denom as string)?.toLowerCase() !== UNKNOWN_SYMBOL
+        ) {
+            url += `&baseDenom=${queryParam.base_denom}`;
+        }
+        if (queryParam?.base_denom_chain_id) {
+            url += `&baseDenomChainId=${queryParam.base_denom_chain_id}`;
         }
         if (queryParam?.status) {
             url += `&status=${queryParam.status.join(',')}`;
@@ -814,7 +852,7 @@
                 groupName: 'Authed IBC Tokens',
                 children: ibcBaseDenomsSorted.value.map((v) => ({
                     title: v.symbol,
-                    id: v.symbol,
+                    id: v.denom + v.chain_id,
                     icon: v.icon || TOKEN_DEFAULT_ICON,
                     metaData: v
                 }))
@@ -835,15 +873,29 @@
     const onSelectedToken = (val?: IDataItem) => {
         (window as any).gtag('event', 'Transfers-点击过滤条件Token');
         pagination.current = 1;
-        const id = String(val?.id || '');
-        searchToken.value = id;
-        if (val?.inputFlag) {
-            queryParam.symbol = undefined;
-            const transferId = id.replace(/^ibc\//i, '');
-            queryParam.denom = id ? `ibc/${transferId.toUpperCase()}` : undefined;
+        const id = val?.id;
+        const denom = val?.metaData?.denom;
+        const denomChainId = val?.metaData?.chain_id;
+        if (id) {
+            if (val?.inputFlag) {
+                inputFlag.value = true;
+                const transferId = (id as string).replace(/^ibc\//i, '');
+                queryParam.denom = id ? `ibc/${transferId.toUpperCase()}` : undefined;
+                queryParam.base_denom = undefined;
+                queryParam.base_denom_chain_id = undefined;
+            } else {
+                inputFlag.value = false;
+                queryParam.base_denom = denom || id;
+                queryParam.base_denom_chain_id = denomChainId;
+                queryParam.denom = undefined;
+            }
+            searchToken.value = id as string;
         } else {
-            queryParam.symbol = id || undefined;
+            inputFlag.value = false;
+            queryParam.base_denom = undefined;
+            queryParam.base_denom_chain_id = undefined;
             queryParam.denom = undefined;
+            searchToken.value = '';
         }
         url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
         if (queryParam?.chain_id) {
@@ -852,8 +904,14 @@
         if (queryParam?.denom) {
             url += `&denom=${queryParam.denom}`;
         }
-        if (queryParam?.symbol && queryParam?.symbol?.toLowerCase() !== UNKNOWN_SYMBOL) {
-            url += `&symbol=${queryParam.symbol}`;
+        if (
+            queryParam?.base_denom &&
+            (queryParam?.base_denom as string)?.toLowerCase() !== UNKNOWN_SYMBOL
+        ) {
+            url += `&baseDenom=${queryParam.base_denom}`;
+        }
+        if (queryParam?.base_denom_chain_id) {
+            url += `&baseDenomChainId=${queryParam.base_denom_chain_id}`;
         }
         if (queryParam?.status) {
             url += `&status=${queryParam.status.join(',')}`;

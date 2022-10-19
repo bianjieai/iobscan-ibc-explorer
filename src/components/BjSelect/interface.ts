@@ -24,6 +24,7 @@ export type TProps = {
     data: TData;
     value?: TDenom | TDenom[];
     mode?: MODES.multiple | MODES.double;
+    inputFlag?: boolean;
     placeholder?: string;
     hideIcon?: boolean;
     associateId?: string | number; // 双选时候，input输入时候一个值时候，另外展示的值
@@ -40,4 +41,4 @@ export type TProps = {
 
 export type ModeType = TProps['mode'];
 
-export type TUseInit = Pick<TProps, 'mode' | 'data' | 'value'>;
+export type TUseInit = Pick<TProps, 'mode' | 'data' | 'value' | 'inputFlag'>;
