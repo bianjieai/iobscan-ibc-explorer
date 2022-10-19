@@ -108,16 +108,16 @@ export const useIbcTokenSelected = (
     const statusQuery = route.query.status as TIbcTokenType;
     const searchChain = ref<string | undefined>(chainIdQuery ?? undefined);
     const searchStatus = ref<TIbcTokenType | undefined>(statusQuery);
-    const baseDenomQuery = route.query.denom as string | undefined;
+    const baseDenomAndChainId = `${route.query.denom || ''}${route.query.denomChainId || ''}`;
     const baseDenomInfo = computed(() => {
         const filterData = ibcBaseDenoms.value.filter(
-            (item: IBaseDenom) => item.denom === baseDenomQuery
+            (item: IBaseDenom) => item.denom + item.chain_id === baseDenomAndChainId
         );
         let symbol = '';
         const filterSymbol = filterData[0]?.symbol;
 
         if (filterData.length === 0 || isNullOrEmpty(filterSymbol)) {
-            symbol = getRestString(baseDenomQuery, 3, 8) || '';
+            symbol = getRestString(route.query.denom, 3, 8) || '';
         } else {
             if (filterSymbol.includes('ibc')) {
                 symbol = getRestString(filterSymbol.replace(/ibc\//, ''), 3, 8);
@@ -202,7 +202,7 @@ export const useIbcTokenSelected = (
         statusDropdown,
         searchChain,
         chainData,
-        baseDenomQuery,
+        baseDenomAndChainId,
         onSelectedChain,
         onSelectedStatus,
         baseDenomInfo,
