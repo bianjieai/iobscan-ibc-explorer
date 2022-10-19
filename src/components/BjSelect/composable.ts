@@ -23,7 +23,7 @@ export const useInit = (props: TUseInit) => {
         flatData.value = tempFlats;
     };
 
-    const resetVal = (val?: TDenom | TDenom[]) => {
+    const resetVal = (val?: TDenom | TDenom[], inputFlag?: boolean) => {
         tokenInput.value = undefined; // 清空input
         selectItems.value = []; // 清空选中
 
@@ -42,7 +42,7 @@ export const useInit = (props: TUseInit) => {
         const inputItems: IDataItem[] = [];
         values.forEach((v) => {
             const temp = flatData.value.find((item) => item.id === v);
-            if (temp) {
+            if (temp && !inputFlag) {
                 selectItems.value.push(temp);
             } else {
                 inputItems.push({
@@ -56,19 +56,18 @@ export const useInit = (props: TUseInit) => {
                 });
             }
         });
-
         tokenInput.value = inputItems.map((v) => v.id).join(',');
     };
 
     onMounted(() => {
         resetFlatArr(props.data);
-        resetVal(props.value);
+        resetVal(props.value, props.inputFlag);
     });
 
     watch(
         () => props.value,
         (newVal) => {
-            resetVal(newVal);
+            resetVal(newVal, props.inputFlag);
         }
     );
 
@@ -76,7 +75,7 @@ export const useInit = (props: TUseInit) => {
         () => props.data,
         (newData) => {
             resetFlatArr(newData);
-            resetVal(props.value);
+            resetVal(props.value, props.inputFlag);
         }
     );
 

@@ -5,7 +5,8 @@ export interface IRequestIbcTxs extends IRequestPagination2 {
     date_range?: string;
     status?: string;
     chain_id?: string;
-    symbol?: string;
+    base_denom?: string;
+    base_denom_chain_id?: string;
     denom?: string;
     start_time?: string;
 }

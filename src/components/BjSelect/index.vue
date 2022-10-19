@@ -169,6 +169,8 @@
         data: TData;
         // ux交互：选中时候展示default颜色。
         selectColorDefaultVal?: string | number | (string | number)[];
+        inputFlag?: boolean;
+        changeInputFlag?: (flag: boolean) => void;
         value?: string | number | (string | number)[];
         mode?: MODES.multiple | MODES.double;
         placeholder?: string;
@@ -197,7 +199,8 @@
     const { visible, selectItems, tokenInput, flatData, resetVal } = useInit(props);
 
     // 是否选中
-    const isSelected = (val: TDenom) => selectItems.value.some((v) => v.id === val);
+    const isSelected = (val: TDenom) =>
+        selectItems.value.some((v) => v.id === val && !props.inputFlag);
 
     // 获取badges
     const getBadgeStr = (val: TDenom) => {
@@ -287,13 +290,14 @@
 
     const visibleChange = (visible: boolean) => {
         // 收起展开时候都重新赋值
-        resetVal(props.value);
+        resetVal(props.value, props.inputFlag);
 
         // 监听一些滚动，只是为了加阴影
         scrollFn(visible);
     };
 
     const onInputChange = () => {
+        props.changeInputFlag && props.changeInputFlag(true);
         let res: IDataItem[] = [];
         const inputItems = inputItemsByMode(tokenInput.value, props.mode);
 

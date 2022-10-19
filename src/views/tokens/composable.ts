@@ -104,6 +104,10 @@ export const useTokensSelected = (
 ) => {
     const router = useRouter();
     const route = useRoute();
+    const inputFlag = ref(false);
+    const changeInputFlag = (flag: boolean) => {
+        inputFlag.value = flag;
+    };
     let pageUrl = '/tokens';
     const chainDropdown = ref();
     const statusDropdown = ref();
@@ -187,27 +191,33 @@ export const useTokensSelected = (
         const denomChainId = val?.metaData?.chain_id;
         if (id) {
             if (val?.inputFlag) {
+                inputFlag.value = true;
                 const transferId = (id as string).replace(/^ibc\//i, '');
                 const ibcId = `ibc/${transferId.toUpperCase()}`;
                 searchDenom.value = ibcId;
             } else {
+                inputFlag.value = false;
                 searchDenom.value = denom || id;
             }
             searchDenomChainId.value = denomChainId;
             searchTokenKey.value = id as string;
         } else {
+            inputFlag.value = false;
             searchDenom.value = '';
             searchDenomChainId.value = '';
             searchTokenKey.value = '';
         }
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'denom',
-            value: searchDenom.value
-        });
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'denomChainId',
-            value: searchDenomChainId.value
-        });
+        pageUrl = urlPageParser(
+            pageUrl,
+            {
+                key: 'denom',
+                value: searchDenom.value
+            },
+            {
+                key: 'denomChainId',
+                value: searchDenomChainId.value
+            }
+        );
         router.replace(pageUrl);
         refreshList();
     };
@@ -266,7 +276,9 @@ export const useTokensSelected = (
         chainData,
         searchTokenKey,
         searchChain,
-        statusQuery
+        statusQuery,
+        inputFlag,
+        changeInputFlag
     };
 };
 
@@ -284,10 +296,11 @@ export const useTokensColumnJump = (getBaseDenomInfoByDenom: any) => {
             }
         });
     };
-
     const goTransfer = (denom: string, chainId: string) => {
         const baseDenomInfo = getBaseDenomInfoByDenom(denom, chainId);
-        const query = baseDenomInfo ? { symbol: baseDenomInfo.symbol } : { denom };
+        const query = baseDenomInfo
+            ? { baseDenom: baseDenomInfo.denom, baseDenomChainId: baseDenomInfo.chain_id }
+            : { denom };
         router.push({
             path: '/transfers',
             query: query
