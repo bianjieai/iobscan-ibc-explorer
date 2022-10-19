@@ -90,13 +90,16 @@
                     <template #content>
                         <div class="popover_c">{{
                             `${
-                                formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms)
+                                formatAmount(record[column.key], baseDenomAndChainId, ibcBaseDenoms)
                                     .popover
                             }`
                         }}</div>
                     </template>
                     <div>{{
-                        `${formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms).title}`
+                        `${
+                            formatAmount(record[column.key], baseDenomAndChainId, ibcBaseDenoms)
+                                .title
+                        }`
                     }}</div>
                 </a-popover>
             </template>
@@ -134,7 +137,7 @@
         statusDropdown,
         searchChain,
         chainData,
-        baseDenomQuery,
+        baseDenomAndChainId,
         onSelectedChain,
         onSelectedStatus,
         baseDenomInfo,

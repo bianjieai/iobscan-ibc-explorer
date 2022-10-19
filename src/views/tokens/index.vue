@@ -94,7 +94,7 @@
                                 `${
                                     formatAmount(
                                         record[column.key],
-                                        record.base_denom,
+                                        record.base_denom + record.chain_id,
                                         ibcBaseDenoms
                                     ).popover
                                 }`
@@ -103,7 +103,11 @@
                     </template>
                     <div>{{
                         `${
-                            formatAmount(record[column.key], record.base_denom, ibcBaseDenoms).title
+                            formatAmount(
+                                record[column.key],
+                                record.base_denom + record.chain_id,
+                                ibcBaseDenoms
+                            ).title
                         }`
                     }}</div>
                 </a-popover>
