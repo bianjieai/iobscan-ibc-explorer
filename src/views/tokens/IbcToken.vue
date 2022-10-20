@@ -147,10 +147,10 @@
         ibcChains,
         getIbcBaseDenom,
         getIbcTokenList,
-        baseDenomQuery,
-        baseDenomChainIdQuery,
         ibcBaseDenoms,
-        loading
+        loading,
+        baseDenomQuery,
+        baseDenomChainIdQuery
     );
     const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump();
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
