@@ -106,10 +106,10 @@ export const useIbcTokenSelected = (
     ibcChains: Ref<IIbcChains>,
     getIbcBaseDenom: () => Promise<void>,
     getIbcTokenList: (params: IRequestIbcTokenList) => Promise<void>,
-    baseDenomQuery: string | undefined,
-    baseDenomChainIdQuery: string | undefined,
     ibcBaseDenoms: Ref<IBaseDenom[]>,
-    loading: Ref<boolean>
+    loading: Ref<boolean>,
+    baseDenomQuery: string | undefined,
+    baseDenomChainIdQuery: string | undefined
 ) => {
     const router = useRouter();
     const route = useRoute();
