@@ -19,9 +19,12 @@ import ChainHelper from '@/helper/chainHelper';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
 export const useGetIbcTokenList = () => {
+    const route = useRoute();
     const ibcTokenList = ref<IResponseIbcTokenListItem[]>([]);
     const total = ref<number>(0);
     const isHaveParams = ref<boolean>(false);
+    const baseDenomQuery = route.query.denom as string | undefined;
+    const baseDenomChainIdQuery = route.query.denomChainId as string | undefined;
     const getIbcTokenList = async (params: IRequestIbcTokenList) => {
         const { loading } = params;
         if (loading) {
@@ -76,7 +79,12 @@ export const useGetIbcTokenList = () => {
         };
         getAllIbcTokenData();
     };
-    getIbcTokenList({ ...BASE_PARAMS, use_count: true });
+    getIbcTokenList({
+        ...BASE_PARAMS,
+        base_denom: baseDenomQuery,
+        base_denom_chain_id: baseDenomChainIdQuery,
+        use_count: true
+    });
     const subtitle = computed(() => {
         return formatSubTitle(
             isHaveParams.value,
@@ -88,7 +96,9 @@ export const useGetIbcTokenList = () => {
     return {
         ibcTokenList,
         getIbcTokenList,
-        subtitle
+        subtitle,
+        baseDenomQuery,
+        baseDenomChainIdQuery
     };
 };
 
@@ -96,6 +106,8 @@ export const useIbcTokenSelected = (
     ibcChains: Ref<IIbcChains>,
     getIbcBaseDenom: () => Promise<void>,
     getIbcTokenList: (params: IRequestIbcTokenList) => Promise<void>,
+    baseDenomQuery: string | undefined,
+    baseDenomChainIdQuery: string | undefined,
     ibcBaseDenoms: Ref<IBaseDenom[]>,
     loading: Ref<boolean>
 ) => {
@@ -182,8 +194,6 @@ export const useIbcTokenSelected = (
         refreshList();
     };
     const refreshList = () => {
-        const baseDenomQuery = route.query.denom as string | undefined;
-        const baseDenomChainIdQuery = route.query.denomChainId as string | undefined;
         getIbcTokenList({
             ...BASE_PARAMS,
             base_denom: baseDenomQuery,
