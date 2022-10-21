@@ -172,3 +172,9 @@ export interface IInfoList {
     isFormatTimestamp?: boolean;
     isFormatTimeoutTimestamp?: boolean;
 }
+export interface DataItem {
+    key: string;
+    name: string;
+    value: string;
+    children?: DataItem[];
+}

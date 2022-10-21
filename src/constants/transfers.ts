@@ -282,6 +282,13 @@ export const TRANSFER_DETAILS_TABLE = [
         title: 'Content',
         dataIndex: 'value',
         key: 'value'
+    },
+    {
+        title: 'Expands All',
+        dataIndex: '',
+        key: 'expand',
+        align: 'right',
+        width: '20%'
     }
 ];
 
