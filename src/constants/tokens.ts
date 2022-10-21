@@ -53,7 +53,7 @@ export const COLUMNS: TableColumnsType = [
     {
         dataIndex: 'chain_id',
         key: 'chain_id',
-        title: 'Origional Chain',
+        title: 'Original Chain',
         sorter: (a, b) => a.chain_id.localeCompare(b.chain_id)
     }
 ];
