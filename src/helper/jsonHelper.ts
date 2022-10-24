@@ -1,5 +1,5 @@
 import { getUUID } from '@/utils/baseTools';
-import type { IIbcSource } from '@/types/interface/transfers.interface';
+import type { DataItem, IIbcSource } from '@/types/interface/transfers.interface';
 
 const secureParse = (JSONString: any) => {
     if (!JSONString) {
@@ -20,13 +20,6 @@ const parseObjJsonData = (_d: any) => {
     const data = secureParse(_d) || {};
     return data;
 };
-
-interface DataItem {
-    key: string;
-    name: string;
-    value: string;
-    children?: DataItem[];
-}
 
 export const getJSONData = (jsonData: IIbcSource) => {
     const keys = [];

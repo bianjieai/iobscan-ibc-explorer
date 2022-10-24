@@ -57,7 +57,8 @@ import type {
     IIbcTxSourceInfo,
     IUseViewSOurce,
     IUseProgressList,
-    IIbcSource
+    IIbcSource,
+    DataItem
 } from '@/types/interface/transfers.interface';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
 import { getTextWidth } from '@/utils/urlTools';
@@ -696,10 +697,36 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const tablePackUp = new URL('../../../assets/transfers/table_packup.png', import.meta.url).href;
     const activeKey = ref<TRANSFER_DETAILS_TAB>(TRANSFER_DETAILS_TAB.tableData);
     const JSONSource = ref<IIbcSource | undefined>();
-    const sourceCode = ref();
+    const sourceCode = ref<DataItem[]>();
     const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);
     const sourceMap = new Map();
     const errorText = ref('');
+    const expandedRowKeys = ref<string[]>([]);
+    const expandedRowsChange = (expandedRows: string[]) => {
+        expandedRowKeys.value = expandedRows;
+    };
+    const expandAllRows = (isExpandedAll: boolean) => {
+        if (isExpandedAll) {
+            const expandRows: string[] = [];
+            const format = (source: DataItem[]) => {
+                source.forEach((item: DataItem) => {
+                    if (item.children) {
+                        format(item.children);
+                    }
+                });
+                for (const i in Object.values(source)) {
+                    expandRows.push(source[i].key);
+                }
+            };
+
+            if (sourceCode.value) {
+                format(sourceCode.value);
+            }
+            expandedRowsChange(expandRows);
+        } else {
+            expandedRowsChange([]);
+        }
+    };
     const getIbcSource = async (hash: string, chainId: string, msgType: string) => {
         loading && (loading.value = true);
         if (sourceMap.get(hash)) {
@@ -780,6 +807,7 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
 
     watch(JSONSource, (newJSONSource) => {
         sourceCode.value = newJSONSource ? getJSONData(newJSONSource) : newJSONSource;
+        expandAllRows(false);
     });
 
     return {
@@ -788,6 +816,9 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
         sourceCode,
         tableExpand,
         tablePackUp,
-        errorText
+        errorText,
+        expandedRowKeys,
+        expandedRowsChange,
+        expandAllRows
     };
 };
