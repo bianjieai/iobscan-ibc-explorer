@@ -177,8 +177,7 @@ export const useOnPressEnter = () => {
 
 export const useGetIbcDenoms = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcBaseDenoms, ibcBaseDenomsSymbolKeyMapGetter } =
-        storeToRefs(ibcStatisticsChainsStore);
+    const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
     const getBaseDenomInfoByDenom = (denom: string, chainId: string) => {
         return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain_id == chainId);
@@ -200,7 +199,6 @@ export const useGetIbcDenoms = () => {
     });
     return {
         ibcBaseDenoms,
-        ibcBaseDenomsSymbolKeyMapGetter,
         ibcBaseDenomsSorted,
         getIbcBaseDenom,
         getBaseDenomInfoByDenom

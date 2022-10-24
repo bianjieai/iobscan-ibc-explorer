@@ -1,11 +1,19 @@
 <template>
     <div class="nodatas">
         <img class="nodatas__icon" src="../assets/no_datas.png" />
-        <p class="nodatas__title">No Data</p>
+        <p class="nodatas__title">{{ text }}</p>
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+    import { API_ERRPR_MESSAGE } from '@/constants/apiCode';
+    interface IProps {
+        text?: string;
+    }
+    withDefaults(defineProps<IProps>(), {
+        text: API_ERRPR_MESSAGE.noData
+    });
+</script>
 
 <style lang="less" scoped>
     .nodatas {

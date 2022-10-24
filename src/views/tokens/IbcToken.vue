@@ -90,13 +90,16 @@
                     <template #content>
                         <div class="popover_c">{{
                             `${
-                                formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms)
+                                formatAmount(record[column.key], baseDenomAndChainId, ibcBaseDenoms)
                                     .popover
                             }`
                         }}</div>
                     </template>
                     <div>{{
-                        `${formatAmount(record[column.key], baseDenomQuery, ibcBaseDenoms).title}`
+                        `${
+                            formatAmount(record[column.key], baseDenomAndChainId, ibcBaseDenoms)
+                                .title
+                        }`
                     }}</div>
                 </a-popover>
             </template>
@@ -127,26 +130,29 @@
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
-    const { ibcTokenList, getIbcTokenList, subtitle, baseDenomQuery } = useGetIbcTokenList();
+    const { ibcTokenList, getIbcTokenList, subtitle, baseDenomQuery, baseDenomChainIdQuery } =
+        useGetIbcTokenList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
     const {
         chainDropdown,
         statusDropdown,
         searchChain,
         chainData,
+        baseDenomAndChainId,
         onSelectedChain,
         onSelectedStatus,
         baseDenomInfo,
         statusQuery
     } = useIbcTokenSelected(
         ibcChains,
-        baseDenomQuery,
         getIbcBaseDenom,
         getIbcTokenList,
         ibcBaseDenoms,
-        loading
+        loading,
+        baseDenomQuery,
+        baseDenomChainIdQuery
     );
-    const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump(baseDenomQuery);
+    const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump();
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;
 </script>
 

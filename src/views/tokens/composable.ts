@@ -18,6 +18,7 @@ import { axiosCancel } from '@/utils/axios';
 import ChainHelper from '@/helper/chainHelper';
 import { CHAIN_DEFAULT_VALUE, TOKEN_DEFAULT_VALUE } from '@/constants/tokens';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
+import { rmIbcPrefix } from '@/helper/parseStringHelper';
 
 export const useGetTokenList = () => {
     const tokensList = ref<ITokensListItem[]>([]);
@@ -103,14 +104,25 @@ export const useTokensSelected = (
 ) => {
     const router = useRouter();
     const route = useRoute();
+    const inputFlag = ref(false);
+    const changeInputFlag = (flag: boolean) => {
+        inputFlag.value = flag;
+    };
     let pageUrl = '/tokens';
     const chainDropdown = ref();
     const statusDropdown = ref();
     const tokensDropdown = ref();
     const chainIdQuery = route.query.chain as string;
-    const denomQuery = route.query.denom as string;
+    const baseDenomQuery = route.query.denom as string;
+    const baseDenomChainIdQuery = route.query.denomChainId as string;
     const statusQuery = route.query.status as TTokenType;
-    const searchDenom = ref(denomQuery);
+    const searchDenom = ref(baseDenomQuery);
+    const searchDenomChainId = ref(baseDenomChainIdQuery);
+    let rmIbcPrefixBaseDenomQuery = '';
+    if (baseDenomQuery && rmIbcPrefix(baseDenomQuery as string).length) {
+        rmIbcPrefixBaseDenomQuery = rmIbcPrefix(baseDenomQuery as string);
+    }
+    const searchTokenKey = ref((rmIbcPrefixBaseDenomQuery || '') + (baseDenomChainIdQuery || ''));
     const searchChain = ref<string | undefined>(chainIdQuery);
     const searchStatus = ref<TTokenType>(statusQuery);
     const tokenData = computed(() => {
@@ -129,7 +141,7 @@ export const useTokensSelected = (
                 groupName: 'Authed IBC Tokens',
                 children: ibcBaseDenomsSorted.value.map((v) => ({
                     title: v.symbol,
-                    id: v.denom,
+                    id: v.denom + v.chain_id,
                     icon: v.icon || TOKEN_DEFAULT_ICON,
                     metaData: v
                 }))
@@ -174,16 +186,38 @@ export const useTokensSelected = (
             'event',
             `${router.currentRoute.value.name as string}-点击过滤条件Token`
         );
-        const denom = val?.id;
-        if (denom) {
-            searchDenom.value = denom as string;
+        const id = val?.id;
+        const denom = val?.metaData?.denom;
+        const denomChainId = val?.metaData?.chain_id;
+        if (id) {
+            if (val?.inputFlag) {
+                inputFlag.value = true;
+                const transferId = (id as string).replace(/^ibc\//i, '');
+                const ibcId = `ibc/${transferId.toUpperCase()}`;
+                searchDenom.value = ibcId;
+            } else {
+                inputFlag.value = false;
+                searchDenom.value = denom || id;
+            }
+            searchDenomChainId.value = denomChainId;
+            searchTokenKey.value = id as string;
         } else {
+            inputFlag.value = false;
             searchDenom.value = '';
+            searchDenomChainId.value = '';
+            searchTokenKey.value = '';
         }
-        pageUrl = urlPageParser(pageUrl, {
-            key: 'denom',
-            value: denom as string
-        });
+        pageUrl = urlPageParser(
+            pageUrl,
+            {
+                key: 'denom',
+                value: searchDenom.value
+            },
+            {
+                key: 'denomChainId',
+                value: searchDenomChainId.value
+            }
+        );
         router.replace(pageUrl);
         refreshList();
     };
@@ -221,6 +255,7 @@ export const useTokensSelected = (
         getTokensList({
             ...BASE_PARAMS,
             base_denom: searchDenom.value,
+            base_denom_chain_id: searchDenomChainId.value,
             chain: searchChain.value,
             token_type: searchStatus.value,
             loading: loading
@@ -239,9 +274,11 @@ export const useTokensSelected = (
         onSelectedStatus,
         tokenData,
         chainData,
-        searchDenom,
+        searchTokenKey,
         searchChain,
-        statusQuery
+        statusQuery,
+        inputFlag,
+        changeInputFlag
     };
 };
 
@@ -250,18 +287,20 @@ export const useTokensColumnJump = (getBaseDenomInfoByDenom: any) => {
     const goChains = () => {
         router.push('/chains');
     };
-    const goIbcToken = (denom: string) => {
+    const goIbcToken = (baseDenom: string, baseDenomChainId: string) => {
         router.push({
             path: '/tokens/details',
             query: {
-                denom
+                denom: baseDenom,
+                denomChainId: baseDenomChainId
             }
         });
     };
-
     const goTransfer = (denom: string, chainId: string) => {
         const baseDenomInfo = getBaseDenomInfoByDenom(denom, chainId);
-        const query = baseDenomInfo ? { symbol: baseDenomInfo.symbol } : { denom };
+        const query = baseDenomInfo
+            ? { baseDenom: baseDenomInfo.denom, baseDenomChainId: baseDenomInfo.chain_id }
+            : { denom };
         router.push({
             path: '/transfers',
             query: query

@@ -20,10 +20,11 @@ import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 
 export const useGetIbcTokenList = () => {
     const route = useRoute();
-    const baseDenomQuery = route.query.denom as string;
     const ibcTokenList = ref<IResponseIbcTokenListItem[]>([]);
     const total = ref<number>(0);
     const isHaveParams = ref<boolean>(false);
+    const baseDenomQuery = route.query.denom as string | undefined;
+    const baseDenomChainIdQuery = route.query.denomChainId as string | undefined;
     const getIbcTokenList = async (params: IRequestIbcTokenList) => {
         const { loading } = params;
         if (loading) {
@@ -34,7 +35,7 @@ export const useGetIbcTokenList = () => {
         const allParams = { ...BASE_PARAMS, ...params };
         const getAllIbcTokenData = async () => {
             try {
-                const result = await getIbcTokenListAPI(baseDenomQuery, allParams);
+                const result = await getIbcTokenListAPI(allParams);
                 const { code, data, message } = result;
                 if (code === API_CODE.success) {
                     if (!allParams.use_count) {
@@ -78,7 +79,12 @@ export const useGetIbcTokenList = () => {
         };
         getAllIbcTokenData();
     };
-    getIbcTokenList({ ...BASE_PARAMS, use_count: true });
+    getIbcTokenList({
+        ...BASE_PARAMS,
+        base_denom: baseDenomQuery,
+        base_denom_chain_id: baseDenomChainIdQuery,
+        use_count: true
+    });
     const subtitle = computed(() => {
         return formatSubTitle(
             isHaveParams.value,
@@ -91,17 +97,19 @@ export const useGetIbcTokenList = () => {
         ibcTokenList,
         getIbcTokenList,
         subtitle,
-        baseDenomQuery
+        baseDenomQuery,
+        baseDenomChainIdQuery
     };
 };
 
 export const useIbcTokenSelected = (
     ibcChains: Ref<IIbcChains>,
-    baseDenomQuery: string,
     getIbcBaseDenom: () => Promise<void>,
     getIbcTokenList: (params: IRequestIbcTokenList) => Promise<void>,
     ibcBaseDenoms: Ref<IBaseDenom[]>,
-    loading: Ref<boolean>
+    loading: Ref<boolean>,
+    baseDenomQuery: string | undefined,
+    baseDenomChainIdQuery: string | undefined
 ) => {
     const router = useRouter();
     const route = useRoute();
@@ -112,15 +120,16 @@ export const useIbcTokenSelected = (
     const statusQuery = route.query.status as TIbcTokenType;
     const searchChain = ref<string | undefined>(chainIdQuery ?? undefined);
     const searchStatus = ref<TIbcTokenType | undefined>(statusQuery);
+    const baseDenomAndChainId = `${route.query.denom || ''}${route.query.denomChainId || ''}`;
     const baseDenomInfo = computed(() => {
         const filterData = ibcBaseDenoms.value.filter(
-            (item: IBaseDenom) => item.denom === baseDenomQuery
+            (item: IBaseDenom) => item.denom + item.chain_id === baseDenomAndChainId
         );
         let symbol = '';
         const filterSymbol = filterData[0]?.symbol;
 
         if (filterData.length === 0 || isNullOrEmpty(filterSymbol)) {
-            symbol = getRestString(baseDenomQuery, 3, 8);
+            symbol = getRestString(route.query.denom, 3, 8) || '';
         } else {
             if (filterSymbol.includes('ibc')) {
                 symbol = getRestString(filterSymbol.replace(/ibc\//, ''), 3, 8);
@@ -128,7 +137,6 @@ export const useIbcTokenSelected = (
                 symbol = filterSymbol;
             }
         }
-
         return {
             symbol,
             imgSrc: filterData[0]?.icon
@@ -169,7 +177,6 @@ export const useIbcTokenSelected = (
             key: 'chain',
             value: chain as string
         });
-        router.replace(pageUrl);
         refreshList();
     };
     const onSelectedStatus = (status?: string | number) => {
@@ -189,6 +196,8 @@ export const useIbcTokenSelected = (
     const refreshList = () => {
         getIbcTokenList({
             ...BASE_PARAMS,
+            base_denom: baseDenomQuery,
+            base_denom_chain_id: baseDenomChainIdQuery,
             chain: searchChain.value,
             token_type: searchStatus.value,
             loading: loading
@@ -203,6 +212,7 @@ export const useIbcTokenSelected = (
         statusDropdown,
         searchChain,
         chainData,
+        baseDenomAndChainId,
         onSelectedChain,
         onSelectedStatus,
         baseDenomInfo,
@@ -210,8 +220,9 @@ export const useIbcTokenSelected = (
     };
 };
 
-export const useIbcTokenColumnJump = (baseDenomQuery: string) => {
+export const useIbcTokenColumnJump = () => {
     const router = useRouter();
+    const route = useRoute();
     const goChains = () => {
         router.push('/chains');
     };
@@ -226,7 +237,17 @@ export const useIbcTokenColumnJump = (baseDenomQuery: string) => {
     };
     const resetSearchCondition = () => {
         const { resetSearch } = useResetSearch();
-        resetSearch(`/${PAGE_PARAMETERS.tokens}/details?denom=${baseDenomQuery}`);
+        const baseDenomQuery = route.query.denom;
+        const baseDenomChainIdQuery = route.query.denomChainId;
+        let url = `/${PAGE_PARAMETERS.tokens}/details`;
+        if (baseDenomQuery || baseDenomChainIdQuery) {
+            url += '?';
+            baseDenomQuery ? (url += `denom=${baseDenomQuery}`) : '';
+            baseDenomChainIdQuery
+                ? (url += `${baseDenomQuery ? '&' : ''}denomChainId=${baseDenomChainIdQuery}`)
+                : '';
+        }
+        resetSearch(url);
     };
     return {
         goChains,

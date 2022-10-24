@@ -5,7 +5,9 @@
             <BjSelect
                 ref="tokensDropdown"
                 :data="tokenData"
-                :value="searchDenom"
+                :value="searchTokenKey"
+                :input-flag="inputFlag"
+                :change-input-flag="changeInputFlag"
                 placeholder="All Tokens"
                 :input-ctn="{
                     title: 'Custom IBC Tokens',
@@ -60,7 +62,7 @@
                     :denom="record[column.key]"
                     :chain-id="record.chain_id"
                     :denoms-data="ibcBaseDenoms"
-                    @click-title="goIbcToken(record.base_denom)"
+                    @click-title="goIbcToken(record.base_denom, record.chain_id)"
                 />
             </template>
             <template #price="{ record, column }">
@@ -94,7 +96,7 @@
                                 `${
                                     formatAmount(
                                         record[column.key],
-                                        record.base_denom,
+                                        record.base_denom + record.chain_id,
                                         ibcBaseDenoms
                                     ).popover
                                 }`
@@ -103,7 +105,11 @@
                     </template>
                     <div>{{
                         `${
-                            formatAmount(record[column.key], record.base_denom, ibcBaseDenoms).title
+                            formatAmount(
+                                record[column.key],
+                                record.base_denom + record.chain_id,
+                                ibcBaseDenoms
+                            ).title
                         }`
                     }}</div>
                 </a-popover>
@@ -116,7 +122,7 @@
             </template>
 
             <template #chains_involved="{ record, column }">
-                <div class="hover_cursor" @click="goIbcToken(record.base_denom)">{{
+                <div class="hover_cursor" @click="goIbcToken(record.base_denom, record.chain_id)">{{
                     record[column.key]
                 }}</div>
             </template>
@@ -168,9 +174,11 @@
         onSelectedStatus,
         tokenData,
         chainData,
-        searchDenom,
+        searchTokenKey,
         searchChain,
-        statusQuery
+        statusQuery,
+        inputFlag,
+        changeInputFlag
     } = useTokensSelected(ibcBaseDenomsSorted, ibcChains, getTokensList, getIbcBaseDenom, loading);
     const { goChains, goIbcToken, goTransfer, resetSearchCondition } =
         useTokensColumnJump(getBaseDenomInfoByDenom);

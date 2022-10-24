@@ -39,7 +39,7 @@ module.exports = {
         'vue/multi-word-component-names': [
             'error',
             {
-                ignores: ['index', 'Navigation', 'Loading', '404', '500', 'base', 'Error500']
+                ignores: ['index', 'Navigation', '404', '500', 'base', 'Error500']
             }
         ],
         'no-use-before-define': 'off',

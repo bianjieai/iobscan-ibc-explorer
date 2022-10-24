@@ -26,5 +26,6 @@
         bottom: 40px;
         width: 32px;
         height: 32px;
+        z-index: 1100;
     }
 </style>
