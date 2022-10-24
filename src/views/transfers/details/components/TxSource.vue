@@ -28,7 +28,7 @@
                                     class="view_source__expand_icon"
                                     :icon-name="'icon-zhankai2'"
                                 ></svg-icon>
-                                <span>Expands All</span>
+                                <span class="view_source__expand_text">Expands All</span>
                             </div>
                             <div
                                 v-else
@@ -39,7 +39,7 @@
                                     class="view_source__expand_icon"
                                     :icon-name="'icon-shouqi2'"
                                 ></svg-icon>
-                                <span>Collapse All</span>
+                                <span class="view_source__expand_text">Collapse All</span>
                             </div>
                         </template>
                     </template>
@@ -141,6 +141,10 @@
         &__expand_icon {
             margin-right: 8px;
         }
+        &__expand_text {
+            color: var(--bj-primary-color);
+            white-space: nowrap;
+        }
         &__table_icon {
             display: inline-block;
             width: 16px;
@@ -167,7 +171,7 @@
             color: var(--bj-text-second);
         }
         :deep(td) {
-            overflow-wrap: anywhere;
+            word-break: break-all;
         }
         :deep(.ant-table-cell-with-append) {
             min-width: 250px;

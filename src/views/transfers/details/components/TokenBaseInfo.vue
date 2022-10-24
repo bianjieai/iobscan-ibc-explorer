@@ -190,7 +190,7 @@
                 }
             }
             &__label {
-                width: 140px;
+                width: 145px;
             }
             &__value {
             }
@@ -234,6 +234,7 @@
             &__right {
                 margin-top: 16px;
                 margin-left: 0;
+                width: 100%;
             }
             &__label_value_wrap {
             }
