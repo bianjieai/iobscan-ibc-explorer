@@ -230,6 +230,7 @@
                 display: inline-block;
                 flex: 1;
                 word-break: break-all;
+                width: 279px;
             }
             &__right {
                 margin-top: 16px;

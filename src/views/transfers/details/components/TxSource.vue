@@ -15,6 +15,7 @@
                     :pagination="false"
                     :loading="loading"
                     :expanded-row-keys="expandedRowKeys"
+                    table-layout="fixed"
                     @expanded-rows-change="expandedRowsChange"
                 >
                     <template #headerCell="{ column }">
@@ -136,7 +137,7 @@
             margin-top: 16px;
         }
         &__expand_btn {
-            .flex(row, nowrap, flex-end, flex-end);
+            .flex(row, nowrap, flex-end, center);
         }
         &__expand_icon {
             margin-right: 8px;
@@ -144,6 +145,7 @@
         &__expand_text {
             color: var(--bj-primary-color);
             white-space: nowrap;
+            line-height: 26px;
         }
         &__table_icon {
             display: inline-block;

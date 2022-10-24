@@ -289,7 +289,8 @@ export const TRANSFER_DETAILS_TABLE: TableColumnsType = [
         title: 'Expands All',
         dataIndex: '',
         key: 'expand',
-        align: 'right'
+        align: 'right',
+        width: 150
     }
 ];
 
