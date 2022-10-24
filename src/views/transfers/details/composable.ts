@@ -701,13 +701,13 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);
     const sourceMap = new Map();
     const errorText = ref('');
-    const expandedRowKeys = ref([]);
-    const expandedRowsChange = (val: any) => {
-        expandedRowKeys.value = val;
+    const expandedRowKeys = ref<string[]>([]);
+    const expandedRowsChange = (expandedRows: string[]) => {
+        expandedRowKeys.value = expandedRows;
     };
-    const expandAllRows = (val: boolean) => {
-        if (val) {
-            const expandRows: any = [];
+    const expandAllRows = (isExpandedAll: boolean) => {
+        if (isExpandedAll) {
+            const expandRows: string[] = [];
             const format = (source: DataItem[]) => {
                 source.forEach((item: DataItem) => {
                     if (item.children) {
@@ -718,6 +718,7 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
                     expandRows.push(source[i].key);
                 }
             };
+
             if (sourceCode.value) {
                 format(sourceCode.value);
             }
