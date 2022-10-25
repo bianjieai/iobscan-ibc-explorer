@@ -22,7 +22,8 @@
             "~/*": ["node_modules/*"]
         },
         "outDir": "./",
-        "typeRoots": ["./node_modules/@types/", "./src/types"]
+        "typeRoots": ["./node_modules/@types/", "./src/types"],
+        "suppressImplicitAnyIndexErrors": true
     },
     "include": [
         "src/**/*.ts",

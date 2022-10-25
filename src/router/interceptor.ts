@@ -1,6 +1,7 @@
 import { Router } from 'vue-router';
 import { useNProgress } from '@/utils/useNProgressTools';
 import { useIbcStatisticsChains } from '@/store/index';
+import { ROUTE_INFO } from '@/constants';
 
 export function createInterceptor(router: Router) {
     const nprogress = useNProgress();
@@ -15,17 +16,18 @@ export function createInterceptor(router: Router) {
         // Modal.destroyAll()
         const ibcStatisticsChainsStore = useIbcStatisticsChains();
         ibcStatisticsChainsStore && (ibcStatisticsChainsStore.isShow500 = false);
-
-        const targetRoutes = [
-            'Home',
-            'Transfers',
-            'Transfers Details',
-            'Tokens',
-            'Tokens Details',
-            'Chains',
-            'Channels',
-            'Relayers'
-        ];
+        const targetRoutes = Object.values(ROUTE_INFO).map((item) => item.name);
+        Object.values(ROUTE_INFO).map((item, index) => {
+            if (item.name === to.name) {
+                const currentRouteInfo = Object.keys(ROUTE_INFO)[index];
+                if (currentRouteInfo) {
+                    document.title = ROUTE_INFO[currentRouteInfo].title;
+                    document
+                        .querySelector('meta[name="description"]')
+                        ?.setAttribute('content', ROUTE_INFO[currentRouteInfo].description);
+                }
+            }
+        });
         if (to && targetRoutes.indexOf(from.name as string) != -1) {
             currentTime = Date.now();
             (window as any).gtag('event', `${from.name as string}页面停留`, {
