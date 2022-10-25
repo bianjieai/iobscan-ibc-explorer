@@ -805,8 +805,15 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
         }
     });
 
+    const formatStr = (obj?: IIbcSource) => {
+        if (!obj) return;
+        let str = JSON.stringify(getJSONData(obj));
+        str = str.replace(/\\u0001/g, '\\\\u0001');
+        return JSON.parse(str);
+    };
+
     watch(JSONSource, (newJSONSource) => {
-        sourceCode.value = newJSONSource ? getJSONData(newJSONSource) : newJSONSource;
+        sourceCode.value = formatStr(newJSONSource);
         expandAllRows(false);
     });
 
