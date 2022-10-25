@@ -15,7 +15,10 @@
     .coming_soon_container {
         width: 1200px;
         height: 442px;
-        margin-top: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 48px auto 0 auto;
         background-color: #fff;
         border-radius: 4px;
         .coming_soon_content_wrap {
