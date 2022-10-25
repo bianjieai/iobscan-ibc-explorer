@@ -809,7 +809,6 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
         if (!obj) return;
         let str = JSON.stringify(getJSONData(obj));
         str = str.replace(/\\u/g, '\\\\u');
-        console.log(str);
         return JSON.parse(str);
     };
 
