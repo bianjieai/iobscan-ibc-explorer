@@ -30,7 +30,7 @@ export const ROUTE_INFO = {
     tokenDetails: {
         name: 'Token Details',
         title: 'IOBScan - IOB - Token Details',
-        description: 'IBC Tokens Details Information'
+        description: 'IBC Token Details Information'
     },
     chains: {
         name: 'Chains',
