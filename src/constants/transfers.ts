@@ -278,7 +278,8 @@ export const TRANSFER_DETAILS_TABLE: TableColumnsType = [
     {
         title: 'Data Name',
         dataIndex: 'name',
-        key: 'name'
+        key: 'name',
+        width: 280
     },
     {
         title: 'Content',
