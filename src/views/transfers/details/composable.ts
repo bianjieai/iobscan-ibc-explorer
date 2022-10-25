@@ -808,7 +808,8 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const formatStr = (obj?: IIbcSource) => {
         if (!obj) return;
         let str = JSON.stringify(getJSONData(obj));
-        str = str.replace(/\\u0001/g, '\\\\u0001');
+        str = str.replace(/\\u/g, '\\\\u');
+        console.log(str);
         return JSON.parse(str);
     };
 
