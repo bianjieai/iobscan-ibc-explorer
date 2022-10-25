@@ -15,6 +15,7 @@
                     :pagination="false"
                     :loading="loading"
                     :expanded-row-keys="expandedRowKeys"
+                    table-layout="fixed"
                     @expanded-rows-change="expandedRowsChange"
                 >
                     <template #headerCell="{ column }">
@@ -28,7 +29,7 @@
                                     class="view_source__expand_icon"
                                     :icon-name="'icon-zhankai2'"
                                 ></svg-icon>
-                                <span>Expands All</span>
+                                <span class="view_source__expand_text">Expands All</span>
                             </div>
                             <div
                                 v-else
@@ -39,7 +40,7 @@
                                     class="view_source__expand_icon"
                                     :icon-name="'icon-shouqi2'"
                                 ></svg-icon>
-                                <span>Collapse All</span>
+                                <span class="view_source__expand_text">Collapse All</span>
                             </div>
                         </template>
                     </template>
@@ -136,10 +137,15 @@
             margin-top: 16px;
         }
         &__expand_btn {
-            .flex(row, nowrap, flex-end, flex-end);
+            .flex(row, nowrap, flex-end, center);
         }
         &__expand_icon {
             margin-right: 8px;
+        }
+        &__expand_text {
+            color: var(--bj-primary-color);
+            white-space: nowrap;
+            line-height: 26px;
         }
         &__table_icon {
             display: inline-block;
@@ -167,7 +173,7 @@
             color: var(--bj-text-second);
         }
         :deep(td) {
-            overflow-wrap: anywhere;
+            word-break: break-all;
         }
         :deep(.ant-table-cell-with-append) {
             min-width: 250px;
