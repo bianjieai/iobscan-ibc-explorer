@@ -6,6 +6,58 @@ export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', im
 export const RELAYER_DEFAULT_ICON = new URL('../assets/relayers/default.png', import.meta.url).href;
 export const TIP_ICON = new URL('../assets/tip.png', import.meta.url).href;
 
+export const ROUTE_INFO = {
+    home: {
+        name: 'Home',
+        title: 'IOBScan - IOB - Home',
+        description: 'IBC transfer Overview Information'
+    },
+    transfers: {
+        name: 'Transfers',
+        title: 'IOBScan - IOB - Transfers',
+        description: 'IBC Transfer List'
+    },
+    transferDetails: {
+        name: 'Transfer Details',
+        title: 'IOBScan - IOB - Transfer Details',
+        description: 'IBC Transfer Details Information'
+    },
+    tokens: {
+        name: 'Tokens',
+        title: 'IOBScan - IOB - Tokens',
+        description: 'IBC Tokens List'
+    },
+    tokenDetails: {
+        name: 'Token Details',
+        title: 'IOBScan - IOB - Token Details',
+        description: 'IBC Token Details Information'
+    },
+    chains: {
+        name: 'Chains',
+        title: 'IOBScan - IOB - Chains',
+        description: 'IBC Chains List'
+    },
+    channels: {
+        name: 'Channels',
+        title: 'IOBScan - IOB - Channels',
+        description: 'IBC Channels List'
+    },
+    relayers: {
+        name: 'Relayers',
+        title: 'IOBScan - IOB - Relayers',
+        description: 'IBC Relayers List'
+    },
+    searchResults: {
+        name: 'Search Results',
+        title: 'IOBScan - IOB - Search Results',
+        description: 'IBC Transfer Search Results'
+    },
+    '404': {
+        name: '404',
+        title: 'IOBScan - IOB - 404',
+        description: 'IOBScan 404 Info'
+    }
+};
 export const MENUS = [
     {
         label: 'Home',

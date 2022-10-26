@@ -190,7 +190,7 @@
                 }
             }
             &__label {
-                width: 140px;
+                width: 145px;
             }
             &__value {
             }
@@ -230,10 +230,12 @@
                 display: inline-block;
                 flex: 1;
                 word-break: break-all;
+                width: 279px;
             }
             &__right {
                 margin-top: 16px;
                 margin-left: 0;
+                width: 100%;
             }
             &__label_value_wrap {
             }

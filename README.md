@@ -36,7 +36,7 @@ step2 build
   yarn build:qa
 ```
 
-## staging
+## stage
 
 step1 安装依赖
 
@@ -47,7 +47,7 @@ step1 安装依赖
 step2 build
 
 ```
-  yarn build:staging
+  yarn build:stage
 ```
 
 ## production
@@ -61,5 +61,5 @@ step1 安装依赖
 step2 build
 
 ```
-  yarn build
+  yarn build:prod
 ```

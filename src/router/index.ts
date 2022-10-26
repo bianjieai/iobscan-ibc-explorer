@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Layout from '@/layout/index.vue';
 import LayoutError from '@/layout/LayoutError.vue';
 import { createInterceptor } from './interceptor';
+import { ROUTE_INFO } from '@/constants';
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -15,7 +16,7 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
-                name: 'Home',
+                name: ROUTE_INFO.home.name,
                 component: () => import('../views/home/index.vue'),
                 meta: {}
             }
@@ -28,13 +29,13 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
-                name: 'Transfers',
+                name: ROUTE_INFO.transfers.name,
                 component: () => import('../views/transfers/index.vue'),
                 meta: {}
             },
             {
                 path: 'details',
-                name: 'Transfers Details',
+                name: ROUTE_INFO.transferDetails.name,
                 component: () => import('../views/transfers/details/index.vue'),
                 meta: {}
             }
@@ -42,12 +43,11 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: '/searchResult',
-        name: 'searchResult',
         component: Layout,
         children: [
             {
                 path: '',
-                name: 'Search Result',
+                name: ROUTE_INFO.searchResults.name,
                 component: () => import('../views/transfers/components/NoResult.vue'),
                 meta: {}
             }
@@ -60,13 +60,13 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
-                name: 'Tokens',
+                name: ROUTE_INFO.tokens.name,
                 component: () => import('../views/tokens/index.vue'),
                 meta: {}
             },
             {
                 path: 'details',
-                name: 'Tokens Details',
+                name: ROUTE_INFO.tokenDetails.name,
                 component: () => import('../views/tokens/IbcToken.vue')
             }
         ]
@@ -78,14 +78,8 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
-                name: 'Chains',
+                name: ROUTE_INFO.chains.name,
                 component: () => import('../views/chains/index.vue'),
-                meta: {}
-            },
-            {
-                path: 'details',
-                name: 'Chains Details',
-                component: () => import('../components/ComingSoon.vue'),
                 meta: {}
             }
         ]
@@ -97,7 +91,7 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
-                name: 'Channels',
+                name: ROUTE_INFO.channels.name,
                 component: () => import('../views/channels/index.vue'),
                 meta: {}
             }
@@ -110,7 +104,7 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
-                name: 'Relayers',
+                name: ROUTE_INFO.relayers.name,
                 component: () => import('../views/relayers/index.vue'),
                 meta: {}
             }
@@ -123,7 +117,7 @@ const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
-                name: '404',
+                name: ROUTE_INFO[404].name,
                 component: () => import('../components/errorpage/404.vue')
             }
         ]
