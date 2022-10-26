@@ -67,3 +67,10 @@ export const getJSONData = (jsonData: IIbcSource) => {
     const data = format(d, '');
     return data;
 };
+
+export const formatObjDisplay = (obj?: IIbcSource) => {
+    if (!obj) return;
+    let str = JSON.stringify(getJSONData(obj));
+    str = str.replace(/\\u/g, '\\\\u');
+    return JSON.parse(str);
+};

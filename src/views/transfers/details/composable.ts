@@ -66,7 +66,7 @@ import moveDecimal from 'move-decimal-point';
 import * as djs from 'dayjs';
 import { Ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { getJSONData } from '@/helper/jsonHelper';
+import { formatObjDisplay } from '@/helper/jsonHelper';
 
 export const useJudgeStatus = (props: Readonly<ITxStatus>) => {
     const isShowSuccess = computed(() => {
@@ -805,15 +805,8 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
         }
     });
 
-    const formatStr = (obj?: IIbcSource) => {
-        if (!obj) return;
-        let str = JSON.stringify(getJSONData(obj));
-        str = str.replace(/\\u/g, '\\\\u');
-        return JSON.parse(str);
-    };
-
     watch(JSONSource, (newJSONSource) => {
-        sourceCode.value = formatStr(newJSONSource);
+        sourceCode.value = formatObjDisplay(newJSONSource);
         expandAllRows(false);
     });
 
