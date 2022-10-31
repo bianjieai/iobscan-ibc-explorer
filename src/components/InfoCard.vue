@@ -8,7 +8,7 @@
             <div v-if="isShowChooseBtn" class="info_card__choose_btn">
                 <span
                     v-for="(item, index) in CHOOSE_BTN_TEXT"
-                    :key="index"
+                    :key="item"
                     class="info_card__item cursor"
                     :class="{ info_card__active_btn: defaultChooseBtn === index }"
                     @click="changeChooseBtn(index)"
@@ -28,11 +28,11 @@
     interface IProps {
         icon: string;
         title: string;
-        isShowChooseBtn?: boolean;
-        defaultChooseBtn?: number;
+        isShowChooseBtn?: boolean; // 右侧是否有按钮
+        defaultChooseBtn?: number; // 默认按钮索引
     }
     withDefaults(defineProps<IProps>(), {
-        isShowChooseBtn: true,
+        isShowChooseBtn: false,
         defaultChooseBtn: 0
     });
     const emits = defineEmits<{

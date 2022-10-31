@@ -5,21 +5,14 @@
             <div
                 v-for="item of msg"
                 :key="item.statistics_name"
-                class="list_item ibc_selected_title cursor"
+                class="list_item ibc_selected_title"
+                :class="{ cursor: !item.no_link }"
                 style="width: 100%"
                 @click="clickListItem(item.statistics_name)"
             >
-                <div
-                    class="list_item__info"
-                    :style="
-                        item.statistics_name ===
-                        IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name
-                            ? 'cursor: text;'
-                            : ''
-                    "
-                >
+                <div class="list_item__info" :class="{ cursor: !item.no_link }">
                     <span class="list_item__name"
-                        >{{ (STATISTICS_NAME as any)[item.statistics_name]
+                        >{{ STATISTICS_NAME[item.statistics_name]
                         }}<span
                             v-if="item.statistics_name.indexOf(DAY_TIME) !== -1"
                             class="list_item__tip"
@@ -28,12 +21,10 @@
                     >
                     <span
                         class="list_item__value"
-                        :style="
-                            item.statistics_name ===
-                            IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name
-                                ? 'color: var(--bj-text-normal); cursor: text;'
-                                : ''
-                        "
+                        :style="{
+                            cursor: item.no_link ? 'text' : 'pointer',
+                            color: item.no_link ? 'var(--bj-text-normal)' : ''
+                        }"
                         >{{ `${formatBigNumber(item.count, undefined)}` }}</span
                     >
                 </div>
@@ -45,35 +36,26 @@
             <div
                 v-for="item of msg"
                 :key="item.statistics_name"
-                class="list_item__horizontal ibc_selected_title cursor"
+                class="list_item__horizontal ibc_selected_title"
+                :class="{ cursor: !item.no_link }"
                 @click="clickListItem(item.statistics_name)"
             >
                 <div class="list_item">
-                    <div
-                        class="list_item__info"
-                        :style="
-                            item.statistics_name ===
-                            IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name
-                                ? 'cursor: text;'
-                                : ''
-                        "
-                    >
-                        <span class="list_item__name"
-                            >{{ (STATISTICS_NAME as any)[item.statistics_name]
-                            }}<span
+                    <div class="list_item__info" :class="{ cursor: !item.no_link }">
+                        <span class="list_item__name">
+                            {{ STATISTICS_NAME[item.statistics_name] }}
+                            <span
                                 v-if="item.statistics_name.indexOf(DAY_TIME) !== -1"
                                 class="list_item__tip"
                                 >24hr</span
-                            ></span
-                        >
+                            >
+                        </span>
                         <span
                             class="list_item__value"
-                            :style="
-                                item.statistics_name ===
-                                IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name
-                                    ? 'color: var(--bj-text-normal);cursor: text;'
-                                    : ''
-                            "
+                            :style="{
+                                cursor: item.no_link ? 'text' : 'pointer',
+                                color: item.no_link ? 'var(--bj-text-normal)' : ''
+                            }"
                             >{{ `${formatBigNumber(item.count, undefined)}` }}</span
                         >
                     </div>
@@ -84,7 +66,7 @@
 </template>
 
 <script setup lang="ts">
-    import { STATISTICS_NAME, IBC_STATISTICS_DENOMS_DEFAULT, DAY_TIME } from '@/constants';
+    import { STATISTICS_NAME, DAY_TIME } from '@/constants';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     defineProps({
         type: {
@@ -118,6 +100,7 @@
 
     .list_item {
         padding: 24px 0;
+        width: 100%;
         border-bottom: 1px solid var(--bj-border-color);
         &:hover {
             .list_item__value {

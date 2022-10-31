@@ -151,7 +151,11 @@ export const STATISTICS_NAME = {
     tx_24hr_all: 'Recent',
     tx_all: 'All',
     tx_success: 'Success',
-    tx_failed: 'Failed'
+    tx_failed: 'Failed',
+    total_relayed_value: 'Total Relayed Value',
+    total_txs: 'Total Txs',
+    served_channel_pairs: 'Served Channel Pairs',
+    total_fee_cost: 'Total Fee Cost'
 };
 
 export const IBC_STATISTICS_CHAINS_DEFAULT = {

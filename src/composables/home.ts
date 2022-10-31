@@ -29,6 +29,7 @@ export const useIbcStatistics = (timerInterval?: number) => {
                 ibcStatisticsChannels.channel_opened = findStatistics(items, 'channel_opened');
                 ibcStatisticsChannels.channel_closed = findStatistics(items, 'channel_closed');
                 ibcStatisticsDenoms.denom_all = findStatistics(items, 'denom_all');
+                ibcStatisticsDenoms.denom_all['no_link'] = true;
                 ibcStatisticsDenoms.base_denom_all = findStatistics(items, 'base_denom_all');
                 ibcStatisticsTxs.tx_24hr_all = findStatistics(items, 'tx_24hr_all');
                 ibcStatisticsTxs.tx_all = findStatistics(items, 'tx_all');
