@@ -88,3 +88,11 @@ export interface IBottomStatus {
     statusImg: string;
     status: string;
 }
+
+export interface IDenomStatistic {
+    [key: string]: {
+        statistics_name: string;
+        count: number;
+        no_link?: boolean;
+    };
+}

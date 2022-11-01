@@ -8,8 +8,7 @@
                 <div class="background" :style="{ bottom: hasIcon ? '3px' : '-3px' }"></div>
             </div>
             <a-typography-text v-if="subtitle" class="number"
-                ><i class="iconfont" :class="titleIcon ? titleIcon : 'icon-shujuliebiao'"></i
-                >{{ subtitle }}</a-typography-text
+                ><i class="iconfont" :class="titleIcon"></i>{{ subtitle }}</a-typography-text
             >
         </div>
     </div>
@@ -24,7 +23,9 @@
         imgSrc?: string;
     }
 
-    defineProps<IProps>();
+    withDefaults(defineProps<IProps>(), {
+        titleIcon: 'icon-shujuliebiao'
+    });
 </script>
 
 <style lang="less" scoped>
