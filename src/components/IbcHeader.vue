@@ -290,7 +290,6 @@
         .header_container {
             .header_content {
                 .logo {
-                    margin-left: 32px;
                     &__img {
                     }
                     .stage_logo__img {
@@ -299,7 +298,6 @@
                 .header_navigation {
                 }
                 .header_input_wrapper {
-                    margin-right: 32px;
                     .header_input_layout {
                         display: none;
                     }
@@ -336,7 +334,6 @@
                 .header_input_wrapper {
                     margin-right: 16px;
                     .header_input_layout {
-                        display: none;
                     }
                     .header_input_icon_wrapper {
                         a {
