@@ -13,7 +13,6 @@
         "build:stage": "vue-tsc --noEmit && vite build --mode stage",
         "build:prod": "vue-tsc --noEmit && vite build --mode production",
         "preview": "vite preview",
-        "params": "node config.js",
         "eslint:comment": "使用 ESLint 检查并自动修复 src 目录下所有扩展名为 .js 和 .vue 的文件",
         "eslint": "eslint --ext .js,.vue --ignore-path .gitignore --fix src --max-warnings 0",
         "prettier:comment": "自动格式化当前目录下的所有文件",

@@ -2,11 +2,8 @@
     <div class="header_container">
         <div class="header_content">
             <div v-ga="'导航栏-Logo'" class="logo cursor" @click="onClickLogo">
-                <div class="logo__icon">
+                <div class="logo__img" :class="{ stage_logo__img: isStage }">
                     <img :src="logoIcon" alt="logo" />
-                </div>
-                <div class="logo__text">
-                    <img :src="logoName" alt="" />
                 </div>
             </div>
             <navigation
@@ -54,7 +51,7 @@
     import { RouteLocationNormalized } from 'vue-router';
     type Key = string | number;
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
-    const logoName = new URL(import.meta.env.VITE_LOGO_NAME, import.meta.url).href;
+    const isStage = import.meta.env.MODE === 'stage';
     const headerMenus = reactive(MENUS);
     const currentMenu = ref<Key[]>([]);
     const isShowNav = ref(false);
@@ -132,17 +129,16 @@
             height: 100%;
             .logo {
                 .flex(row, nowrap, center, center);
-                &__icon {
+                &__img {
                     img {
-                        width: 32px;
-                        height: 34px;
+                        width: 148px;
+                        height: 30px;
                     }
                 }
-                &__text {
-                    margin-left: 9px;
+                .stage_logo__img {
                     img {
-                        width: 100px;
-                        height: 34px;
+                        width: 138px;
+                        height: 30px;
                     }
                 }
             }
@@ -184,7 +180,9 @@
             background-size: 100% 396px;
             .header_content {
                 .logo {
-                    &__icon {
+                    &__img {
+                    }
+                    .stage_logo__img {
                     }
                 }
                 .header_navigation {
@@ -209,7 +207,9 @@
             .header_content {
                 .logo {
                     margin-left: 48px;
-                    &__icon {
+                    &__img {
+                    }
+                    .stage_logo__img {
                     }
                 }
                 .header_navigation {
@@ -235,7 +235,9 @@
             .header_content {
                 position: relative;
                 .logo {
-                    &__icon {
+                    &__img {
+                    }
+                    .stage_logo__img {
                     }
                 }
                 .header_navigation {
@@ -261,8 +263,9 @@
             .header_content {
                 .logo {
                     margin-left: 32px;
-                    width: 136px;
-                    &__icon {
+                    &__img {
+                    }
+                    .stage_logo__img {
                     }
                 }
                 .header_navigation {
@@ -283,12 +286,47 @@
             }
         }
     }
+    @media screen and (max-width: 545px) {
+        .header_container {
+            .header_content {
+                .logo {
+                    &__img {
+                    }
+                    .stage_logo__img {
+                    }
+                }
+                .header_navigation {
+                }
+                .header_input_wrapper {
+                    .header_input_layout {
+                        display: none;
+                    }
+                    .header_input_icon_wrapper {
+                        a {
+                            .header_input_icon {
+                            }
+                        }
+                        .header_btn_mobile {
+                            img {
+                            }
+                        }
+                    }
+                }
+            }
+            &__input {
+                display: block;
+                padding: 0 32px;
+            }
+        }
+    }
     @media screen and (max-width: 530px) {
         .header_container {
             .header_content {
                 .logo {
                     margin-left: 16px;
-                    &__icon {
+                    &__img {
+                    }
+                    .stage_logo__img {
                     }
                 }
                 .header_navigation {
@@ -296,7 +334,6 @@
                 .header_input_wrapper {
                     margin-right: 16px;
                     .header_input_layout {
-                        display: none;
                     }
                     .header_input_icon_wrapper {
                         a {
