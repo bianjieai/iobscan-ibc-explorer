@@ -1,4 +1,4 @@
-import { IRequestPagination } from '@/types/interface/index.interface';
+import type { IDenomStatistic, IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
 
 export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.meta.url).href;
@@ -151,10 +151,14 @@ export const STATISTICS_NAME = {
     tx_24hr_all: 'Recent',
     tx_all: 'All',
     tx_success: 'Success',
-    tx_failed: 'Failed'
+    tx_failed: 'Failed',
+    total_relayed_value: 'Total Relayed Value',
+    total_txs: 'Total Txs',
+    served_channel_pairs: 'Served Channel Pairs',
+    total_fee_cost: 'Total Fee Cost'
 };
 
-export const IBC_STATISTICS_CHAINS_DEFAULT = {
+export const IBC_STATISTICS_CHAINS_DEFAULT: IDenomStatistic = {
     chains_24hr: {
         statistics_name: 'chains_24hr',
         count: 0
@@ -165,7 +169,7 @@ export const IBC_STATISTICS_CHAINS_DEFAULT = {
     }
 };
 
-export const IBC_STATISTICS_CHANNELS_DEFAULT = {
+export const IBC_STATISTICS_CHANNELS_DEFAULT: IDenomStatistic = {
     channels_24hr: {
         statistics_name: 'channels_24hr',
         count: 0
@@ -184,7 +188,7 @@ export const IBC_STATISTICS_CHANNELS_DEFAULT = {
     }
 };
 
-export const IBC_STATISTICS_DENOMS_DEFAULT = {
+export const IBC_STATISTICS_DENOMS_DEFAULT: IDenomStatistic = {
     denom_all: {
         statistics_name: 'denom_all',
         count: 0
@@ -195,7 +199,7 @@ export const IBC_STATISTICS_DENOMS_DEFAULT = {
     }
 };
 
-export const IBC_STATISTICS_TXS_DEFAULT = {
+export const IBC_STATISTICS_TXS_DEFAULT: IDenomStatistic = {
     tx_24hr_all: {
         statistics_name: 'tx_24hr_all',
         count: 0
@@ -471,3 +475,4 @@ export const BOTTOM_STATUS_DATA = {
         }
     ]
 };
+export const CHOOSE_BTN_TEXT = ['Value', 'Txs'];

@@ -64,7 +64,6 @@
     import LayerBlock from './components/LayerBlock.vue';
     import ChainsInfo from './components/ChainsInfo.vue';
     import ChainsListInfo from './components/ChainsListInfo.vue';
-    import StatisticList from './components/StatisticList.vue';
     import TransferList from './components/TransferList.vue';
     import { useIbcChains } from '@/composables';
     import { useIbcTxs, useInterfaceActive } from './composable';

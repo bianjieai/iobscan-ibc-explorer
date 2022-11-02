@@ -74,3 +74,23 @@ export const RELAYER_STATUS = {
     RUNNING: 'Running',
     UNKNOWN: 'Unknown'
 };
+
+// Todo 渲染到界面时，需要添加 no_link: true，用来标识没有跳转，移入鼠标不需要 pointer，字色不需要变为主题色
+export const RELAYER_DETAILS_INFO = {
+    total_relayed_value: {
+        statistics_name: 'total_relayed_value',
+        count: 0
+    },
+    total_txs: {
+        statistics_name: 'total_txs',
+        count: 0
+    },
+    served_channel_pairs: {
+        statistics_name: 'served_channel_pairs',
+        count: 0
+    },
+    total_fee_cost: {
+        statistics_name: 'total_fee_cost',
+        count: 0
+    }
+};
