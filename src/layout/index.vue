@@ -94,7 +94,7 @@
             }
         }
     }
-    @media screen and (max-width: 530px) {
+    @media screen and (max-width: 545px) {
         .layout {
             padding-top: 160px;
             &__header {
