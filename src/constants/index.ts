@@ -47,6 +47,11 @@ export const ROUTE_INFO = {
         title: 'IOBScan - IOB - Relayers',
         description: 'IBC Relayers List'
     },
+    relayerDetails: {
+        name: 'Relayer Details',
+        title: 'IOBScan - IOB - Relayer Details',
+        description: 'IBC Relayer Details Information'
+    },
     searchResults: {
         name: 'Search Results',
         title: 'IOBScan - IOB - Search Results',

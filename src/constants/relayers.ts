@@ -1,4 +1,5 @@
 import { CompareOrder } from '@/types/interface/components/table.interface';
+import { IDenomStatistic } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
 
 export const COLUMNS: TableColumnsType = [
@@ -76,21 +77,27 @@ export const RELAYER_STATUS = {
 };
 
 // Todo 渲染到界面时，需要添加 no_link: true，用来标识没有跳转，移入鼠标不需要 pointer，字色不需要变为主题色
-export const RELAYER_DETAILS_INFO = {
+export const RELAYER_DETAILS_INFO: IDenomStatistic = {
     total_relayed_value: {
         statistics_name: 'total_relayed_value',
-        count: 0
+        count: 0,
+        no_link: true,
+        has_dollar: true
     },
     total_txs: {
         statistics_name: 'total_txs',
-        count: 0
+        count: 0,
+        no_link: true
     },
     served_channel_pairs: {
         statistics_name: 'served_channel_pairs',
-        count: 0
+        count: 0,
+        no_link: true
     },
     total_fee_cost: {
         statistics_name: 'total_fee_cost',
-        count: 0
+        count: 0,
+        no_link: true,
+        has_dollar: true
     }
 };

@@ -92,7 +92,8 @@ export interface IBottomStatus {
 export interface IDenomStatistic {
     [key: string]: {
         statistics_name: string;
-        count: number;
+        count: number | string;
         no_link?: boolean;
+        has_dollar?: boolean;
     };
 }

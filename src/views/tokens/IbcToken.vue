@@ -3,7 +3,6 @@
         <PageTitle
             :title="`${baseDenomInfo.symbol} IBC Token`"
             :subtitle="subtitle"
-            has-icon
             :img-src="baseDenomInfo.imgSrc"
         />
         <div class="select flex items-center flex-wrap wrapRelative">
