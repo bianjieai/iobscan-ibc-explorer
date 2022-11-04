@@ -10,6 +10,7 @@ export const useGetRelayerDetailsInfo = () => {
     const relayerName = ref<string>('');
     const servedChains = ref<number>(0);
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
+    const isShowModal = ref<boolean>(false);
     const getRelayerDetailsInfo = () => {
         const route = useRoute();
         const relayerId: string = route?.params?.relayerId as string;
@@ -31,6 +32,9 @@ export const useGetRelayerDetailsInfo = () => {
                             data.channel_pair_info.length;
                         relayerInfo.value.total_fee_cost.count = data.total_fee_value;
                     }
+                } else if (code === API_CODE.systemAbnormality) {
+                    // Todo shan 需要修改 code 对应的值，界面中要引入弹窗，通过改值控制弹窗展示与否
+                    isShowModal.value = true;
                 } else {
                     console.error(message);
                 }
@@ -47,6 +51,7 @@ export const useGetRelayerDetailsInfo = () => {
         relayerIcon,
         relayerName,
         servedChains,
-        relayerInfo
+        relayerInfo,
+        isShowModal
     };
 };
