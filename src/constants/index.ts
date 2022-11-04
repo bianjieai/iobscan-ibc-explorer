@@ -321,12 +321,12 @@ export const ICON_LINK = [
     {
         groupName: 'Medium',
         iconName: 'icon-medium',
-        iconLink: 'https://medium.com/irisnet-blog'
+        iconLink: 'https://medium.com/@IOBScan'
     },
     {
         groupName: 'Twitter',
         iconName: 'icon-tweeter',
-        iconLink: 'https://twitter.com/irisnetwork'
+        iconLink: 'https://twitter.com/iobscan_ibc'
     }
 ];
 
