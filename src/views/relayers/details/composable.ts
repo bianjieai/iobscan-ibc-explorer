@@ -39,6 +39,7 @@ export const useGetRelayerDetailsInfo = () => {
                     console.error(message);
                 }
             } catch (error) {
+                loading && (loading.value = false);
                 console.error(error);
             }
         };
