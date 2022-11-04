@@ -17,7 +17,7 @@ export const getRelayersListAPI = async (params: IRequestRelayerList) => {
         cancelToken: setExecuteCancel(params.use_count)
     });
 };
-// Todo 需切换成真实 API
+// Todo shan 需切换成真实 API
 export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
     return requestMock<IResponse<IResponseRelayerDetails>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}`,
