@@ -94,6 +94,6 @@ export interface IDenomStatistic {
         statistics_name: string;
         count: number | string;
         no_link?: boolean;
-        has_dollar?: boolean;
+        unit?: string;
     };
 }

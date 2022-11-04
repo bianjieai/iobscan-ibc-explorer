@@ -1,3 +1,4 @@
+import { UNIT_SIGNS } from '@/constants';
 import { CompareOrder } from '@/types/interface/components/table.interface';
 import { IDenomStatistic } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
@@ -81,7 +82,7 @@ export const RELAYER_DETAILS_INFO: IDenomStatistic = {
         statistics_name: 'total_relayed_value',
         count: 0,
         no_link: true,
-        has_dollar: true
+        unit: UNIT_SIGNS
     },
     total_txs: {
         statistics_name: 'total_txs',
@@ -97,6 +98,6 @@ export const RELAYER_DETAILS_INFO: IDenomStatistic = {
         statistics_name: 'total_fee_cost',
         count: 0,
         no_link: true,
-        has_dollar: true
+        unit: UNIT_SIGNS
     }
 };

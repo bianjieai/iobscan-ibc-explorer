@@ -481,3 +481,5 @@ export const BOTTOM_STATUS_DATA = {
     ]
 };
 export const CHOOSE_BTN_TEXT = ['Value', 'Txs'];
+
+export const UNIT_SIGNS = '$';

@@ -1,11 +1,11 @@
 import { getRelayerDetailsByRelayerIdAPI } from '@/api/relayers';
-import { useLoading } from '@/composables';
 import { API_CODE } from '@/constants/apiCode';
 import { RELAYER_DETAILS_INFO } from '@/constants/relayers';
+import { useIbcStatisticsChains } from '@/store';
 import { IDenomStatistic } from '@/types/interface/index.interface';
 
 export const useGetRelayerDetailsInfo = () => {
-    const { loading } = useLoading();
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const relayerIcon = ref<string>('');
     const relayerName = ref<string>('');
     const servedChains = ref<number>(0);
@@ -15,12 +15,10 @@ export const useGetRelayerDetailsInfo = () => {
         const route = useRoute();
         const relayerId: string = route?.params?.relayerId as string;
         const getRelayerDetailsByRelayerId = async () => {
-            if (loading) {
-                loading.value = true;
-            }
+            ibcStatisticsChainsStore.isShowLoading = true;
             try {
                 const { code, data, message } = await getRelayerDetailsByRelayerIdAPI(relayerId);
-                loading && (loading.value = false);
+                ibcStatisticsChainsStore.isShowLoading = false;
                 if (code === API_CODE.success) {
                     if (data) {
                         relayerIcon.value = data.relayer_icon;
@@ -39,7 +37,7 @@ export const useGetRelayerDetailsInfo = () => {
                     console.error(message);
                 }
             } catch (error) {
-                loading && (loading.value = false);
+                ibcStatisticsChainsStore.isShowLoading = false;
                 console.error(error);
             }
         };

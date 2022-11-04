@@ -26,7 +26,7 @@
                             color: item.no_link ? 'var(--bj-text-normal)' : ''
                         }"
                     >
-                        <span v-if="item.has_dollar" class="list_item__dollar">$ </span>
+                        <span v-if="item.unit" class="list_item__dollar">{{ item.unit }} </span>
                         {{ `${formatBigNumber(item.count, undefined)}` }}
                     </span>
                 </div>
@@ -59,7 +59,7 @@
                                 color: item.no_link ? 'var(--bj-text-normal)' : ''
                             }"
                         >
-                            <span v-if="item.has_dollar" class="list_item__dollar">$ </span>
+                            <span v-if="item.unit" class="list_item__unit">{{ item.unit }} </span>
                             {{ `${formatBigNumber(item.count, undefined)}` }}
                         </span>
                     </div>
@@ -76,7 +76,6 @@
     interface IProps {
         type: String;
         msg: IDenomStatistic;
-        hasDollar?: boolean;
     }
     defineProps<IProps>();
     const emits = defineEmits(['clickItem']);
