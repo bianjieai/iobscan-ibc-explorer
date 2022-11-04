@@ -178,3 +178,12 @@ export interface DataItem {
     value: string;
     children?: DataItem[];
 }
+
+export interface ITransfersQueryParams {
+    date_range: number[];
+    status: string[] | undefined;
+    chain_id: string | undefined;
+    base_denom: string | undefined;
+    base_denom_chain_id: string | undefined;
+    denom: string | undefined;
+}
