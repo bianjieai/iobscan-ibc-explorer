@@ -1,4 +1,5 @@
 <template>
+    <BulletinBoard />
     <PageContainer>
         <PageTitle title="IBC Relayers" :subtitle="subtitle" />
         <div class="select flex items-center flex-wrap wrapRelative">
@@ -113,6 +114,7 @@
 </template>
 
 <script setup lang="ts">
+    import BulletinBoard from './components/BulletinBoard.vue';
     import NamePopover from './components/NamePopover.vue';
     import { PAGE_PARAMETERS, CHAIN_DEFAULT_VALUE, BOTTOM_STATUS_DATA } from '@/constants';
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/relayers';

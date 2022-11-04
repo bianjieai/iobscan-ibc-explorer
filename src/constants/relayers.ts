@@ -94,3 +94,5 @@ export const RELAYER_DETAILS_INFO = {
         count: 0
     }
 };
+
+export const RELAYER_REGISTE_ADDRESS = 'https://github.com/irisnet/iob-registry/tree/main/relayers';
