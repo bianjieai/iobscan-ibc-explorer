@@ -1,3 +1,4 @@
+import { API_ERRPR_MESSAGE } from '@/constants/apiCode';
 import { getTxDetailsByTxHashAPI, getTxDetailsViewSourceByTxHashAPI } from '@/api/transfers';
 import { useMatchChainInfo } from '@/composables';
 import {
@@ -56,7 +57,8 @@ import type {
     IIbcTxSourceInfo,
     IUseViewSOurce,
     IUseProgressList,
-    IIbcSource
+    IIbcSource,
+    DataItem
 } from '@/types/interface/transfers.interface';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
 import { getTextWidth } from '@/utils/urlTools';
@@ -64,7 +66,7 @@ import moveDecimal from 'move-decimal-point';
 import * as djs from 'dayjs';
 import { Ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { getJSONData } from '@/helper/jsonHelper';
+import { formatObjDisplay } from '@/helper/jsonHelper';
 
 export const useJudgeStatus = (props: Readonly<ITxStatus>) => {
     const isShowSuccess = computed(() => {
@@ -695,9 +697,36 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     const tablePackUp = new URL('../../../assets/transfers/table_packup.png', import.meta.url).href;
     const activeKey = ref<TRANSFER_DETAILS_TAB>(TRANSFER_DETAILS_TAB.tableData);
     const JSONSource = ref<IIbcSource | undefined>();
-    const sourceCode = ref();
+    const sourceCode = ref<DataItem[]>();
     const { scInfo, dcInfo, ibcTxInfo, mark } = toRefs(props);
     const sourceMap = new Map();
+    const errorText = ref('');
+    const expandedRowKeys = ref<string[]>([]);
+    const expandedRowsChange = (expandedRows: string[]) => {
+        expandedRowKeys.value = expandedRows;
+    };
+    const expandAllRows = (isExpandedAll: boolean) => {
+        if (isExpandedAll) {
+            const expandRows: string[] = [];
+            const format = (source: DataItem[]) => {
+                source.forEach((item: DataItem) => {
+                    if (item.children) {
+                        format(item.children);
+                    }
+                });
+                for (const i in Object.values(source)) {
+                    expandRows.push(source[i].key);
+                }
+            };
+
+            if (sourceCode.value) {
+                format(sourceCode.value);
+            }
+            expandedRowsChange(expandRows);
+        } else {
+            expandedRowsChange([]);
+        }
+    };
     const getIbcSource = async (hash: string, chainId: string, msgType: string) => {
         loading && (loading.value = true);
         if (sourceMap.get(hash)) {
@@ -711,14 +740,26 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
                     params
                 );
                 loading && (loading.value = false);
-                if (code === API_CODE.success) {
-                    sourceMap.set(hash, data);
-                    return data;
-                } else {
-                    console.error(message);
+                switch (code) {
+                    case API_CODE.success:
+                        sourceMap.set(hash, data);
+                        return data;
+                    case API_CODE.wrongRequestParameters:
+                        errorText.value = API_ERRPR_MESSAGE.wrongRequestParameters;
+                        console.error(message);
+                        break;
+                    case API_CODE.systemAbnormality:
+                        errorText.value = API_ERRPR_MESSAGE.systemAbnormality;
+                        console.error(message);
+                        break;
+                    case API_CODE.nodeAccessError:
+                        errorText.value = API_ERRPR_MESSAGE.nodeAccessError;
+                        console.error(message);
+                        break;
                 }
             } catch (error) {
                 console.log(error);
+                errorText.value = API_ERRPR_MESSAGE.networkError;
                 loading && (loading.value = false);
             }
         }
@@ -765,9 +806,8 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
     });
 
     watch(JSONSource, (newJSONSource) => {
-        if (newJSONSource) {
-            sourceCode.value = getJSONData(newJSONSource);
-        }
+        sourceCode.value = formatObjDisplay(newJSONSource);
+        expandAllRows(false);
     });
 
     return {
@@ -775,6 +815,10 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
         JSONSource,
         sourceCode,
         tableExpand,
-        tablePackUp
+        tablePackUp,
+        errorText,
+        expandedRowKeys,
+        expandedRowsChange,
+        expandAllRows
     };
 };

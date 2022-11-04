@@ -5,13 +5,13 @@
             <router-link
                 v-if="tokenName !== DEFAULT_DISPLAY_TEXT"
                 class="token_info__left"
-                :to="`/tokens/details?denom=${tokenInfo?.base_denom}`"
+                :to="`/tokens/details?denom=${tokenInfo?.base_denom}&denomChainId=${tokenInfo?.base_denom_chain_id}`"
             >
                 <div class="token_info__icon">
                     <img :src="tokenLogo" alt="" />
                 </div>
                 <a-popover
-                    v-if="tokenName?.length > 18"
+                    v-if="tokenName?.length > 6"
                     destroy-tooltip-on-hide
                     class="token_info__name_popover"
                 >
@@ -190,7 +190,7 @@
                 }
             }
             &__label {
-                width: 140px;
+                width: 145px;
             }
             &__value {
             }
@@ -230,10 +230,12 @@
                 display: inline-block;
                 flex: 1;
                 word-break: break-all;
+                width: 279px;
             }
             &__right {
                 margin-top: 16px;
                 margin-left: 0;
+                width: 100%;
             }
             &__label_value_wrap {
             }

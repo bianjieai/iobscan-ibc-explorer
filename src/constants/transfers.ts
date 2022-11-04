@@ -1,4 +1,6 @@
 import type { IInfoList, IProgress } from '@/types/interface/transfers.interface';
+import { TableColumnsType } from 'ant-design-vue';
+
 export enum IBC_TX_STATUS {
     'default' = 1000, // web custom staus
     'success' = 1,
@@ -272,16 +274,24 @@ export const PROGRESS_TIMEOUT_LIST: IInfoList[] = [
     }
 ];
 
-export const TRANSFER_DETAILS_TABLE = [
+export const TRANSFER_DETAILS_TABLE: TableColumnsType = [
     {
         title: 'Data Name',
         dataIndex: 'name',
-        key: 'name'
+        key: 'name',
+        width: 280
     },
     {
         title: 'Content',
         dataIndex: 'value',
         key: 'value'
+    },
+    {
+        title: 'Expands All',
+        dataIndex: '',
+        key: 'expand',
+        align: 'right',
+        width: 150
     }
 ];
 

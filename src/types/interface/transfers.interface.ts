@@ -5,7 +5,8 @@ export interface IRequestIbcTxs extends IRequestPagination2 {
     date_range?: string;
     status?: string;
     chain_id?: string;
-    symbol?: string;
+    base_denom?: string;
+    base_denom_chain_id?: string;
     denom?: string;
     start_time?: string;
 }
@@ -22,7 +23,7 @@ export interface IIbcTx {
     record_id: string;
     sc_addr: string;
     dc_addr: string;
-    status: string;
+    status: number;
     sequence: string;
     dc_channel: string;
     sc_channel: string;
@@ -36,9 +37,10 @@ export interface IIbcTx {
         hash: string;
     };
     base_denom: string;
+    base_denom_chain_id: string;
     denoms: IDenomTrace;
     tx_time: number;
-    end_time: string;
+    end_time: number;
     expanded?: boolean;
 }
 export interface ITxInfo {
@@ -169,4 +171,10 @@ export interface IInfoList {
     isFormatSigner?: boolean;
     isFormatTimestamp?: boolean;
     isFormatTimeoutTimestamp?: boolean;
+}
+export interface DataItem {
+    key: string;
+    name: string;
+    value: string;
+    children?: DataItem[];
 }

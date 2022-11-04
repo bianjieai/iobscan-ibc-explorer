@@ -318,6 +318,9 @@
         white-space: nowrap;
         border-bottom: none;
     }
+    :deep(.ant-table-cell-scrollbar) {
+        display: none;
+    }
     :deep(.ant-table-tbody > tr > td) {
         border-bottom: 1px solid var(--bj-border-color);
         padding: 16px 16px 15px 0;
