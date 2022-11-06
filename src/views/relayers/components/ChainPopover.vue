@@ -1,6 +1,4 @@
 <template>
-    <!-- todo dj -->
-    <!-- :default-visible="true" -->
     <a-popover
         overlay-class-name="relayers_chain_popover"
         destroy-tooltip-on-hide
@@ -8,26 +6,35 @@
     >
         <template #content>
             <div class="chain_popover_c">
-                <div class="chain_popover_c__item">
+                <div
+                    v-for="chain in displayChainList"
+                    :key="chain.chainName + chain.chainLogo"
+                    class="chain_popover_c__item"
+                >
                     <div class="chain_popover_c__item__chain">
                         <div class="chain_popover_c__item__chain__img_c">
-                            <img
-                                src="https://iobscan.io/resources/xp-chains/irishub-1.png"
-                                alt="chain_logo"
-                            />
+                            <img :src="chain.chainLogo" alt="" />
                         </div>
-                        <span class="chain_popover_c__item__chain__text">Cosmos Hub</span>
+                        <span class="chain_popover_c__item__chain__text">{{
+                            chain.chainName
+                        }}</span>
                     </div>
-                    <div class="chain_popover_c__item__address">
+                    <div
+                        v-for="address in chain.address"
+                        :key="address"
+                        class="chain_popover_c__item__address"
+                    >
                         <div class="chain_popover_c__item__address__img_c">
                             <img src="@/assets/home/address.png" alt="address_icon" />
                         </div>
-                        <span class="chain_popover_c__item__address__text"
-                            >cosmos1u443493849384938498304</span
-                        >
+                        <span class="chain_popover_c__item__address__text">{{ address }}</span>
                     </div>
                 </div>
-                <div class="chain_popover_c__bottom" @click="goRelayerDetails">
+                <div
+                    v-show="props.chainList.length > 3"
+                    class="chain_popover_c__bottom"
+                    @click="goRelayerDetails"
+                >
                     <div class="chain_popover_c__bottom__ellipsis">……</div>
                     <div class="chain_popover_c__bottom__botton">
                         <span>View All</span>
@@ -36,12 +43,11 @@
                 </div>
             </div>
         </template>
-        <span class="chain_popover_content">{{ props.servedChainsNum }}</span>
+        <div class="chain_popover_content">{{ props.servedChainsNum }}</div>
     </a-popover>
 </template>
 
 <script setup lang="ts">
-    // todo dj 数据待组装处理
     interface chainItem {
         chainName: string;
         chainLogo: string;
@@ -54,18 +60,12 @@
         chainList: chainItem[];
     }
 
-    const props = withDefaults(defineProps<IProps>(), {
-        relayerId: 'relayerId',
-        chainList: () => {
-            return [
-                {
-                    chainName: 'Cosmos Hub',
-                    chainLogo: 'logo',
-                    address: ['cosmos1rkr8dlz03q6t76mv65sqx28s3ydzgzz59j4w7s']
-                }
-            ];
-        }
+    const props = defineProps<IProps>();
+
+    const displayChainList = computed(() => {
+        return props.chainList.slice(0, 3) || [];
     });
+
     const router = useRouter();
     const goRelayerDetails = () => {
         router.push({

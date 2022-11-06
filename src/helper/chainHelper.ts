@@ -1,18 +1,14 @@
 import { isArray } from '@/utils/objectTools';
-import { BASE_PARAMS, CHAINNAME, UNKNOWN, CHAIN_DEFAULT_VALUE } from '@/constants';
+import { CHAINNAME, UNKNOWN, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { useIbcChains } from '@/composables';
 import { IResponseChainsListItem } from '@/types/interface/chains.interface';
 import { IResponseTokensListItem, ITokensListItem } from '@/types/interface/tokens.interface';
 import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { getRestString } from '@/helper/parseStringHelper';
-import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
-import {
-    IRelayersListItem,
-    IRequestRelayerList,
-    IResponseRelayerListItem
-} from '@/types/interface/relayers.interface';
 import { TData, TDenom, IDataItem } from '@/components/BjSelect/interface';
+import { useIbcStatisticsChains } from '@/store/index';
+
 const { ibcChains } = useIbcChains();
 export default class ChainHelper {
     static formatChainId(chainId: any) {
@@ -165,21 +161,6 @@ export default class ChainHelper {
         return temp;
     }
 
-    static formatTransfer(data: IResponseRelayerListItem[], params: IRequestRelayerList) {
-        const relayersList = ref<IResponseRelayerListItem[]>([]);
-        const allParams = { ...BASE_PARAMS, ...params };
-        relayersList.value = ChainHelper.sortByChainName(data, allParams.chain)?.map(
-            (item: IRelayersListItem) => {
-                item.txs_success_rate = formatTransfer_success_txs(
-                    item.transfer_success_txs,
-                    item.transfer_total_txs
-                );
-                return item;
-            }
-        );
-        return relayersList.value;
-    }
-
     // channels and relayers 选择框是否需要排序
     static isNeedSort = (chainIdArr: TDenom[], chainsArrs: TData) => {
         // 拍扁数组处理，集合
@@ -226,5 +207,14 @@ export default class ChainHelper {
             }
         }
         return isLocaleCompare.value;
+    };
+
+    static getChainInfoByKey = async (chainID: string): Promise<IIbcchain | undefined> => {
+        const ibcStatisticsChainsStore = useIbcStatisticsChains();
+        const { ibcChainsUniqueKeyMapGetter } = ibcStatisticsChainsStore;
+        if (Object.keys(ibcChainsUniqueKeyMapGetter).length <= 0) {
+            await ibcStatisticsChainsStore.getIbcChainsAction();
+        }
+        return ibcChainsUniqueKeyMapGetter[chainID];
     };
 }

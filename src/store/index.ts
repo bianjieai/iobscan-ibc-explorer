@@ -1,3 +1,4 @@
+import { IIbcchain } from './../types/interface/index.interface';
 import { defineStore } from 'pinia';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
 import moveDecimal from 'move-decimal-point';
@@ -36,6 +37,13 @@ export const useIbcStatisticsChains = defineStore('global', {
                 ibcBaseDenomsUniqueKeyMap[key] = token;
             });
             return ibcBaseDenomsUniqueKeyMap;
+        },
+        ibcChainsUniqueKeyMapGetter(): { [key: string]: IIbcchain } {
+            const ibcChainUniqueKeyMap: { [key: string]: IIbcchain } = {};
+            this.ibcChains.all.forEach((chain: IIbcchain) => {
+                ibcChainUniqueKeyMap[chain.chain_id] = chain;
+            });
+            return ibcChainUniqueKeyMap;
         }
         // ibcDenomsMapGetter(): { [key: string]: IResponseIbcDenom } {
         //     const ibcDenomsMap: { [key: string]: IResponseIbcDenom } = {};
