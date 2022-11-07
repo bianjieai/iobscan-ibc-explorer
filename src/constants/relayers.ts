@@ -1,7 +1,8 @@
-import { UNIT_SIGNS } from '@/constants';
 import { CompareOrder } from '@/types/interface/components/table.interface';
 import { IDenomStatistic } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
+
+export const UNIT_SIGNS = '$';
 
 export enum RelayersListKey {
     relayersRelayerName = 'relayers_relayer_name',
