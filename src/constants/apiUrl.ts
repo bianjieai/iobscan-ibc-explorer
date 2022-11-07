@@ -11,5 +11,5 @@ export enum API_URL {
     ibcIbcTokenListUrl = '/ibc/ibcTokenList',
     ibcChainsListUrl = '/ibc/chainList',
     ibcChannelsListUrl = '/ibc/channelList',
-    ibcRelayerListUrl = '/ibc/relayers'
+    ibcRelayerListUrl = '/ibc/relayerList'
 }
