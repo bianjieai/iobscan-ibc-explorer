@@ -60,13 +60,13 @@
     import type { TableColumnsType } from 'ant-design-vue';
     import { GetComponentProps } from 'ant-design-vue/lib/vc-table/interface';
     import type { IIbcTx } from '@/types/interface/transfers.interface';
-    import type { IResponseRelayerListItem } from '@/types/interface/relayers.interface';
     import type { IResponseChannelsListItem } from '@/types/interface/channels.interface';
     import type { IResponseChainsListItem } from '@/types/interface/chains.interface';
     import type {
         IResponseIbcTokenListItem,
         ITokensListItem
     } from '@/types/interface/tokens.interface';
+    import { RelayerListItem } from '@/types/interface/relayers.interface';
     import { CompareOrder } from '@/types/interface/components/table.interface';
     import { computed, onMounted, reactive, ref, watch } from 'vue';
     import { useRouter } from 'vue-router';
@@ -74,6 +74,7 @@
     import { formatLastUpdated } from '@/utils/timeTools';
     import { formatSupply } from '@/helper/tableCellHelper';
     import { useGetIbcDenoms, useTimeInterval } from '@/composables';
+    import { RelayersListKey } from '@/constants/relayers';
 
     const router = useRouter();
     const { ibcBaseDenoms } = useGetIbcDenoms();
@@ -82,7 +83,7 @@
         | IResponseChainsListItem[]
         | ITokensListItem[]
         | IResponseIbcTokenListItem[]
-        | IResponseRelayerListItem[]
+        | RelayerListItem[]
         | IResponseChannelsListItem[];
     interface IProps {
         columns: TableColumnsType;
@@ -215,6 +216,33 @@
         return formatSupply(item[key], item.base_denom, ibcBaseDenoms.value, 2, false);
     };
     let tempColumn: any;
+    const relayerSort = (key: string, order: any) => {
+        let registeredTemp: any[] = [];
+        let unRegisteredTemp: any[] = [];
+        backUpDataSource.forEach((item) => {
+            item[RelayersListKey.relayersRelayerName]
+                ? registeredTemp.push(item)
+                : unRegisteredTemp.push(item);
+        });
+        registeredTemp = registeredTemp.sort((a, b) => {
+            return (
+                new BigNumber(a[key]).comparedTo(new BigNumber(b[key])) *
+                (order === CompareOrder.DESCEND ? -1 : 1)
+            );
+        });
+        unRegisteredTemp = unRegisteredTemp.sort((a, b) => {
+            return (
+                new BigNumber(a[key]).comparedTo(new BigNumber(b[key])) *
+                (order === CompareOrder.DESCEND ? -1 : 1)
+            );
+        });
+        backUpDataSource = [...registeredTemp, ...unRegisteredTemp].map(
+            (item: any, index: number) => ({
+                ...item,
+                _count: index + 1
+            })
+        );
+    };
     const onTableChange = (pagination: any, filters: any, sorter: any) => {
         let { columnKey, column, order } = sorter;
         column ? (tempColumn = column) : null;
@@ -227,7 +255,6 @@
                 item.sortOrder = null;
             }
         });
-        // todo duanjie => 待优化
         switch (columnKey) {
             case 'supply':
             case 'ibc_transfer_amount':
@@ -255,6 +282,14 @@
                         _count: index + 1
                     })
                 );
+                break;
+            case RelayersListKey.relayersServedChains:
+            case RelayersListKey.relayersSuccessRate:
+            case RelayersListKey.relayersIbcTransferTxs:
+            case RelayersListKey.relayersTotalRelayedValue:
+            case RelayersListKey.relayersTotalFeeCost:
+            case RelayersListKey.relayersLastUpdated:
+                relayerSort(columnKey, order);
                 break;
             default: // reset backup
                 if (tempColumn.key !== columnKey) {

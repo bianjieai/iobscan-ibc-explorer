@@ -4,6 +4,7 @@
 
 import { IBaseDenom } from '@/types/interface/index.interface';
 import { formatBigNumber } from './parseStringHelper';
+import { BigNumber } from 'bignumber.js';
 import moveDecimal from 'move-decimal-point';
 /**
  *
@@ -91,7 +92,10 @@ export const formatAmount = (
 export const formatTransfer_success_txs = (
     transfer_success_txs: number,
     transfer_total_txs: number
-) => {
+): number => {
     if (transfer_total_txs === 0) return 0;
-    return ((transfer_success_txs / transfer_total_txs) * 100).toFixed(0);
+    const numerator = new BigNumber(transfer_success_txs);
+    const denominator = new BigNumber(transfer_total_txs);
+    const res = Number(numerator.dividedBy(denominator).multipliedBy(100).toFixed(0));
+    return res > 100 ? 100 : res;
 };

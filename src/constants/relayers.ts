@@ -3,58 +3,77 @@ import { CompareOrder } from '@/types/interface/components/table.interface';
 import { IDenomStatistic } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
 
+export enum RelayersListKey {
+    relayersRelayerName = 'relayers_relayer_name',
+    relayersServedChains = 'relayers_served_chains',
+    relayersSuccessRate = 'relayers_success_rate',
+    relayersIbcTransferTxs = 'relayers_ibc_transfer_txs',
+    relayersTotalRelayedValue = 'relayers_total_relayed_value',
+    relayersTotalFeeCost = 'relayers_total_fee_cost',
+    relayersLastUpdated = 'relayers_last_updated'
+}
+
 export const COLUMNS: TableColumnsType = [
     {
         title: 'Relayer Name',
-        dataIndex: 'relayer_name',
-        key: 'relayer_name',
-        width: 110
+        dataIndex: RelayersListKey.relayersRelayerName,
+        key: RelayersListKey.relayersRelayerName,
+        width: 150
     },
     {
-        title: 'Connected Channel',
-        dataIndex: 'chain_a',
-        key: 'chain_a',
-        width: 180
-    },
-    {
-        title: 'Status',
-        dataIndex: 'status',
-        key: 'status',
-        align: 'center'
-    },
-    {
-        title: 'Connected Channel',
-        dataIndex: 'chain_b',
-        key: 'chain_b',
-        width: 180
-    },
-    {
-        title: 'Last Updated',
-        dataIndex: 'last_updated',
-        key: 'update_time',
+        title: 'Served Chains',
+        dataIndex: RelayersListKey.relayersServedChains,
+        key: RelayersListKey.relayersServedChains,
         align: 'right',
-        sorter: (a, b) => a.update_time - b.update_time,
         sortDirections: ['descend', 'ascend'],
-        width: 70
+        sorter: true,
+        width: 100
     },
     {
-        title: 'Txs Success Rate',
-        dataIndex: 'txs_success_rate',
-        key: 'txs_success_rate',
+        title: 'Success rate',
+        dataIndex: RelayersListKey.relayersSuccessRate,
+        key: RelayersListKey.relayersSuccessRate,
         align: 'right',
-        sorter: (a, b) => a.txs_success_rate - b.txs_success_rate,
         sortDirections: ['descend', 'ascend'],
+        sorter: true,
         width: 100
     },
     {
         title: 'IBC Transfer Txs',
-        dataIndex: 'transfer_total_txs',
-        key: 'transfer_total_txs',
+        dataIndex: RelayersListKey.relayersIbcTransferTxs,
+        key: RelayersListKey.relayersIbcTransferTxs,
         align: 'right',
-        sorter: (a, b) => a.transfer_total_txs - b.transfer_total_txs,
         sortDirections: ['descend', 'ascend'],
         defaultSortOrder: CompareOrder.DESCEND,
-        width: 120
+        sorter: true,
+        width: 100
+    },
+    {
+        title: 'Total Relayed Value',
+        dataIndex: RelayersListKey.relayersTotalRelayedValue,
+        key: RelayersListKey.relayersTotalRelayedValue,
+        align: 'right',
+        sortDirections: ['descend', 'ascend'],
+        sorter: true,
+        width: 100
+    },
+    {
+        title: 'Total Fee Cost',
+        dataIndex: RelayersListKey.relayersTotalFeeCost,
+        key: RelayersListKey.relayersTotalFeeCost,
+        align: 'right',
+        sortDirections: ['descend', 'ascend'],
+        sorter: true,
+        width: 100
+    },
+    {
+        title: 'Last Updated',
+        dataIndex: RelayersListKey.relayersLastUpdated,
+        key: RelayersListKey.relayersLastUpdated,
+        align: 'right',
+        sortDirections: ['descend', 'ascend'],
+        sorter: true,
+        width: 100
     }
 ];
 
