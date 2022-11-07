@@ -43,7 +43,7 @@
 <style lang="less" scoped>
     .channel_pairs {
         max-height: 416px;
-        overflow-y: auto;
+        overflow: auto;
         &__info {
             .flex(row, nowrap, space-between, center);
             margin-top: 16px;
@@ -64,7 +64,23 @@
             margin-left: 16px;
         }
         &__status_img {
+            margin: 0 20px;
             transform: translateY(33px);
+        }
+    }
+    @media screen and (max-width: 1050px) {
+        .channel_pairs {
+            &__info {
+                &:first-child {
+                }
+            }
+            &__index {
+            }
+            &__pair {
+            }
+            &__status_img {
+                margin: 0 16px;
+            }
         }
     }
 </style>
