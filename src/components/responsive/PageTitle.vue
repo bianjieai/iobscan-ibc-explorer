@@ -1,11 +1,11 @@
 <template>
     <div class="page_title_container">
-        <img v-if="hasIcon" class="icon" :src="imgSrc" />
+        <img v-if="imgSrc" class="icon" :src="imgSrc" />
         <div class="flex">
             <div class="title_p">
-                <img v-if="hasIcon" class="icon inline_icon" :src="imgSrc" />
+                <img v-if="imgSrc" class="icon inline_icon" :src="imgSrc" />
                 <a-typography-text class="title">{{ title }}</a-typography-text>
-                <div class="background" :style="{ bottom: hasIcon ? '3px' : '-3px' }"></div>
+                <div class="background" :style="{ bottom: imgSrc ? '3px' : '-3px' }"></div>
             </div>
             <a-typography-text v-if="subtitle" class="number"
                 ><i class="iconfont" :class="titleIcon"></i>{{ subtitle }}</a-typography-text
@@ -16,7 +16,6 @@
 
 <script lang="ts" setup>
     interface IProps {
-        hasIcon?: boolean;
         titleIcon?: string;
         title: string;
         subtitle?: string;
