@@ -57,6 +57,7 @@
                     line-height: 18px;
                     color: var(--bj-primary-color);
                     align-self: flex-end;
+                    cursor: pointer;
                     .iconfont {
                         font-size: 14px;
                     }

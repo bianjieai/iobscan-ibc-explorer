@@ -1,20 +1,20 @@
 <template>
     <div
         v-show="show"
-        class="modal-mask"
+        class="modal_mask"
         :style="{ background: `rgba(0, 0, 0, ${props.opacity})` }"
         @click="cancelModal"
     >
-        <div class="modal-content">
-            <div class="modal-content__top"></div>
-            <div class="modal-content__close">
-                <svg-icon :icon-name="'icon-close'" @click="closeModal"></svg-icon>
+        <div class="modal_content">
+            <div class="modal_content__top"></div>
+            <div class="modal_content__close">
+                <svg-icon class="cursor" :icon-name="'icon-close'" @click="closeModal"></svg-icon>
             </div>
-            <div class="modal-content__info">
+            <div class="modal_content__info">
                 <p>{{ props.showText }} </p>
             </div>
             <div class="mt-16 mb-16">
-                <div class="modal-content__button" @click="confirmButton">
+                <div class="modal_content__button" @click="confirmButton">
                     <p>{{ props.goText }}</p>
                 </div>
             </div>
@@ -54,7 +54,7 @@
         }
     );
     const cancelModal = (event: any) => {
-        let tp = document.querySelector('.modal-content');
+        let tp = document.querySelector('.modal_content');
         if (tp) {
             if (!tp.contains(event.target)) {
                 show.value = false;
@@ -74,7 +74,7 @@
 </script>
 
 <style lang="less" scoped>
-    .modal-mask {
+    .modal_mask {
         width: 100%;
         height: 100%;
         background: rgba(0, 0, 0, 0);
@@ -84,7 +84,7 @@
         right: 0;
         bottom: 0;
         z-index: 1200;
-        .modal-content {
+        .modal_content {
             width: 276px;
             position: absolute;
             top: 50%;
