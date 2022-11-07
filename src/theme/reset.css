@@ -89,7 +89,6 @@ body {
     color: var(--bj-text-normal);
     background-color: var(--bj-background-color);
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-    /* overflow: overlay; */
 }
 body::-webkit-scrollbar {
     display: none;
