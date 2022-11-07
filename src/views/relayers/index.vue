@@ -1,4 +1,5 @@
 <template>
+    <!-- <IbcDialog v-model:show-modal="showmodal1"/> -->
     <BulletinBoard />
     <PageContainer>
         <PageTitle title="IBC Relayers" :subtitle="subtitle" />

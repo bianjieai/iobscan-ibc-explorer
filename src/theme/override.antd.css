@@ -99,6 +99,7 @@
 .ant-popover-inner {
     box-shadow: 0px 2px 8px 0px #d9deec;
     border: 1px solid #d9dfee;
+    margin-left: 4px;
 }
 .ant-popover-inner .ant-popover-inner-content {
     padding: 8px 12px;

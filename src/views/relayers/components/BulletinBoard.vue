@@ -3,14 +3,14 @@
         <div class="bulletin__container">
             <div class="content">
                 <div class="desc">
-                    <i class="iconfont icon-zhiding"></i>
+                    <i class="iconfont icon-notice"></i>
                     <span
                         >Relayer detailed page is launched! Welcome to register your relayers!</span
                     >
                 </div>
                 <div class="info" @click="gotoRegistry()">
                     <span>relayer registry</span>
-                    <i class="iconfont icon-zhiding"></i>
+                    <i class="iconfont icon-turnto1"></i>
                 </div>
             </div>
         </div>
@@ -28,25 +28,42 @@
         background-color: var(--bj-background-color);
         width: 100%;
         &__container {
-            // height: 46px;
-            // line-height: 46px;
             background: rgba(61, 80, 255, 0.1);
             padding: 14px 48px;
             width: 100%;
+            // display: flex;
+            // align-items: center;
             .content {
                 margin: 0 auto;
                 max-width: 1200px;
                 display: flex;
                 justify-content: space-between;
+                align-items: center;
                 .desc {
                     font-size: var(--bj-font-size-normal);
-                    font-family: GolosUIWebRegular;
+                    line-height: 18px;
                     color: rgba(0, 0, 0, 0.65);
+                    align-self: flex-start;
+                    .iconfont {
+                        font-size: 14px;
+                        color: var(--bj-primary-color);
+                    }
+                    span {
+                        margin-left: 12px;
+                    }
                 }
                 .info {
                     font-size: var(--bj-font-size-normal);
-                    font-family: GolosUIWebRegular;
+                    line-height: 18px;
                     color: var(--bj-primary-color);
+                    align-self: flex-end;
+                    .iconfont {
+                        font-size: 14px;
+                    }
+                    span {
+                        display: inline-block;
+                        margin-right: 4px;
+                    }
                 }
             }
         }
@@ -55,8 +72,6 @@
         .bulletin {
             &__container {
                 padding: 14px 32px;
-                .content {
-                }
             }
         }
     }
@@ -67,11 +82,8 @@
                 .content {
                     display: flex;
                     flex-direction: column;
-                    .desc {
-                        text-align: left;
-                    }
                     .info {
-                        text-align: right;
+                        margin-top: 8px;
                     }
                 }
             }
@@ -88,7 +100,7 @@
                         text-align: left;
                     }
                     .info {
-                        text-align: right;
+                        margin-top: 8px;
                     }
                 }
             }
