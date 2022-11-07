@@ -9,14 +9,14 @@ npm install -g pnpm@6.10.3 && pnpm config set registry https://registry.npm.taob
 FROM nginx:1.19-alpine
 RUN echo -e 'server {\n\
   location / {\n\
-    if ($request_filename ~ index.html)\n\
+    if ($request_filename ~* index.html)\n\
     {\n\
         add_header Cache-Control "no-cache";\n\
     }\n\
     root /usr/share/nginx/html;\n\
-    try_files $URI $URI/ /index.html;\n\
+    try_files $URI $RUI/ /index.html;\n\
   }\n\
-}' > /nginx.template
+}' > /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /app/dist/ /usr/share/nginx/html/
-CMD sh -c "envsubst < /nginx.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
+CMD sh -c "exec nginx -g 'daemon off;'"
