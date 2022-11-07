@@ -48,6 +48,7 @@ export interface RelayerListItem {
     [RelayersListKey.relayersLastUpdated]: number;
     relayer_id: string;
     relayer_icon: string;
+    is_registered: boolean;
     served_chains_infos: chainPopoverProp[];
 }
 export interface IChannelChain {

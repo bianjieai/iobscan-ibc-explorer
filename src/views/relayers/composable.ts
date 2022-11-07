@@ -6,8 +6,7 @@ import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import { getRelayersListMock } from '@/api/relayers';
 import { IRequestRelayerList, IResponseRelayerList } from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
-import { BASE_PARAMS, PAGE_PARAMETERS } from '@/constants';
-import { useResetSearch } from '@/composables';
+import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON, UNKNOWN } from '@/constants';
 import { useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
@@ -25,11 +24,10 @@ export const useGetRelayersList = () => {
         for (let i = 0; i < servedChainsInfos.length; i++) {
             const servedChainsInfo = servedChainsInfos[i];
             const chainInfo = await ChainHelper.getChainInfoByKey(servedChainsInfo.chain);
-            // todo dj 如果没有匹配上，如何展示，默认值是什么
             formatChainPopoverProp.push({
                 chain: servedChainsInfo.chain,
-                chainName: chainInfo?.chain_name || servedChainsInfo.chain,
-                chainLogo: chainInfo?.icon || '',
+                chainName: chainInfo?.chain_name || UNKNOWN,
+                chainLogo: chainInfo?.icon || CHAIN_DEFAULT_ICON,
                 address: [...servedChainsInfo.addresses]
             });
         }
@@ -67,6 +65,7 @@ export const useGetRelayersList = () => {
                                 );
                                 formatItems.push({
                                     relayer_id: item.relayer_id,
+                                    is_registered: Boolean(item.relayer_name),
                                     relayer_icon: item.relayer_icon,
                                     served_chains_infos: served_chains_infos,
                                     [RelayersListKey.relayersRelayerName]: item.relayer_name,
@@ -138,17 +137,18 @@ export const useGetRelayersList = () => {
     };
 };
 
-export const useRelayersColumnJump = () => {
+export const useGoRelayersDetails = () => {
     const router = useRouter();
-    const goChains = () => {
-        router.push('/chains');
-    };
-    const resetSearchCondition = () => {
-        const { resetSearch } = useResetSearch();
-        resetSearch();
+    const goRelayersDetails = (isRegistered: boolean, relayerId?: string) => {
+        if (isRegistered) {
+            router.push({
+                path: '/relayers/details/' + relayerId
+            });
+        } else {
+            // todo dj 弹窗
+        }
     };
     return {
-        goChains,
-        resetSearchCondition
+        goRelayersDetails
     };
 };
