@@ -17,6 +17,17 @@ export const getRelayersListAPI = async (params: IRequestRelayerList) => {
         cancelToken: setExecuteCancel(params.use_count)
     });
 };
+
+export const getRelayersListMock = async (params: IRequestRelayerList) => {
+    executeCancel(params.use_count);
+    return requestMock<IResponse<IResponseRelayerList | number>>({
+        url: API_URL.ibcRelayerListUrl,
+        method: 'get',
+        params: params,
+        cancelToken: setExecuteCancel(params.use_count)
+    });
+};
+
 // Todo shan 需切换成真实 API
 export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
     return requestMock<IResponse<IResponseRelayerDetails>>({

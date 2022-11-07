@@ -6,6 +6,27 @@
     "description": "",
     "glyphs": [
         {
+            "icon_id": "32691640",
+            "name": "turnto",
+            "font_class": "turnto1",
+            "unicode": "e7a1",
+            "unicode_decimal": 59297
+        },
+        {
+            "icon_id": "32677439",
+            "name": "close",
+            "font_class": "close",
+            "unicode": "e7a0",
+            "unicode_decimal": 59296
+        },
+        {
+            "icon_id": "32653014",
+            "name": "turnto",
+            "font_class": "turnto",
+            "unicode": "e79e",
+            "unicode_decimal": 59294
+        },
+        {
             "icon_id": "32638079",
             "name": "notice",
             "font_class": "notice",
