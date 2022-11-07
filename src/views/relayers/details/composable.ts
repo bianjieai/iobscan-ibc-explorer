@@ -39,6 +39,7 @@ export const useGetRelayerDetailsInfo = () => {
                 }
             } catch (error) {
                 ibcStatisticsChainsStore.isShowLoading = false;
+                ibcStatisticsChainsStore.isShow500 = true;
                 console.error(error);
             }
         };
