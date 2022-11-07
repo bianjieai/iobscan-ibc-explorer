@@ -77,8 +77,8 @@
 
 <style lang="less" scoped>
     :deep(.value_container .symbol) {
-        font-size: 14px;
+        font-size: var(--bj-font-size-normal);
         font-weight: 400;
-        color: rgba(0, 0, 0, 0.35);
+        color: var(--bj-text-third);
     }
 </style>

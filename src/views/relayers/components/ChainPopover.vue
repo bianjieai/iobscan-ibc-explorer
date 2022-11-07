@@ -82,7 +82,6 @@
     }
     .chain_popover_content {
         font-size: 14px;
-        font-family: GolosUIWebRegular;
         font-weight: 400;
         color: #000000;
         line-height: 18px;
@@ -129,7 +128,6 @@
                 }
                 &__text {
                     font-size: 14px;
-                    font-family: GolosUIWebRegular;
                     font-weight: 400;
                     color: #000000;
                     line-height: 18px;
@@ -142,7 +140,6 @@
             .flex(row,nowrap,space-between);
             &__ellipsis {
                 font-size: 14px;
-                font-family: PingFangSC-Medium, PingFang SC;
                 font-weight: 500;
                 color: rgba(0, 0, 0, 0.75);
             }
@@ -152,7 +149,6 @@
                 span {
                     margin-right: 4px;
                     font-size: 14px;
-                    font-family: PingFangSC-Medium, PingFang SC;
                     font-weight: 500;
                     color: var(--bj-primary-color);
                     line-height: 18px;
