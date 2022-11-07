@@ -1,5 +1,10 @@
 <template>
-    <div v-show="show" class="modal-mask" @click="cancelModal">
+    <div
+        v-show="show"
+        class="modal-mask"
+        :style="{ background: `rgba(0, 0, 0, ${props.opacity})` }"
+        @click="cancelModal"
+    >
         <div class="modal-content">
             <div class="modal-content__top"></div>
             <div class="modal-content__close">
@@ -25,12 +30,14 @@
         showText?: string;
         goText?: string;
         goUrl?: string;
+        opacity?: number;
     }
     const props = withDefaults(defineProps<DialogProps>(), {
         showModal: false,
         showText: RELAYER_REGISTE_TEXT,
         goText: 'Go',
-        goUrl: RELAYER_REGISTE_ADDRESS
+        goUrl: RELAYER_REGISTE_ADDRESS,
+        opacity: 0
     });
     const show = ref<boolean>(props.showModal);
     const emit = defineEmits(['update:show-modal']);
@@ -76,7 +83,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        z-index: 2;
+        z-index: 1200;
         .modal-content {
             width: 276px;
             position: absolute;
@@ -88,7 +95,7 @@
             border-radius: 4px;
             border: 1px solid #d9dfee;
             text-align: center;
-            z-index: 3;
+            z-index: 1201;
             &__top {
                 height: 8px;
                 border-radius: 4px 4px 0px 0px;
