@@ -47,6 +47,11 @@ export const ROUTE_INFO = {
         title: 'IOBScan - IOB - Relayers',
         description: 'IBC Relayers List'
     },
+    relayerDetails: {
+        name: 'Relayer Details',
+        title: 'IOBScan - IOB - Relayer Details',
+        description: 'IBC Relayer Details Information'
+    },
     searchResults: {
         name: 'Search Results',
         title: 'IOBScan - IOB - Search Results',
@@ -476,3 +481,5 @@ export const BOTTOM_STATUS_DATA = {
     ]
 };
 export const CHOOSE_BTN_TEXT = ['Value', 'Txs'];
+
+export const UNIT_SIGNS = '$';

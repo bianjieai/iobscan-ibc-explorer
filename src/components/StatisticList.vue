@@ -25,8 +25,10 @@
                             cursor: item.no_link ? 'text' : 'pointer',
                             color: item.no_link ? 'var(--bj-text-normal)' : ''
                         }"
-                        >{{ `${formatBigNumber(item.count, undefined)}` }}</span
                     >
+                        <span v-if="item.unit" class="list_item__dollar">{{ item.unit }} </span>
+                        {{ `${formatBigNumber(item.count, undefined)}` }}
+                    </span>
                 </div>
             </div>
         </div>
@@ -56,8 +58,10 @@
                                 cursor: item.no_link ? 'text' : 'pointer',
                                 color: item.no_link ? 'var(--bj-text-normal)' : ''
                             }"
-                            >{{ `${formatBigNumber(item.count, undefined)}` }}</span
                         >
+                            <span v-if="item.unit" class="list_item__unit">{{ item.unit }} </span>
+                            {{ `${formatBigNumber(item.count, undefined)}` }}
+                        </span>
                     </div>
                 </div>
             </div>
@@ -68,16 +72,12 @@
 <script setup lang="ts">
     import { STATISTICS_NAME, DAY_TIME } from '@/constants';
     import { formatBigNumber } from '@/helper/parseStringHelper';
-    defineProps({
-        type: {
-            type: String,
-            required: true
-        },
-        msg: {
-            type: Object,
-            required: true
-        }
-    });
+    import type { IDenomStatistic } from '@/types/interface/index.interface';
+    interface IProps {
+        type: String;
+        msg: IDenomStatistic;
+    }
+    defineProps<IProps>();
     const emits = defineEmits(['clickItem']);
     const clickListItem = (value: any) => {
         emits('clickItem', value);
@@ -146,7 +146,6 @@
             color: var(--bj-text-normal);
             line-height: var(--bj-font-size-home-number);
         }
-
         &__tip {
             margin-left: 8px;
             padding: 0 4px;

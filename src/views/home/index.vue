@@ -61,7 +61,6 @@
 </template>
 
 <script setup lang="ts">
-    import LayerBlock from './components/LayerBlock.vue';
     import ChainsInfo from './components/ChainsInfo.vue';
     import ChainsListInfo from './components/ChainsListInfo.vue';
     import TransferList from './components/TransferList.vue';

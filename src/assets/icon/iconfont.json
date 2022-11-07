@@ -6,6 +6,69 @@
     "description": "",
     "glyphs": [
         {
+            "icon_id": "32638079",
+            "name": "notice",
+            "font_class": "notice",
+            "unicode": "e79c",
+            "unicode_decimal": 59292
+        },
+        {
+            "icon_id": "32638099",
+            "name": "icon_search",
+            "font_class": "icon_search",
+            "unicode": "e79d",
+            "unicode_decimal": 59293
+        },
+        {
+            "icon_id": "32638073",
+            "name": "chains served",
+            "font_class": "a-chainsserved",
+            "unicode": "e79b",
+            "unicode_decimal": 59291
+        },
+        {
+            "icon_id": "32637638",
+            "name": "success rate",
+            "font_class": "a-successrate",
+            "unicode": "e798",
+            "unicode_decimal": 59288
+        },
+        {
+            "icon_id": "32637642",
+            "name": "transactions",
+            "font_class": "transactions",
+            "unicode": "e799",
+            "unicode_decimal": 59289
+        },
+        {
+            "icon_id": "32637603",
+            "name": "Trend",
+            "font_class": "Trend",
+            "unicode": "e795",
+            "unicode_decimal": 59285
+        },
+        {
+            "icon_id": "32637623",
+            "name": "relayed assets",
+            "font_class": "a-relayedassets",
+            "unicode": "e796",
+            "unicode_decimal": 59286
+        },
+        {
+            "icon_id": "32637627",
+            "name": "transfer type",
+            "font_class": "a-transfertype",
+            "unicode": "e797",
+            "unicode_decimal": 59287
+        },
+        {
+            "icon_id": "32637598",
+            "name": "Channel Pairs",
+            "font_class": "a-ChannelPairs",
+            "unicode": "e794",
+            "unicode_decimal": 59284
+        },
+        {
             "icon_id": "32428410",
             "name": "展开",
             "font_class": "zhankai2",

@@ -7,12 +7,15 @@
             </div>
             <div class="layout__content">
                 <div
-                    v-if="!ibcStatisticsChainsStore.isShow500"
+                    v-show="!ibcStatisticsChainsStore.isShow500"
                     class="layout__content__router_container"
                 >
                     <router-view />
                 </div>
-                <div v-else class="layout__content__error_container">
+                <div
+                    v-show="ibcStatisticsChainsStore.isShow500"
+                    class="layout__content__error_container"
+                >
                     <error-500 />
                 </div>
             </div>
