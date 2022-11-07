@@ -77,9 +77,6 @@
     :global(.relayers_chain_popover .ant-popover-inner-content) {
         padding: 0;
     }
-    :global(.relayers_chain_popover .ant-popover-inner) {
-        box-shadow: 0px 2px 8px 0px #d9deec;
-    }
     .chain_popover_content {
         font-size: 14px;
         font-weight: 400;
