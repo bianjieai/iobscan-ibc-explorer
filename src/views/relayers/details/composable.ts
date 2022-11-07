@@ -62,16 +62,14 @@ export const useGetRelayerDetailsInfo = () => {
 };
 
 export const useChannelPairsAddressHeight = () => {
-    const pairAddressListHeight = computed(() => {
-        return (item: IChannelChain) => {
-            const chainAAddressList = item.chain_a_addresses;
-            const chainBAddressList = item.chain_b_addresses;
-            const maxChainLength = Math.max(chainAAddressList.length, chainBAddressList.length);
-            const maxHeight = maxChainLength * SINGLE_ADDRESS_HEIGHT;
-            return maxHeight;
-        };
-    });
+    const getPairAddressListHeight = (item: IChannelChain) => {
+        const chainAAddressList = item.chain_a_addresses;
+        const chainBAddressList = item.chain_b_addresses;
+        const maxChainLength = Math.max(chainAAddressList.length, chainBAddressList.length);
+        const maxHeight = maxChainLength * SINGLE_ADDRESS_HEIGHT;
+        return maxHeight;
+    };
     return {
-        pairAddressListHeight
+        getPairAddressListHeight
     };
 };

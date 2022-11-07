@@ -44,6 +44,7 @@
         }
         &__chain_address_wrap {
             padding: 8px 0 7px;
+            line-height: 18px;
             border-bottom: 1px solid #eaeaea;
             &:last-child {
                 border-bottom: 0;

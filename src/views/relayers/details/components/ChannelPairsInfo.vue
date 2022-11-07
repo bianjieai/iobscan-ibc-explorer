@@ -7,7 +7,7 @@
                     :chain="item.chain_a"
                     :channel="item.channel_a"
                     :chain-address-list="item.chain_a_addresses"
-                    :height="pairAddressListHeight(item)"
+                    :height="getPairAddressListHeight(item)"
                 ></ChannelPair>
                 <div class="channel_pairs__status_img">
                     <StatusImg
@@ -21,7 +21,7 @@
                     :chain="item.chain_b"
                     :channel="item.channel_b"
                     :chain-address-list="item.chain_b_addresses"
-                    :height="pairAddressListHeight(item)"
+                    :height="getPairAddressListHeight(item)"
                 ></ChannelPair>
             </div>
         </div>
@@ -38,7 +38,7 @@
         channelPairsInfo: IChannelChain[] | undefined;
     }
     defineProps<IChannelPairsInfo>();
-    const { pairAddressListHeight } = useChannelPairsAddressHeight();
+    const { getPairAddressListHeight } = useChannelPairsAddressHeight();
 </script>
 <style lang="less" scoped>
     .channel_pairs {

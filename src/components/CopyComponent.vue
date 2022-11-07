@@ -52,6 +52,7 @@
         .copied {
             .flex(row, nowrap, flex-start, center);
             font-size: var(--bj-font-size-normal);
+            line-height: 14px;
             .text {
                 margin-left: 3px;
                 font-family: GolosUIWebRegular;
