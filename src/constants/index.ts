@@ -1,5 +1,6 @@
 import type { IDenomStatistic, IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
+import { RelayersListKey } from '@/constants/relayers';
 
 export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.meta.url).href;
 export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', import.meta.url).href;
@@ -46,6 +47,11 @@ export const ROUTE_INFO = {
         name: 'Relayers',
         title: 'IOBScan - IOB - Relayers',
         description: 'IBC Relayers List'
+    },
+    relayerDetails: {
+        name: 'Relayer Details',
+        title: 'IOBScan - IOB - Relayer Details',
+        description: 'IBC Relayer Details Information'
     },
     searchResults: {
         name: 'Search Results',
@@ -354,6 +360,11 @@ export const CHAINNAME = {
     IRISHUB: 'IRIS Hub'
 };
 
+export const CHAINID = {
+    cosmoshub: 'cosmoshub_4',
+    irishub: 'irishub_1'
+};
+
 export const UNKNOWN = 'Unknown';
 export const THOUSAND_DECIMAL = 0.0001;
 
@@ -407,13 +418,13 @@ export const NEED_CUSTOM_COLUMN = {
         'ibc_transfer_txs'
     ],
     relayers: [
-        'relayer_name',
-        'chain_a',
-        'status',
-        'chain_b',
-        'update_time',
-        'txs_success_rate',
-        'transfer_total_txs'
+        RelayersListKey.relayersRelayerName,
+        RelayersListKey.relayersServedChains,
+        RelayersListKey.relayersSuccessRate,
+        RelayersListKey.relayersIbcTransferTxs,
+        RelayersListKey.relayersTotalRelayedValue,
+        RelayersListKey.relayersTotalFeeCost,
+        RelayersListKey.relayersLastUpdated
     ],
     transfers: ['token', 'fromTxhash', 'from', 'status', 'to', 'toTxHash', 'createTime', 'endTime']
 };
@@ -476,3 +487,5 @@ export const BOTTOM_STATUS_DATA = {
     ]
 };
 export const CHOOSE_BTN_TEXT = ['Value', 'Txs'];
+
+export const UNIT_SIGNS = '$';

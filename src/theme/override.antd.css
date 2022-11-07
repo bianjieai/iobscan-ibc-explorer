@@ -96,7 +96,7 @@
 .ant-popover-arrow > .ant-popover-arrow-content {
     background: #3d50ff;
 }
-.ant-popover-inner {
+.ant-popover-content .ant-popover-inner {
     box-shadow: 0px 2px 8px 0px #d9deec;
     border: 1px solid #d9dfee;
     margin-left: 4px;

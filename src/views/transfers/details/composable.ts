@@ -60,10 +60,9 @@ import type {
     IIbcSource,
     DataItem
 } from '@/types/interface/transfers.interface';
-import { formatAge, getTimestamp } from '@/utils/timeTools';
+import { dayjsFormatDate, formatAge, getTimestamp } from '@/utils/timeTools';
 import { getTextWidth } from '@/utils/urlTools';
 import moveDecimal from 'move-decimal-point';
-import * as djs from 'dayjs';
 import { Ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { formatObjDisplay } from '@/helper/jsonHelper';
@@ -603,14 +602,13 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
         return (signers && signers[0]) || DEFAULT_DISPLAY_TEXT;
     };
     const formatTimestamp = (timestamp: number | string) => {
-        const dayjs = djs?.default || djs;
         let date = '';
         const time = Number(timestamp);
         if (timestamp > 0) {
             if (time * 1000 > Date.now()) {
-                date = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')}`;
+                date = `${dayjsFormatDate(time * 1000, 'YYYY-MM-DD HH:mm:ss')}`;
             } else {
-                date = `${dayjs(time * 1000).format('YYYY-MM-DD HH:mm:ss')} (${formatAge(
+                date = `${dayjsFormatDate(time * 1000, 'YYYY-MM-DD HH:mm:ss')} (${formatAge(
                     getTimestamp(),
                     time * 1000,
                     'ago',
