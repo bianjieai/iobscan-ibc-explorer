@@ -101,3 +101,5 @@ export const RELAYER_DETAILS_INFO: IDenomStatistic = {
         unit: UNIT_SIGNS
     }
 };
+
+export const SINGLE_ADDRESS_HEIGHT = 34;
