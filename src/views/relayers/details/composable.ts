@@ -34,6 +34,7 @@ export const useGetRelayerDetailsInfo = () => {
                     // Todo shan 需要修改 code 对应的值，界面中要引入弹窗，通过改值控制弹窗展示与否
                     isShowModal.value = true;
                 } else {
+                    ibcStatisticsChainsStore.isShow500 = true;
                     console.error(message);
                 }
             } catch (error) {
