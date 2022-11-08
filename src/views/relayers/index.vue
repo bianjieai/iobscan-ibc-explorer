@@ -1,4 +1,6 @@
 <template>
+    <!-- <IbcDialog v-model:show-modal="showmodal1"/> -->
+    <BulletinBoard />
     <PageContainer>
         <PageTitle title="IBC Relayers" :subtitle="subtitle" />
         <TableCommon
@@ -63,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+    import BulletinBoard from './components/BulletinBoard.vue';
     import ChainPopover from './components/ChainPopover.vue';
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, RelayersListKey } from '@/constants/relayers';
