@@ -1,7 +1,7 @@
 <template>
     <a-button type="primary" @click="reset">
         <template #icon>
-            <svg
+            <!-- <svg
                 t="1635235094959"
                 class="icon"
                 viewBox="0 0 1137 1024"
@@ -17,6 +17,25 @@
                     p-id="1019"
                     fill="#ffffff"
                 ></path>
+            </svg> -->
+            <!-- todo dj type -->
+            <svg
+                t="1667830466302"
+                class="icon"
+                viewBox="0 0 1024 1024"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                p-id="3337"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                width="18"
+                height="18"
+                style="margin: 3px 0 0 0"
+            >
+                <path
+                    d="M1002.609778 907.946667l-206.734222-206.791111a438.158222 438.158222 0 0 0 85.560888-260.551112c0-242.915556-197.632-440.490667-440.490666-440.490666C197.973333 0.113778 0.398222 197.688889 0.398222 440.604444c0 242.915556 197.632 440.490667 440.547556 440.490667 97.393778 0 187.505778-31.800889 260.551111-85.560889l206.734222 206.734222a66.56 66.56 0 0 0 94.435556 0c25.998222-26.055111 25.998222-68.266667 0-94.378666zM108.885333 440.547556A332.458667 332.458667 0 0 1 440.888889 108.544a332.458667 332.458667 0 0 1 332.060444 332.060444 332.458667 332.458667 0 0 1-332.060444 332.060445 332.458667 332.458667 0 0 1-332.117333-332.060445z"
+                    p-id="3338"
+                    fill="#ffffff"
+                ></path>
             </svg>
         </template>
     </a-button>
@@ -24,6 +43,12 @@
 
 <script lang="ts" setup>
     import { debounce } from 'lodash-es';
+    // interface IProps {
+    //     type: string;
+    // }
+    // const props = withDefaults(defineProps<IProps>(), {
+    //     type: 'type'
+    // });
     const emits = defineEmits<{
         (e: 'onReset'): void;
     }>();

@@ -1,6 +1,7 @@
 <template>
     <PageContainer>
         <PageTitle title="IBC Relayers" :subtitle="subtitle" />
+        <RelayerSearch class="relayer_search" />
         <TableCommon
             :loading="loading"
             :data="relayersList"
@@ -67,6 +68,7 @@
 
 <script setup lang="ts">
     import ChainPopover from './components/ChainPopover.vue';
+    import RelayerSearch from './components/RelayerSearch.vue';
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, RelayersListKey, UNIT_SIGNS } from '@/constants/relayers';
     import { useNeedCustomColumns, useLoading } from '@/composables';
@@ -84,5 +86,8 @@
         font-size: var(--bj-font-size-normal);
         font-weight: 400;
         color: var(--bj-text-third);
+    }
+    .relayer_search {
+        margin-top: 26px;
     }
 </style>
