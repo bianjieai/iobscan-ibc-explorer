@@ -61,7 +61,7 @@ function formatNum(numOrigin: any) {
     return result;
 }
 
-function formatBigNumber(value: any, num: number | undefined) {
+function formatBigNumber(value: any, num?: number) {
     if (value == 0) {
         return value;
     }
