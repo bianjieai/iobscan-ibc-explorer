@@ -55,9 +55,9 @@
                     <div class="search__content__complete__c">
                         <input
                             v-model="inputValue"
+                            :placeholder="placeholder"
                             class="search__content__complete__c__input"
                             type="text"
-                            :placeholder="placeholder"
                             @focus="onFocus"
                             @blur="onBlur"
                         />
@@ -218,5 +218,15 @@
     :global(.ant-select-dropdown .ant-select-item-option-active) {
         background-color: rgba(61, 80, 255, 0.04);
         color: rgba(61, 80, 255, 1);
+    }
+    // todo dj 小屏幕样式待调整
+    @media screen and (max-width: 606px) {
+        .search__content {
+            flex: 1;
+            .search__content__complete {
+                flex: 1;
+                width: auto;
+            }
+        }
     }
 </style>
