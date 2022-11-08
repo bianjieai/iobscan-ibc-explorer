@@ -54,6 +54,12 @@ progress {
     border: 0;
     vertical-align: baseline;
 }
+
+input {
+    outline: none;
+    border: none;
+}
+
 /* scrollbar-color: #3d50ff #f2f2f2;
 scrollbar-width: thin; */
 ::-webkit-scrollbar {

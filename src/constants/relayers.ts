@@ -126,3 +126,24 @@ export const RELAYER_REGISTE_ADDRESS = 'https://github.com/irisnet/iob-registry/
 // prettier-ignore
 export const RELAYER_REGISTE_TEXT = 'Haven\'t found your relayer? Complete the info!'
 export const SINGLE_ADDRESS_HEIGHT = 34;
+
+export enum RelayersSearchType {
+    relayerName = 'relayer_name',
+    relayerAddress = 'relayer_address'
+}
+
+export const SEARCH_OPTIONS: { key: RelayersSearchType; value: string }[] = [
+    {
+        key: RelayersSearchType.relayerName,
+        value: 'Relayer Name'
+    },
+    {
+        key: RelayersSearchType.relayerAddress,
+        value: 'Relayer Address'
+    }
+];
+
+export const RelayerSearchPlaceholder = {
+    relayerName: 'Search by Relayer Name',
+    relayerAddress: 'Search by Relayer Address'
+};

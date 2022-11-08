@@ -502,3 +502,8 @@ export const TRANSFER_TYPE = {
         short: 'Timeout Txs'
     }
 };
+
+export enum TypeButtonProp {
+    reset = 'reset',
+    search = 'search'
+}

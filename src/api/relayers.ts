@@ -29,6 +29,20 @@ export const getRelayersListMock = async (params: IRequestRelayerList) => {
     });
 };
 
+export const getRelayersNameListAPI = async () => {
+    return request<IResponse<string[]>>({
+        url: API_URL.ibcRelayerRelayerName,
+        method: 'get'
+    });
+};
+
+export const getRelayersNameListMock = async () => {
+    return requestMock<IResponse<string[]>>({
+        url: API_URL.ibcRelayerRelayerName,
+        method: 'get'
+    });
+};
+
 // Todo shan 需切换成真实 API
 export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
     return requestMock<IResponse<IResponseRelayerDetails>>({

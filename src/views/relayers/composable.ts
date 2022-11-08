@@ -6,14 +6,14 @@ import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import { getRelayersListMock } from '@/api/relayers';
 import { IRequestRelayerList, IResponseRelayerList } from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
-import { BASE_PARAMS, PAGE_PARAMETERS } from '@/constants';
-import { useResetSearch } from '@/composables';
+import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON, UNKNOWN } from '@/constants';
 import { useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
-import { RelayersListKey } from '@/constants/relayers';
+import { RelayersListKey, RelayersSearchType } from '@/constants/relayers';
 
 export const useGetRelayersList = () => {
+    const router = useRouter();
     const relayersList = ref<RelayerListItem[]>([]);
     const total = ref<number>(0);
     const isHaveParams = ref<boolean>(false);
@@ -25,11 +25,10 @@ export const useGetRelayersList = () => {
         for (let i = 0; i < servedChainsInfos.length; i++) {
             const servedChainsInfo = servedChainsInfos[i];
             const chainInfo = await ChainHelper.getChainInfoByKey(servedChainsInfo.chain);
-            // todo dj 如果没有匹配上，如何展示，默认值是什么
             formatChainPopoverProp.push({
                 chain: servedChainsInfo.chain,
-                chainName: chainInfo?.chain_name || servedChainsInfo.chain,
-                chainLogo: chainInfo?.icon || '',
+                chainName: chainInfo?.chain_name || UNKNOWN,
+                chainLogo: chainInfo?.icon || CHAIN_DEFAULT_ICON,
                 address: [...servedChainsInfo.addresses]
             });
         }
@@ -67,10 +66,12 @@ export const useGetRelayersList = () => {
                                 );
                                 formatItems.push({
                                     relayer_id: item.relayer_id,
+                                    is_registered: Boolean(item.relayer_name),
                                     relayer_icon: item.relayer_icon,
                                     served_chains_infos: served_chains_infos,
                                     [RelayersListKey.relayersRelayerName]: item.relayer_name,
-                                    [RelayersListKey.relayersServedChains]: item.served_chains,
+                                    [RelayersListKey.relayersServedChains]:
+                                        item.served_chains_number,
                                     [RelayersListKey.relayersSuccessRate]:
                                         formatTransfer_success_txs(
                                             item.relayed_success_txs,
@@ -131,24 +132,64 @@ export const useGetRelayersList = () => {
             PAGE_PARAMETERS.relayers
         );
     });
+    const searchFn = (searchType: string, searchValue: string) => {
+        if (!searchValue) {
+            router.replace('/relayers');
+            getRelayersList({ ...BASE_PARAMS });
+        } else {
+            const params: {
+                relayer_name?: string;
+                relayer_address?: string;
+            } = {};
+            let pageUrl: string;
+            switch (searchType) {
+                case RelayersSearchType.relayerName:
+                    params.relayer_name = searchValue;
+                    pageUrl = `/relayers?relayer_name=${searchValue}`;
+                    router.replace(pageUrl);
+                    break;
+                case RelayersSearchType.relayerAddress:
+                    params.relayer_address = searchValue;
+                    pageUrl = `/relayers?relayer_address=${searchValue}`;
+                    router.replace(pageUrl);
+                    break;
+                default:
+                    break;
+            }
+            getRelayersList({ ...BASE_PARAMS, ...params });
+        }
+    };
     return {
         relayersList,
         getRelayersList,
-        subtitle
+        subtitle,
+        searchFn
     };
 };
 
-export const useRelayersColumnJump = () => {
-    const router = useRouter();
-    const goChains = () => {
-        router.push('/chains');
-    };
-    const resetSearchCondition = () => {
-        const { resetSearch } = useResetSearch();
-        resetSearch();
+export const useShowModal = () => {
+    const showModal = ref(false);
+    const changeModal = (flag: boolean) => {
+        showModal.value = flag;
     };
     return {
-        goChains,
-        resetSearchCondition
+        showModal,
+        changeModal
+    };
+};
+
+export const useGoRelayersDetails = (changeModal: (flag: boolean) => void) => {
+    const router = useRouter();
+    const goRelayersDetails = (isRegistered: boolean, relayerId?: string) => {
+        if (isRegistered) {
+            router.push({
+                path: '/relayers/details/' + relayerId
+            });
+        } else {
+            changeModal(true);
+        }
+    };
+    return {
+        goRelayersDetails
     };
 };

@@ -18,7 +18,7 @@ export interface IResponseRelayerListItem {
     relayer_name: string;
     relayer_id: string;
     relayer_icon: string;
-    served_chains: number;
+    served_chains_number: number;
     served_chains_info: ServedChainsInfo[];
     update_time: number;
     relayed_total_txs: number;
@@ -48,6 +48,7 @@ export interface RelayerListItem {
     [RelayersListKey.relayersLastUpdated]: number;
     relayer_id: string;
     relayer_icon: string;
+    is_registered: boolean;
     served_chains_infos: chainPopoverProp[];
 }
 export interface IChannelChain {
