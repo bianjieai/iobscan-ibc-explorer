@@ -6,6 +6,20 @@
     "description": "",
     "glyphs": [
         {
+            "icon_id": "32692308",
+            "name": "copy",
+            "font_class": "copy",
+            "unicode": "e7a4",
+            "unicode_decimal": 59300
+        },
+        {
+            "icon_id": "32692309",
+            "name": "notice",
+            "font_class": "notice1",
+            "unicode": "e7a5",
+            "unicode_decimal": 59301
+        },
+        {
             "icon_id": "32691640",
             "name": "turnto",
             "font_class": "turnto1",

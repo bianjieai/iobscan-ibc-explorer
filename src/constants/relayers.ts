@@ -122,6 +122,9 @@ export const RELAYER_DETAILS_INFO: IDenomStatistic = {
     }
 };
 
+export const RELAYER_REGISTE_ADDRESS = 'https://github.com/irisnet/iob-registry/tree/main/relayers';
+// prettier-ignore
+export const RELAYER_REGISTE_TEXT = 'Haven\'t found your relayer? Complete the info!'
 export const SINGLE_ADDRESS_HEIGHT = 34;
 
 export enum RelayersSearchType {

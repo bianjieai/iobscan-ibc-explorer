@@ -1,4 +1,6 @@
 <template>
+    <!-- <IbcDialog v-model:show-modal="showmodal1"/> -->
+    <BulletinBoard />
     <PageContainer>
         <PageTitle title="IBC Relayers" :subtitle="subtitle" />
         <RelayerSearch class="relayer_search" />
@@ -67,6 +69,7 @@
 </template>
 
 <script setup lang="ts">
+    import BulletinBoard from './components/BulletinBoard.vue';
     import ChainPopover from './components/ChainPopover.vue';
     import RelayerSearch from './components/RelayerSearch.vue';
     import { PAGE_PARAMETERS } from '@/constants';

@@ -487,3 +487,18 @@ export const BOTTOM_STATUS_DATA = {
     ]
 };
 export const CHOOSE_BTN_TEXT = ['Value', 'Txs'];
+
+export const TRANSFER_TYPE = {
+    receive: {
+        label: 'Receive',
+        short: 'Receive Txs'
+    },
+    acknowledge: {
+        label: 'Acknowledge',
+        short: 'Ack Txs'
+    },
+    timeout: {
+        label: 'Timeout',
+        short: 'Timeout Txs'
+    }
+};
