@@ -93,11 +93,12 @@
                 </template>
             </a-auto-complete>
         </div>
-        <ResetButton @on-reset="searchFn" />
+        <TypeButton :type="TypeButtonProp.search" @on-reset="searchFn" />
     </div>
 </template>
 
 <script setup lang="ts">
+    import { TypeButtonProp } from '@/constants';
     import { SEARCH_OPTIONS } from '@/constants/relayers';
     import { useRelayerSearch } from './composable';
     const emits = defineEmits<{
@@ -107,7 +108,6 @@
     const {
         isHighlighted,
         visibleDropdown,
-        searchType,
         isDropdownSelected,
         selectedText,
         selectOption,
@@ -120,13 +120,9 @@
         placeholder,
         onFocus,
         onBlur,
-        clearValue
-    } = useRelayerSearch();
-
-    // todo dj search icon
-    const searchFn = () => {
-        emits('onSearch', searchType.value, completeValue.value);
-    };
+        clearValue,
+        searchFn
+    } = useRelayerSearch(emits);
 </script>
 <style lang="less" scoped>
     .search {

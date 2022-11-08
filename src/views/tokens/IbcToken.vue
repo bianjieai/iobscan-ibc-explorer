@@ -28,7 +28,7 @@
                 :options="IBC_STATUS_OPTIONS"
                 @on-selected-change="onSelectedStatus"
             />
-            <ResetButton @on-reset="resetSearchCondition" />
+            <TypeButton @on-reset="resetSearchCondition" />
         </div>
 
         <TableCommon

@@ -1,9 +1,9 @@
 <template>
-    <!-- <IbcDialog v-model:show-modal="showmodal1"/> -->
+    <IbcDialog v-model:show-modal="showModal" />
     <BulletinBoard />
     <PageContainer>
         <PageTitle title="IBC Relayers" :subtitle="subtitle" />
-        <RelayerSearch class="relayer_search" />
+        <RelayerSearch class="relayer_search" @on-search="searchFn" />
         <TableCommon
             :loading="loading"
             :data="relayersList"
@@ -32,6 +32,7 @@
             <template #relayers_served_chains="{ record, column }">
                 <!-- todo dj 悬浮区域待调整 -->
                 <ChainPopover
+                    :change-modal="changeModal"
                     :relayer-id="record.relayer_id"
                     :is-registered="record.is_registered"
                     :served-chains-num="record[column.key]"
@@ -75,13 +76,13 @@
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS, RelayersListKey, UNIT_SIGNS } from '@/constants/relayers';
     import { useNeedCustomColumns, useLoading } from '@/composables';
-    import { useGetRelayersList, useGoRelayersDetails } from './composable';
+    import { useGetRelayersList, useGoRelayersDetails, useShowModal } from './composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
-
     const { loading } = useLoading();
-    const { relayersList, subtitle } = useGetRelayersList();
+    const { showModal, changeModal } = useShowModal();
+    const { relayersList, subtitle, searchFn } = useGetRelayersList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
-    const { goRelayersDetails } = useGoRelayersDetails();
+    const { goRelayersDetails } = useGoRelayersDetails(changeModal);
 </script>
 
 <style lang="less" scoped>

@@ -1,3 +1,5 @@
+import { removeSpaceAndToLowerCase } from './../utils/stringTools';
+import { getRelayersNameListMock } from './../api/relayers';
 import { IIbcchain } from './../types/interface/index.interface';
 import { defineStore } from 'pinia';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
@@ -26,7 +28,8 @@ export const useIbcStatisticsChains = defineStore('global', {
             isShowLoading: false,
             isShow500: false,
             ibcTxs: [],
-            isDocumentHidden: false
+            isDocumentHidden: false,
+            relayerNames: []
         };
     },
     getters: {
@@ -63,6 +66,9 @@ export const useIbcStatisticsChains = defineStore('global', {
             if (this.ibcChains.all.length <= 0) {
                 promiseArray.push(this.getIbcChainsAction);
             }
+            if (this.relayerNames.length <= 0) {
+                promiseArray.push(this.getIbcRelayerNamesAction);
+            }
             await Promise.all(promiseArray.map((item) => item()));
         },
         async getIbcBaseDenomsAction() {
@@ -98,6 +104,26 @@ export const useIbcStatisticsChains = defineStore('global', {
         //         console.log('getIbcDenomsAPI', error);
         //     }
         // },
+        async getIbcRelayerNamesAction() {
+            try {
+                // todo dj  mock => api
+                const { code, data } = await getRelayersNameListMock();
+                if (code == API_CODE.success) {
+                    if (data && data.length > 0) {
+                        this.relayerNames = data.map((name) => {
+                            return {
+                                source: name,
+                                matching: removeSpaceAndToLowerCase(name)
+                            };
+                        });
+                    } else {
+                        this.relayerNames = [];
+                    }
+                }
+            } catch (error) {
+                console.log('getIbcRelayerNames', error);
+            }
+        },
         async getIbcTxsAction(queryParams: any, isNeedJudgeShow500 = true) {
             if (queryParams?.date_range) {
                 queryParams.date_range = queryParams.date_range?.toString();

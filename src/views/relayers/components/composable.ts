@@ -1,6 +1,10 @@
+import { removeSpaceAndToLowerCase } from './../../../utils/stringTools';
 import { SEARCH_OPTIONS, RelayersSearchType, RelayerSearchPlaceholder } from '@/constants/relayers';
+import { useIbcStatisticsChains } from '@/store';
 
-export const useRelayerSearch = () => {
+export const useRelayerSearch = (emits: any) => {
+    const router = useRouter();
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     // a-dropdown
     const isDropdownSelected = ref(false);
     const searchType = ref<RelayersSearchType>(RelayersSearchType.relayerName);
@@ -67,10 +71,19 @@ export const useRelayerSearch = () => {
     const onSearch = (searchText: string) => {
         handleOptions(searchText);
     };
-    // todo dj 获取 options
     const handleOptions = (searchText: string) => {
         if (searchType.value === RelayersSearchType.relayerName) {
-            options.value = !searchText ? [] : [{ text: 'testtext', value: 'testvalue' }];
+            if (!searchText) {
+                options.value = [];
+            } else {
+                const matching = removeSpaceAndToLowerCase(searchText);
+                const res = ibcStatisticsChainsStore.relayerNames.filter((item) =>
+                    item.matching.includes(matching)
+                );
+                options.value = res.map((item) => {
+                    return { text: item.source, value: item.source };
+                });
+            }
         }
     };
     const onCompleteSelect = (value: string) => {
@@ -91,11 +104,17 @@ export const useRelayerSearch = () => {
         completeValue.value = '';
         inputValue.value = '';
         options.value = [];
+        router.replace('/relayers');
     };
+    const searchFn = () => {
+        emits('onSearch', searchType.value, completeValue.value);
+    };
+    onMounted(() => {
+        searchFn();
+    });
     return {
         isHighlighted,
         visibleDropdown,
-        searchType,
         isDropdownSelected,
         selectedText,
         selectOption,
@@ -108,6 +127,7 @@ export const useRelayerSearch = () => {
         placeholder,
         onFocus,
         onBlur,
-        clearValue
+        clearValue,
+        searchFn
     };
 };

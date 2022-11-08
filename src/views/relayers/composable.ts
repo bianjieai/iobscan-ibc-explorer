@@ -10,9 +10,10 @@ import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON, UNKNOWN } from '@/con
 import { useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
-import { RelayersListKey } from '@/constants/relayers';
+import { RelayersListKey, RelayersSearchType } from '@/constants/relayers';
 
 export const useGetRelayersList = () => {
+    const router = useRouter();
     const relayersList = ref<RelayerListItem[]>([]);
     const total = ref<number>(0);
     const isHaveParams = ref<boolean>(false);
@@ -69,7 +70,8 @@ export const useGetRelayersList = () => {
                                     relayer_icon: item.relayer_icon,
                                     served_chains_infos: served_chains_infos,
                                     [RelayersListKey.relayersRelayerName]: item.relayer_name,
-                                    [RelayersListKey.relayersServedChains]: item.served_chains,
+                                    [RelayersListKey.relayersServedChains]:
+                                        item.served_chains_number,
                                     [RelayersListKey.relayersSuccessRate]:
                                         formatTransfer_success_txs(
                                             item.relayed_success_txs,
@@ -130,14 +132,53 @@ export const useGetRelayersList = () => {
             PAGE_PARAMETERS.relayers
         );
     });
+    const searchFn = (searchType: string, searchValue: string) => {
+        if (!searchValue) {
+            router.replace('/relayers');
+            getRelayersList({ ...BASE_PARAMS });
+        } else {
+            const params: {
+                relayer_name?: string;
+                relayer_address?: string;
+            } = {};
+            let pageUrl: string;
+            switch (searchType) {
+                case RelayersSearchType.relayerName:
+                    params.relayer_name = searchValue;
+                    pageUrl = `/relayers?relayer_name=${searchValue}`;
+                    router.replace(pageUrl);
+                    break;
+                case RelayersSearchType.relayerAddress:
+                    params.relayer_address = searchValue;
+                    pageUrl = `/relayers?relayer_address=${searchValue}`;
+                    router.replace(pageUrl);
+                    break;
+                default:
+                    break;
+            }
+            getRelayersList({ ...BASE_PARAMS, ...params });
+        }
+    };
     return {
         relayersList,
         getRelayersList,
-        subtitle
+        subtitle,
+        searchFn
     };
 };
 
-export const useGoRelayersDetails = () => {
+export const useShowModal = () => {
+    const showModal = ref(false);
+    const changeModal = (flag: boolean) => {
+        showModal.value = flag;
+    };
+    return {
+        showModal,
+        changeModal
+    };
+};
+
+export const useGoRelayersDetails = (changeModal: (flag: boolean) => void) => {
     const router = useRouter();
     const goRelayersDetails = (isRegistered: boolean, relayerId?: string) => {
         if (isRegistered) {
@@ -145,7 +186,7 @@ export const useGoRelayersDetails = () => {
                 path: '/relayers/details/' + relayerId
             });
         } else {
-            // todo dj 弹窗
+            changeModal(true);
         }
     };
     return {

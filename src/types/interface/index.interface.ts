@@ -97,3 +97,8 @@ export interface IDenomStatistic {
         unit?: string;
     };
 }
+
+export interface IRelayerName {
+    source: string;
+    matching: string;
+}

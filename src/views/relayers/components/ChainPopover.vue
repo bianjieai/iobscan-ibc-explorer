@@ -60,6 +60,7 @@
         servedChainsNum: number;
         relayerId: string;
         isRegistered: boolean;
+        changeModal: (flag: boolean) => void;
         chainList: chainItem[];
     }
 
@@ -69,7 +70,7 @@
         return props.chainList.slice(0, 3) || [];
     });
 
-    const { goRelayersDetails } = useGoRelayersDetails();
+    const { goRelayersDetails } = useGoRelayersDetails(props.changeModal);
 </script>
 <style lang="less" scoped>
     :global(.relayers_chain_popover .ant-popover-inner-content) {

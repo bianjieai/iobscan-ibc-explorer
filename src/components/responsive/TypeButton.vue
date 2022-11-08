@@ -1,7 +1,8 @@
 <template>
     <a-button type="primary" @click="reset">
         <template #icon>
-            <!-- <svg
+            <svg
+                v-show="props.type === TypeButtonProp.reset"
                 t="1635235094959"
                 class="icon"
                 viewBox="0 0 1137 1024"
@@ -17,9 +18,9 @@
                     p-id="1019"
                     fill="#ffffff"
                 ></path>
-            </svg> -->
-            <!-- todo dj type -->
+            </svg>
             <svg
+                v-show="props.type === TypeButtonProp.search"
                 t="1667830466302"
                 class="icon"
                 viewBox="0 0 1024 1024"
@@ -42,13 +43,14 @@
 </template>
 
 <script lang="ts" setup>
+    import { TypeButtonProp } from '@/constants';
     import { debounce } from 'lodash-es';
-    // interface IProps {
-    //     type: string;
-    // }
-    // const props = withDefaults(defineProps<IProps>(), {
-    //     type: 'type'
-    // });
+    interface IProps {
+        type: 'reset' | 'search';
+    }
+    const props = withDefaults(defineProps<IProps>(), {
+        type: TypeButtonProp.reset
+    });
     const emits = defineEmits<{
         (e: 'onReset'): void;
     }>();
