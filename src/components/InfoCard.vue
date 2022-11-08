@@ -84,7 +84,7 @@
             border-radius: var(--border-radius-normal);
         }
         &__primary {
-            padding: 24px;
+            padding: 16px 24px 24px;
         }
     }
     @media screen and(max-width: 500px) {

@@ -66,8 +66,14 @@ export interface IResponseRelayerDetails {
     served_chains: number;
     channel_pair_info: IChannelChain[];
     update_time: string;
-    relayed_total_txs: string;
-    relayed_success_txs: string;
+    relayed_total_txs: number;
+    relayed_success_txs: number;
     relayed_total_txs_value: string;
     total_fee_value: string;
+}
+
+export interface ITransferTypeTxs {
+    recv_packet_txs: number;
+    acknowledge_packet_txs: number;
+    timeout_packet_txs: number;
 }

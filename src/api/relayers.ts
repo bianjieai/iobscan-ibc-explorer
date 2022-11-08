@@ -5,7 +5,8 @@ import { IResponse } from '@/types/interface/index.interface';
 import {
     IRequestRelayerList,
     IResponseRelayerDetails,
-    IResponseRelayerList
+    IResponseRelayerList,
+    ITransferTypeTxs
 } from '@/types/interface/relayers.interface';
 
 export const getRelayersListAPI = async (params: IRequestRelayerList) => {
@@ -35,11 +36,25 @@ export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
         method: 'get'
     });
 };
+
+export const getTransferTypeTxsAPI = async (relayerId: string) => {
+    return requestMock<IResponse<ITransferTypeTxs>>({
+        url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/transferTypeTxs`,
+        method: 'get'
+    });
+};
 /*
 // Relayer Details API 真实
 export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
-    return request<IResponse<IResponseRelayerList | number>>({
+    return request<IResponse<IResponseRelayerDetails>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}`,
+        method: 'get'
+    });
+};
+
+export const getTransferTypeTxs = async (relayerId: string) => {
+    return request<IResponse<ITransferTypeTxs>>({
+        url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/transferTypeTxs`,
         method: 'get'
     });
 };
