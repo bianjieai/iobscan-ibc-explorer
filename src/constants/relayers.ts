@@ -1,7 +1,8 @@
-import { UNIT_SIGNS } from '@/constants';
 import { CompareOrder } from '@/types/interface/components/table.interface';
 import { IDenomStatistic } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
+
+export const UNIT_SIGNS = '$';
 
 export enum RelayersListKey {
     relayersRelayerName = 'relayers_relayer_name',
@@ -124,3 +125,4 @@ export const RELAYER_DETAILS_INFO: IDenomStatistic = {
 export const RELAYER_REGISTE_ADDRESS = 'https://github.com/irisnet/iob-registry/tree/main/relayers';
 // prettier-ignore
 export const RELAYER_REGISTE_TEXT = 'Haven\'t found your relayer? Complete the info!'
+export const SINGLE_ADDRESS_HEIGHT = 34;

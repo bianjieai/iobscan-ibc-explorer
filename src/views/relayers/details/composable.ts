@@ -1,8 +1,9 @@
 import { getRelayerDetailsByRelayerIdAPI } from '@/api/relayers';
 import { API_CODE } from '@/constants/apiCode';
-import { RELAYER_DETAILS_INFO } from '@/constants/relayers';
+import { RELAYER_DETAILS_INFO, SINGLE_ADDRESS_HEIGHT } from '@/constants/relayers';
 import { useIbcStatisticsChains } from '@/store';
 import { IDenomStatistic } from '@/types/interface/index.interface';
+import { IChannelChain } from '@/types/interface/relayers.interface';
 
 export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -10,6 +11,7 @@ export const useGetRelayerDetailsInfo = () => {
     const relayerName = ref<string>('');
     const servedChains = ref<number>(0);
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
+    const channelPairsInfo = ref<IChannelChain[]>();
     const isShowModal = ref<boolean>(false);
     const getRelayerDetailsInfo = () => {
         const route = useRoute();
@@ -29,6 +31,7 @@ export const useGetRelayerDetailsInfo = () => {
                         relayerInfo.value.served_channel_pairs.count =
                             data.channel_pair_info.length;
                         relayerInfo.value.total_fee_cost.count = data.total_fee_value;
+                        channelPairsInfo.value = data.channel_pair_info;
                     }
                 } else if (code === API_CODE.systemAbnormality) {
                     // Todo shan 需要修改 code 对应的值，界面中要引入弹窗，通过改值控制弹窗展示与否
@@ -53,6 +56,20 @@ export const useGetRelayerDetailsInfo = () => {
         relayerName,
         servedChains,
         relayerInfo,
+        channelPairsInfo,
         isShowModal
+    };
+};
+
+export const useChannelPairsAddressHeight = () => {
+    const getPairAddressListHeight = (item: IChannelChain) => {
+        const chainAAddressList = item.chain_a_addresses;
+        const chainBAddressList = item.chain_b_addresses;
+        const maxChainLength = Math.max(chainAAddressList.length, chainBAddressList.length);
+        const maxHeight = maxChainLength * SINGLE_ADDRESS_HEIGHT;
+        return maxHeight;
+    };
+    return {
+        getPairAddressListHeight
     };
 };

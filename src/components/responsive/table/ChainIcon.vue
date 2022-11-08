@@ -58,7 +58,7 @@
         TTableCellIconSize
     } from '@/types/interface/components/table.interface';
     import ChainHelper from '@/helper/chainHelper';
-    import { UNKNOWN } from '@/constants';
+    import { CHAIN_DEFAULT_ICON, UNKNOWN } from '@/constants';
 
     interface IProps {
         iconSize?: TTableCellIconSize;
@@ -90,15 +90,13 @@
             return {
                 title: filterData.chain_name,
                 subtitle: filterData.chain_id,
-                imgSrc: filterData.icon
-                    ? filterData.icon
-                    : new URL('../../../assets/home/chain-default.png', import.meta.url).href
+                imgSrc: filterData.icon ? filterData.icon : CHAIN_DEFAULT_ICON
             };
         } else {
             return {
                 title: UNKNOWN,
                 subtitle: '--',
-                imgSrc: new URL('../../../assets/home/chain-default.png', import.meta.url).href
+                imgSrc: CHAIN_DEFAULT_ICON
             };
         }
     });

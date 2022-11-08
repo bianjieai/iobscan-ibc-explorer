@@ -47,14 +47,14 @@
         margin-left: 8px;
         display: inline-block;
         align-items: center;
-        font-size: var(--bj-font-size-sub-title);
         color: var(--bj-primary-color);
         user-select: none;
         .copied {
             .flex(row, nowrap, flex-start, center);
+            font-size: var(--bj-font-size-normal);
+            line-height: 14px;
             .text {
                 margin-left: 3px;
-                font-size: var(--bj-font-size-normal);
                 font-family: GolosUIWebRegular;
                 font-weight: 400;
                 line-height: 18px;
