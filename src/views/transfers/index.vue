@@ -95,8 +95,7 @@
                         <template #content>
                             <div>
                                 <p class="popover_c">
-                                    Date selection range from the first IBC Transfer to the latest
-                                    IBC Transfer
+                                    Supports filtering within the latest 500k transfers found.
                                 </p>
                             </div>
                         </template>
@@ -524,18 +523,23 @@
     const disabledDate = (current: any) =>
         current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
 
+    // todo 如果用户的查询条件中有chainA → chainB，
     const isIbcTxTotalAndHashFilter = computed(() => {
         if (ibcTxTotalMoreThan500k.value) {
             if (isHashFilterParams.value) {
                 if (pagination.total === TOTAL_BOUND) {
-                    return 'Last 500k transfers found';
+                    return 'Latest 500k transfers found';
                 }
-                return `${pagination.total} of the last 500k transfers found`;
+                return `${pagination.total} of the latest 500k transfers found`;
+                const allAmount = '343,434,232';
+                return `${pagination.total} of the latest 500k transfers were found and valued at $${allAmount}`;
             }
-            return 'Last 500k transfers found';
+            return 'Latest 500k transfers found';
         } else {
             if (isHashFilterParams.value) {
                 return `${pagination.total} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
+                const allAmount = '343,434,232';
+                return `${pagination.total} of the latest 500k transfers were found and valued at $${allAmount}`;
             }
             return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
         }
