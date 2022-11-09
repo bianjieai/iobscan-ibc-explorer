@@ -43,6 +43,11 @@ export interface IIbcTx {
     end_time: number;
     expanded?: boolean;
 }
+
+export interface IIbcTxCount {
+    txs_count: number;
+    txs_value: string;
+}
 export interface ITxInfo {
     address: string;
     chain_id: string;
@@ -177,4 +182,8 @@ export interface DataItem {
     name: string;
     value: string;
     children?: DataItem[];
+}
+
+export interface IIbcSearchCondition {
+    tx_time_min: number;
 }

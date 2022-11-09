@@ -322,9 +322,16 @@
         TOKEN_DEFAULT_ICON,
         TIP_ICON,
         PAGE_PARAMETERS,
-        BOTTOM_STATUS_DATA
+        BOTTOM_STATUS_DATA,
+        DEFAULT_DISPLAY_TEXT
     } from '@/constants';
-    import { JSONparse, getRestString, formatNum, rmIbcPrefix } from '@/helper/parseStringHelper';
+    import {
+        JSONparse,
+        getRestString,
+        formatNum,
+        rmIbcPrefix,
+        formatBigNumber
+    } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
     import { dayjsFormatDate } from '@/utils/timeTools';
     import { usePagination, useGetTableColumns } from './composable';
@@ -337,7 +344,10 @@
     import { IDataItem, TDenom } from '@/components/BjSelect/interface';
     import { MODES } from '@/components/BjSelect/constants';
     import { TRANSFERS_TOKEN_DEFAULT_VALUE } from '@/constants/transfers';
+    import type { IIbcTxCount } from '@/types/interface/transfers.interface';
+    import { useIbcStatisticsChains } from '@/store';
 
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
     const { pagination } = usePagination();
@@ -347,6 +357,10 @@
     const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(
         PAGE_PARAMETERS.transfers
     );
+
+    const isShowValuedText = ref(false);
+    const countLoading = ref(false);
+    const txsValue = ref<string>('');
     getIbcStatistics();
 
     const pickerPlaceholderColor = ref('var(--bj-text-second)');
@@ -468,7 +482,9 @@
             base_denom_chain_id: queryParam.base_denom_chain_id,
             denom: queryParam.denom
         };
+        isShowValuedText.value = Boolean(queryParam.chain_id);
 
+        countLoading.value = true;
         getIbcTxs({
             use_count: true,
             ...params,
@@ -476,7 +492,10 @@
             page_size: 10
         })
             .then((data) => {
-                pagination.total = data as number;
+                // todo dj 接口待联调
+                pagination.total = (data as IIbcTxCount).txs_count;
+                txsValue.value = (data as IIbcTxCount).txs_value;
+                countLoading.value = false;
             })
             .catch((error) => {
                 console.log(error);
@@ -520,26 +539,49 @@
         return nowTimeDate.setHours(0, 0, 0, 0);
     };
 
-    const disabledDate = (current: any) =>
-        current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
+    const disabledDate = (current: any) => {
+        const max = dayjs().endOf('day');
+        const min = dayjs((ibcStatisticsChainsStore.txSearchTimeMin || 1617007625) * 1000);
+        return current && (current < min || current > max);
+    };
 
-    // todo 如果用户的查询条件中有chainA → chainB，
+    const getDisplaySubtitle = (
+        showDefault: boolean,
+        total: number,
+        showValuedText: boolean,
+        valuedText: string
+    ) => {
+        const displayTotal = showDefault ? total : DEFAULT_DISPLAY_TEXT;
+        const displayValued = showDefault
+            ? formatBigNumber(valuedText || '0', 0)
+            : DEFAULT_DISPLAY_TEXT;
+        return !showValuedText
+            ? `${displayTotal} of the latest 500k transfers found`
+            : `${displayTotal} of the latest 500k transfers were found and valued at $${displayValued}`;
+    };
+
     const isIbcTxTotalAndHashFilter = computed(() => {
         if (ibcTxTotalMoreThan500k.value) {
             if (isHashFilterParams.value) {
                 if (pagination.total === TOTAL_BOUND) {
                     return 'Latest 500k transfers found';
                 }
-                return `${pagination.total} of the latest 500k transfers found`;
-                const allAmount = '343,434,232';
-                return `${pagination.total} of the latest 500k transfers were found and valued at $${allAmount}`;
+                return getDisplaySubtitle(
+                    !countLoading.value,
+                    pagination.total,
+                    isShowValuedText.value,
+                    txsValue.value
+                );
             }
             return 'Latest 500k transfers found';
         } else {
             if (isHashFilterParams.value) {
-                return `${pagination.total} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
-                const allAmount = '343,434,232';
-                return `${pagination.total} of the latest 500k transfers were found and valued at $${allAmount}`;
+                return getDisplaySubtitle(
+                    !countLoading.value,
+                    pagination.total,
+                    isShowValuedText.value,
+                    txsValue.value
+                );
             }
             return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
         }

@@ -1,3 +1,4 @@
+// import { getTxSearchCondition } from '@/api/transfers';
 import { defineStore } from 'pinia';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
 import moveDecimal from 'move-decimal-point';
@@ -25,7 +26,8 @@ export const useIbcStatisticsChains = defineStore('global', {
             isShowLoading: false,
             isShow500: false,
             ibcTxs: [],
-            isDocumentHidden: false
+            isDocumentHidden: false,
+            txSearchTimeMin: 0
         };
     },
     getters: {
@@ -48,6 +50,10 @@ export const useIbcStatisticsChains = defineStore('global', {
     },
     actions: {
         async initStateAction() {
+            const localTxSearchTimeMin = localStorage.getItem('txSearchTimeMin');
+            if (localTxSearchTimeMin) {
+                this.txSearchTimeMin = Number(localTxSearchTimeMin) || 0;
+            }
             const promiseArray = [];
             if (this.ibcBaseDenoms.length <= 0) {
                 promiseArray.push(this.getIbcBaseDenomsAction);
@@ -55,6 +61,7 @@ export const useIbcStatisticsChains = defineStore('global', {
             if (this.ibcChains.all.length <= 0) {
                 promiseArray.push(this.getIbcChainsAction);
             }
+            promiseArray.push(this.getIbcTxSearchCondition);
             await Promise.all(promiseArray.map((item) => item()));
         },
         async getIbcBaseDenomsAction() {
@@ -78,6 +85,18 @@ export const useIbcStatisticsChains = defineStore('global', {
                     this.isShow500 = true;
                 }
                 console.log('getIbcChains', error);
+            }
+        },
+        async getIbcTxSearchCondition() {
+            try {
+                // todo dj  接口待联调
+                // const { code, data } = await getTxSearchCondition();
+                // if (code == API_CODE.success) {
+                // this.txSearchTimeMin = data.tx_time_min;
+                // localStorage.setItem('txSearchTimeMin', data.tx_time_min?.toString());
+                // }
+            } catch (error) {
+                console.log('getIbcTxSearchCondition', error);
             }
         },
         // async getIbcDenomsAction() {
