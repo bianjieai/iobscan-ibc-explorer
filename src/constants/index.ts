@@ -428,7 +428,7 @@ export const AXIOS_TIMEOUT = 50000;
 
 export const CHAIN_DEFAULT_VALUE = 'allchain';
 
-export const TOTAL_BOUND = 500000;
+export const TOTAL_BOUND = 300000;
 
 export const BACK_TOP_NUM = 2064;
 
