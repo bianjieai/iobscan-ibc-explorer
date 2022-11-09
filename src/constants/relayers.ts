@@ -18,8 +18,7 @@ export const COLUMNS: TableColumnsType = [
     {
         title: 'Relayer Name',
         dataIndex: RelayersListKey.relayersRelayerName,
-        key: RelayersListKey.relayersRelayerName,
-        width: 150
+        key: RelayersListKey.relayersRelayerName
     },
     {
         title: 'Served Chains',
@@ -27,8 +26,7 @@ export const COLUMNS: TableColumnsType = [
         key: RelayersListKey.relayersServedChains,
         align: 'right',
         sortDirections: ['descend', 'ascend'],
-        sorter: true,
-        width: 100
+        sorter: true
     },
     {
         title: 'Success rate',
@@ -36,8 +34,7 @@ export const COLUMNS: TableColumnsType = [
         key: RelayersListKey.relayersSuccessRate,
         align: 'right',
         sortDirections: ['descend', 'ascend'],
-        sorter: true,
-        width: 100
+        sorter: true
     },
     {
         title: 'IBC Transfer Txs',
@@ -46,8 +43,7 @@ export const COLUMNS: TableColumnsType = [
         align: 'right',
         sortDirections: ['descend', 'ascend'],
         defaultSortOrder: CompareOrder.DESCEND,
-        sorter: true,
-        width: 100
+        sorter: true
     },
     {
         title: 'Total Relayed Value',
@@ -55,8 +51,7 @@ export const COLUMNS: TableColumnsType = [
         key: RelayersListKey.relayersTotalRelayedValue,
         align: 'right',
         sortDirections: ['descend', 'ascend'],
-        sorter: true,
-        width: 100
+        sorter: true
     },
     {
         title: 'Total Fee Cost',
@@ -64,8 +59,7 @@ export const COLUMNS: TableColumnsType = [
         key: RelayersListKey.relayersTotalFeeCost,
         align: 'right',
         sortDirections: ['descend', 'ascend'],
-        sorter: true,
-        width: 100
+        sorter: true
     },
     {
         title: 'Last Updated',
@@ -73,8 +67,7 @@ export const COLUMNS: TableColumnsType = [
         key: RelayersListKey.relayersLastUpdated,
         align: 'right',
         sortDirections: ['descend', 'ascend'],
-        sorter: true,
-        width: 100
+        sorter: true
     }
 ];
 
