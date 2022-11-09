@@ -66,6 +66,7 @@
                 <div>{{ record.relayers_last_updated_format }}</div>
             </template>
         </TableCommon>
+        <!-- todo dj 搜索无结果 -->
     </PageContainer>
 </template>
 
@@ -80,7 +81,7 @@
     import { formatBigNumber } from '@/helper/parseStringHelper';
     const { loading } = useLoading();
     const { showModal, changeModal } = useShowModal();
-    const { relayersList, subtitle, searchFn } = useGetRelayersList();
+    const { relayersList, subtitle, searchFn } = useGetRelayersList(loading);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
     const { goRelayersDetails } = useGoRelayersDetails(changeModal);
 </script>
