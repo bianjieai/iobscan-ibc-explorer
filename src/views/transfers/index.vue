@@ -102,7 +102,7 @@
                         </template>
                         <img class="tip cursor" :src="TIP_ICON" />
                     </a-popover>
-                    <ResetButton @on-reset="onClickReset" />
+                    <TypeButton @on-reset="onClickReset" />
                 </div>
             </div>
             <div class="transfer__middle__bottom">

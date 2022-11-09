@@ -33,7 +33,7 @@
                 <div
                     v-show="props.chainList.length > 3"
                     class="chain_popover_c__bottom"
-                    @click="goRelayerDetails"
+                    @click="goRelayersDetails(props.isRegistered, props.relayerId)"
                 >
                     <div class="chain_popover_c__bottom__ellipsis">……</div>
                     <div class="chain_popover_c__bottom__botton">
@@ -48,6 +48,8 @@
 </template>
 
 <script setup lang="ts">
+    import { useGoRelayersDetails } from '../composable';
+
     interface chainItem {
         chainName: string;
         chainLogo: string;
@@ -57,6 +59,8 @@
     interface IProps {
         servedChainsNum: number;
         relayerId: string;
+        isRegistered: boolean;
+        changeModal: (flag: boolean) => void;
         chainList: chainItem[];
     }
 
@@ -66,12 +70,7 @@
         return props.chainList.slice(0, 3) || [];
     });
 
-    const router = useRouter();
-    const goRelayerDetails = () => {
-        router.push({
-            path: '/relayers/details/' + props.relayerId
-        });
-    };
+    const { goRelayersDetails } = useGoRelayersDetails(props.changeModal);
 </script>
 <style lang="less" scoped>
     :global(.relayers_chain_popover .ant-popover-inner-content) {
