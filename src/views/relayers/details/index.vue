@@ -11,7 +11,7 @@
         </layer-block>
         <InfoCard icon="icon-a-ChannelPairs" title="Channel Pairs">
             <ChannelPairsInfo v-if="channelPairsInfo" :channel-pairs-info="channelPairsInfo" />
-            <no-datas v-else />
+            <no-datas v-if="!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo" />
         </InfoCard>
         <div class="relayer_details__charts_wrap">
             <div class="relayer_details__charts_wrap__left">
@@ -56,6 +56,23 @@
             </div>
             <div class="relayer_details__charts_wrap__right"></div>
         </div>
+        <InfoCard icon="icon-transactions" title="Transactions">
+            <div class="relayer_details__transfer">
+                <div class="relayer_details__search">
+                    <!-- <BjSelect
+                        ref="relayerChainDropdown"
+                        placeholder="All Chains"
+                        :hide-icon="true"
+                        :data="relayerChainData"
+                        :input-ctn="{
+                            placeholder: 'Search by Chain ID',
+                            btnTxt: 'Confirm'
+                        }"
+                    /> -->
+                    <!-- <ResetButton @on-reset="onClickReset" /> -->
+                </div>
+            </div>
+        </InfoCard>
     </PageContainer>
 </template>
 
@@ -69,6 +86,8 @@
         useGetSuccessRatePercent,
         useGetTransferTypeData
     } from './composable';
+    import { useIbcStatisticsChains } from '@/store';
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const {
         relayerIcon,
         relayerName,
@@ -116,6 +135,11 @@
                 margin-left: 16px;
                 flex: 1;
             }
+        }
+        &__transfer {
+        }
+        &__search {
+            .flex(row, nowrap, flex-start, center);
         }
     }
 </style>

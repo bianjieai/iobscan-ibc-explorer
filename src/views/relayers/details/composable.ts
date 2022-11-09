@@ -7,6 +7,7 @@ import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import { useIbcStatisticsChains } from '@/store';
 import { IDenomStatistic } from '@/types/interface/index.interface';
 import { IChannelChain } from '@/types/interface/relayers.interface';
+import dayjs from 'dayjs';
 import * as echarts from 'echarts';
 import { Ref } from 'vue';
 
@@ -32,7 +33,7 @@ export const useGetRelayerDetailsInfo = () => {
                     if (data) {
                         relayerIcon.value = data.relayer_icon;
                         relayerName.value = data.relayer_name;
-                        servedChains.value = data.served_chains;
+                        servedChains.value = data.served_chains.length;
                         relayedTotalTxs.value = data.relayed_total_txs;
                         relayedSuccessTxs.value = data.relayed_success_txs;
                         relayerInfo.value.total_relayed_value.count = data.relayed_total_txs_value;
@@ -292,6 +293,7 @@ export const useGetSuccessRatePercent = (
         successRatePercent
     };
 };
+
 export const useSuccessRateChart = (
     successRateDom: Ref<HTMLElement>,
     successRatePercent: Ref<number>
@@ -430,4 +432,16 @@ export const useSuccessRateChart = (
             };
         }
     });
+};
+
+export const useGetRelayerTransferTxs = () => {};
+
+export const useSelectedSearch = () => {
+    const dateRange = reactive({ value: [] });
+    const disabledDate = (current: any) =>
+        current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
+    return {
+        dateRange,
+        disabledDate
+    };
 };
