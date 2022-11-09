@@ -24,6 +24,7 @@
                         :default-choose-btn="relayedTrendChoose"
                         @change-choose-btn="relayedTrendChooseBtnFn"
                     >
+                        <!-- todo dj 由于有滚动条,echart 中的边距改成 dom css -->
                         <div ref="relayedTrendDom" style="width: 756px; height: 324px"></div>
                     </InfoCard>
                 </div>
@@ -73,6 +74,7 @@
                     :is-show-choose-btn="true"
                     :default-choose-btn="0"
                 >
+                    <div ref="relayedTrendDom" style="width: 756px; height: 324px"></div>
                 </InfoCard>
             </div>
         </div>
