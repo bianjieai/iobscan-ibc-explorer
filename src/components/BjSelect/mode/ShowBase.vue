@@ -81,7 +81,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        padding-left: 8px;
         //max-width: 118px;
         &__default {
             color: var(--bj-text-second);

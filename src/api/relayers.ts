@@ -64,10 +64,12 @@ export const getRelayerTransferListAPI = async (
     relayerId: string,
     params: IRequestRelayerTransfer
 ) => {
+    executeCancel(params.use_count);
     return requestMock<IResponse<IRelayerTransferList>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/txs`,
         method: 'get',
-        params: params
+        params: params,
+        cancelToken: setExecuteCancel(params.use_count)
     });
 };
 /*
@@ -86,11 +88,16 @@ export const getTransferTypeTxs = async (relayerId: string) => {
     });
 };
 
-export const getRelayerTransferListAPI = async (relayerId: string, params: IRequestRelayerTransfer) => {
-    return request<IResponse<IRelayerTransferList>>({
+export const getRelayerTransferListAPI = async (
+    relayerId: string,
+    params: IRequestRelayerTransfer
+) => {
+    executeCancel(params.use_count);
+    return requestMock<IResponse<IRelayerTransferList>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/txs`,
         method: 'get',
-        params: params
+        params: params,
+        cancelToken: setExecuteCancel(params.use_count)
     });
 };
 */

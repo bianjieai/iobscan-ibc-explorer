@@ -64,7 +64,7 @@ export interface IResponseRelayerDetails {
     relayer_id: string;
     relayer_name: string;
     relayer_icon: string;
-    served_chains: string[];
+    served_chains_info: string[];
     channel_pair_info: IChannelChain[];
     update_time: string;
     relayed_total_txs: number;
@@ -85,22 +85,19 @@ export interface IRequestRelayerTransfer extends IRequestPagination {
     tx_time_end?: string;
 }
 
+export interface IRtTokenInfo {
+    denom: string;
+    denom_chain: string;
+    base_denom?: string;
+    base_denom_chain?: string;
+    amount: string;
+}
 export interface IRelayerTransferItem {
     tx_hash: string;
     tx_type: string;
     chain: string;
-    denom_info: {
-        denom: string;
-        denom_chain: string;
-        base_denom: string;
-        base_denom_chain: string;
-        amount: string;
-    };
-    fee_info: {
-        denom: string;
-        denom_chain: string;
-        amount: string;
-    };
+    denom_info: IRtTokenInfo;
+    fee_info: IRtTokenInfo;
     tx_status: number;
     signer: string;
     tx_time: number;

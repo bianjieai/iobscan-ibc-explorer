@@ -1,12 +1,24 @@
-import { getRelayerDetailsByRelayerIdAPI, getTransferTypeTxsAPI } from '@/api/relayers';
-import { TRANSFER_TYPE } from '@/constants';
+import {
+    getRelayerDetailsByRelayerIdAPI,
+    getRelayerTransferListAPI,
+    getTransferTypeTxsAPI
+} from '@/api/relayers';
+import { IDataItem } from '@/components/BjSelect/interface';
+import { useMatchBaseDenom } from '@/composables';
+import { CHAIN_DEFAULT_ICON, TOKEN_DEFAULT_ICON, TRANSFER_TYPE } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
-import { RELAYER_DETAILS_INFO, SINGLE_ADDRESS_HEIGHT } from '@/constants/relayers';
+import { RELAYER_DETAILS_INFO, RT_COLUMN_TYPE, SINGLE_ADDRESS_HEIGHT } from '@/constants/relayers';
+import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import { useIbcStatisticsChains } from '@/store';
-import { IDenomStatistic } from '@/types/interface/index.interface';
-import { IChannelChain } from '@/types/interface/relayers.interface';
+import { IDenomStatistic, IIbcchain, IPaginationParams } from '@/types/interface/index.interface';
+import {
+    IChannelChain,
+    IRelayerTransferItem,
+    IRequestRelayerTransfer,
+    IRtTokenInfo
+} from '@/types/interface/relayers.interface';
 import dayjs from 'dayjs';
 import * as echarts from 'echarts';
 import { Ref } from 'vue';
@@ -15,7 +27,7 @@ export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const relayerIcon = ref<string>('');
     const relayerName = ref<string>('');
-    const servedChains = ref<number>(0);
+    const servedChainsInfo = ref<string[]>([]);
     const relayedTotalTxs = ref<number>(0);
     const relayedSuccessTxs = ref<number>(0);
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
@@ -33,7 +45,7 @@ export const useGetRelayerDetailsInfo = () => {
                     if (data) {
                         relayerIcon.value = data.relayer_icon;
                         relayerName.value = data.relayer_name;
-                        servedChains.value = data.served_chains.length;
+                        servedChainsInfo.value = data.served_chains_info;
                         relayedTotalTxs.value = data.relayed_total_txs;
                         relayedSuccessTxs.value = data.relayed_success_txs;
                         relayerInfo.value.total_relayed_value.count = data.relayed_total_txs_value;
@@ -64,7 +76,7 @@ export const useGetRelayerDetailsInfo = () => {
     return {
         relayerIcon,
         relayerName,
-        servedChains,
+        servedChainsInfo,
         relayedTotalTxs,
         relayedSuccessTxs,
         relayerInfo,
@@ -225,7 +237,7 @@ export const useTransferTypeChart = (
                                 <div style="display: flex;margin-left: 4px;background: #FFFFFF;box-shadow: 0px 2px 8px 0px #D9DEEC;border-radius: 4px;border: 1px solid #D9DFEE;">
                                         <div style="width: 8px;height: 50px;background-color:rgba(61, 80, 255, 0.1);"></div>
                                         <div style="padding: 14px 12px;">
-                                            <span style="font-size: 14px;font-family: GolosUI_Medium;color: #000;line-height: 18px;">${typeShort}: </span>
+                                            <span style="font-size: 14px;font-family: GolosUI_Medium;color: #000;line-height: 18px;">${typeShort} Txs: </span>
                                             <span style="margin-left: 8px;font-size: 14px;color: rgba(0,0,0,0.75);line-height: 18px;">${formatBigNumber(
                                                 newTxsCount
                                             )}</span>
@@ -268,6 +280,7 @@ export const useTransferTypeChart = (
                         }
                     ]
                 };
+                // Todo shan 需添加销毁操作及监听事件调整
                 const transferTypeChart = echarts.init(newTransferTypeDom);
                 option && transferTypeChart.setOption(option, true);
                 window.onresize = () => {
@@ -434,14 +447,200 @@ export const useSuccessRateChart = (
     });
 };
 
-export const useGetRelayerTransferTxs = () => {};
+export const usePagination = () => {
+    const pagination = reactive<IPaginationParams>({
+        total: 0,
+        current: 1,
+        pageSize: 5
+    });
+    return {
+        pagination
+    };
+};
 
-export const useSelectedSearch = () => {
+export const useSelectedChains = (
+    servedChainsInfo: Ref<string[]>,
+    loading: Ref<boolean>,
+    pagination: IPaginationParams
+) => {
+    const router = useRouter();
+    const route = useRoute();
+    const relayerChain = ref<IIbcchain[]>([]);
+    const relayerId: string = route?.params?.relayerId as string;
+    const relayerTransferTableData = ref<IRelayerTransferItem[]>([]);
+    watch(servedChainsInfo, (newServedChainsInfo) => {
+        const sortServedChainsInfo = async () => {
+            if (!newServedChainsInfo.length) return [];
+            for (const i in newServedChainsInfo) {
+                const chainInfo = await ChainHelper.getChainInfoByKey(newServedChainsInfo[i]);
+                if (chainInfo) {
+                    relayerChain.value.push(chainInfo);
+                }
+            }
+        };
+        sortServedChainsInfo();
+    });
+    const relayerChainData = computed(() => {
+        return [
+            {
+                children: ChainHelper.sortArrsByNames(relayerChain.value).map((item) => ({
+                    title: item.chain_name,
+                    id: item.chain_id,
+                    icon: item.icon || CHAIN_DEFAULT_ICON,
+                    metaData: item
+                }))
+            }
+        ];
+    });
+    const defaultChain = computed(() => {
+        return relayerChainData.value[0]?.children[0];
+    });
+    const searchChain = ref<string | undefined>(defaultChain.value?.id);
+
+    const getRelayerTransferTxs = (params: any, page_num = 1, page_size = 5, use_count = false) => {
+        const getRelayerTransferTxsData = async () => {
+            if (loading) {
+                loading.value = true;
+            }
+            try {
+                const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
+                    page_num,
+                    page_size,
+                    use_count,
+                    ...params
+                });
+                loading && (loading.value = false);
+                if (code === API_CODE.success) {
+                    if (data) {
+                        if (typeof data === 'number') {
+                            pagination.total = data;
+                        } else {
+                            relayerTransferTableData.value = data.items;
+                        }
+                    } else {
+                        console.error(message);
+                    }
+                } else {
+                    console.error(message);
+                }
+            } catch (error) {
+                loading && (loading.value = false);
+                console.error(error);
+            }
+        };
+        getRelayerTransferTxsData();
+    };
+    watch(defaultChain, (newDefaultChain) => {
+        getRelayerTransferTxs(
+            {
+                chain: newDefaultChain?.id
+            },
+            1,
+            5,
+            true
+        );
+        getRelayerTransferTxs(
+            {
+                chain: newDefaultChain?.id
+            },
+            pagination.current,
+            pagination.pageSize,
+            false
+        );
+    });
+    const onSelectedChain = (selectedChainInfo?: IDataItem) => {
+        (window as any).gtag(
+            'event',
+            `${router.currentRoute.value.name as string}-点击过滤条件Chain`
+        );
+        const chain = selectedChainInfo?.id;
+        searchChain.value = chain !== undefined ? String(chain) : undefined;
+        if (chain) {
+            refreshList({
+                chain: chain as string,
+                page_num: pagination.current,
+                page_size: pagination.pageSize
+            });
+        }
+    };
+    const onPaginationChange = (current: number, pageSize: number) => {
+        pagination.current = current;
+        refreshList({
+            chain: searchChain.value || defaultChain.value.id,
+            page_num: pagination.current,
+            page_size: pageSize
+        });
+    };
+    const refreshList = (params: IRequestRelayerTransfer) => {
+        getRelayerTransferTxs(params);
+    };
+    const formatTransferType = (type: string) => {
+        switch (type) {
+            case TRANSFER_TYPE.transfer.type:
+                return TRANSFER_TYPE.transfer.short;
+            case TRANSFER_TYPE.receive.type:
+                return TRANSFER_TYPE.receive.short;
+            case TRANSFER_TYPE.acknowledge.type:
+                return TRANSFER_TYPE.acknowledge.short;
+            case TRANSFER_TYPE.timeout.type:
+                return TRANSFER_TYPE.timeout.short;
+        }
+    };
+    return {
+        defaultChain,
+        relayerChainData,
+        searchChain,
+        onSelectedChain,
+        relayerTransferTableData,
+        formatTransferType,
+        onPaginationChange
+    };
+};
+
+export const useRangePicker = () => {
     const dateRange = reactive({ value: [] });
     const disabledDate = (current: any) =>
         current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
     return {
         dateRange,
         disabledDate
+    };
+};
+
+export const useFormatTokenDenom = (tokenInfo: Ref<IRtTokenInfo>, type: Ref<string>) => {
+    const chain = ref<string>('');
+    const denom = ref<string>('');
+    const amount = ref<string>('');
+    const tokenLogo = ref<string>(TOKEN_DEFAULT_ICON);
+    const tokenSymbol = ref<string>('');
+    const tokenAmount = ref<string>('');
+    switch (type.value) {
+        case RT_COLUMN_TYPE.token:
+            chain.value = tokenInfo.value.base_denom_chain || '';
+            denom.value = tokenInfo.value.base_denom || '';
+            amount.value = tokenInfo.value.amount;
+            break;
+        case RT_COLUMN_TYPE.fee:
+            chain.value = tokenInfo.value.denom_chain || '';
+            denom.value = tokenInfo.value.denom || '';
+            amount.value = tokenInfo.value.amount;
+            break;
+    }
+
+    const formarTokenDenomByChainDenom = async () => {
+        const { feeAmount, tokenIcon, symbol } = await useMatchBaseDenom(
+            chain.value,
+            denom.value,
+            amount.value
+        );
+        tokenLogo.value = tokenIcon;
+        tokenSymbol.value = symbol;
+        tokenAmount.value = feeAmount;
+    };
+    formarTokenDenomByChainDenom();
+    return {
+        tokenLogo,
+        tokenSymbol,
+        tokenAmount
     };
 };

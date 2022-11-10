@@ -5,11 +5,15 @@ import {
     NEED_CUSTOM_COLUMN,
     CHAIN_DEFAULT_ICON,
     SYMBOL,
-    NEED_CUSTOM_HEADER
+    NEED_CUSTOM_HEADER,
+    TOKEN_DEFAULT_ICON
 } from '@/constants';
 import { useIbcStatisticsChains } from '@/store';
 import { DATA_REFRESH_GAP } from '@/constants/home';
 import { IBaseDenom } from '@/types/interface/index.interface';
+import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
+import { formatBigNumber } from '@/helper/parseStringHelper';
+import moveDecimal from 'move-decimal-point';
 
 export const useTimeInterval = (intervalCallBack: Function, interval = AGE_TIMER_INTERVAL) => {
     let timer: number | null = null;
@@ -64,6 +68,8 @@ export const useNeedCustomColumns = (whitePage: string) => {
             needCustomColumns.value = NEED_CUSTOM_COLUMN.transfers;
             needCustomHeaders.value = NEED_CUSTOM_HEADER.transfers;
             break;
+        case PAGE_PARAMETERS.relayerDetails:
+            needCustomColumns.value = NEED_CUSTOM_COLUMN.relayerDetails;
     }
     return {
         needCustomColumns,
@@ -163,6 +169,26 @@ export const useMatchChainInfo = (chainId: string) => {
     return {
         chainIcon,
         chainName
+    };
+};
+
+export const useMatchBaseDenom = async (chainId: string, denom: string, amount: string) => {
+    let feeAmount = amount;
+    let tokenIcon = TOKEN_DEFAULT_ICON;
+    let symbol = denom;
+    const matchBaseDenom = await getBaseDenomByKey(chainId, denom);
+    if (matchBaseDenom) {
+        feeAmount = `${formatBigNumber(
+            moveDecimal(amount || 0, -matchBaseDenom.scale),
+            undefined
+        )}`;
+        tokenIcon = matchBaseDenom.icon;
+        symbol = matchBaseDenom.symbol;
+    }
+    return {
+        feeAmount,
+        tokenIcon,
+        symbol
     };
 };
 

@@ -14,6 +14,17 @@ export enum RelayersListKey {
     relayersLastUpdated = 'relayers_last_updated'
 }
 
+export enum RELAYER_TRANSFER_KEY {
+    rtTxHash = 'tx_hash',
+    rtType = 'tx_type',
+    rtChain = 'chain',
+    rtToken = 'denom_info',
+    rtFee = 'fee_info',
+    rtResult = 'tx_status',
+    rtSigner = 'signer',
+    rtTimestamp = 'tx_time'
+}
+
 export const COLUMNS: TableColumnsType = [
     {
         title: 'Relayer Name',
@@ -146,4 +157,52 @@ export const SEARCH_OPTIONS: { key: RelayersSearchType; value: string }[] = [
 export const RelayerSearchPlaceholder = {
     relayerName: 'Search by Relayer Name',
     relayerAddress: 'Search by Relayer Address'
+};
+
+export const RELAYER_TRANSFER_COLUMN: TableColumnsType = [
+    {
+        title: 'TxHash',
+        dataIndex: RELAYER_TRANSFER_KEY.rtTxHash,
+        key: RELAYER_TRANSFER_KEY.rtTxHash,
+        width: 150
+    },
+    {
+        title: 'Type',
+        dataIndex: RELAYER_TRANSFER_KEY.rtType,
+        key: RELAYER_TRANSFER_KEY.rtType
+    },
+    {
+        title: 'Chain',
+        dataIndex: RELAYER_TRANSFER_KEY.rtChain,
+        key: RELAYER_TRANSFER_KEY.rtChain
+    },
+    {
+        title: 'Token',
+        dataIndex: RELAYER_TRANSFER_KEY.rtToken,
+        key: RELAYER_TRANSFER_KEY.rtToken
+    },
+    {
+        title: 'Fee',
+        dataIndex: RELAYER_TRANSFER_KEY.rtFee,
+        key: RELAYER_TRANSFER_KEY.rtFee
+    },
+    {
+        title: 'Result',
+        dataIndex: RELAYER_TRANSFER_KEY.rtResult,
+        key: RELAYER_TRANSFER_KEY.rtResult
+    },
+    {
+        title: 'Signer',
+        dataIndex: RELAYER_TRANSFER_KEY.rtSigner,
+        key: RELAYER_TRANSFER_KEY.rtSigner
+    },
+    {
+        title: 'Timestamp',
+        dataIndex: RELAYER_TRANSFER_KEY.rtTimestamp,
+        key: RELAYER_TRANSFER_KEY.rtTimestamp
+    }
+];
+export const RT_COLUMN_TYPE = {
+    token: 'Token',
+    fee: 'Fee'
 };

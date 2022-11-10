@@ -16,6 +16,7 @@
 
 <script setup lang="ts">
     import type { IIbcTxInfo, IProgress, ITxInfo } from '@/types/interface/transfers.interface';
+    import { changeColor } from '@/helper/tableCellHelper';
     import { useProgressList } from '../composable';
 
     interface IProps {
@@ -26,7 +27,7 @@
         dcInfo: ITxInfo | undefined;
     }
     const props = defineProps<IProps>();
-    const { progressListAll, changeColor } = useProgressList(props);
+    const { progressListAll } = useProgressList(props);
 </script>
 
 <style lang="less" scoped>
@@ -54,14 +55,14 @@
             color: var(--bj-text-second);
             word-break: break-word;
         }
-        &__success {
-            font-family: GolosUI_Medium;
-            color: var(--bj-success);
-        }
-        &__failed {
-            font-family: GolosUI_Medium;
-            color: var(--bj-failed);
-        }
+    }
+    .success_color {
+        font-family: GolosUI_Medium;
+        color: var(--bj-success);
+    }
+    .failed_color {
+        font-family: GolosUI_Medium;
+        color: var(--bj-failed);
     }
     @media screen and (max-width: 556px) {
         .progress_list {
@@ -76,10 +77,6 @@
             &__value {
                 margin-top: 2;
                 margin-left: 0;
-            }
-            &__success {
-            }
-            &__failed {
             }
         }
     }

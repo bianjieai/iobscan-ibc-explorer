@@ -1,6 +1,6 @@
 import { API_ERRPR_MESSAGE } from '@/constants/apiCode';
 import { getTxDetailsByTxHashAPI, getTxDetailsViewSourceByTxHashAPI } from '@/api/transfers';
-import { useMatchChainInfo } from '@/composables';
+import { useMatchBaseDenom, useMatchChainInfo } from '@/composables';
 import {
     CHAIN_DEFAULT_ICON,
     DEFAULT_DISPLAY_TEXT,
@@ -33,12 +33,9 @@ import {
     PROGRESS_RECEIVE_LIST,
     PROGRESS_ACKNOWLEDGE_LIST,
     PROGRESS_TIMEOUT_LIST,
-    TRANSFER_DETAILS_STATUS,
     REFUND_TX_TYPE,
     TRANSFER_DETAILS_TAB
 } from '@/constants/transfers';
-import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
-import { formatBigNumber } from '@/helper/parseStringHelper';
 import { useIbcStatisticsChains } from '@/store';
 import type { IAmountDenom } from '@/types/interface/index.interface';
 import type {
@@ -62,10 +59,10 @@ import type {
 } from '@/types/interface/transfers.interface';
 import { dayjsFormatDate, formatAge, getTimestamp } from '@/utils/timeTools';
 import { getTextWidth } from '@/utils/urlTools';
-import moveDecimal from 'move-decimal-point';
 import { Ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { formatObjDisplay } from '@/helper/jsonHelper';
+import { formatTxStatus } from '@/helper/tableCellHelper';
 
 export const useJudgeStatus = (props: Readonly<ITxStatus>) => {
     const isShowSuccess = computed(() => {
@@ -195,25 +192,6 @@ const calculateTextLength = (
     }
 };
 
-const getMatchBaseDenom = async (chainId: string, denom: string, amount: string) => {
-    let feeAmount = amount;
-    let tokenIcon = TOKEN_DEFAULT_ICON;
-    let symbol = denom;
-    const matchBaseDenom = await getBaseDenomByKey(chainId, denom);
-    if (matchBaseDenom) {
-        feeAmount = `${formatBigNumber(
-            moveDecimal(amount || 0, -matchBaseDenom.scale),
-            undefined
-        )}`;
-        tokenIcon = matchBaseDenom.icon;
-        symbol = matchBaseDenom.symbol;
-    }
-    return {
-        feeAmount,
-        tokenIcon,
-        symbol
-    };
-};
 // token_info
 export const useTokenInfo = (props: Readonly<IUseTokenInfo>) => {
     const tokenInfoList = ref<IInfoList>(TOKEN_INFO_LIST);
@@ -225,7 +203,7 @@ export const useTokenInfo = (props: Readonly<IUseTokenInfo>) => {
         () => props.tokenInfo,
         async (newTokenInfo) => {
             if (newTokenInfo) {
-                matchInfo.value = await getMatchBaseDenom(
+                matchInfo.value = await useMatchBaseDenom(
                     newTokenInfo.base_denom_chain_id,
                     newTokenInfo.base_denom,
                     newTokenInfo.amount
@@ -531,7 +509,7 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
         progressList.value.forEach(async (item) => {
             if (item.value !== '' && item.value !== DEFAULT_DISPLAY_TEXT) {
                 if (item.isFormatStatus) {
-                    item.value = formatStatus(item.value);
+                    item.value = formatTxStatus(item.value);
                 } else if (item.isFormatFee) {
                     item.value = await formatFee(item.value);
                 } else if (item.isFormatSigner) {
@@ -557,17 +535,6 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
         });
         progressListAll.value = progressList.value;
     };
-    const formatStatus = (status: number | string) => {
-        if (typeof status === 'string') return status;
-        switch (status) {
-            case TRANSFER_DETAILS_STATUS.SUCCESS.value:
-                return TRANSFER_DETAILS_STATUS.SUCCESS.label;
-            case TRANSFER_DETAILS_STATUS.FAILED.value:
-                return TRANSFER_DETAILS_STATUS.FAILED.label;
-            default:
-                return DEFAULT_DISPLAY_TEXT;
-        }
-    };
     const formatFee = async (amount: IAmountDenom[] | string) => {
         if (typeof amount === 'string') return amount;
         const feeAmount = amount[0].amount;
@@ -577,7 +544,7 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
             case PROGRESS_STEP[3]:
             case PROGRESS_STEP[4]:
                 if (scInfo.value) {
-                    const result = await getMatchBaseDenom(
+                    const result = await useMatchBaseDenom(
                         scInfo.value.chain_id,
                         feeDenom,
                         feeAmount
@@ -586,7 +553,7 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                 }
             case PROGRESS_STEP[2]:
                 if (dcInfo.value) {
-                    const result = await getMatchBaseDenom(
+                    const result = await useMatchBaseDenom(
                         dcInfo.value.chain_id,
                         feeDenom,
                         feeAmount
@@ -665,18 +632,6 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
             }
         }
     });
-    const changeColor = computed(() => {
-        return (value: string) => {
-            switch (value) {
-                case 'Success':
-                    return 'progress_list__success';
-                case 'Failed':
-                    return 'progress_list__failed';
-                default:
-                    return '';
-            }
-        };
-    });
     onBeforeUnmount(() => {
         timestampTimer && clearTimestampTimer(timestampTimer);
         timeoutstampTimer && clearTimestampTimer(timeoutstampTimer);
@@ -684,7 +639,6 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
 
     return {
         progressListAll,
-        changeColor,
         formatTimestamp,
         formatTimeoutTimestamp
     };

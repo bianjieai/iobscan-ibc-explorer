@@ -1,6 +1,6 @@
 import type { IDenomStatistic, IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
-import { RelayersListKey } from '@/constants/relayers';
+import { RelayersListKey, RELAYER_TRANSFER_KEY } from '@/constants/relayers';
 
 export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.meta.url).href;
 export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', import.meta.url).href;
@@ -101,7 +101,8 @@ export const PAGE_PARAMETERS = {
     channel: 'channel',
     channels: 'channels',
     relayers: 'relayers',
-    denom: 'denom'
+    denom: 'denom',
+    relayerDetails: 'relayerDetails'
 };
 
 export const MSG_DESC = {
@@ -426,7 +427,17 @@ export const NEED_CUSTOM_COLUMN = {
         RelayersListKey.relayersTotalFeeCost,
         RelayersListKey.relayersLastUpdated
     ],
-    transfers: ['token', 'fromTxhash', 'from', 'status', 'to', 'toTxHash', 'createTime', 'endTime']
+    transfers: ['token', 'fromTxhash', 'from', 'status', 'to', 'toTxHash', 'createTime', 'endTime'],
+    relayerDetails: [
+        RELAYER_TRANSFER_KEY.rtTxHash,
+        RELAYER_TRANSFER_KEY.rtType,
+        RELAYER_TRANSFER_KEY.rtChain,
+        RELAYER_TRANSFER_KEY.rtToken,
+        RELAYER_TRANSFER_KEY.rtFee,
+        RELAYER_TRANSFER_KEY.rtResult,
+        RELAYER_TRANSFER_KEY.rtSigner,
+        RELAYER_TRANSFER_KEY.rtTimestamp
+    ]
 };
 
 export const NEED_CUSTOM_HEADER = {
@@ -489,17 +500,25 @@ export const BOTTOM_STATUS_DATA = {
 export const CHOOSE_BTN_TEXT = ['Value', 'Txs'];
 
 export const TRANSFER_TYPE = {
+    transfer: {
+        label: 'Transfer',
+        short: 'Transfer',
+        type: 'transfer'
+    },
     receive: {
         label: 'Receive',
-        short: 'Receive Txs'
+        short: 'Receive',
+        type: 'recv_packet'
     },
     acknowledge: {
         label: 'Acknowledge',
-        short: 'Ack Txs'
+        short: 'Ack',
+        type: 'acknowledge_packet'
     },
     timeout: {
         label: 'Timeout',
-        short: 'Timeout Txs'
+        short: 'Timeout',
+        type: 'timeout_packet'
     }
 };
 

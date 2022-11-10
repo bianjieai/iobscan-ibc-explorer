@@ -3,7 +3,7 @@
         <PageTitle
             :title="`${relayerName} Relayer Details`"
             :title-icon="'icon-a-chainsserved'"
-            :subtitle="`A total of ${servedChains} blockchains served`"
+            :subtitle="`A total of ${servedChainsInfo.length} blockchains served`"
             :img-src="relayerIcon"
         />
         <layer-block class="relayer_details__statistic">
@@ -57,21 +57,7 @@
             <div class="relayer_details__charts_wrap__right"></div>
         </div>
         <InfoCard icon="icon-transactions" title="Transactions">
-            <div class="relayer_details__transfer">
-                <div class="relayer_details__search">
-                    <!-- <BjSelect
-                        ref="relayerChainDropdown"
-                        placeholder="All Chains"
-                        :hide-icon="true"
-                        :data="relayerChainData"
-                        :input-ctn="{
-                            placeholder: 'Search by Chain ID',
-                            btnTxt: 'Confirm'
-                        }"
-                    /> -->
-                    <!-- <ResetButton @on-reset="onClickReset" /> -->
-                </div>
-            </div>
+            <RelayerTransfer :served-chains-info="servedChainsInfo" />
         </InfoCard>
     </PageContainer>
 </template>
@@ -80,6 +66,7 @@
     import ChannelPairsInfo from './components/ChannelPairsInfo.vue';
     import TransferTypeChart from './components/TransferTypeChart.vue';
     import SuccessRateChart from './components/SuccessRateChart.vue';
+    import RelayerTransfer from './components/RelayerTransfer.vue';
     import { TRANSFER_TYPE } from '@/constants';
     import {
         useGetRelayerDetailsInfo,
@@ -91,7 +78,7 @@
     const {
         relayerIcon,
         relayerName,
-        servedChains,
+        servedChainsInfo,
         relayedTotalTxs,
         relayedSuccessTxs,
         relayerInfo,
@@ -135,11 +122,6 @@
                 margin-left: 16px;
                 flex: 1;
             }
-        }
-        &__transfer {
-        }
-        &__search {
-            .flex(row, nowrap, flex-start, center);
         }
     }
 </style>

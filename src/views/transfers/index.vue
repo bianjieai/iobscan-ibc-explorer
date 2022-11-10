@@ -495,15 +495,6 @@
                 width: 24px;
             }
         }
-        .thead_border_bottom {
-            position: absolute;
-            top: 48px;
-            left: 0;
-            right: 0;
-            background: var(--bj-border-color);
-            height: 1px;
-            z-index: 1;
-        }
         &__bottom {
             .flex(row, nowrap, space-between, center);
             font-family: GolosUI_Medium;
