@@ -458,7 +458,7 @@ export const usePagination = () => {
     };
 };
 
-export const useSelectedChains = (
+export const useSelectedSearch = (
     servedChainsInfo: Ref<string[]>,
     loading: Ref<boolean>,
     pagination: IPaginationParams
@@ -495,8 +495,7 @@ export const useSelectedChains = (
     const defaultChain = computed(() => {
         return relayerChainData.value[0]?.children[0];
     });
-    const searchChain = ref<string | undefined>(defaultChain.value?.id);
-
+    const searchChain = ref<string>(defaultChain.value?.id);
     const getRelayerTransferTxs = (params: any, page_num = 1, page_size = 5, use_count = false) => {
         const getRelayerTransferTxsData = async () => {
             if (loading) {
@@ -531,30 +530,33 @@ export const useSelectedChains = (
         getRelayerTransferTxsData();
     };
     watch(defaultChain, (newDefaultChain) => {
-        getRelayerTransferTxs(
-            {
-                chain: newDefaultChain?.id
-            },
-            1,
-            5,
-            true
-        );
-        getRelayerTransferTxs(
-            {
-                chain: newDefaultChain?.id
-            },
-            pagination.current,
-            pagination.pageSize,
-            false
-        );
+        if (newDefaultChain) {
+            getRelayerTransferTxs(
+                {
+                    chain: newDefaultChain.id
+                },
+                1,
+                5,
+                true
+            );
+            getRelayerTransferTxs(
+                {
+                    chain: newDefaultChain.id
+                },
+                pagination.current,
+                pagination.pageSize,
+                false
+            );
+        }
     });
     const onSelectedChain = (selectedChainInfo?: IDataItem) => {
         (window as any).gtag(
             'event',
             `${router.currentRoute.value.name as string}-点击过滤条件Chain`
         );
+        pagination.current = 1;
         const chain = selectedChainInfo?.id;
-        searchChain.value = chain !== undefined ? String(chain) : undefined;
+        searchChain.value = chain ? String(chain) : '';
         if (chain) {
             refreshList({
                 chain: chain as string,
@@ -566,9 +568,17 @@ export const useSelectedChains = (
     const onPaginationChange = (current: number, pageSize: number) => {
         pagination.current = current;
         refreshList({
-            chain: searchChain.value || defaultChain.value.id,
+            chain: searchChain.value,
             page_num: pagination.current,
             page_size: pageSize
+        });
+    };
+    const onClickReset = () => {
+        pagination.current = 1;
+        refreshList({
+            chain: searchChain.value || defaultChain.value.id,
+            page_num: 1,
+            page_size: 5
         });
     };
     const refreshList = (params: IRequestRelayerTransfer) => {
@@ -593,7 +603,8 @@ export const useSelectedChains = (
         onSelectedChain,
         relayerTransferTableData,
         formatTransferType,
-        onPaginationChange
+        onPaginationChange,
+        onClickReset
     };
 };
 

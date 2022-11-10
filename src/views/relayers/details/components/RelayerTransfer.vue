@@ -14,9 +14,10 @@
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
                 }"
+                @on-change="onSelectedChain"
             />
-            <!-- @on-change="onSelectedChain" -->
-            <!-- <TypeButton @on-reset="onClickReset" /> -->
+
+            <TypeButton class="relayer_transfer__reset_btn" @on-reset="onClickReset" />
         </div>
         <div class="relayer_transfer__table">
             <TableCommon
@@ -29,10 +30,9 @@
                 :columns="RELAYER_TRANSFER_COLUMN"
                 :current="pagination.current"
                 :page-size="pagination.pageSize"
-                :total="100"
+                :total="pagination.total"
                 @on-page-change="onPaginationChange"
             >
-                <!-- :total="pagination.total" -->
                 <template #tx_hash="{ record }">
                     <a-popover destroy-tooltip-on-hide>
                         <template #content>
@@ -95,7 +95,7 @@
     import { formatTxStatus, changeColor } from '@/helper/tableCellHelper';
     import { dayjsFormatDate } from '@/utils/timeTools';
     import { useIbcChains, useLoading, useNeedCustomColumns } from '@/composables';
-    import { usePagination, useSelectedChains } from '../composable';
+    import { usePagination, useSelectedSearch } from '../composable';
     import { PAGE_PARAMETERS } from '@/constants';
     interface IRelayerTransfer {
         servedChainsInfo: string[];
@@ -112,8 +112,9 @@
         onSelectedChain,
         relayerTransferTableData,
         formatTransferType,
-        onPaginationChange
-    } = useSelectedChains(servedChainsInfo, loading, pagination);
+        onPaginationChange,
+        onClickReset
+    } = useSelectedSearch(servedChainsInfo, loading, pagination);
     const getPopupContainer = (): HTMLElement =>
         document.querySelector('.relayer_transfer__search')!;
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayerDetails);
@@ -123,6 +124,9 @@
     .relayer_transfer {
         &__search {
             .flex(row, nowrap, flex-start, center);
+        }
+        &__reset_btn {
+            margin-left: 8px;
         }
         &__table {
             &__content {

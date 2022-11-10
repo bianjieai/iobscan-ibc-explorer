@@ -46,7 +46,7 @@
     import { TypeButtonProp } from '@/constants';
     import { debounce } from 'lodash-es';
     interface IProps {
-        type: 'reset' | 'search';
+        type?: 'reset' | 'search';
     }
     const props = withDefaults(defineProps<IProps>(), {
         type: TypeButtonProp.reset
