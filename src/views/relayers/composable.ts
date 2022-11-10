@@ -12,7 +12,7 @@ import { axiosCancel } from '@/utils/axios';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 import { RelayersListKey, RelayersSearchType } from '@/constants/relayers';
 
-export const useGetRelayersList = () => {
+export const useGetRelayersList = (loading: Ref<boolean>) => {
     const router = useRouter();
     const relayersList = ref<RelayerListItem[]>([]);
     const total = ref<number>(0);
@@ -135,7 +135,7 @@ export const useGetRelayersList = () => {
     const searchFn = (searchType: string, searchValue: string) => {
         if (!searchValue) {
             router.replace('/relayers');
-            getRelayersList({ ...BASE_PARAMS });
+            getRelayersList({ ...BASE_PARAMS, loading: loading });
         } else {
             const params: {
                 relayer_name?: string;
@@ -156,7 +156,7 @@ export const useGetRelayersList = () => {
                 default:
                     break;
             }
-            getRelayersList({ ...BASE_PARAMS, ...params });
+            getRelayersList({ ...BASE_PARAMS, ...params, loading: loading });
         }
     };
     return {
