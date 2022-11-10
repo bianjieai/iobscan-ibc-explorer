@@ -557,7 +557,7 @@
         const displayValued = showDefault
             ? formatBigNumber(valuedText || '0', 0)
             : DEFAULT_DISPLAY_TEXT;
-        return !showValuedText
+        return !showValuedText || total === 0
             ? `${displayTotal} of the latest 500k transfers found`
             : `${displayTotal} of the latest 500k transfers were found and valued at $${displayValued}`;
     };
