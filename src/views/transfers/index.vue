@@ -492,7 +492,6 @@
             page_size: 10
         })
             .then((data) => {
-                // todo dj 接口待联调
                 pagination.total = (data as IIbcTxCount).txs_count;
                 txsValue.value = (data as IIbcTxCount).txs_value;
                 countLoading.value = false;
