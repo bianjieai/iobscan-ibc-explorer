@@ -539,9 +539,12 @@
     };
 
     const disabledDate = (current: any) => {
+        const currentStart = dayjs(current).startOf('day');
         const max = dayjs().endOf('day');
-        const min = dayjs((ibcStatisticsChainsStore.txSearchTimeMin || 1617007625) * 1000);
-        return current && (current < min || current > max);
+        const min = dayjs((ibcStatisticsChainsStore.txSearchTimeMin || 1617007625) * 1000).startOf(
+            'day'
+        );
+        return currentStart && (currentStart < min || currentStart > max);
     };
 
     const getDisplaySubtitle = (

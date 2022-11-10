@@ -91,7 +91,7 @@ export const useIbcStatisticsChains = defineStore('global', {
             try {
                 const { code, data } = await getTxSearchCondition();
                 if (code == API_CODE.success) {
-                    this.txSearchTimeMin = data.tx_time_min - 86400;
+                    this.txSearchTimeMin = data.tx_time_min;
                     localStorage.setItem('txSearchTimeMin', data.tx_time_min?.toString());
                 }
             } catch (error) {
