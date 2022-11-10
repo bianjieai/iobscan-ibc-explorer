@@ -1,4 +1,4 @@
-// import { getTxSearchCondition } from '@/api/transfers';
+import { getTxSearchCondition } from '@/api/transfers';
 import { defineStore } from 'pinia';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
 import moveDecimal from 'move-decimal-point';
@@ -89,12 +89,11 @@ export const useIbcStatisticsChains = defineStore('global', {
         },
         async getIbcTxSearchCondition() {
             try {
-                // todo dj  接口待联调
-                // const { code, data } = await getTxSearchCondition();
-                // if (code == API_CODE.success) {
-                // this.txSearchTimeMin = data.tx_time_min;
-                // localStorage.setItem('txSearchTimeMin', data.tx_time_min?.toString());
-                // }
+                const { code, data } = await getTxSearchCondition();
+                if (code == API_CODE.success) {
+                    this.txSearchTimeMin = data.tx_time_min - 86400;
+                    localStorage.setItem('txSearchTimeMin', data.tx_time_min?.toString());
+                }
             } catch (error) {
                 console.log('getIbcTxSearchCondition', error);
             }
