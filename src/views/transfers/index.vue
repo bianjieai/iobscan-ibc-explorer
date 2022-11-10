@@ -325,7 +325,6 @@
     import {
         usePagination,
         useGetTableColumns,
-        usePickerPlaceholder,
         useSubTitleFilter,
         useSelectedParams,
         useTransfersTable,
@@ -334,7 +333,7 @@
         useSortIbcChains
     } from './composable';
     import { useIbcStatistics } from '@/composables/home';
-    import { useIbcChains, useNeedCustomColumns } from '@/composables';
+    import { useIbcChains, useNeedCustomColumns, usePickerPlaceholder } from '@/composables';
     import { MODES } from '@/components/BjSelect/constants';
     import { TRANSFERS_TOKEN_DEFAULT_VALUE } from '@/constants/transfers';
 

@@ -128,17 +128,6 @@ export const useNoResult = () => {
     };
 };
 
-export const usePickerPlaceholder = () => {
-    const pickerPlaceholderColor = ref('var(--bj-text-second)');
-    const onOpenChangeRangePicker = (open: boolean) => {
-        pickerPlaceholderColor.value = open ? 'var(--bj-text-third)' : 'var(--bj-text-second)';
-    };
-    return {
-        pickerPlaceholderColor,
-        onOpenChangeRangePicker
-    };
-};
-
 export const useSortIbcChains = (ibcChains: Ref<IIbcChains>) => {
     const setAllChains = (ibcChains: Ref<IIbcChains>) => {
         if (ibcChains?.value?.all) {

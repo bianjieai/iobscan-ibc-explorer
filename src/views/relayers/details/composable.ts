@@ -468,6 +468,11 @@ export const useSelectedSearch = (
     const relayerChain = ref<IIbcchain[]>([]);
     const relayerId: string = route?.params?.relayerId as string;
     const relayerTransferTableData = ref<IRelayerTransferItem[]>([]);
+    const dateRange = reactive({ value: [] });
+    const disabledDate = (current: any) =>
+        current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
+    const startTxTime = ref<number>(0);
+    const endTxTime = ref<number>(0);
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
             if (!newServedChainsInfo.length) return [];
@@ -529,25 +534,17 @@ export const useSelectedSearch = (
         };
         getRelayerTransferTxsData();
     };
+    const queryDatas = (params: any) => {
+        getRelayerTransferTxs(params, 1, 5, true);
+        getRelayerTransferTxs(params, pagination.current, pagination.pageSize, false);
+    };
+    const chainParams = ref<string>('');
     watch(defaultChain, (newDefaultChain) => {
         if (newDefaultChain) {
-            getRelayerTransferTxs(
-                {
-                    chain: newDefaultChain.id
-                },
-                1,
-                5,
-                true
-            );
-            getRelayerTransferTxs(
-                {
-                    chain: newDefaultChain.id
-                },
-                pagination.current,
-                pagination.pageSize,
-                false
-            );
+            chainParams.value = newDefaultChain.id;
         }
+        // Todo shan 请求次数处理
+        queryDatas({ chain: chainParams.value });
     });
     const onSelectedChain = (selectedChainInfo?: IDataItem) => {
         (window as any).gtag(
@@ -560,29 +557,53 @@ export const useSelectedSearch = (
         if (chain) {
             refreshList({
                 chain: chain as string,
+                tx_time_start: String(startTxTime.value),
+                tx_time_end: String(endTxTime.value),
                 page_num: pagination.current,
                 page_size: pagination.pageSize
             });
         }
     };
-    const onPaginationChange = (current: number, pageSize: number) => {
-        pagination.current = current;
-        refreshList({
-            chain: searchChain.value,
-            page_num: pagination.current,
-            page_size: pageSize
-        });
+    const startTime = (time: string | number | Date) => {
+        const nowTimeDate = new Date(time);
+        return nowTimeDate.setHours(0, 0, 0, 0);
     };
-    const onClickReset = () => {
-        pagination.current = 1;
+    const onChangeRangePicker = (dates: any) => {
+        dateRange.value = dates;
+        startTxTime.value = Math.floor(startTime(dayjs(dates[0]).valueOf()) / 1000);
+        endTxTime.value = Math.floor(
+            startTime(dayjs(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1
+        );
         refreshList({
             chain: searchChain.value || defaultChain.value.id,
+            tx_time_start: String(startTxTime.value),
+            tx_time_end: String(endTxTime.value),
             page_num: 1,
             page_size: 5
         });
     };
+    const onClickReset = () => {
+        pagination.current = 1;
+        searchChain.value = defaultChain.value.id;
+        dateRange.value = [];
+        refreshList({
+            chain: defaultChain.value.id,
+            page_num: 1,
+            page_size: 5
+        });
+    };
+    const onPaginationChange = (current: number, pageSize: number) => {
+        pagination.current = current;
+        refreshList({
+            chain: searchChain.value,
+            tx_time_start: String(startTxTime.value),
+            tx_time_end: String(endTxTime.value),
+            page_num: pagination.current,
+            page_size: pageSize
+        });
+    };
     const refreshList = (params: IRequestRelayerTransfer) => {
-        getRelayerTransferTxs(params);
+        queryDatas(params);
     };
     const formatTransferType = (type: string) => {
         switch (type) {
@@ -604,17 +625,10 @@ export const useSelectedSearch = (
         relayerTransferTableData,
         formatTransferType,
         onPaginationChange,
-        onClickReset
-    };
-};
-
-export const useRangePicker = () => {
-    const dateRange = reactive({ value: [] });
-    const disabledDate = (current: any) =>
-        current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
-    return {
+        onClickReset,
         dateRange,
-        disabledDate
+        disabledDate,
+        onChangeRangePicker
     };
 };
 

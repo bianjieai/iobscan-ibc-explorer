@@ -429,6 +429,8 @@
     // mobile
     @media screen and (max-width: 530px) {
         .table_wrapper {
+        }
+        .table_padding_lr {
             padding: 0 16px;
         }
         .bottom {
