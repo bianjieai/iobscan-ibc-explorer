@@ -72,9 +72,10 @@
                     icon="icon-a-relayedassets"
                     title="Related Assets"
                     :is-show-choose-btn="true"
-                    :default-choose-btn="0"
+                    :default-choose-btn="relayedAssetsChoose"
+                    @change-choose-btn="relayedAssetsChooseBtnFn"
                 >
-                    <div ref="relayedTrendDom" style="width: 756px; height: 324px"></div>
+                    <div ref="relayedValueDom" style="width: 380px; height: 300px"></div>
                 </InfoCard>
             </div>
         </div>
@@ -112,7 +113,7 @@
     } = useGetTransferTypeData();
     const { successRatePercent } = useGetSuccessRatePercent(relayedSuccessTxs, relayedTotalTxs);
 
-    // todo dj 逻辑抽离
+    // todo dj relayedTrend 逻辑抽离
     const relayedTrendChoose = ref(0);
     const relayedTrendDom = ref<HTMLElement>();
     const relayedTrendChooseBtnFn = (index: number) => {
@@ -136,75 +137,75 @@
                 padding: 0,
                 extraCssText: 'box-shadow: 0 0 0 transparent;',
                 formatter: (params: any) => {
+                    // <div style="width: 100%; height: 8px; background-color: rgba(61, 80, 255, 0.1)"></div>
                     return `<div style="display: flex; flex-direction: column; align-items: center; transform: translate(0,6px);">
-                                  <div
-                                      style="
-                                          display: flex;
-                                          flex-direction: column;
-                                          margin-bottom: 4px;
-                                          background: #ffffff;
-                                          box-shadow: 0px 2px 8px 0px #d9deec;
-                                          border-radius: 4px;
-                                          border: 1px solid #d9dfee;
-                                      "
-                                  >
-                                      <div style="display: flex; justify-content: flex-start; padding: 12px 12px 8px">
-                                          <span
-                                              style="
-                                                  font-size: 14px;
-                                                  font-family: 'GolosUI_Medium';
-                                                  color: #000;
-                                                  font-weight: 500;
-                                                  line-height: 18px;
-                                              "
-                                              >Transfers:
-                                          </span>
-                                          <span
-                                              style="
-                                                  margin-left: 8px;
-                                                  font-size: 14px;
-                                                  color: rgba(0, 0, 0, 0.75);
-                                                  font-family: 'GolosUIWebRegular';
-                                                  font-weight: 400;
-                                                  line-height: 18px;
-                                              "
-                                              >${params.data}</span
-                                          >
-                                      </div>
-                                      <div style="display: flex; justify-content: flex-start; padding: 0px 12px 12px">
-                                          <span
-                                              style="
-                                                  font-size: 14px;
-                                                  font-family: 'GolosUI_Medium';
-                                                  color: #000;
-                                                  font-weight: 500;
-                                                  line-height: 18px;
-                                              "
-                                              >Date:
-                                          </span>
-                                          <span
-                                              style="
-                                                  margin-left: 8px;
-                                                  font-size: 14px;
-                                                  color: rgba(0, 0, 0, 0.75);
-                                                  font-family: 'GolosUIWebRegular';
-                                                  font-weight: 400;
-                                                  line-height: 18px;
-                                              "
-                                              >${params.name}</span
-                                          >
-                                      </div>
-                                      <div style="width: 100%; height: 8px; background-color: rgba(61, 80, 255, 0.1)"></div>
-                                  </div>
-                                  <div
-                                      style="
-                                          border-top: 8px solid #3d50ff;
-                                          border-right: 5px solid transparent;
-                                          border-bottom: 8px solid transparent;
-                                          border-left: 5px solid transparent;
-                                      "
-                                  ></div>
-                              </div>`;
+                                    <div
+                                        style="
+                                            display: flex;
+                                            flex-direction: column;
+                                            margin-bottom: 4px;
+                                            background: #ffffff;
+                                            box-shadow: 0px 2px 8px 0px #d9deec;
+                                            border-radius: 4px;
+                                            border: 1px solid #d9dfee;
+                                        "
+                                    >
+                                        <div style="display: flex; justify-content: flex-start; padding: 12px 12px 8px">
+                                            <span
+                                                style="
+                                                    font-size: 14px;
+                                                    font-family: 'GolosUI_Medium';
+                                                    color: #000;
+                                                    font-weight: 500;
+                                                    line-height: 18px;
+                                                "
+                                                >Transfers:
+                                            </span>
+                                            <span
+                                                style="
+                                                    margin-left: 8px;
+                                                    font-size: 14px;
+                                                    color: rgba(0, 0, 0, 0.75);
+                                                    font-family: 'GolosUIWebRegular';
+                                                    font-weight: 400;
+                                                    line-height: 18px;
+                                                "
+                                                >${params.data}</span
+                                            >
+                                        </div>
+                                        <div style="display: flex; justify-content: flex-start; padding: 0px 12px 12px">
+                                            <span
+                                                style="
+                                                    font-size: 14px;
+                                                    font-family: 'GolosUI_Medium';
+                                                    color: #000;
+                                                    font-weight: 500;
+                                                    line-height: 18px;
+                                                "
+                                                >Date:
+                                            </span>
+                                            <span
+                                                style="
+                                                    margin-left: 8px;
+                                                    font-size: 14px;
+                                                    color: rgba(0, 0, 0, 0.75);
+                                                    font-family: 'GolosUIWebRegular';
+                                                    font-weight: 400;
+                                                    line-height: 18px;
+                                                "
+                                                >${params.name}</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div
+                                        style="
+                                            border-top: 8px solid #3d50ff;
+                                            border-right: 5px solid transparent;
+                                            border-bottom: 8px solid transparent;
+                                            border-left: 5px solid transparent;
+                                        "
+                                    ></div>
+                                </div>`;
                 }
             },
             yAxis: [
@@ -289,8 +290,41 @@
                     type: 'bar',
                     barWidth: 10,
                     data: [
-                        10, 52, 100, 334, 390, 330, 10, 52, 100, 334, 390, 330, 10, 52, 100, 334,
-                        390, 330, 10, 52, 100, 334, 390, 330, 10, 52, 100, 334, 390, 330
+                        10,
+                        52,
+                        100,
+                        {
+                            value: 500,
+                            itemStyle: {
+                                color: 'blue'
+                            }
+                        },
+                        390,
+                        330,
+                        10,
+                        52,
+                        100,
+                        334,
+                        390,
+                        330,
+                        10,
+                        52,
+                        100,
+                        334,
+                        390,
+                        330,
+                        10,
+                        52,
+                        100,
+                        334,
+                        390,
+                        330,
+                        10,
+                        52,
+                        100,
+                        334,
+                        390,
+                        330
                     ],
                     itemStyle: {
                         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -306,41 +340,292 @@
                             ])
                         }
                     }
-                    // todo dj 效果差，需沟通
-                    // markPoint: {
-                    //     symbol: 'circle',
-                    //     silent: true,
-                    //     symbolOffset: [0, '-50%'],
-                    //     label: {
-                    //         color: 'red'
-                    //     },
-                    //     // symbolSize: 2,
-                    //     data: [{ type: 'max', name: 'Max' }]
-                    // },
-                    // markLine: {
-                    //     silent: true,
-                    //     data: [
-                    //         {
-                    //             type: 'max'
-                    //         }
-                    //     ],
-                    //     label: {
-                    //         position: 'start',
-                    //         padding: 11.5,
-                    //         color: 'blue'
-                    //     },
-                    //     lineStyle: {
-                    //         type: [2, 3],
-                    //         color: 'rgba(61,80,255,0.35)'
-                    //     },
-                    //     symbol: 'none'
-                    // }
                 }
             ]
         };
         relayedTrendChart.setOption(option, true);
         window.addEventListener('resize', () => {
             relayedTrendChart.resize();
+        });
+    });
+
+    // todo dj related assets 逻辑抽离
+    const relayedAssetsChoose = ref(0);
+    const relayedValueDom = ref<HTMLElement>();
+    const relayedAssetsChooseBtnFn = (index: number) => {
+        relayedAssetsChoose.value = index;
+    };
+    onMounted(() => {
+        const relayedValueChart = echarts.init(relayedValueDom.value as HTMLElement);
+        const pieColorList = [
+            '#0D47A1',
+            '#2F54EB',
+            '#FA8C16',
+            '#2979FF',
+            '#1890FF',
+            '#597EF7',
+            '#FAAD14',
+            '#40A9FF',
+            '#85A5FF',
+            '#82B1FF',
+            '#FFC069',
+            '#FFD666',
+            '#FFD591',
+            '#81D4FA',
+            '#FFE58F',
+            '#FFE7BA',
+            '#FFF1B8',
+            '#BED2FF'
+        ];
+        const totalRelayedValue = '200';
+        const tokenTotal = 5;
+        let option = {
+            title: {
+                text: `Total Relayed Value $${totalRelayedValue}`,
+                textStyle: {
+                    color: '#000000',
+                    fontWeight: 400,
+                    fontFamily: 'GolosUIWebRegular',
+                    fontSize: 14,
+                    lineHeight: 18
+                }
+            },
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: null,
+                borderWidth: 0,
+                padding: 0,
+                extraCssText: 'box-shadow: 0 0 0 transparent;',
+                formatter: (params: any) => {
+                    console.log(params);
+                    return `<div style="display: flex; align-items: center; transform: translate(6px, 0)">
+                                <div
+                                    style="
+                                    display: flex;
+                                    margin-left: 4px;
+                                    background: #ffffff;
+                                    box-shadow: 0px 2px 8px 0px #d9deec;
+                                    border-radius: 4px;
+                                    border: 1px solid #d9dfee;
+                                    "
+                                    >
+                                      <div>
+                                          <div style="display: flex; justify-content: flex-start; padding: 12px 12px 6px">
+                                              <img
+                                                  src="https://iobscan.io/resources/xp-tokens/cosmoshub-4.png"
+                                                  style="width: 20px; height: 20px"
+                                              />
+                                              <span
+                                                  style="
+                                                      margin-left: 8px;
+                                                      font-size: 16px;
+                                                      font-family: GolosUI-Medium, GolosUI;
+                                                      font-weight: 500;
+                                                      color: #000000;
+                                                      line-height: 20px;
+                                                  "
+                                                  >${params.name}</span
+                                              >
+                                          </div>
+                                          <div style="display: flex; justify-content: flex-start; padding: 0px 12px 14px">
+                                              <span
+                                                  style="
+                                                      font-size: 14px;
+                                                      font-family: 'GolosUI_Medium';
+                                                      color: #000;
+                                                      font-weight: 500;
+                                                      line-height: 18px;
+                                                  "
+                                                  >Value:
+                                              </span>
+                                              <span
+                                                  style="
+                                                      margin-left: 8px;
+                                                      font-size: 14px;
+                                                      color: rgba(0, 0, 0, 0.75);
+                                                      font-family: 'GolosUIWebRegular';
+                                                      font-weight: 400;
+                                                      line-height: 18px;
+                                                  "
+                                                  >${params.data.value}</span
+                                              >
+                                              <span
+                                                  style="
+                                                      font-size: 14px;
+                                                      font-family: GolosUI-Medium, GolosUI;
+                                                      font-weight: 500;
+                                                      color: rgba(0, 0, 0, 0.34);
+                                                      line-height: 18px;
+                                                  "
+                                                  >/${params.percent}%</span
+                                              >
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>`;
+                }
+            },
+            legend: {
+                // todo dj 距离需要控制
+                // top: 100,
+                bottom: '15%',
+                right: 0,
+                orient: 'vertical',
+                itemWidth: 12,
+                itemHeight: 12,
+                itemGap: 9,
+                padding: 0,
+                textStyle: {
+                    padding: [1.4, 0, 0, 0],
+                    color: '#000000',
+                    fontWeight: 400,
+                    fontFamily: 'GolosUIWebRegular',
+                    fontSize: 12
+                }
+            },
+            series: [
+                {
+                    type: 'pie',
+                    silent: true,
+                    radius: [78, 90],
+                    // todo dj 距离需调整
+                    center: ['32%', '55%'],
+                    itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 5,
+                        opacity: 1
+                    },
+                    label: {
+                        show: true,
+                        top: 'middle',
+                        position: 'center',
+                        formatter: `{text| IBC Token}\n\r\n\r{total|${tokenTotal}}`,
+                        padding: [7, 0, 0, 0],
+                        opacity: 1,
+                        rich: {
+                            text: {
+                                color: '#000000',
+                                fontWeight: 400,
+                                fontFamily: 'GolosUIWebRegular',
+                                fontSize: 16,
+                                lineHeight: 16
+                            },
+                            total: {
+                                color: '#000000',
+                                fontWeight: 600,
+                                fontFamily: 'GolosUIWebRegular',
+                                fontSize: 24,
+                                lineHeight: 24
+                            }
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: [
+                        {
+                            value: 1048,
+                            itemStyle: {
+                                color: pieColorList[0]
+                            }
+                        },
+                        {
+                            value: 735,
+                            itemStyle: {
+                                color: pieColorList[1]
+                                // opacity: 0.15
+                            }
+                        },
+                        {
+                            value: 580,
+                            itemStyle: {
+                                color: pieColorList[2]
+                                // opacity: 0.15
+                            }
+                        },
+                        {
+                            value: 484,
+                            itemStyle: {
+                                color: pieColorList[3]
+                                // opacity: 0.15
+                            }
+                        },
+                        {
+                            value: 300,
+                            itemStyle: {
+                                color: pieColorList[4]
+                                // opacity: 0.15
+                            }
+                        }
+                    ]
+                },
+                {
+                    type: 'pie',
+                    radius: [91, 111],
+                    // todo dj 距离需调整
+                    center: ['32%', '55%'],
+                    itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: false
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    emphasis: {
+                        scaleSize: 8
+                    },
+                    data: [
+                        {
+                            value: 1048,
+                            name: 'Search Engine',
+                            itemStyle: {
+                                color: pieColorList[0]
+                            }
+                        },
+                        {
+                            value: 735,
+                            name: 'Direct',
+                            itemStyle: {
+                                color: pieColorList[1]
+                            }
+                        },
+                        {
+                            value: 580,
+                            name: 'Email',
+                            itemStyle: {
+                                color: pieColorList[2]
+                            }
+                        },
+                        {
+                            value: 484,
+                            name: 'Union Ads',
+                            itemStyle: {
+                                color: pieColorList[3]
+                            }
+                        },
+                        {
+                            value: 300,
+                            name: 'Video Ads',
+                            itemStyle: {
+                                color: pieColorList[4]
+                            }
+                        }
+                    ]
+                }
+            ]
+        };
+        // 点击取消之后，立即再次选中
+        relayedValueChart.on('legendselectchanged', (params: any) => {
+            relayedValueChart.setOption({
+                legend: { selected: { [params.name]: true } }
+            });
+        });
+        relayedValueChart.setOption(option, true);
+        window.addEventListener('resize', () => {
+            relayedValueChart.resize();
         });
     });
 </script>
