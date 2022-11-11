@@ -1,14 +1,16 @@
 import { floor } from 'lodash-es';
 import { BigNumber } from 'bignumber.js';
 import { isString } from '@/utils/objectTools';
-import { THOUSAND_DECIMAL } from '@/constants';
+import { DEFAULT_DISPLAY_TEXT, THOUSAND_DECIMAL } from '@/constants';
 
 function getRestString(string: any, left: number, right: number) {
     if (!isString(string)) return;
     if (string.length <= Number(left) + Number(right)) {
         return string;
     }
-    return string ? `${string.substr(0, left)}...${right > 0 ? string.substr(-right) : ''}` : '';
+    return string
+        ? `${string.substr(0, left)}...${right > 0 ? string.substr(-right) : ''}`
+        : DEFAULT_DISPLAY_TEXT;
 }
 
 function rmIbcPrefix(ibcHash = '') {
@@ -62,7 +64,7 @@ function formatNum(numOrigin: any) {
 }
 
 function formatBigNumber(value: any, num?: number) {
-    if (value == 0) {
+    if (value == 0 || value === DEFAULT_DISPLAY_TEXT) {
         return value;
     }
     return new BigNumber(value).toFormat(num);

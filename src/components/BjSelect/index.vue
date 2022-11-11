@@ -5,11 +5,12 @@
         :overlay-style="{ zIndex: 1020 }"
         :destroy-popup-on-hide="true"
         :get-popup-container="dropdownProps?.getPopupContainer"
+        :disabled="isDisabled"
         @visible-change="visibleChange"
     >
         <div
             class="flex items-center default_color dropdown_container cursor"
-            :class="[{ visible_border: visible }]"
+            :class="[{ visible_border: visible, disabled_border: isDisabled }]"
         >
             <!--            多选单选的展示 start-->
             <template v-if="props.mode !== MODES.double">
@@ -186,6 +187,7 @@
             btnTxt: string;
         };
         dropdownProps?: DropdownProps;
+        isDisabled?: boolean;
     }
 
     const props = withDefaults(defineProps<IProps>(), {
@@ -431,6 +433,13 @@
         color: var(--bj-text-second);
         &:hover {
             border-color: var(--bj-primary-color);
+        }
+    }
+    .disabled_border {
+        // Todo shan 禁用时鼠标样式更换
+        cursor: auto;
+        &:hover {
+            border-color: var(--bj-border-color);
         }
     }
 

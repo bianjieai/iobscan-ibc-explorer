@@ -1,5 +1,6 @@
 <template>
-    <div class="table_wrapper">
+    <div class="table_wrapper" :class="{ table_padding_lr: hasPaddingLr }">
+        <div v-if="!hasPaddingLr" class="thead_border_top"></div>
         <a-config-provider>
             <a-table
                 v-if="dataSource"
@@ -34,7 +35,7 @@
                 <no-datas v-if="!loading && !data.length" />
             </template>
         </a-config-provider>
-        <div class="thead_border_bottom"></div>
+        <div v-if="hasPaddingLr" class="thead_border_bottom"></div>
         <div
             v-if="hasData || $slots.table_bottom_status"
             class="flex justify-between pt-16 items-center bottom"
@@ -66,7 +67,7 @@
         IResponseIbcTokenListItem,
         ITokensListItem
     } from '@/types/interface/tokens.interface';
-    import { RelayerListItem } from '@/types/interface/relayers.interface';
+    import { IRelayerTransferItem, RelayerListItem } from '@/types/interface/relayers.interface';
     import { CompareOrder } from '@/types/interface/components/table.interface';
     import { computed, onMounted, reactive, ref, watch } from 'vue';
     import { useRouter } from 'vue-router';
@@ -84,7 +85,8 @@
         | ITokensListItem[]
         | IResponseIbcTokenListItem[]
         | RelayerListItem[]
-        | IResponseChannelsListItem[];
+        | IResponseChannelsListItem[]
+        | IRelayerTransferItem[];
     interface IProps {
         columns: TableColumnsType;
         data: TData;
@@ -100,14 +102,17 @@
         realTimeKey?: { scKey: string; dcKey: string }[] | null;
         loading: boolean;
         customRow?: GetComponentProps<any>;
+        hasPaddingLr?: boolean;
     }
+    // Todo shan hasPaddingLr 能否修改 Transfer 列表页等移入每一行两边有间距的情况
     let backUpDataSource: any[] = [];
     const props = withDefaults(defineProps<IProps>(), {
         pageSize: null,
         current: null,
         scroll: undefined,
         realTimeKey: null,
-        rowKey: 'record_id'
+        rowKey: 'record_id',
+        hasPaddingLr: true
     });
     const pageInfo = reactive({
         pageSize: props.pageSize || 10,
@@ -388,10 +393,21 @@
     }
     .table_wrapper {
         margin-top: 16px;
-        padding: 0 24px;
         background-color: #fff;
         border-radius: 4px;
         position: relative;
+    }
+    .table_padding_lr {
+        padding: 0 24px;
+    }
+    .thead_border_top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(61, 80, 255, 0.1);
+        height: 2px;
+        z-index: 1;
     }
     .thead_border_bottom {
         position: absolute;
@@ -415,6 +431,8 @@
     // mobile
     @media screen and (max-width: 530px) {
         .table_wrapper {
+        }
+        .table_padding_lr {
             padding: 0 16px;
         }
         .bottom {

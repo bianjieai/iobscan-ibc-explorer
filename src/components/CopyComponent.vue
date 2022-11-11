@@ -5,7 +5,7 @@
         :data-clipboard-text="copyText"
         @click="handleCopy()"
     >
-        <span v-show="!isShowCopied" class="copied iconfont icon-fuzhi"></span>
+        <span v-show="!isShowCopied" class="copied iconfont icon-copy"></span>
         <span v-show="isShowCopied" class="copied iconfont icon-fuzhichenggong1">
             <span class="text">Copied</span></span
         >

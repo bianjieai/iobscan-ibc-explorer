@@ -62,6 +62,7 @@
             font-family: GolosUI_Medium;
             font-weight: 500;
             color: var(--bj-text-normal);
+            white-space: nowrap;
         }
         &__choose_btn {
             background: #ebedff;

@@ -310,6 +310,7 @@
 </template>
 
 <script setup lang="ts">
+    // Todo shan merge master
     import {
         IBC_TX_STATUS_SELECT_OPTIONS,
         IBC_TX_STATUS,
@@ -325,7 +326,6 @@
     import {
         usePagination,
         useGetTableColumns,
-        usePickerPlaceholder,
         useSubTitleFilter,
         useSelectedParams,
         useTransfersTable,
@@ -334,7 +334,7 @@
         useSortIbcChains
     } from './composable';
     import { useIbcStatistics } from '@/composables/home';
-    import { useIbcChains, useNeedCustomColumns } from '@/composables';
+    import { useIbcChains, useNeedCustomColumns, usePickerPlaceholder } from '@/composables';
     import { MODES } from '@/components/BjSelect/constants';
     import { TRANSFERS_TOKEN_DEFAULT_VALUE } from '@/constants/transfers';
 
@@ -494,15 +494,6 @@
             .status_icon {
                 width: 24px;
             }
-        }
-        .thead_border_bottom {
-            position: absolute;
-            top: 48px;
-            left: 0;
-            right: 0;
-            background: var(--bj-border-color);
-            height: 1px;
-            z-index: 1;
         }
         &__bottom {
             .flex(row, nowrap, space-between, center);

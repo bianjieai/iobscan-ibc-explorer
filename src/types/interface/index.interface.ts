@@ -95,6 +95,7 @@ export interface IDenomStatistic {
         count: number | string;
         no_link?: boolean;
         unit?: string;
+        decimal?: number;
     };
 }
 
