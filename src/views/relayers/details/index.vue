@@ -23,9 +23,15 @@
                         icon="icon-a-transfertype"
                         title="IBC Transfer Type"
                     >
+                        <loading-component
+                            v-if="transferTypeLoading"
+                            :type="LoadingType.container"
+                            :height="200"
+                        />
                         <div
                             v-if="
                                 !isShowModal &&
+                                !transferTypeLoading &&
                                 (recvPacketTxs || acknowledgePacketTxs || timeoutPacketTxs)
                             "
                             class="relayer_details__charts_wrap__left__bottom__transfer_type"
@@ -54,7 +60,8 @@
                         <no-datas
                             v-if="
                                 isShowModal ||
-                                !(recvPacketTxs && acknowledgePacketTxs && timeoutPacketTxs)
+                                (!transferTypeLoading &&
+                                    !(recvPacketTxs && acknowledgePacketTxs && timeoutPacketTxs))
                             "
                             class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap__nodatas"
                         />
@@ -64,6 +71,12 @@
                         icon="icon-a-successrate"
                         title="Success Rate"
                     >
+                        <!-- Todo shan loading 状态添加 -->
+                        <!-- <loading-component
+                            v-if="transferTypeLoading"
+                            :type="LoadingType.container"
+                            :height="200"
+                        /> -->
                         <SuccessRateChart
                             v-if="!isShowModal && !ibcStatisticsChainsStore.isShowLoading"
                             :success-rate-percent="successRatePercent"
@@ -92,7 +105,7 @@
     import TransferTypeChart from './components/TransferTypeChart.vue';
     import SuccessRateChart from './components/SuccessRateChart.vue';
     import RelayerTransfer from './components/RelayerTransfer.vue';
-    import { TRANSFER_TYPE } from '@/constants';
+    import { LoadingType, TRANSFER_TYPE } from '@/constants';
     import {
         useGetRelayerDetailsInfo,
         useGetSuccessRatePercent,
@@ -118,7 +131,8 @@
         totalTxsCount,
         recvPacketTxsPercent,
         acknowledgePacketTxsPercent,
-        timeoutPacketTxsPercent
+        timeoutPacketTxsPercent,
+        transferTypeLoading
     } = useGetTransferTypeData();
     const { successRatePercent } = useGetSuccessRatePercent(relayedSuccessTxs, relayedTotalTxs);
 </script>

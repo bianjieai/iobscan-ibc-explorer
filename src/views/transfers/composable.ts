@@ -1,8 +1,9 @@
-import { useIbcStatisticsChains } from '@/store/index';
+import { useIbcStatisticsChains } from '@/store';
 import {
     CHAINNAME,
     CHAIN_DEFAULT_ICON,
     CHAIN_DEFAULT_VALUE,
+    DEFAULT_DISPLAY_TEXT,
     TOKEN_DEFAULT_ICON,
     TOTAL_BOUND,
     TRANSFERS_STATUS_OPTIONS,
@@ -20,14 +21,14 @@ import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { API_CODE } from '@/constants/apiCode';
 import { useGetIbcDenoms } from '@/composables';
 import dayjs from 'dayjs';
-import { JSONparse, rmIbcPrefix } from '@/helper/parseStringHelper';
+import { formatBigNumber, JSONparse, rmIbcPrefix } from '@/helper/parseStringHelper';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
 import { dayjsFormatDate } from '@/utils/timeTools';
 import ChainHelper from '@/helper/chainHelper';
 import { Ref } from 'vue';
 import { urlParser } from '@/utils/urlTools';
 import { axiosCancel } from '@/utils/axios';
-import { IIbcTx, ITransfersQueryParams } from '@/types/interface/transfers.interface';
+import { IIbcTx, IIbcTxCount, ITransfersQueryParams } from '@/types/interface/transfers.interface';
 
 export const usePagination = () => {
     const route = useRoute();
@@ -268,23 +269,50 @@ export const useRouteParams = () => {
 };
 
 export const useSubTitleFilter = (
+    isHashFilterParams: Ref<boolean>,
     pagination: IPaginationParams,
-    ibcStatisticsTxs: IDenomStatistic
+    ibcStatisticsTxs: IDenomStatistic,
+    isShowValuedText: Ref<boolean>,
+    countLoading: Ref<boolean>,
+    txsValue: Ref<string>
 ) => {
     const ibcTxTotalMoreThan500k = ref<boolean>(false);
-    const isHashFilterParams = ref<boolean>(false);
+    const getDisplaySubtitle = (
+        showDefault: boolean,
+        total: number,
+        showValuedText: boolean,
+        valuedText: string
+    ) => {
+        const displayTotal = showDefault ? total : DEFAULT_DISPLAY_TEXT;
+        const displayValued = showDefault
+            ? formatBigNumber(valuedText || '0', 0)
+            : DEFAULT_DISPLAY_TEXT;
+        return !showValuedText || total === 0
+            ? `${displayTotal} of the latest 500k transfers found`
+            : `${displayTotal} of the latest 500k transfers were found and valued at $${displayValued}`;
+    };
     const isIbcTxTotalAndHashFilter = computed(() => {
         if (ibcTxTotalMoreThan500k.value) {
             if (isHashFilterParams.value) {
                 if (pagination.total === TOTAL_BOUND) {
-                    return 'Last 500k transfers found';
+                    return 'Latest 500k transfers found';
                 }
-                return `${pagination.total} of the last 500k transfers found`;
+                return getDisplaySubtitle(
+                    !countLoading.value,
+                    pagination.total,
+                    isShowValuedText.value,
+                    txsValue.value
+                );
             }
-            return 'Last 500k transfers found';
+            return 'Latest 500k transfers found';
         } else {
             if (isHashFilterParams.value) {
-                return `${pagination.total} of the ${ibcStatisticsTxs.tx_all.count} transfers found`;
+                return getDisplaySubtitle(
+                    !countLoading.value,
+                    pagination.total,
+                    isShowValuedText.value,
+                    txsValue.value
+                );
             }
             return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
         }
@@ -306,11 +334,15 @@ export const useQueryDatas = (
     showTransferLoading: Ref<boolean>,
     pagination: IPaginationParams,
     getIbcTxs: any,
-    isHashFilterParams: Ref<boolean>,
     tableDatas: Ref<IIbcTx[]>,
     queryParams: ITransfersQueryParams
 ) => {
     let isDateDefaultValue = false;
+
+    const isHashFilterParams = ref<boolean>(false);
+    const isShowValuedText = ref(false);
+    const countLoading = ref(false);
+    const txsValue = ref<string>('');
     const getIbcTxsData = (params: any, page_num: number, page_size: number, use_count = false) => {
         showTransferLoading.value = true;
         getIbcTxs({
@@ -319,11 +351,13 @@ export const useQueryDatas = (
             use_count,
             ...params
         })
-            .then((data: IIbcTx[] | number) => {
-                if (typeof data === 'number') {
-                    pagination.total = data;
+            .then((data: IIbcTx[] | IIbcTxCount) => {
+                if (use_count) {
+                    pagination.total = (data as IIbcTxCount).txs_count;
+                    txsValue.value = (data as IIbcTxCount).txs_value;
+                    countLoading.value = false;
                 } else {
-                    tableDatas.value = data;
+                    tableDatas.value = data as IIbcTx[];
                     showTransferLoading.value = false;
                 }
             })
@@ -368,13 +402,19 @@ export const useQueryDatas = (
             base_denom_chain_id: queryParams.base_denom_chain_id,
             denom: queryParams.denom
         };
+        isShowValuedText.value = Boolean(queryParams.chain_id);
+        countLoading.value = true;
         getIbcTxsData(params, 1, 10, true);
         getIbcTxsData(params, pagination.current, pagination.pageSize);
     };
     queryDatas();
     return {
         queryDatas,
-        getIbcTxsData
+        getIbcTxsData,
+        isHashFilterParams,
+        isShowValuedText,
+        countLoading,
+        txsValue
     };
 };
 
@@ -392,6 +432,7 @@ export const useSelectedParams = (
     queryDatas: () => void
 ) => {
     const router = useRouter();
+    const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const chainDropdown = ref();
     const chainIds = ref<TDenom[]>(chainId ? (chainId as string).split(',') : []);
@@ -458,8 +499,14 @@ export const useSelectedParams = (
     const changeInputFlag = (flag: boolean) => {
         inputFlag.value = flag;
     };
-    const disabledDate = (current: any) =>
-        current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
+    const disabledDate = (current: any) => {
+        const currentStart = dayjs(current).startOf('day');
+        const max = dayjs().endOf('day');
+        const min = dayjs((ibcStatisticsChainsStore.txSearchTimeMin || 1617007625) * 1000).startOf(
+            'day'
+        );
+        return currentStart && (currentStart < min || currentStart > max);
+    };
     const judgeQueryParams = () => {
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pagination.pageSize}`;
         if (queryParams?.chain_id) {
