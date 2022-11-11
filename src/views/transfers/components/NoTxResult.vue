@@ -1,5 +1,5 @@
 <template>
-    <NoResult
+    <no-result
         title-label="Search Results"
         :title-value="searchInputValue.value[0]"
         :button-fn="toHome"

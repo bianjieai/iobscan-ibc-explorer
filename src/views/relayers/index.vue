@@ -67,12 +67,12 @@
             </template>
         </TableCommon>
         <div v-show="searchNoResult" class="relayer_no_result_c">
-            <LoadingComponent
+            <loading-component
                 v-show="loading"
                 class="relayer_no_result_c__loading"
-                :is-page-loading="false"
+                :type="LoadingType.position"
             />
-            <NoResult
+            <no-result
                 tip-description="Try to search with relayer name or address."
                 class="relayer_no_result_c__content"
             />
@@ -81,6 +81,7 @@
 </template>
 
 <script setup lang="ts">
+    import { LoadingType } from '@/constants';
     import BulletinBoard from './components/BulletinBoard.vue';
     import ChainPopover from './components/ChainPopover.vue';
     import RelayerSearch from './components/RelayerSearch.vue';
@@ -108,14 +109,7 @@
     .relayer_no_result_c {
         position: relative;
         &__loading {
-            width: 100%;
-            height: 100%;
-            position: absolute;
             top: 45%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.6);
-            z-index: 10;
         }
         &__content {
             margin-top: 16px;

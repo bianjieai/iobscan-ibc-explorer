@@ -11,6 +11,7 @@ import { useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 import { RelayersListKey, RelayersSearchType } from '@/constants/relayers';
+import { Ref } from 'vue';
 
 export const useGetRelayersList = (loading: Ref<boolean>) => {
     const router = useRouter();

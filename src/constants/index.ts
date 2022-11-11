@@ -507,3 +507,9 @@ export enum TypeButtonProp {
     reset = 'reset',
     search = 'search'
 }
+
+export enum LoadingType {
+    page,
+    container,
+    position
+}
