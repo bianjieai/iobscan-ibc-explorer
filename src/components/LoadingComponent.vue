@@ -17,7 +17,7 @@
 <script setup lang="ts">
     import { LoadingType } from '@/constants';
     interface IProps {
-        type: LoadingType;
+        type?: LoadingType;
         height?: number;
         heightUnit?: string;
         width?: number;
