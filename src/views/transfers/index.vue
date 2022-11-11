@@ -353,14 +353,12 @@
         queryDatas,
         getIbcTxsData,
         isHashFilterParams,
-        ibcTxTotalMoreThan500k,
         isShowValuedText,
         countLoading,
         txsValue
     } = useQueryDatas(showTransferLoading, pagination, getIbcTxs, tableDatas, queryParams);
     const { isIbcTxTotalAndHashFilter } = useSubTitleFilter(
         isHashFilterParams,
-        ibcTxTotalMoreThan500k,
         pagination,
         ibcStatisticsTxs,
         isShowValuedText,

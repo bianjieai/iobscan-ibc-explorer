@@ -270,13 +270,13 @@ export const useRouteParams = () => {
 
 export const useSubTitleFilter = (
     isHashFilterParams: Ref<boolean>,
-    ibcTxTotalMoreThan500k: Ref<boolean>,
     pagination: IPaginationParams,
     ibcStatisticsTxs: IDenomStatistic,
     isShowValuedText: Ref<boolean>,
     countLoading: Ref<boolean>,
     txsValue: Ref<string>
 ) => {
+    const ibcTxTotalMoreThan500k = ref<boolean>(false);
     const getDisplaySubtitle = (
         showDefault: boolean,
         total: number,
@@ -339,7 +339,6 @@ export const useQueryDatas = (
 ) => {
     let isDateDefaultValue = false;
 
-    const ibcTxTotalMoreThan500k = ref<boolean>(false);
     const isHashFilterParams = ref<boolean>(false);
     const isShowValuedText = ref(false);
     const countLoading = ref(false);
@@ -413,7 +412,6 @@ export const useQueryDatas = (
         queryDatas,
         getIbcTxsData,
         isHashFilterParams,
-        ibcTxTotalMoreThan500k,
         isShowValuedText,
         countLoading,
         txsValue
