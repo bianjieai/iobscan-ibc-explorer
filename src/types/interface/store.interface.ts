@@ -10,4 +10,5 @@ export interface GlobalState {
     isShow500: boolean;
     ibcTxs: IIbcTx[];
     isDocumentHidden: boolean;
+    txSearchTimeMin: number;
 }
