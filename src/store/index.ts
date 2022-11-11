@@ -1,6 +1,7 @@
 import { removeSpaceAndToLowerCase } from './../utils/stringTools';
 import { getRelayersNameListMock } from './../api/relayers';
 import { IIbcchain } from './../types/interface/index.interface';
+import { getTxSearchCondition } from '@/api/transfers';
 import { defineStore } from 'pinia';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
 import moveDecimal from 'move-decimal-point';
@@ -29,7 +30,8 @@ export const useIbcStatisticsChains = defineStore('global', {
             isShow500: false,
             ibcTxs: [],
             isDocumentHidden: false,
-            relayerNames: []
+            relayerNames: [],
+            txSearchTimeMin: 0
         };
     },
     getters: {
@@ -59,6 +61,10 @@ export const useIbcStatisticsChains = defineStore('global', {
     },
     actions: {
         async initStateAction() {
+            const localTxSearchTimeMin = localStorage.getItem('txSearchTimeMin');
+            if (localTxSearchTimeMin) {
+                this.txSearchTimeMin = Number(localTxSearchTimeMin) || 0;
+            }
             const promiseArray = [];
             if (this.ibcBaseDenoms.length <= 0) {
                 promiseArray.push(this.getIbcBaseDenomsAction);
@@ -69,6 +75,7 @@ export const useIbcStatisticsChains = defineStore('global', {
             if (this.relayerNames.length <= 0) {
                 promiseArray.push(this.getIbcRelayerNamesAction);
             }
+            promiseArray.push(this.getIbcTxSearchCondition);
             await Promise.all(promiseArray.map((item) => item()));
         },
         async getIbcBaseDenomsAction() {
@@ -92,6 +99,17 @@ export const useIbcStatisticsChains = defineStore('global', {
                     this.isShow500 = true;
                 }
                 console.log('getIbcChains', error);
+            }
+        },
+        async getIbcTxSearchCondition() {
+            try {
+                const { code, data } = await getTxSearchCondition();
+                if (code == API_CODE.success) {
+                    this.txSearchTimeMin = data.tx_time_min;
+                    localStorage.setItem('txSearchTimeMin', data.tx_time_min?.toString());
+                }
+            } catch (error) {
+                console.log('getIbcTxSearchCondition', error);
             }
         },
         // async getIbcDenomsAction() {

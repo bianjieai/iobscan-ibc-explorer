@@ -95,8 +95,7 @@
                         <template #content>
                             <div>
                                 <p class="popover_c">
-                                    Date selection range from the first IBC Transfer to the latest
-                                    IBC Transfer
+                                    Supports filtering within the latest 500k transfers found.
                                 </p>
                             </div>
                         </template>
@@ -349,17 +348,24 @@
     const { pickerPlaceholderColor, onOpenChangeRangePicker } = usePickerPlaceholder();
     useSortIbcChains(ibcChains);
     const { url, searchToken, inputFlag, dateRange, chainId, queryParams } = useRouteParams();
-    const { isHashFilterParams, isIbcTxTotalAndHashFilter } = useSubTitleFilter(
-        pagination,
-        ibcStatisticsTxs
-    );
-    const { queryDatas, getIbcTxsData } = useQueryDatas(
-        showTransferLoading,
-        pagination,
-        getIbcTxs,
+
+    const {
+        queryDatas,
+        getIbcTxsData,
         isHashFilterParams,
-        tableDatas,
-        queryParams
+        ibcTxTotalMoreThan500k,
+        isShowValuedText,
+        countLoading,
+        txsValue
+    } = useQueryDatas(showTransferLoading, pagination, getIbcTxs, tableDatas, queryParams);
+    const { isIbcTxTotalAndHashFilter } = useSubTitleFilter(
+        isHashFilterParams,
+        ibcTxTotalMoreThan500k,
+        pagination,
+        ibcStatisticsTxs,
+        isShowValuedText,
+        countLoading,
+        txsValue
     );
     const {
         chainDropdown,

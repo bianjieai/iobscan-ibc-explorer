@@ -17,12 +17,12 @@ export const formatSubTitle = (
         )} ${unit} found`;
     } else {
         if (!isHaveParams) {
-            return `Last 500k ${unit} found`;
+            return `Latest 500k ${unit} found`;
         } else {
             if (conditionCount === TOTAL_BOUND) {
-                return `Last 500k ${unit} found`;
+                return `Latest 500k ${unit} found`;
             }
-            return `${formatBigNumber(conditionCount, 0)} of the last 500k ${unit} found`;
+            return `${formatBigNumber(conditionCount, 0)} of the latest 500k ${unit} found`;
         }
     }
 };
