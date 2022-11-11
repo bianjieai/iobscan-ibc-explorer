@@ -14,6 +14,7 @@
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
                 }"
+                :is-disabled="isShowModal"
                 @on-change="onSelectedChain"
             />
             <div class="relayer_transfer__search_wrap">
@@ -25,6 +26,7 @@
                     format="YYYY-MM-DD"
                     separator="-"
                     :placeholder="['Start Date', 'End Date']"
+                    :disabled="isShowModal"
                     @open-change="onOpenChangeRangePicker"
                     @change="onChangeRangePicker"
                 >
@@ -145,6 +147,7 @@
     import { PAGE_PARAMETERS } from '@/constants';
     interface IRelayerTransfer {
         servedChainsInfo: string[];
+        isShowModal: boolean;
     }
     const props = defineProps<IRelayerTransfer>();
     const { servedChainsInfo } = toRefs(props);
@@ -194,6 +197,13 @@
                 }
             }
             border: 1px solid var(--bj-border-color);
+        }
+        :deep(.ant-picker-disabled) {
+            background: #fff;
+            &:hover {
+                border-color: var(--bj-border-color);
+                cursor: default;
+            }
         }
         &__reset_btn {
             margin-left: 8px;

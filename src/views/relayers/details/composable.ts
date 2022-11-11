@@ -51,12 +51,11 @@ export const useGetRelayerDetailsInfo = () => {
                         relayerInfo.value.total_relayed_value.count = data.relayed_total_txs_value;
                         relayerInfo.value.total_txs.count = relayedTotalTxs.value;
                         relayerInfo.value.served_channel_pairs.count =
-                            data.channel_pair_info.length;
+                            data.channel_pair_info?.length;
                         relayerInfo.value.total_fee_cost.count = data.total_fee_value;
                         channelPairsInfo.value = data.channel_pair_info;
                     }
-                } else if (code === API_CODE.systemAbnormality) {
-                    // Todo shan 需要修改 code 对应的值，界面中要引入弹窗，通过改值控制弹窗展示与否
+                } else if (code === API_CODE.unRegisteredRelayer) {
                     isShowModal.value = true;
                 } else {
                     ibcStatisticsChainsStore.isShow500 = true;
@@ -70,6 +69,11 @@ export const useGetRelayerDetailsInfo = () => {
         };
         getRelayerDetailsByRelayerId();
     };
+    const subTitle = computed(() => {
+        return `A total of ${
+            isShowModal.value ? '--' : servedChainsInfo.value?.length
+        } blockchains served`;
+    });
     onMounted(() => {
         getRelayerDetailsInfo();
     });
@@ -81,7 +85,8 @@ export const useGetRelayerDetailsInfo = () => {
         relayedSuccessTxs,
         relayerInfo,
         channelPairsInfo,
-        isShowModal
+        isShowModal,
+        subTitle
     };
 };
 
@@ -233,7 +238,7 @@ export const useTransferTypeChart = (
                         formatter: () => {
                             return `
                                 <div style="display: flex; align-items: center;">
-                                <div style="border-top: 8px solid transparent;border-right: 10px solid #3D50FF;border-bottom: 8px solid transparent;border-left: 10px solid transparent;"></div>
+                                <div style="border-top: 5px solid transparent;border-right: 8px solid #3D50FF;border-bottom: 5px solid transparent;border-left: 8px solid transparent;"></div>
                                 <div style="display: flex;margin-left: 4px;background: #FFFFFF;box-shadow: 0px 2px 8px 0px #D9DEEC;border-radius: 4px;border: 1px solid #D9DFEE;">
                                         <div style="width: 8px;height: 50px;background-color:rgba(61, 80, 255, 0.1);"></div>
                                         <div style="padding: 14px 12px;">
@@ -475,13 +480,15 @@ export const useSelectedSearch = (
     const endTxTime = ref<number>(0);
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
-            if (!newServedChainsInfo.length) return [];
+            if (!newServedChainsInfo?.length) return [];
+            const chainInfoArr: IIbcchain[] = [];
             for (const i in newServedChainsInfo) {
                 const chainInfo = await ChainHelper.getChainInfoByKey(newServedChainsInfo[i]);
                 if (chainInfo) {
-                    relayerChain.value.push(chainInfo);
+                    chainInfoArr.push(chainInfo);
                 }
             }
+            relayerChain.value = [...chainInfoArr];
         };
         sortServedChainsInfo();
     });
@@ -538,13 +545,10 @@ export const useSelectedSearch = (
         getRelayerTransferTxs(params, 1, 5, true);
         getRelayerTransferTxs(params, pagination.current, pagination.pageSize, false);
     };
-    const chainParams = ref<string>('');
     watch(defaultChain, (newDefaultChain) => {
         if (newDefaultChain) {
-            chainParams.value = newDefaultChain.id;
+            queryDatas({ chain: newDefaultChain.id });
         }
-        // Todo shan 请求次数处理
-        queryDatas({ chain: chainParams.value });
     });
     const onSelectedChain = (selectedChainInfo?: IDataItem) => {
         (window as any).gtag(

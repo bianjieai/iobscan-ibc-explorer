@@ -64,7 +64,7 @@ function formatNum(numOrigin: any) {
 }
 
 function formatBigNumber(value: any, num?: number) {
-    if (value == 0) {
+    if (value == 0 || value === DEFAULT_DISPLAY_TEXT) {
         return value;
     }
     return new BigNumber(value).toFormat(num);

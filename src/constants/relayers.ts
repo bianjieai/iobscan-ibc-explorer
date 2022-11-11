@@ -104,25 +104,27 @@ export const RELAYER_STATUS = {
 export const RELAYER_DETAILS_INFO: IDenomStatistic = {
     total_relayed_value: {
         statistics_name: 'total_relayed_value',
-        count: 0,
+        count: '--',
         no_link: true,
-        unit: UNIT_SIGNS
+        unit: UNIT_SIGNS,
+        decimal: 0
     },
     total_txs: {
         statistics_name: 'total_txs',
-        count: 0,
+        count: '--',
         no_link: true
     },
     served_channel_pairs: {
         statistics_name: 'served_channel_pairs',
-        count: 0,
+        count: '--',
         no_link: true
     },
     total_fee_cost: {
         statistics_name: 'total_fee_cost',
-        count: 0,
+        count: '--',
         no_link: true,
-        unit: UNIT_SIGNS
+        unit: UNIT_SIGNS,
+        decimal: 2
     }
 };
 

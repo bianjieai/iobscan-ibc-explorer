@@ -11,11 +11,11 @@
                 <svg-icon class="cursor" :icon-name="'icon-close'" @click="closeModal"></svg-icon>
             </div>
             <div class="modal_content__info">
-                <p>{{ props.showText }} </p>
+                <span>{{ props.showText }} </span>
             </div>
             <div class="mt-16 mb-16">
-                <div class="modal_content__button" @click="confirmButton">
-                    <p>{{ props.goText }}</p>
+                <div class="modal_content__button cursor" @click="confirmButton">
+                    {{ props.goText }}
                 </div>
             </div>
         </div>
@@ -117,16 +117,13 @@
             &__button {
                 padding: 6px 33px;
                 width: 86px;
+                font-size: 16px;
+                font-weight: 400;
+                color: #ffffff;
+                line-height: 20px;
                 background: var(--bj-primary-color);
                 border-radius: 4px;
                 margin: 0 auto;
-                cursor: pointer;
-                p {
-                    font-size: 16px;
-                    font-weight: 400;
-                    color: #ffffff;
-                    line-height: 20px;
-                }
             }
         }
     }
