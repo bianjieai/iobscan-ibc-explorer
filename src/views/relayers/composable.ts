@@ -11,6 +11,7 @@ import { useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
 import { RelayersListKey, RelayersSearchType } from '@/constants/relayers';
+import { Ref } from 'vue';
 
 export const useGetRelayersList = (loading: Ref<boolean>) => {
     const router = useRouter();
@@ -39,6 +40,18 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
         );
         other.sort((a, b) => a.chain.localeCompare(b.chain));
         return [...cosmos, ...irishub, ...other];
+    };
+    const searchNoResult = ref(false);
+    const handleSerchNoResult = (
+        dataLength: number,
+        relayer_name?: string,
+        relayer_address?: string
+    ) => {
+        if ((relayer_address || relayer_name) && dataLength <= 0) {
+            searchNoResult.value = true;
+        } else {
+            searchNoResult.value = false;
+        }
     };
     const getRelayersList = async (params: IRequestRelayerList) => {
         const { loading } = params;
@@ -89,6 +102,11 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
                                 allData = [...(allData || []), ...formatItems];
                                 loading && (loading.value = false);
                                 relayersList.value = allData;
+                                handleSerchNoResult(
+                                    relayersList.value.length,
+                                    params.relayer_name,
+                                    params.relayer_address
+                                );
                             } else {
                                 allData = [...(allData || []), ...formatItems];
                                 allParams.page_num++;
@@ -97,6 +115,11 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
                         } else {
                             loading && (loading.value = false);
                             relayersList.value = allData;
+                            handleSerchNoResult(
+                                relayersList.value.length,
+                                params.relayer_name,
+                                params.relayer_address
+                            );
                             return;
                         }
                     } else {
@@ -105,6 +128,11 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
                 } else {
                     loading && (loading.value = false);
                     relayersList.value = allData;
+                    handleSerchNoResult(
+                        relayersList.value.length,
+                        params.relayer_name,
+                        params.relayer_address
+                    );
                     console.error(message);
                 }
             } catch (error) {
@@ -112,6 +140,11 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
                     loading && (loading.value = false);
                 }
                 relayersList.value = allData;
+                handleSerchNoResult(
+                    relayersList.value.length,
+                    params.relayer_name,
+                    params.relayer_address
+                );
                 console.error(error);
             } finally {
                 if (!params.relayer_name && !params.relayer_address) {
@@ -163,7 +196,8 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
         relayersList,
         getRelayersList,
         subtitle,
-        searchFn
+        searchFn,
+        searchNoResult
     };
 };
 
