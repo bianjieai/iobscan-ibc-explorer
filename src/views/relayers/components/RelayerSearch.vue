@@ -178,6 +178,10 @@
                         padding: 8px 5px 10px 8px;
                         box-sizing: border-box;
                         height: 100%;
+                        width: 0;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
                     }
                     &__svg_c {
                         margin: 0 8px 0px 5px;
@@ -219,7 +223,6 @@
         background-color: rgba(61, 80, 255, 0.04);
         color: rgba(61, 80, 255, 1);
     }
-    // todo dj 小屏幕样式待调整
     @media screen and (max-width: 606px) {
         .search__content {
             flex: 1;

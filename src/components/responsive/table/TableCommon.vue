@@ -325,7 +325,8 @@
     }
     :deep(.ant-table-container) {
         width: 1150px;
-        min-height: 300px;
+        // min-height: 300px;
+        min-height: 436px;
     }
     :deep(div.ant-table-body) {
         overflow-y: auto !important;
