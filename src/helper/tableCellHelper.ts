@@ -114,17 +114,15 @@ export const formatTxStatus = (status: number | string) => {
     }
 };
 
-export const changeColor = computed(() => {
-    return (value: string | number) => {
-        switch (value) {
-            case TRANSFER_DETAILS_STATUS.SUCCESS.label:
-            case TRANSFER_DETAILS_STATUS.SUCCESS.value:
-                return 'success_color';
-            case TRANSFER_DETAILS_STATUS.FAILED.label:
-            case TRANSFER_DETAILS_STATUS.FAILED.value:
-                return 'failed_color';
-            default:
-                return '';
-        }
-    };
-});
+export const changeColor = (value: string | number) => {
+    switch (value) {
+        case TRANSFER_DETAILS_STATUS.SUCCESS.label:
+        case TRANSFER_DETAILS_STATUS.SUCCESS.value:
+            return 'success_color';
+        case TRANSFER_DETAILS_STATUS.FAILED.label:
+        case TRANSFER_DETAILS_STATUS.FAILED.value:
+            return 'failed_color';
+        default:
+            return '';
+    }
+};

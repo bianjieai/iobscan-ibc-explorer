@@ -285,7 +285,7 @@ export const useTransferTypeChart = (
                         }
                     ]
                 };
-                // Todo shan 需添加销毁操作及监听事件调整
+                // Todo shan 需添加销毁操作及监听事件调整，适配方案研究
                 const transferTypeChart = echarts.init(newTransferTypeDom);
                 option && transferTypeChart.setOption(option, true);
                 window.onresize = () => {
@@ -508,6 +508,7 @@ export const useSelectedSearch = (
         return relayerChainData.value[0]?.children[0];
     });
     const searchChain = ref<string>(defaultChain.value?.id);
+    // Todo shan params 类型需要更改
     const getRelayerTransferTxs = (params: any, page_num = 1, page_size = 5, use_count = false) => {
         const getRelayerTransferTxsData = async () => {
             if (loading) {
@@ -541,6 +542,7 @@ export const useSelectedSearch = (
         };
         getRelayerTransferTxsData();
     };
+    // Todo shan params 类型需要更改
     const queryDatas = (params: any) => {
         getRelayerTransferTxs(params, 1, 5, true);
         getRelayerTransferTxs(params, pagination.current, pagination.pageSize, false);
