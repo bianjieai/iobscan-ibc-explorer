@@ -5,6 +5,7 @@
         <PageTitle title="IBC Relayers" :subtitle="subtitle" />
         <RelayerSearch class="relayer_search" @on-search="searchFn" />
         <TableCommon
+            v-show="!searchNoResult"
             :loading="loading"
             :data="relayersList"
             :need-custom-columns="needCustomColumns"
@@ -30,7 +31,6 @@
             </template>
 
             <template #relayers_served_chains="{ record, column }">
-                <!-- todo dj 悬浮区域待调整 -->
                 <ChainPopover
                     :change-modal="changeModal"
                     :relayer-id="record.relayer_id"
@@ -66,7 +66,17 @@
                 <div>{{ record.relayers_last_updated_format }}</div>
             </template>
         </TableCommon>
-        <!-- todo dj 搜索无结果 -->
+        <div v-show="searchNoResult" class="relayer_no_result_c">
+            <LoadingComponent
+                v-show="loading"
+                class="relayer_no_result_c__loading"
+                :is-page-loading="false"
+            />
+            <NoResult
+                tip-description="Try to search with relayer name or address."
+                class="relayer_no_result_c__content"
+            />
+        </div>
     </PageContainer>
 </template>
 
@@ -81,7 +91,7 @@
     import { formatBigNumber } from '@/helper/parseStringHelper';
     const { loading } = useLoading();
     const { showModal, changeModal } = useShowModal();
-    const { relayersList, subtitle, searchFn } = useGetRelayersList(loading);
+    const { relayersList, subtitle, searchFn, searchNoResult } = useGetRelayersList(loading);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
     const { goRelayersDetails } = useGoRelayersDetails(changeModal);
 </script>
@@ -94,5 +104,28 @@
     }
     .relayer_search {
         margin-top: 26px;
+    }
+    .relayer_no_result_c {
+        position: relative;
+        &__loading {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.6);
+            z-index: 10;
+        }
+        &__content {
+            margin-top: 16px;
+            padding: 0;
+            :deep(.no_result__content) {
+                padding: 0;
+                .result_icon {
+                    margin: 100px 0 224px 0;
+                }
+            }
+        }
     }
 </style>

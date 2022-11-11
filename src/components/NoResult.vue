@@ -1,18 +1,22 @@
 <template>
     <div class="no_result">
         <div class="no_result__content">
-            <p class="search_result">
-                <span class="search_result__label">Search Results</span>
-                <span class="search_result__value">{{ searchInputValue.value[0] }}</span>
+            <p v-show="props.titleLabel" class="search_result">
+                <span class="search_result__label">{{ props.titleLabel }}</span>
+                <span class="search_result__value">{{ props.titleValue }}</span>
             </p>
             <div class="result_icon">
                 <div class="result_icon__wrap">
                     <div class="result_no_data_img_content">
-                        <img src="../../../assets/no_datas.png" alt="" />
+                        <img src="../assets/no_datas.png" alt="" />
                     </div>
-                    <p class="result_tip_text">There is no valid result.</p>
-                    <p class="result_description">Try to search with Transaction.</p>
-                    <a-button class="back_home_button" type="primary" @click="toHome"
+                    <p class="result_tip_text">{{ props.tipText }}</p>
+                    <p class="result_description">{{ props.tipDescription }}</p>
+                    <a-button
+                        v-show="props.buttonFn"
+                        class="back_home_button"
+                        type="primary"
+                        @click="buttonFn"
                         >Back Home</a-button
                     >
                 </div>
@@ -22,8 +26,17 @@
 </template>
 
 <script setup lang="ts">
-    import { useNoResult } from '../composable';
-    const { searchInputValue, toHome } = useNoResult();
+    interface IProps {
+        titleLabel?: string;
+        titleValue?: string;
+        buttonFn?: () => void;
+        tipText?: string;
+        tipDescription?: string;
+    }
+    const props = withDefaults(defineProps<IProps>(), {
+        tipText: 'There is no valid result.',
+        tipDescription: 'Try to search with Transaction.'
+    });
 </script>
 
 <style scoped lang="less">
@@ -94,6 +107,7 @@
                     .result_description {
                         margin-top: 10px;
                         font-size: var(--bj-font-size-normal);
+                        line-height: 14px;
                         font-weight: 400;
                         color: rgba(0, 0, 0, 0.35);
                     }

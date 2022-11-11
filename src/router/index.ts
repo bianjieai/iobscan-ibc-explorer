@@ -48,7 +48,7 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: '',
                 name: ROUTE_INFO.searchResults.name,
-                component: () => import('../views/transfers/components/NoResult.vue'),
+                component: () => import('../views/transfers/components/NoTxResult.vue'),
                 meta: {}
             }
         ]

@@ -80,7 +80,6 @@
         font-size: 14px;
         font-weight: 400;
         color: #000000;
-        line-height: 18px;
     }
     .chain_popover_c {
         padding: 4px 16px 0 12px;
