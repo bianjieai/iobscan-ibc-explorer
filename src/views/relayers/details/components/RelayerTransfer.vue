@@ -66,10 +66,15 @@
             </div>
         </div>
         <div class="relayer_transfer__table">
+            <loading-component
+                v-if="rtTableLoading && !relayerTransferTableData"
+                :type="LoadingType.container"
+                :height="300"
+            />
             <TableCommon
                 class="relayer_transfer__table__content"
                 :has-padding-lr="false"
-                :loading="loading"
+                :loading="rtTableLoading"
                 :data="relayerTransferTableData"
                 row-key="record_id"
                 :need-custom-columns="needCustomColumns"
@@ -138,21 +143,15 @@
     import { getRestString } from '@/helper/parseStringHelper';
     import { formatTxStatus, changeColor } from '@/helper/tableCellHelper';
     import { dayjsFormatDate } from '@/utils/timeTools';
-    import {
-        useIbcChains,
-        useLoading,
-        useNeedCustomColumns,
-        usePickerPlaceholder
-    } from '@/composables';
+    import { useIbcChains, useNeedCustomColumns, usePickerPlaceholder } from '@/composables';
     import { usePagination, useSelectedSearch } from '../composable';
-    import { PAGE_PARAMETERS } from '@/constants';
+    import { LoadingType, PAGE_PARAMETERS } from '@/constants';
     interface IRelayerTransfer {
         servedChainsInfo: string[];
         isShowModal: boolean;
     }
     const props = defineProps<IRelayerTransfer>();
     const { servedChainsInfo } = toRefs(props);
-    const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
     const { pagination } = usePagination();
     const {
@@ -166,8 +165,9 @@
         onClickReset,
         dateRange,
         disabledDate,
-        onChangeRangePicker
-    } = useSelectedSearch(servedChainsInfo, loading, pagination);
+        onChangeRangePicker,
+        rtTableLoading
+    } = useSelectedSearch(servedChainsInfo, pagination);
     const getPopupContainer = (): HTMLElement =>
         document.querySelector('.relayer_transfer__search')!;
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayerDetails);
@@ -178,6 +178,9 @@
     .relayer_transfer {
         &__search {
             .flex(row, nowrap, flex-start, center);
+            :deep(.overlay) {
+                min-height: 100px !important;
+            }
         }
         &__search_wrap {
             .flex(row, nowrap, flex-start, center);
@@ -213,6 +216,7 @@
         &__table {
             &__content {
                 :deep(.ant-table-thead) {
+                    font-family: GolosUI_Medium;
                     tr {
                         th {
                             background: #f8fafd !important;
@@ -223,6 +227,9 @@
                     &:nth-of-type(1) {
                         padding-left: 16px;
                     }
+                }
+                :deep(.ant-table-container) {
+                    min-height: 300px;
                 }
             }
             &__tx_hash {

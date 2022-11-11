@@ -107,12 +107,14 @@ export const useGetTransferTypeData = () => {
     const recvPacketTxs = ref<number>(0);
     const acknowledgePacketTxs = ref<number>(0);
     const timeoutPacketTxs = ref<number>(0);
+    const transferTypeLoading = ref<boolean>(true);
     const getTransferTypeTxsData = () => {
         const route = useRoute();
         const relayerId: string = route?.params?.relayerId as string;
         const getTransferTypeTxs = async () => {
             try {
                 const { code, data, message } = await getTransferTypeTxsAPI(relayerId);
+                transferTypeLoading.value = false;
                 if (code === API_CODE.success) {
                     if (data) {
                         recvPacketTxs.value = data.recv_packet_txs;
@@ -125,6 +127,7 @@ export const useGetTransferTypeData = () => {
                     console.error(message);
                 }
             } catch (error) {
+                transferTypeLoading.value = false;
                 console.error(error);
             }
         };
@@ -188,7 +191,8 @@ export const useGetTransferTypeData = () => {
         totalTxsCount,
         recvPacketTxsPercent,
         acknowledgePacketTxsPercent,
-        timeoutPacketTxsPercent
+        timeoutPacketTxsPercent,
+        transferTypeLoading
     };
 };
 
@@ -465,7 +469,6 @@ export const usePagination = () => {
 
 export const useSelectedSearch = (
     servedChainsInfo: Ref<string[]>,
-    loading: Ref<boolean>,
     pagination: IPaginationParams
 ) => {
     const router = useRouter();
@@ -478,6 +481,7 @@ export const useSelectedSearch = (
         current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
     const startTxTime = ref<number>(0);
     const endTxTime = ref<number>(0);
+    const rtTableLoading = ref<boolean>(true);
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
             if (!newServedChainsInfo?.length) return [];
@@ -511,9 +515,6 @@ export const useSelectedSearch = (
     // Todo shan params 类型需要更改
     const getRelayerTransferTxs = (params: any, page_num = 1, page_size = 5, use_count = false) => {
         const getRelayerTransferTxsData = async () => {
-            if (loading) {
-                loading.value = true;
-            }
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
                     page_num,
@@ -521,7 +522,7 @@ export const useSelectedSearch = (
                     use_count,
                     ...params
                 });
-                loading && (loading.value = false);
+                rtTableLoading.value = false;
                 if (code === API_CODE.success) {
                     if (data) {
                         if (typeof data === 'number') {
@@ -536,7 +537,7 @@ export const useSelectedSearch = (
                     console.error(message);
                 }
             } catch (error) {
-                loading && (loading.value = false);
+                rtTableLoading.value = false;
                 console.error(error);
             }
         };
@@ -634,7 +635,8 @@ export const useSelectedSearch = (
         onClickReset,
         dateRange,
         disabledDate,
-        onChangeRangePicker
+        onChangeRangePicker,
+        rtTableLoading
     };
 };
 

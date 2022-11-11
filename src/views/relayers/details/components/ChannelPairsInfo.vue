@@ -52,11 +52,16 @@
                 margin-top: 0;
             }
         }
+        // Todo shan 适配序号宽度
         &__index {
+            display: inline-block;
+            width: 24px !important;
             font-size: var(--bj-font-size-sub-title);
             font-weight: 400;
             color: var(--bj-text-normal);
             line-height: 22px;
+            text-align: right;
+            white-space: nowrap;
         }
         &__pair {
             flex: 1;
