@@ -62,7 +62,7 @@ export const getRelayedTrendMock = async (params: IRequestRelayedTrend) => {
     return requestMock<IResponse<IResponseRelayerTrend[]>>({
         url,
         method: 'get',
-        params: params
+        params: { days: params.days }
     });
 };
 

@@ -36,7 +36,7 @@
 
 <style lang="less" scoped>
     .relayed_trend_c {
-        width: 756px;
+        max-width: 756px;
         :deep(.info_card__primary) {
             padding: 0 24px 24px 24px;
         }
@@ -52,9 +52,11 @@
             }
         }
     }
+    // 1247px
     @media screen and (max-width: 1183px) {
         .relayed_trend_c {
             width: 100%;
+            max-width: 100%;
             :deep(.info_card__primary) {
             }
             &__chart_wrap {

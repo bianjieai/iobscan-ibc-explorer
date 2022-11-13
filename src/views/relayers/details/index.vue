@@ -152,8 +152,12 @@
         }
         &__charts_wrap {
             .flex(row, nowrap, space-between, flex-start);
+            .info_card {
+                margin-top: 16px;
+            }
             &__left {
                 flex: 1;
+                max-width: 756px;
                 &__top {
                 }
                 &__bottom {
@@ -180,9 +184,11 @@
             &__right {
                 margin-left: 16px;
                 flex: 1;
+                max-width: 428px;
             }
         }
     }
+    // 1247px
     @media screen and (max-width: 1183px) {
         .relayer_details {
             &__statistic {
@@ -191,6 +197,7 @@
                 flex-direction: column;
                 &__left {
                     width: 100%;
+                    max-width: 100%;
                     &__top {
                     }
                     &__bottom {
@@ -207,6 +214,9 @@
                     }
                 }
                 &__right {
+                    margin-left: 0;
+                    width: 100%;
+                    max-width: 100%;
                 }
             }
         }
