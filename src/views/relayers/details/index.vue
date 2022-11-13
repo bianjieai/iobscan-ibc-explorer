@@ -146,6 +146,7 @@
 
 <style lang="less" scoped>
     .relayer_details {
+        padding: 48px 24px 100px;
         &__statistic {
             margin-top: 24px;
         }
@@ -179,6 +180,34 @@
             &__right {
                 margin-left: 16px;
                 flex: 1;
+            }
+        }
+    }
+    @media screen and (max-width: 1183px) {
+        .relayer_details {
+            &__statistic {
+            }
+            &__charts_wrap {
+                flex-direction: column;
+                &__left {
+                    width: 100%;
+                    &__top {
+                    }
+                    &__bottom {
+                        &__transfer_type_wrap {
+                            &__nodatas {
+                            }
+                        }
+                        &__transfer_type {
+                        }
+                        &__success_rate {
+                            &__nodatas {
+                            }
+                        }
+                    }
+                }
+                &__right {
+                }
             }
         }
     }
