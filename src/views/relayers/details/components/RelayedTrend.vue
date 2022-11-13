@@ -24,6 +24,7 @@
     import { useRelayedTrend } from '../composable';
 
     const {
+        relayedTrendDom,
         relayedTrendChoose,
         relayedTrendChooseBtnFn,
         relayedTrendLoading,

@@ -968,6 +968,7 @@ export const useRelayedTrend = () => {
         window.removeEventListener('resize', resizeFn);
     });
     return {
+        relayedTrendDom,
         relayedTrendChoose,
         relayedTrendChooseBtnFn,
         relayedTrendLoading,
