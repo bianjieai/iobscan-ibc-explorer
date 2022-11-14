@@ -33,6 +33,12 @@
     .transfer_type {
         .flex(column, nowrap, flex-start, center);
         padding: 16px 16px 12px;
+        &:first-child {
+            padding-left: 0;
+        }
+        &:last-child {
+            padding-right: 0;
+        }
         &__type {
             margin-top: 12px;
             font-size: var(--bj-font-size-sub-title);
