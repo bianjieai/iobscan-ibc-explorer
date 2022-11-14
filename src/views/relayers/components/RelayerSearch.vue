@@ -58,6 +58,7 @@
                             :placeholder="placeholder"
                             class="search__content__complete__c__input"
                             type="text"
+                            @keydown.enter="searchFn"
                             @focus="onFocus"
                             @blur="onBlur"
                         />

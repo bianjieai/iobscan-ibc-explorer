@@ -46,6 +46,7 @@ export const useRelayerSearch = (emits: any) => {
 
     const route = useRoute();
     const initDataByUrl = () => {
+        // todo dj 初始化
         const relayerNameQuery = route.query.relayer_name as string | undefined;
         const relayerAddressQuery = route.query.relayer_address as string | undefined;
         if (relayerNameQuery && relayerAddressQuery) {

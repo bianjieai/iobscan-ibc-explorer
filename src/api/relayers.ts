@@ -11,7 +11,10 @@ import {
     IResponseRelayerList,
     ITransferTypeTxs,
     IResponseRelayerTrend,
-    IRequestRelayedTrend
+    IRequestRelayedTrend,
+    IRequestTotalRelayedValueOrFee,
+    IResponseTotalRelayedValue,
+    IResponseTotalFeeCost
 } from '@/types/interface/relayers.interface';
 
 export const getRelayersListAPI = async (params: IRequestRelayerList) => {
@@ -41,12 +44,13 @@ export const getRelayersNameListAPI = async () => {
     });
 };
 
-export const getRelayersNameListMock = async () => {
-    return requestMock<IResponse<string[]>>({
-        url: API_URL.ibcRelayerRelayerName,
-        method: 'get'
-    });
-};
+// todo dj mock 删除
+// export const getRelayersNameListMock = async () => {
+//     return requestMock<IResponse<string[]>>({
+//         url: API_URL.ibcRelayerRelayerName,
+//         method: 'get'
+//     });
+// };
 
 export const getRelayedTrendAPI = async (params: IRequestRelayedTrend) => {
     const url = API_URL.ibcRelayedTrend.replace(urlReplacePlaceholder, params.relayer_id);
@@ -57,12 +61,47 @@ export const getRelayedTrendAPI = async (params: IRequestRelayedTrend) => {
     });
 };
 
-export const getRelayedTrendMock = async (params: IRequestRelayedTrend) => {
-    const url = API_URL.ibcRelayedTrend.replace(urlReplacePlaceholder, params.relayer_id);
-    return requestMock<IResponse<IResponseRelayerTrend[]>>({
+// todo dj mock 删除
+// export const getRelayedTrendMock = async (params: IRequestRelayedTrend) => {
+//     const url = API_URL.ibcRelayedTrend.replace(urlReplacePlaceholder, params.relayer_id);
+//     return requestMock<IResponse<IResponseRelayerTrend[]>>({
+//         url,
+//         method: 'get',
+//         params: { days: params.days }
+//     });
+// };
+
+export const getTotalRelayedValueAPI = async (params: IRequestTotalRelayedValueOrFee) => {
+    const url = API_URL.ibcTotalRelayedValue.replace(urlReplacePlaceholder, params.relayer_id);
+    return request<IResponse<IResponseTotalRelayedValue>>({
         url,
-        method: 'get',
-        params: { days: params.days }
+        method: 'get'
+    });
+};
+
+// todo dj mock 删除
+export const getTotalRelayedValueMock = async (params: IRequestTotalRelayedValueOrFee) => {
+    const url = API_URL.ibcTotalRelayedValue.replace(urlReplacePlaceholder, params.relayer_id);
+    return requestMock<IResponse<IResponseTotalRelayedValue>>({
+        url,
+        method: 'get'
+    });
+};
+
+export const getTotalFeeCostAPI = async (params: IRequestTotalRelayedValueOrFee) => {
+    const url = API_URL.ibcTotalFeeCost.replace(urlReplacePlaceholder, params.relayer_id);
+    return request<IResponse<IResponseTotalFeeCost>>({
+        url,
+        method: 'get'
+    });
+};
+
+// todo dj mock 删除
+export const getTotalFeeCostMock = async (params: IRequestTotalRelayedValueOrFee) => {
+    const url = API_URL.ibcTotalFeeCost.replace(urlReplacePlaceholder, params.relayer_id);
+    return requestMock<IResponse<IResponseTotalFeeCost>>({
+        url,
+        method: 'get'
     });
 };
 
