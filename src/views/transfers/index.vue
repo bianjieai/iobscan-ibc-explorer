@@ -674,7 +674,7 @@
     }
     @media screen and (max-width: 768px) {
         .transfer {
-            :deep(.page_title_container) {
+            :deep(.page_title) {
                 display: inline-flex;
                 text-align: left;
                 .flex {

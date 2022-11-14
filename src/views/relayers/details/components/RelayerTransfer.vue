@@ -152,8 +152,7 @@
             background: #fff;
             &:hover {
                 border-color: var(--bj-border-color);
-                // Todo shan 禁用时鼠标样式更换
-                cursor: default;
+                cursor: url('../../../../assets/forbidden.png'), not-allowed;
             }
         }
         &__reset_btn {
