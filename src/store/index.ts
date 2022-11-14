@@ -1,6 +1,6 @@
-import { removeSpaceAndToLowerCase } from './../utils/stringTools';
-import { getRelayersNameListMock } from './../api/relayers';
-import { IIbcchain } from './../types/interface/index.interface';
+import { removeSpaceAndToLowerCase } from '@/utils/stringTools';
+import { getRelayersNameListAPI } from '@/api/relayers';
+import { IIbcchain } from '@/types/interface/index.interface';
 import { getTxSearchCondition } from '@/api/transfers';
 import { defineStore } from 'pinia';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
@@ -124,8 +124,7 @@ export const useIbcStatisticsChains = defineStore('global', {
         // },
         async getIbcRelayerNamesAction() {
             try {
-                // todo dj  mock => api
-                const { code, data } = await getRelayersNameListMock();
+                const { code, data } = await getRelayersNameListAPI();
                 if (code == API_CODE.success) {
                     if (data && data.length > 0) {
                         this.relayerNames = data.map((name) => {

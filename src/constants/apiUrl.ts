@@ -17,5 +17,7 @@ export const API_URL = {
     ibcRelayerDetailsUrl: 'ibc/relayer/',
     ibcRelayerRelayerName: '/ibc/relayer/names',
     ibcTxsSearchCondition: '/ibc/txs/searchCondition',
-    ibcRelayedTrend: `/ibc/relayer/${urlReplacePlaceholder}/relayedTrend`
+    ibcRelayedTrend: `/ibc/relayer/${urlReplacePlaceholder}/relayedTrend`,
+    ibcTotalRelayedValue: `/ibc/relayer/${urlReplacePlaceholder}/totalRelayedValue`,
+    ibcTotalFeeCost: `/ibc/relayer/${urlReplacePlaceholder}/totalFeeCost`
 };

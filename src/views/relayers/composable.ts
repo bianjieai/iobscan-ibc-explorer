@@ -1,9 +1,9 @@
+import { getRelayersListAPI } from '@/api/relayers';
 import ChainHelper from '@/helper/chainHelper';
 import { CHAINID } from '@/constants/index';
 import { ServedChainsInfo, chainPopoverProp } from '@/types/interface/relayers.interface';
 import { RelayerListItem } from '@/types/interface/relayers.interface';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
-import { getRelayersListMock } from '@/api/relayers';
 import { IRequestRelayerList, IResponseRelayerList } from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
 import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON, UNKNOWN } from '@/constants';
@@ -63,12 +63,10 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
         const allParams = { ...BASE_PARAMS, ...params };
         const getAllData = async () => {
             try {
-                // todo dj mock => api getRelayersListAPI
-                const result = await getRelayersListMock(allParams);
+                const result = await getRelayersListAPI(allParams);
                 const { code, data, message } = result;
                 if (code === API_CODE.success) {
-                    // todo dj || 条件待删除
-                    if (!allParams.use_count || true) {
+                    if (!allParams.use_count) {
                         const items = (data as IResponseRelayerList).items;
                         if (items && items.length > 0) {
                             const formatItems: RelayerListItem[] = [];
@@ -83,8 +81,7 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
                                     relayer_icon: item.relayer_icon,
                                     served_chains_infos: served_chains_infos,
                                     [RelayersListKey.relayersRelayerName]: item.relayer_name,
-                                    [RelayersListKey.relayersServedChains]:
-                                        item.served_chains_number,
+                                    [RelayersListKey.relayersServedChains]: item.served_chains,
                                     [RelayersListKey.relayersSuccessRate]:
                                         formatTransfer_success_txs(
                                             item.relayed_success_txs,
@@ -166,6 +163,12 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
         );
     });
     const searchFn = (searchType: string, searchValue: string) => {
+        // console.log('before', searchValue);
+        // searchValue.replaceAll(' ', '%20');
+        // console.log('after', searchValue);
+        // todo dj  编码需要商讨
+        // searchValue = encodeURI(searchValue);
+        console.log(searchValue);
         if (!searchValue) {
             router.replace('/relayers');
             getRelayersList({ ...BASE_PARAMS, loading: loading });

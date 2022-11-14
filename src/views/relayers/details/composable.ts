@@ -23,7 +23,7 @@ import dayjs from 'dayjs';
 import * as echarts from 'echarts';
 import { Ref } from 'vue';
 import { BigNumber } from 'bignumber.js';
-import { getRelayedTrendMock } from '@/api/relayers';
+import { getRelayedTrendAPI } from '@/api/relayers';
 import { RelayerTrendData, BarData } from '@/types/interface/relayers.interface';
 import { useWindowSize } from '@vueuse/core';
 
@@ -834,6 +834,7 @@ export const useRelayedTrend = () => {
             {
                 type: 'bar',
                 barWidth: 10,
+                barMinHeight: 1,
                 data: [],
                 itemStyle: {
                     color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
@@ -849,15 +850,18 @@ export const useRelayedTrend = () => {
             }
         ]
     };
-    let relayedTrendData = reactive<RelayerTrendData>({
+    const relayedTrendData = reactive<RelayerTrendData>({
         date: [],
         txs: [],
         txsValue: []
     });
     const relayedTrendChooseBtnFn = (index: number) => {
         relayedTrendChoose.value = index;
-        option.series[0].data =
-            relayedTrendChoose.value === 0 ? relayedTrendData.txs : relayedTrendData.txsValue;
+        if (relayedTrendChoose.value === 0) {
+            option.series[0].data = relayedTrendData.txs;
+        } else {
+            option.series[0].data = relayedTrendData.txsValue;
+        }
         relayedTrendChart && relayedTrendChart.setOption(option, true);
     };
     const changeOptionByWidth = () => {
@@ -867,10 +871,10 @@ export const useRelayedTrend = () => {
     };
     const getRelayedTrendData = async () => {
         try {
-            // todo dj mock => api
             relayedTrendLoading.value = true;
             relayedTrendNoData.value = false;
-            const { code, data, message } = await getRelayedTrendMock({
+            relayedTrendNetworkError.value = false;
+            const { code, data, message } = await getRelayedTrendAPI({
                 relayer_id: relayerId
             });
             relayedTrendLoading.value = false;
@@ -883,7 +887,7 @@ export const useRelayedTrend = () => {
                         const item = data[i];
                         originDates.push(item.date);
                         originTxs.push(item.txs);
-                        originTxsValues.push(item.txs_value);
+                        originTxsValues.push(item.txs_value || '0');
                     }
                     const maxTxs = BigNumber.max.apply(null, originTxs).toString();
                     const maxTxsValue = BigNumber.max.apply(null, originTxsValues).toString();
@@ -929,14 +933,15 @@ export const useRelayedTrend = () => {
                     relayedTrendData.txsValue = txsValue;
                 } else {
                     relayedTrendNoData.value = true;
-                    relayedTrendData = {
-                        date: [],
-                        txs: [],
-                        txsValue: []
-                    };
+                    relayedTrendData.date = [];
+                    relayedTrendData.txs = [];
+                    relayedTrendData.txsValue = [];
                 }
             } else if (code === API_CODE.unRegisteredRelayer) {
                 relayedTrendNoData.value = true;
+                relayedTrendData.date = [];
+                relayedTrendData.txs = [];
+                relayedTrendData.txsValue = [];
                 console.error(message);
             } else {
                 relayedTrendNetworkError.value = true;
@@ -959,8 +964,7 @@ export const useRelayedTrend = () => {
         await getRelayedTrendData();
         relayedTrendChart = echarts.init(relayedTrendDom.value as HTMLElement);
         option.xAxis[0].data = relayedTrendData.date;
-        option.series[0].data =
-            relayedTrendChoose.value === 0 ? relayedTrendData.txs : relayedTrendData.txsValue;
+        relayedTrendChooseBtnFn(0);
         changeOptionByWidth();
         relayedTrendChart.setOption(option, true);
         window.addEventListener('resize', resizeFn);
