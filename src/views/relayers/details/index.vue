@@ -307,6 +307,7 @@
     }
     @media screen and (max-width: 530px) {
         .relayer_details {
+            padding: 24px 16px 60px;
             &__statistic {
                 :deep(.horizontal_container) {
                     grid-template-columns: repeat(1, 1fr);
