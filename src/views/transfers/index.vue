@@ -95,8 +95,7 @@
                         <template #content>
                             <div>
                                 <p class="popover_c">
-                                    Date selection range from the first IBC Transfer to the latest
-                                    IBC Transfer
+                                    Supports filtering within the latest 500k transfers found.
                                 </p>
                             </div>
                         </template>
@@ -310,7 +309,6 @@
 </template>
 
 <script setup lang="ts">
-    // Todo shan merge master
     import {
         IBC_TX_STATUS_SELECT_OPTIONS,
         IBC_TX_STATUS,
@@ -349,17 +347,22 @@
     const { pickerPlaceholderColor, onOpenChangeRangePicker } = usePickerPlaceholder();
     useSortIbcChains(ibcChains);
     const { url, searchToken, inputFlag, dateRange, chainId, queryParams } = useRouteParams();
-    const { isHashFilterParams, isIbcTxTotalAndHashFilter } = useSubTitleFilter(
-        pagination,
-        ibcStatisticsTxs
-    );
-    const { queryDatas, getIbcTxsData } = useQueryDatas(
-        showTransferLoading,
-        pagination,
-        getIbcTxs,
+
+    const {
+        queryDatas,
+        getIbcTxsData,
         isHashFilterParams,
-        tableDatas,
-        queryParams
+        isShowValuedText,
+        countLoading,
+        txsValue
+    } = useQueryDatas(showTransferLoading, pagination, getIbcTxs, tableDatas, queryParams);
+    const { isIbcTxTotalAndHashFilter } = useSubTitleFilter(
+        isHashFilterParams,
+        pagination,
+        ibcStatisticsTxs,
+        isShowValuedText,
+        countLoading,
+        txsValue
     );
     const {
         chainDropdown,
@@ -671,7 +674,7 @@
     }
     @media screen and (max-width: 768px) {
         .transfer {
-            :deep(.page_title_container) {
+            :deep(.page_title) {
                 display: inline-flex;
                 text-align: left;
                 .flex {

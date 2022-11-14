@@ -49,7 +49,6 @@ export const useRelayerSearch = (emits: any) => {
         const relayerNameQuery = route.query.relayer_name as string | undefined;
         const relayerAddressQuery = route.query.relayer_address as string | undefined;
         if (relayerNameQuery && relayerAddressQuery) {
-            // todo dj  如果url 两者都有值如何处理
             completeValue.value = relayerNameQuery;
             inputValue.value = relayerNameQuery;
         } else if (relayerNameQuery) {

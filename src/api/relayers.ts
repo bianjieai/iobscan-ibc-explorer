@@ -1,3 +1,4 @@
+import { urlReplacePlaceholder } from '@/constants/apiUrl';
 import { API_URL } from '@/constants/apiUrl';
 import request, { executeCancel, setExecuteCancel } from '@/utils/axios';
 import requestMock from '@/utils/axiosMock';
@@ -8,7 +9,12 @@ import {
     IRequestRelayerTransfer,
     IResponseRelayerDetails,
     IResponseRelayerList,
-    ITransferTypeTxs
+    ITransferTypeTxs,
+    IResponseRelayerTrend,
+    IRequestRelayedTrend,
+    IRequestTotalRelayedValueOrFee,
+    IResponseTotalRelayedValue,
+    IResponseTotalFeeCost
 } from '@/types/interface/relayers.interface';
 
 export const getRelayersListAPI = async (params: IRequestRelayerList) => {
@@ -38,42 +44,31 @@ export const getRelayersNameListAPI = async () => {
     });
 };
 
-export const getRelayersNameListMock = async () => {
-    return requestMock<IResponse<string[]>>({
-        url: API_URL.ibcRelayerRelayerName,
-        method: 'get'
-    });
-};
-
-// Todo shan 需切换成真实 API
-export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
-    return requestMock<IResponse<IResponseRelayerDetails>>({
-        url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}`,
-        method: 'get'
-    });
-};
-
-export const getTransferTypeTxsAPI = async (relayerId: string) => {
-    return requestMock<IResponse<ITransferTypeTxs>>({
-        url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/transferTypeTxs`,
-        method: 'get'
-    });
-};
-
-export const getRelayerTransferListAPI = async (
-    relayerId: string,
-    params: IRequestRelayerTransfer
-) => {
-    executeCancel(params.use_count);
-    return requestMock<IResponse<IRelayerTransferList>>({
-        url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/txs`,
+export const getRelayedTrendAPI = async (params: IRequestRelayedTrend) => {
+    const url = API_URL.ibcRelayedTrend.replace(urlReplacePlaceholder, params.relayer_id);
+    return request<IResponse<IResponseRelayerTrend[]>>({
+        url,
         method: 'get',
-        params: params,
-        cancelToken: setExecuteCancel(params.use_count)
+        params: params
     });
 };
-/*
-// Relayer Details API 真实
+
+export const getTotalRelayedValueAPI = async (params: IRequestTotalRelayedValueOrFee) => {
+    const url = API_URL.ibcTotalRelayedValue.replace(urlReplacePlaceholder, params.relayer_id);
+    return request<IResponse<IResponseTotalRelayedValue>>({
+        url,
+        method: 'get'
+    });
+};
+
+export const getTotalFeeCostAPI = async (params: IRequestTotalRelayedValueOrFee) => {
+    const url = API_URL.ibcTotalFeeCost.replace(urlReplacePlaceholder, params.relayer_id);
+    return request<IResponse<IResponseTotalFeeCost>>({
+        url,
+        method: 'get'
+    });
+};
+
 export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
     return request<IResponse<IResponseRelayerDetails>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}`,
@@ -81,7 +76,7 @@ export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
     });
 };
 
-export const getTransferTypeTxs = async (relayerId: string) => {
+export const getTransferTypeTxsAPI = async (relayerId: string) => {
     return request<IResponse<ITransferTypeTxs>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/transferTypeTxs`,
         method: 'get'
@@ -93,11 +88,10 @@ export const getRelayerTransferListAPI = async (
     params: IRequestRelayerTransfer
 ) => {
     executeCancel(params.use_count);
-    return requestMock<IResponse<IRelayerTransferList>>({
+    return request<IResponse<IRelayerTransferList>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/txs`,
         method: 'get',
         params: params,
         cancelToken: setExecuteCancel(params.use_count)
     });
 };
-*/

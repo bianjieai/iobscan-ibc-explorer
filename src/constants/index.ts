@@ -389,12 +389,12 @@ export const ICON_LINK = [
     {
         groupName: 'Medium',
         iconName: 'icon-medium',
-        iconLink: 'https://medium.com/irisnet-blog'
+        iconLink: 'https://medium.com/@IOBScan'
     },
     {
         groupName: 'Twitter',
         iconName: 'icon-tweeter',
-        iconLink: 'https://twitter.com/irisnetwork'
+        iconLink: 'https://twitter.com/iobscan_ibc'
     }
 ];
 
@@ -454,7 +454,7 @@ export const AXIOS_TIMEOUT = 50000;
 
 export const CHAIN_DEFAULT_VALUE = 'allchain';
 
-export const TOTAL_BOUND = 500000;
+export const TOTAL_BOUND = 300000;
 
 export const BACK_TOP_NUM = 2064;
 

@@ -34,6 +34,10 @@
                     src = new URL('../../../assets/status/relayer_stopped.png', import.meta.url)
                         .href;
                     break;
+                case RelayerStatus.UNSEARCH:
+                    src = new URL('../../../assets/status/relayer_stopped.png', import.meta.url)
+                        .href;
+                    break;
                 default:
                     break;
             }

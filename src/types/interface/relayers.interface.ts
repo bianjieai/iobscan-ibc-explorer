@@ -1,5 +1,6 @@
 import { RelayersListKey } from '@/constants/relayers';
 import { IRequestPagination, IResponsePageInfo } from '@/types/interface/index.interface';
+import { LinearGradientObject } from 'echarts';
 import { Ref } from 'vue';
 export type TTxsSuccessRate = string | number | undefined;
 
@@ -18,7 +19,7 @@ export interface IResponseRelayerListItem {
     relayer_name: string;
     relayer_id: string;
     relayer_icon: string;
-    served_chains_number: number;
+    served_chains: number;
     served_chains_info: ServedChainsInfo[];
     update_time: number;
     relayed_total_txs: number;
@@ -105,4 +106,84 @@ export interface IRelayerTransferItem {
 export interface IRelayerTransferList {
     items: IRelayerTransferItem[];
     page_info: IResponsePageInfo;
+}
+
+export interface IRequestRelayedTrend {
+    relayer_id: string;
+    days?: number;
+}
+
+export interface IRequestTotalRelayedValueOrFee {
+    relayer_id: string;
+}
+
+export interface IResponseRelayerTrend {
+    date: string;
+    txs: number;
+    txs_value: string;
+}
+
+export interface IDenomItem {
+    base_denom: string;
+    base_denom_chain: string;
+    txs: number;
+    txs_value: string;
+}
+export interface IResponseTotalRelayedValue {
+    total_txs: number;
+    total_txs_value: string;
+    total_denom_count: number;
+    denom_list: IDenomItem[];
+}
+
+export interface FormatDenomItem extends IDenomItem {
+    imgUrl: string;
+    name: string;
+}
+
+export interface IResponseTotalFeeCost {
+    total_txs: number;
+    total_fee_value: string;
+    total_denom_count: number;
+    denom_list: IDenomItem[];
+}
+
+export interface BarData {
+    value: string | number;
+    itemStyle?: {
+        color: string | LinearGradientObject;
+    };
+}
+
+export interface RelayerTrendData {
+    date: string[];
+    txs: BarData[];
+    txsValue: BarData[];
+}
+
+export interface PieData {
+    value: string | number;
+    imgUrl?: string;
+    percent?: string;
+    name?: string;
+    itemStyle: {
+        color: string;
+    };
+}
+
+export interface RelayedValueData {
+    totalValue: string;
+    valueOpacity: PieData[];
+    value: PieData[];
+    totalTxs: number | string;
+    txsOpacity: PieData[];
+    txs: PieData[];
+    totalDenomCount: number;
+    valueTwoLegend: boolean;
+    txsTwoLegend: boolean;
+}
+
+export enum RelatedAssetsPieType {
+    relayedValue,
+    feeCost
 }

@@ -1,7 +1,8 @@
 <template>
     <div class="channel_pairs">
         <div v-for="(item, index) in channelPairsInfo" :key="index" class="channel_pairs__info">
-            <span class="channel_pairs__index">{{ index + 1 }}</span>
+            <!-- Todo 需跟 UI 确定这种展示方式是否合适 -->
+            <span class="channel_pairs__index">{{ prefixInteger(index + 1, 2) }}</span>
             <div class="channel_pairs__pair">
                 <ChannelPair
                     :chain="item.chain_a"
@@ -32,6 +33,7 @@
     import ChannelPair from './ChannelPair.vue';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
     import { IChannelChain } from '@/types/interface/relayers.interface';
+    import { prefixInteger } from '@/helper/parseStringHelper';
     import { useChannelPairsAddressHeight } from '../composable';
 
     interface IChannelPairsInfo {

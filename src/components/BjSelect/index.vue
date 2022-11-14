@@ -436,8 +436,7 @@
         }
     }
     .disabled_border {
-        // Todo shan 禁用时鼠标样式更换
-        cursor: auto;
+        cursor: url('../../assets/forbidden.png'), not-allowed;
         &:hover {
             border-color: var(--bj-border-color);
         }
@@ -501,7 +500,7 @@
         }
 
         &.disabled {
-            cursor: not-allowed;
+            cursor: url('../../assets/forbidden.png'), not-allowed;
             filter: grayscale(100%);
 
             &:hover {

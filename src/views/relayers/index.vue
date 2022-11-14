@@ -113,7 +113,7 @@
         }
         &__content {
             margin-top: 16px;
-            padding: 0;
+            padding: 0 !important;
             :deep(.no_result__content) {
                 padding: 0;
                 .result_icon {

@@ -12,4 +12,5 @@ export interface GlobalState {
     ibcTxs: IIbcTx[];
     isDocumentHidden: boolean;
     relayerNames: IRelayerName[];
+    txSearchTimeMin: number;
 }

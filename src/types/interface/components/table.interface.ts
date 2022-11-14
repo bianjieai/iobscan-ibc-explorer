@@ -18,10 +18,11 @@ export enum CompareOrder {
     DESCEND = 'descend'
 }
 
-export type TRelayerStatus = '1' | '2';
+export type TRelayerStatus = '1' | '2' | '0';
 export enum RelayerStatus {
     RUNNING = '1',
-    UNKNOWN = '2'
+    UNKNOWN = '2',
+    UNSEARCH = '0'
 }
 
 export type TChannelStatus = '1' | '2';

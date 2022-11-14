@@ -1,6 +1,5 @@
 <template>
     <PageContainer class="relayer_details">
-        <!-- Todo shan 需要 Relayer Name 过长情况的展示方案 -->
         <PageTitle
             :title="`${relayerName} Relayer Details`"
             :title-icon="'icon-a-chainsserved'"
@@ -11,23 +10,39 @@
             <statistic-list type="horizontal" :msg="relayerInfo" />
         </layer-block>
         <InfoCard icon="icon-a-ChannelPairs" title="Channel Pairs">
-            <ChannelPairsInfo v-if="channelPairsInfo" :channel-pairs-info="channelPairsInfo" />
-            <no-datas v-if="!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo" />
+            <loading-component
+                v-if="ibcStatisticsChainsStore.isShowLoading"
+                :type="LoadingType.container"
+                :width="100"
+                :width-unit="'%'"
+                :height="364"
+            />
+            <no-datas v-else-if="!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo" />
+            <ChannelPairsInfo v-else :channel-pairs-info="channelPairsInfo" />
         </InfoCard>
         <div class="relayer_details__charts_wrap">
             <div class="relayer_details__charts_wrap__left">
-                <div class="relayer_details__charts_wrap__left__top"></div>
+                <div class="relayer_details__charts_wrap__left__top">
+                    <RelayedTrendChart />
+                </div>
                 <div class="relayer_details__charts_wrap__left__bottom">
                     <InfoCard
                         class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap"
                         icon="icon-a-transfertype"
                         title="IBC Transfer Type"
                     >
+                        <loading-component
+                            v-if="transferTypeLoading"
+                            :type="LoadingType.container"
+                            :width="460"
+                            :height="200"
+                        />
+                        <no-datas
+                            v-else-if="isShowModal || (!transferTypeLoading && !totalTxsCount)"
+                            class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap__nodatas"
+                        />
                         <div
-                            v-if="
-                                !isShowModal &&
-                                (recvPacketTxs || acknowledgePacketTxs || timeoutPacketTxs)
-                            "
+                            v-else
                             class="relayer_details__charts_wrap__left__bottom__transfer_type"
                         >
                             <TransferTypeChart
@@ -51,34 +66,32 @@
                                 :process-color="'#FAAD14'"
                             />
                         </div>
-                        <no-datas
-                            v-if="
-                                isShowModal ||
-                                !(recvPacketTxs && acknowledgePacketTxs && timeoutPacketTxs)
-                            "
-                            class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap__nodatas"
-                        />
                     </InfoCard>
                     <InfoCard
                         class="relayer_details__charts_wrap__left__bottom__success_rate"
                         icon="icon-a-successrate"
                         title="Success Rate"
                     >
-                        <SuccessRateChart
-                            v-if="!isShowModal && !ibcStatisticsChainsStore.isShowLoading"
-                            :success-rate-percent="successRatePercent"
+                        <loading-component
+                            v-if="ibcStatisticsChainsStore.isShowLoading"
+                            :type="LoadingType.container"
+                            :width="280"
+                            :height="200"
                         />
                         <no-datas
-                            v-if="
+                            v-else-if="
                                 isShowModal ||
                                 (!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo)
                             "
                             class="relayer_details__charts_wrap__left__bottom__success_rate__nodatas"
                         />
+                        <SuccessRateChart v-else :success-rate-percent="successRatePercent" />
                     </InfoCard>
                 </div>
             </div>
-            <div class="relayer_details__charts_wrap__right"></div>
+            <div class="relayer_details__charts_wrap__right">
+                <RelatedAssets />
+            </div>
         </div>
         <InfoCard icon="icon-transactions" title="Transactions">
             <RelayerTransfer :served-chains-info="servedChainsInfo" :is-show-modal="isShowModal" />
@@ -88,17 +101,20 @@
 </template>
 
 <script setup lang="ts">
+    import RelayedTrendChart from './components/RelayedTrend.vue';
+    import RelatedAssets from './components/RelatedAssets.vue';
     import ChannelPairsInfo from './components/ChannelPairsInfo.vue';
     import TransferTypeChart from './components/TransferTypeChart.vue';
     import SuccessRateChart from './components/SuccessRateChart.vue';
     import RelayerTransfer from './components/RelayerTransfer.vue';
-    import { TRANSFER_TYPE } from '@/constants';
+    import { LoadingType, TRANSFER_TYPE } from '@/constants';
     import {
         useGetRelayerDetailsInfo,
         useGetSuccessRatePercent,
         useGetTransferTypeData
     } from './composable';
     import { useIbcStatisticsChains } from '@/store';
+
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const {
         relayerIcon,
@@ -118,37 +134,46 @@
         totalTxsCount,
         recvPacketTxsPercent,
         acknowledgePacketTxsPercent,
-        timeoutPacketTxsPercent
+        timeoutPacketTxsPercent,
+        transferTypeLoading
     } = useGetTransferTypeData();
     const { successRatePercent } = useGetSuccessRatePercent(relayedSuccessTxs, relayedTotalTxs);
 </script>
 
 <style lang="less" scoped>
     .relayer_details {
+        padding-left: 32px;
+        padding-right: 32px;
         &__statistic {
             margin-top: 24px;
         }
         &__charts_wrap {
             .flex(row, nowrap, space-between, flex-start);
+            .info_card {
+                margin-top: 16px;
+            }
             &__left {
                 flex: 1;
+                max-width: 756px;
+                &__top {
+                }
                 &__bottom {
                     .flex(row, nowrap, space-between, flex-start);
                     &__transfer_type_wrap {
                         flex: 1;
                         &__nodatas {
                             margin: 1px 0;
-                            min-width: 460px;
+                            min-width: 380px;
                         }
                     }
                     &__transfer_type {
-                        .flex(row, nowrap, space-between, flex-start);
+                        .flex(row, nowrap, center, flex-start);
                     }
                     &__success_rate {
                         margin-left: 16px;
                         &__nodatas {
                             margin: 1px 0;
-                            min-width: 232px;
+                            min-width: 200px;
                         }
                     }
                 }
@@ -156,6 +181,40 @@
             &__right {
                 margin-left: 16px;
                 flex: 1;
+                max-width: 428px;
+            }
+        }
+    }
+    // 1247px
+    @media screen and (max-width: 1183px) {
+        .relayer_details {
+            &__statistic {
+            }
+            &__charts_wrap {
+                flex-direction: column;
+                &__left {
+                    width: 100%;
+                    max-width: 100%;
+                    &__top {
+                    }
+                    &__bottom {
+                        &__transfer_type_wrap {
+                            &__nodatas {
+                            }
+                        }
+                        &__transfer_type {
+                        }
+                        &__success_rate {
+                            &__nodatas {
+                            }
+                        }
+                    }
+                }
+                &__right {
+                    margin-left: 0;
+                    width: 100%;
+                    max-width: 100%;
+                }
             }
         }
     }
@@ -216,8 +275,39 @@
             }
         }
     }
+    @media screen and (max-width: 792px) {
+        .relayer_details {
+            &__statistic {
+                :deep(.horizontal_container) {
+                    .list_item__horizontal {
+                        .list_item {
+                        }
+                    }
+                }
+            }
+            &__charts_wrap {
+                &__left {
+                    &__bottom {
+                        .flex(column, nowrap, center, flex-start);
+                        &__transfer_type_wrap {
+                            width: 100%;
+                        }
+                        &__transfer_type {
+                        }
+                        &__success_rate {
+                            margin-left: 0;
+                            width: 100%;
+                        }
+                    }
+                }
+                &__right {
+                }
+            }
+        }
+    }
     @media screen and (max-width: 530px) {
         .relayer_details {
+            padding: 24px 16px 60px;
             &__statistic {
                 :deep(.horizontal_container) {
                     grid-template-columns: repeat(1, 1fr);
@@ -246,6 +336,31 @@
                         &__transfer_type_wrap {
                         }
                         &__transfer_type {
+                        }
+                        &__success_rate {
+                        }
+                    }
+                }
+                &__right {
+                }
+            }
+        }
+    }
+    @media screen and (max-width: 460px) {
+        .relayer_details {
+            &__statistic {
+                :deep(.horizontal_container) {
+                    .list_item__horizontal {
+                    }
+                }
+            }
+            &__charts_wrap {
+                &__left {
+                    &__bottom {
+                        &__transfer_type_wrap {
+                        }
+                        &__transfer_type {
+                            .flex(column, nowrap, center, flex-start);
                         }
                         &__success_rate {
                         }

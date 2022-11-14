@@ -6,7 +6,7 @@ import {
 import { IDataItem } from '@/components/BjSelect/interface';
 import { useMatchBaseDenom } from '@/composables';
 import { CHAIN_DEFAULT_ICON, TOKEN_DEFAULT_ICON, TRANSFER_TYPE } from '@/constants';
-import { API_CODE } from '@/constants/apiCode';
+import { API_CODE, API_ERRPR_MESSAGE } from '@/constants/apiCode';
 import { RELAYER_DETAILS_INFO, RT_COLUMN_TYPE, SINGLE_ADDRESS_HEIGHT } from '@/constants/relayers';
 import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber } from '@/helper/parseStringHelper';
@@ -22,6 +22,22 @@ import {
 import dayjs from 'dayjs';
 import * as echarts from 'echarts';
 import { Ref } from 'vue';
+import { BigNumber } from 'bignumber.js';
+import { getRelayedTrendAPI } from '@/api/relayers';
+import { RelayerTrendData, BarData } from '@/types/interface/relayers.interface';
+import { useWindowSize } from '@vueuse/core';
+import { PIE_COLOR_LIST, OPACITY_PIE_COLOR_LIST } from '@/constants/relayers';
+import { getTotalFeeCostAPI, getTotalRelayedValueAPI } from '@/api/relayers';
+import { DEFAULT_DISPLAY_TEXT } from '@/constants';
+import {
+    RelayedValueData,
+    FormatDenomItem,
+    RelatedAssetsPieType
+} from '@/types/interface/relayers.interface';
+import chainDefaultUrl from '@/assets/home/chain-default.png';
+import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
+import { formatString } from '@/utils/stringTools';
+import { calculatePercentage } from '@/utils/calculate';
 
 export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -107,12 +123,14 @@ export const useGetTransferTypeData = () => {
     const recvPacketTxs = ref<number>(0);
     const acknowledgePacketTxs = ref<number>(0);
     const timeoutPacketTxs = ref<number>(0);
+    const transferTypeLoading = ref<boolean>(true);
     const getTransferTypeTxsData = () => {
         const route = useRoute();
         const relayerId: string = route?.params?.relayerId as string;
         const getTransferTypeTxs = async () => {
             try {
                 const { code, data, message } = await getTransferTypeTxsAPI(relayerId);
+                transferTypeLoading.value = false;
                 if (code === API_CODE.success) {
                     if (data) {
                         recvPacketTxs.value = data.recv_packet_txs;
@@ -125,6 +143,7 @@ export const useGetTransferTypeData = () => {
                     console.error(message);
                 }
             } catch (error) {
+                transferTypeLoading.value = false;
                 console.error(error);
             }
         };
@@ -174,6 +193,8 @@ export const useGetTransferTypeData = () => {
                 getRecvPacketTxsPercent.value -= newTotalTxsPercent - 100;
             } else if (newTotalTxsPercent < 100) {
                 getRecvPacketTxsPercent.value += 100 - newTotalTxsPercent;
+            } else {
+                getRecvPacketTxsPercent.value = getRecvPacketTxsPercent.value;
             }
         }
     });
@@ -188,19 +209,20 @@ export const useGetTransferTypeData = () => {
         totalTxsCount,
         recvPacketTxsPercent,
         acknowledgePacketTxsPercent,
-        timeoutPacketTxsPercent
+        timeoutPacketTxsPercent,
+        transferTypeLoading
     };
 };
 
 export const useTransferTypeChart = (
-    transferTypeDom: Ref<HTMLElement>,
     type: Ref<string>,
     txsCount: Ref<number>,
     txsPercent: Ref<number>,
     totalTxsCount: Ref<number>,
     processColor: Ref<string>
 ) => {
-    let option: any;
+    const transferTypeDom = ref<HTMLElement>();
+    let transferTypeChart: echarts.ECharts;
     let typeShort = '';
     switch (type.value) {
         case TRANSFER_TYPE.receive.label:
@@ -213,87 +235,83 @@ export const useTransferTypeChart = (
             typeShort = TRANSFER_TYPE.timeout.short;
             break;
     }
-    watch(
-        [transferTypeDom, txsCount, txsPercent, totalTxsCount, processColor],
-        ([newTransferTypeDom, newTxsCount, newTxsPercent, newTotalTxsCount, newProcessColor]) => {
-            if (newTransferTypeDom) {
-                option = {
-                    title: {
-                        text: `${newTxsPercent}%`,
-                        left: 'center',
-                        top: 'center',
-                        textStyle: {
-                            color: '#000',
-                            fontSize: 16,
-                            fontFamily: 'GolosUI_Medium',
-                            fontWeight: 400,
-                            lineHeight: 20
-                        }
-                    },
-                    tooltip: {
-                        position: ['50%', '13%'],
-                        backgroundColor: null,
-                        borderWidth: 0,
-                        extraCssText: 'box-shadow: 0 0 0 transparent;',
-                        formatter: () => {
-                            return `
-                                <div style="display: flex; align-items: center;">
-                                <div style="border-top: 5px solid transparent;border-right: 8px solid #3D50FF;border-bottom: 5px solid transparent;border-left: 8px solid transparent;"></div>
-                                <div style="display: flex;margin-left: 4px;background: #FFFFFF;box-shadow: 0px 2px 8px 0px #D9DEEC;border-radius: 4px;border: 1px solid #D9DFEE;">
-                                        <div style="width: 8px;height: 50px;background-color:rgba(61, 80, 255, 0.1);"></div>
-                                        <div style="padding: 14px 12px;">
-                                            <span style="font-size: 14px;font-family: GolosUI_Medium;color: #000;line-height: 18px;">${typeShort} Txs: </span>
-                                            <span style="margin-left: 8px;font-size: 14px;color: rgba(0,0,0,0.75);line-height: 18px;">${formatBigNumber(
-                                                newTxsCount
-                                            )}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    },
-                    visualMap: {
-                        show: false
-                    },
-                    series: [
-                        {
-                            type: 'pie',
-                            radius: [34, 50],
-                            data: [
-                                {
-                                    value: `${newTxsCount}`,
-                                    itemStyle: { color: `${newProcessColor}` }
-                                },
-                                {
-                                    value: `${newTotalTxsCount - newTxsCount}`,
-                                    itemStyle: { color: 'rgba(0,0,0,0.05)' }
-                                }
-                            ],
-                            emphasis: {
-                                scale: false,
-                                label: {
-                                    show: false
-                                }
-                            },
-                            label: {
-                                show: false
-                            },
-                            itemStyle: {
-                                borderWidth: 2,
-                                borderColor: '#fff'
-                            }
-                        }
-                    ]
-                };
-                // Todo shan 需添加销毁操作及监听事件调整，适配方案研究
-                const transferTypeChart = echarts.init(newTransferTypeDom);
-                option && transferTypeChart.setOption(option, true);
-                window.onresize = () => {
-                    transferTypeChart.resize();
-                };
+    const option = {
+        title: {
+            text: `${txsPercent.value}%`,
+            left: 'center',
+            top: 'center',
+            textStyle: {
+                color: '#000',
+                fontSize: 16,
+                fontFamily: 'GolosUI_Medium',
+                fontWeight: 400,
+                lineHeight: 20
             }
-        }
-    );
+        },
+        tooltip: {
+            position: ['65%', '13%'],
+            backgroundColor: null,
+            borderWidth: 0,
+            extraCssText: 'box-shadow: 0 0 0 transparent;',
+            formatter: () => {
+                return `
+                    <div style="position: relative;padding: 14px 12px;background: #FFFFFF;box-shadow: 0px 2px 8px 0px #D9DEEC;border-radius: 4px;border: 1px solid #D9DFEE;">
+                        <span style="font-size: 14px;font-family: GolosUI_Medium;color: #000;line-height: 18px;">${typeShort} Txs: </span>
+                        <span style="margin-left: 8px;font-size: 14px;color: rgba(0,0,0,0.75);line-height: 18px;">
+                            ${formatBigNumber(txsCount.value)}
+                        </span>
+                        <div style="position: absolute;top: 50%;left: -20px;transform: translateY(-50%);border-top: 5px solid transparent;border-right: 8px solid #3D50FF;border-bottom: 5px solid transparent;border-left: 8px solid transparent;"></div>
+                    </div>
+                `;
+            }
+        },
+        visualMap: {
+            show: false
+        },
+        series: [
+            {
+                type: 'pie',
+                radius: [34, 50],
+                data: [
+                    {
+                        value: `${txsCount.value}`,
+                        itemStyle: { color: `${processColor.value}` }
+                    },
+                    {
+                        value: `${totalTxsCount.value - txsCount.value}`,
+                        itemStyle: { color: 'rgba(0,0,0,0.05)' }
+                    }
+                ],
+                emphasis: {
+                    scale: false,
+                    label: {
+                        show: false
+                    }
+                },
+                label: {
+                    show: false
+                },
+                itemStyle: {
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }
+            }
+        ]
+    };
+    const transferTypeResize = () => {
+        transferTypeChart && transferTypeChart.resize();
+    };
+    onMounted(() => {
+        transferTypeChart = echarts.init(transferTypeDom.value as HTMLElement);
+        option && transferTypeChart.setOption(option, true);
+        window.addEventListener('resize', transferTypeResize);
+    });
+    onBeforeUnmount(() => {
+        window.removeEventListener('resize', transferTypeResize);
+    });
+    return {
+        transferTypeDom
+    };
 };
 
 export const useGetSuccessRatePercent = (
@@ -312,144 +330,147 @@ export const useGetSuccessRatePercent = (
     };
 };
 
-export const useSuccessRateChart = (
-    successRateDom: Ref<HTMLElement>,
-    successRatePercent: Ref<number>
-) => {
-    let option: any;
-    watch([successRateDom, successRatePercent], ([newSuccessRateDom, newSuccessRatePercent]) => {
-        if (newSuccessRateDom) {
-            option = {
-                series: [
+export const useSuccessRateChart = (successRatePercent: Ref<number>) => {
+    const successRateDom = ref<HTMLElement>();
+    let successRateChart: echarts.ECharts;
+    const option = {
+        series: [
+            {
+                type: 'gauge',
+                radius: '78%',
+                splitNumber: 5,
+                progress: {
+                    show: true,
+                    width: 14,
+                    itemStyle: {
+                        color: '#3D50FF'
+                    }
+                },
+                splitLine: {
+                    length: 1,
+                    distance: -23,
+                    lineStyle: {
+                        width: 4,
+                        color: '#BAC1FF',
+                        cap: 'round'
+                    }
+                },
+                axisTick: {
+                    show: true,
+                    splitNumber: 100,
+                    length: 1,
+                    distance: -22,
+                    lineStyle: {
+                        color: '#BAC1FF',
+                        type: 'solid'
+                    }
+                },
+                axisLine: {
+                    lineStyle: {
+                        width: 14,
+                        color: [[1, '#F2F2F2']]
+                    }
+                },
+                axisLabel: {
+                    distance: -8,
+                    color: 'rgba(0,0,0,0.35)',
+                    fontSize: 12,
+                    lineHeight: 18
+                },
+                pointer: {
+                    length: '100%',
+                    icon: 'triangle',
+                    width: 4,
+                    itemStyle: {
+                        color: '#BAC1FF'
+                    }
+                },
+                anchor: {
+                    show: true,
+                    showAbove: true,
+                    size: 4,
+                    itemStyle: {
+                        borderWidth: 4,
+                        borderColor: '#BAC1FF'
+                    }
+                },
+                title: {
+                    show: false
+                },
+                detail: {
+                    offsetCenter: [0, '85%'],
+                    fontSize: 24,
+                    fontFamily: 'GolosUI_Medium',
+                    valueAnimation: true,
+                    formatter: function (value: number) {
+                        return `${value.toFixed(0)}%`;
+                    }
+                },
+                data: [
                     {
-                        type: 'gauge',
-                        radius: '78%',
-                        splitNumber: 5,
-                        progress: {
-                            show: true,
-                            width: 14,
-                            itemStyle: {
-                                color: '#3D50FF'
-                            }
-                        },
-                        splitLine: {
-                            length: 1,
-                            distance: -23,
-                            lineStyle: {
-                                width: 4,
-                                color: '#BAC1FF',
-                                cap: 'round'
-                            }
-                        },
-                        axisTick: {
-                            show: true,
-                            splitNumber: 100,
-                            length: 1,
-                            distance: -22,
-                            lineStyle: {
-                                color: '#BAC1FF',
-                                type: 'solid'
-                            }
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                width: 14,
-                                color: [[1, '#F2F2F2']]
-                            }
-                        },
-                        axisLabel: {
-                            distance: -8,
-                            color: 'rgba(0,0,0,0.35)',
-                            fontSize: 12,
-                            lineHeight: 18
-                        },
-                        pointer: {
-                            length: '100%',
-                            icon: 'triangle',
-                            width: 4,
-                            itemStyle: {
-                                color: '#BAC1FF'
-                            }
-                        },
-                        anchor: {
-                            show: true,
-                            showAbove: true,
-                            size: 4,
-                            itemStyle: {
-                                borderWidth: 4,
-                                borderColor: '#BAC1FF'
-                            }
-                        },
-                        title: {
-                            show: false
-                        },
-                        detail: {
-                            offsetCenter: [0, '85%'],
-                            fontSize: 24,
-                            fontFamily: 'GolosUI_Medium',
-                            valueAnimation: true,
-                            formatter: function (value: number) {
-                                return `${value.toFixed(0)}%`;
-                            }
-                        },
-                        data: [
-                            {
-                                value: newSuccessRatePercent
-                            }
-                        ]
-                    },
-                    {
-                        type: 'gauge',
-                        radius: '54%',
-                        axisLine: {
-                            lineStyle: {
-                                width: 0,
-                                color: [
-                                    [0.1, 'rgba(61,80,255,0.1)'],
-                                    [1, 'transparent']
-                                ]
-                            }
-                        },
-                        progress: {
-                            show: true,
-                            width: 12,
-                            itemStyle: {
-                                color: 'rgba(61,80,255,0.1)'
-                            }
-                        },
-                        splitLine: {
-                            show: false
-                        },
-                        axisLabel: {
-                            show: false
-                        },
-                        axisTick: {
-                            show: false
-                        },
-                        pointer: {
-                            length: '100%',
-                            icon: 'triangle',
-                            width: 4,
-                            itemStyle: {
-                                color: '#BAC1FF'
-                            }
-                        },
-                        detail: { show: false },
-                        data: [
-                            {
-                                value: newSuccessRatePercent
-                            }
-                        ]
+                        value: successRatePercent.value
                     }
                 ]
-            };
-            const successRateChart = echarts.init(newSuccessRateDom);
-            option && successRateChart.setOption(option, true);
-            window.onresize = () => {
-                successRateChart.resize();
-            };
-        }
+            },
+            {
+                type: 'gauge',
+                radius: '54%',
+                axisLine: {
+                    lineStyle: {
+                        width: 0,
+                        color: [
+                            [0.1, 'rgba(61,80,255,0.1)'],
+                            [1, 'transparent']
+                        ]
+                    }
+                },
+                progress: {
+                    show: true,
+                    width: 12,
+                    itemStyle: {
+                        color: 'rgba(61,80,255,0.1)'
+                    }
+                },
+                splitLine: {
+                    show: false
+                },
+                axisLabel: {
+                    show: false
+                },
+                axisTick: {
+                    show: false
+                },
+                pointer: {
+                    length: '100%',
+                    icon: 'triangle',
+                    width: 4,
+                    itemStyle: {
+                        color: '#BAC1FF'
+                    }
+                },
+                detail: { show: false },
+                data: [
+                    {
+                        value: successRatePercent.value
+                    }
+                ]
+            }
+        ]
+    };
+    const successRateResize = () => {
+        successRateChart && successRateChart.resize();
+    };
+    onMounted(() => {
+        successRateChart = echarts.init(successRateDom.value as HTMLElement);
+        option && successRateChart.setOption(option, true);
+        window.addEventListener('resize', successRateResize);
     });
+    onBeforeUnmount(() => {
+        window.removeEventListener('resize', successRateResize);
+    });
+    return {
+        successRateDom
+    };
 };
 
 export const usePagination = () => {
@@ -465,7 +486,6 @@ export const usePagination = () => {
 
 export const useSelectedSearch = (
     servedChainsInfo: Ref<string[]>,
-    loading: Ref<boolean>,
     pagination: IPaginationParams
 ) => {
     const router = useRouter();
@@ -476,8 +496,9 @@ export const useSelectedSearch = (
     const dateRange = reactive({ value: [] });
     const disabledDate = (current: any) =>
         current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
-    const startTxTime = ref<number>(0);
-    const endTxTime = ref<number>(0);
+    const startTxTime = ref<number | undefined>(undefined);
+    const endTxTime = ref<number | undefined>(undefined);
+    const rtTableLoading = ref<boolean>(true);
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
             if (!newServedChainsInfo?.length) return [];
@@ -508,20 +529,21 @@ export const useSelectedSearch = (
         return relayerChainData.value[0]?.children[0];
     });
     const searchChain = ref<string>(defaultChain.value?.id);
-    // Todo shan params 类型需要更改
-    const getRelayerTransferTxs = (params: any, page_num = 1, page_size = 5, use_count = false) => {
+    const getRelayerTransferTxs = (
+        params: IRequestRelayerTransfer,
+        page_num = 1,
+        page_size = 5,
+        use_count = false
+    ) => {
         const getRelayerTransferTxsData = async () => {
-            if (loading) {
-                loading.value = true;
-            }
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
+                    ...params,
                     page_num,
                     page_size,
-                    use_count,
-                    ...params
+                    use_count
                 });
-                loading && (loading.value = false);
+                rtTableLoading.value = false;
                 if (code === API_CODE.success) {
                     if (data) {
                         if (typeof data === 'number') {
@@ -536,20 +558,23 @@ export const useSelectedSearch = (
                     console.error(message);
                 }
             } catch (error) {
-                loading && (loading.value = false);
+                rtTableLoading.value = false;
                 console.error(error);
             }
         };
         getRelayerTransferTxsData();
     };
-    // Todo shan params 类型需要更改
-    const queryDatas = (params: any) => {
+    const queryDatas = (params: IRequestRelayerTransfer) => {
         getRelayerTransferTxs(params, 1, 5, true);
         getRelayerTransferTxs(params, pagination.current, pagination.pageSize, false);
     };
     watch(defaultChain, (newDefaultChain) => {
         if (newDefaultChain) {
-            queryDatas({ chain: newDefaultChain.id });
+            queryDatas({
+                chain: newDefaultChain.id,
+                page_num: 1,
+                page_size: 5
+            });
         }
     });
     const onSelectedChain = (selectedChainInfo?: IDataItem) => {
@@ -563,8 +588,8 @@ export const useSelectedSearch = (
         if (chain) {
             refreshList({
                 chain: chain as string,
-                tx_time_start: String(startTxTime.value),
-                tx_time_end: String(endTxTime.value),
+                tx_time_start: startTxTime.value?.toString(),
+                tx_time_end: endTxTime.value?.toString(),
                 page_num: pagination.current,
                 page_size: pagination.pageSize
             });
@@ -582,8 +607,8 @@ export const useSelectedSearch = (
         );
         refreshList({
             chain: searchChain.value || defaultChain.value.id,
-            tx_time_start: String(startTxTime.value),
-            tx_time_end: String(endTxTime.value),
+            tx_time_start: startTxTime.value?.toString(),
+            tx_time_end: endTxTime.value?.toString(),
             page_num: 1,
             page_size: 5
         });
@@ -592,6 +617,8 @@ export const useSelectedSearch = (
         pagination.current = 1;
         searchChain.value = defaultChain.value.id;
         dateRange.value = [];
+        startTxTime.value = undefined;
+        endTxTime.value = undefined;
         refreshList({
             chain: defaultChain.value.id,
             page_num: 1,
@@ -601,9 +628,9 @@ export const useSelectedSearch = (
     const onPaginationChange = (current: number, pageSize: number) => {
         pagination.current = current;
         refreshList({
-            chain: searchChain.value,
-            tx_time_start: String(startTxTime.value),
-            tx_time_end: String(endTxTime.value),
+            chain: searchChain.value || defaultChain.value.id,
+            tx_time_start: startTxTime.value?.toString(),
+            tx_time_end: endTxTime.value?.toString(),
             page_num: pagination.current,
             page_size: pageSize
         });
@@ -634,7 +661,8 @@ export const useSelectedSearch = (
         onClickReset,
         dateRange,
         disabledDate,
-        onChangeRangePicker
+        onChangeRangePicker,
+        rtTableLoading
     };
 };
 
@@ -673,5 +701,755 @@ export const useFormatTokenDenom = (tokenInfo: Ref<IRtTokenInfo>, type: Ref<stri
         tokenLogo,
         tokenSymbol,
         tokenAmount
+    };
+};
+
+export const useRelayedTrend = () => {
+    const relayedTrendChoose = ref(0);
+    const relayedTrendDom = ref<HTMLElement>();
+    const route = useRoute();
+    const relayerId: string = route.params.relayerId as string;
+    const relayedTrendLoading = ref(true);
+    const relayedTrendNoData = ref(false);
+    const relayedTrendNetworkError = ref(false);
+    const relayedAbnormalText = computed(() => {
+        if (relayedTrendNoData.value) {
+            return API_ERRPR_MESSAGE.noData;
+        } else if (relayedTrendNetworkError.value) {
+            return API_ERRPR_MESSAGE.networkError;
+        } else {
+            return '';
+        }
+    });
+    const { width: widthClient } = useWindowSize();
+    let relayedTrendChart: echarts.ECharts;
+    const option: any = {
+        grid: {
+            left: 0,
+            right: 0,
+            top: 32,
+            bottom: 0,
+            containLabel: true
+        },
+        tooltip: {
+            trigger: 'item',
+            position: 'top',
+            backgroundColor: null,
+            borderWidth: 0,
+            padding: 0,
+            extraCssText: 'box-shadow: 0 0 0 transparent;',
+            formatter: (params: any) => {
+                // <div style="width: 100%; height: 8px; background-color: rgba(61, 80, 255, 0.1)"></div>
+                return `<div style="display: flex; flex-direction: column; align-items: center; transform: translate(0,6px);">
+                                    <div
+                                        style="
+                                            display: flex;
+                                            flex-direction: column;
+                                            margin-bottom: 4px;
+                                            background: #ffffff;
+                                            box-shadow: 0px 2px 8px 0px #d9deec;
+                                            border-radius: 4px;
+                                            border: 1px solid #d9dfee;
+                                        "
+                                    >
+                                        <div style="display: flex; justify-content: flex-start; padding: 12px 12px 8px">
+                                            <span
+                                                style="
+                                                    font-size: 14px;
+                                                    font-family: 'GolosUI_Medium';
+                                                    color: #000;
+                                                    font-weight: 500;
+                                                    line-height: 18px;
+                                                "
+                                                >Transfers:
+                                            </span>
+                                            <span
+                                                style="
+                                                    margin-left: 8px;
+                                                    font-size: 14px;
+                                                    color: rgba(0, 0, 0, 0.75);
+                                                    font-family: 'GolosUIWebRegular';
+                                                    font-weight: 400;
+                                                    line-height: 18px;
+                                                "
+                                                >${formatBigNumber(params.data.value, 0)}</span
+                                            >
+                                        </div>
+                                        <div style="display: flex; justify-content: flex-start; padding: 0px 12px 12px">
+                                            <span
+                                                style="
+                                                    font-size: 14px;
+                                                    font-family: 'GolosUI_Medium';
+                                                    color: #000;
+                                                    font-weight: 500;
+                                                    line-height: 18px;
+                                                "
+                                                >Date:
+                                            </span>
+                                            <span
+                                                style="
+                                                    margin-left: 8px;
+                                                    font-size: 14px;
+                                                    color: rgba(0, 0, 0, 0.75);
+                                                    font-family: 'GolosUIWebRegular';
+                                                    font-weight: 400;
+                                                    line-height: 18px;
+                                                "
+                                                >${params.name}</span
+                                            >
+                                        </div>
+                                    </div>
+                                    <div
+                                        style="
+                                            border-top: 8px solid #3d50ff;
+                                            border-right: 5px solid transparent;
+                                            border-bottom: 8px solid transparent;
+                                            border-left: 5px solid transparent;
+                                        "
+                                    ></div>
+                                </div>`;
+            }
+        },
+        yAxis: [
+            {
+                type: 'value',
+                axisLabel: {
+                    margin: 16,
+                    color: '#000',
+                    fontSize: 14,
+                    fontFamily: 'GolosUIWebRegular',
+                    fontWeight: 400,
+                    lineHeight: 18
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                }
+            }
+        ],
+        xAxis: [
+            {
+                type: 'category',
+                data: [],
+                axisTick: {
+                    show: false
+                },
+                axisLabel: {
+                    interval: 3,
+                    margin: 8,
+                    color: '#000',
+                    fontSize: 14,
+                    fontFamily: 'GolosUIWebRegular',
+                    fontWeight: 'normal',
+                    lineHeight: 18
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: 'rgba(0,0,0,0.15)',
+                        width: 2
+                    }
+                }
+            }
+        ],
+        series: [
+            {
+                type: 'bar',
+                barWidth: 10,
+                barMinHeight: 1,
+                data: [],
+                itemStyle: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                        { offset: 0, color: 'rgba(61,80,255,0.6)' },
+                        { offset: 1, color: 'rgba(61,80,255,0.35)' }
+                    ])
+                },
+                emphasis: {
+                    itemStyle: {
+                        color: 'rgba(61, 80, 255, 1)'
+                    }
+                }
+            }
+        ]
+    };
+    const relayedTrendData = reactive<RelayerTrendData>({
+        date: [],
+        txs: [],
+        txsValue: []
+    });
+    const relayedTrendChooseBtnFn = (index: number) => {
+        relayedTrendChoose.value = index;
+        if (relayedTrendChoose.value === 0) {
+            option.series[0].data = relayedTrendData.txs;
+        } else {
+            option.series[0].data = relayedTrendData.txsValue;
+        }
+        relayedTrendChart && relayedTrendChart.setOption(option, true);
+    };
+    const changeOptionByWidth = () => {
+        option.series[0].barWidth = widthClient.value > 560 ? 10 : 8;
+        option.tooltip.confine = widthClient.value > 496 ? false : true;
+        option.grid.top = widthClient.value > 496 ? 32 : 28;
+    };
+    const getRelayedTrendData = async () => {
+        try {
+            relayedTrendLoading.value = true;
+            relayedTrendNoData.value = false;
+            relayedTrendNetworkError.value = false;
+            const { code, data, message } = await getRelayedTrendAPI({
+                relayer_id: relayerId
+            });
+            relayedTrendLoading.value = false;
+            if (code === API_CODE.success) {
+                if (data && data.length > 0) {
+                    const originDates: string[] = [];
+                    const originTxs: number[] = [];
+                    const originTxsValues: string[] = [];
+                    for (let i = 0; i < data.length; i++) {
+                        const item = data[i];
+                        originDates.push(item.date);
+                        originTxs.push(item.txs);
+                        originTxsValues.push(item.txs_value || '0');
+                    }
+                    const maxTxs = BigNumber.max.apply(null, originTxs).toString();
+                    const maxTxsValue = BigNumber.max.apply(null, originTxsValues).toString();
+                    const txs: BarData[] = originTxs.map((txs) => {
+                        return {
+                            value: txs,
+                            itemStyle: {
+                                color:
+                                    txs.toString() === maxTxs
+                                        ? new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                              { offset: 0, color: '#3D50FF' },
+                                              { offset: 1, color: 'rgba(61,80,255,0.35)' }
+                                          ])
+                                        : new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                              { offset: 0, color: 'rgba(61,80,255,0.6)' },
+                                              { offset: 1, color: 'rgba(61,80,255,0.35)' }
+                                          ])
+                            }
+                        };
+                    });
+                    const txsValue: BarData[] = originTxsValues.map((txsValue) => {
+                        return {
+                            value: txsValue,
+                            itemStyle: {
+                                color:
+                                    txsValue.toString() === maxTxsValue
+                                        ? new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                              { offset: 0, color: '#3D50FF' },
+                                              { offset: 1, color: 'rgba(61,80,255,0.35)' }
+                                          ])
+                                        : new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                              { offset: 0, color: 'rgba(61,80,255,0.6)' },
+                                              { offset: 1, color: 'rgba(61,80,255,0.35)' }
+                                          ])
+                            }
+                        };
+                    });
+                    relayedTrendData.date = originDates.map((originData) => {
+                        const linkSymbol = '-';
+                        return originData.split(linkSymbol).splice(1).join(linkSymbol);
+                    });
+                    relayedTrendData.txs = txs;
+                    relayedTrendData.txsValue = txsValue;
+                } else {
+                    relayedTrendNoData.value = true;
+                    relayedTrendData.date = [];
+                    relayedTrendData.txs = [];
+                    relayedTrendData.txsValue = [];
+                }
+            } else if (code === API_CODE.unRegisteredRelayer) {
+                relayedTrendNoData.value = true;
+                relayedTrendData.date = [];
+                relayedTrendData.txs = [];
+                relayedTrendData.txsValue = [];
+                console.error(message);
+            } else {
+                relayedTrendNetworkError.value = true;
+                console.error(message);
+            }
+        } catch (error) {
+            relayedTrendLoading.value = false;
+            relayedTrendNetworkError.value = true;
+            console.error(error);
+        }
+    };
+    const resizeFn = () => {
+        if (relayedTrendChart) {
+            changeOptionByWidth();
+            relayedTrendChart.setOption(option, true);
+            relayedTrendChart.resize();
+        }
+    };
+    onMounted(async () => {
+        await getRelayedTrendData();
+        relayedTrendChart = echarts.init(relayedTrendDom.value as HTMLElement);
+        option.xAxis[0].data = relayedTrendData.date;
+        relayedTrendChooseBtnFn(0);
+        changeOptionByWidth();
+        relayedTrendChart.setOption(option, true);
+        window.addEventListener('resize', resizeFn);
+    });
+    onBeforeUnmount(() => {
+        window.removeEventListener('resize', resizeFn);
+    });
+    return {
+        relayedTrendDom,
+        relayedTrendChoose,
+        relayedTrendChooseBtnFn,
+        relayedTrendLoading,
+        relayedTrendNoData,
+        relayedTrendNetworkError,
+        relayedAbnormalText
+    };
+};
+
+export const useRelatedAssetChart = (
+    relayedAssetsChoose: Ref<number>,
+    type: Ref<RelatedAssetsPieType>
+) => {
+    const route = useRoute();
+    const relayerId: string = route.params.relayerId as string;
+
+    const getBaseOption = () => {
+        const baseOption = {
+            tooltip: {
+                trigger: 'item',
+                backgroundColor: null,
+                borderWidth: 0,
+                padding: 0,
+                extraCssText: 'box-shadow: 0 0 0 transparent;',
+                formatter: (params: any) => {
+                    return `<div style="display: flex; align-items: center; transform: translate(6px, 0)">
+                                <div
+                                    style="
+                                    display: flex;
+                                    margin-left: 4px;
+                                    background: #ffffff;
+                                    box-shadow: 0px 2px 8px 0px #d9deec;
+                                    border-radius: 4px;
+                                    border: 1px solid #d9dfee;
+                                    "
+                                    >
+                                      <div>
+                                          <div style="display: flex; justify-content: flex-start; padding: 12px 12px 6px">
+                                              <img
+                                                  src="${params.data.imgUrl}"
+                                                  style="width: 20px; height: 20px"
+                                              />
+                                              <span
+                                                  style="
+                                                      margin-left: 8px;
+                                                      font-size: 16px;
+                                                      font-family: GolosUI-Medium, GolosUI;
+                                                      font-weight: 500;
+                                                      color: #000000;
+                                                      line-height: 20px;
+                                                  "
+                                                  >${formatString(params.name)}</span
+                                              >
+                                          </div>
+                                          <div style="display: flex; justify-content: flex-start; padding: 0px 12px 14px">
+                                              <span
+                                                  style="
+                                                      font-size: 14px;
+                                                      font-family: 'GolosUI_Medium';
+                                                      color: #000;
+                                                      font-weight: 500;
+                                                      line-height: 18px;
+                                                  "
+                                                  >Value:
+                                              </span>
+                                              <span
+                                                  style="
+                                                      margin-left: 8px;
+                                                      font-size: 14px;
+                                                      color: rgba(0, 0, 0, 0.75);
+                                                      font-family: 'GolosUIWebRegular';
+                                                      font-weight: 400;
+                                                      line-height: 18px;
+                                                  "
+                                                  >${formatBigNumber(params.data.value, 0)}</span
+                                              >
+                                              <span
+                                                  style="
+                                                      font-size: 14px;
+                                                      font-family: GolosUI-Medium, GolosUI;
+                                                      font-weight: 500;
+                                                      color: rgba(0, 0, 0, 0.34);
+                                                      line-height: 18px;
+                                                  "
+                                                  >/${params.data.percent}%</span
+                                              >
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>`;
+                }
+            },
+            legend: {
+                top: null,
+                bottom: 10,
+                right: 0,
+                orient: 'vertical',
+                itemWidth: 12,
+                itemHeight: 12,
+                itemGap: 9,
+                padding: 0,
+                formatter: (name: string) => {
+                    return formatString(name);
+                },
+                textStyle: {
+                    padding: [1.4, 0, 0, 0],
+                    color: '#000000',
+                    fontWeight: 400,
+                    fontFamily: 'GolosUIWebRegular',
+                    fontSize: 12
+                }
+            },
+            series: [
+                {
+                    type: 'pie',
+                    silent: true,
+                    radius: [68, 80],
+                    center: [108, '50%'],
+                    itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 2,
+                        opacity: 1
+                    },
+                    label: {
+                        show: true,
+                        top: 'middle',
+                        position: 'center',
+                        padding: [7, 0, 0, 0],
+                        opacity: 1,
+                        rich: {
+                            text: {
+                                color: '#000000',
+                                fontWeight: 400,
+                                fontFamily: 'GolosUIWebRegular',
+                                fontSize: 16,
+                                lineHeight: 16
+                            },
+                            total: {
+                                color: '#000000',
+                                fontWeight: 600,
+                                fontFamily: 'GolosUIWebRegular',
+                                fontSize: 24,
+                                lineHeight: 24
+                            }
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    data: []
+                },
+                {
+                    type: 'pie',
+                    radius: [80, 100],
+                    center: [108, '50%'],
+                    itemStyle: {
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: false
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    emphasis: {
+                        scaleSize: 8
+                    },
+                    data: []
+                }
+            ]
+        };
+        return baseOption;
+    };
+    const { width: widthClient } = useWindowSize();
+
+    const changeRelayedAssetsOption = (
+        option: any,
+        widthClient: number,
+        isTwoColumnsLegend: boolean
+    ) => {
+        if (widthClient > 1183) {
+            if (isTwoColumnsLegend) {
+                option.legend.top = '35%';
+            } else {
+                option.legend.top = null;
+            }
+            option.legend.bottom = 10;
+            option.legend.right = 0;
+            option.series[0].radius = [68, 80];
+            option.series[0].center = [108, '50%'];
+            option.series[1].radius = [80, 100];
+            option.series[1].center = [108, '50%'];
+        } else {
+            if (isTwoColumnsLegend) {
+                option.legend.top = '25%';
+                option.legend.bottom = 10;
+                option.legend.right = 10;
+                option.series[0].radius = [52, 62];
+                option.series[0].center = [85, '53%'];
+                option.series[1].radius = [62, 77];
+                option.series[1].center = [85, '53%'];
+            } else {
+                option.legend.top = null;
+                option.legend.bottom = 10;
+                option.legend.right = 0;
+                option.series[0].radius = [52, 62];
+                option.series[0].center = [85, '53%'];
+                option.series[1].radius = [62, 77];
+                option.series[1].center = [85, '53%'];
+            }
+        }
+    };
+
+    const relayedValueDom = ref<HTMLElement>();
+    const relayedValueOption: any = getBaseOption();
+    let relayedValueChart: echarts.ECharts;
+    const relayedValueLoading = ref(true);
+    const relayedValueNoData = ref(false);
+    const relayedValueNetworkError = ref(false);
+    const changeRelayedValueOption = () => {
+        const legend =
+            relayedAssetsChoose.value === 0
+                ? totalRelayedValueData.valueTwoLegend
+                : totalRelayedValueData.txsTwoLegend;
+        changeRelayedAssetsOption(relayedValueOption, widthClient.value, legend);
+    };
+    const relayedValueSizeFn = () => {
+        if (relayedValueChart) {
+            changeRelayedValueOption();
+            relayedValueChart.setOption(relayedValueOption, true);
+            relayedValueChart.resize();
+        }
+    };
+    const relayedValueAbnormalText = computed(() => {
+        if (relayedValueNoData.value) {
+            return API_ERRPR_MESSAGE.noData;
+        } else if (relayedValueNetworkError.value) {
+            return API_ERRPR_MESSAGE.networkError;
+        } else {
+            return '';
+        }
+    });
+    const totalRelayedValueData = reactive<RelayedValueData>({
+        totalValue: DEFAULT_DISPLAY_TEXT,
+        value: [],
+        valueOpacity: [],
+        txs: [],
+        txsOpacity: [],
+        totalTxs: DEFAULT_DISPLAY_TEXT,
+        totalDenomCount: 0,
+        valueTwoLegend: false,
+        txsTwoLegend: false
+    });
+    const isRelayedValueType = computed(() => type.value === RelatedAssetsPieType.relayedValue);
+
+    const totalRelayedTitle = computed(() => {
+        if (relayedAssetsChoose.value === 0) {
+            return `Total ${
+                isRelayedValueType.value ? 'related Value' : 'Fee Cost'
+            } $${formatBigNumber(totalRelayedValueData.totalValue, 0)}`;
+        } else {
+            return `Total ${isRelayedValueType.value ? 'related Txs' : 'Fee Txs'} ${formatBigNumber(
+                totalRelayedValueData.totalTxs,
+                0
+            )}`;
+        }
+    });
+    const getRelayedValueData = async () => {
+        try {
+            relayedValueLoading.value = true;
+            relayedValueNoData.value = false;
+            relayedValueNetworkError.value = false;
+            const getDataApi = isRelayedValueType.value
+                ? getTotalRelayedValueAPI
+                : getTotalFeeCostAPI;
+            const { code, data, message } = await getDataApi({
+                relayer_id: relayerId
+            });
+            relayedValueLoading.value = false;
+            if (code === API_CODE.success) {
+                if (data) {
+                    if (!isRelayedValueType.value) {
+                        (data as any).total_txs_value = (data as any).total_fee_value;
+                        data.denom_list = data.denom_list.map((item) => {
+                            item.txs_value = (item as any).fee_value;
+                            item.base_denom = (item as any).denom;
+                            item.base_denom_chain = (item as any).denom_chain;
+                            return item;
+                        });
+                    }
+                    totalRelayedValueData.totalValue = (data as any).total_txs_value;
+                    totalRelayedValueData.totalTxs = data.total_txs;
+                    totalRelayedValueData.totalDenomCount = data.total_denom_count;
+                    const denomList: FormatDenomItem[] = [];
+                    for (let i = 0; i < data.denom_list.length; i++) {
+                        const item = data.denom_list[i];
+                        const baseDenom = await getBaseDenomByKey(
+                            item.base_denom_chain,
+                            item.base_denom
+                        );
+                        if (baseDenom) {
+                            denomList.push({
+                                imgUrl: baseDenom.icon,
+                                name: baseDenom.symbol,
+                                ...item
+                            });
+                        } else {
+                            denomList.push({
+                                imgUrl: chainDefaultUrl,
+                                name: item.base_denom,
+                                ...item
+                            });
+                        }
+                    }
+                    const valueDenomList = [...denomList];
+                    const txsDenomList = [...denomList];
+                    valueDenomList.sort((a, b) => BigNumber(b.txs_value).comparedTo(a.txs_value));
+                    txsDenomList.sort((a, b) => BigNumber(b.txs).comparedTo(a.txs));
+                    const needMaxNum = 12;
+                    if (data.denom_list.length > needMaxNum) {
+                        const spliceValueDenomList = valueDenomList.splice(needMaxNum - 1);
+                        const spliceTxsDenomList = txsDenomList.splice(needMaxNum - 1);
+                        const spliceValueTotal = spliceValueDenomList.reduce((total, current) => {
+                            return BigNumber(total).plus(current.txs_value).toString();
+                        }, '0');
+                        const spliceTxsTotal = spliceTxsDenomList.reduce((total, current) => {
+                            return BigNumber(total).plus(current.txs).toNumber();
+                        }, 0);
+                        valueDenomList.push({
+                            imgUrl: chainDefaultUrl,
+                            name: 'Others',
+                            base_denom: '',
+                            base_denom_chain: '',
+                            txs_value: spliceValueTotal,
+                            txs: 0
+                        });
+                        txsDenomList.push({
+                            imgUrl: chainDefaultUrl,
+                            name: 'Others',
+                            base_denom: '',
+                            base_denom_chain: '',
+                            txs: spliceTxsTotal,
+                            txs_value: ''
+                        });
+                    }
+                    for (let i = 0; i < valueDenomList.length; i++) {
+                        const valueDenom = valueDenomList[i];
+                        totalRelayedValueData.valueOpacity.push({
+                            value: valueDenom.txs_value,
+                            itemStyle: {
+                                color: OPACITY_PIE_COLOR_LIST[i]
+                            }
+                        });
+                        totalRelayedValueData.value.push({
+                            value: valueDenom.txs_value,
+                            imgUrl: valueDenom.imgUrl,
+                            name: valueDenom.name,
+                            percent: calculatePercentage(
+                                valueDenom.txs_value,
+                                totalRelayedValueData.totalValue
+                            ),
+                            itemStyle: {
+                                color: PIE_COLOR_LIST[i]
+                            }
+                        });
+                    }
+                    for (let i = 0; i < txsDenomList.length; i++) {
+                        const txsDenom = txsDenomList[i];
+                        totalRelayedValueData.txsOpacity.push({
+                            value: txsDenom.txs,
+                            itemStyle: {
+                                color: OPACITY_PIE_COLOR_LIST[i]
+                            }
+                        });
+                        totalRelayedValueData.txs.push({
+                            value: txsDenom.txs,
+                            imgUrl: txsDenom.imgUrl,
+                            name: txsDenom.name,
+                            percent: calculatePercentage(txsDenom.txs, data.total_txs),
+                            itemStyle: {
+                                color: PIE_COLOR_LIST[i]
+                            }
+                        });
+                    }
+                    totalRelayedValueData.valueTwoLegend = totalRelayedValueData.value.length > 6;
+                    totalRelayedValueData.txsTwoLegend = totalRelayedValueData.txs.length > 6;
+                } else {
+                    relayedValueNoData.value = true;
+                    totalRelayedValueData.totalValue = DEFAULT_DISPLAY_TEXT;
+                    totalRelayedValueData.value = [];
+                    totalRelayedValueData.valueOpacity = [];
+                    totalRelayedValueData.totalTxs = DEFAULT_DISPLAY_TEXT;
+                    totalRelayedValueData.txs = [];
+                    totalRelayedValueData.txsOpacity = [];
+                }
+            } else if (code === API_CODE.unRegisteredRelayer) {
+                relayedValueNoData.value = true;
+                console.error(message);
+            } else {
+                relayedValueNetworkError.value = true;
+                console.error(message);
+            }
+        } catch (error) {
+            relayedValueLoading.value = false;
+            relayedValueNetworkError.value = true;
+            console.error(error);
+        }
+    };
+    const twoLegendRelayedValue = computed(() => {
+        return relayedAssetsChoose.value === 0
+            ? totalRelayedValueData.valueTwoLegend
+            : totalRelayedValueData.txsTwoLegend;
+    });
+
+    const relayedAssetsChooseBtnFn = (index: number) => {
+        const labelCenter = isRelayedValueType.value ? 'IBC Token' : 'Fee Token';
+        if (index === 0) {
+            relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.value.length}}`;
+            relayedValueOption.series[0].data = totalRelayedValueData.valueOpacity;
+            relayedValueOption.series[1].data = totalRelayedValueData.value;
+        } else {
+            relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.txs.length}}`;
+            relayedValueOption.series[0].data = totalRelayedValueData.txsOpacity;
+            relayedValueOption.series[1].data = totalRelayedValueData.txs;
+        }
+        relayedValueChart.setOption(relayedValueOption, true);
+    };
+
+    onMounted(async () => {
+        await getRelayedValueData();
+        relayedValueChart = echarts.init(relayedValueDom.value as HTMLElement);
+        relayedValueChart.on('legendselectchanged', (params: any) => {
+            relayedValueChart.setOption({
+                legend: { selected: { [params.name]: true } }
+            });
+        });
+        relayedAssetsChooseBtnFn(0);
+        changeRelayedValueOption();
+        relayedValueChart.resize();
+        relayedValueChart.setOption(relayedValueOption, true);
+        window.addEventListener('resize', relayedValueSizeFn);
+    });
+    onBeforeUnmount(() => {
+        window.removeEventListener('resize', relayedValueSizeFn);
+    });
+    return {
+        totalRelayedTitle,
+        relayedValueLoading,
+        relayedValueNoData,
+        relayedValueNetworkError,
+        relayedValueAbnormalText,
+        twoLegendRelayedValue,
+        relayedAssetsChooseBtnFn,
+        relayedValueDom
     };
 };
