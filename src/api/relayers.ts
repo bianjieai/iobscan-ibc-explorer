@@ -1,3 +1,4 @@
+import { urlReplacePlaceholder } from '@/constants/apiUrl';
 import { API_URL } from '@/constants/apiUrl';
 import request, { executeCancel, setExecuteCancel } from '@/utils/axios';
 import requestMock from '@/utils/axiosMock';
@@ -8,7 +9,9 @@ import {
     IRequestRelayerTransfer,
     IResponseRelayerDetails,
     IResponseRelayerList,
-    ITransferTypeTxs
+    ITransferTypeTxs,
+    IResponseRelayerTrend,
+    IRequestRelayedTrend
 } from '@/types/interface/relayers.interface';
 
 export const getRelayersListAPI = async (params: IRequestRelayerList) => {
@@ -42,6 +45,24 @@ export const getRelayersNameListMock = async () => {
     return requestMock<IResponse<string[]>>({
         url: API_URL.ibcRelayerRelayerName,
         method: 'get'
+    });
+};
+
+export const getRelayedTrendAPI = async (params: IRequestRelayedTrend) => {
+    const url = API_URL.ibcRelayedTrend.replace(urlReplacePlaceholder, params.relayer_id);
+    return request<IResponse<IResponseRelayerTrend[]>>({
+        url,
+        method: 'get',
+        params: params
+    });
+};
+
+export const getRelayedTrendMock = async (params: IRequestRelayedTrend) => {
+    const url = API_URL.ibcRelayedTrend.replace(urlReplacePlaceholder, params.relayer_id);
+    return requestMock<IResponse<IResponseRelayerTrend[]>>({
+        url,
+        method: 'get',
+        params: { days: params.days }
     });
 };
 

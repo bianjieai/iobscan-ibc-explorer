@@ -23,7 +23,9 @@
         </InfoCard>
         <div class="relayer_details__charts_wrap">
             <div class="relayer_details__charts_wrap__left">
-                <div class="relayer_details__charts_wrap__left__top"></div>
+                <div class="relayer_details__charts_wrap__left__top">
+                    <RelayedTrendChart />
+                </div>
                 <div class="relayer_details__charts_wrap__left__bottom">
                     <InfoCard
                         class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap"
@@ -99,7 +101,9 @@
                     </InfoCard>
                 </div>
             </div>
-            <div class="relayer_details__charts_wrap__right"></div>
+            <div class="relayer_details__charts_wrap__right">
+                <RelatedAssets />
+            </div>
         </div>
         <InfoCard icon="icon-transactions" title="Transactions">
             <RelayerTransfer :served-chains-info="servedChainsInfo" :is-show-modal="isShowModal" />
@@ -109,6 +113,8 @@
 </template>
 
 <script setup lang="ts">
+    import RelayedTrendChart from './components/RelayedTrend.vue';
+    import RelatedAssets from './components/RelatedAssets.vue';
     import ChannelPairsInfo from './components/ChannelPairsInfo.vue';
     import TransferTypeChart from './components/TransferTypeChart.vue';
     import SuccessRateChart from './components/SuccessRateChart.vue';
@@ -120,6 +126,7 @@
         useGetTransferTypeData
     } from './composable';
     import { useIbcStatisticsChains } from '@/store';
+
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const {
         relayerIcon,
@@ -147,13 +154,20 @@
 
 <style lang="less" scoped>
     .relayer_details {
+        padding: 48px 24px 100px;
         &__statistic {
             margin-top: 24px;
         }
         &__charts_wrap {
             .flex(row, nowrap, space-between, flex-start);
+            .info_card {
+                margin-top: 16px;
+            }
             &__left {
                 flex: 1;
+                max-width: 756px;
+                &__top {
+                }
                 &__bottom {
                     .flex(row, nowrap, space-between, flex-start);
                     &__transfer_type_wrap {
@@ -178,6 +192,40 @@
             &__right {
                 margin-left: 16px;
                 flex: 1;
+                max-width: 428px;
+            }
+        }
+    }
+    // 1247px
+    @media screen and (max-width: 1183px) {
+        .relayer_details {
+            &__statistic {
+            }
+            &__charts_wrap {
+                flex-direction: column;
+                &__left {
+                    width: 100%;
+                    max-width: 100%;
+                    &__top {
+                    }
+                    &__bottom {
+                        &__transfer_type_wrap {
+                            &__nodatas {
+                            }
+                        }
+                        &__transfer_type {
+                        }
+                        &__success_rate {
+                            &__nodatas {
+                            }
+                        }
+                    }
+                }
+                &__right {
+                    margin-left: 0;
+                    width: 100%;
+                    max-width: 100%;
+                }
             }
         }
     }
