@@ -5,15 +5,17 @@
 </template>
 
 <script setup lang="ts">
-    import { Ref } from 'vue';
     import { useSuccessRateChart } from '../composable';
     interface ISucccessRate {
         successRatePercent: number;
     }
     const props = defineProps<ISucccessRate>();
     const { successRatePercent } = toRefs(props);
-    const successRateDom = ref<HTMLElement>() as Ref<HTMLElement>;
-    useSuccessRateChart(successRateDom, successRatePercent);
+    const { successRateDom } = useSuccessRateChart(successRatePercent);
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+    .success_rate {
+        .flex(row, nowrap, center, center);
+    }
+</style>

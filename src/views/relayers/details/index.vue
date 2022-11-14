@@ -1,6 +1,5 @@
 <template>
     <PageContainer class="relayer_details">
-        <!-- Todo shan 需要 Relayer Name 过长情况的展示方案 -->
         <PageTitle
             :title="`${relayerName} Relayer Details`"
             :title-icon="'icon-a-chainsserved'"
@@ -11,6 +10,13 @@
             <statistic-list type="horizontal" :msg="relayerInfo" />
         </layer-block>
         <InfoCard icon="icon-a-ChannelPairs" title="Channel Pairs">
+            <loading-component
+                v-if="ibcStatisticsChainsStore.isShowLoading"
+                :type="LoadingType.container"
+                :width="100"
+                :width-unit="'%'"
+                :height="364"
+            />
             <ChannelPairsInfo v-if="channelPairsInfo" :channel-pairs-info="channelPairsInfo" />
             <no-datas v-if="!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo" />
         </InfoCard>
@@ -28,6 +34,7 @@
                         <loading-component
                             v-if="transferTypeLoading"
                             :type="LoadingType.container"
+                            :width="460"
                             :height="200"
                         />
                         <div
@@ -73,12 +80,12 @@
                         icon="icon-a-successrate"
                         title="Success Rate"
                     >
-                        <!-- Todo shan loading 状态添加 -->
-                        <!-- <loading-component
-                            v-if="transferTypeLoading"
+                        <loading-component
+                            v-if="ibcStatisticsChainsStore.isShowLoading"
                             :type="LoadingType.container"
+                            :width="280"
                             :height="200"
-                        /> -->
+                        />
                         <SuccessRateChart
                             v-if="!isShowModal && !ibcStatisticsChainsStore.isShowLoading"
                             :success-rate-percent="successRatePercent"
@@ -146,7 +153,6 @@
 
 <style lang="less" scoped>
     .relayer_details {
-        padding: 48px 24px 100px;
         &__statistic {
             margin-top: 24px;
         }
@@ -170,7 +176,7 @@
                         }
                     }
                     &__transfer_type {
-                        .flex(row, nowrap, space-between, flex-start);
+                        .flex(row, nowrap, center, flex-start);
                     }
                     &__success_rate {
                         margin-left: 16px;
@@ -278,6 +284,36 @@
             }
         }
     }
+    @media screen and (max-width: 792px) {
+        .relayer_details {
+            &__statistic {
+                :deep(.horizontal_container) {
+                    .list_item__horizontal {
+                        .list_item {
+                        }
+                    }
+                }
+            }
+            &__charts_wrap {
+                &__left {
+                    &__bottom {
+                        .flex(column, nowrap, center, flex-start);
+                        &__transfer_type_wrap {
+                            width: 100%;
+                        }
+                        &__transfer_type {
+                        }
+                        &__success_rate {
+                            margin-left: 0;
+                            width: 100%;
+                        }
+                    }
+                }
+                &__right {
+                }
+            }
+        }
+    }
     @media screen and (max-width: 530px) {
         .relayer_details {
             padding: 24px 16px 60px;
@@ -309,6 +345,31 @@
                         &__transfer_type_wrap {
                         }
                         &__transfer_type {
+                        }
+                        &__success_rate {
+                        }
+                    }
+                }
+                &__right {
+                }
+            }
+        }
+    }
+    @media screen and (max-width: 460px) {
+        .relayer_details {
+            &__statistic {
+                :deep(.horizontal_container) {
+                    .list_item__horizontal {
+                    }
+                }
+            }
+            &__charts_wrap {
+                &__left {
+                    &__bottom {
+                        &__transfer_type_wrap {
+                        }
+                        &__transfer_type {
+                            .flex(column, nowrap, center, flex-start);
                         }
                         &__success_rate {
                         }

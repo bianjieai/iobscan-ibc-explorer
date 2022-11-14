@@ -7,7 +7,7 @@
         }"
         :style="{
             height: props.height + props.heightUnit,
-            width: props.width + props.heightUnit
+            width: props.width + props.widthUnit
         }"
     >
         <a-spin></a-spin>

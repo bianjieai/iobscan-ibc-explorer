@@ -201,14 +201,14 @@ export const useGetTransferTypeData = () => {
 };
 
 export const useTransferTypeChart = (
-    transferTypeDom: Ref<HTMLElement>,
     type: Ref<string>,
     txsCount: Ref<number>,
     txsPercent: Ref<number>,
     totalTxsCount: Ref<number>,
     processColor: Ref<string>
 ) => {
-    let option: any;
+    const transferTypeDom = ref<HTMLElement>();
+    let transferTypeChart: echarts.ECharts;
     let typeShort = '';
     switch (type.value) {
         case TRANSFER_TYPE.receive.label:
@@ -221,87 +221,83 @@ export const useTransferTypeChart = (
             typeShort = TRANSFER_TYPE.timeout.short;
             break;
     }
-    watch(
-        [transferTypeDom, txsCount, txsPercent, totalTxsCount, processColor],
-        ([newTransferTypeDom, newTxsCount, newTxsPercent, newTotalTxsCount, newProcessColor]) => {
-            if (newTransferTypeDom) {
-                option = {
-                    title: {
-                        text: `${newTxsPercent}%`,
-                        left: 'center',
-                        top: 'center',
-                        textStyle: {
-                            color: '#000',
-                            fontSize: 16,
-                            fontFamily: 'GolosUI_Medium',
-                            fontWeight: 400,
-                            lineHeight: 20
-                        }
-                    },
-                    tooltip: {
-                        position: ['50%', '13%'],
-                        backgroundColor: null,
-                        borderWidth: 0,
-                        extraCssText: 'box-shadow: 0 0 0 transparent;',
-                        formatter: () => {
-                            return `
-                                <div style="display: flex; align-items: center;">
-                                <div style="border-top: 5px solid transparent;border-right: 8px solid #3D50FF;border-bottom: 5px solid transparent;border-left: 8px solid transparent;"></div>
-                                <div style="display: flex;margin-left: 4px;background: #FFFFFF;box-shadow: 0px 2px 8px 0px #D9DEEC;border-radius: 4px;border: 1px solid #D9DFEE;">
-                                        <div style="width: 8px;height: 50px;background-color:rgba(61, 80, 255, 0.1);"></div>
-                                        <div style="padding: 14px 12px;">
-                                            <span style="font-size: 14px;font-family: GolosUI_Medium;color: #000;line-height: 18px;">${typeShort} Txs: </span>
-                                            <span style="margin-left: 8px;font-size: 14px;color: rgba(0,0,0,0.75);line-height: 18px;">${formatBigNumber(
-                                                newTxsCount
-                                            )}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    },
-                    visualMap: {
-                        show: false
-                    },
-                    series: [
-                        {
-                            type: 'pie',
-                            radius: [34, 50],
-                            data: [
-                                {
-                                    value: `${newTxsCount}`,
-                                    itemStyle: { color: `${newProcessColor}` }
-                                },
-                                {
-                                    value: `${newTotalTxsCount - newTxsCount}`,
-                                    itemStyle: { color: 'rgba(0,0,0,0.05)' }
-                                }
-                            ],
-                            emphasis: {
-                                scale: false,
-                                label: {
-                                    show: false
-                                }
-                            },
-                            label: {
-                                show: false
-                            },
-                            itemStyle: {
-                                borderWidth: 2,
-                                borderColor: '#fff'
-                            }
-                        }
-                    ]
-                };
-                // Todo shan 需添加销毁操作及监听事件调整，适配方案研究
-                const transferTypeChart = echarts.init(newTransferTypeDom);
-                option && transferTypeChart.setOption(option, true);
-                window.onresize = () => {
-                    transferTypeChart.resize();
-                };
+    const option = {
+        title: {
+            text: `${txsPercent.value}%`,
+            left: 'center',
+            top: 'center',
+            textStyle: {
+                color: '#000',
+                fontSize: 16,
+                fontFamily: 'GolosUI_Medium',
+                fontWeight: 400,
+                lineHeight: 20
             }
-        }
-    );
+        },
+        tooltip: {
+            position: ['65%', '13%'],
+            backgroundColor: null,
+            borderWidth: 0,
+            extraCssText: 'box-shadow: 0 0 0 transparent;',
+            formatter: () => {
+                return `
+                    <div style="position: relative;padding: 14px 12px;background: #FFFFFF;box-shadow: 0px 2px 8px 0px #D9DEEC;border-radius: 4px;border: 1px solid #D9DFEE;">
+                        <span style="font-size: 14px;font-family: GolosUI_Medium;color: #000;line-height: 18px;">${typeShort} Txs: </span>
+                        <span style="margin-left: 8px;font-size: 14px;color: rgba(0,0,0,0.75);line-height: 18px;">
+                            ${formatBigNumber(txsCount.value)}
+                        </span>
+                        <div style="position: absolute;top: 50%;left: -20px;transform: translateY(-50%);border-top: 5px solid transparent;border-right: 8px solid #3D50FF;border-bottom: 5px solid transparent;border-left: 8px solid transparent;"></div>
+                    </div>
+                `;
+            }
+        },
+        visualMap: {
+            show: false
+        },
+        series: [
+            {
+                type: 'pie',
+                radius: [34, 50],
+                data: [
+                    {
+                        value: `${txsCount.value}`,
+                        itemStyle: { color: `${processColor.value}` }
+                    },
+                    {
+                        value: `${totalTxsCount.value - txsCount.value}`,
+                        itemStyle: { color: 'rgba(0,0,0,0.05)' }
+                    }
+                ],
+                emphasis: {
+                    scale: false,
+                    label: {
+                        show: false
+                    }
+                },
+                label: {
+                    show: false
+                },
+                itemStyle: {
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }
+            }
+        ]
+    };
+    const transferTypeResize = () => {
+        transferTypeChart && transferTypeChart.resize();
+    };
+    onMounted(() => {
+        transferTypeChart = echarts.init(transferTypeDom.value as HTMLElement);
+        option && transferTypeChart.setOption(option, true);
+        window.addEventListener('resize', transferTypeResize);
+    });
+    onBeforeUnmount(() => {
+        window.removeEventListener('resize', transferTypeResize);
+    });
+    return {
+        transferTypeDom
+    };
 };
 
 export const useGetSuccessRatePercent = (
@@ -320,144 +316,147 @@ export const useGetSuccessRatePercent = (
     };
 };
 
-export const useSuccessRateChart = (
-    successRateDom: Ref<HTMLElement>,
-    successRatePercent: Ref<number>
-) => {
-    let option: any;
-    watch([successRateDom, successRatePercent], ([newSuccessRateDom, newSuccessRatePercent]) => {
-        if (newSuccessRateDom) {
-            option = {
-                series: [
+export const useSuccessRateChart = (successRatePercent: Ref<number>) => {
+    const successRateDom = ref<HTMLElement>();
+    let successRateChart: echarts.ECharts;
+    const option = {
+        series: [
+            {
+                type: 'gauge',
+                radius: '78%',
+                splitNumber: 5,
+                progress: {
+                    show: true,
+                    width: 14,
+                    itemStyle: {
+                        color: '#3D50FF'
+                    }
+                },
+                splitLine: {
+                    length: 1,
+                    distance: -23,
+                    lineStyle: {
+                        width: 4,
+                        color: '#BAC1FF',
+                        cap: 'round'
+                    }
+                },
+                axisTick: {
+                    show: true,
+                    splitNumber: 100,
+                    length: 1,
+                    distance: -22,
+                    lineStyle: {
+                        color: '#BAC1FF',
+                        type: 'solid'
+                    }
+                },
+                axisLine: {
+                    lineStyle: {
+                        width: 14,
+                        color: [[1, '#F2F2F2']]
+                    }
+                },
+                axisLabel: {
+                    distance: -8,
+                    color: 'rgba(0,0,0,0.35)',
+                    fontSize: 12,
+                    lineHeight: 18
+                },
+                pointer: {
+                    length: '100%',
+                    icon: 'triangle',
+                    width: 4,
+                    itemStyle: {
+                        color: '#BAC1FF'
+                    }
+                },
+                anchor: {
+                    show: true,
+                    showAbove: true,
+                    size: 4,
+                    itemStyle: {
+                        borderWidth: 4,
+                        borderColor: '#BAC1FF'
+                    }
+                },
+                title: {
+                    show: false
+                },
+                detail: {
+                    offsetCenter: [0, '85%'],
+                    fontSize: 24,
+                    fontFamily: 'GolosUI_Medium',
+                    valueAnimation: true,
+                    formatter: function (value: number) {
+                        return `${value.toFixed(0)}%`;
+                    }
+                },
+                data: [
                     {
-                        type: 'gauge',
-                        radius: '78%',
-                        splitNumber: 5,
-                        progress: {
-                            show: true,
-                            width: 14,
-                            itemStyle: {
-                                color: '#3D50FF'
-                            }
-                        },
-                        splitLine: {
-                            length: 1,
-                            distance: -23,
-                            lineStyle: {
-                                width: 4,
-                                color: '#BAC1FF',
-                                cap: 'round'
-                            }
-                        },
-                        axisTick: {
-                            show: true,
-                            splitNumber: 100,
-                            length: 1,
-                            distance: -22,
-                            lineStyle: {
-                                color: '#BAC1FF',
-                                type: 'solid'
-                            }
-                        },
-                        axisLine: {
-                            lineStyle: {
-                                width: 14,
-                                color: [[1, '#F2F2F2']]
-                            }
-                        },
-                        axisLabel: {
-                            distance: -8,
-                            color: 'rgba(0,0,0,0.35)',
-                            fontSize: 12,
-                            lineHeight: 18
-                        },
-                        pointer: {
-                            length: '100%',
-                            icon: 'triangle',
-                            width: 4,
-                            itemStyle: {
-                                color: '#BAC1FF'
-                            }
-                        },
-                        anchor: {
-                            show: true,
-                            showAbove: true,
-                            size: 4,
-                            itemStyle: {
-                                borderWidth: 4,
-                                borderColor: '#BAC1FF'
-                            }
-                        },
-                        title: {
-                            show: false
-                        },
-                        detail: {
-                            offsetCenter: [0, '85%'],
-                            fontSize: 24,
-                            fontFamily: 'GolosUI_Medium',
-                            valueAnimation: true,
-                            formatter: function (value: number) {
-                                return `${value.toFixed(0)}%`;
-                            }
-                        },
-                        data: [
-                            {
-                                value: newSuccessRatePercent
-                            }
-                        ]
-                    },
-                    {
-                        type: 'gauge',
-                        radius: '54%',
-                        axisLine: {
-                            lineStyle: {
-                                width: 0,
-                                color: [
-                                    [0.1, 'rgba(61,80,255,0.1)'],
-                                    [1, 'transparent']
-                                ]
-                            }
-                        },
-                        progress: {
-                            show: true,
-                            width: 12,
-                            itemStyle: {
-                                color: 'rgba(61,80,255,0.1)'
-                            }
-                        },
-                        splitLine: {
-                            show: false
-                        },
-                        axisLabel: {
-                            show: false
-                        },
-                        axisTick: {
-                            show: false
-                        },
-                        pointer: {
-                            length: '100%',
-                            icon: 'triangle',
-                            width: 4,
-                            itemStyle: {
-                                color: '#BAC1FF'
-                            }
-                        },
-                        detail: { show: false },
-                        data: [
-                            {
-                                value: newSuccessRatePercent
-                            }
-                        ]
+                        value: successRatePercent.value
                     }
                 ]
-            };
-            const successRateChart = echarts.init(newSuccessRateDom);
-            option && successRateChart.setOption(option, true);
-            window.onresize = () => {
-                successRateChart.resize();
-            };
-        }
+            },
+            {
+                type: 'gauge',
+                radius: '54%',
+                axisLine: {
+                    lineStyle: {
+                        width: 0,
+                        color: [
+                            [0.1, 'rgba(61,80,255,0.1)'],
+                            [1, 'transparent']
+                        ]
+                    }
+                },
+                progress: {
+                    show: true,
+                    width: 12,
+                    itemStyle: {
+                        color: 'rgba(61,80,255,0.1)'
+                    }
+                },
+                splitLine: {
+                    show: false
+                },
+                axisLabel: {
+                    show: false
+                },
+                axisTick: {
+                    show: false
+                },
+                pointer: {
+                    length: '100%',
+                    icon: 'triangle',
+                    width: 4,
+                    itemStyle: {
+                        color: '#BAC1FF'
+                    }
+                },
+                detail: { show: false },
+                data: [
+                    {
+                        value: successRatePercent.value
+                    }
+                ]
+            }
+        ]
+    };
+    const successRateResize = () => {
+        successRateChart && successRateChart.resize();
+    };
+    onMounted(() => {
+        successRateChart = echarts.init(successRateDom.value as HTMLElement);
+        option && successRateChart.setOption(option, true);
+        window.addEventListener('resize', successRateResize);
     });
+    onBeforeUnmount(() => {
+        window.removeEventListener('resize', successRateResize);
+    });
+    return {
+        successRateDom
+    };
 };
 
 export const usePagination = () => {
@@ -483,8 +482,8 @@ export const useSelectedSearch = (
     const dateRange = reactive({ value: [] });
     const disabledDate = (current: any) =>
         current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
-    const startTxTime = ref<number>(0);
-    const endTxTime = ref<number>(0);
+    const startTxTime = ref<number | string>('');
+    const endTxTime = ref<number | string>('');
     const rtTableLoading = ref<boolean>(true);
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
@@ -516,15 +515,19 @@ export const useSelectedSearch = (
         return relayerChainData.value[0]?.children[0];
     });
     const searchChain = ref<string>(defaultChain.value?.id);
-    // Todo shan params 类型需要更改
-    const getRelayerTransferTxs = (params: any, page_num = 1, page_size = 5, use_count = false) => {
+    const getRelayerTransferTxs = (
+        params: IRequestRelayerTransfer,
+        page_num = 1,
+        page_size = 5,
+        use_count = false
+    ) => {
         const getRelayerTransferTxsData = async () => {
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
+                    ...params,
                     page_num,
                     page_size,
-                    use_count,
-                    ...params
+                    use_count
                 });
                 rtTableLoading.value = false;
                 if (code === API_CODE.success) {
@@ -547,14 +550,17 @@ export const useSelectedSearch = (
         };
         getRelayerTransferTxsData();
     };
-    // Todo shan params 类型需要更改
-    const queryDatas = (params: any) => {
+    const queryDatas = (params: IRequestRelayerTransfer) => {
         getRelayerTransferTxs(params, 1, 5, true);
         getRelayerTransferTxs(params, pagination.current, pagination.pageSize, false);
     };
     watch(defaultChain, (newDefaultChain) => {
         if (newDefaultChain) {
-            queryDatas({ chain: newDefaultChain.id });
+            queryDatas({
+                chain: newDefaultChain.id,
+                page_num: 1,
+                page_size: 5
+            });
         }
     });
     const onSelectedChain = (selectedChainInfo?: IDataItem) => {

@@ -309,7 +309,6 @@
 </template>
 
 <script setup lang="ts">
-    // Todo shan merge master
     import {
         IBC_TX_STATUS_SELECT_OPTIONS,
         IBC_TX_STATUS,
@@ -675,7 +674,7 @@
     }
     @media screen and (max-width: 768px) {
         .transfer {
-            :deep(.page_title_container) {
+            :deep(.page_title) {
                 display: inline-flex;
                 text-align: left;
                 .flex {
