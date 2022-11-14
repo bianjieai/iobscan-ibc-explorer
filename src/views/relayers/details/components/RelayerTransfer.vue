@@ -24,7 +24,11 @@
                     :is-show-modal="isShowModal"
                     @change="onChangeRangePicker"
                 ></RangePicker>
-                <TypeButton class="relayer_transfer__reset_btn" @on-reset="onClickReset" />
+                <TypeButton
+                    class="relayer_transfer__reset_btn"
+                    :is-disabled="isShowModal"
+                    @on-reset="onClickReset"
+                />
             </div>
         </div>
         <div class="relayer_transfer__table">
@@ -33,7 +37,12 @@
                 :type="LoadingType.container"
                 :height="300"
             />
+            <no-datas
+                v-else-if="isShowModal || (!rtTableLoading && !relayerTransferTableData)"
+                class="relayer_transfer__table__nodatas"
+            />
             <TableCommon
+                v-else
                 class="relayer_transfer__table__content"
                 :has-padding-lr="false"
                 :loading="rtTableLoading"

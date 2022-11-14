@@ -193,6 +193,8 @@ export const useGetTransferTypeData = () => {
                 getRecvPacketTxsPercent.value -= newTotalTxsPercent - 100;
             } else if (newTotalTxsPercent < 100) {
                 getRecvPacketTxsPercent.value += 100 - newTotalTxsPercent;
+            } else {
+                getRecvPacketTxsPercent.value = getRecvPacketTxsPercent.value;
             }
         }
     });
@@ -494,8 +496,8 @@ export const useSelectedSearch = (
     const dateRange = reactive({ value: [] });
     const disabledDate = (current: any) =>
         current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
-    const startTxTime = ref<number | string>('');
-    const endTxTime = ref<number | string>('');
+    const startTxTime = ref<number | undefined>(undefined);
+    const endTxTime = ref<number | undefined>(undefined);
     const rtTableLoading = ref<boolean>(true);
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
@@ -586,8 +588,8 @@ export const useSelectedSearch = (
         if (chain) {
             refreshList({
                 chain: chain as string,
-                tx_time_start: String(startTxTime.value),
-                tx_time_end: String(endTxTime.value),
+                tx_time_start: startTxTime.value?.toString(),
+                tx_time_end: endTxTime.value?.toString(),
                 page_num: pagination.current,
                 page_size: pagination.pageSize
             });
@@ -605,8 +607,8 @@ export const useSelectedSearch = (
         );
         refreshList({
             chain: searchChain.value || defaultChain.value.id,
-            tx_time_start: String(startTxTime.value),
-            tx_time_end: String(endTxTime.value),
+            tx_time_start: startTxTime.value?.toString(),
+            tx_time_end: endTxTime.value?.toString(),
             page_num: 1,
             page_size: 5
         });
@@ -615,6 +617,8 @@ export const useSelectedSearch = (
         pagination.current = 1;
         searchChain.value = defaultChain.value.id;
         dateRange.value = [];
+        startTxTime.value = undefined;
+        endTxTime.value = undefined;
         refreshList({
             chain: defaultChain.value.id,
             page_num: 1,
@@ -624,9 +628,9 @@ export const useSelectedSearch = (
     const onPaginationChange = (current: number, pageSize: number) => {
         pagination.current = current;
         refreshList({
-            chain: searchChain.value,
-            tx_time_start: String(startTxTime.value),
-            tx_time_end: String(endTxTime.value),
+            chain: searchChain.value || defaultChain.value.id,
+            tx_time_start: startTxTime.value?.toString(),
+            tx_time_end: endTxTime.value?.toString(),
             page_num: pagination.current,
             page_size: pageSize
         });
