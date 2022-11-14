@@ -479,8 +479,8 @@ export const useSelectedSearch = (
     const dateRange = reactive({ value: [] });
     const disabledDate = (current: any) =>
         current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
-    const startTxTime = ref<number>(0);
-    const endTxTime = ref<number>(0);
+    const startTxTime = ref<number | string>('');
+    const endTxTime = ref<number | string>('');
     const rtTableLoading = ref<boolean>(true);
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
@@ -512,15 +512,19 @@ export const useSelectedSearch = (
         return relayerChainData.value[0]?.children[0];
     });
     const searchChain = ref<string>(defaultChain.value?.id);
-    // Todo shan params 类型需要更改
-    const getRelayerTransferTxs = (params: any, page_num = 1, page_size = 5, use_count = false) => {
+    const getRelayerTransferTxs = (
+        params: IRequestRelayerTransfer,
+        page_num = 1,
+        page_size = 5,
+        use_count = false
+    ) => {
         const getRelayerTransferTxsData = async () => {
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
+                    ...params,
                     page_num,
                     page_size,
-                    use_count,
-                    ...params
+                    use_count
                 });
                 rtTableLoading.value = false;
                 if (code === API_CODE.success) {
@@ -543,14 +547,17 @@ export const useSelectedSearch = (
         };
         getRelayerTransferTxsData();
     };
-    // Todo shan params 类型需要更改
-    const queryDatas = (params: any) => {
+    const queryDatas = (params: IRequestRelayerTransfer) => {
         getRelayerTransferTxs(params, 1, 5, true);
         getRelayerTransferTxs(params, pagination.current, pagination.pageSize, false);
     };
     watch(defaultChain, (newDefaultChain) => {
         if (newDefaultChain) {
-            queryDatas({ chain: newDefaultChain.id });
+            queryDatas({
+                chain: newDefaultChain.id,
+                page_num: 1,
+                page_size: 5
+            });
         }
     });
     const onSelectedChain = (selectedChainInfo?: IDataItem) => {

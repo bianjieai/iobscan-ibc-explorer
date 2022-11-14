@@ -11,6 +11,13 @@
             <statistic-list type="horizontal" :msg="relayerInfo" />
         </layer-block>
         <InfoCard icon="icon-a-ChannelPairs" title="Channel Pairs">
+            <loading-component
+                v-if="ibcStatisticsChainsStore.isShowLoading"
+                :type="LoadingType.container"
+                :width="100"
+                :width-unit="'%'"
+                :height="364"
+            />
             <ChannelPairsInfo v-if="channelPairsInfo" :channel-pairs-info="channelPairsInfo" />
             <no-datas v-if="!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo" />
         </InfoCard>
@@ -26,6 +33,7 @@
                         <loading-component
                             v-if="transferTypeLoading"
                             :type="LoadingType.container"
+                            :width="460"
                             :height="200"
                         />
                         <div
@@ -71,12 +79,12 @@
                         icon="icon-a-successrate"
                         title="Success Rate"
                     >
-                        <!-- Todo shan loading 状态添加 -->
-                        <!-- <loading-component
-                            v-if="transferTypeLoading"
+                        <loading-component
+                            v-if="ibcStatisticsChainsStore.isShowLoading"
                             :type="LoadingType.container"
+                            :width="280"
                             :height="200"
-                        /> -->
+                        />
                         <SuccessRateChart
                             v-if="!isShowModal && !ibcStatisticsChainsStore.isShowLoading"
                             :success-rate-percent="successRatePercent"

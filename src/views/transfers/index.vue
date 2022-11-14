@@ -309,7 +309,6 @@
 </template>
 
 <script setup lang="ts">
-    // Todo shan merge master
     import {
         IBC_TX_STATUS_SELECT_OPTIONS,
         IBC_TX_STATUS,
