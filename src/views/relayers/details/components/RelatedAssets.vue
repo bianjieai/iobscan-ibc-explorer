@@ -8,17 +8,17 @@
         @change-choose-btn="relayedAssetsChooseBtnFn"
     >
         <div class="related_asset_c__value">
-            <div class="related_asset_c__value__title">Total related Value $200</div>
+            <div class="related_asset_c__value__title">{{ totalRelayedTitle }}</div>
             <div class="related_asset_c__value__chart_warp">
-                <!-- todo dj 接口逻辑待处理 -->
-                <!-- <loading-component :type="LoadingType.container" /> -->
-                <!-- <no-datas :text="nodata || network" /> -->
                 <loading-component v-if="relayedValueLoading" :type="LoadingType.container" />
                 <no-datas
                     v-else-if="relayedValueNoData || relayedValueNetworkError"
                     :text="relayedValueAbnormalText"
                 />
                 <div
+                    v-show="
+                        !relayedValueLoading && !(relayedValueNoData || relayedValueNetworkError)
+                    "
                     ref="relayedValueDom"
                     class="related_asset_c__value__chart_warp__chart"
                     :class="{ two_legend: twoLegendRelayedValue }"
@@ -49,6 +49,7 @@
     import BigNumber from 'bignumber.js';
     import { formatString } from '@/utils/stringTools';
     import { calculatePercentage } from '@/utils/calculate';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
 
     const route = useRoute();
     const relayerId: string = route.params.relayerId as string;
@@ -101,7 +102,7 @@
                                                       color: #000000;
                                                       line-height: 20px;
                                                   "
-                                                  >${params.name}</span
+                                                  >${formatString(params.name)}</span
                                               >
                                           </div>
                                           <div style="display: flex; justify-content: flex-start; padding: 0px 12px 14px">
@@ -124,7 +125,7 @@
                                                       font-weight: 400;
                                                       line-height: 18px;
                                                   "
-                                                  >${params.data.value}</span
+                                                  >${formatBigNumber(params.data.value, 0)}</span
                                               >
                                               <span
                                                   style="
@@ -151,6 +152,9 @@
                 itemHeight: 12,
                 itemGap: 9,
                 padding: 0,
+                formatter: (name: string) => {
+                    return formatString(name);
+                },
                 textStyle: {
                     padding: [1.4, 0, 0, 0],
                     color: '#000000',
@@ -221,7 +225,6 @@
         };
         return baseOption;
     };
-
     const { width: widthClient } = useWindowSize();
 
     const changeRelayedAssetsOption = (
@@ -302,6 +305,14 @@
         valueTwoLegend: false,
         txsTwoLegend: false
     });
+
+    const totalRelayedTitle = computed(() => {
+        if (relayedAssetsChoose.value === 0) {
+            return `Total related Value $${formatBigNumber(totalRelayedValueData.totalValue, 0)}`;
+        } else {
+            return `Total related Txs ${formatBigNumber(totalRelayedValueData.totalTxs, 0)}`;
+        }
+    });
     const getRelayedValueData = async () => {
         try {
             relayedValueLoading.value = true;
@@ -379,7 +390,7 @@
                         totalRelayedValueData.value.push({
                             value: valueDenom.txs_value,
                             imgUrl: valueDenom.imgUrl,
-                            name: formatString(valueDenom.name),
+                            name: valueDenom.name,
                             percent: calculatePercentage(
                                 valueDenom.txs_value,
                                 data.total_txs_value
@@ -400,7 +411,7 @@
                         totalRelayedValueData.txs.push({
                             value: txsDenom.txs,
                             imgUrl: txsDenom.imgUrl,
-                            name: formatString(txsDenom.name),
+                            name: txsDenom.name,
                             percent: calculatePercentage(txsDenom.txs, data.total_txs),
                             itemStyle: {
                                 color: PIE_COLOR_LIST[i]
@@ -437,15 +448,16 @@
             : totalRelayedValueData.txsTwoLegend;
     });
     onMounted(async () => {
-        relayedValueChart = echarts.init(relayedValueDom.value as HTMLElement);
         await getRelayedValueData();
+        relayedValueChart = echarts.init(relayedValueDom.value as HTMLElement);
         relayedValueChart.on('legendselectchanged', (params: any) => {
             relayedValueChart.setOption({
                 legend: { selected: { [params.name]: true } }
             });
         });
-        changeRelayedValueOption();
         relayedAssetsChooseBtnFn(0);
+        changeRelayedValueOption();
+        relayedValueChart.resize();
         relayedValueChart.setOption(relayedValueOption, true);
         window.addEventListener('resize', relayedValueSizeFn);
     });
