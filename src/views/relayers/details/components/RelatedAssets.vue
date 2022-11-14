@@ -310,7 +310,7 @@
             relayedValueOption.series[0].center = [108, '50%'];
             relayedValueOption.series[1].radius = [80, 100];
             relayedValueOption.series[1].center = [108, '50%'];
-        } else if (widthClient.value > 767) {
+        } else {
             if (relayedValueChartLegendTwo.value) {
                 relayedValueOption.legend.top = '25%';
                 relayedValueOption.legend.bottom = 10;
@@ -343,7 +343,7 @@
             relayedFeeOption.series[0].center = [108, '50%'];
             relayedFeeOption.series[1].radius = [80, 100];
             relayedFeeOption.series[1].center = [108, '50%'];
-        } else if (widthClient.value > 767) {
+        } else {
             if (relayedFeeChartLegendTwo.value) {
                 relayedFeeOption.legend.top = '25%';
                 relayedFeeOption.legend.bottom = 10;
@@ -734,7 +734,8 @@
             height: 589px;
             .flex(column, nowrap);
         }
-        &__value {
+        &__value,
+        &__fee {
             flex: 1;
             padding: 16px 0 0 0;
             .flex(column, nowrap);
@@ -755,33 +756,6 @@
                 }
                 .two_legend {
                     width: 100%;
-                    height: 213px;
-                    padding: 0 27px;
-                }
-            }
-        }
-        &__fee {
-            flex: 1;
-            padding: 16px 0 0 0;
-            .flex(column, nowrap);
-            &__title {
-                padding-left: 24px;
-                font-size: 14px;
-                font-weight: 400;
-                color: #000000;
-                line-height: 18px;
-            }
-            &__chart_warp {
-                width: 100%;
-                flex: 1;
-                .flex(row,nowrap,center,center);
-                &__chart {
-                    width: 290px;
-                    height: 213px;
-                }
-                .two_legend {
-                    width: 100%;
-                    height: 213px;
                     padding: 0 27px;
                 }
             }
@@ -793,25 +767,7 @@
                 height: 250px;
                 flex-direction: row;
             }
-            &__value {
-                flex: 1;
-                padding: 0;
-                margin: 16px 0 39px 0;
-                border-right: 1px solid #eaeaea;
-                &__title {
-                }
-                &__chart_warp {
-                    &__chart {
-                        width: 245px;
-                        height: 180px;
-                    }
-                    .two_legend {
-                        width: 333px;
-                        height: 180px;
-                        padding: 0;
-                    }
-                }
-            }
+            &__value,
             &__fee {
                 flex: 1;
                 padding: 0;
@@ -826,10 +782,36 @@
                     }
                     .two_legend {
                         width: 333px;
-                        height: 180px;
                         padding: 0;
                     }
                 }
+            }
+            &__fee {
+                border-right: none;
+            }
+        }
+    }
+    @media screen and (max-width: 767px) {
+        .related_asset_c {
+            :deep(.info_card__primary) {
+                height: 450px;
+                flex-direction: column;
+            }
+            &__value,
+            &__fee {
+                border-right: none;
+                margin: 16px 0 10px 0;
+                &__title {
+                }
+                &__chart_warp {
+                    &__chart {
+                    }
+                    .two_legend {
+                    }
+                }
+            }
+            &__fee {
+                margin: 0 0 10px 0;
             }
         }
     }
