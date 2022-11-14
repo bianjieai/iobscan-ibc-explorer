@@ -1,5 +1,6 @@
 import { RelayersListKey } from '@/constants/relayers';
 import { IRequestPagination, IResponsePageInfo } from '@/types/interface/index.interface';
+import { LinearGradientObject } from 'echarts';
 import { Ref } from 'vue';
 export type TTxsSuccessRate = string | number | undefined;
 
@@ -105,4 +106,28 @@ export interface IRelayerTransferItem {
 export interface IRelayerTransferList {
     items: IRelayerTransferItem[];
     page_info: IResponsePageInfo;
+}
+
+export interface IRequestRelayedTrend {
+    relayer_id: string;
+    days?: number;
+}
+
+export interface IResponseRelayerTrend {
+    date: string;
+    txs: number;
+    txs_value: string;
+}
+
+export interface BarData {
+    value: string | number;
+    itemStyle?: {
+        color: string | LinearGradientObject;
+    };
+}
+
+export interface RelayerTrendData {
+    date: string[];
+    txs: BarData[];
+    txsValue: BarData[];
 }
