@@ -843,10 +843,7 @@ export const useRelayedTrend = () => {
                 },
                 emphasis: {
                     itemStyle: {
-                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                            { offset: 0, color: '#3D50FF' },
-                            { offset: 1, color: 'rgba(61,80,255,0.35)' }
-                        ])
+                        color: 'rgba(61, 80, 255, 1)'
                     }
                 }
             }
@@ -894,10 +891,12 @@ export const useRelayedTrend = () => {
                         return {
                             value: txs,
                             itemStyle: {
-                                // todo dj 最高的柱子的颜色，blue待替换
                                 color:
                                     txs.toString() === maxTxs
-                                        ? 'blue'
+                                        ? new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                              { offset: 0, color: '#3D50FF' },
+                                              { offset: 1, color: 'rgba(61,80,255,0.35)' }
+                                          ])
                                         : new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                                               { offset: 0, color: 'rgba(61,80,255,0.6)' },
                                               { offset: 1, color: 'rgba(61,80,255,0.35)' }
@@ -909,10 +908,12 @@ export const useRelayedTrend = () => {
                         return {
                             value: txsValue,
                             itemStyle: {
-                                // todo dj 最高的柱子的颜色，blue待替换
                                 color:
-                                    txs.toString() === maxTxsValue
-                                        ? 'blue'
+                                    txsValue.toString() === maxTxsValue
+                                        ? new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                                              { offset: 0, color: '#3D50FF' },
+                                              { offset: 1, color: 'rgba(61,80,255,0.35)' }
+                                          ])
                                         : new echarts.graphic.LinearGradient(0, 0, 0, 1, [
                                               { offset: 0, color: 'rgba(61,80,255,0.6)' },
                                               { offset: 1, color: 'rgba(61,80,255,0.35)' }
