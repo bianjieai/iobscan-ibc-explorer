@@ -17,8 +17,8 @@
                 :width-unit="'%'"
                 :height="364"
             />
-            <ChannelPairsInfo v-if="channelPairsInfo" :channel-pairs-info="channelPairsInfo" />
-            <no-datas v-if="!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo" />
+            <no-datas v-else-if="!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo" />
+            <ChannelPairsInfo v-else :channel-pairs-info="channelPairsInfo" />
         </InfoCard>
         <div class="relayer_details__charts_wrap">
             <div class="relayer_details__charts_wrap__left">
@@ -37,12 +37,12 @@
                             :width="460"
                             :height="200"
                         />
+                        <no-datas
+                            v-else-if="isShowModal || (!transferTypeLoading && !totalTxsCount)"
+                            class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap__nodatas"
+                        />
                         <div
-                            v-if="
-                                !isShowModal &&
-                                !transferTypeLoading &&
-                                (recvPacketTxs || acknowledgePacketTxs || timeoutPacketTxs)
-                            "
+                            v-else
                             class="relayer_details__charts_wrap__left__bottom__transfer_type"
                         >
                             <TransferTypeChart
@@ -66,14 +66,6 @@
                                 :process-color="'#FAAD14'"
                             />
                         </div>
-                        <no-datas
-                            v-if="
-                                isShowModal ||
-                                (!transferTypeLoading &&
-                                    !(recvPacketTxs && acknowledgePacketTxs && timeoutPacketTxs))
-                            "
-                            class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap__nodatas"
-                        />
                     </InfoCard>
                     <InfoCard
                         class="relayer_details__charts_wrap__left__bottom__success_rate"
@@ -86,17 +78,14 @@
                             :width="280"
                             :height="200"
                         />
-                        <SuccessRateChart
-                            v-if="!isShowModal && !ibcStatisticsChainsStore.isShowLoading"
-                            :success-rate-percent="successRatePercent"
-                        />
                         <no-datas
-                            v-if="
+                            v-else-if="
                                 isShowModal ||
                                 (!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo)
                             "
                             class="relayer_details__charts_wrap__left__bottom__success_rate__nodatas"
                         />
+                        <SuccessRateChart v-else :success-rate-percent="successRatePercent" />
                     </InfoCard>
                 </div>
             </div>
@@ -153,6 +142,8 @@
 
 <style lang="less" scoped>
     .relayer_details {
+        padding-left: 32px;
+        padding-right: 32px;
         &__statistic {
             margin-top: 24px;
         }
@@ -172,7 +163,7 @@
                         flex: 1;
                         &__nodatas {
                             margin: 1px 0;
-                            min-width: 460px;
+                            min-width: 380px;
                         }
                     }
                     &__transfer_type {
@@ -182,7 +173,7 @@
                         margin-left: 16px;
                         &__nodatas {
                             margin: 1px 0;
-                            min-width: 232px;
+                            min-width: 200px;
                         }
                     }
                 }

@@ -1,5 +1,5 @@
 <template>
-    <a-button type="primary" @click="reset">
+    <a-button :class="{ disabled_style: isDisabled }" type="primary" @click="reset">
         <template #icon>
             <svg
                 v-show="props.type === TypeButtonProp.reset"
@@ -47,9 +47,11 @@
     import { debounce } from 'lodash-es';
     interface IProps {
         type?: 'reset' | 'search';
+        isDisabled?: boolean;
     }
     const props = withDefaults(defineProps<IProps>(), {
-        type: TypeButtonProp.reset
+        type: TypeButtonProp.reset,
+        isDisabled: false
     });
     const emits = defineEmits<{
         (e: 'onReset'): void;
@@ -59,4 +61,11 @@
     }, 300);
 </script>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+    .disabled_style {
+        &:hover {
+            background: var(--bj-primary-color);
+            cursor: url('../../assets/forbidden.png'), not-allowed;
+        }
+    }
+</style>

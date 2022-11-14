@@ -1,6 +1,6 @@
 <template>
     <div class="success_rate">
-        <div ref="successRateDom" style="width: 232px; height: 160px"></div>
+        <div ref="successRateDom" class="success_rate__chart"></div>
     </div>
 </template>
 
@@ -17,5 +17,9 @@
 <style lang="less" scoped>
     .success_rate {
         .flex(row, nowrap, center, center);
+        &__chart {
+            min-width: 200px;
+            height: 160px;
+        }
     }
 </style>

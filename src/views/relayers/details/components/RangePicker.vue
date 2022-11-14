@@ -9,7 +9,7 @@
         :placeholder="['Start Date', 'End Date']"
         :disabled="isShowModal"
         @open-change="onOpenChangeRangePicker"
-        @change="onChangeRangePicker"
+        @on-change="onChangeRangePicker"
     >
         <template #suffixIcon>
             <svg
@@ -48,11 +48,11 @@
     }
     defineProps<IRangePicker>();
     const emits = defineEmits<{
-        (e: 'click'): void;
+        (e: 'onChange'): void;
     }>();
     const { pickerPlaceholderColor, onOpenChangeRangePicker } = usePickerPlaceholder();
     const onChangeRangePicker = () => {
-        emits('click');
+        emits('onChange');
     };
 </script>
 
@@ -63,12 +63,17 @@
         &:hover {
             border-color: var(--bj-primary-color);
         }
-        :deep(.ant-picker-input > input) {
-            font-family: GolosUIWebRegular;
-            color: var(--bj-primary-color);
-            text-align: center;
-            &::placeholder {
-                color: v-bind(pickerPlaceholderColor);
+        :deep(.ant-picker-input) {
+            input {
+                font-family: GolosUIWebRegular;
+                color: var(--bj-primary-color);
+                text-align: center;
+                &::placeholder {
+                    color: v-bind(pickerPlaceholderColor);
+                }
+            }
+            input[disabled] {
+                cursor: url('../../../../assets/forbidden.png'), not-allowed;
             }
         }
         border: 1px solid var(--bj-border-color);

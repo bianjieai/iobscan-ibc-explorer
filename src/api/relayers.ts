@@ -65,36 +65,6 @@ export const getRelayedTrendMock = async (params: IRequestRelayedTrend) => {
         params: { days: params.days }
     });
 };
-
-// Todo shan 需切换成真实 API
-export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
-    return requestMock<IResponse<IResponseRelayerDetails>>({
-        url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}`,
-        method: 'get'
-    });
-};
-
-export const getTransferTypeTxsAPI = async (relayerId: string) => {
-    return requestMock<IResponse<ITransferTypeTxs>>({
-        url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/transferTypeTxs`,
-        method: 'get'
-    });
-};
-
-export const getRelayerTransferListAPI = async (
-    relayerId: string,
-    params: IRequestRelayerTransfer
-) => {
-    executeCancel(params.use_count);
-    return requestMock<IResponse<IRelayerTransferList>>({
-        url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/txs`,
-        method: 'get',
-        params: params,
-        cancelToken: setExecuteCancel(params.use_count)
-    });
-};
-/*
-// Relayer Details API 真实
 export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
     return request<IResponse<IResponseRelayerDetails>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}`,
@@ -102,7 +72,7 @@ export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
     });
 };
 
-export const getTransferTypeTxs = async (relayerId: string) => {
+export const getTransferTypeTxsAPI = async (relayerId: string) => {
     return request<IResponse<ITransferTypeTxs>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/transferTypeTxs`,
         method: 'get'
@@ -114,11 +84,10 @@ export const getRelayerTransferListAPI = async (
     params: IRequestRelayerTransfer
 ) => {
     executeCancel(params.use_count);
-    return requestMock<IResponse<IRelayerTransferList>>({
+    return request<IResponse<IRelayerTransferList>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/txs`,
         method: 'get',
         params: params,
         cancelToken: setExecuteCancel(params.use_count)
     });
 };
-*/
