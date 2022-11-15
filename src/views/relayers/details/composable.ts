@@ -5,7 +5,13 @@ import {
 } from '@/api/relayers';
 import { IDataItem } from '@/components/BjSelect/interface';
 import { useMatchBaseDenom } from '@/composables';
-import { CHAINNAME, CHAIN_DEFAULT_ICON, TOKEN_DEFAULT_ICON, TRANSFER_TYPE } from '@/constants';
+import {
+    CHAINNAME,
+    CHAIN_DEFAULT_ICON,
+    RELAYER_DEFAULT_ICON,
+    TOKEN_DEFAULT_ICON,
+    TRANSFER_TYPE
+} from '@/constants';
 import { API_CODE, API_ERRPR_MESSAGE } from '@/constants/apiCode';
 import { RELAYER_DETAILS_INFO, RT_COLUMN_TYPE, SINGLE_ADDRESS_HEIGHT } from '@/constants/relayers';
 import ChainHelper from '@/helper/chainHelper';
@@ -92,7 +98,7 @@ export const useGetRelayerDetailsInfo = () => {
                 ibcStatisticsChainsStore.isShowLoading = false;
                 if (code === API_CODE.success) {
                     if (data) {
-                        relayerIcon.value = data.relayer_icon;
+                        relayerIcon.value = data.relayer_icon || RELAYER_DEFAULT_ICON;
                         relayerName.value = data.relayer_name;
                         servedChainsInfo.value = data.served_chains_info;
                         relayedTotalTxs.value = data.relayed_total_txs;

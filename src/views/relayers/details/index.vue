@@ -17,7 +17,9 @@
                 :width-unit="'%'"
                 :height="364"
             />
-            <no-datas v-else-if="!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo" />
+            <no-datas
+                v-else-if="!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo.length"
+            />
             <ChannelPairsInfo v-else :channel-pairs-info="channelPairsInfo" />
         </InfoCard>
         <div class="relayer_details__charts_wrap">
