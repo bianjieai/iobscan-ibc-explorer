@@ -21,6 +21,7 @@
         >
             <template #relayers_relayer_name="{ record, column }">
                 <IconAndTitle
+                    :title-can-click="true"
                     :style="{ cursor: 'pointer' }"
                     :title="record[column.key]"
                     :img-src="record.relayer_icon"
@@ -113,7 +114,7 @@
         }
         &__content {
             margin-top: 16px;
-            padding: 0;
+            padding: 0 !important;
             :deep(.no_result__content) {
                 padding: 0;
                 .result_icon {

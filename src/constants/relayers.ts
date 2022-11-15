@@ -40,7 +40,7 @@ export const COLUMNS: TableColumnsType = [
         sorter: true
     },
     {
-        title: 'Success rate',
+        title: 'Success Rate',
         dataIndex: RelayersListKey.relayersSuccessRate,
         key: RelayersListKey.relayersSuccessRate,
         align: 'right',

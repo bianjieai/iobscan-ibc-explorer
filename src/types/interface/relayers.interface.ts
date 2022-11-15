@@ -182,3 +182,8 @@ export interface RelayedValueData {
     valueTwoLegend: boolean;
     txsTwoLegend: boolean;
 }
+
+export enum RelatedAssetsPieType {
+    relayedValue,
+    feeCost
+}

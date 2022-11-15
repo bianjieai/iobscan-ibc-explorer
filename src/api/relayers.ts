@@ -44,14 +44,6 @@ export const getRelayersNameListAPI = async () => {
     });
 };
 
-// todo dj mock 删除
-// export const getRelayersNameListMock = async () => {
-//     return requestMock<IResponse<string[]>>({
-//         url: API_URL.ibcRelayerRelayerName,
-//         method: 'get'
-//     });
-// };
-
 export const getRelayedTrendAPI = async (params: IRequestRelayedTrend) => {
     const url = API_URL.ibcRelayedTrend.replace(urlReplacePlaceholder, params.relayer_id);
     return request<IResponse<IResponseRelayerTrend[]>>({
@@ -61,28 +53,9 @@ export const getRelayedTrendAPI = async (params: IRequestRelayedTrend) => {
     });
 };
 
-// todo dj mock 删除
-// export const getRelayedTrendMock = async (params: IRequestRelayedTrend) => {
-//     const url = API_URL.ibcRelayedTrend.replace(urlReplacePlaceholder, params.relayer_id);
-//     return requestMock<IResponse<IResponseRelayerTrend[]>>({
-//         url,
-//         method: 'get',
-//         params: { days: params.days }
-//     });
-// };
-
 export const getTotalRelayedValueAPI = async (params: IRequestTotalRelayedValueOrFee) => {
     const url = API_URL.ibcTotalRelayedValue.replace(urlReplacePlaceholder, params.relayer_id);
     return request<IResponse<IResponseTotalRelayedValue>>({
-        url,
-        method: 'get'
-    });
-};
-
-// todo dj mock 删除
-export const getTotalRelayedValueMock = async (params: IRequestTotalRelayedValueOrFee) => {
-    const url = API_URL.ibcTotalRelayedValue.replace(urlReplacePlaceholder, params.relayer_id);
-    return requestMock<IResponse<IResponseTotalRelayedValue>>({
         url,
         method: 'get'
     });
@@ -96,14 +69,6 @@ export const getTotalFeeCostAPI = async (params: IRequestTotalRelayedValueOrFee)
     });
 };
 
-// todo dj mock 删除
-export const getTotalFeeCostMock = async (params: IRequestTotalRelayedValueOrFee) => {
-    const url = API_URL.ibcTotalFeeCost.replace(urlReplacePlaceholder, params.relayer_id);
-    return requestMock<IResponse<IResponseTotalFeeCost>>({
-        url,
-        method: 'get'
-    });
-};
 export const getRelayerDetailsByRelayerIdAPI = async (relayerId: string) => {
     return request<IResponse<IResponseRelayerDetails>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}`,

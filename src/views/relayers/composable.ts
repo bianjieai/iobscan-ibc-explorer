@@ -163,12 +163,6 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
         );
     });
     const searchFn = (searchType: string, searchValue: string) => {
-        // console.log('before', searchValue);
-        // searchValue.replaceAll(' ', '%20');
-        // console.log('after', searchValue);
-        // todo dj  编码需要商讨
-        // searchValue = encodeURI(searchValue);
-        console.log(searchValue);
         if (!searchValue) {
             router.replace('/relayers');
             getRelayersList({ ...BASE_PARAMS, loading: loading });
