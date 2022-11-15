@@ -1275,7 +1275,6 @@ export const useRelatedAssetChart = (
             const { code, data, message } = await getDataApi({
                 relayer_id: relayerId
             });
-            relayedValueLoading.value = false;
             if (code === API_CODE.success) {
                 if (data) {
                     if (!isRelayedValueType.value) {
@@ -1402,9 +1401,10 @@ export const useRelatedAssetChart = (
                 console.error(message);
             }
         } catch (error) {
-            relayedValueLoading.value = false;
             relayedValueNetworkError.value = true;
             console.error(error);
+        } finally {
+            relayedValueLoading.value = false;
         }
     };
     const twoLegendRelayedValue = computed(() => {

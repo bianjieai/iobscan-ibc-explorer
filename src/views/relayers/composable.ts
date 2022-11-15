@@ -1,12 +1,11 @@
 import { getRelayersListAPI } from '@/api/relayers';
 import ChainHelper from '@/helper/chainHelper';
-import { CHAINID } from '@/constants/index';
 import { ServedChainsInfo, chainPopoverProp } from '@/types/interface/relayers.interface';
 import { RelayerListItem } from '@/types/interface/relayers.interface';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import { IRequestRelayerList, IResponseRelayerList } from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
-import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON, UNKNOWN } from '@/constants';
+import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON, UNKNOWN, CHAINNAME } from '@/constants';
 import { useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
@@ -33,12 +32,14 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
                 address: [...servedChainsInfo.addresses]
             });
         }
-        const irishub = formatChainPopoverProp.filter((item) => item.chain === CHAINID.irishub);
-        const cosmos = formatChainPopoverProp.filter((item) => item.chain === CHAINID.cosmoshub);
-        const other = formatChainPopoverProp.filter(
-            (item) => item.chain !== CHAINID.irishub && item.chain !== CHAINID.cosmoshub
+        const irishub = formatChainPopoverProp.filter(
+            (item) => item.chainName === CHAINNAME.IRISHUB
         );
-        other.sort((a, b) => a.chain.localeCompare(b.chain));
+        const cosmos = formatChainPopoverProp.filter((item) => item.chain === CHAINNAME.IRISHUB);
+        const other = formatChainPopoverProp.filter(
+            (item) => item.chainName !== CHAINNAME.IRISHUB && item.chainName !== CHAINNAME.COSMOSHUB
+        );
+        other.sort((a, b) => a.chainName.localeCompare(b.chainName));
         return [...cosmos, ...irishub, ...other];
     };
     const searchNoResult = ref(false);

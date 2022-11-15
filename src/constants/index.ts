@@ -361,11 +361,6 @@ export const CHAINNAME = {
     IRISHUB: 'IRIS Hub'
 };
 
-export const CHAINID = {
-    cosmoshub: 'cosmoshub_4',
-    irishub: 'irishub_1'
-};
-
 export const UNKNOWN = 'Unknown';
 export const THOUSAND_DECIMAL = 0.0001;
 
