@@ -19,7 +19,7 @@ export default class ChainHelper {
     }
 
     // chain_name sort
-    static sortByChainName(sourceList: any, chain: any) {
+    static sortByChainName(sourceList: any, chain?: any) {
         function changeChainsSort(item: any) {
             const saveChain = item.chain_a;
             item.chain_a = item.chain_b;
@@ -111,9 +111,9 @@ export default class ChainHelper {
         const excludes = dropdownData.filter((v) => !sortNames.includes(v.chain_name));
 
         excludes.sort((a, b) => {
-            return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
+            return a.chain_name?.toLowerCase() < b.chain_name?.toLowerCase()
                 ? -1
-                : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
+                : a.chain_name?.toLowerCase() > b.chain_name?.toLowerCase()
                 ? 1
                 : 0;
         });

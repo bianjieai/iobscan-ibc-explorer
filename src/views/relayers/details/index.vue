@@ -5,6 +5,8 @@
             :title-icon="'icon-a-chainsserved'"
             :subtitle="subTitle"
             :img-src="relayerIcon"
+            relayer
+            :relayer-img-src="relayerImgSrc(relayerIcon, relayerName)"
         />
         <layer-block class="relayer_details__statistic">
             <statistic-list type="horizontal" :msg="relayerInfo" />
@@ -127,7 +129,8 @@
         relayerInfo,
         channelPairsInfo,
         isShowModal,
-        subTitle
+        subTitle,
+        relayerImgSrc
     } = useGetRelayerDetailsInfo();
     const {
         recvPacketTxs,
