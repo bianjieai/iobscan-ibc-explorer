@@ -1313,17 +1313,19 @@ export const useRelatedAssetChart = (
                     }
                     const valueDenomList = [...denomList];
                     const txsDenomList = [...denomList];
-                    valueDenomList.sort((a, b) => BigNumber(b.txs_value).comparedTo(a.txs_value));
-                    txsDenomList.sort((a, b) => BigNumber(b.txs).comparedTo(a.txs));
+                    valueDenomList.sort((a, b) =>
+                        new BigNumber(b.txs_value).comparedTo(a.txs_value)
+                    );
+                    txsDenomList.sort((a, b) => new BigNumber(b.txs).comparedTo(a.txs));
                     const needMaxNum = 12;
                     if (data.denom_list.length > needMaxNum) {
                         const spliceValueDenomList = valueDenomList.splice(needMaxNum - 1);
                         const spliceTxsDenomList = txsDenomList.splice(needMaxNum - 1);
                         const spliceValueTotal = spliceValueDenomList.reduce((total, current) => {
-                            return BigNumber(total).plus(current.txs_value).toString();
+                            return new BigNumber(total).plus(current.txs_value).toString();
                         }, '0');
                         const spliceTxsTotal = spliceTxsDenomList.reduce((total, current) => {
-                            return BigNumber(total).plus(current.txs).toNumber();
+                            return new BigNumber(total).plus(current.txs).toNumber();
                         }, 0);
                         valueDenomList.push({
                             imgUrl: chainDefaultUrl,
