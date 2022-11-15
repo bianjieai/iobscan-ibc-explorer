@@ -19,6 +19,7 @@ export default class ChainHelper {
     }
 
     // chain_name sort
+    // Todo shan 该方法中 ibcChains 可能存在没有值的情况，需要做处理
     static sortByChainName(sourceList: any, chain?: any) {
         function changeChainsSort(item: any) {
             const saveChain = item.chain_a;
