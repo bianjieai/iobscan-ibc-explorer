@@ -1298,7 +1298,7 @@ export const useRelatedAssetChart = (
                         );
                         if (baseDenom) {
                             denomList.push({
-                                imgUrl: baseDenom.icon,
+                                imgUrl: baseDenom.icon || chainDefaultUrl,
                                 name: baseDenom.symbol,
                                 ...item
                             });
