@@ -10,6 +10,7 @@
     ibcStatisticsChainsStore.initStateAction();
     useChangeTitleAndIcon();
     useDocumentVisibility();
+    console.log('CICD');
 </script>
 
 <style>
