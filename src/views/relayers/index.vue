@@ -21,6 +21,7 @@
         >
             <template #relayers_relayer_name="{ record, column }">
                 <IconAndTitle
+                    :title-can-click="true"
                     :style="{ cursor: 'pointer' }"
                     :title="record[column.key]"
                     :img-src="record.relayer_icon"
