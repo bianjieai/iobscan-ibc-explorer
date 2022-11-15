@@ -45,6 +45,7 @@
             margin-right: 8px;
             width: 32px;
             height: 32px;
+            border-radius: 50%;
         }
         &__icon_mobile {
             display: none;
@@ -113,6 +114,7 @@
                 margin-right: 8px;
                 width: 32px;
                 height: 32px;
+                border-radius: 50%;
             }
             &__wrap {
             }
