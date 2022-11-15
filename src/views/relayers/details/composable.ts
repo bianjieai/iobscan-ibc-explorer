@@ -5,7 +5,7 @@ import {
 } from '@/api/relayers';
 import { IDataItem } from '@/components/BjSelect/interface';
 import { useMatchBaseDenom } from '@/composables';
-import { CHAIN_DEFAULT_ICON, TOKEN_DEFAULT_ICON, TRANSFER_TYPE } from '@/constants';
+import { CHAINNAME, CHAIN_DEFAULT_ICON, TOKEN_DEFAULT_ICON, TRANSFER_TYPE } from '@/constants';
 import { API_CODE, API_ERRPR_MESSAGE } from '@/constants/apiCode';
 import { RELAYER_DETAILS_INFO, RT_COLUMN_TYPE, SINGLE_ADDRESS_HEIGHT } from '@/constants/relayers';
 import ChainHelper from '@/helper/chainHelper';
@@ -35,8 +35,41 @@ export const useGetRelayerDetailsInfo = () => {
     const relayedTotalTxs = ref<number>(0);
     const relayedSuccessTxs = ref<number>(0);
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
-    const channelPairsInfo = ref<IChannelChain[]>();
+    const channelPairsInfo = ref<IChannelChain[]>([]);
     const isShowModal = ref<boolean>(false);
+    // 根据 chain_a 的 chain_name 排序
+    const sortChannelPairsByChainName = async (channelPairsInfoArr: IChannelChain[]) => {
+        if (!channelPairsInfoArr?.length) return [];
+        const chainChannelArr = [];
+        for (const i in channelPairsInfoArr) {
+            const chainInfo = await ChainHelper.getChainInfoByKey(channelPairsInfoArr[i].chain_a);
+            if (chainInfo) {
+                chainChannelArr.push({
+                    chainName: chainInfo.chain_name,
+                    channelInfo: channelPairsInfoArr[i]
+                });
+            }
+        }
+        const cosmosChainChannel = chainChannelArr
+            .filter((item) => item.chainName === CHAINNAME.COSMOSHUB)
+            .map((item) => item.channelInfo);
+
+        const irishubChainChannel = chainChannelArr
+            .filter((item) => item.chainName === CHAINNAME.IRISHUB)
+            .map((item) => item.channelInfo);
+        const otherChainChannel = chainChannelArr
+            .filter(
+                (item) =>
+                    item.chainName !== CHAINNAME.COSMOSHUB && item.chainName !== CHAINNAME.IRISHUB
+            )
+            .sort((a, b) => {
+                return a.chainName.localeCompare(b.chainName);
+            })
+            .map((item) => item.channelInfo);
+
+        return [...cosmosChainChannel, ...irishubChainChannel, ...otherChainChannel];
+    };
+
     const getRelayerDetailsInfo = () => {
         const route = useRoute();
         const relayerId: string = route?.params?.relayerId as string;
@@ -57,7 +90,9 @@ export const useGetRelayerDetailsInfo = () => {
                         relayerInfo.value.served_channel_pairs.count =
                             data.channel_pair_info?.length;
                         relayerInfo.value.total_fee_cost.count = data.total_fee_value;
-                        channelPairsInfo.value = data.channel_pair_info;
+                        channelPairsInfo.value = await sortChannelPairsByChainName(
+                            data.channel_pair_info
+                        );
                     }
                 } else if (code === API_CODE.unRegisteredRelayer) {
                     isShowModal.value = true;
