@@ -880,9 +880,9 @@ export const useRelayedTrend = () => {
     const relayedTrendChooseBtnFn = (index: number) => {
         relayedTrendChoose.value = index;
         if (relayedTrendChoose.value === 0) {
-            option.series[0].data = relayedTrendData.txs;
-        } else {
             option.series[0].data = relayedTrendData.txsValue;
+        } else {
+            option.series[0].data = relayedTrendData.txs;
         }
         relayedTrendChart && relayedTrendChart.setOption(option, true);
     };
