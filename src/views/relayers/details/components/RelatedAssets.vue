@@ -4,6 +4,7 @@
         icon="icon-a-relayedassets"
         title="Related Assets"
         :is-show-choose-btn="true"
+        :tip-msg="tipText"
         :default-choose-btn="relayedAssetsChoose"
         @change-choose-btn="relayedAssetsChooseBtnFn"
     >
@@ -25,19 +26,14 @@
 <script setup lang="ts">
     import { RelatedAssetsPieType } from '@/types/interface/relayers.interface';
     import RelatedAssetChart from './RelatedAssetChart.vue';
-
-    const relayedAssetsChoose = ref(0);
-    const relatedAssetValueRef = ref<any>(null);
-    const relatedAssetFeeRef = ref<any>(null);
-    const relayedAssetsChooseBtnFn = (index: number) => {
-        relayedAssetsChoose.value = index;
-        relatedAssetValueRef.value &&
-            relatedAssetValueRef.value.relayedAssetsChooseBtnFn &&
-            (relatedAssetValueRef.value as any).relayedAssetsChooseBtnFn(index);
-        relatedAssetFeeRef.value &&
-            relatedAssetFeeRef.value.relayedAssetsChooseBtnFn &&
-            (relatedAssetFeeRef.value as any).relayedAssetsChooseBtnFn(index);
-    };
+    import { useRelatedAssets } from '../composable';
+    const {
+        relayedAssetsChoose,
+        tipText,
+        relayedAssetsChooseBtnFn,
+        relatedAssetValueRef,
+        relatedAssetFeeRef
+    } = useRelatedAssets();
 </script>
 
 <style lang="less" scoped>

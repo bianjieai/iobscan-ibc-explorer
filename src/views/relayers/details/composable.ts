@@ -1132,6 +1132,35 @@ export const useRelayedTrend = () => {
     };
 };
 
+export const useRelatedAssets = () => {
+    const relayedAssetsChoose = ref(0);
+    const relatedAssetValueRef = ref<any>(null);
+    const relatedAssetFeeRef = ref<any>(null);
+    const tipText = computed(() => {
+        const result =
+            relayedAssetsChoose.value === 0
+                ? 'When calculating the token value distribution relayed by the relayer, tokens with a price of 0 are not displayed.'
+                : '';
+        return result;
+    });
+    const relayedAssetsChooseBtnFn = (index: number) => {
+        relayedAssetsChoose.value = index;
+        relatedAssetValueRef.value &&
+            relatedAssetValueRef.value.relayedAssetsChooseBtnFn &&
+            (relatedAssetValueRef.value as any).relayedAssetsChooseBtnFn(index);
+        relatedAssetFeeRef.value &&
+            relatedAssetFeeRef.value.relayedAssetsChooseBtnFn &&
+            (relatedAssetFeeRef.value as any).relayedAssetsChooseBtnFn(index);
+    };
+    return {
+        relayedAssetsChoose,
+        tipText,
+        relayedAssetsChooseBtnFn,
+        relatedAssetValueRef,
+        relatedAssetFeeRef
+    };
+};
+
 export const useRelatedAssetChart = (
     relayedAssetsChoose: Ref<number>,
     type: Ref<RelatedAssetsPieType>
