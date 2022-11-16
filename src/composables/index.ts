@@ -6,13 +6,13 @@ import {
     CHAIN_DEFAULT_ICON,
     SYMBOL,
     NEED_CUSTOM_HEADER,
-    TOKEN_DEFAULT_ICON
+    TOKEN_DEFAULT_ICON,
+    DEFAULT_DISPLAY_TEXT
 } from '@/constants';
 import { useIbcStatisticsChains } from '@/store';
 import { DATA_REFRESH_GAP } from '@/constants/home';
 import { IBaseDenom } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
-import { formatBigNumber } from '@/helper/parseStringHelper';
 import moveDecimal from 'move-decimal-point';
 
 export const useTimeInterval = (intervalCallBack: Function, interval = AGE_TIMER_INTERVAL) => {
@@ -156,10 +156,10 @@ export const useBoundary = (ele: HTMLElement) => {
     return res;
 };
 
-// 获取对应 ChainInfo
+// 获取对应 ChainInfo，Todo 考虑 ibcChains 会存在情况
 export const useMatchChainInfo = (chainId: string) => {
     let chainIcon = CHAIN_DEFAULT_ICON;
-    let chainName = '';
+    let chainName = DEFAULT_DISPLAY_TEXT;
     const { ibcChains } = useIbcChains(DATA_REFRESH_GAP);
     const matchChain = ibcChains.value.all.find((item) => item.chain_id === chainId);
     if (matchChain) {
@@ -178,11 +178,8 @@ export const useMatchBaseDenom = async (chainId: string, denom: string, amount: 
     let symbol = denom;
     const matchBaseDenom = await getBaseDenomByKey(chainId, denom);
     if (matchBaseDenom) {
-        feeAmount = `${formatBigNumber(
-            moveDecimal(amount || 0, -matchBaseDenom.scale),
-            undefined
-        )}`;
-        tokenIcon = matchBaseDenom.icon;
+        feeAmount = `${moveDecimal(Number(amount) || 0, -matchBaseDenom.scale)}`;
+        tokenIcon = matchBaseDenom.icon || TOKEN_DEFAULT_ICON;
         symbol = matchBaseDenom.symbol;
     }
     return {

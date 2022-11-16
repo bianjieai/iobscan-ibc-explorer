@@ -2,7 +2,7 @@
     <div class="las">
         <img class="las__logo" :src="tokenLogo" alt="" />
         <span class="las__content">
-            <span class="las__top">{{ formatNum(tokenAmount) }}</span>
+            <span class="las__top">{{ tokenAmount }}</span>
             <a-popover destroy-tooltip-on-hide>
                 <template #content>
                     <span class="las__bottom">{{ tokenSymbol }}</span>
@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-    import { getRestString, formatNum } from '@/helper/parseStringHelper';
+    import { getRestString } from '@/helper/parseStringHelper';
     import type { IRtTokenInfo } from '@/types/interface/relayers.interface';
     import { useFormatTokenDenom } from '@/views/relayers/details/composable';
     interface ITokenInfo {
