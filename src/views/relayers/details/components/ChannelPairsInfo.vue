@@ -1,10 +1,7 @@
 <template>
     <div class="channel_pairs">
         <div v-for="(item, index) in channelPairsInfo" :key="index" class="channel_pairs__info">
-            <!-- Todo 需跟 UI 确定这种展示方式是否合适 -->
-            <span class="channel_pairs__index">{{
-                prefixInteger(index + 1, String(channelPairsInfo?.length).length)
-            }}</span>
+            <span class="channel_pairs__index">{{ index + 1 }}</span>
             <div class="channel_pairs__pair">
                 <ChannelPair
                     :chain="item.chain_a"
@@ -35,7 +32,6 @@
     import ChannelPair from './ChannelPair.vue';
     import { TRelayerStatus, BottomStatusType } from '@/types/interface/components/table.interface';
     import { IChannelChain } from '@/types/interface/relayers.interface';
-    import { prefixInteger } from '@/helper/parseStringHelper';
     import { useChannelPairsAddressHeight } from '../composable';
 
     interface IChannelPairsInfo {
@@ -57,10 +53,12 @@
             }
         }
         &__index {
+            width: 24px;
             font-size: var(--bj-font-size-sub-title);
             font-weight: 400;
             color: var(--bj-text-normal);
             line-height: 22px;
+            text-align: right;
         }
         &__pair {
             flex: 1;
@@ -72,7 +70,7 @@
             transform: translateY(33px);
         }
     }
-    @media screen and (max-width: 1050px) {
+    @media screen and (max-width: 1036px) {
         .channel_pairs {
             &__info {
                 &:first-child {
@@ -84,6 +82,21 @@
             }
             &__status_img {
                 margin: 0 16px;
+            }
+        }
+    }
+    @media screen and (max-width: 988px) {
+        .channel_pairs {
+            &__info {
+                &:first-child {
+                }
+            }
+            &__index {
+                min-width: 24px;
+            }
+            &__pair {
+            }
+            &__status_img {
             }
         }
     }
