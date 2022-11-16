@@ -36,7 +36,7 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
             (item) => item.chainName === CHAINNAME.IRISHUB
         );
         const cosmos = formatChainPopoverProp.filter(
-            (item) => item.chainName === CHAINNAME.IRISHUB
+            (item) => item.chainName === CHAINNAME.COSMOSHUB
         );
         const other = formatChainPopoverProp.filter(
             (item) => item.chainName !== CHAINNAME.IRISHUB && item.chainName !== CHAINNAME.COSMOSHUB
