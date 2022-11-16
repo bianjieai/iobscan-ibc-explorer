@@ -231,3 +231,8 @@ export const OPACITY_PIE_COLOR_LIST = [
     'rgba(255, 192, 105, 0.15)',
     'rgba(255, 214, 102, 0.15)'
 ];
+
+export const CHART_TOOLTIP = {
+    value: 'value',
+    txs: 'transaction'
+};

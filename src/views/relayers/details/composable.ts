@@ -1,3 +1,4 @@
+import { getChartTooltip } from '@/helper/relayerHelper';
 import {
     getRelayerDetailsByRelayerIdAPI,
     getRelayerTransferListAPI,
@@ -40,7 +41,6 @@ import {
     FormatDenomItem,
     RelatedAssetsPieType
 } from '@/types/interface/relayers.interface';
-import chainDefaultUrl from '@/assets/home/chain-default.png';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatString } from '@/utils/stringTools';
 import { calculatePercentage } from '@/utils/calculate';
@@ -775,6 +775,11 @@ export const useRelayedTrend = () => {
     });
     const { width: widthClient } = useWindowSize();
     let relayedTrendChart: echarts.ECharts;
+
+    const chartTooltip = computed(() => {
+        return getChartTooltip(relayedTrendChoose.value);
+    });
+    const tooltipBreakpoint = 560;
     const option: any = {
         grid: {
             left: 0,
@@ -792,74 +797,143 @@ export const useRelayedTrend = () => {
             extraCssText: 'box-shadow: 0 0 0 transparent;',
             formatter: (params: any) => {
                 // <div style="width: 100%; height: 8px; background-color: rgba(61, 80, 255, 0.1)"></div>
-                return `<div style="display: flex; flex-direction: column; align-items: center; transform: translate(0,6px);">
-                                    <div
-                                        style="
-                                            display: flex;
-                                            flex-direction: column;
-                                            margin-bottom: 4px;
-                                            background: #ffffff;
-                                            box-shadow: 0px 2px 8px 0px #d9deec;
-                                            border-radius: 4px;
-                                            border: 1px solid #d9dfee;
-                                        "
-                                    >
-                                        <div style="display: flex; justify-content: flex-start; padding: 12px 12px 8px">
-                                            <span
-                                                style="
-                                                    font-size: 14px;
-                                                    font-family: 'GolosUI_Medium';
-                                                    color: #000;
-                                                    font-weight: 500;
-                                                    line-height: 18px;
-                                                "
-                                                >Transfers:
-                                            </span>
-                                            <span
-                                                style="
-                                                    margin-left: 8px;
-                                                    font-size: 14px;
-                                                    color: rgba(0, 0, 0, 0.75);
-                                                    font-family: 'GolosUIWebRegular';
-                                                    font-weight: 400;
-                                                    line-height: 18px;
-                                                "
-                                                >${formatBigNumber(params.data.value, 0)}</span
-                                            >
+                if (widthClient.value > tooltipBreakpoint) {
+                    return `<div style="display: flex; flex-direction: column; align-items: center; transform: translate(0,6px);">
+                                        <div
+                                            style="
+                                                display: flex;
+                                                flex-direction: column;
+                                                margin-bottom: 4px;
+                                                background: #ffffff;
+                                                box-shadow: 0px 2px 8px 0px #d9deec;
+                                                border-radius: 4px;
+                                                border: 1px solid #d9dfee;
+                                            "
+                                        >
+                                            <div style="display: flex; justify-content: flex-start; padding: 12px 12px 8px">
+                                                <span
+                                                    style="
+                                                        font-size: 14px;
+                                                        font-family: 'GolosUI_Medium';
+                                                        color: #000;
+                                                        font-weight: 500;
+                                                        line-height: 18px;
+                                                    "
+                                                    >${chartTooltip.value.key}:
+                                                </span>
+                                                <span
+                                                    style="
+                                                        margin-left: 8px;
+                                                        font-size: 14px;
+                                                        color: rgba(0, 0, 0, 0.75);
+                                                        font-family: 'GolosUIWebRegular';
+                                                        font-weight: 400;
+                                                        line-height: 18px;
+                                                    "
+                                                    >${chartTooltip.value.symbol}${formatBigNumber(
+                        params.data.value,
+                        0
+                    )}</span
+                                                >
+                                            </div>
+                                            <div style="display: flex; justify-content: flex-start; padding: 0px 12px 12px">
+                                                <span
+                                                    style="
+                                                        font-size: 14px;
+                                                        font-family: 'GolosUI_Medium';
+                                                        color: #000;
+                                                        font-weight: 500;
+                                                        line-height: 18px;
+                                                    "
+                                                    >Date:
+                                                </span>
+                                                <span
+                                                    style="
+                                                        margin-left: 8px;
+                                                        font-size: 14px;
+                                                        color: rgba(0, 0, 0, 0.75);
+                                                        font-family: 'GolosUIWebRegular';
+                                                        font-weight: 400;
+                                                        line-height: 18px;
+                                                    "
+                                                    >${params.name}</span
+                                                >
+                                            </div>
                                         </div>
-                                        <div style="display: flex; justify-content: flex-start; padding: 0px 12px 12px">
-                                            <span
-                                                style="
-                                                    font-size: 14px;
-                                                    font-family: 'GolosUI_Medium';
-                                                    color: #000;
-                                                    font-weight: 500;
-                                                    line-height: 18px;
-                                                "
-                                                >Date:
-                                            </span>
-                                            <span
-                                                style="
-                                                    margin-left: 8px;
-                                                    font-size: 14px;
-                                                    color: rgba(0, 0, 0, 0.75);
-                                                    font-family: 'GolosUIWebRegular';
-                                                    font-weight: 400;
-                                                    line-height: 18px;
-                                                "
-                                                >${params.name}</span
-                                            >
+                                        <div
+                                            style="
+                                                border-top: 8px solid #3d50ff;
+                                                border-right: 5px solid transparent;
+                                                border-bottom: 8px solid transparent;
+                                                border-left: 5px solid transparent;
+                                            "
+                                        ></div>
+                                    </div>`;
+                } else {
+                    return `<div style="display: flex; flex-direction: column; align-items: center; transform: translate(0,6px);">
+                                        <div
+                                            style="
+                                                display: flex;
+                                                flex-direction: column;
+                                                margin-bottom: 4px;
+                                                background: #ffffff;
+                                                box-shadow: 0px 2px 8px 0px #d9deec;
+                                                border-radius: 4px;
+                                                border: 1px solid #d9dfee;
+                                            "
+                                        >
+                                            <div style="display: flex; justify-content: flex-start; padding: 12px 12px 8px">
+                                                <span
+                                                    style="
+                                                        font-size: 14px;
+                                                        font-family: 'GolosUI_Medium';
+                                                        color: #000;
+                                                        font-weight: 500;
+                                                        line-height: 18px;
+                                                    "
+                                                    >${chartTooltip.value.key}:
+                                                </span>
+                                                <span
+                                                    style="
+                                                        margin-left: 8px;
+                                                        font-size: 14px;
+                                                        color: rgba(0, 0, 0, 0.75);
+                                                        font-family: 'GolosUIWebRegular';
+                                                        font-weight: 400;
+                                                        line-height: 18px;
+                                                    "
+                                                    >${chartTooltip.value.symbol}${formatBigNumber(
+                        params.data.value,
+                        0
+                    )}</span
+                                                >
+                                            </div>
+                                            <div style="display: flex; justify-content: flex-start; padding: 0px 12px 12px">
+                                                <span
+                                                    style="
+                                                        font-size: 14px;
+                                                        font-family: 'GolosUI_Medium';
+                                                        color: #000;
+                                                        font-weight: 500;
+                                                        line-height: 18px;
+                                                    "
+                                                    >Date:
+                                                </span>
+                                                <span
+                                                    style="
+                                                        margin-left: 8px;
+                                                        font-size: 14px;
+                                                        color: rgba(0, 0, 0, 0.75);
+                                                        font-family: 'GolosUIWebRegular';
+                                                        font-weight: 400;
+                                                        line-height: 18px;
+                                                    "
+                                                    >${params.name}</span
+                                                >
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div
-                                        style="
-                                            border-top: 8px solid #3d50ff;
-                                            border-right: 5px solid transparent;
-                                            border-bottom: 8px solid transparent;
-                                            border-left: 5px solid transparent;
-                                        "
-                                    ></div>
-                                </div>`;
+                                    </div>`;
+                }
             }
         },
         yAxis: [
@@ -932,15 +1006,15 @@ export const useRelayedTrend = () => {
     const relayedTrendChooseBtnFn = (index: number) => {
         relayedTrendChoose.value = index;
         if (relayedTrendChoose.value === 0) {
-            option.series[0].data = relayedTrendData.txs;
-        } else {
             option.series[0].data = relayedTrendData.txsValue;
+        } else {
+            option.series[0].data = relayedTrendData.txs;
         }
         relayedTrendChart && relayedTrendChart.setOption(option, true);
     };
     const changeOptionByWidth = () => {
         option.series[0].barWidth = widthClient.value > 560 ? 10 : 8;
-        option.tooltip.confine = widthClient.value > 496 ? false : true;
+        option.tooltip.confine = widthClient.value > tooltipBreakpoint ? false : true;
         option.grid.top = widthClient.value > 496 ? 32 : 28;
     };
     const getRelayedTrendData = async () => {
@@ -1064,6 +1138,10 @@ export const useRelatedAssetChart = (
     const route = useRoute();
     const relayerId: string = route.params.relayerId as string;
 
+    const chartTooltip = computed(() => {
+        return getChartTooltip(relayedAssetsChoose.value);
+    });
+
     const getBaseOption = () => {
         const baseOption = {
             tooltip: {
@@ -1111,7 +1189,7 @@ export const useRelatedAssetChart = (
                                                       font-weight: 500;
                                                       line-height: 18px;
                                                   "
-                                                  >Value:
+                                                  >${chartTooltip.value.key}:
                                               </span>
                                               <span
                                                   style="
@@ -1122,7 +1200,10 @@ export const useRelatedAssetChart = (
                                                       font-weight: 400;
                                                       line-height: 18px;
                                                   "
-                                                  >${formatBigNumber(params.data.value, 0)}</span
+                                                  >${chartTooltip.value.symbol}${formatBigNumber(
+                        params.data.value,
+                        0
+                    )}</span
                                               >
                                               <span
                                                   style="
@@ -1165,6 +1246,7 @@ export const useRelatedAssetChart = (
                     type: 'pie',
                     silent: true,
                     radius: [68, 80],
+                    minAngle: 2,
                     center: [108, '50%'],
                     itemStyle: {
                         borderColor: '#fff',
@@ -1203,6 +1285,7 @@ export const useRelatedAssetChart = (
                     type: 'pie',
                     radius: [80, 100],
                     center: [108, '50%'],
+                    minAngle: 2,
                     itemStyle: {
                         borderColor: '#fff',
                         borderWidth: 2
@@ -1224,6 +1307,7 @@ export const useRelatedAssetChart = (
     };
     const { width: widthClient } = useWindowSize();
 
+    // todo dj 饼图样式需要调整
     const changeRelayedAssetsOption = (
         option: any,
         widthClient: number,
@@ -1246,17 +1330,17 @@ export const useRelatedAssetChart = (
                 option.legend.top = '25%';
                 option.legend.bottom = 10;
                 option.legend.right = 10;
-                option.series[0].radius = [52, 62];
+                option.series[0].radius = [52, 60];
                 option.series[0].center = [85, '53%'];
-                option.series[1].radius = [62, 77];
+                option.series[1].radius = [60, 76];
                 option.series[1].center = [85, '53%'];
             } else {
                 option.legend.top = null;
                 option.legend.bottom = 10;
                 option.legend.right = 0;
-                option.series[0].radius = [52, 62];
+                option.series[0].radius = [52, 60];
                 option.series[0].center = [85, '53%'];
-                option.series[1].radius = [62, 77];
+                option.series[1].radius = [60, 76];
                 option.series[1].center = [85, '53%'];
             }
         }
@@ -1327,7 +1411,6 @@ export const useRelatedAssetChart = (
             const { code, data, message } = await getDataApi({
                 relayer_id: relayerId
             });
-            relayedValueLoading.value = false;
             if (code === API_CODE.success) {
                 if (data) {
                     if (!isRelayedValueType.value) {
@@ -1351,13 +1434,13 @@ export const useRelatedAssetChart = (
                         );
                         if (baseDenom) {
                             denomList.push({
-                                imgUrl: baseDenom.icon,
+                                imgUrl: baseDenom.icon || CHAIN_DEFAULT_ICON,
                                 name: baseDenom.symbol,
                                 ...item
                             });
                         } else {
                             denomList.push({
-                                imgUrl: chainDefaultUrl,
+                                imgUrl: CHAIN_DEFAULT_ICON,
                                 name: item.base_denom,
                                 ...item
                             });
@@ -1380,7 +1463,7 @@ export const useRelatedAssetChart = (
                             return new BigNumber(total).plus(current.txs).toNumber();
                         }, 0);
                         valueDenomList.push({
-                            imgUrl: chainDefaultUrl,
+                            imgUrl: CHAIN_DEFAULT_ICON,
                             name: 'Others',
                             base_denom: '',
                             base_denom_chain: '',
@@ -1388,7 +1471,7 @@ export const useRelatedAssetChart = (
                             txs: 0
                         });
                         txsDenomList.push({
-                            imgUrl: chainDefaultUrl,
+                            imgUrl: CHAIN_DEFAULT_ICON,
                             name: 'Others',
                             base_denom: '',
                             base_denom_chain: '',
@@ -1454,9 +1537,10 @@ export const useRelatedAssetChart = (
                 console.error(message);
             }
         } catch (error) {
-            relayedValueLoading.value = false;
             relayedValueNetworkError.value = true;
             console.error(error);
+        } finally {
+            relayedValueLoading.value = false;
         }
     };
     const twoLegendRelayedValue = computed(() => {
@@ -1478,11 +1562,11 @@ export const useRelatedAssetChart = (
         }
         relayedValueChart.setOption(relayedValueOption, true);
     };
-
     onMounted(async () => {
         await getRelayedValueData();
         relayedValueChart = echarts.init(relayedValueDom.value as HTMLElement);
         relayedValueChart.on('legendselectchanged', (params: any) => {
+            // todo dj  点击复制，且出现提示框
             relayedValueChart.setOption({
                 legend: { selected: { [params.name]: true } }
             });
