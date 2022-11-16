@@ -135,7 +135,7 @@ export const useRelayerSearch = (emits: any) => {
 
 export const useChainPopover = (chainList: Ref<ChainPopoverChainItem[]>) => {
     const showViewAll = ref(false);
-    const displayChainList = ref<chainItem[]>([]);
+    const displayChainList = ref<ChainPopoverChainItem[]>([]);
 
     watch(
         () => chainList,
