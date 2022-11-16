@@ -63,6 +63,7 @@ import { Ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { formatObjDisplay } from '@/helper/jsonHelper';
 import { formatTxStatus } from '@/helper/tableCellHelper';
+import { formatBigNumber } from '@/helper/parseStringHelper';
 
 export const useJudgeStatus = (props: Readonly<ITxStatus>) => {
     const isShowSuccess = computed(() => {
@@ -209,7 +210,7 @@ export const useTokenInfo = (props: Readonly<IUseTokenInfo>) => {
                     newTokenInfo.amount
                 );
                 tokenInfoList.value.value =
-                    `${matchInfo.value.feeAmount} ${matchInfo.value.symbol}` ||
+                    `${formatBigNumber(matchInfo.value.feeAmount)} ${matchInfo.value.symbol}` ||
                     DEFAULT_DISPLAY_TEXT;
                 tokenInfoListExpand.value.forEach((item) => {
                     handleTransferDetails(item, newTokenInfo);
@@ -549,7 +550,7 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                         feeDenom,
                         feeAmount
                     );
-                    return `${result.feeAmount} ${result.symbol}`;
+                    return `${formatBigNumber(result.feeAmount)} ${result.symbol}`;
                 }
             case PROGRESS_STEP[2]:
                 if (dcInfo.value) {
@@ -558,7 +559,7 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                         feeDenom,
                         feeAmount
                     );
-                    return `${result.feeAmount} ${result.symbol}`;
+                    return `${formatBigNumber(result.feeAmount)} ${result.symbol}`;
                 }
             default:
                 return DEFAULT_DISPLAY_TEXT;

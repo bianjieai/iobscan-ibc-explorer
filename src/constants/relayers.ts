@@ -106,8 +106,7 @@ export const RELAYER_DETAILS_INFO: IDenomStatistic = {
         statistics_name: 'total_relayed_value',
         count: '--',
         no_link: true,
-        unit: UNIT_SIGNS,
-        decimal: 0
+        unit: UNIT_SIGNS
     },
     total_txs: {
         statistics_name: 'total_txs',
@@ -123,8 +122,7 @@ export const RELAYER_DETAILS_INFO: IDenomStatistic = {
         statistics_name: 'total_fee_cost',
         count: '--',
         no_link: true,
-        unit: UNIT_SIGNS,
-        decimal: 2
+        unit: UNIT_SIGNS
     }
 };
 

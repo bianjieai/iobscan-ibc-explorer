@@ -13,7 +13,9 @@
                 <img class="chain_channel__chain_logo" :src="chainIcon" alt="" />
                 <div class="chain_channel__info">
                     <span class="chain_channel__chain">{{ chainName }}</span>
-                    <span class="chain_channel__channel">{{ channel }}</span>
+                    <span class="chain_channel__channel">{{
+                        channel || DEFAULT_DISPLAY_TEXT
+                    }}</span>
                 </div>
             </div>
         </a-popover>
@@ -22,6 +24,7 @@
 
 <script setup lang="ts">
     import { useMatchChainInfo } from '@/composables';
+    import { DEFAULT_DISPLAY_TEXT } from '@/constants';
     import ChainHelper from '@/helper/chainHelper';
 
     interface IChainChannel {
