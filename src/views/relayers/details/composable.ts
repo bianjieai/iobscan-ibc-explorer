@@ -18,7 +18,7 @@ import {
 import { API_CODE, API_ERRPR_MESSAGE } from '@/constants/apiCode';
 import { RELAYER_DETAILS_INFO, RT_COLUMN_TYPE, SINGLE_ADDRESS_HEIGHT } from '@/constants/relayers';
 import ChainHelper from '@/helper/chainHelper';
-import { formatBigNumber } from '@/helper/parseStringHelper';
+import { formatBigNumber, formatNum } from '@/helper/parseStringHelper';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import { useIbcStatisticsChains } from '@/store';
 import { IDenomStatistic, IIbcchain, IPaginationParams } from '@/types/interface/index.interface';
@@ -609,6 +609,8 @@ export const useSelectedSearch = (
                     }
                 } else {
                     console.error(message);
+                    pagination.total = 0;
+                    relayerTransferTableData.value = [];
                 }
             } catch (error) {
                 rtTableLoading.value = false;
@@ -631,6 +633,8 @@ export const useSelectedSearch = (
         }
     });
     const onSelectedChain = (selectedChainInfo?: IDataItem) => {
+        console.log(selectedChainInfo, 'selectedChainInfo');
+
         (window as any).gtag(
             'event',
             `${router.currentRoute.value.name as string}-点击过滤条件Chain`
@@ -725,20 +729,7 @@ export const useFormatTokenDenom = (tokenInfo: Ref<IRtTokenInfo>, type: Ref<stri
     const amount = ref<string>('');
     const tokenLogo = ref<string>(TOKEN_DEFAULT_ICON);
     const tokenSymbol = ref<string>('');
-    const tokenAmount = ref<string>('');
-    switch (type.value) {
-        case RT_COLUMN_TYPE.token:
-            chain.value = tokenInfo.value.base_denom_chain || '';
-            denom.value = tokenInfo.value.base_denom || '';
-            amount.value = tokenInfo.value.amount;
-            break;
-        case RT_COLUMN_TYPE.fee:
-            chain.value = tokenInfo.value.denom_chain || '';
-            denom.value = tokenInfo.value.denom || '';
-            amount.value = tokenInfo.value.amount;
-            break;
-    }
-
+    const tokenAmount = ref<string | number>('');
     const formarTokenDenomByChainDenom = async () => {
         const { feeAmount, tokenIcon, symbol } = await useMatchBaseDenom(
             chain.value,
@@ -747,9 +738,28 @@ export const useFormatTokenDenom = (tokenInfo: Ref<IRtTokenInfo>, type: Ref<stri
         );
         tokenLogo.value = tokenIcon;
         tokenSymbol.value = symbol;
-        tokenAmount.value = feeAmount;
+        tokenAmount.value = formatNum(feeAmount);
     };
-    formarTokenDenomByChainDenom();
+    watch(
+        [tokenInfo, type],
+        ([newTokenInfo, newType]) => {
+            switch (newType) {
+                case RT_COLUMN_TYPE.token:
+                    chain.value = newTokenInfo.base_denom_chain || '';
+                    denom.value = newTokenInfo.base_denom || '';
+                    amount.value = newTokenInfo.amount;
+                    break;
+                case RT_COLUMN_TYPE.fee:
+                    chain.value = newTokenInfo.denom_chain || '';
+                    denom.value = newTokenInfo.denom || '';
+                    amount.value = newTokenInfo.amount;
+                    break;
+            }
+            formarTokenDenomByChainDenom();
+        },
+        { immediate: true }
+    );
+
     return {
         tokenLogo,
         tokenSymbol,

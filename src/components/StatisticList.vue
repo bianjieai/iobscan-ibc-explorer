@@ -27,7 +27,7 @@
                         }"
                     >
                         <span v-if="item.unit" class="list_item__dollar">{{ item.unit }} </span>
-                        {{ `${formatBigNumber(item.count, item.decimal)}` }}
+                        {{ `${formatBigNumber(item.count)}` }}
                     </span>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                             }"
                         >
                             <span v-if="item.unit" class="list_item__unit">{{ item.unit }} </span>
-                            {{ `${formatBigNumber(item.count, item.decimal)}` }}
+                            {{ `${formatBigNumber(item.count)}` }}
                         </span>
                     </div>
                 </div>
