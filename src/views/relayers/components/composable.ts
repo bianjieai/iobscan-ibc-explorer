@@ -1,6 +1,8 @@
-import { removeSpaceAndToLowerCase } from './../../../utils/stringTools';
+import { Ref } from 'vue';
+import { removeSpaceAndToLowerCase } from '@/utils/stringTools';
 import { SEARCH_OPTIONS, RelayersSearchType, RelayerSearchPlaceholder } from '@/constants/relayers';
 import { useIbcStatisticsChains } from '@/store';
+import { ChainPopoverChainItem } from '@/types/interface/relayers.interface';
 
 export const useRelayerSearch = (emits: any) => {
     const router = useRouter();
@@ -128,5 +130,56 @@ export const useRelayerSearch = (emits: any) => {
         onBlur,
         clearValue,
         searchFn
+    };
+};
+
+export const useChainPopover = (chainList: Ref<ChainPopoverChainItem[]>) => {
+    const showViewAll = ref(false);
+    const displayChainList = ref<chainItem[]>([]);
+
+    watch(
+        () => chainList,
+        (newValue) => {
+            if (newValue.value.length <= 0) return [];
+            const maxheight = 246;
+            let currentHeight = 0;
+            const tempChainList = [...newValue.value];
+            displayChainList.value = [];
+            for (let i = 0; i < tempChainList.length; i++) {
+                currentHeight += 36;
+                if (currentHeight > maxheight) {
+                    displayChainList.value = newValue.value.slice(0, i - 1);
+                    showViewAll.value = true;
+                    return;
+                }
+                const chain = tempChainList[i];
+                for (let j = 0; j < chain.address.length; j++) {
+                    currentHeight += 28;
+                    if (currentHeight > maxheight) {
+                        if (i === 0) {
+                            const lastIndex = i;
+                            const tempAddressList = newValue.value[lastIndex].address.slice(
+                                0,
+                                j - 1
+                            );
+                            displayChainList.value = newValue.value.slice(0, i + 1);
+                            displayChainList.value[lastIndex].address = [...tempAddressList];
+                        } else {
+                            displayChainList.value = newValue.value.slice(0, i);
+                        }
+                        showViewAll.value = true;
+                        return;
+                    }
+                }
+            }
+            displayChainList.value = [...newValue.value];
+        },
+        {
+            immediate: true
+        }
+    );
+    return {
+        showViewAll,
+        displayChainList
     };
 };

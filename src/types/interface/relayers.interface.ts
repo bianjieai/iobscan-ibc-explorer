@@ -187,3 +187,9 @@ export enum RelatedAssetsPieType {
     relayedValue,
     feeCost
 }
+
+export interface ChainPopoverChainItem {
+    chainName: string;
+    chainLogo: string;
+    address: string[];
+}
