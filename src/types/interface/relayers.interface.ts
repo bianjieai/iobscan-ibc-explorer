@@ -50,6 +50,7 @@ export interface RelayerListItem {
     relayer_id: string;
     relayer_icon: string;
     is_registered: boolean;
+    show_popover: boolean;
     served_chains_infos: chainPopoverProp[];
 }
 export interface IChannelChain {

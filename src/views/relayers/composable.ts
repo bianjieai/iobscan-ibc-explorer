@@ -1,3 +1,4 @@
+import { getTextWidth } from '@/utils/urlTools';
 import { getRelayersListAPI } from '@/api/relayers';
 import ChainHelper from '@/helper/chainHelper';
 import { ServedChainsInfo, chainPopoverProp } from '@/types/interface/relayers.interface';
@@ -85,9 +86,13 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
                                 const served_chains_infos = await sortServedChainsInfo(
                                     item.served_chains_info
                                 );
+                                const is_registered = Boolean(item.relayer_name);
+                                const textWidth =
+                                    getTextWidth(item.relayer_name, '16px GolosUI_Medium') || 0;
+                                const isShowEllipsis = textWidth > 80;
                                 formatItems.push({
                                     relayer_id: item.relayer_id,
-                                    is_registered: Boolean(item.relayer_name),
+                                    is_registered,
                                     relayer_icon: item.relayer_icon,
                                     served_chains_infos: served_chains_infos,
                                     [RelayersListKey.relayersRelayerName]: item.relayer_name,
@@ -103,7 +108,8 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
                                         item.relayed_total_txs_value || DEFAULT_DISPLAY_TEXT,
                                     [RelayersListKey.relayersTotalFeeCost]:
                                         item.total_fee_value || DEFAULT_DISPLAY_TEXT,
-                                    [RelayersListKey.relayersLastUpdated]: item.update_time
+                                    [RelayersListKey.relayersLastUpdated]: item.update_time,
+                                    show_popover: isShowEllipsis
                                 });
                             }
                             if (items.length < allParams.page_size) {
