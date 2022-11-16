@@ -35,7 +35,6 @@ import {
     FormatDenomItem,
     RelatedAssetsPieType
 } from '@/types/interface/relayers.interface';
-import chainDefaultUrl from '@/assets/home/chain-default.png';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatString } from '@/utils/stringTools';
 import { calculatePercentage } from '@/utils/calculate';
@@ -1383,13 +1382,13 @@ export const useRelatedAssetChart = (
                         );
                         if (baseDenom) {
                             denomList.push({
-                                imgUrl: baseDenom.icon || chainDefaultUrl,
+                                imgUrl: baseDenom.icon || CHAIN_DEFAULT_ICON,
                                 name: baseDenom.symbol,
                                 ...item
                             });
                         } else {
                             denomList.push({
-                                imgUrl: chainDefaultUrl,
+                                imgUrl: CHAIN_DEFAULT_ICON,
                                 name: item.base_denom,
                                 ...item
                             });
@@ -1412,7 +1411,7 @@ export const useRelatedAssetChart = (
                             return new BigNumber(total).plus(current.txs).toNumber();
                         }, 0);
                         valueDenomList.push({
-                            imgUrl: chainDefaultUrl,
+                            imgUrl: CHAIN_DEFAULT_ICON,
                             name: 'Others',
                             base_denom: '',
                             base_denom_chain: '',
@@ -1420,7 +1419,7 @@ export const useRelatedAssetChart = (
                             txs: 0
                         });
                         txsDenomList.push({
-                            imgUrl: chainDefaultUrl,
+                            imgUrl: CHAIN_DEFAULT_ICON,
                             name: 'Others',
                             base_denom: '',
                             base_denom_chain: '',
