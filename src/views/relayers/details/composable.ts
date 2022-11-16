@@ -5,7 +5,13 @@ import {
 } from '@/api/relayers';
 import { IDataItem } from '@/components/BjSelect/interface';
 import { useMatchBaseDenom } from '@/composables';
-import { CHAIN_DEFAULT_ICON, TOKEN_DEFAULT_ICON, TRANSFER_TYPE } from '@/constants';
+import {
+    CHAINNAME,
+    CHAIN_DEFAULT_ICON,
+    RELAYER_DEFAULT_ICON,
+    TOKEN_DEFAULT_ICON,
+    TRANSFER_TYPE
+} from '@/constants';
 import { API_CODE, API_ERRPR_MESSAGE } from '@/constants/apiCode';
 import { RELAYER_DETAILS_INFO, RT_COLUMN_TYPE, SINGLE_ADDRESS_HEIGHT } from '@/constants/relayers';
 import ChainHelper from '@/helper/chainHelper';
@@ -47,8 +53,41 @@ export const useGetRelayerDetailsInfo = () => {
     const relayedTotalTxs = ref<number>(0);
     const relayedSuccessTxs = ref<number>(0);
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
-    const channelPairsInfo = ref<IChannelChain[]>();
+    const channelPairsInfo = ref<IChannelChain[]>([]);
     const isShowModal = ref<boolean>(false);
+    // chain_name 先左右排，再上下排
+    const sortChannelPairsByChainName = async (channelPairsInfoArr: IChannelChain[]) => {
+        if (!channelPairsInfoArr?.length) return [];
+        const chainChannelLRSort = ChainHelper.sortByChainName(channelPairsInfoArr);
+        const chainChannelArr = [];
+        for (const i in chainChannelLRSort) {
+            const chainInfo = await ChainHelper.getChainInfoByKey(chainChannelLRSort[i].chain_a);
+            if (chainInfo) {
+                chainChannelArr.push({
+                    chainName: chainInfo.chain_name,
+                    channelInfo: chainChannelLRSort[i]
+                });
+            }
+        }
+        const cosmosChainChannel = chainChannelArr
+            .filter((item) => item.chainName === CHAINNAME.COSMOSHUB)
+            .map((item) => item.channelInfo);
+
+        const irishubChainChannel = chainChannelArr
+            .filter((item) => item.chainName === CHAINNAME.IRISHUB)
+            .map((item) => item.channelInfo);
+        const otherChainChannel = chainChannelArr
+            .filter(
+                (item) =>
+                    item.chainName !== CHAINNAME.COSMOSHUB && item.chainName !== CHAINNAME.IRISHUB
+            )
+            .sort((a, b) => {
+                return a.chainName.localeCompare(b.chainName);
+            })
+            .map((item) => item.channelInfo);
+
+        return [...cosmosChainChannel, ...irishubChainChannel, ...otherChainChannel];
+    };
     const getRelayerDetailsInfo = () => {
         const route = useRoute();
         const relayerId: string = route?.params?.relayerId as string;
@@ -56,7 +95,6 @@ export const useGetRelayerDetailsInfo = () => {
             ibcStatisticsChainsStore.isShowLoading = true;
             try {
                 const { code, data, message } = await getRelayerDetailsByRelayerIdAPI(relayerId);
-                ibcStatisticsChainsStore.isShowLoading = false;
                 if (code === API_CODE.success) {
                     if (data) {
                         relayerIcon.value = data.relayer_icon;
@@ -69,18 +107,22 @@ export const useGetRelayerDetailsInfo = () => {
                         relayerInfo.value.served_channel_pairs.count =
                             data.channel_pair_info?.length;
                         relayerInfo.value.total_fee_cost.count = data.total_fee_value;
-                        channelPairsInfo.value = data.channel_pair_info;
+                        channelPairsInfo.value = await sortChannelPairsByChainName(
+                            data.channel_pair_info
+                        );
                     }
                 } else if (code === API_CODE.unRegisteredRelayer) {
+                    relayerIcon.value = RELAYER_DEFAULT_ICON;
                     isShowModal.value = true;
                 } else {
                     ibcStatisticsChainsStore.isShow500 = true;
                     console.error(message);
                 }
             } catch (error) {
-                ibcStatisticsChainsStore.isShowLoading = false;
                 ibcStatisticsChainsStore.isShow500 = true;
                 console.error(error);
+            } finally {
+                ibcStatisticsChainsStore.isShowLoading = false;
             }
         };
         getRelayerDetailsByRelayerId();
@@ -90,6 +132,15 @@ export const useGetRelayerDetailsInfo = () => {
             isShowModal.value ? '--' : servedChainsInfo.value?.length
         } blockchains served`;
     });
+    const relayerImgSrc = (relayerIcon: string, relayerName: string): string => {
+        if (relayerIcon) {
+            return relayerIcon;
+        } else if (!relayerName) {
+            return RELAYER_DEFAULT_ICON;
+        } else {
+            return '';
+        }
+    };
     onMounted(() => {
         getRelayerDetailsInfo();
     });
@@ -102,7 +153,8 @@ export const useGetRelayerDetailsInfo = () => {
         relayerInfo,
         channelPairsInfo,
         isShowModal,
-        subTitle
+        subTitle,
+        relayerImgSrc
     };
 };
 

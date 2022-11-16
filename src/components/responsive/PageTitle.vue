@@ -1,9 +1,37 @@
 <template>
     <div class="page_title">
-        <img v-if="imgSrc" class="page_title__icon" :src="imgSrc" alt="" />
+        <div v-if="!relayer">
+            <img v-if="imgSrc" class="page_title__icon" :src="imgSrc" alt="" />
+        </div>
+        <div v-else>
+            <img v-if="relayerImgSrc" class="page_title__icon" :src="relayerImgSrc" alt="" />
+            <div
+                v-else
+                class="page_title__icon page_title__icon_wrap flex items-center justify-center"
+            >
+                <span class="page_title__icon_text">{{
+                    (title.substring(0, 1) || '').toUpperCase()
+                }}</span>
+            </div>
+        </div>
         <div class="page_title__wrap" :class="{ page_title__wrap_diff: title.length > 60 }">
             <div class="page_title__text">
-                <img v-if="imgSrc" class="page_title__icon_mobile" :src="imgSrc" alt="" />
+                <div v-if="!relayer">
+                    <img v-if="imgSrc" class="page_title__icon_mobile" :src="imgSrc" alt="" />
+                </div>
+                <div v-else>
+                    <img
+                        v-if="relayerImgSrc"
+                        class="page_title__icon_mobile"
+                        :src="relayerImgSrc"
+                        alt=""
+                    />
+                    <div v-else class="page_title__icon_mobile page_title__icon_wrap">
+                        <span class="page_title__icon_text">{{
+                            (title.substring(0, 1) || '').toUpperCase()
+                        }}</span>
+                    </div>
+                </div>
                 <a-popover v-if="title.length > 60" destroy-tooltip-on-hide>
                     <template #content>
                         <span>{{ title }}</span>
@@ -31,6 +59,8 @@
         title: string;
         subtitle?: string;
         imgSrc?: string;
+        relayer?: boolean;
+        relayerImgSrc?: string;
     }
 
     withDefaults(defineProps<IProps>(), {
@@ -45,6 +75,18 @@
             margin-right: 8px;
             width: 32px;
             height: 32px;
+            border-radius: 50%;
+        }
+        &__icon_wrap {
+            background: url('../../assets/relayers/default_bg.png') no-repeat center center;
+            border-radius: 50%;
+        }
+        &__icon_text {
+            font-size: 22px;
+            background: linear-gradient(to right, #b3bbff, #8594ff);
+            background-size: cover;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
         &__icon_mobile {
             display: none;
@@ -113,6 +155,8 @@
                 margin-right: 8px;
                 width: 32px;
                 height: 32px;
+                text-align: center;
+                border-radius: 50%;
             }
             &__wrap {
             }
