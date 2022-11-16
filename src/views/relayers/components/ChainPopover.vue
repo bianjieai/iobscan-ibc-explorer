@@ -7,9 +7,13 @@
         <template #content>
             <div class="chain_popover_c">
                 <div
-                    v-for="chain in displayChainList"
+                    v-for="(chain, index) in displayChainList"
                     :key="chain.chainName + chain.chainLogo"
                     class="chain_popover_c__item"
+                    :class="{
+                        chain_popover_c__item_last:
+                            displayChainList.length - 1 === index && !showViewAll
+                    }"
                 >
                     <div class="chain_popover_c__item__chain">
                         <div class="chain_popover_c__item__chain__img_c">
@@ -31,7 +35,7 @@
                     </div>
                 </div>
                 <div
-                    v-show="props.chainList.length > 3"
+                    v-show="showViewAll"
                     class="chain_popover_c__bottom"
                     @click="goRelayersDetails(props.isRegistered, props.relayerId)"
                 >
@@ -49,26 +53,20 @@
 
 <script setup lang="ts">
     import { useGoRelayersDetails } from '../composable';
-
-    interface chainItem {
-        chainName: string;
-        chainLogo: string;
-        address: string[];
-    }
+    import { useChainPopover } from './composable';
+    import { ChainPopoverChainItem } from '@/types/interface/relayers.interface';
 
     interface IProps {
         servedChainsNum: number;
         relayerId: string;
         isRegistered: boolean;
         changeModal: (flag: boolean) => void;
-        chainList: chainItem[];
+        chainList: ChainPopoverChainItem[];
     }
 
     const props = defineProps<IProps>();
-
-    const displayChainList = computed(() => {
-        return props.chainList.slice(0, 3) || [];
-    });
+    const { chainList } = toRefs(props);
+    const { showViewAll, displayChainList } = useChainPopover(chainList);
 
     const { goRelayersDetails } = useGoRelayersDetails(props.changeModal);
 </script>
@@ -85,7 +83,7 @@
         padding: 4px 16px 0 12px;
         &__item {
             min-width: 386px;
-            padding: 8px 0 6px 0;
+            padding: 8px 0 0 0;
             border-bottom: 1px solid #ebebeb;
             &__chain {
                 .flex(row,nowrap);
@@ -110,6 +108,7 @@
             }
             &__address {
                 .flex(row,nowrap);
+                margin-bottom: 8px;
                 &__img_c {
                     width: 20px;
                     height: 20px;
@@ -128,6 +127,9 @@
                     line-height: 18px;
                 }
             }
+        }
+        &__item_last {
+            border-bottom: none;
         }
         &__bottom {
             margin: 8px 0;
@@ -150,6 +152,7 @@
                 }
                 .iconfont {
                     color: var(--bj-primary-color);
+                    margin-top: 1px;
                 }
             }
         }

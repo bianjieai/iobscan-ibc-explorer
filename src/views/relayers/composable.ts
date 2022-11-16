@@ -1,3 +1,4 @@
+import { getTextWidth } from '@/utils/urlTools';
 import { getRelayersListAPI } from '@/api/relayers';
 import ChainHelper from '@/helper/chainHelper';
 import { ServedChainsInfo, chainPopoverProp } from '@/types/interface/relayers.interface';
@@ -5,7 +6,14 @@ import { RelayerListItem } from '@/types/interface/relayers.interface';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import { IRequestRelayerList, IResponseRelayerList } from '@/types/interface/relayers.interface';
 import { API_CODE } from '@/constants/apiCode';
-import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON, UNKNOWN, CHAINNAME } from '@/constants';
+import {
+    BASE_PARAMS,
+    PAGE_PARAMETERS,
+    CHAIN_DEFAULT_ICON,
+    UNKNOWN,
+    CHAINNAME,
+    DEFAULT_DISPLAY_TEXT
+} from '@/constants';
 import { useRouter } from 'vue-router';
 import { axiosCancel } from '@/utils/axios';
 import { formatSubTitle } from '@/helper/pageSubTitleHelper';
@@ -78,9 +86,13 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
                                 const served_chains_infos = await sortServedChainsInfo(
                                     item.served_chains_info
                                 );
+                                const is_registered = Boolean(item.relayer_name);
+                                const textWidth =
+                                    getTextWidth(item.relayer_name, '16px GolosUI_Medium') || 0;
+                                const isShowEllipsis = textWidth > 80;
                                 formatItems.push({
                                     relayer_id: item.relayer_id,
-                                    is_registered: Boolean(item.relayer_name),
+                                    is_registered,
                                     relayer_icon: item.relayer_icon,
                                     served_chains_infos: served_chains_infos,
                                     [RelayersListKey.relayersRelayerName]: item.relayer_name,
@@ -93,9 +105,11 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
                                     [RelayersListKey.relayersIbcTransferTxs]:
                                         item.relayed_total_txs,
                                     [RelayersListKey.relayersTotalRelayedValue]:
-                                        item.relayed_total_txs_value,
-                                    [RelayersListKey.relayersTotalFeeCost]: item.total_fee_value,
-                                    [RelayersListKey.relayersLastUpdated]: item.update_time
+                                        item.relayed_total_txs_value || DEFAULT_DISPLAY_TEXT,
+                                    [RelayersListKey.relayersTotalFeeCost]:
+                                        item.total_fee_value || DEFAULT_DISPLAY_TEXT,
+                                    [RelayersListKey.relayersLastUpdated]: item.update_time,
+                                    show_popover: isShowEllipsis
                                 });
                             }
                             if (items.length < allParams.page_size) {

@@ -1,3 +1,4 @@
+import { copyToClipboard } from '@/utils/clipboardTools';
 import { getChartTooltip } from '@/helper/relayerHelper';
 import {
     getRelayerDetailsByRelayerIdAPI,
@@ -11,7 +12,8 @@ import {
     CHAIN_DEFAULT_ICON,
     RELAYER_DEFAULT_ICON,
     TOKEN_DEFAULT_ICON,
-    TRANSFER_TYPE
+    TRANSFER_TYPE,
+    DEFAULT_DISPLAY_TEXT
 } from '@/constants';
 import { API_CODE, API_ERRPR_MESSAGE } from '@/constants/apiCode';
 import { RELAYER_DETAILS_INFO, RT_COLUMN_TYPE, SINGLE_ADDRESS_HEIGHT } from '@/constants/relayers';
@@ -35,7 +37,6 @@ import { RelayerTrendData, BarData } from '@/types/interface/relayers.interface'
 import { useWindowSize } from '@vueuse/core';
 import { PIE_COLOR_LIST, OPACITY_PIE_COLOR_LIST } from '@/constants/relayers';
 import { getTotalFeeCostAPI, getTotalRelayedValueAPI } from '@/api/relayers';
-import { DEFAULT_DISPLAY_TEXT } from '@/constants';
 import {
     RelayedValueData,
     FormatDenomItem,
@@ -1141,227 +1142,289 @@ export const useRelayedTrend = () => {
     };
 };
 
+export const useRelatedAssets = () => {
+    const relayedAssetsChoose = ref(0);
+    const relatedAssetValueRef = ref<any>(null);
+    const relatedAssetFeeRef = ref<any>(null);
+    const tipText = computed(() => {
+        const result =
+            relayedAssetsChoose.value === 0
+                ? 'When calculating the token value distribution relayed by the relayer, tokens with a price of 0 are not displayed.'
+                : '';
+        return result;
+    });
+    const relayedAssetsChooseBtnFn = (index: number) => {
+        relayedAssetsChoose.value = index;
+        relatedAssetValueRef.value &&
+            relatedAssetValueRef.value.relayedAssetsChooseBtnFn &&
+            (relatedAssetValueRef.value as any).relayedAssetsChooseBtnFn(index);
+        relatedAssetFeeRef.value &&
+            relatedAssetFeeRef.value.relayedAssetsChooseBtnFn &&
+            (relatedAssetFeeRef.value as any).relayedAssetsChooseBtnFn(index);
+    };
+    return {
+        relayedAssetsChoose,
+        tipText,
+        relayedAssetsChooseBtnFn,
+        relatedAssetValueRef,
+        relatedAssetFeeRef
+    };
+};
+
 export const useRelatedAssetChart = (
     relayedAssetsChoose: Ref<number>,
     type: Ref<RelatedAssetsPieType>
 ) => {
     const route = useRoute();
     const relayerId: string = route.params.relayerId as string;
-
+    const relayedValueDom = ref<HTMLElement>();
+    const relayedValueOption: any = {
+        tooltip: {
+            trigger: 'item',
+            backgroundColor: null,
+            borderWidth: 0,
+            padding: 0,
+            extraCssText: 'box-shadow: 0 0 0 transparent;',
+            formatter: (params: any) => {
+                return `<div style="display: flex; align-items: center; transform: translate(6px, 0)">
+                            <div
+                                style="
+                                display: flex;
+                                margin-left: 4px;
+                                background: #ffffff;
+                                box-shadow: 0px 2px 8px 0px #d9deec;
+                                border-radius: 4px;
+                                border: 1px solid #d9dfee;
+                                "
+                                >
+                                  <div>
+                                      <div style="display: flex; justify-content: flex-start; padding: 12px 12px 6px">
+                                          <img
+                                              src="${params.data.imgUrl}"
+                                              style="width: 20px; height: 20px"
+                                          />
+                                          <span
+                                              style="
+                                                  margin-left: 8px;
+                                                  font-size: 16px;
+                                                  font-family: GolosUI-Medium, GolosUI;
+                                                  font-weight: 500;
+                                                  color: #000000;
+                                                  line-height: 20px;
+                                              "
+                                              >${formatString(params.name)}</span
+                                          >
+                                      </div>
+                                      <div style="display: flex; justify-content: flex-start; padding: 0px 12px 14px">
+                                          <span
+                                              style="
+                                                  font-size: 14px;
+                                                  font-family: 'GolosUI_Medium';
+                                                  color: #000;
+                                                  font-weight: 500;
+                                                  line-height: 18px;
+                                              "
+                                              >${chartTooltip.value.key}:
+                                          </span>
+                                          <span
+                                              style="
+                                                  margin-left: 8px;
+                                                  font-size: 14px;
+                                                  color: rgba(0, 0, 0, 0.75);
+                                                  font-family: 'GolosUIWebRegular';
+                                                  font-weight: 400;
+                                                  line-height: 18px;
+                                              "
+                                              >${chartTooltip.value.symbol}${formatBigNumber(
+                    params.data.value,
+                    0
+                )}</span
+                                          >
+                                          <span
+                                              style="
+                                                  font-size: 14px;
+                                                  font-family: GolosUI-Medium, GolosUI;
+                                                  font-weight: 500;
+                                                  color: rgba(0, 0, 0, 0.34);
+                                                  line-height: 18px;
+                                              "
+                                              >/${params.data.percent}%</span
+                                          >
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>`;
+            },
+            confine: true
+        },
+        legend: {
+            orient: 'vertical',
+            top: 80,
+            left: 228,
+            bottom: 8,
+            itemWidth: 12,
+            itemHeight: 12,
+            itemGap: 0,
+            padding: [0, 0, 0, 0],
+            fontSize: 12,
+            formatter: (name: string) => {
+                return formatString(name);
+            },
+            textStyle: {
+                padding: [0, 10, 10, 0],
+                color: '#000000',
+                fontWeight: 400,
+                fontFamily: 'GolosUIWebRegular',
+                fontSize: 12,
+                backgroundColor: 'transparent'
+            }
+        },
+        series: [
+            {
+                type: 'pie',
+                silent: true,
+                radius: [68, 80],
+                minAngle: 2,
+                center: [108, '50%'],
+                itemStyle: {
+                    borderColor: '#fff',
+                    borderWidth: 2,
+                    opacity: 1
+                },
+                label: {
+                    show: true,
+                    top: 'middle',
+                    position: 'center',
+                    padding: [7, 0, 0, 0],
+                    opacity: 1,
+                    rich: {
+                        text: {
+                            color: '#000000',
+                            fontWeight: 400,
+                            fontFamily: 'GolosUIWebRegular',
+                            fontSize: 16,
+                            lineHeight: 16
+                        },
+                        total: {
+                            color: '#000000',
+                            fontWeight: 600,
+                            fontFamily: 'GolosUIWebRegular',
+                            fontSize: 24,
+                            lineHeight: 24
+                        }
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: []
+            },
+            {
+                type: 'pie',
+                radius: [80, 100],
+                center: [108, '50%'],
+                minAngle: 2,
+                itemStyle: {
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false
+                },
+                labelLine: {
+                    show: false
+                },
+                emphasis: {
+                    scaleSize: 8
+                },
+                data: []
+            }
+        ]
+    };
+    let relayedValueChart: echarts.ECharts;
+    const relayedValueLoading = ref(true);
+    const relayedValueNoData = ref(false);
+    const relayedValueNetworkError = ref(false);
+    const totalRelayedValueData = reactive<RelayedValueData>({
+        totalValue: DEFAULT_DISPLAY_TEXT,
+        value: [],
+        valueOpacity: [],
+        txs: [],
+        txsOpacity: [],
+        totalTxs: DEFAULT_DISPLAY_TEXT,
+        totalDenomCount: 0,
+        valueTwoLegend: false,
+        txsTwoLegend: false
+    });
+    const relayedValueAbnormalText = computed(() => {
+        if (relayedValueNoData.value) {
+            return API_ERRPR_MESSAGE.noData;
+        } else if (relayedValueNetworkError.value) {
+            return API_ERRPR_MESSAGE.networkError;
+        } else {
+            return '';
+        }
+    });
+    const isRelayedValueType = computed(() => type.value === RelatedAssetsPieType.relayedValue);
+    const totalRelayedTitle = computed(() => {
+        if (relayedAssetsChoose.value === 0) {
+            return `Total ${
+                isRelayedValueType.value ? 'related Value' : 'Fee Cost'
+            } $${formatBigNumber(totalRelayedValueData.totalValue, 0)}`;
+        } else {
+            return `Total ${isRelayedValueType.value ? 'related Txs' : 'Fee Txs'} ${formatBigNumber(
+                totalRelayedValueData.totalTxs,
+                0
+            )}`;
+        }
+    });
+    const twoLegendRelayedValue = computed(() => {
+        return relayedAssetsChoose.value === 0
+            ? totalRelayedValueData.valueTwoLegend
+            : totalRelayedValueData.txsTwoLegend;
+    });
     const chartTooltip = computed(() => {
         return getChartTooltip(relayedAssetsChoose.value);
     });
-
-    const getBaseOption = () => {
-        const baseOption = {
-            tooltip: {
-                trigger: 'item',
-                backgroundColor: null,
-                borderWidth: 0,
-                padding: 0,
-                extraCssText: 'box-shadow: 0 0 0 transparent;',
-                formatter: (params: any) => {
-                    return `<div style="display: flex; align-items: center; transform: translate(6px, 0)">
-                                <div
-                                    style="
-                                    display: flex;
-                                    margin-left: 4px;
-                                    background: #ffffff;
-                                    box-shadow: 0px 2px 8px 0px #d9deec;
-                                    border-radius: 4px;
-                                    border: 1px solid #d9dfee;
-                                    "
-                                    >
-                                      <div>
-                                          <div style="display: flex; justify-content: flex-start; padding: 12px 12px 6px">
-                                              <img
-                                                  src="${params.data.imgUrl}"
-                                                  style="width: 20px; height: 20px"
-                                              />
-                                              <span
-                                                  style="
-                                                      margin-left: 8px;
-                                                      font-size: 16px;
-                                                      font-family: GolosUI-Medium, GolosUI;
-                                                      font-weight: 500;
-                                                      color: #000000;
-                                                      line-height: 20px;
-                                                  "
-                                                  >${formatString(params.name)}</span
-                                              >
-                                          </div>
-                                          <div style="display: flex; justify-content: flex-start; padding: 0px 12px 14px">
-                                              <span
-                                                  style="
-                                                      font-size: 14px;
-                                                      font-family: 'GolosUI_Medium';
-                                                      color: #000;
-                                                      font-weight: 500;
-                                                      line-height: 18px;
-                                                  "
-                                                  >${chartTooltip.value.key}:
-                                              </span>
-                                              <span
-                                                  style="
-                                                      margin-left: 8px;
-                                                      font-size: 14px;
-                                                      color: rgba(0, 0, 0, 0.75);
-                                                      font-family: 'GolosUIWebRegular';
-                                                      font-weight: 400;
-                                                      line-height: 18px;
-                                                  "
-                                                  >${chartTooltip.value.symbol}${formatBigNumber(
-                        params.data.value,
-                        0
-                    )}</span
-                                              >
-                                              <span
-                                                  style="
-                                                      font-size: 14px;
-                                                      font-family: GolosUI-Medium, GolosUI;
-                                                      font-weight: 500;
-                                                      color: rgba(0, 0, 0, 0.34);
-                                                      line-height: 18px;
-                                                  "
-                                                  >/${params.data.percent}%</span
-                                              >
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>`;
-                }
-            },
-            legend: {
-                top: null,
-                bottom: 10,
-                right: 0,
-                orient: 'vertical',
-                itemWidth: 12,
-                itemHeight: 12,
-                itemGap: 9,
-                padding: 0,
-                formatter: (name: string) => {
-                    return formatString(name);
-                },
-                textStyle: {
-                    padding: [1.4, 0, 0, 0],
-                    color: '#000000',
-                    fontWeight: 400,
-                    fontFamily: 'GolosUIWebRegular',
-                    fontSize: 12
-                }
-            },
-            series: [
-                {
-                    type: 'pie',
-                    silent: true,
-                    radius: [68, 80],
-                    minAngle: 2,
-                    center: [108, '50%'],
-                    itemStyle: {
-                        borderColor: '#fff',
-                        borderWidth: 2,
-                        opacity: 1
-                    },
-                    label: {
-                        show: true,
-                        top: 'middle',
-                        position: 'center',
-                        padding: [7, 0, 0, 0],
-                        opacity: 1,
-                        rich: {
-                            text: {
-                                color: '#000000',
-                                fontWeight: 400,
-                                fontFamily: 'GolosUIWebRegular',
-                                fontSize: 16,
-                                lineHeight: 16
-                            },
-                            total: {
-                                color: '#000000',
-                                fontWeight: 600,
-                                fontFamily: 'GolosUIWebRegular',
-                                fontSize: 24,
-                                lineHeight: 24
-                            }
-                        }
-                    },
-                    labelLine: {
-                        show: false
-                    },
-                    data: []
-                },
-                {
-                    type: 'pie',
-                    radius: [80, 100],
-                    center: [108, '50%'],
-                    minAngle: 2,
-                    itemStyle: {
-                        borderColor: '#fff',
-                        borderWidth: 2
-                    },
-                    label: {
-                        show: false
-                    },
-                    labelLine: {
-                        show: false
-                    },
-                    emphasis: {
-                        scaleSize: 8
-                    },
-                    data: []
-                }
-            ]
-        };
-        return baseOption;
-    };
     const { width: widthClient } = useWindowSize();
 
-    // todo dj 饼图样式需要调整
     const changeRelayedAssetsOption = (
         option: any,
         widthClient: number,
         isTwoColumnsLegend: boolean
     ) => {
         if (widthClient > 1183) {
-            if (isTwoColumnsLegend) {
-                option.legend.top = '35%';
-            } else {
-                option.legend.top = null;
-            }
-            option.legend.bottom = 10;
-            option.legend.right = 0;
+            option.legend.top = isTwoColumnsLegend ? 80 : 'auto';
+            option.legend.left = 228;
             option.series[0].radius = [68, 80];
             option.series[0].center = [108, '50%'];
+            option.series[0].minAngle = 2;
             option.series[1].radius = [80, 100];
             option.series[1].center = [108, '50%'];
+            option.series[1].minAngle = 2;
+            option.series[1].emphasis.scaleSize = 8;
+        } else if (widthClient > 390) {
+            option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
+            option.legend.left = 175;
+            option.series[0].radius = [52, 60];
+            option.series[0].center = [85, '50%'];
+            option.series[1].radius = [60, 76];
+            option.series[1].center = [85, '50%'];
+            option.series[0].minAngle = 3;
+            option.series[1].minAngle = 3;
+            option.series[1].emphasis.scaleSize = 5;
         } else {
-            if (isTwoColumnsLegend) {
-                option.legend.top = '25%';
-                option.legend.bottom = 10;
-                option.legend.right = 10;
-                option.series[0].radius = [52, 60];
-                option.series[0].center = [85, '53%'];
-                option.series[1].radius = [60, 76];
-                option.series[1].center = [85, '53%'];
-            } else {
-                option.legend.top = null;
-                option.legend.bottom = 10;
-                option.legend.right = 0;
-                option.series[0].radius = [52, 60];
-                option.series[0].center = [85, '53%'];
-                option.series[1].radius = [60, 76];
-                option.series[1].center = [85, '53%'];
-            }
+            option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
+            option.legend.left = isTwoColumnsLegend ? 165 : 175;
+            option.series[0].radius = [52, 60];
+            option.series[0].center = [85, '50%'];
+            option.series[1].radius = [60, 76];
+            option.series[1].center = [85, '50%'];
+            option.series[0].minAngle = 3;
+            option.series[1].minAngle = 3;
+            option.series[1].emphasis.scaleSize = 5;
         }
     };
-
-    const relayedValueDom = ref<HTMLElement>();
-    const relayedValueOption: any = getBaseOption();
-    let relayedValueChart: echarts.ECharts;
-    const relayedValueLoading = ref(true);
-    const relayedValueNoData = ref(false);
-    const relayedValueNetworkError = ref(false);
     const changeRelayedValueOption = () => {
         const legend =
             relayedAssetsChoose.value === 0
@@ -1376,40 +1439,7 @@ export const useRelatedAssetChart = (
             relayedValueChart.resize();
         }
     };
-    const relayedValueAbnormalText = computed(() => {
-        if (relayedValueNoData.value) {
-            return API_ERRPR_MESSAGE.noData;
-        } else if (relayedValueNetworkError.value) {
-            return API_ERRPR_MESSAGE.networkError;
-        } else {
-            return '';
-        }
-    });
-    const totalRelayedValueData = reactive<RelayedValueData>({
-        totalValue: DEFAULT_DISPLAY_TEXT,
-        value: [],
-        valueOpacity: [],
-        txs: [],
-        txsOpacity: [],
-        totalTxs: DEFAULT_DISPLAY_TEXT,
-        totalDenomCount: 0,
-        valueTwoLegend: false,
-        txsTwoLegend: false
-    });
-    const isRelayedValueType = computed(() => type.value === RelatedAssetsPieType.relayedValue);
 
-    const totalRelayedTitle = computed(() => {
-        if (relayedAssetsChoose.value === 0) {
-            return `Total ${
-                isRelayedValueType.value ? 'related Value' : 'Fee Cost'
-            } $${formatBigNumber(totalRelayedValueData.totalValue, 0)}`;
-        } else {
-            return `Total ${isRelayedValueType.value ? 'related Txs' : 'Fee Txs'} ${formatBigNumber(
-                totalRelayedValueData.totalTxs,
-                0
-            )}`;
-        }
-    });
     const getRelayedValueData = async () => {
         try {
             relayedValueLoading.value = true;
@@ -1444,13 +1474,13 @@ export const useRelatedAssetChart = (
                         );
                         if (baseDenom) {
                             denomList.push({
-                                imgUrl: baseDenom.icon || CHAIN_DEFAULT_ICON,
+                                imgUrl: baseDenom.icon || TOKEN_DEFAULT_ICON,
                                 name: baseDenom.symbol,
                                 ...item
                             });
                         } else {
                             denomList.push({
-                                imgUrl: CHAIN_DEFAULT_ICON,
+                                imgUrl: TOKEN_DEFAULT_ICON,
                                 name: item.base_denom,
                                 ...item
                             });
@@ -1473,7 +1503,7 @@ export const useRelatedAssetChart = (
                             return new BigNumber(total).plus(current.txs).toNumber();
                         }, 0);
                         valueDenomList.push({
-                            imgUrl: CHAIN_DEFAULT_ICON,
+                            imgUrl: TOKEN_DEFAULT_ICON,
                             name: 'Others',
                             base_denom: '',
                             base_denom_chain: '',
@@ -1481,7 +1511,7 @@ export const useRelatedAssetChart = (
                             txs: 0
                         });
                         txsDenomList.push({
-                            imgUrl: CHAIN_DEFAULT_ICON,
+                            imgUrl: TOKEN_DEFAULT_ICON,
                             name: 'Others',
                             base_denom: '',
                             base_denom_chain: '',
@@ -1491,6 +1521,9 @@ export const useRelatedAssetChart = (
                     }
                     for (let i = 0; i < valueDenomList.length; i++) {
                         const valueDenom = valueDenomList[i];
+                        if (valueDenom.txs_value == '0') {
+                            continue;
+                        }
                         totalRelayedValueData.valueOpacity.push({
                             value: valueDenom.txs_value,
                             itemStyle: {
@@ -1553,12 +1586,6 @@ export const useRelatedAssetChart = (
             relayedValueLoading.value = false;
         }
     };
-    const twoLegendRelayedValue = computed(() => {
-        return relayedAssetsChoose.value === 0
-            ? totalRelayedValueData.valueTwoLegend
-            : totalRelayedValueData.txsTwoLegend;
-    });
-
     const relayedAssetsChooseBtnFn = (index: number) => {
         const labelCenter = isRelayedValueType.value ? 'IBC Token' : 'Fee Token';
         if (index === 0) {
@@ -1566,20 +1593,40 @@ export const useRelatedAssetChart = (
             relayedValueOption.series[0].data = totalRelayedValueData.valueOpacity;
             relayedValueOption.series[1].data = totalRelayedValueData.value;
         } else {
-            relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.txs.length}}`;
+            relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.totalDenomCount}}`;
             relayedValueOption.series[0].data = totalRelayedValueData.txsOpacity;
             relayedValueOption.series[1].data = totalRelayedValueData.txs;
         }
-        relayedValueChart.setOption(relayedValueOption, true);
+        setTimeout(() => {
+            relayedValueSizeFn();
+        }, 0);
     };
+    const showToast = ref(false);
+    const clientX = ref(0);
+    const clientY = ref(0);
+    const clickEventFn = (e: MouseEvent) => {
+        clientX.value = e.clientX || 0;
+        clientY.value = e.clientY || 0;
+    };
+    let showTimer: number;
+    let cancelShowTimer: number;
     onMounted(async () => {
         await getRelayedValueData();
         relayedValueChart = echarts.init(relayedValueDom.value as HTMLElement);
         relayedValueChart.on('legendselectchanged', (params: any) => {
-            // todo dj  点击复制，且出现提示框
             relayedValueChart.setOption({
                 legend: { selected: { [params.name]: true } }
             });
+            showTimer && clearInterval(showTimer);
+            cancelShowTimer && clearInterval(cancelShowTimer);
+            showToast.value = false;
+            showTimer = setTimeout(() => {
+                copyToClipboard(params.name);
+                showToast.value = true;
+            }, 0);
+            cancelShowTimer = setTimeout(() => {
+                showToast.value = false;
+            }, 600);
         });
         relayedAssetsChooseBtnFn(0);
         changeRelayedValueOption();
@@ -1598,6 +1645,10 @@ export const useRelatedAssetChart = (
         relayedValueAbnormalText,
         twoLegendRelayedValue,
         relayedAssetsChooseBtnFn,
-        relayedValueDom
+        relayedValueDom,
+        clickEventFn,
+        clientX,
+        clientY,
+        showToast
     };
 };
