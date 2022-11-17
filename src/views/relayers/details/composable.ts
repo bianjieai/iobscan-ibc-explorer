@@ -45,6 +45,7 @@ import {
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatString } from '@/utils/stringTools';
 import { calculatePercentage, getRoundingOffBigNumber } from '@/utils/calculate';
+import { handleImgLoadingSussess } from '@/utils/imageTools';
 
 export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -56,6 +57,7 @@ export const useGetRelayerDetailsInfo = () => {
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
     const channelPairsInfo = ref<IChannelChain[]>([]);
     const isShowModal = ref<boolean>(false);
+    const successLoadingImg = ref(false);
     // chain_name 先左右排，再上下排
     const sortChannelPairsByChainName = async (channelPairsInfoArr: IChannelChain[]) => {
         if (!channelPairsInfoArr?.length) return [];
@@ -133,15 +135,21 @@ export const useGetRelayerDetailsInfo = () => {
             isShowModal.value ? '--' : servedChainsInfo.value?.length
         } blockchains served`;
     });
-    const relayerImgSrc = (relayerIcon: string, relayerName: string): string => {
+    const relayerImgSrc = computed(() => {
         if (relayerIcon) {
-            return relayerIcon;
+            return relayerIcon.value;
         } else if (!relayerName) {
             return RELAYER_DEFAULT_ICON;
         } else {
             return '';
         }
-    };
+    });
+    watch(relayerImgSrc, (newValue) => {
+        handleImgLoadingSussess(newValue, successLoadingImg);
+    });
+    const displayRelayerImgSrc = computed(() => {
+        return successLoadingImg.value ? relayerImgSrc.value : RELAYER_DEFAULT_ICON;
+    });
     onMounted(() => {
         getRelayerDetailsInfo();
     });
@@ -155,7 +163,8 @@ export const useGetRelayerDetailsInfo = () => {
         channelPairsInfo,
         isShowModal,
         subTitle,
-        relayerImgSrc
+        relayerImgSrc,
+        displayRelayerImgSrc
     };
 };
 

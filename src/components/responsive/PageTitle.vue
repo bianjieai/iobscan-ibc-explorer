@@ -4,7 +4,7 @@
             <img v-if="imgSrc" class="page_title__icon" :src="imgSrc" alt="" />
         </div>
         <div v-else>
-            <img v-if="relayerImgSrc" class="page_title__icon" :src="relayerImgSrc" alt="" />
+            <img v-if="relayerImgSrc" class="page_title__icon" :src="displayRelayerImgSrc" alt="" />
             <div
                 v-else
                 class="page_title__icon page_title__icon_wrap flex items-center justify-center"
@@ -23,7 +23,7 @@
                     <img
                         v-if="relayerImgSrc"
                         class="page_title__icon_mobile"
-                        :src="relayerImgSrc"
+                        :src="displayRelayerImgSrc"
                         alt=""
                     />
                     <div v-else class="page_title__icon_mobile page_title__icon_wrap">
@@ -61,6 +61,7 @@
         imgSrc?: string;
         relayer?: boolean;
         relayerImgSrc?: string;
+        displayRelayerImgSrc?: string;
     }
 
     withDefaults(defineProps<IProps>(), {

@@ -6,7 +6,8 @@
             :subtitle="subTitle"
             :img-src="relayerIcon"
             relayer
-            :relayer-img-src="relayerImgSrc(relayerIcon, relayerName)"
+            :relayer-img-src="relayerImgSrc"
+            :display-relayer-img-src="displayRelayerImgSrc"
         />
         <layer-block class="relayer_details__statistic">
             <statistic-list type="horizontal" :msg="relayerInfo" />
@@ -134,7 +135,8 @@
         channelPairsInfo,
         isShowModal,
         subTitle,
-        relayerImgSrc
+        relayerImgSrc,
+        displayRelayerImgSrc
     } = useGetRelayerDetailsInfo();
     const {
         recvPacketTxs,
