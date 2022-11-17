@@ -162,8 +162,6 @@
     import { useInit } from './composable';
     import { getValByMode, closeByMode, inputItemsByMode, getLastArrs } from './helper';
     import { MODES } from './constants';
-    import ChainHelper from '@/helper/chainHelper';
-
     /**
      * defineProps 使用外部引入的interface或者type会报错
      */
@@ -189,16 +187,17 @@
         };
         dropdownProps?: DropdownProps;
         isDisabled?: boolean;
+        defaultValue?: IDataItem;
     }
 
     const props = withDefaults(defineProps<IProps>(), {
         data: () => []
     });
 
-    const { inputCtn, placeholder, hideIcon, badges, selectColorDefaultVal, dropdownProps } = {
+    const { inputCtn, hideIcon, badges, selectColorDefaultVal, dropdownProps } = {
         ...props
     };
-
+    const { defaultValue, placeholder } = toRefs(props);
     const { visible, selectItems, tokenInput, flatData, resetVal } = useInit(props);
 
     // 是否选中
@@ -240,20 +239,11 @@
             }
         }
     };
-    const matchChainInfo = async (chainId: string) => {
-        const chainInfo = await ChainHelper.getChainInfoByKey(chainId);
-        if (chainInfo) {
-            return chainInfo.chain_name;
-        } else {
-            return chainId;
-        }
-    };
 
     // 确认confirm时候
-    const confirmChains = async () => {
+    const confirmChains = () => {
         const inputItems = inputItemsByMode(tokenInput.value, props.mode);
         // 双选时候，如果选择框没有值时候希望填充
-        // Todo shan 双选框输入框输入后点击后边关闭按钮接着点击 Confirm，选择框中的值应为在此之前选中的两条 Chain
         if (props.mode === MODES.double && inputItems.length === 0) {
             const matchItem: IDataItem | undefined = flatData.value.find(
                 (v) => v.id === props.associateId
@@ -263,10 +253,13 @@
                 selectItems.value = [matchItem, matchItem];
             }
         } else if (props.mode !== MODES.multiple) {
-            if (!inputItems.length) {
-                const selectItemTitle = await matchChainInfo(props.value as string);
+            if (!inputItems.length && defaultValue) {
                 selectItems.value = [
-                    { id: props.value as TDenom, title: selectItemTitle, inputFlag: false }
+                    {
+                        id: defaultValue.value?.id as TDenom,
+                        title: defaultValue.value?.title as TDenom,
+                        inputFlag: false
+                    }
                 ];
             }
         }
@@ -572,6 +565,10 @@
             max-width: 381px;
             max-height: 552px;
             overflow-y: auto;
+        }
+        .confirm_button {
+            margin-top: 12px;
+            margin-left: 0;
         }
     }
 

@@ -42,6 +42,7 @@
 </script>
 <style lang="less" scoped>
     .channel_pairs {
+        padding-bottom: 12px;
         max-height: 416px;
         overflow: auto;
         &__info {
@@ -54,6 +55,7 @@
         }
         &__index {
             width: 24px;
+            min-width: 24px;
             font-size: var(--bj-font-size-sub-title);
             font-weight: 400;
             color: var(--bj-text-normal);
@@ -70,7 +72,7 @@
             transform: translateY(33px);
         }
     }
-    @media screen and (max-width: 1036px) {
+    @media screen and (max-width: 1058px) {
         .channel_pairs {
             &__info {
                 &:first-child {
@@ -82,21 +84,6 @@
             }
             &__status_img {
                 margin: 0 16px;
-            }
-        }
-    }
-    @media screen and (max-width: 988px) {
-        .channel_pairs {
-            &__info {
-                &:first-child {
-                }
-            }
-            &__index {
-                min-width: 24px;
-            }
-            &__pair {
-            }
-            &__status_img {
             }
         }
     }

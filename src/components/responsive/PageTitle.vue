@@ -151,11 +151,10 @@
                 display: none;
             }
             &__icon_mobile {
-                display: block;
+                .flex(row, nowrap, center, center);
                 margin-right: 8px;
                 width: 32px;
                 height: 32px;
-                text-align: center;
                 border-radius: 50%;
             }
             &__wrap {
