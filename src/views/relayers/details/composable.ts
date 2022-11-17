@@ -44,7 +44,7 @@ import {
 } from '@/types/interface/relayers.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatString } from '@/utils/stringTools';
-import { calculatePercentage } from '@/utils/calculate';
+import { calculatePercentage, getRoundingOffBigNumber } from '@/utils/calculate';
 
 export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -1069,7 +1069,7 @@ export const useRelayedTrend = () => {
                     });
                     const txsValue: BarData[] = originTxsValues.map((txsValue) => {
                         return {
-                            value: txsValue,
+                            value: getRoundingOffBigNumber(txsValue),
                             itemStyle: {
                                 color:
                                     txsValue.toString() === maxTxsValue

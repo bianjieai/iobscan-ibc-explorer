@@ -8,3 +8,10 @@ export const calculatePercentage = (
     const res = new BigNumber(numerator).div(denominator).multipliedBy(100).toFixed(0);
     return res;
 };
+
+export function getRoundingOffBigNumber(value: string | number, num = 0) {
+    if (value == 0) {
+        return value;
+    }
+    return new BigNumber(value).toFixed(num);
+}
