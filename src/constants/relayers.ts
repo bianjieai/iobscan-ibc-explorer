@@ -231,6 +231,6 @@ export const OPACITY_PIE_COLOR_LIST = [
 ];
 
 export const CHART_TOOLTIP = {
-    value: 'value',
-    txs: 'transaction'
+    value: 'Value',
+    txs: 'Transaction'
 };

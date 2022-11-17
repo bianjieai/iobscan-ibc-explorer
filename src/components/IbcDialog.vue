@@ -112,7 +112,7 @@
                 color: #000000;
                 line-height: 18px;
                 white-space: wrap;
-                width: 253px;
+                min-width: 253px;
             }
             &__button {
                 padding: 6px 33px;
