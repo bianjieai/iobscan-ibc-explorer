@@ -8,18 +8,12 @@
                 :text="relayedValueAbnormalText"
             />
             <div
-                v-show="
-                    !relayedValueLoading &&
-                    !(relayedValueNoData || relayedValueNetworkError) &&
-                    !isShowNoDataPie
-                "
+                v-show="!relayedValueLoading && !(relayedValueNoData || relayedValueNetworkError)"
                 ref="relayedValueDom"
                 class="related_asset_chart__chart_wrap__chart"
                 :class="{ two_legend: twoLegendRelayedValue }"
                 @click="clickEventFn"
             ></div>
-            <!-- todo dj 接口数据获取成功，但是过滤掉无价值的之后，导致没有数据，需展示特殊的样式 -->
-            <div v-show="isShowNoDataPie">我没数据</div>
             <div
                 v-show="showToast"
                 :style="{ left: clientX + 'px', top: clientY + 'px' }"
@@ -54,8 +48,7 @@
         clickEventFn,
         clientX,
         clientY,
-        showToast,
-        isShowNoDataPie
+        showToast
     } = useRelatedAssetChart(relayedAssetsChoose, type);
 
     defineExpose({

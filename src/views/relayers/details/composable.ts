@@ -963,8 +963,7 @@ export const useRelayedTrend = () => {
                     lineStyle: {
                         color: 'rgba(0,0,0,0.1)'
                     }
-                },
-                minInterval: 1
+                }
             }
         ],
         xAxis: [
@@ -1361,8 +1360,6 @@ export const useRelatedAssetChart = (
         txsNoData: false
     });
     const isShowNoDataPie = computed(() => {
-        // todo dj 接口数据获取成功，但是过滤掉无价值的之后，导致没有数据，需展示特殊的样式
-        return false;
         if (relayedAssetsChoose.value === 0) {
             return totalRelayedValueData.valueNoData;
         } else {
@@ -1407,35 +1404,63 @@ export const useRelatedAssetChart = (
         isTwoColumnsLegend: boolean
     ) => {
         if (widthClient > 1183) {
-            option.legend.top = isTwoColumnsLegend ? 80 : 'auto';
-            option.legend.left = 228;
+            if (isShowNoDataPie.value) {
+                option.series[0].center = ['50%', '50%'];
+                option.series[0].itemStyle.color = '#F9F9F9';
+                option.series[1].itemStyle.color = '#F2F2F2';
+                option.series[1].silent = true;
+                option.series[1].center = ['50%', '50%'];
+            } else {
+                option.legend.top = isTwoColumnsLegend ? 80 : 'auto';
+                option.legend.left = 228;
+                option.series[1].silent = false;
+                option.series[0].center = [108, '50%'];
+                option.series[0].minAngle = 2;
+                option.series[1].silent = false;
+                option.series[1].center = [108, '50%'];
+                option.series[1].minAngle = 2;
+                option.series[1].emphasis.scaleSize = 8;
+            }
             option.series[0].radius = [68, 80];
-            option.series[0].center = [108, '50%'];
-            option.series[0].minAngle = 2;
             option.series[1].radius = [80, 100];
-            option.series[1].center = [108, '50%'];
-            option.series[1].minAngle = 2;
-            option.series[1].emphasis.scaleSize = 8;
         } else if (widthClient > 390) {
-            option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
-            option.legend.left = 175;
+            if (isShowNoDataPie.value) {
+                option.series[0].center = ['50%', '50%'];
+                option.series[0].itemStyle.color = '#F9F9F9';
+                option.series[1].itemStyle.color = '#F2F2F2';
+                option.series[1].silent = true;
+                option.series[1].center = ['50%', '50%'];
+            } else {
+                option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
+                option.legend.left = 175;
+                option.series[1].silent = false;
+                option.series[0].center = [85, '50%'];
+                option.series[1].center = [85, '50%'];
+                option.series[0].minAngle = 3;
+                option.series[1].minAngle = 3;
+                option.series[1].emphasis.scaleSize = 5;
+            }
             option.series[0].radius = [52, 60];
-            option.series[0].center = [85, '50%'];
             option.series[1].radius = [60, 76];
-            option.series[1].center = [85, '50%'];
-            option.series[0].minAngle = 3;
-            option.series[1].minAngle = 3;
-            option.series[1].emphasis.scaleSize = 5;
         } else {
-            option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
-            option.legend.left = isTwoColumnsLegend ? 165 : 175;
+            if (isShowNoDataPie.value) {
+                option.series[0].center = ['50%', '50%'];
+                option.series[0].itemStyle.color = '#F9F9F9';
+                option.series[1].itemStyle.color = '#F2F2F2';
+                option.series[1].silent = true;
+                option.series[1].center = ['50%', '50%'];
+            } else {
+                option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
+                option.legend.left = isTwoColumnsLegend ? 165 : 175;
+                option.series[1].silent = false;
+                option.series[0].center = [85, '50%'];
+                option.series[1].center = [85, '50%'];
+                option.series[0].minAngle = 3;
+                option.series[1].minAngle = 3;
+                option.series[1].emphasis.scaleSize = 5;
+            }
             option.series[0].radius = [52, 60];
-            option.series[0].center = [85, '50%'];
             option.series[1].radius = [60, 76];
-            option.series[1].center = [85, '50%'];
-            option.series[0].minAngle = 3;
-            option.series[1].minAngle = 3;
-            option.series[1].emphasis.scaleSize = 5;
         }
     };
     const changeRelayedValueOption = () => {
@@ -1608,13 +1633,25 @@ export const useRelatedAssetChart = (
     const relayedAssetsChooseBtnFn = (index: number) => {
         const labelCenter = isRelayedValueType.value ? 'IBC Token' : 'Fee Token';
         if (index === 0) {
-            relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.value.length}}`;
-            relayedValueOption.series[0].data = totalRelayedValueData.valueOpacity;
-            relayedValueOption.series[1].data = totalRelayedValueData.value;
+            if (totalRelayedValueData.valueNoData) {
+                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|0}`;
+                relayedValueOption.series[0].data = [0];
+                relayedValueOption.series[1].data = [0];
+            } else {
+                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.value.length}}`;
+                relayedValueOption.series[0].data = totalRelayedValueData.valueOpacity;
+                relayedValueOption.series[1].data = totalRelayedValueData.value;
+            }
         } else {
-            relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.totalDenomCount}}`;
-            relayedValueOption.series[0].data = totalRelayedValueData.txsOpacity;
-            relayedValueOption.series[1].data = totalRelayedValueData.txs;
+            if (totalRelayedValueData.txsNoData) {
+                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|0}`;
+                relayedValueOption.series[0].data = [0];
+                relayedValueOption.series[1].data = [0];
+            } else {
+                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.totalDenomCount}}`;
+                relayedValueOption.series[0].data = totalRelayedValueData.txsOpacity;
+                relayedValueOption.series[1].data = totalRelayedValueData.txs;
+            }
         }
         setTimeout(() => {
             relayedValueSizeFn();
