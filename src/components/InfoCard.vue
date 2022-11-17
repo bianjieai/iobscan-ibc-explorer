@@ -4,6 +4,12 @@
             <div class="info_card__title">
                 <svg-icon :icon-name="icon"></svg-icon>
                 <span class="info_card__text">{{ title }}</span>
+                <a-tooltip>
+                    <template #title
+                        ><span class="popover_c">{{ tipMsg }}</span></template
+                    >
+                    <img v-if="tipMsg" class="info_card__title__tip_icon cursor" :src="TIP_ICON" />
+                </a-tooltip>
             </div>
             <div v-if="isShowChooseBtn" class="info_card__choose_btn">
                 <span
@@ -24,12 +30,13 @@
 </template>
 
 <script setup lang="ts">
-    import { CHOOSE_BTN_TEXT } from '@/constants';
+    import { CHOOSE_BTN_TEXT, TIP_ICON } from '@/constants';
     interface IProps {
         icon: string;
         title: string;
         isShowChooseBtn?: boolean; // 右侧是否有按钮
         defaultChooseBtn?: number; // 默认按钮索引
+        tipMsg?: string;
     }
     withDefaults(defineProps<IProps>(), {
         isShowChooseBtn: false,
@@ -55,6 +62,10 @@
         }
         &__title {
             .flex(row, nowrap, flex-start, center);
+            &__tip_icon {
+                margin-left: 8px;
+                width: 20px;
+            }
         }
         &__text {
             margin-left: 8px;

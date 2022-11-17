@@ -24,6 +24,7 @@
                     :title-can-click="true"
                     :style="{ cursor: 'pointer' }"
                     :title="record[column.key]"
+                    :title-popover="record.show_popover"
                     :img-src="record.relayer_icon"
                     relayer
                     icon-size="small"

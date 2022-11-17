@@ -12,7 +12,14 @@
                 ref="relayedValueDom"
                 class="related_asset_chart__chart_wrap__chart"
                 :class="{ two_legend: twoLegendRelayedValue }"
+                @click="clickEventFn"
             ></div>
+            <div
+                v-show="showToast"
+                :style="{ left: clientX + 'px', top: clientY + 'px' }"
+                class="related_asset_chart__chart_wrap__toast"
+                >Copied</div
+            >
         </div>
     </div>
 </template>
@@ -37,7 +44,11 @@
         relayedValueAbnormalText,
         twoLegendRelayedValue,
         relayedValueDom,
-        relayedAssetsChooseBtnFn
+        relayedAssetsChooseBtnFn,
+        clickEventFn,
+        clientX,
+        clientY,
+        showToast
     } = useRelatedAssetChart(relayedAssetsChoose, type);
 
     defineExpose({
@@ -62,12 +73,27 @@
             flex: 1;
             .flex(row,nowrap,center,center);
             &__chart {
-                width: 295px;
-                height: 213px;
+                align-self: flex-start;
+                margin-top: 16px;
+                width: 315px;
+                height: 216px;
             }
             .two_legend {
                 width: 100%;
-                padding: 0 27px;
+                padding: 0 10px;
+            }
+            &__toast {
+                position: fixed;
+                top: 0;
+                left: 0;
+                transform: translate(-50%, -120%);
+                width: 50px;
+                height: 20px;
+                background-color: black;
+                border-radius: 8px;
+                color: white;
+                line-height: 20px;
+                text-align: center;
             }
         }
     }
@@ -81,11 +107,11 @@
             }
             &__chart_wrap {
                 &__chart {
-                    width: 245px;
-                    height: 180px;
+                    width: 260px;
+                    height: 166px;
                 }
                 .two_legend {
-                    width: 333px;
+                    width: 355px;
                     padding: 0;
                 }
             }
