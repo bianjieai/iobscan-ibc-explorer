@@ -47,7 +47,7 @@
                 </div>
             </div>
         </template>
-        <div class="chain_popover_content">{{ props.servedChainsNum }}</div>
+        <div class="chain_popover_content">{{ formatBigNumber(props.servedChainsNum, 0) }}</div>
     </a-popover>
 </template>
 
@@ -55,6 +55,7 @@
     import { useGoRelayersDetails } from '../composable';
     import { useChainPopover } from './composable';
     import { ChainPopoverChainItem } from '@/types/interface/relayers.interface';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
 
     interface IProps {
         servedChainsNum: number;
