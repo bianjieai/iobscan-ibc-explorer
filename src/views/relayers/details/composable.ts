@@ -354,7 +354,7 @@ export const useTransferTypeChart = (
                     show: false
                 },
                 itemStyle: {
-                    borderWidth: 2,
+                    borderWidth: `${txsPercent.value === 100 ? 0 : 2}`,
                     borderColor: '#fff'
                 }
             }
