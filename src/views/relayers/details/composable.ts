@@ -1412,7 +1412,7 @@ export const useRelatedAssetChart = (
         };
         if (widthClient > 1183) {
             if (isShowNoDataPie.value) {
-                handleNoDataOption();
+                handleChangeNoDataOption();
             } else {
                 option.legend.top = isTwoColumnsLegend ? 80 : 'auto';
                 option.legend.left = 228;
