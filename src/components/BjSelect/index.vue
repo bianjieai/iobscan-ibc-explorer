@@ -162,7 +162,6 @@
     import { useInit } from './composable';
     import { getValByMode, closeByMode, inputItemsByMode, getLastArrs } from './helper';
     import { MODES } from './constants';
-
     /**
      * defineProps 使用外部引入的interface或者type会报错
      */
@@ -188,16 +187,17 @@
         };
         dropdownProps?: DropdownProps;
         isDisabled?: boolean;
+        defaultValue?: IDataItem;
     }
 
     const props = withDefaults(defineProps<IProps>(), {
         data: () => []
     });
 
-    const { inputCtn, placeholder, hideIcon, badges, selectColorDefaultVal, dropdownProps } = {
+    const { inputCtn, hideIcon, badges, selectColorDefaultVal, dropdownProps } = {
         ...props
     };
-
+    const { defaultValue, placeholder } = toRefs(props);
     const { visible, selectItems, tokenInput, flatData, resetVal } = useInit(props);
 
     // 是否选中
@@ -243,7 +243,6 @@
     // 确认confirm时候
     const confirmChains = () => {
         const inputItems = inputItemsByMode(tokenInput.value, props.mode);
-
         // 双选时候，如果选择框没有值时候希望填充
         if (props.mode === MODES.double && inputItems.length === 0) {
             const matchItem: IDataItem | undefined = flatData.value.find(
@@ -252,6 +251,16 @@
 
             if (matchItem) {
                 selectItems.value = [matchItem, matchItem];
+            }
+        } else if (props.mode !== MODES.multiple) {
+            if (!inputItems.length && defaultValue) {
+                selectItems.value = [
+                    {
+                        id: defaultValue.value?.id as TDenom,
+                        title: defaultValue.value?.title as TDenom,
+                        inputFlag: false
+                    }
+                ];
             }
         }
         sumbitTokens(selectItems.value, true);
@@ -327,7 +336,6 @@
                 res = getLastArrs(inputItems);
                 break;
         }
-
         selectItems.value = res;
     };
 
@@ -557,6 +565,10 @@
             max-width: 381px;
             max-height: 552px;
             overflow-y: auto;
+        }
+        .confirm_button {
+            margin-top: 12px;
+            margin-left: 0;
         }
     }
 

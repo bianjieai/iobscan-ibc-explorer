@@ -3,7 +3,7 @@
         <div class="relayer_transfer__search">
             <BjSelect
                 ref="relayerChainDropdown"
-                placeholder="All Chains"
+                :placeholder="defaultChain?.title || DEFAULT_TITLE.defaultChains"
                 :hide-icon="true"
                 :data="relayerChainData"
                 :input-ctn="{
@@ -15,6 +15,7 @@
                     getPopupContainer: getPopupContainer
                 }"
                 :is-disabled="isShowModal"
+                :default-value="defaultChain"
                 @on-change="onSelectedChain"
             />
             <div class="relayer_transfer__search_wrap">
@@ -56,7 +57,7 @@
                 @on-page-change="onPaginationChange"
             >
                 <template #tx_hash="{ record }">
-                    <a-popover destroy-tooltip-on-hide>
+                    <a-popover placement="topLeft" destroy-tooltip-on-hide>
                         <template #content>
                             <span class="popover_c">{{ record.tx_hash }}</span>
                         </template>
@@ -117,7 +118,7 @@
     import { dayjsFormatDate } from '@/utils/timeTools';
     import { useIbcChains, useNeedCustomColumns } from '@/composables';
     import { usePagination, useSelectedSearch } from '../composable';
-    import { LoadingType, PAGE_PARAMETERS } from '@/constants';
+    import { DEFAULT_TITLE, LoadingType, PAGE_PARAMETERS } from '@/constants';
     interface IRelayerTransfer {
         servedChainsInfo: string[];
         isShowModal: boolean;
@@ -150,6 +151,7 @@
         &__search {
             .flex(row, nowrap, flex-start, center);
             :deep(.overlay) {
+                padding-right: 12px;
                 min-height: 100px !important;
             }
         }
@@ -170,7 +172,6 @@
         &__table {
             &__content {
                 :deep(.ant-table-thead) {
-                    font-family: GolosUI_Medium;
                     tr {
                         th {
                             background: #f8fafd !important;
