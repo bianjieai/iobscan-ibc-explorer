@@ -182,6 +182,8 @@ export interface RelayedValueData {
     totalDenomCount: number;
     valueTwoLegend: boolean;
     txsTwoLegend: boolean;
+    valueNoData: boolean;
+    txsNoData: boolean;
 }
 
 export enum RelatedAssetsPieType {
