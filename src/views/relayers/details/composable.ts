@@ -44,7 +44,7 @@ import {
 } from '@/types/interface/relayers.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatString } from '@/utils/stringTools';
-import { calculatePercentage } from '@/utils/calculate';
+import { calculatePercentage, getRoundingOffBigNumber } from '@/utils/calculate';
 
 export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -310,7 +310,7 @@ export const useTransferTypeChart = (
                 return `
                     <div style="position: relative;padding: 14px 12px;background: #FFFFFF;box-shadow: 0px 2px 8px 0px #D9DEEC;border-radius: 4px;border: 1px solid #D9DFEE;">
                         <span style="font-size: 14px;font-family: GolosUI_Medium;color: #000;line-height: 18px;">${typeShort} Txs: </span>
-                        <span style="margin-left: 8px;font-size: 14px;color: rgba(0,0,0,0.75);line-height: 18px;">
+                        <span style="margin-left: 8px;font-size: 14px;color: rgba(0,0,0,0.75);line-height: 18px;font-family: 'GolosUIWebRegular';">
                             ${formatBigNumber(txsCount.value)}
                         </span>
                         <div style="position: absolute;top: 50%;left: -20px;transform: translateY(-50%);border-top: 5px solid transparent;border-right: 8px solid #3D50FF;border-bottom: 5px solid transparent;border-left: 8px solid transparent;"></div>
@@ -454,6 +454,7 @@ export const useSuccessRateChart = (successRatePercent: Ref<number>) => {
                     offsetCenter: [0, '85%'],
                     fontSize: 24,
                     fontFamily: 'GolosUI_Medium',
+                    fontWeight: 400,
                     valueAnimation: true,
                     formatter: function (value: number) {
                         return `${value.toFixed(0)}%`;
@@ -962,7 +963,8 @@ export const useRelayedTrend = () => {
                     lineStyle: {
                         color: 'rgba(0,0,0,0.1)'
                     }
-                }
+                },
+                minInterval: 1
             }
         ],
         xAxis: [
@@ -1069,7 +1071,7 @@ export const useRelayedTrend = () => {
                     });
                     const txsValue: BarData[] = originTxsValues.map((txsValue) => {
                         return {
-                            value: txsValue,
+                            value: getRoundingOffBigNumber(txsValue),
                             itemStyle: {
                                 color:
                                     txsValue.toString() === maxTxsValue
@@ -1207,7 +1209,7 @@ export const useRelatedAssetChart = (
                                               style="
                                                   margin-left: 8px;
                                                   font-size: 16px;
-                                                  font-family: GolosUI-Medium, GolosUI;
+                                                  font-family: 'GolosUI_Medium';
                                                   font-weight: 500;
                                                   color: #000000;
                                                   line-height: 20px;
@@ -1243,7 +1245,7 @@ export const useRelatedAssetChart = (
                                           <span
                                               style="
                                                   font-size: 14px;
-                                                  font-family: GolosUI-Medium, GolosUI;
+                                                  font-family: 'GolosUIWebRegular';
                                                   font-weight: 500;
                                                   color: rgba(0, 0, 0, 0.34);
                                                   line-height: 18px;
