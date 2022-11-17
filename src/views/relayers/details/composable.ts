@@ -1356,7 +1356,18 @@ export const useRelatedAssetChart = (
         totalTxs: DEFAULT_DISPLAY_TEXT,
         totalDenomCount: 0,
         valueTwoLegend: false,
-        txsTwoLegend: false
+        txsTwoLegend: false,
+        valueNoData: false,
+        txsNoData: false
+    });
+    const isShowNoDataPie = computed(() => {
+        // todo dj 接口数据获取成功，但是过滤掉无价值的之后，导致没有数据，需展示特殊的样式
+        return false;
+        if (relayedAssetsChoose.value === 0) {
+            return totalRelayedValueData.valueNoData;
+        } else {
+            return totalRelayedValueData.txsNoData;
+        }
     });
     const relayedValueAbnormalText = computed(() => {
         if (relayedValueNoData.value) {
@@ -1563,6 +1574,10 @@ export const useRelatedAssetChart = (
                             }
                         });
                     }
+                    totalRelayedValueData.valueNoData = Boolean(
+                        !totalRelayedValueData.value.length
+                    );
+                    totalRelayedValueData.txsNoData = Boolean(!totalRelayedValueData.txs.length);
                     totalRelayedValueData.valueTwoLegend = totalRelayedValueData.value.length > 6;
                     totalRelayedValueData.txsTwoLegend = totalRelayedValueData.txs.length > 6;
                 } else {
@@ -1573,6 +1588,8 @@ export const useRelatedAssetChart = (
                     totalRelayedValueData.totalTxs = DEFAULT_DISPLAY_TEXT;
                     totalRelayedValueData.txs = [];
                     totalRelayedValueData.txsOpacity = [];
+                    totalRelayedValueData.valueNoData = true;
+                    totalRelayedValueData.txsNoData = true;
                 }
             } else if (code === API_CODE.unRegisteredRelayer) {
                 relayedValueNoData.value = true;
@@ -1651,6 +1668,7 @@ export const useRelatedAssetChart = (
         clickEventFn,
         clientX,
         clientY,
-        showToast
+        showToast,
+        isShowNoDataPie
     };
 };
