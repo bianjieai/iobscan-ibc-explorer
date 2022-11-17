@@ -90,7 +90,7 @@
                         <no-datas
                             v-else-if="
                                 isShowModal ||
-                                (!ibcStatisticsChainsStore.isShowLoading && !channelPairsInfo)
+                                (!ibcStatisticsChainsStore.isShowLoading && !relayedTotalTxs)
                             "
                             class="relayer_details__charts_wrap__left__bottom__success_rate__nodatas"
                         />
