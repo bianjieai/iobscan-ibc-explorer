@@ -1382,10 +1382,10 @@ export const useRelatedAssetChart = (
     const totalRelayedTitle = computed(() => {
         if (relayedAssetsChoose.value === 0) {
             return `Total ${
-                isRelayedValueType.value ? 'related Value' : 'Fee Cost'
+                isRelayedValueType.value ? 'Relayed Value' : 'Fee Cost'
             } $${formatBigNumber(totalRelayedValueData.totalValue, 0)}`;
         } else {
-            return `Total ${isRelayedValueType.value ? 'related Txs' : 'Fee Txs'} ${formatBigNumber(
+            return `Total ${isRelayedValueType.value ? 'Relayed Txs' : 'Fee Txs'} ${formatBigNumber(
                 totalRelayedValueData.totalTxs,
                 0
             )}`;
