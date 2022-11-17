@@ -632,8 +632,6 @@ export const useSelectedSearch = (
         }
     });
     const onSelectedChain = (selectedChainInfo?: IDataItem) => {
-        console.log(selectedChainInfo, 'selectedChainInfo');
-
         (window as any).gtag(
             'event',
             `${router.currentRoute.value.name as string}-点击过滤条件Chain`

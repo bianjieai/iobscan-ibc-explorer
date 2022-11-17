@@ -27,7 +27,7 @@
                         }"
                     >
                         <span v-if="item.unit" class="list_item__dollar">{{ item.unit }} </span>
-                        {{ `${formatBigNumber(item.count)}` }}
+                        {{ `${formatBigNumber(item.count)}` || DEFAULT_DISPLAY_TEXT }}
                     </span>
                 </div>
             </div>
@@ -60,7 +60,7 @@
                             }"
                         >
                             <span v-if="item.unit" class="list_item__unit">{{ item.unit }} </span>
-                            {{ `${formatBigNumber(item.count)}` }}
+                            {{ `${formatBigNumber(item.count)}` || DEFAULT_DISPLAY_TEXT }}
                         </span>
                     </div>
                 </div>
@@ -70,7 +70,7 @@
 </template>
 
 <script setup lang="ts">
-    import { STATISTICS_NAME, DAY_TIME } from '@/constants';
+    import { STATISTICS_NAME, DAY_TIME, DEFAULT_DISPLAY_TEXT } from '@/constants';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import type { IDenomStatistic } from '@/types/interface/index.interface';
     interface IProps {
