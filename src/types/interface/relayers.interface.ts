@@ -179,6 +179,7 @@ export interface RelayedValueData {
     totalTxs: number | string;
     txsOpacity: PieData[];
     txs: PieData[];
+    totalValueCount: number;
     totalDenomCount: number;
     valueTwoLegend: boolean;
     txsTwoLegend: boolean;
