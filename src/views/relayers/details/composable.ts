@@ -962,7 +962,8 @@ export const useRelayedTrend = () => {
                     lineStyle: {
                         color: 'rgba(0,0,0,0.1)'
                     }
-                }
+                },
+                minInterval: 1
             }
         ],
         xAxis: [
@@ -1207,7 +1208,7 @@ export const useRelatedAssetChart = (
                                               style="
                                                   margin-left: 8px;
                                                   font-size: 16px;
-                                                  font-family: GolosUI-Medium, GolosUI;
+                                                  font-family: 'GolosUI-Medium';
                                                   font-weight: 500;
                                                   color: #000000;
                                                   line-height: 20px;
@@ -1243,7 +1244,7 @@ export const useRelatedAssetChart = (
                                           <span
                                               style="
                                                   font-size: 14px;
-                                                  font-family: GolosUI-Medium, GolosUI;
+                                                  font-family: 'GolosUI-Medium';
                                                   font-weight: 500;
                                                   color: rgba(0, 0, 0, 0.34);
                                                   line-height: 18px;
