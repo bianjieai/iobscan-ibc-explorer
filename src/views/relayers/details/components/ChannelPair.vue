@@ -30,6 +30,7 @@
 <style lang="less" scoped>
     .channel_pair {
         flex: 1;
+        min-width: 400px;
         min-height: 92px;
         border-radius: 8px;
         border: 1px solid #eaeaea;
@@ -59,21 +60,6 @@
         &__visible_border {
             border: 1px solid var(--bj-primary-color) !important;
             box-shadow: 0 0 0 2px rgb(61 80 255 / 20%);
-        }
-    }
-    @media screen and (max-width: 988px) {
-        .channel_pair {
-            min-width: 400px;
-            &__top {
-            }
-            &__bottom {
-            }
-            &__chain_address_wrap {
-            }
-            &__chain_address {
-            }
-            &__visible_border {
-            }
         }
     }
 </style>

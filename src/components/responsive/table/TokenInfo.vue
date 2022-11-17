@@ -3,12 +3,13 @@
         <img class="las__logo" :src="tokenLogo" alt="" />
         <span class="las__content">
             <span class="las__top">{{ tokenAmount }}</span>
-            <a-popover destroy-tooltip-on-hide>
+            <a-popover v-if="tokenSymbol.length > 6" destroy-tooltip-on-hide>
                 <template #content>
-                    <span class="las__bottom">{{ tokenSymbol }}</span>
+                    <span>{{ tokenSymbol }}</span>
                 </template>
                 <span class="las__bottom">{{ getRestString(tokenSymbol, 6, 0) }}</span>
             </a-popover>
+            <span v-else class="las__bottom">{{ getRestString(tokenSymbol, 6, 0) }}</span>
         </span>
     </div>
 </template>

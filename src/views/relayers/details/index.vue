@@ -6,12 +6,17 @@
             :subtitle="subTitle"
             :img-src="relayerIcon"
             relayer
-            :relayer-img-src="relayerImgSrc(relayerIcon, relayerName)"
+            :relayer-img-src="relayerImgSrc"
+            :display-relayer-img-src="displayRelayerImgSrc"
         />
         <layer-block class="relayer_details__statistic">
             <statistic-list type="horizontal" :msg="relayerInfo" />
         </layer-block>
-        <InfoCard icon="icon-a-ChannelPairs" title="Channel Pairs">
+        <InfoCard
+            icon="icon-a-ChannelPairs"
+            title="Channel Pairs"
+            class="relayer_details__channel_pairs"
+        >
             <loading-component
                 v-if="ibcStatisticsChainsStore.isShowLoading"
                 :type="LoadingType.container"
@@ -130,7 +135,8 @@
         channelPairsInfo,
         isShowModal,
         subTitle,
-        relayerImgSrc
+        relayerImgSrc,
+        displayRelayerImgSrc
     } = useGetRelayerDetailsInfo();
     const {
         recvPacketTxs,
@@ -147,10 +153,14 @@
 
 <style lang="less" scoped>
     .relayer_details {
-        padding-left: 32px;
-        padding-right: 32px;
+        padding: 38px 32px 22px;
         &__statistic {
             margin-top: 24px;
+        }
+        &__channel_pairs {
+            :deep(.info_card__primary) {
+                padding-bottom: 12px !important;
+            }
         }
         &__charts_wrap {
             .flex(row, nowrap, space-between, flex-start);
@@ -189,8 +199,40 @@
                 max-width: 428px;
             }
         }
+        :deep(.page_title__icon) {
+            width: 40px;
+            height: 40px;
+        }
     }
     // 1247px
+    @media screen and (max-width: 1200px) {
+        .relayer_details {
+            padding-left: 48px;
+            padding-right: 48px;
+            &__statistic {
+            }
+            &__charts_wrap {
+                &__left {
+                    &__top {
+                    }
+                    &__bottom {
+                        &__transfer_type_wrap {
+                            &__nodatas {
+                            }
+                        }
+                        &__transfer_type {
+                        }
+                        &__success_rate {
+                            &__nodatas {
+                            }
+                        }
+                    }
+                }
+                &__right {
+                }
+            }
+        }
+    }
     @media screen and (max-width: 1183px) {
         .relayer_details {
             &__statistic {
@@ -308,6 +350,40 @@
                 &__right {
                 }
             }
+        }
+    }
+    @media screen and (max-width: 580px) {
+        .relayer_details {
+            &__statistic {
+                :deep(.horizontal_container) {
+                    .list_item__horizontal {
+                        .list_item {
+                        }
+                    }
+                }
+            }
+            &__charts_wrap {
+                &__left {
+                    &__bottom {
+                        .flex(column, nowrap, center, flex-start);
+                        &__transfer_type_wrap {
+                            width: 100%;
+                        }
+                        &__transfer_type {
+                        }
+                        &__success_rate {
+                            margin-left: 0;
+                            width: 100%;
+                        }
+                    }
+                }
+                &__right {
+                }
+            }
+        }
+        :deep(.page_title__icon_mobile) {
+            width: 40px;
+            height: 40px;
         }
     }
     @media screen and (max-width: 530px) {
