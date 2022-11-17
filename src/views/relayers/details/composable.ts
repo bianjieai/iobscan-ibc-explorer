@@ -970,8 +970,7 @@ export const useRelayedTrend = () => {
                     lineStyle: {
                         color: 'rgba(0,0,0,0.1)'
                     }
-                },
-                minInterval: 1
+                }
             }
         ],
         xAxis: [
@@ -1363,7 +1362,16 @@ export const useRelatedAssetChart = (
         totalTxs: DEFAULT_DISPLAY_TEXT,
         totalDenomCount: 0,
         valueTwoLegend: false,
-        txsTwoLegend: false
+        txsTwoLegend: false,
+        valueNoData: false,
+        txsNoData: false
+    });
+    const isShowNoDataPie = computed(() => {
+        if (relayedAssetsChoose.value === 0) {
+            return totalRelayedValueData.valueNoData;
+        } else {
+            return totalRelayedValueData.txsNoData;
+        }
     });
     const relayedValueAbnormalText = computed(() => {
         if (relayedValueNoData.value) {
@@ -1378,10 +1386,10 @@ export const useRelatedAssetChart = (
     const totalRelayedTitle = computed(() => {
         if (relayedAssetsChoose.value === 0) {
             return `Total ${
-                isRelayedValueType.value ? 'related Value' : 'Fee Cost'
+                isRelayedValueType.value ? 'Relayed Value' : 'Fee Cost'
             } $${formatBigNumber(totalRelayedValueData.totalValue, 0)}`;
         } else {
-            return `Total ${isRelayedValueType.value ? 'related Txs' : 'Fee Txs'} ${formatBigNumber(
+            return `Total ${isRelayedValueType.value ? 'Relayed Txs' : 'Fee Txs'} ${formatBigNumber(
                 totalRelayedValueData.totalTxs,
                 0
             )}`;
@@ -1402,36 +1410,59 @@ export const useRelatedAssetChart = (
         widthClient: number,
         isTwoColumnsLegend: boolean
     ) => {
+        const handleChangeNoDataOption = () => {
+            option.series[0].center = ['50%', '50%'];
+            option.series[0].itemStyle.color = '#F9F9F9';
+            option.series[1].itemStyle.color = '#F2F2F2';
+            option.series[1].silent = true;
+            option.series[1].center = ['50%', '50%'];
+        };
         if (widthClient > 1183) {
-            option.legend.top = isTwoColumnsLegend ? 80 : 'auto';
-            option.legend.left = 228;
+            if (isShowNoDataPie.value) {
+                handleChangeNoDataOption();
+            } else {
+                option.legend.top = isTwoColumnsLegend ? 80 : 'auto';
+                option.legend.left = 228;
+                option.series[1].silent = false;
+                option.series[0].center = [108, '50%'];
+                option.series[0].minAngle = 2;
+                option.series[1].silent = false;
+                option.series[1].center = [108, '50%'];
+                option.series[1].minAngle = 2;
+                option.series[1].emphasis.scaleSize = 8;
+            }
             option.series[0].radius = [68, 80];
-            option.series[0].center = [108, '50%'];
-            option.series[0].minAngle = 2;
             option.series[1].radius = [80, 100];
-            option.series[1].center = [108, '50%'];
-            option.series[1].minAngle = 2;
-            option.series[1].emphasis.scaleSize = 8;
         } else if (widthClient > 390) {
-            option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
-            option.legend.left = 175;
+            if (isShowNoDataPie.value) {
+                handleChangeNoDataOption();
+            } else {
+                option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
+                option.legend.left = 175;
+                option.series[1].silent = false;
+                option.series[0].center = [85, '50%'];
+                option.series[1].center = [85, '50%'];
+                option.series[0].minAngle = 3;
+                option.series[1].minAngle = 3;
+                option.series[1].emphasis.scaleSize = 5;
+            }
             option.series[0].radius = [52, 60];
-            option.series[0].center = [85, '50%'];
             option.series[1].radius = [60, 76];
-            option.series[1].center = [85, '50%'];
-            option.series[0].minAngle = 3;
-            option.series[1].minAngle = 3;
-            option.series[1].emphasis.scaleSize = 5;
         } else {
-            option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
-            option.legend.left = isTwoColumnsLegend ? 165 : 175;
+            if (isShowNoDataPie.value) {
+                handleChangeNoDataOption();
+            } else {
+                option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
+                option.legend.left = isTwoColumnsLegend ? 165 : 175;
+                option.series[1].silent = false;
+                option.series[0].center = [85, '50%'];
+                option.series[1].center = [85, '50%'];
+                option.series[0].minAngle = 3;
+                option.series[1].minAngle = 3;
+                option.series[1].emphasis.scaleSize = 5;
+            }
             option.series[0].radius = [52, 60];
-            option.series[0].center = [85, '50%'];
             option.series[1].radius = [60, 76];
-            option.series[1].center = [85, '50%'];
-            option.series[0].minAngle = 3;
-            option.series[1].minAngle = 3;
-            option.series[1].emphasis.scaleSize = 5;
         }
     };
     const changeRelayedValueOption = () => {
@@ -1570,6 +1601,10 @@ export const useRelatedAssetChart = (
                             }
                         });
                     }
+                    totalRelayedValueData.valueNoData = Boolean(
+                        !totalRelayedValueData.value.length
+                    );
+                    totalRelayedValueData.txsNoData = Boolean(!totalRelayedValueData.txs.length);
                     totalRelayedValueData.valueTwoLegend = totalRelayedValueData.value.length > 6;
                     totalRelayedValueData.txsTwoLegend = totalRelayedValueData.txs.length > 6;
                 } else {
@@ -1580,6 +1615,8 @@ export const useRelatedAssetChart = (
                     totalRelayedValueData.totalTxs = DEFAULT_DISPLAY_TEXT;
                     totalRelayedValueData.txs = [];
                     totalRelayedValueData.txsOpacity = [];
+                    totalRelayedValueData.valueNoData = true;
+                    totalRelayedValueData.txsNoData = true;
                 }
             } else if (code === API_CODE.unRegisteredRelayer) {
                 relayedValueNoData.value = true;
@@ -1597,14 +1634,27 @@ export const useRelatedAssetChart = (
     };
     const relayedAssetsChooseBtnFn = (index: number) => {
         const labelCenter = isRelayedValueType.value ? 'IBC Token' : 'Fee Token';
+        const handldNoDataPieOption = () => {
+            relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|0}`;
+            relayedValueOption.series[0].data = [0];
+            relayedValueOption.series[1].data = [0];
+        };
         if (index === 0) {
-            relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.value.length}}`;
-            relayedValueOption.series[0].data = totalRelayedValueData.valueOpacity;
-            relayedValueOption.series[1].data = totalRelayedValueData.value;
+            if (totalRelayedValueData.valueNoData) {
+                handldNoDataPieOption();
+            } else {
+                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.value.length}}`;
+                relayedValueOption.series[0].data = totalRelayedValueData.valueOpacity;
+                relayedValueOption.series[1].data = totalRelayedValueData.value;
+            }
         } else {
-            relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.totalDenomCount}}`;
-            relayedValueOption.series[0].data = totalRelayedValueData.txsOpacity;
-            relayedValueOption.series[1].data = totalRelayedValueData.txs;
+            if (totalRelayedValueData.txsNoData) {
+                handldNoDataPieOption();
+            } else {
+                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.totalDenomCount}}`;
+                relayedValueOption.series[0].data = totalRelayedValueData.txsOpacity;
+                relayedValueOption.series[1].data = totalRelayedValueData.txs;
+            }
         }
         setTimeout(() => {
             relayedValueSizeFn();
@@ -1658,6 +1708,7 @@ export const useRelatedAssetChart = (
         clickEventFn,
         clientX,
         clientY,
-        showToast
+        showToast,
+        isShowNoDataPie
     };
 };
