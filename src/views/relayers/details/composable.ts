@@ -1403,13 +1403,16 @@ export const useRelatedAssetChart = (
         widthClient: number,
         isTwoColumnsLegend: boolean
     ) => {
+        const handleChangeNoDataOption = () => {
+            option.series[0].center = ['50%', '50%'];
+            option.series[0].itemStyle.color = '#F9F9F9';
+            option.series[1].itemStyle.color = '#F2F2F2';
+            option.series[1].silent = true;
+            option.series[1].center = ['50%', '50%'];
+        };
         if (widthClient > 1183) {
             if (isShowNoDataPie.value) {
-                option.series[0].center = ['50%', '50%'];
-                option.series[0].itemStyle.color = '#F9F9F9';
-                option.series[1].itemStyle.color = '#F2F2F2';
-                option.series[1].silent = true;
-                option.series[1].center = ['50%', '50%'];
+                handleNoDataOption();
             } else {
                 option.legend.top = isTwoColumnsLegend ? 80 : 'auto';
                 option.legend.left = 228;
@@ -1425,11 +1428,7 @@ export const useRelatedAssetChart = (
             option.series[1].radius = [80, 100];
         } else if (widthClient > 390) {
             if (isShowNoDataPie.value) {
-                option.series[0].center = ['50%', '50%'];
-                option.series[0].itemStyle.color = '#F9F9F9';
-                option.series[1].itemStyle.color = '#F2F2F2';
-                option.series[1].silent = true;
-                option.series[1].center = ['50%', '50%'];
+                handleChangeNoDataOption();
             } else {
                 option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
                 option.legend.left = 175;
@@ -1444,11 +1443,7 @@ export const useRelatedAssetChart = (
             option.series[1].radius = [60, 76];
         } else {
             if (isShowNoDataPie.value) {
-                option.series[0].center = ['50%', '50%'];
-                option.series[0].itemStyle.color = '#F9F9F9';
-                option.series[1].itemStyle.color = '#F2F2F2';
-                option.series[1].silent = true;
-                option.series[1].center = ['50%', '50%'];
+                handleChangeNoDataOption();
             } else {
                 option.legend.top = isTwoColumnsLegend ? 30 : 'auto';
                 option.legend.left = isTwoColumnsLegend ? 165 : 175;
@@ -1632,11 +1627,14 @@ export const useRelatedAssetChart = (
     };
     const relayedAssetsChooseBtnFn = (index: number) => {
         const labelCenter = isRelayedValueType.value ? 'IBC Token' : 'Fee Token';
+        const handldNoDataPieOption = () => {
+            relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|0}`;
+            relayedValueOption.series[0].data = [0];
+            relayedValueOption.series[1].data = [0];
+        };
         if (index === 0) {
             if (totalRelayedValueData.valueNoData) {
-                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|0}`;
-                relayedValueOption.series[0].data = [0];
-                relayedValueOption.series[1].data = [0];
+                handldNoDataPieOption();
             } else {
                 relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.value.length}}`;
                 relayedValueOption.series[0].data = totalRelayedValueData.valueOpacity;
@@ -1644,9 +1642,7 @@ export const useRelatedAssetChart = (
             }
         } else {
             if (totalRelayedValueData.txsNoData) {
-                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|0}`;
-                relayedValueOption.series[0].data = [0];
-                relayedValueOption.series[1].data = [0];
+                handldNoDataPieOption();
             } else {
                 relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.totalDenomCount}}`;
                 relayedValueOption.series[0].data = totalRelayedValueData.txsOpacity;
