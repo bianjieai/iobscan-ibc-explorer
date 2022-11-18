@@ -1566,7 +1566,10 @@ export const useRelatedAssetChart = (
                         }
                     }
                     const valueDenomList = denomList.filter((denom) => {
-                        return denom.txs_value != '0';
+                        return (
+                            denom.txs_value != '0' &&
+                            formatBigNumber(Number(denom.txs_value), 0) != 0
+                        );
                     });
                     totalRelayedValueData.totalValueCount = valueDenomList.length;
                     const txsDenomList = [...denomList];
