@@ -103,6 +103,7 @@
 .ant-popover-inner .ant-popover-inner-content {
     padding: 8px 12px;
     color: var(--bj-text-second);
+    word-break: break-all;
 }
 
 .ant-select-open .ant-select-arrow {
