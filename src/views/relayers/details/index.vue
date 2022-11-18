@@ -200,10 +200,6 @@
                 max-width: 428px;
             }
         }
-        :deep(.page_title__icon) {
-            width: 40px;
-            height: 40px;
-        }
     }
     // 1247px
     @media screen and (max-width: 1200px) {
@@ -380,10 +376,6 @@
                 &__right {
                 }
             }
-        }
-        :deep(.page_title__icon_mobile) {
-            width: 40px;
-            height: 40px;
         }
     }
     @media screen and (max-width: 530px) {
