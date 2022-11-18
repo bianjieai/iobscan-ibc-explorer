@@ -28,9 +28,16 @@ export default class ChainHelper {
             const saveChannel = item.channel_a;
             item.channel_a = item.channel_b;
             item.channel_b = saveChannel;
-            const saveAddress = item.chain_a_address;
-            item.chain_a_address = item.chain_b_address;
-            item.chain_b_address = saveAddress;
+            if (item.chain_a_address || item.chain_b_address) {
+                const saveAddress = item.chain_a_address;
+                item.chain_a_address = item.chain_b_address;
+                item.chain_b_address = saveAddress;
+            }
+            if (item.chain_a_addresses || item.chain_b_addresses) {
+                const saveAddresses = item.chain_a_addresses;
+                item.chain_a_addresses = item.chain_b_addresses;
+                item.chain_b_addresses = saveAddresses;
+            }
         }
         if (isArray(sourceList) && sourceList?.length) {
             const updateList = sourceList?.map((item: any) => {
