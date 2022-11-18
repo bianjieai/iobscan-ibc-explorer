@@ -52,6 +52,7 @@ import { formatString } from '@/utils/stringTools';
 import { calculatePercentage, getRoundingOffBigNumber } from '@/utils/calculate';
 import { handleImgLoadingSussess } from '@/utils/imageTools';
 import { getTextWidth } from '@/utils/urlTools';
+import { axiosCancel } from '@/utils/axios';
 
 export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -628,6 +629,9 @@ export const useSelectedSearch = (
         page_size = 5,
         use_count = false
     ) => {
+        if (rtTableLoading) {
+            rtTableLoading.value = true;
+        }
         const getRelayerTransferTxsData = async () => {
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
@@ -636,24 +640,28 @@ export const useSelectedSearch = (
                     page_size,
                     use_count
                 });
-                rtTableLoading.value = false;
                 if (code === API_CODE.success) {
                     if (data) {
                         if (typeof data === 'number') {
                             pagination.total = data;
                         } else {
                             relayerTransferTableData.value = data.items;
+                            rtTableLoading.value = false;
                         }
                     } else {
                         console.error(message);
+                        rtTableLoading.value = false;
                     }
                 } else {
                     console.error(message);
                     pagination.total = 0;
                     relayerTransferTableData.value = [];
+                    rtTableLoading.value = false;
                 }
             } catch (error) {
-                rtTableLoading.value = false;
+                if (!axiosCancel(error)) {
+                    rtTableLoading.value = false;
+                }
                 console.error(error);
             }
         };
