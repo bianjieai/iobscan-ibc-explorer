@@ -1360,6 +1360,7 @@ export const useRelatedAssetChart = (
         txs: [],
         txsOpacity: [],
         totalTxs: DEFAULT_DISPLAY_TEXT,
+        totalValueCount: 0,
         totalDenomCount: 0,
         valueTwoLegend: false,
         txsTwoLegend: false,
@@ -1526,22 +1527,21 @@ export const useRelatedAssetChart = (
                             });
                         }
                     }
-                    const valueDenomList = [...denomList];
+                    const valueDenomList = denomList.filter((denom) => {
+                        return denom.txs_value != '0';
+                    });
+                    totalRelayedValueData.totalValueCount = valueDenomList.length;
                     const txsDenomList = [...denomList];
                     valueDenomList.sort((a, b) =>
                         new BigNumber(b.txs_value).comparedTo(a.txs_value)
                     );
                     txsDenomList.sort((a, b) => new BigNumber(b.txs).comparedTo(a.txs));
                     const needMaxNum = 12;
-                    if (data.denom_list.length > needMaxNum) {
+                    if (valueDenomList.length > needMaxNum) {
                         const spliceValueDenomList = valueDenomList.splice(needMaxNum - 1);
-                        const spliceTxsDenomList = txsDenomList.splice(needMaxNum - 1);
                         const spliceValueTotal = spliceValueDenomList.reduce((total, current) => {
                             return new BigNumber(total).plus(current.txs_value).toString();
                         }, '0');
-                        const spliceTxsTotal = spliceTxsDenomList.reduce((total, current) => {
-                            return new BigNumber(total).plus(current.txs).toNumber();
-                        }, 0);
                         valueDenomList.push({
                             imgUrl: TOKEN_DEFAULT_ICON,
                             name: 'Others',
@@ -1550,6 +1550,12 @@ export const useRelatedAssetChart = (
                             txs_value: spliceValueTotal,
                             txs: 0
                         });
+                    }
+                    if (txsDenomList.length > needMaxNum) {
+                        const spliceTxsDenomList = txsDenomList.splice(needMaxNum - 1);
+                        const spliceTxsTotal = spliceTxsDenomList.reduce((total, current) => {
+                            return new BigNumber(total).plus(current.txs).toNumber();
+                        }, 0);
                         txsDenomList.push({
                             imgUrl: TOKEN_DEFAULT_ICON,
                             name: 'Others',
@@ -1561,9 +1567,6 @@ export const useRelatedAssetChart = (
                     }
                     for (let i = 0; i < valueDenomList.length; i++) {
                         const valueDenom = valueDenomList[i];
-                        if (valueDenom.txs_value == '0') {
-                            continue;
-                        }
                         totalRelayedValueData.valueOpacity.push({
                             value: valueDenom.txs_value,
                             itemStyle: {
@@ -1643,7 +1646,10 @@ export const useRelatedAssetChart = (
             if (totalRelayedValueData.valueNoData) {
                 handldNoDataPieOption();
             } else {
-                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.value.length}}`;
+                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${formatBigNumber(
+                    totalRelayedValueData.totalValueCount,
+                    0
+                )}}`;
                 relayedValueOption.series[0].data = totalRelayedValueData.valueOpacity;
                 relayedValueOption.series[1].data = totalRelayedValueData.value;
             }
@@ -1651,7 +1657,10 @@ export const useRelatedAssetChart = (
             if (totalRelayedValueData.txsNoData) {
                 handldNoDataPieOption();
             } else {
-                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${totalRelayedValueData.totalDenomCount}}`;
+                relayedValueOption.series[0].label.formatter = `{text|${labelCenter}}\n\r\n\r{total|${formatBigNumber(
+                    totalRelayedValueData.totalDenomCount,
+                    0
+                )}}`;
                 relayedValueOption.series[0].data = totalRelayedValueData.txsOpacity;
                 relayedValueOption.series[1].data = totalRelayedValueData.txs;
             }
