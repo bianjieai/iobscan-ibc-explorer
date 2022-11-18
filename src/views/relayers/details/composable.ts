@@ -16,7 +16,12 @@ import {
     DEFAULT_DISPLAY_TEXT
 } from '@/constants';
 import { API_CODE, API_ERRPR_MESSAGE } from '@/constants/apiCode';
-import { RELAYER_DETAILS_INFO, RT_COLUMN_TYPE, SINGLE_ADDRESS_HEIGHT } from '@/constants/relayers';
+import {
+    DISPLAY_RELAYER_NAME_AREA,
+    RELAYER_DETAILS_INFO,
+    RT_COLUMN_TYPE,
+    SINGLE_ADDRESS_HEIGHT
+} from '@/constants/relayers';
 import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber, formatNum } from '@/helper/parseStringHelper';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
@@ -46,6 +51,7 @@ import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatString } from '@/utils/stringTools';
 import { calculatePercentage, getRoundingOffBigNumber } from '@/utils/calculate';
 import { handleImgLoadingSussess } from '@/utils/imageTools';
+import { getTextWidth } from '@/utils/urlTools';
 
 export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -58,6 +64,8 @@ export const useGetRelayerDetailsInfo = () => {
     const channelPairsInfo = ref<IChannelChain[]>([]);
     const isShowModal = ref<boolean>(false);
     const successLoadingImg = ref(false);
+    // relayer_name 适配
+    const displayAdaptor = ref<boolean>(false);
     // chain_name 先左右排，再上下排
     const sortChannelPairsByChainName = async (channelPairsInfoArr: IChannelChain[]) => {
         if (!channelPairsInfoArr?.length) return [];
@@ -150,11 +158,32 @@ export const useGetRelayerDetailsInfo = () => {
     const displayRelayerImgSrc = computed(() => {
         return successLoadingImg.value ? relayerImgSrc.value : RELAYER_DEFAULT_ICON;
     });
+    // relayer_name
+    const { width: widthClient } = useWindowSize();
+    watch([relayerName, widthClient], ([newRelayerName, newWidthClient]) => {
+        const relayerNameWidth = getTextWidth(newRelayerName, '22px Eurocine-regular');
+        if (relayerNameWidth) {
+            if (newWidthClient > 1200) {
+                displayAdaptor.value =
+                    relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more1200 ? true : false;
+            } else if (newWidthClient > 1000) {
+                displayAdaptor.value =
+                    relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more1000 ? true : false;
+            } else if (newWidthClient > 768) {
+                displayAdaptor.value =
+                    relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more768 ? true : false;
+            } else if (newWidthClient > 580) {
+                displayAdaptor.value =
+                    relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more580 ? true : false;
+            } else {
+                displayAdaptor.value = true;
+            }
+        }
+    });
     onMounted(() => {
         getRelayerDetailsInfo();
     });
     return {
-        relayerIcon,
         relayerName,
         servedChainsInfo,
         relayedTotalTxs,
@@ -164,7 +193,8 @@ export const useGetRelayerDetailsInfo = () => {
         isShowModal,
         subTitle,
         relayerImgSrc,
-        displayRelayerImgSrc
+        displayRelayerImgSrc,
+        displayAdaptor
     };
 };
 

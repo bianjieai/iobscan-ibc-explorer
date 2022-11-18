@@ -1,13 +1,13 @@
 <template>
     <PageContainer class="relayer_details">
-        <PageTitle
-            :title="`${relayerName} Relayer Details`"
+        <RelayerTitle
+            :title="`${relayerName}`"
+            :title-suffix="'Relayer Details'"
             :title-icon="'icon-a-chainsserved'"
             :subtitle="subTitle"
-            :img-src="relayerIcon"
-            relayer
             :relayer-img-src="relayerImgSrc"
             :display-relayer-img-src="displayRelayerImgSrc"
+            :display-adaptor="displayAdaptor"
         />
         <layer-block class="relayer_details__statistic">
             <statistic-list type="horizontal" :msg="relayerInfo" />
@@ -110,6 +110,7 @@
 </template>
 
 <script setup lang="ts">
+    import RelayerTitle from './components/RelayerTitle.vue';
     import RelayedTrendChart from './components/RelayedTrend.vue';
     import RelatedAssets from './components/RelatedAssets.vue';
     import ChannelPairsInfo from './components/ChannelPairsInfo.vue';
@@ -126,7 +127,6 @@
 
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const {
-        relayerIcon,
         relayerName,
         servedChainsInfo,
         relayedTotalTxs,
@@ -136,7 +136,8 @@
         isShowModal,
         subTitle,
         relayerImgSrc,
-        displayRelayerImgSrc
+        displayRelayerImgSrc,
+        displayAdaptor
     } = useGetRelayerDetailsInfo();
     const {
         recvPacketTxs,
