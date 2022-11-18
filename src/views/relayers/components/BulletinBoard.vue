@@ -5,7 +5,7 @@
                 <div class="desc">
                     <i class="iconfont icon-notice"></i>
                     <span
-                        >Relayer detailed page is launched! Welcome to register your relayers!</span
+                        >Relayer details page is launched! Welcome to register your relayers!</span
                     >
                 </div>
                 <div class="info" @click="gotoRegistry()">
