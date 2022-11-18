@@ -234,3 +234,10 @@ export const CHART_TOOLTIP = {
     value: 'Value',
     txs: 'Transaction'
 };
+
+export const DISPLAY_RELAYER_NAME_AREA = {
+    more1200: 688,
+    more1000: 459,
+    more768: 169,
+    more580: 40
+};
