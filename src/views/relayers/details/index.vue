@@ -154,9 +154,9 @@
 
 <style lang="less" scoped>
     .relayer_details {
-        padding: 38px 32px 22px;
+        padding: 38px 32px 100px !important;
         &__statistic {
-            margin-top: 24px;
+            margin-top: 22px !important;
         }
         &__channel_pairs {
             :deep(.info_card__primary) {
@@ -200,16 +200,11 @@
                 max-width: 428px;
             }
         }
-        :deep(.page_title__icon) {
-            width: 40px;
-            height: 40px;
-        }
     }
     // 1247px
     @media screen and (max-width: 1200px) {
         .relayer_details {
-            padding-left: 48px;
-            padding-right: 48px;
+            padding: 38px 48px 100px !important;
             &__statistic {
             }
             &__charts_wrap {
@@ -382,14 +377,10 @@
                 }
             }
         }
-        :deep(.page_title__icon_mobile) {
-            width: 40px;
-            height: 40px;
-        }
     }
     @media screen and (max-width: 530px) {
         .relayer_details {
-            padding: 24px 16px 60px;
+            padding: 24px 16px 60px !important;
             &__statistic {
                 :deep(.horizontal_container) {
                     grid-template-columns: repeat(1, 1fr);
