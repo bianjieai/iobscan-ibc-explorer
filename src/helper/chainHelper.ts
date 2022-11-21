@@ -54,7 +54,11 @@ export default class ChainHelper {
                     }
                     return item;
                 } else {
-                    if (
+                    if (!matchChainA?.chain_name) {
+                        if (matchChainB?.chain_name) {
+                            changeChainsSort(item);
+                        }
+                    } else if (
                         [matchChainA?.chain_name, matchChainB?.chain_name].indexOf(
                             CHAINNAME.COSMOSHUB
                         ) !== -1
