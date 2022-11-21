@@ -552,9 +552,6 @@ export const useSuccessRateChart = (
                 ]
             },
             {
-                tooltip: {
-                    show: false
-                },
                 type: 'gauge',
                 radius: '54%',
                 axisLine: {
