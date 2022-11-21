@@ -1,4 +1,4 @@
-import { bigNumberAdd } from './../../../utils/calculate';
+import { bigNumberAdd } from '@/utils/calculate';
 import { copyToClipboard } from '@/utils/clipboardTools';
 import { getChartTooltip } from '@/helper/relayerHelper';
 import {
