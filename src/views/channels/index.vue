@@ -48,7 +48,9 @@
                             </p>
                             <p class="popover_c mt-8">
                                 <span class="tip_label">Chain ID:</span>
-                                <span class="tip_value ml-8">{{ record[column.key] }}</span>
+                                <span class="tip_value ml-8">
+                                    {{ ChainHelper.formatChainId(record[column.key]) }}
+                                </span>
                             </p>
                         </div>
                     </template>
@@ -85,7 +87,9 @@
                             </p>
                             <p class="popover_c mt-8">
                                 <span class="tip_label">Chain ID:</span>
-                                <span class="tip_value ml-8">{{ record[column.key] }}</span>
+                                <span class="tip_value ml-8">
+                                    {{ ChainHelper.formatChainId(record[column.key]) }}
+                                </span>
                             </p>
                         </div>
                     </template>
@@ -146,6 +150,7 @@
         useChannelsColumnJump
     } from '@/views/channels/composable';
     import { MODES } from '@/components/BjSelect/constants';
+    import ChainHelper from '@/helper/chainHelper';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
