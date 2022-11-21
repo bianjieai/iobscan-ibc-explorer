@@ -442,7 +442,7 @@ export const NEED_CUSTOM_HEADER = {
 export const BASE_PARAMS: IRequestPagination = {
     use_count: false,
     page_num: 1,
-    page_size: 1000
+    page_size: 3000
 };
 
 export const AXIOS_TIMEOUT = 50000;

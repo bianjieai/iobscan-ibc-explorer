@@ -15,3 +15,24 @@ export const getRoundingOffBigNumber = (value: string | number, num = 0) => {
     }
     return new BigNumber(value).toFixed(num);
 };
+
+// bigNumber的加减乘除
+export const bigNumberAdd = (num1: string | number, num2: string | number): string => {
+    return new BigNumber(num1).plus(num2).toString();
+};
+
+export const bigNumberSubtract = (num1: string | number, num2: string | number): string => {
+    return new BigNumber(num1).minus(num2).toString();
+};
+
+export const bigNumberMultiply = (num1: string | number, num2: string | number): string => {
+    if (isNaN(new BigNumber(num1).multipliedBy(num2).toNumber())) {
+        return '0';
+    } else {
+        return new BigNumber(num1).multipliedBy(num2).toString();
+    }
+};
+
+export const bigNumberDivide = (num1: string | number, num2: string | number): string => {
+    return new BigNumber(num1).div(num2).toString();
+};
