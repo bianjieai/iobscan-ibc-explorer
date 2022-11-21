@@ -7,7 +7,7 @@
                 :tab="TRANSFER_DETAILS_TAB.tableData"
                 :class="{ view_source__first_tab: sourceCode }"
             >
-                <loading-component v-if="loading" :is-page-loading="false" :height="208" />
+                <loading-component v-if="loading" :type="LoadingType.container" :height="208" />
                 <a-table
                     v-else-if="sourceCode"
                     :columns="TRANSFER_DETAILS_TABLE"
@@ -87,7 +87,7 @@
                 :tab="TRANSFER_DETAILS_TAB.json"
                 force-render
             >
-                <loading-component v-if="loading" :is-page-loading="false" :height="208" />
+                <loading-component v-if="loading" :type="LoadingType.container" :height="208" />
                 <pre v-else-if="JSONSource" class="view_source__json">{{ JSONSource }}</pre>
                 <no-datas v-else :text="errorText" />
             </a-tab-pane>
@@ -100,6 +100,7 @@
     import { TRANSFER_DETAILS_TABLE, TRANSFER_DETAILS_TAB } from '@/constants/transfers';
     import { useViewSource } from '../composable';
     import { useLoading } from '@/composables';
+    import { LoadingType } from '@/constants';
 
     interface IProps {
         ibcTxInfo: IIbcTxInfo | undefined;

@@ -1,5 +1,6 @@
-import { IRequestPagination } from '@/types/interface/index.interface';
+import type { IDenomStatistic, IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
+import { RelayersListKey, RELAYER_TRANSFER_KEY } from '@/constants/relayers';
 
 export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.meta.url).href;
 export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', import.meta.url).href;
@@ -46,6 +47,11 @@ export const ROUTE_INFO = {
         name: 'Relayers',
         title: 'IOBScan - IOB - Relayers',
         description: 'IBC Relayers List'
+    },
+    relayerDetails: {
+        name: 'Relayer Details',
+        title: 'IOBScan - IOB - Relayer Details',
+        description: 'IBC Relayer Details Information'
     },
     searchResults: {
         name: 'Search Results',
@@ -95,7 +101,8 @@ export const PAGE_PARAMETERS = {
     channel: 'channel',
     channels: 'channels',
     relayers: 'relayers',
-    denom: 'denom'
+    denom: 'denom',
+    relayerDetails: 'relayerDetails'
 };
 
 export const MSG_DESC = {
@@ -151,10 +158,14 @@ export const STATISTICS_NAME = {
     tx_24hr_all: 'Recent',
     tx_all: 'All',
     tx_success: 'Success',
-    tx_failed: 'Failed'
+    tx_failed: 'Failed',
+    total_relayed_value: 'Total Relayed Value',
+    total_txs: 'Total Txs',
+    served_channel_pairs: 'Served Channel Pairs',
+    total_fee_cost: 'Total Fee Cost'
 };
 
-export const IBC_STATISTICS_CHAINS_DEFAULT = {
+export const IBC_STATISTICS_CHAINS_DEFAULT: IDenomStatistic = {
     chains_24hr: {
         statistics_name: 'chains_24hr',
         count: 0
@@ -165,7 +176,7 @@ export const IBC_STATISTICS_CHAINS_DEFAULT = {
     }
 };
 
-export const IBC_STATISTICS_CHANNELS_DEFAULT = {
+export const IBC_STATISTICS_CHANNELS_DEFAULT: IDenomStatistic = {
     channels_24hr: {
         statistics_name: 'channels_24hr',
         count: 0
@@ -184,7 +195,7 @@ export const IBC_STATISTICS_CHANNELS_DEFAULT = {
     }
 };
 
-export const IBC_STATISTICS_DENOMS_DEFAULT = {
+export const IBC_STATISTICS_DENOMS_DEFAULT: IDenomStatistic = {
     denom_all: {
         statistics_name: 'denom_all',
         count: 0
@@ -195,7 +206,7 @@ export const IBC_STATISTICS_DENOMS_DEFAULT = {
     }
 };
 
-export const IBC_STATISTICS_TXS_DEFAULT = {
+export const IBC_STATISTICS_TXS_DEFAULT: IDenomStatistic = {
     tx_24hr_all: {
         statistics_name: 'tx_24hr_all',
         count: 0
@@ -403,15 +414,25 @@ export const NEED_CUSTOM_COLUMN = {
         'ibc_transfer_txs'
     ],
     relayers: [
-        'relayer_name',
-        'chain_a',
-        'status',
-        'chain_b',
-        'update_time',
-        'txs_success_rate',
-        'transfer_total_txs'
+        RelayersListKey.relayersRelayerName,
+        RelayersListKey.relayersServedChains,
+        RelayersListKey.relayersSuccessRate,
+        RelayersListKey.relayersIbcTransferTxs,
+        RelayersListKey.relayersTotalRelayedValue,
+        RelayersListKey.relayersTotalFeeCost,
+        RelayersListKey.relayersLastUpdated
     ],
-    transfers: ['token', 'fromTxhash', 'from', 'status', 'to', 'toTxHash', 'createTime', 'endTime']
+    transfers: ['token', 'fromTxhash', 'from', 'status', 'to', 'toTxHash', 'createTime', 'endTime'],
+    relayerDetails: [
+        RELAYER_TRANSFER_KEY.rtTxHash,
+        RELAYER_TRANSFER_KEY.rtType,
+        RELAYER_TRANSFER_KEY.rtChain,
+        RELAYER_TRANSFER_KEY.rtToken,
+        RELAYER_TRANSFER_KEY.rtFee,
+        RELAYER_TRANSFER_KEY.rtResult,
+        RELAYER_TRANSFER_KEY.rtSigner,
+        RELAYER_TRANSFER_KEY.rtTimestamp
+    ]
 };
 
 export const NEED_CUSTOM_HEADER = {
@@ -421,7 +442,7 @@ export const NEED_CUSTOM_HEADER = {
 export const BASE_PARAMS: IRequestPagination = {
     use_count: false,
     page_num: 1,
-    page_size: 1000
+    page_size: 3000
 };
 
 export const AXIOS_TIMEOUT = 50000;
@@ -471,3 +492,38 @@ export const BOTTOM_STATUS_DATA = {
         }
     ]
 };
+export const CHOOSE_BTN_TEXT = ['Value', 'Txs'];
+
+export const TRANSFER_TYPE = {
+    transfer: {
+        label: 'Transfer',
+        short: 'Transfer',
+        type: 'transfer'
+    },
+    receive: {
+        label: 'Receive',
+        short: 'Receive',
+        type: 'recv_packet'
+    },
+    acknowledge: {
+        label: 'Acknowledge',
+        short: 'Ack',
+        type: 'acknowledge_packet'
+    },
+    timeout: {
+        label: 'Timeout',
+        short: 'Timeout',
+        type: 'timeout_packet'
+    }
+};
+
+export enum TypeButtonProp {
+    reset = 'reset',
+    search = 'search'
+}
+
+export enum LoadingType {
+    page,
+    container,
+    position
+}

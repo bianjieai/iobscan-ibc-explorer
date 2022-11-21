@@ -87,7 +87,7 @@
 }
 
 .ant-popover {
-    z-index: 1051 !important;
+    z-index: 1100 !important;
 }
 .ant-popover-arrow {
     bottom: -4px !important;
@@ -96,12 +96,14 @@
 .ant-popover-arrow > .ant-popover-arrow-content {
     background: #3d50ff;
 }
-.ant-popover-inner {
+.ant-popover-content .ant-popover-inner {
     box-shadow: 0px 2px 8px 0px #d9deec;
     border: 1px solid #d9dfee;
 }
 .ant-popover-inner .ant-popover-inner-content {
     padding: 8px 12px;
+    color: var(--bj-text-second);
+    word-break: break-all;
 }
 
 .ant-select-open .ant-select-arrow {

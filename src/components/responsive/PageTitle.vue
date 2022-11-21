@@ -1,11 +1,11 @@
 <template>
     <div class="page_title_container">
-        <img v-if="hasIcon" class="icon" :src="imgSrc" />
+        <img v-if="imgSrc" class="icon" :src="imgSrc" />
         <div class="flex">
             <div class="title_p">
-                <img v-if="hasIcon" class="icon inline_icon" :src="imgSrc" />
+                <img v-if="imgSrc" class="icon inline_icon" :src="imgSrc" />
                 <a-typography-text class="title">{{ title }}</a-typography-text>
-                <div class="background" :style="{ bottom: hasIcon ? '3px' : '-3px' }"></div>
+                <div class="background" :style="{ bottom: imgSrc ? '3px' : '-3px' }"></div>
             </div>
             <a-typography-text v-if="subtitle" class="number"
                 ><i class="iconfont icon-shujuliebiao"></i>{{ subtitle }}</a-typography-text
@@ -16,13 +16,15 @@
 
 <script lang="ts" setup>
     interface IProps {
-        hasIcon?: boolean;
+        titleIcon?: string;
         title: string;
         subtitle?: string;
         imgSrc?: string;
     }
 
-    defineProps<IProps>();
+    withDefaults(defineProps<IProps>(), {
+        titleIcon: 'icon-shujuliebiao'
+    });
 </script>
 
 <style lang="less" scoped>
@@ -32,40 +34,33 @@
         line-height: 1;
         position: relative;
         justify-content: flex-start;
-
         .flex {
             display: flex;
             align-items: center;
         }
-
         .icon {
             width: 32px;
             height: 32px;
             border-radius: 32px;
             margin-right: 8px;
         }
-
         .inline_icon {
             display: none;
         }
-
         .title_p {
             margin-right: 8px;
-
             .title {
                 font-size: var(--bj-font-size-title);
                 font-family: Eurocine-regular;
                 font-weight: 600;
             }
         }
-
         .number {
             color: var(--bj-text-second);
             .iconfont {
                 margin-right: 4px;
             }
         }
-
         .background {
             position: absolute;
             left: 0;
@@ -81,25 +76,19 @@
             box-sizing: border-box;
         }
     }
-
-    // mobile
     @media screen and (max-width: 580px) {
         .page_title_container {
             display: inline-flex;
             text-align: left;
-
             .flex {
                 display: block;
             }
-
             .icon {
                 display: none;
             }
-
             .inline_icon {
                 display: block;
             }
-
             .title_p {
                 position: relative;
                 display: inline-flex;
@@ -107,7 +96,6 @@
                 margin-right: 0;
                 margin-bottom: 8px;
             }
-
             .number {
                 display: block;
             }

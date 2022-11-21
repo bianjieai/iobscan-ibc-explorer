@@ -4,7 +4,10 @@
 
 import { IBaseDenom } from '@/types/interface/index.interface';
 import { formatBigNumber } from './parseStringHelper';
+import { BigNumber } from 'bignumber.js';
 import moveDecimal from 'move-decimal-point';
+import { TRANSFER_DETAILS_STATUS } from '@/constants/transfers';
+import { DEFAULT_DISPLAY_TEXT } from '@/constants';
 /**
  *
  * @param price 价格 不超过10w
@@ -91,7 +94,35 @@ export const formatAmount = (
 export const formatTransfer_success_txs = (
     transfer_success_txs: number,
     transfer_total_txs: number
-) => {
+): number => {
     if (transfer_total_txs === 0) return 0;
-    return ((transfer_success_txs / transfer_total_txs) * 100).toFixed(0);
+    const numerator = new BigNumber(transfer_success_txs);
+    const denominator = new BigNumber(transfer_total_txs);
+    const res = Number(numerator.dividedBy(denominator).multipliedBy(100).toFixed(0));
+    return res > 100 ? 100 : res;
+};
+
+export const formatTxStatus = (status: number | string) => {
+    if (typeof status === 'string') return status;
+    switch (status) {
+        case TRANSFER_DETAILS_STATUS.SUCCESS.value:
+            return TRANSFER_DETAILS_STATUS.SUCCESS.label;
+        case TRANSFER_DETAILS_STATUS.FAILED.value:
+            return TRANSFER_DETAILS_STATUS.FAILED.label;
+        default:
+            return DEFAULT_DISPLAY_TEXT;
+    }
+};
+
+export const changeColor = (value: string | number) => {
+    switch (value) {
+        case TRANSFER_DETAILS_STATUS.SUCCESS.label:
+        case TRANSFER_DETAILS_STATUS.SUCCESS.value:
+            return 'success_color';
+        case TRANSFER_DETAILS_STATUS.FAILED.label:
+        case TRANSFER_DETAILS_STATUS.FAILED.value:
+            return 'failed_color';
+        default:
+            return '';
+    }
 };

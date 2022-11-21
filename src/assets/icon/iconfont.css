@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'iconfont'; /* Project id 2812235 */
-    src: url('iconfont.woff2?t=1666261197178') format('woff2'),
-        url('iconfont.woff?t=1666261197178') format('woff'),
-        url('iconfont.ttf?t=1666261197178') format('truetype');
+    src: url('iconfont.woff2?t=1667957395719') format('woff2'),
+        url('iconfont.woff?t=1667957395719') format('woff'),
+        url('iconfont.ttf?t=1667957395719') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,62 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-copy:before {
+    content: '\e7a4';
+}
+
+.icon-notice1:before {
+    content: '\e7a5';
+}
+
+.icon-turnto1:before {
+    content: '\e7a1';
+}
+
+.icon-close:before {
+    content: '\e7a0';
+}
+
+.icon-turnto:before {
+    content: '\e79e';
+}
+
+.icon-notice:before {
+    content: '\e79c';
+}
+
+.icon-icon_search:before {
+    content: '\e79d';
+}
+
+.icon-a-chainsserved:before {
+    content: '\e79b';
+}
+
+.icon-a-successrate:before {
+    content: '\e798';
+}
+
+.icon-transactions:before {
+    content: '\e799';
+}
+
+.icon-Trend:before {
+    content: '\e795';
+}
+
+.icon-a-relayedassets:before {
+    content: '\e796';
+}
+
+.icon-a-transfertype:before {
+    content: '\e797';
+}
+
+.icon-a-ChannelPairs:before {
+    content: '\e794';
 }
 
 .icon-zhankai2:before {

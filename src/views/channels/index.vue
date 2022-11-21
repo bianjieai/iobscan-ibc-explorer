@@ -27,7 +27,7 @@
                 @on-selected-change="onSelectedStatus"
             />
 
-            <ResetButton @on-reset="resetSearchCondition" />
+            <TypeButton @on-reset="resetSearchCondition" />
         </div>
         <TableCommon
             :loading="loading"
@@ -37,15 +37,33 @@
             need-count
         >
             <template #chain_a="{ record, column }">
-                <ChainIcon
-                    avatar-can-click
-                    :title="record.channel_a"
-                    no-subtitle
-                    :chain-id="record[column.key]"
-                    :chains-data="ibcChains.all"
-                    icon-size="small"
-                    @click-avatar="goChains"
-                />
+                <a-popover placement="right" destroy-tooltip-on-hide>
+                    <template #content>
+                        <div>
+                            <p class="popover_c">
+                                <span class="tip_label">Chain Name:</span>
+                                <span class="tip_value ml-8">{{
+                                    useMatchChainInfo(record[column.key]).chainName
+                                }}</span>
+                            </p>
+                            <p class="popover_c mt-8">
+                                <span class="tip_label">Chain ID:</span>
+                                <span class="tip_value ml-8">
+                                    {{ ChainHelper.formatChainId(record[column.key]) }}
+                                </span>
+                            </p>
+                        </div>
+                    </template>
+                    <ChainIcon
+                        avatar-can-click
+                        :title="record.channel_a"
+                        no-subtitle
+                        :chain-id="record[column.key]"
+                        :chains-data="ibcChains.all"
+                        icon-size="small"
+                        @click-avatar="goChains"
+                    />
+                </a-popover>
             </template>
 
             <template #status="{ record, column }">
@@ -58,15 +76,33 @@
             </template>
 
             <template #chain_b="{ record, column }">
-                <ChainIcon
-                    avatar-can-click
-                    :title="record.channel_b"
-                    no-subtitle
-                    :chain-id="record[column.key]"
-                    :chains-data="ibcChains.all"
-                    icon-size="small"
-                    @click-avatar="goChains"
-                />
+                <a-popover placement="right" destroy-tooltip-on-hide>
+                    <template #content>
+                        <div>
+                            <p class="popover_c">
+                                <span class="tip_label">Chain Name:</span>
+                                <span class="tip_value ml-8">{{
+                                    useMatchChainInfo(record[column.key]).chainName
+                                }}</span>
+                            </p>
+                            <p class="popover_c mt-8">
+                                <span class="tip_label">Chain ID:</span>
+                                <span class="tip_value ml-8">
+                                    {{ ChainHelper.formatChainId(record[column.key]) }}
+                                </span>
+                            </p>
+                        </div>
+                    </template>
+                    <ChainIcon
+                        avatar-can-click
+                        :title="record.channel_b"
+                        no-subtitle
+                        :chain-id="record[column.key]"
+                        :chains-data="ibcChains.all"
+                        icon-size="small"
+                        @click-avatar="goChains"
+                    />
+                </a-popover>
             </template>
 
             <template #last_updated="{ record, column }">
@@ -102,13 +138,19 @@
     import { COLUMNS, STATUS_OPTIONS } from '@/constants/channels';
     import { formatLastUpdated, formatOperatingPeriod } from '@/utils/timeTools';
     import { TChannelStatus, BottomStatusType } from '@/types/interface/components/table.interface';
-    import { useIbcChains, useNeedCustomColumns, useLoading } from '@/composables';
+    import {
+        useIbcChains,
+        useNeedCustomColumns,
+        useLoading,
+        useMatchChainInfo
+    } from '@/composables';
     import {
         useGetChannelsList,
         useChannelsSelected,
         useChannelsColumnJump
     } from '@/views/channels/composable';
     import { MODES } from '@/components/BjSelect/constants';
+    import ChainHelper from '@/helper/chainHelper';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
@@ -138,6 +180,14 @@
         :deep(.ant-dropdown-trigger) {
             margin-right: 8px;
         }
+    }
+    .tip_label {
+        font-family: 'GolosUI_Medium';
+        font-weight: 500;
+        color: rgba(0, 0, 0, 1);
+    }
+    .tip_value {
+        color: rgba(0, 0, 0, 0.75);
     }
     :deep(.ant-table-tbody tr .ant-table-cell) {
         &:nth-of-type(1) {

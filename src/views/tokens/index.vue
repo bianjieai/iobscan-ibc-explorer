@@ -44,7 +44,7 @@
                 :options="STATUS_OPTIONS"
                 @on-selected-change="onSelectedStatus"
             />
-            <ResetButton @on-reset="resetSearchCondition" />
+            <TypeButton @on-reset="resetSearchCondition" />
         </div>
 
         <TableCommon
@@ -68,9 +68,9 @@
             <template #price="{ record, column }">
                 <a-popover v-if="+record[column.key] !== -1">
                     <template #content>
-                        <div class="popover_c">{{
-                            `${record.currency} ${formatPrice(record[column.key], undefined)}`
-                        }}</div>
+                        <div class="popover_c">
+                            {{ `${record.currency} ${formatPrice(record[column.key])}` }}
+                        </div>
                     </template>
                     <div v-if="record[column.key] < THOUSAND_DECIMAL">
                         {{ `< ${record.currency} ${THOUSAND_DECIMAL}` }}

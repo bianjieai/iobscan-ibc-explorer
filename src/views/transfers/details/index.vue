@@ -6,7 +6,7 @@
         </div>
         <TxTip :status="ibcTxStatus" :error-log="errorLog"></TxTip>
         <div class="info_container">
-            <TxCard icon="icon-a-baseinfo" title="Base Info">
+            <InfoCard icon="icon-a-baseinfo" title="Base Info">
                 <TokenBaseInfo :token-info="tokenInfo"></TokenBaseInfo>
                 <div class="info_container__bottom">
                     <ChainBaseInfo
@@ -48,15 +48,15 @@
                         @update-is-flex-column="updateIsFlexColumn"
                     ></ChainBaseInfo>
                 </div>
-            </TxCard>
-            <TxCard icon="icon-Message" title="Messages">
+            </InfoCard>
+            <InfoCard icon="icon-Message" title="Messages">
                 <TxProgress
                     :ibc-tx-status="ibcTxStatus"
                     :ibc-tx-info="ibcTxInfo"
                     :sc-info="scInfo"
                     :dc-info="dcInfo"
                 ></TxProgress>
-            </TxCard>
+            </InfoCard>
         </div>
     </PageContainer>
 </template>
@@ -64,7 +64,6 @@
 <script setup lang="ts">
     import TxStatus from './components/TxStatus.vue';
     import TxTip from './components/TxTip.vue';
-    import TxCard from './components/TxCard.vue';
     import TokenBaseInfo from './components/TokenBaseInfo.vue';
     import ChainBaseInfo from './components/ChainBaseInfo.vue';
     import ChainProgress from './components/ChainProgress.vue';

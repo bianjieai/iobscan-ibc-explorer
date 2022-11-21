@@ -48,7 +48,7 @@ const routes: Array<RouteRecordRaw> = [
             {
                 path: '',
                 name: ROUTE_INFO.searchResults.name,
-                component: () => import('../views/transfers/components/NoResult.vue'),
+                component: () => import('../views/transfers/components/NoTxResult.vue'),
                 meta: {}
             }
         ]
@@ -106,6 +106,12 @@ const routes: Array<RouteRecordRaw> = [
                 path: '',
                 name: ROUTE_INFO.relayers.name,
                 component: () => import('../views/relayers/index.vue'),
+                meta: {}
+            },
+            {
+                path: 'details/:relayerId',
+                name: ROUTE_INFO.relayerDetails.name,
+                component: () => import('../views/relayers/details/index.vue'),
                 meta: {}
             }
         ]
