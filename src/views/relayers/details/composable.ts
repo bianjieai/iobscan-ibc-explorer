@@ -79,6 +79,11 @@ export const useGetRelayerDetailsInfo = () => {
                     chainName: chainInfo.chain_name,
                     channelInfo: chainChannelLRSort[i]
                 });
+            } else {
+                chainChannelArr.push({
+                    chainName: DEFAULT_DISPLAY_TEXT,
+                    channelInfo: chainChannelLRSort[i]
+                });
             }
         }
         const cosmosChainChannel = chainChannelArr
@@ -599,6 +604,7 @@ export const useSelectedSearch = (
             const chainInfoArr: IIbcchain[] = [];
             for (const i in newServedChainsInfo) {
                 const chainInfo = await ChainHelper.getChainInfoByKey(newServedChainsInfo[i]);
+                // 不支持的 chain 在此处不展示
                 if (chainInfo) {
                     chainInfoArr.push(chainInfo);
                 }
