@@ -39,7 +39,7 @@
             </template>
 
             <template #ibc_tokens_value="{ record, column }">
-                <div>{{ `$ ${formatAmount(record[column.key]).title}` }}</div>
+                <div>{{ `${formatAmount(record[column.key]).title} $` }}</div>
             </template>
 
             <template #transfer_txs="{ record, column }">
