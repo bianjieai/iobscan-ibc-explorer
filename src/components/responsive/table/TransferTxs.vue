@@ -4,7 +4,7 @@
             formatBigNumber(title, 0)
         }}</div>
         <div class="subtitle mt-4">{{
-            subtitle === '' ? `-- ${currency}` : `${formatBigNumber(subtitle, 0)} ${currency}`
+            subtitle === '' ? `${currency} --` : `${currency} ${formatBigNumber(subtitle, 0)}`
         }}</div>
     </div>
 </template>

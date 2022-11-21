@@ -68,18 +68,18 @@
             <template #price="{ record, column }">
                 <a-popover v-if="+record[column.key] !== -1">
                     <template #content>
-                        <div class="popover_c">{{
-                            `${formatPrice(record[column.key])} ${record.currency}`
-                        }}</div>
+                        <div class="popover_c">
+                            {{ `${record.currency} ${formatPrice(record[column.key])}` }}
+                        </div>
                     </template>
                     <div v-if="record[column.key] < THOUSAND_DECIMAL">
-                        {{ `< ${THOUSAND_DECIMAL} ${record.currency}` }}
+                        {{ `< ${record.currency} ${THOUSAND_DECIMAL}` }}
                     </div>
                     <div v-else>
-                        {{ `${formatPrice(record[column.key])} ${record.currency}` }}
+                        {{ `${record.currency} ${formatPrice(record[column.key])}` }}
                     </div>
                 </a-popover>
-                <div v-else>{{ `${formatPrice(record[column.key])} ${record.currency}` }}</div>
+                <div v-else>{{ `${record.currency} ${formatPrice(record[column.key])}` }}</div>
             </template>
 
             <template #supply="{ record, column }">

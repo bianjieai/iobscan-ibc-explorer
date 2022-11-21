@@ -51,17 +51,17 @@
             </template>
 
             <template #relayers_total_relayed_value="{ record, column }">
-                <div class="value_container"
-                    >{{ formatBigNumber(record[column.key], 0) }}
-                    <span class="symbol"> {{ UNIT_SIGNS }}</span></div
-                >
+                <div class="value_container">
+                    <span class="symbol"> {{ UNIT_SIGNS }}</span>
+                    {{ formatBigNumber(record[column.key], 0) }}
+                </div>
             </template>
 
             <template #relayers_total_fee_cost="{ record, column }">
-                <div class="value_container"
-                    >{{ formatBigNumber(record[column.key], 0) }}
-                    <span class="symbol"> {{ UNIT_SIGNS }}</span></div
-                >
+                <div class="value_container">
+                    <span class="symbol"> {{ UNIT_SIGNS }}</span>
+                    {{ formatBigNumber(record[column.key], 0) }}
+                </div>
             </template>
 
             <template #relayers_last_updated="{ record }">
@@ -100,11 +100,6 @@
 </script>
 
 <style lang="less" scoped>
-    :deep(.value_container .symbol) {
-        font-size: var(--bj-font-size-normal);
-        font-weight: 400;
-        color: var(--bj-text-third);
-    }
     .relayer_search {
         margin-top: 26px;
     }
