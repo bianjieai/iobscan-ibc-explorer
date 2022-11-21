@@ -94,7 +94,12 @@
                             "
                             class="relayer_details__charts_wrap__left__bottom__success_rate__nodatas"
                         />
-                        <SuccessRateChart v-else :success-rate-percent="successRatePercent" />
+                        <SuccessRateChart
+                            v-else
+                            :relayed-success-txs="relayedSuccessTxs"
+                            :relayed-total-txs="relayedTotalTxs"
+                            :success-rate-percent="successRatePercent"
+                        />
                     </InfoCard>
                 </div>
             </div>

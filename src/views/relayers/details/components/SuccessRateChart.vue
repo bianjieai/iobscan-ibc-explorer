@@ -7,11 +7,17 @@
 <script setup lang="ts">
     import { useSuccessRateChart } from '../composable';
     interface ISucccessRate {
+        relayedSuccessTxs: number;
+        relayedTotalTxs: number;
         successRatePercent: number;
     }
     const props = defineProps<ISucccessRate>();
-    const { successRatePercent } = toRefs(props);
-    const { successRateDom } = useSuccessRateChart(successRatePercent);
+    const { relayedSuccessTxs, relayedTotalTxs, successRatePercent } = toRefs(props);
+    const { successRateDom } = useSuccessRateChart(
+        relayedSuccessTxs,
+        relayedTotalTxs,
+        successRatePercent
+    );
 </script>
 
 <style lang="less" scoped>

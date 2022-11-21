@@ -94,17 +94,27 @@ export const useGetRelayerDetailsInfo = () => {
         const irishubChainChannel = chainChannelArr
             .filter((item) => item.chainName === CHAINNAME.IRISHUB)
             .map((item) => item.channelInfo);
+        const notSupportedChainChannel = chainChannelArr
+            .filter((item) => item.chainName === DEFAULT_DISPLAY_TEXT)
+            .map((item) => item.channelInfo);
         const otherChainChannel = chainChannelArr
             .filter(
                 (item) =>
-                    item.chainName !== CHAINNAME.COSMOSHUB && item.chainName !== CHAINNAME.IRISHUB
+                    item.chainName !== CHAINNAME.COSMOSHUB &&
+                    item.chainName !== CHAINNAME.IRISHUB &&
+                    item.chainName !== DEFAULT_DISPLAY_TEXT
             )
             .sort((a, b) => {
                 return a.chainName.localeCompare(b.chainName);
             })
             .map((item) => item.channelInfo);
 
-        return [...cosmosChainChannel, ...irishubChainChannel, ...otherChainChannel];
+        return [
+            ...cosmosChainChannel,
+            ...irishubChainChannel,
+            ...otherChainChannel,
+            ...notSupportedChainChannel
+        ];
     };
     const getRelayerDetailsInfo = () => {
         const route = useRoute();
@@ -429,10 +439,39 @@ export const useGetSuccessRatePercent = (
     };
 };
 
-export const useSuccessRateChart = (successRatePercent: Ref<number>) => {
+export const useSuccessRateChart = (
+    relayedSuccessTxs: Ref<number>,
+    relayedTotalTxs: Ref<number>,
+    successRatePercent: Ref<number>
+) => {
     const successRateDom = ref<HTMLElement>();
     let successRateChart: echarts.ECharts;
     const option = {
+        tooltip: {
+            position: ['65%', '55%'],
+            backgroundColor: null,
+            borderWidth: 0,
+            extraCssText: 'box-shadow: 0 0 0 transparent;',
+            formatter: () => {
+                return `
+                        <div style="position: relative;padding: 12px;background: #FFFFFF;box-shadow: 0px 2px 8px 0px #D9DEEC;border-radius: 4px;border: 1px solid #D9DFEE;">
+                            <div>
+                                <span style="font-size: 14px;font-family: GolosUI_Medium;color: #000;line-height: 18px;">Success Txs: </span>
+                                <span style="margin-left: 8px;font-size: 14px;color: rgba(0,0,0,0.75);line-height: 18px;font-family: 'GolosUIWebRegular';">
+                                    ${formatBigNumber(relayedSuccessTxs.value)}
+                                </span>
+                            </div>
+                            <div>
+                                <span style="font-size: 14px;font-family: GolosUI_Medium;color: #000;line-height: 18px;">Total Txs: </span>
+                                <span style="margin-left: 8px;font-size: 14px;color: rgba(0,0,0,0.75);line-height: 18px;font-family: 'GolosUIWebRegular';">
+                                    ${formatBigNumber(relayedTotalTxs.value)}
+                                </span>
+                            </div>
+                            <div style="position: absolute;top: 50%;left: -20px;transform: translateY(-50%);border-top: 5px solid transparent;border-right: 8px solid #3D50FF;border-bottom: 5px solid transparent;border-left: 8px solid transparent;"></div>
+                        </div>
+                    `;
+            }
+        },
         series: [
             {
                 type: 'gauge',
@@ -636,9 +675,7 @@ export const useSelectedSearch = (
         page_size = 5,
         use_count = false
     ) => {
-        if (rtTableLoading) {
-            rtTableLoading.value = true;
-        }
+        rtTableLoading.value = true;
         const getRelayerTransferTxsData = async () => {
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
