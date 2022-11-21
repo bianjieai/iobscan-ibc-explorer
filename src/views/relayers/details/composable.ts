@@ -1,3 +1,4 @@
+import { bigNumberAdd } from './../../../utils/calculate';
 import { copyToClipboard } from '@/utils/clipboardTools';
 import { getChartTooltip } from '@/helper/relayerHelper';
 import {
@@ -1543,36 +1544,41 @@ export const useRelatedAssetChart = (
                     }
                     totalRelayedValueData.totalValue = (data as any).total_txs_value;
                     totalRelayedValueData.totalTxs = data.total_txs;
-                    totalRelayedValueData.totalDenomCount = data.total_denom_count;
-                    const denomList: FormatDenomItem[] = [];
+                    const denomMap: { [key: string]: FormatDenomItem } = {};
+                    // 合并Symbol 相同的值
                     for (let i = 0; i < data.denom_list.length; i++) {
                         const item = data.denom_list[i];
                         const baseDenom = await getBaseDenomByKey(
                             item.base_denom_chain,
                             item.base_denom
                         );
-                        if (baseDenom) {
-                            denomList.push({
-                                imgUrl: baseDenom.icon || TOKEN_DEFAULT_ICON,
-                                name: baseDenom.symbol,
-                                ...item
-                            });
+                        const key = baseDenom?.symbol || item.base_denom;
+                        if (denomMap[key]) {
+                            const oldDenom = JSON.parse(JSON.stringify(denomMap[key]));
+                            denomMap[key].txs_value = bigNumberAdd(
+                                oldDenom.txs_value,
+                                item.txs_value
+                            );
+                            denomMap[key].txs = Number(bigNumberAdd(oldDenom.txs, item.txs));
                         } else {
-                            denomList.push({
-                                imgUrl: TOKEN_DEFAULT_ICON,
-                                name: item.base_denom,
+                            denomMap[key] = {
+                                imgUrl: baseDenom?.icon || TOKEN_DEFAULT_ICON,
+                                name: baseDenom?.symbol || item.base_denom,
                                 ...item
-                            });
+                            };
                         }
                     }
+                    const denomList: FormatDenomItem[] = Object.values(denomMap);
+                    // value 需要过滤出显示为0的值
                     const valueDenomList = denomList.filter((denom) => {
                         return (
                             denom.txs_value != '0' &&
                             formatBigNumber(Number(denom.txs_value), 0) != 0
                         );
                     });
-                    totalRelayedValueData.totalValueCount = valueDenomList.length;
                     const txsDenomList = [...denomList];
+                    totalRelayedValueData.totalValueCount = valueDenomList.length;
+                    totalRelayedValueData.totalDenomCount = txsDenomList.length;
                     valueDenomList.sort((a, b) =>
                         new BigNumber(b.txs_value).comparedTo(a.txs_value)
                     );
