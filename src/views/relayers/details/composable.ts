@@ -1,4 +1,4 @@
-import { bigNumberAdd } from '@/utils/calculate';
+import { getDenomKey } from '@/helper/baseDenomHelper';
 import { copyToClipboard } from '@/utils/clipboardTools';
 import { getChartTooltip } from '@/helper/relayerHelper';
 import {
@@ -1231,6 +1231,10 @@ export const useRelatedAssetChart = (
     const route = useRoute();
     const relayerId: string = route.params.relayerId as string;
     const relayedValueDom = ref<HTMLElement>();
+    const mapLegend: { [key: string]: string } = {};
+    const displayName = (name: string) => {
+        return formatString(mapLegend[name] || name);
+    };
     const relayedValueOption: any = {
         tooltip: {
             trigger: 'item',
@@ -1265,7 +1269,7 @@ export const useRelatedAssetChart = (
                                                   color: #000000;
                                                   line-height: 20px;
                                               "
-                                              >${formatString(params.name)}</span
+                                              >${displayName(params.name)}</span
                                           >
                                       </div>
                                       <div style="display: flex; justify-content: flex-start; padding: 0px 12px 14px">
@@ -1321,7 +1325,7 @@ export const useRelatedAssetChart = (
             padding: [0, 0, 0, 0],
             fontSize: 12,
             formatter: (name: string) => {
-                return formatString(name);
+                return displayName(name);
             },
             textStyle: {
                 padding: [0, 10, 10, 0],
@@ -1550,31 +1554,30 @@ export const useRelatedAssetChart = (
                     }
                     totalRelayedValueData.totalValue = (data as any).total_txs_value;
                     totalRelayedValueData.totalTxs = data.total_txs;
-                    const denomMap: { [key: string]: FormatDenomItem } = {};
-                    // 合并Symbol 相同的值
+                    const denomList: FormatDenomItem[] = [];
                     for (let i = 0; i < data.denom_list.length; i++) {
                         const item = data.denom_list[i];
                         const baseDenom = await getBaseDenomByKey(
                             item.base_denom_chain,
                             item.base_denom
                         );
-                        const key = baseDenom?.symbol || item.base_denom;
-                        if (denomMap[key]) {
-                            const oldDenom = JSON.parse(JSON.stringify(denomMap[key]));
-                            denomMap[key].txs_value = bigNumberAdd(
-                                oldDenom.txs_value,
-                                item.txs_value
-                            );
-                            denomMap[key].txs = Number(bigNumberAdd(oldDenom.txs, item.txs));
-                        } else {
-                            denomMap[key] = {
-                                imgUrl: baseDenom?.icon || TOKEN_DEFAULT_ICON,
-                                name: baseDenom?.symbol || item.base_denom,
+                        const uniqueName = getDenomKey(item.base_denom_chain, item.base_denom);
+                        if (baseDenom) {
+                            denomList.push({
+                                imgUrl: baseDenom.icon || TOKEN_DEFAULT_ICON,
+                                name: uniqueName,
                                 ...item
-                            };
+                            });
+                            mapLegend[uniqueName] = baseDenom.symbol;
+                        } else {
+                            denomList.push({
+                                imgUrl: TOKEN_DEFAULT_ICON,
+                                name: uniqueName,
+                                ...item
+                            });
+                            mapLegend[uniqueName] = item.base_denom;
                         }
                     }
-                    const denomList: FormatDenomItem[] = Object.values(denomMap);
                     // value 需要过滤出显示为0的值
                     const valueDenomList = denomList.filter((denom) => {
                         return (
