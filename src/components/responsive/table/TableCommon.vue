@@ -47,6 +47,8 @@
             <a-pagination
                 v-if="hasData && !noPagination"
                 v-model:current="pageInfo.current"
+                class="table_pagination"
+                :class="{ android_adapter: isAndroid }"
                 :page-size="pageInfo.pageSize"
                 :total="pageInfo.total"
                 :show-title="false"
@@ -76,6 +78,7 @@
     import { formatSupply } from '@/helper/tableCellHelper';
     import { useGetIbcDenoms, useTimeInterval } from '@/composables';
     import { RelayersListKey } from '@/constants/relayers';
+    import { getIsAndroid } from '@/utils/systemTools';
 
     const router = useRouter();
     const { ibcBaseDenoms } = useGetIbcDenoms();
@@ -190,6 +193,7 @@
             dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
         }
     };
+    const isAndroid = getIsAndroid();
     const emits = defineEmits<{
         (e: 'onPageChange', current: number, pageSize: number): void;
     }>();
@@ -417,6 +421,35 @@
         background: var(--bj-border-color);
         height: 1px;
         z-index: 1;
+    }
+    :deep(.ant-pagination) {
+        overflow: auto;
+        .ant-pagination-item {
+            min-width: auto;
+        }
+        .ant-pagination-jump-next-custom-icon,
+        .ant-pagination-jump-prev-custom-icon {
+            min-width: 30px;
+            .ant-pagination-item-link {
+                width: 100%;
+                height: 100%;
+                .ant-pagination-item-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                    .ant-pagination-item-ellipsis {
+                        line-height: 24px;
+                    }
+                }
+            }
+        }
+    }
+    .android_adapter {
+        :deep(.ant-pagination-item-ellipsis) {
+            letter-spacing: -5px;
+        }
     }
     // tablet
     @media screen and (max-width: 810px) {
