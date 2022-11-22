@@ -10,7 +10,6 @@
     ibcStatisticsChainsStore.initStateAction();
     useChangeTitleAndIcon();
     useDocumentVisibility();
-    console.log();
 </script>
 
 <style>
