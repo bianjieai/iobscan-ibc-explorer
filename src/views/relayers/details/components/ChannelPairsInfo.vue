@@ -72,7 +72,7 @@
             transform: translateY(33px);
         }
     }
-    @media screen and (max-width: 1058px) {
+    @media screen and (max-width: 1130px) {
         .channel_pairs {
             &__info {
                 &:first-child {
