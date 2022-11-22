@@ -60,7 +60,7 @@
         }
         .ant-menu-title-content {
             font-size: var(--bj-font-size-sub-title);
-            color: rgba(#ffffff, 0.65);
+            color: rgba(255, 255, 255, 0.65);
             font-weight: var(--bj-font-weight-normal);
         }
         .ant-menu-item-active {
