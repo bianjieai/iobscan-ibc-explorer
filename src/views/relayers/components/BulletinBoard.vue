@@ -9,7 +9,7 @@
                     >
                 </div>
                 <div class="info" @click="gotoRegistry()">
-                    <span>relayer registry</span>
+                    <span>Register Now</span>
                     <i class="iconfont icon-turnto1"></i>
                 </div>
             </div>

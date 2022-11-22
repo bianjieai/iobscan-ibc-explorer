@@ -70,7 +70,8 @@ export default ({ mode }: { mode: string }) => {
                     drop_debugger: true
                 }
             },
-            sourcemap: mode !== 'production'
+            sourcemap: mode !== 'production',
+            cssTarget: 'chrome61'
         }
     });
 };
