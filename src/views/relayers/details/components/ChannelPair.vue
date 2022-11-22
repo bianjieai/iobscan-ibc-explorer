@@ -30,7 +30,7 @@
 <style lang="less" scoped>
     .channel_pair {
         flex: 1;
-        min-width: 400px;
+        min-width: 460px;
         min-height: 92px;
         border-radius: 8px;
         border: 1px solid #eaeaea;

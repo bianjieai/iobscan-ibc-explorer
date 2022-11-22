@@ -212,6 +212,10 @@
             padding: 38px 48px 100px !important;
             &__statistic {
             }
+            &__channel_pairs {
+                :deep(.info_card__primary) {
+                }
+            }
             &__charts_wrap {
                 &__left {
                     &__top {
@@ -237,6 +241,10 @@
     @media screen and (max-width: 1183px) {
         .relayer_details {
             &__statistic {
+            }
+            &__channel_pairs {
+                :deep(.info_card__primary) {
+                }
             }
             &__charts_wrap {
                 flex-direction: column;
@@ -307,6 +315,10 @@
                     }
                 }
             }
+            &__channel_pairs {
+                :deep(.info_card__primary) {
+                }
+            }
             &__charts_wrap {
                 &__left {
                     &__bottom {
@@ -331,6 +343,10 @@
                         .list_item {
                         }
                     }
+                }
+            }
+            &__channel_pairs {
+                :deep(.info_card__primary) {
                 }
             }
             &__charts_wrap {
@@ -361,6 +377,10 @@
                         .list_item {
                         }
                     }
+                }
+            }
+            &__channel_pairs {
+                :deep(.info_card__primary) {
                 }
             }
             &__charts_wrap {
@@ -408,6 +428,10 @@
                     }
                 }
             }
+            &__channel_pairs {
+                :deep(.info_card__primary) {
+                }
+            }
             &__charts_wrap {
                 &__left {
                     &__bottom {
@@ -430,6 +454,10 @@
                 :deep(.horizontal_container) {
                     .list_item__horizontal {
                     }
+                }
+            }
+            &__channel_pairs {
+                :deep(.info_card__primary) {
                 }
             }
             &__charts_wrap {

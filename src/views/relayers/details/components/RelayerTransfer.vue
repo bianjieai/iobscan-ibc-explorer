@@ -6,10 +6,6 @@
                 :placeholder="defaultChain?.title || DEFAULT_TITLE.defaultChains"
                 :hide-icon="true"
                 :data="relayerChainData"
-                :input-ctn="{
-                    placeholder: 'Search by Chain ID',
-                    btnTxt: 'Confirm'
-                }"
                 :value="searchChain || defaultChain?.id"
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
