@@ -361,7 +361,7 @@ export const useTransferTypeChart = (
             position: ['65%', '13%'],
             backgroundColor: null,
             borderWidth: 0,
-            extraCssText: 'box-shadow: 0 0 0 transparent;',
+            extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
             formatter: () => {
                 return `
                     <div style="position: relative;padding: 14px 12px;background: #FFFFFF;box-shadow: 0px 2px 8px 0px #D9DEEC;border-radius: 4px;border: 1px solid #D9DFEE;">
@@ -451,7 +451,7 @@ export const useSuccessRateChart = (
             position: ['65%', '55%'],
             backgroundColor: null,
             borderWidth: 0,
-            extraCssText: 'box-shadow: 0 0 0 transparent;',
+            extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
             formatter: () => {
                 return `
                         <div style="position: relative;padding: 12px;background: #FFFFFF;box-shadow: 0px 2px 8px 0px #D9DEEC;border-radius: 4px;border: 1px solid #D9DFEE;">
@@ -895,7 +895,7 @@ export const useRelayedTrend = () => {
             backgroundColor: null,
             borderWidth: 0,
             padding: 0,
-            extraCssText: 'box-shadow: 0 0 0 transparent;',
+            extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
             formatter: (params: any) => {
                 // <div style="width: 100%; height: 8px; background-color: rgba(61, 80, 255, 0.1)"></div>
                 if (widthClient.value > tooltipBreakpoint) {
@@ -1278,9 +1278,9 @@ export const useRelatedAssetChart = (
             backgroundColor: null,
             borderWidth: 0,
             padding: 0,
-            extraCssText: 'box-shadow: 0 0 0 transparent;',
+            extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
             formatter: (params: any) => {
-                return `<div style="display: flex; align-items: center; transform: translate(6px, 0)">
+                return `<div style="display: flex; align-items: center; transform: translate(6px, 0);">
                             <div
                                 style="
                                 display: flex;
