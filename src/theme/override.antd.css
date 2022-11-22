@@ -151,6 +151,8 @@
 
 .ant-pagination {
     display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
 }
 .ant-pagination li {
     display: flex;
