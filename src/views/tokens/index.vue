@@ -83,13 +83,15 @@
             </template>
 
             <template #supply="{ record, column }">
-                <div>{{
-                    `${formatSupply(
-                        record[column.key],
-                        `${record.base_denom}${record.chain_id}`,
-                        ibcBaseDenoms
-                    )}`
-                }}</div>
+                <div
+                    >{{
+                        `${formatSupply(
+                            record[column.key],
+                            record.base_denom + record.chain_id,
+                            ibcBaseDenoms
+                        )}`
+                    }}
+                </div>
             </template>
 
             <template #ibc_transfer_amount="{ record, column }">
