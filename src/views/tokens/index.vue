@@ -84,7 +84,11 @@
 
             <template #supply="{ record, column }">
                 <div>{{
-                    `${formatSupply(record[column.key], record.base_denom, ibcBaseDenoms)}`
+                    `${formatSupply(
+                        record[column.key],
+                        `${record.base_denom}${record.chain_id}`,
+                        ibcBaseDenoms
+                    )}`
                 }}</div>
             </template>
 

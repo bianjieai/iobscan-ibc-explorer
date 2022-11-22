@@ -788,13 +788,13 @@ export const useSelectedSearch = (
     const formatTransferType = (type: string) => {
         switch (type) {
             case TRANSFER_TYPE.transfer.type:
-                return TRANSFER_TYPE.transfer.short;
+                return TRANSFER_TYPE.transfer.label;
             case TRANSFER_TYPE.receive.type:
-                return TRANSFER_TYPE.receive.short;
+                return TRANSFER_TYPE.receive.label;
             case TRANSFER_TYPE.acknowledge.type:
-                return TRANSFER_TYPE.acknowledge.short;
+                return TRANSFER_TYPE.acknowledge.label;
             case TRANSFER_TYPE.timeout.type:
-                return TRANSFER_TYPE.timeout.short;
+                return TRANSFER_TYPE.timeout.label;
         }
     };
     return {
