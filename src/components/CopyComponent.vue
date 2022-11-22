@@ -22,8 +22,8 @@
     let isShowCopied = ref<boolean>(false);
     let copyTimer = ref<number>(0);
     const handleCopy = () => {
-        clearTimeout(copyTimer.value);
         if (isShowCopied.value) return;
+        clearTimeout(copyTimer.value);
         const clipboard = new Clipboard('#tag_copy');
         clipboard.on('success', () => {
             // 释放内存
