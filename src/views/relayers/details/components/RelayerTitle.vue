@@ -11,7 +11,7 @@
         <div class="relayer_title__wrap">
             <div class="relayer_title__text">
                 <ImageLoadStatus
-                    class="relayer_title__icon"
+                    class="relayer_title__icon_mobile"
                     :display-image-src="displayRelayerImgSrc"
                     :is-display-special-img="true"
                     :img-text="title"
