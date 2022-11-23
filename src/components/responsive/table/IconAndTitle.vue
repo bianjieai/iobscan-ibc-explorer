@@ -7,19 +7,13 @@
                 class="icon mr-8"
                 :class="{ small_icon: iconSize === TableCellIconSize.SMALL }"
             />
-            <div v-else>
-                <img
-                    v-if="displayRelayerImageSrc"
-                    :src="displayRelayerImageSrc"
-                    alt=""
-                    class="icon mr-8 small_icon"
-                />
-                <div v-else class="bg_text_c flex items-center justify-center mr-8">
-                    <div class="bg_text leading_none">{{
-                        (title.substring(0, 1) || '').toUpperCase()
-                    }}</div>
-                </div>
-            </div>
+            <ImageLoadStatus
+                v-else
+                class="relayer_title__icon"
+                :display-image-src="displayRelayerImageSrc"
+                :is-display-special-img="true"
+                :img-text="title"
+            ></ImageLoadStatus>
         </div>
         <div
             class="flex flex-col justify-around"
@@ -58,7 +52,7 @@
         TTableCellIconSize
     } from '@/types/interface/components/table.interface';
     import { RELAYER_DEFAULT_ICON, UNKNOWN } from '@/constants';
-    import { handleImgLoadingSussess } from '@/utils/imageTools';
+    import { useImageLoadStatus } from '@/composables';
 
     // 说明 现已将 token chain 拆除。 仅剩relayer
     interface IProps {
@@ -75,25 +69,14 @@
         imgSrc: '',
         iconSize: TableCellIconSize.NORMAL
     });
+    const { imgSrc } = toRefs(props);
 
     // relayer 处理
     const relayerName = computed(() => props.title || UNKNOWN);
-
-    const successLoadingImg = ref(false);
-
-    watch(
-        () => props.imgSrc,
-        (newValue) => {
-            handleImgLoadingSussess(newValue, successLoadingImg);
-        },
-        {
-            immediate: true
-        }
-    );
-
+    const { isSuccessLoadingImg } = useImageLoadStatus(imgSrc);
     const displayRelayerImageSrc = computed(() => {
-        return successLoadingImg.value
-            ? props.imgSrc
+        return isSuccessLoadingImg.value
+            ? imgSrc.value
             : relayerName.value === UNKNOWN
             ? RELAYER_DEFAULT_ICON
             : '';
@@ -127,21 +110,5 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width: 80px;
-    }
-
-    .bg_text_c {
-        width: 32px;
-        height: 32px;
-        background: url('../../../assets/relayers/default_bg.png') no-repeat center center;
-        border-radius: 50%;
-    }
-
-    .bg_text {
-        font-size: 22px;
-        background: linear-gradient(to right, #b3bbff, #8594ff);
-        background-size: cover;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-        display: inline-block;
     }
 </style>

@@ -6,4 +6,7 @@ export const handleImgLoadingSussess = (imgSrc: string, isSuccess: Ref<boolean>)
     img.onload = () => {
         isSuccess.value = true;
     };
+    img.onerror = () => {
+        isSuccess.value = false;
+    };
 };

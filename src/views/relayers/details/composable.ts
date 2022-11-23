@@ -7,7 +7,7 @@ import {
     getTransferTypeTxsAPI
 } from '@/api/relayers';
 import { IDataItem } from '@/components/BjSelect/interface';
-import { useMatchBaseDenom } from '@/composables';
+import { useImageLoadStatus, useMatchBaseDenom } from '@/composables';
 import {
     CHAINNAME,
     CHAIN_DEFAULT_ICON,
@@ -51,7 +51,6 @@ import {
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatString } from '@/utils/stringTools';
 import { calculatePercentage, getRoundingOffBigNumber } from '@/utils/calculate';
-import { handleImgLoadingSussess } from '@/utils/imageTools';
 import { getTextWidth } from '@/utils/urlTools';
 import { axiosCancel } from '@/utils/axios';
 
@@ -65,7 +64,6 @@ export const useGetRelayerDetailsInfo = () => {
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
     const channelPairsInfo = ref<IChannelChain[]>([]);
     const isShowModal = ref<boolean>(false);
-    const successLoadingImg = ref(false);
     // relayer_name 适配
     const displayAdaptor = ref<boolean>(false);
     // chain_name 先左右排，再上下排
@@ -160,11 +158,9 @@ export const useGetRelayerDetailsInfo = () => {
             isShowModal.value ? '--' : servedChainsInfo.value?.length
         } blockchains served`;
     });
-    watch(relayerIcon, (newValue) => {
-        handleImgLoadingSussess(newValue, successLoadingImg);
-    });
+    const { isSuccessLoadingImg } = useImageLoadStatus(relayerIcon);
     const displayRelayerImgSrc = computed(() => {
-        return successLoadingImg.value
+        return isSuccessLoadingImg.value
             ? relayerIcon.value
             : !relayerName
             ? RELAYER_DEFAULT_ICON
