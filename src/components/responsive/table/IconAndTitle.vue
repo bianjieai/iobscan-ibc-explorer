@@ -9,7 +9,7 @@
             />
             <div v-else>
                 <img
-                    v-if="relayerImageSrc"
+                    v-if="displayRelayerImageSrc"
                     :src="displayRelayerImageSrc"
                     alt=""
                     class="icon mr-8 small_icon"
@@ -81,20 +81,10 @@
 
     const successLoadingImg = ref(false);
 
-    const relayerImageSrc = computed(() => {
-        if (props.imgSrc) {
-            return props.imgSrc;
-        } else if (relayerName.value === UNKNOWN) {
-            return RELAYER_DEFAULT_ICON;
-        } else {
-            return '';
-        }
-    });
-
     watch(
-        () => relayerImageSrc,
+        () => props.imgSrc,
         (newValue) => {
-            handleImgLoadingSussess(newValue.value, successLoadingImg);
+            handleImgLoadingSussess(newValue, successLoadingImg);
         },
         {
             immediate: true
@@ -102,7 +92,11 @@
     );
 
     const displayRelayerImageSrc = computed(() => {
-        return successLoadingImg.value ? relayerImageSrc.value : RELAYER_DEFAULT_ICON;
+        return successLoadingImg.value
+            ? props.imgSrc
+            : relayerName.value === UNKNOWN
+            ? RELAYER_DEFAULT_ICON
+            : '';
     });
 
     const emit = defineEmits<{

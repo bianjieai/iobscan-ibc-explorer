@@ -160,20 +160,15 @@ export const useGetRelayerDetailsInfo = () => {
             isShowModal.value ? '--' : servedChainsInfo.value?.length
         } blockchains served`;
     });
-    const relayerImgSrc = computed(() => {
-        if (relayerIcon) {
-            return relayerIcon.value;
-        } else if (!relayerName) {
-            return RELAYER_DEFAULT_ICON;
-        } else {
-            return '';
-        }
-    });
-    watch(relayerImgSrc, (newValue) => {
+    watch(relayerIcon, (newValue) => {
         handleImgLoadingSussess(newValue, successLoadingImg);
     });
     const displayRelayerImgSrc = computed(() => {
-        return successLoadingImg.value ? relayerImgSrc.value : RELAYER_DEFAULT_ICON;
+        return successLoadingImg.value
+            ? relayerIcon.value
+            : !relayerName
+            ? RELAYER_DEFAULT_ICON
+            : '';
     });
     // relayer_name
     const { width: widthClient } = useWindowSize();
@@ -209,7 +204,6 @@ export const useGetRelayerDetailsInfo = () => {
         channelPairsInfo,
         isShowModal,
         subTitle,
-        relayerImgSrc,
         displayRelayerImgSrc,
         displayAdaptor
     };

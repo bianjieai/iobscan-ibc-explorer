@@ -1,6 +1,11 @@
 <template>
     <div class="relayer_title">
-        <img v-if="relayerImgSrc" class="relayer_title__icon" :src="displayRelayerImgSrc" alt="" />
+        <img
+            v-if="displayRelayerImgSrc"
+            class="relayer_title__icon"
+            :src="displayRelayerImgSrc"
+            alt=""
+        />
         <div
             v-else
             class="relayer_title__icon relayer_title__icon_wrap flex items-center justify-center"
@@ -12,7 +17,7 @@
         <div class="relayer_title__wrap">
             <div class="relayer_title__text">
                 <img
-                    v-if="relayerImgSrc"
+                    v-if="displayRelayerImgSrc"
                     class="relayer_title__icon_mobile"
                     :src="displayRelayerImgSrc"
                     alt=""
@@ -71,7 +76,6 @@
         title: string;
         titleSuffix?: string;
         subtitle?: string;
-        relayerImgSrc?: string;
         displayRelayerImgSrc?: string;
         displayAdaptor?: boolean;
     }

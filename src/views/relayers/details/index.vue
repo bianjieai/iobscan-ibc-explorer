@@ -5,7 +5,6 @@
             :title-suffix="'Relayer Details'"
             :title-icon="'icon-a-chainsserved'"
             :subtitle="subTitle"
-            :relayer-img-src="relayerImgSrc"
             :display-relayer-img-src="displayRelayerImgSrc"
             :display-adaptor="displayAdaptor"
         />
@@ -140,7 +139,6 @@
         channelPairsInfo,
         isShowModal,
         subTitle,
-        relayerImgSrc,
         displayRelayerImgSrc,
         displayAdaptor
     } = useGetRelayerDetailsInfo();
