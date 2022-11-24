@@ -1,7 +1,11 @@
 <template>
     <div
         class="rload_img flex items-center justify-center mr-8"
-        :style="{ width: width + 'px', height: height + 'px' }"
+        :class="{ rload_img__default_bg: imgText }"
+        :style="{
+            width: width + 'px',
+            height: height + 'px'
+        }"
     >
         <div class="rload_img__text">
             {{ (imgText.substring(0, 1) || '').toUpperCase() }}
@@ -23,8 +27,10 @@
 
 <style lang="less" scoped>
     .rload_img {
-        background: url('../../../../assets/relayers/default_bg.png') no-repeat center center;
         border-radius: 50%;
+        &__default_bg {
+            background: url('../../../../assets/relayers/default_bg.png') no-repeat center center;
+        }
         &__text {
             font-size: 22px;
             background: linear-gradient(to right, #b3bbff, #8594ff);

@@ -1,16 +1,16 @@
 <template>
     <div class="image_status flex justify-center items-center mr-8">
-        <loading-component
+        <img
             v-if="isLoadingImg"
-            :type="LoadingType.container"
-            :width="width"
-            :height="height"
+            :style="{ width: width + 'px', height: height + 'px' }"
+            :src="IMAGE_LOADING"
+            alt=""
         />
         <img
             v-else-if="!isLoadingImg && displayImageSrc(successImg, defaultImg)"
+            v-lazyload="displayImageSrc(successImg, defaultImg)"
             class="image_status__img"
             :style="{ width: width + 'px', height: height + 'px' }"
-            :src="displayImageSrc(successImg, defaultImg)"
             alt=""
         />
         <slot v-else></slot>
@@ -19,7 +19,7 @@
 
 <script setup lang="ts">
     import { useImageLoadStatus } from '@/composables';
-    import { LoadingType } from '@/constants';
+    import { IMAGE_LOADING } from '@/constants';
 
     interface IImageLoadStatus {
         successImg: string;
