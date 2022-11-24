@@ -5,7 +5,8 @@
             :title-suffix="'Relayer Details'"
             :title-icon="'icon-a-chainsserved'"
             :subtitle="subTitle"
-            :display-relayer-img-src="displayRelayerImgSrc"
+            :relayer-icon="relayerIcon"
+            :default-relayer-img="defaultRelayerImg"
             :display-adaptor="displayAdaptor"
         />
         <layer-block class="relayer_details__statistic">
@@ -131,6 +132,7 @@
 
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const {
+        relayerIcon,
         relayerName,
         servedChainsInfo,
         relayedTotalTxs,
@@ -139,7 +141,7 @@
         channelPairsInfo,
         isShowModal,
         subTitle,
-        displayRelayerImgSrc,
+        defaultRelayerImg,
         displayAdaptor
     } = useGetRelayerDetailsInfo();
     const {

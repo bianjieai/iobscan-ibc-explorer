@@ -7,7 +7,7 @@ import {
     getTransferTypeTxsAPI
 } from '@/api/relayers';
 import { IDataItem } from '@/components/BjSelect/interface';
-import { useImageLoadStatus, useMatchBaseDenom } from '@/composables';
+import { useMatchBaseDenom } from '@/composables';
 import {
     CHAINNAME,
     CHAIN_DEFAULT_ICON,
@@ -64,6 +64,7 @@ export const useGetRelayerDetailsInfo = () => {
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
     const channelPairsInfo = ref<IChannelChain[]>([]);
     const isShowModal = ref<boolean>(false);
+    const defaultRelayerImg = ref<string>('');
     // relayer_name 适配
     const displayAdaptor = ref<boolean>(false);
     // chain_name 先左右排，再上下排
@@ -158,14 +159,9 @@ export const useGetRelayerDetailsInfo = () => {
             isShowModal.value ? '--' : servedChainsInfo.value?.length
         } blockchains served`;
     });
-    const { isSuccessLoadingImg } = useImageLoadStatus(relayerIcon);
-    const displayRelayerImgSrc = computed(() => {
-        return isSuccessLoadingImg.value
-            ? relayerIcon.value
-            : !relayerName
-            ? RELAYER_DEFAULT_ICON
-            : '';
-    });
+    if (!relayerName) {
+        defaultRelayerImg.value = RELAYER_DEFAULT_ICON;
+    }
     // relayer_name
     const { width: widthClient } = useWindowSize();
     watch([relayerName, widthClient], ([newRelayerName, newWidthClient]) => {
@@ -192,6 +188,7 @@ export const useGetRelayerDetailsInfo = () => {
         getRelayerDetailsInfo();
     });
     return {
+        relayerIcon,
         relayerName,
         servedChainsInfo,
         relayedTotalTxs,
@@ -200,7 +197,7 @@ export const useGetRelayerDetailsInfo = () => {
         channelPairsInfo,
         isShowModal,
         subTitle,
-        displayRelayerImgSrc,
+        defaultRelayerImg,
         displayAdaptor
     };
 };

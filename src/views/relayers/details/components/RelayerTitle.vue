@@ -2,22 +2,24 @@
     <div class="relayer_title">
         <ImageLoadStatus
             class="relayer_title__icon"
-            :display-image-src="displayRelayerImgSrc"
-            :is-display-special-img="true"
-            :img-text="title"
+            :success-img="relayerIcon"
+            :default-img="defaultRelayerImg"
             :width="40"
             :height="40"
-        ></ImageLoadStatus>
+        >
+            <RLoadErrorImage :img-text="title" :width="40" :height="40" />
+        </ImageLoadStatus>
         <div class="relayer_title__wrap">
             <div class="relayer_title__text">
                 <ImageLoadStatus
                     class="relayer_title__icon_mobile"
-                    :display-image-src="displayRelayerImgSrc"
-                    :is-display-special-img="true"
-                    :img-text="title"
+                    :success-img="relayerIcon"
+                    :default-img="defaultRelayerImg"
                     :width="40"
                     :height="40"
-                ></ImageLoadStatus>
+                >
+                    <RLoadErrorImage :img-text="title" :width="40" :height="40" />
+                </ImageLoadStatus>
                 <a-popover v-if="displayAdaptor" destroy-tooltip-on-hide>
                     <template #content>
                         <span>{{ title }}</span>
@@ -62,12 +64,14 @@
 </template>
 
 <script lang="ts" setup>
+    import RLoadErrorImage from './RLoadErrorImage.vue';
     interface IProps {
-        titleIcon?: string;
+        relayerIcon: string;
+        defaultRelayerImg: string;
         title: string;
+        titleIcon?: string;
         titleSuffix?: string;
         subtitle?: string;
-        displayRelayerImgSrc?: string;
         displayAdaptor?: boolean;
     }
 
@@ -80,10 +84,6 @@
     .relayer_title {
         .flex(row, nowrap, flex-start, center);
         &__icon {
-            margin-right: 8px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
         }
         &__icon_mobile {
             display: none;
@@ -247,10 +247,6 @@
             }
             &__icon_mobile {
                 .flex(row, nowrap, center, center);
-                margin-right: 8px;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
             }
             &__wrap {
                 width: 100%;

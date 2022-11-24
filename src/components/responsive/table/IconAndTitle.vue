@@ -7,13 +7,9 @@
                 class="icon mr-8"
                 :class="{ small_icon: iconSize === TableCellIconSize.SMALL }"
             />
-            <ImageLoadStatus
-                v-else
-                class="relayer_title__icon"
-                :display-image-src="displayRelayerImageSrc"
-                :is-display-special-img="true"
-                :img-text="title"
-            ></ImageLoadStatus>
+            <ImageLoadStatus v-else :success-img="imgSrc" :default-img="defaultImg">
+                <RLoadErrorImage :img-text="title" />
+            </ImageLoadStatus>
         </div>
         <div
             class="flex flex-col justify-around"
@@ -46,13 +42,13 @@
 </template>
 
 <script setup lang="ts">
+    import RLoadErrorImage from '@/views/relayers/details/components/RLoadErrorImage.vue';
     import { computed } from 'vue';
     import {
         TableCellIconSize,
         TTableCellIconSize
     } from '@/types/interface/components/table.interface';
     import { RELAYER_DEFAULT_ICON, UNKNOWN } from '@/constants';
-    import { useImageLoadStatus } from '@/composables';
 
     // 说明 现已将 token chain 拆除。 仅剩relayer
     interface IProps {
@@ -73,15 +69,10 @@
 
     // relayer 处理
     const relayerName = computed(() => props.title || UNKNOWN);
-    const { isSuccessLoadingImg } = useImageLoadStatus(imgSrc);
-    const displayRelayerImageSrc = computed(() => {
-        return isSuccessLoadingImg.value
-            ? imgSrc.value
-            : relayerName.value === UNKNOWN
-            ? RELAYER_DEFAULT_ICON
-            : '';
-    });
-
+    const defaultImg = ref<string>('');
+    if (relayerName.value === UNKNOWN) {
+        defaultImg.value = RELAYER_DEFAULT_ICON;
+    }
     const emit = defineEmits<{
         (e: 'clickTitle'): void;
     }>();

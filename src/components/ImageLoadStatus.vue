@@ -1,57 +1,44 @@
 <template>
-    <div class="image_status">
-        <!-- 有明确要展示的图片 -->
+    <div class="image_status flex justify-center items-center mr-8">
+        <loading-component
+            v-if="isLoadingImg"
+            :type="LoadingType.container"
+            :width="width"
+            :height="height"
+        />
         <img
-            v-if="displayImageSrc"
-            class="image_status__img mr-8"
+            v-else-if="!isLoadingImg && displayImageSrc(successImg, defaultImg)"
+            class="image_status__img"
             :style="{ width: width + 'px', height: height + 'px' }"
-            :src="displayImageSrc"
+            :src="displayImageSrc(successImg, defaultImg)"
             alt=""
         />
-        <!-- 需要特殊展示的图片 -->
-        <div
-            v-else-if="!displayImageSrc && isDisplaySpecialImg"
-            class="image_status__img image_status__special_img flex items-center justify-center mr-8"
-            :style="{ width: width + 'px', height: height + 'px' }"
-        >
-            <div class="image_status__text">
-                {{ (imgText.substring(0, 1) || '').toUpperCase() }}
-            </div>
-        </div>
+        <slot v-else></slot>
     </div>
 </template>
 
 <script setup lang="ts">
+    import { useImageLoadStatus } from '@/composables';
+    import { LoadingType } from '@/constants';
+
     interface IImageLoadStatus {
-        displayImageSrc?: string;
-        isDisplaySpecialImg?: boolean; // 是否展示特殊的图片，默认不展示
-        imgText?: string; // 需要特殊展示的文案
+        successImg: string;
+        defaultImg: string;
         width?: number;
         height?: number;
     }
-    withDefaults(defineProps<IImageLoadStatus>(), {
-        isDisplaySpecialImg: false,
-        imgText: '',
+    const props = withDefaults(defineProps<IImageLoadStatus>(), {
         width: 32,
         height: 32
     });
+    const { successImg } = toRefs(props);
+    const { isLoadingImg, displayImageSrc } = useImageLoadStatus(successImg);
 </script>
 
 <style lang="less" scoped>
     .image_status {
         &__img {
             border-radius: 50%;
-        }
-        &__special_img {
-            background: url('../assets/relayers/default_bg.png') no-repeat center center;
-            border-radius: 50%;
-        }
-        &__text {
-            font-size: 22px;
-            background: linear-gradient(to right, #b3bbff, #8594ff);
-            background-size: cover;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
     }
 </style>

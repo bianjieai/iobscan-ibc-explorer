@@ -255,14 +255,19 @@ export const usePickerPlaceholder = () => {
 // 根据图片加载状态展示对应的图片
 export const useImageLoadStatus = (image: Ref<string>) => {
     const isSuccessLoadingImg = ref<boolean>(false);
+    const isLoadingImg = ref<boolean>(true);
     watch(
         image,
         (newImage) => {
-            handleImgLoadingSussess(newImage, isSuccessLoadingImg);
+            handleImgLoadingSussess(newImage, isSuccessLoadingImg, isLoadingImg);
         },
         { immediate: true }
     );
+    const displayImageSrc = (successImg: string, defaultImg: string) => {
+        return isSuccessLoadingImg.value ? successImg : defaultImg;
+    };
     return {
-        isSuccessLoadingImg
+        isLoadingImg,
+        displayImageSrc
     };
 };
