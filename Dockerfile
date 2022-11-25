@@ -1,16 +1,22 @@
 FROM node:14.4.0-alpine3.12 AS builder
 WORKDIR /app
 COPY . .
-RUN apk add make git &&  yarn install && yarn build
-# npm i cnpm -g && cnpm install && npm run build
+ARG ENVIRONMENT=dev
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories && \
+apk add make git && npm config set registry https://registry.npm.taobao.org && \
+npm install -g pnpm@6.10.3 && pnpm config set registry https://registry.npm.taobao.org && pnpm install && pnpm run build:$ENVIRONMENT
 
 FROM nginx:1.19-alpine
 RUN echo -e 'server {\n\
   root /usr/share/nginx/html;\n\
-    location /api/ {\n\
-    proxy_pass http://$BACKEND/;\n\
+  location / {\n\
+    if ($request_filename ~* index.html|.*\.ico$)\n\
+    {\n\
+        add_header Cache-Control "no-cache";\n\
     }\n\
-}' > /nginx.template
+    try_files $URI $URI/ /index.html;\n\
+  }\n\
+}' > /etc/nginx/conf.d/default.conf
 
 COPY --from=builder /app/dist/ /usr/share/nginx/html/
-CMD sh -c "envsubst < /nginx.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
+CMD sh -c "exec nginx -g 'daemon off;'"
