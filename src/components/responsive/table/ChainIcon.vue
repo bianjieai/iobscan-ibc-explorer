@@ -30,19 +30,16 @@
             >
 
             <div v-if="chainInfo.subtitle !== '--'">
-                <a-popover
-                    v-if="formatChainID(chainInfo.subtitle)?.length >= 20"
-                    placement="bottom"
-                >
+                <a-popover v-if="chainInfo.subtitle?.length >= 20" placement="bottom">
                     <template #content>
-                        <div class="popover_c">{{ formatChainID(chainInfo.subtitle) }}</div>
+                        <div class="popover_c">{{ chainInfo.subtitle }}</div>
                     </template>
                     <div v-if="!noSubtitle" class="subtitle leading_none tag">{{
-                        formatChainID(chainInfo.subtitle)
+                        chainInfo.subtitle
                     }}</div>
                 </a-popover>
                 <div v-else-if="!noSubtitle" class="subtitle leading_none tag">{{
-                    formatChainID(chainInfo.subtitle)
+                    chainInfo.subtitle
                 }}</div>
             </div>
             <div v-else-if="!noSubtitle" class="subtitle leading_none tag">--</div>
@@ -57,12 +54,11 @@
         TableCellIconSize,
         TTableCellIconSize
     } from '@/types/interface/components/table.interface';
-    import ChainHelper from '@/helper/chainHelper';
     import { CHAIN_DEFAULT_ICON, UNKNOWN } from '@/constants';
 
     interface IProps {
         iconSize?: TTableCellIconSize;
-        chainId: string;
+        chain: string;
         chainsData: IIbcchain[];
         titleCanClick?: boolean;
         title?: string;
@@ -85,11 +81,11 @@
     });
 
     const chainInfo = computed(() => {
-        const filterData = props.chainsData.find((item) => item.chain_id === props.chainId);
+        const filterData = props.chainsData.find((item) => item.chain_name === props.chain);
         if (filterData) {
             return {
-                title: filterData.chain_name,
-                subtitle: filterData.chain_id,
+                title: filterData.pretty_name,
+                subtitle: filterData.current_chain_id,
                 imgSrc: filterData.icon ? filterData.icon : CHAIN_DEFAULT_ICON
             };
         } else {
@@ -100,10 +96,6 @@
             };
         }
     });
-
-    const formatChainID = (chainId: string) => {
-        return ChainHelper.formatChainId(chainId);
-    };
 
     const emits = defineEmits<{
         (e: 'clickTitle'): void;

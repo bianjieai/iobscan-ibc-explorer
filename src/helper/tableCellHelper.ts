@@ -22,10 +22,10 @@ export const formatPrice = (price: number | string, numberOfDecimal: number | un
     return `${formatBigNumber(Number(price), numberOfDecimal)}`;
 };
 
-const getScale = (denomAndChainID?: string, baseDenomData?: IBaseDenom[]) => {
-    if (Array.isArray(baseDenomData) && denomAndChainID) {
+const getScale = (denomAndChain?: string, baseDenomData?: IBaseDenom[]) => {
+    if (Array.isArray(baseDenomData) && denomAndChain) {
         const filterData = baseDenomData.filter(
-            (item) => item.denom + item.chain_id === denomAndChainID
+            (item) => item.denom + item.chain === denomAndChain
         );
         if (filterData.length > 0) {
             return filterData[0].scale ?? 0;
@@ -61,7 +61,7 @@ export const formatSupply = (
 
 export const formatAmount = (
     amount: number | string,
-    denomAndChainID?: string,
+    denomAndChain?: string,
     baseDenomData?: IBaseDenom[],
     numberOfDecimal = 2
 ) => {
@@ -71,13 +71,13 @@ export const formatAmount = (
             popover: '--'
         };
     }
-    if (!denomAndChainID && !baseDenomData) {
+    if (!denomAndChain && !baseDenomData) {
         return {
             title: formatBigNumber(amount, numberOfDecimal),
             popover: formatBigNumber(amount, numberOfDecimal)
         };
     }
-    const scale = getScale(denomAndChainID, baseDenomData);
+    const scale = getScale(denomAndChain, baseDenomData);
     let result = 0;
 
     if (scale > 0) {

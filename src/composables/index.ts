@@ -157,26 +157,29 @@ export const useBoundary = (ele: HTMLElement) => {
 };
 
 // 获取对应 ChainInfo，Todo 考虑 ibcChains 会存在情况
-export const useMatchChainInfo = (chainId: string) => {
+export const useMatchChainInfo = (chain: string) => {
     let chainIcon = CHAIN_DEFAULT_ICON;
-    let chainName = DEFAULT_DISPLAY_TEXT;
+    let prettyName = DEFAULT_DISPLAY_TEXT;
+    let currentChainId = '';
     const { ibcChains } = useIbcChains(DATA_REFRESH_GAP);
-    const matchChain = ibcChains.value.all.find((item) => item.chain_id === chainId);
+    const matchChain = ibcChains.value.all.find((item) => item.chain_name === chain);
     if (matchChain) {
         chainIcon = matchChain.icon;
-        chainName = matchChain.chain_name;
+        prettyName = matchChain.pretty_name;
+        currentChainId = matchChain.current_chain_id;
     }
     return {
+        currentChainId,
         chainIcon,
-        chainName
+        prettyName
     };
 };
 
-export const useMatchBaseDenom = async (chainId: string, denom: string, amount: string) => {
+export const useMatchBaseDenom = async (chain: string, denom: string, amount: string) => {
     let feeAmount = amount;
     let tokenIcon = TOKEN_DEFAULT_ICON;
     let symbol = denom;
-    const matchBaseDenom = await getBaseDenomByKey(chainId, denom);
+    const matchBaseDenom = await getBaseDenomByKey(chain, denom);
     if (matchBaseDenom) {
         feeAmount = `${moveDecimal(Number(amount) || 0, -matchBaseDenom.scale)}`;
         tokenIcon = matchBaseDenom.icon || TOKEN_DEFAULT_ICON;
@@ -202,8 +205,8 @@ export const useGetIbcDenoms = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcBaseDenoms } = storeToRefs(ibcStatisticsChainsStore);
     const getIbcBaseDenom = ibcStatisticsChainsStore.getIbcBaseDenomsAction;
-    const getBaseDenomInfoByDenom = (denom: string, chainId: string) => {
-        return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain_id == chainId);
+    const getBaseDenomInfoByDenom = (denom: string, chain: string) => {
+        return ibcBaseDenoms.value.find((item) => item.denom == denom && item.chain == chain);
     };
     const ibcBaseDenomsSorted = computed(() => {
         const tokens: IBaseDenom[] = [];

@@ -51,10 +51,10 @@ export const COLUMNS: TableColumnsType = [
         sortDirections: ['descend', 'ascend']
     },
     {
-        dataIndex: 'chain_id',
-        key: 'chain_id',
+        dataIndex: 'chain',
+        key: 'chain',
         title: 'Original Chain',
-        sorter: (a, b) => a.chain_id.localeCompare(b.chain_id)
+        sorter: (a, b) => a.chain.localeCompare(b.chain)
     }
 ];
 
@@ -65,10 +65,10 @@ export const IBC_COLUMNS: TableColumnsType = [
         title: 'Name'
     },
     {
-        dataIndex: 'chain_id',
-        key: 'chain_id',
+        dataIndex: 'chain',
+        key: 'chain',
         title: 'Current Chain',
-        sorter: (a, b) => a.chain_id.localeCompare(b.chain_id)
+        sorter: (a, b) => a.chain.localeCompare(b.chain)
     },
     {
         dataIndex: 'token_type',

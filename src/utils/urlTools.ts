@@ -42,7 +42,7 @@ export const urlParser = (url = document.location.toString()) => {
         return {};
     }
 };
-// 计算文本宽度 --> TextMetrics.width 是只读属性，chain_id 长度判断时需加 Icon 长度和间距
+// 计算文本宽度 --> TextMetrics.width 是只读属性，chain 长度判断时需加 Icon 长度和间距
 export const getTextWidth = (text: string, font = '14px GolosUI_Medium') => {
     if (!text) return 0;
     const canvas: HTMLCanvasElement = document.createElement('canvas');

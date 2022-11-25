@@ -4,14 +4,14 @@ import { IRequestPagination2 } from '@/types/interface/index.interface';
 export interface IRequestIbcTxs extends IRequestPagination2 {
     date_range?: string;
     status?: string;
-    chain_id?: string;
+    chain?: string;
     base_denom?: string;
-    base_denom_chain_id?: string;
+    base_denom_chain?: string;
     denom?: string;
     start_time?: string;
 }
 export interface IRequestIbcSource {
-    chain_id: string;
+    chain: string;
     msg_type: string;
 }
 
@@ -27,8 +27,8 @@ export interface IIbcTx {
     sequence: string;
     dc_channel: string;
     sc_channel: string;
-    sc_chain_id: string;
-    dc_chain_id: string;
+    sc_chain: string;
+    dc_chain: string;
     sc_tx_info: {
         hash: string;
         msg_amount: IAmountDenom;
@@ -37,7 +37,7 @@ export interface IIbcTx {
         hash: string;
     };
     base_denom: string;
-    base_denom_chain_id: string;
+    base_denom_chain: string;
     denoms: IDenomTrace;
     tx_time: number;
     end_time: number;
@@ -50,7 +50,7 @@ export interface IIbcTxCount {
 }
 export interface ITxInfo {
     address: string;
-    chain_id: string;
+    chain: string;
     channel_id: string;
     port_id: string;
     connection_id: string;
@@ -67,7 +67,7 @@ export interface IRelayerInfo {
 }
 export interface ITokenInfo {
     base_denom: string;
-    base_denom_chain_id: string;
+    base_denom_chain: string;
     send_token: {
         denom: string;
         denom_path: string;
@@ -104,7 +104,7 @@ export interface IIbcTxSourceInfo {
 export interface IIbcTxInfo {
     sc_tx_info: IIbcTxSourceInfo;
     dc_tx_info: IIbcTxSourceInfo | null;
-    refund_tx_info: IIbcTxSourceInfo | null;
+    ack_timeout_tx_info: IIbcTxSourceInfo | null;
 }
 export interface IUseTokenInfo {
     tokenInfo: ITokenInfo | undefined;
@@ -187,9 +187,9 @@ export interface DataItem {
 export interface ITransfersQueryParams {
     date_range: number[];
     status: string[] | undefined;
-    chain_id: string | undefined;
+    chain: string | undefined;
     base_denom: string | undefined;
-    base_denom_chain_id: string | undefined;
+    base_denom_chain: string | undefined;
     denom: string | undefined;
 }
 export interface IIbcSearchCondition {

@@ -40,7 +40,7 @@ export const useGetChannelsList = () => {
                             if (items.length < allParams.page_size) {
                                 allData = [...(allData || []), ...items];
                                 loading && (loading.value = false);
-                                channelsList.value = ChainHelper.sortByChainName(
+                                channelsList.value = ChainHelper.sortByPrettyName(
                                     allData,
                                     allParams.chain
                                 );
@@ -51,7 +51,7 @@ export const useGetChannelsList = () => {
                             }
                         } else {
                             loading && (loading.value = false);
-                            channelsList.value = ChainHelper.sortByChainName(
+                            channelsList.value = ChainHelper.sortByPrettyName(
                                 allData,
                                 allParams.chain
                             );
@@ -62,14 +62,14 @@ export const useGetChannelsList = () => {
                     }
                 } else {
                     loading && (loading.value = false);
-                    channelsList.value = ChainHelper.sortByChainName(allData, allParams.chain);
+                    channelsList.value = ChainHelper.sortByPrettyName(allData, allParams.chain);
                     console.error(message);
                 }
             } catch (error) {
                 if (!axiosCancel(error)) {
                     loading && (loading.value = false);
                 }
-                channelsList.value = ChainHelper.sortByChainName(allData, allParams.chain);
+                channelsList.value = ChainHelper.sortByPrettyName(allData, allParams.chain);
                 console.error(error);
             } finally {
                 if (!params.chain && !params.status) {
@@ -126,8 +126,8 @@ export const useChannelsSelected = (
             },
             {
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
-                    title: v.chain_name,
-                    id: v.chain_id,
+                    title: v.pretty_name,
+                    id: v.chain_name,
                     icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
@@ -147,8 +147,8 @@ export const useChannelsSelected = (
             chainIds.value = res;
         }
 
-        const chain_id = chainIds.value.join(',');
-        searchChain.value = chain_id !== 'allchain,allchain' ? chain_id : '';
+        const chain = chainIds.value.join(',');
+        searchChain.value = chain !== 'allchain,allchain' ? chain : '';
         pageUrl = urlPageParser(pageUrl, {
             key: 'chain',
             value: searchChain.value as string

@@ -11,7 +11,7 @@ import {
     PAGE_PARAMETERS,
     CHAIN_DEFAULT_ICON,
     UNKNOWN,
-    CHAINNAME,
+    PRETTYNAME,
     DEFAULT_DISPLAY_TEXT
 } from '@/constants';
 import { useRouter } from 'vue-router';
@@ -35,21 +35,22 @@ export const useGetRelayersList = (loading: Ref<boolean>) => {
             const chainInfo = await ChainHelper.getChainInfoByKey(servedChainsInfo.chain);
             formatChainPopoverProp.push({
                 chain: servedChainsInfo.chain,
-                chainName: chainInfo?.chain_name || UNKNOWN,
+                prettyName: chainInfo?.pretty_name || UNKNOWN,
                 chainLogo: chainInfo?.icon || CHAIN_DEFAULT_ICON,
                 address: [...servedChainsInfo.addresses]
             });
         }
         const irishub = formatChainPopoverProp.filter(
-            (item) => item.chainName === CHAINNAME.IRISHUB
+            (item) => item.prettyName === PRETTYNAME.IRISHUB
         );
         const cosmos = formatChainPopoverProp.filter(
-            (item) => item.chainName === CHAINNAME.COSMOSHUB
+            (item) => item.prettyName === PRETTYNAME.COSMOSHUB
         );
         const other = formatChainPopoverProp.filter(
-            (item) => item.chainName !== CHAINNAME.IRISHUB && item.chainName !== CHAINNAME.COSMOSHUB
+            (item) =>
+                item.prettyName !== PRETTYNAME.IRISHUB && item.prettyName !== PRETTYNAME.COSMOSHUB
         );
-        other.sort((a, b) => a.chainName.localeCompare(b.chainName));
+        other.sort((a, b) => a.prettyName.localeCompare(b.prettyName));
         return [...cosmos, ...irishub, ...other];
     };
     const searchNoResult = ref(false);

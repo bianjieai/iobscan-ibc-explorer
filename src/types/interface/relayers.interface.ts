@@ -35,7 +35,7 @@ export interface IResponseRelayerList {
 
 export interface chainPopoverProp {
     chain: string;
-    chainName: string;
+    prettyName: string;
     chainLogo: string;
     address: string[];
 }
@@ -193,7 +193,7 @@ export enum RelatedAssetsPieType {
 }
 
 export interface ChainPopoverChainItem {
-    chainName: string;
+    prettyName: string;
     chainLogo: string;
     address: string[];
 }

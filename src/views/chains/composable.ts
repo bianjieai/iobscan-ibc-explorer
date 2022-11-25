@@ -1,3 +1,4 @@
+import { IChainsListItem } from './../../types/interface/chains.interface';
 import { getChainsListAPI } from '@/api/chains';
 import { BASE_PARAMS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
@@ -5,7 +6,7 @@ import { IResponseChainsList, IResponseChainsListItem } from '@/types/interface/
 import ChainHelper from '@/helper/chainHelper';
 import { Ref } from 'vue';
 export const useGetChainsList = (loading?: Ref<boolean>) => {
-    const chainsList = ref<IResponseChainsListItem[]>([]);
+    const chainsList = ref<IChainsListItem[]>([]);
     const getChainsList = async (loading?: Ref<boolean>) => {
         if (loading) {
             loading.value = true;
@@ -77,11 +78,11 @@ export const useChainsColumnJump = () => {
             }
         });
     };
-    const goTransfer = (chain_id: string) => {
+    const goTransfer = (chain: string) => {
         router.push({
             path: '/transfers',
             query: {
-                chain: chain_id + ',allchain'
+                chain: chain + ',allchain'
             }
         });
     };

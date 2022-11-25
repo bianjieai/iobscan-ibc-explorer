@@ -1,7 +1,7 @@
 <template>
     <div class="address">
         <span class="address__label">
-            <span v-if="chainInfo" class="address__chain_name">{{ chainName }}</span>
+            <span v-if="chainInfo" class="address__chain_name">{{ prettyName }}</span>
             <span>{{ chainAddress.label }}</span>
         </span>
         <span class="address__value">
@@ -23,10 +23,10 @@
         chainInfo?: ITxInfo;
     }
     const props = defineProps<IProps>();
-    const chainName = computed(() => {
+    const prettyName = computed(() => {
         if (props.chainInfo) {
-            const { chainName } = useMatchChainInfo(props.chainInfo.chain_id);
-            return chainName || DEFAULT_DISPLAY_TEXT;
+            const { prettyName } = useMatchChainInfo(props.chainInfo.chain);
+            return prettyName || DEFAULT_DISPLAY_TEXT;
         }
     });
 </script>

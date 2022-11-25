@@ -5,14 +5,14 @@
                 <span class="chain_channel__tooltip">
                     <TooltipLabelValue
                         label="Chain ID:"
-                        :value="ChainHelper.formatChainId(chain)"
+                        :value="useMatchChainInfo(chain).currentChainId || DEFAULT_DISPLAY_TEXT"
                     ></TooltipLabelValue>
                 </span>
             </template>
             <div class="chain_channel__wrap">
                 <img class="chain_channel__chain_logo" :src="chainIcon" alt="" />
                 <div class="chain_channel__info">
-                    <span class="chain_channel__chain">{{ chainName }}</span>
+                    <span class="chain_channel__chain">{{ prettyName }}</span>
                     <span class="chain_channel__channel">{{
                         channel || DEFAULT_DISPLAY_TEXT
                     }}</span>
@@ -25,14 +25,13 @@
 <script setup lang="ts">
     import { useMatchChainInfo } from '@/composables';
     import { DEFAULT_DISPLAY_TEXT } from '@/constants';
-    import ChainHelper from '@/helper/chainHelper';
 
     interface IChainChannel {
         chain: string;
         channel: string;
     }
     const props = defineProps<IChainChannel>();
-    const { chainIcon, chainName } = useMatchChainInfo(props.chain);
+    const { chainIcon, prettyName } = useMatchChainInfo(props.chain);
 </script>
 
 <style lang="less" scoped>

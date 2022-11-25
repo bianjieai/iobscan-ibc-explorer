@@ -6,14 +6,14 @@ export type TIbcTokenType = 'Authed' | 'Other' | 'Genesis';
 
 export interface IRequestTokensList extends IRequestPagination {
     base_denom?: string;
-    base_denom_chain_id?: string;
+    base_denom_chain?: string;
     chain?: string;
     token_type?: TTokenType;
     loading?: Ref<boolean>;
 }
 export interface IRequestIbcTokenList extends IRequestPagination {
     base_denom?: string;
-    base_denom_chain_id?: string;
+    base_denom_chain?: string;
     chain?: string;
     token_type?: TIbcTokenType;
     loading?: Ref<boolean>;
@@ -21,7 +21,7 @@ export interface IRequestIbcTokenList extends IRequestPagination {
 
 export interface IResponseTokensListItem {
     base_denom: string;
-    chain_id: string;
+    chain: string;
     chains_involved: number;
     currency: string;
     ibc_transfer_amount: string;
@@ -36,7 +36,7 @@ export interface ITokensListItem extends IResponseTokensListItem {
 
 export interface IResponseIbcTokenListItem {
     amount: string;
-    chain_id: string;
+    chain: string;
     denom: string;
     denom_path: string;
     ibc_hops: number;

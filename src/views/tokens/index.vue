@@ -60,9 +60,9 @@
                     title-can-click
                     :token-type="record.token_type"
                     :denom="record[column.key]"
-                    :chain-id="record.chain_id"
+                    :chain="record.chain"
                     :denoms-data="ibcBaseDenoms"
-                    @click-title="goIbcToken(record.base_denom, record.chain_id)"
+                    @click-title="goIbcToken(record.base_denom, record.chain)"
                 />
             </template>
             <template #price="{ record, column }">
@@ -87,7 +87,7 @@
                     >{{
                         `${formatSupply(
                             record[column.key],
-                            record.base_denom + record.chain_id,
+                            record.base_denom + record.chain,
                             ibcBaseDenoms
                         )}`
                     }}
@@ -102,7 +102,7 @@
                                 `${
                                     formatAmount(
                                         record[column.key],
-                                        record.base_denom + record.chain_id,
+                                        record.base_denom + record.chain,
                                         ibcBaseDenoms
                                     ).popover
                                 }`
@@ -113,7 +113,7 @@
                         `${
                             formatAmount(
                                 record[column.key],
-                                record.base_denom + record.chain_id,
+                                record.base_denom + record.chain,
                                 ibcBaseDenoms
                             ).title
                         }`
@@ -122,22 +122,22 @@
             </template>
 
             <template #ibc_transfer_txs="{ record, column }">
-                <div class="hover_cursor" @click="goTransfer(record.base_denom, record.chain_id)">{{
+                <div class="hover_cursor" @click="goTransfer(record.base_denom, record.chain)">{{
                     `${formatBigNumber(record[column.key], 0)}`
                 }}</div>
             </template>
 
             <template #chains_involved="{ record, column }">
-                <div class="hover_cursor" @click="goIbcToken(record.base_denom, record.chain_id)">{{
+                <div class="hover_cursor" @click="goIbcToken(record.base_denom, record.chain)">{{
                     record[column.key]
                 }}</div>
             </template>
 
-            <template #chain_id="{ record, column }">
+            <template #chain="{ record, column }">
                 <ChainIcon
                     title-can-click
                     avatar-can-click
-                    :chain-id="record[column.key]"
+                    :chain="record[column.key]"
                     :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
