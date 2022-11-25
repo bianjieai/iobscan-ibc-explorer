@@ -64,7 +64,7 @@
     import { GetComponentProps } from 'ant-design-vue/lib/vc-table/interface';
     import type { IIbcTx } from '@/types/interface/transfers.interface';
     import type { IResponseChannelsListItem } from '@/types/interface/channels.interface';
-    import type { IResponseChainsListItem } from '@/types/interface/chains.interface';
+    import type { IChainsListItem } from '@/types/interface/chains.interface';
     import type {
         IResponseIbcTokenListItem,
         ITokensListItem
@@ -84,7 +84,7 @@
     const { ibcBaseDenoms } = useGetIbcDenoms();
     type TData =
         | IIbcTx[]
-        | IResponseChainsListItem[]
+        | IChainsListItem[]
         | ITokensListItem[]
         | IResponseIbcTokenListItem[]
         | RelayerListItem[]

@@ -1,6 +1,6 @@
 import { useIbcStatisticsChains } from '@/store';
 import {
-    CHAINNAME,
+    PRETTYNAME,
     CHAIN_DEFAULT_ICON,
     CHAIN_DEFAULT_VALUE,
     DEFAULT_DISPLAY_TEXT,
@@ -133,16 +133,16 @@ export const useSortIbcChains = (ibcChains: Ref<IIbcChains>) => {
     const setAllChains = (ibcChains: Ref<IIbcChains>) => {
         if (ibcChains?.value?.all) {
             const cosmosChain = ibcChains.value.all.filter(
-                (item: IIbcchain) => item.chain_name === CHAINNAME.COSMOSHUB
+                (item: IIbcchain) => item.pretty_name === PRETTYNAME.COSMOSHUB
             );
             const irishubChain = ibcChains.value.all.filter(
-                (item: IIbcchain) => item.chain_name === CHAINNAME.IRISHUB
+                (item: IIbcchain) => item.pretty_name === PRETTYNAME.IRISHUB
             );
             const notIncludesIrisAndCosmosChains: IIbcchain[] = [];
             ibcChains.value.all.forEach((item: IIbcchain) => {
                 if (
-                    item.chain_name !== CHAINNAME.COSMOSHUB &&
-                    item.chain_name !== CHAINNAME.IRISHUB
+                    item.pretty_name !== PRETTYNAME.COSMOSHUB &&
+                    item.pretty_name !== PRETTYNAME.IRISHUB
                 ) {
                     notIncludesIrisAndCosmosChains.push(item);
                 }
@@ -181,16 +181,16 @@ export const useRouteParams = () => {
     let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
     let paramsStatus = undefined,
         paramsBaseDenom: string | undefined = undefined,
-        paramsBaseDenomChainId: string | undefined = undefined,
+        paramsBaseDenomChain: string | undefined = undefined,
         paramsDenom: string | undefined = undefined,
         startTimestamp = 0,
         endTimestamp = 0;
     const searchToken = ref<string | undefined>();
     const inputFlag = ref(false);
     const dateRange = reactive({ value: [] });
-    const chainId = route?.query.chain as string;
-    if (chainId) {
-        url += `&chain=${chainId}`;
+    const chain = route?.query.chain as string;
+    if (chain) {
+        url += `&chain=${chain}`;
     }
     if (route?.query?.denom) {
         url += `&denom=${route.query.denom}`;
@@ -203,9 +203,9 @@ export const useRouteParams = () => {
         url += `&baseDenom=${route.query.baseDenom}`;
         paramsBaseDenom = route?.query.baseDenom as string | undefined;
     }
-    if (route?.query?.baseDenomChainId) {
-        url += `&baseDenomChainId=${route.query.baseDenomChainId}`;
-        paramsBaseDenomChainId = route?.query.baseDenomChainId as string | undefined;
+    if (route?.query?.baseDenomChain) {
+        url += `&baseDenomChain=${route.query.baseDenomChain}`;
+        paramsBaseDenomChain = route?.query.baseDenomChain as string | undefined;
     }
     if (route?.query?.status) {
         const defaultOptions = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
@@ -242,7 +242,7 @@ export const useRouteParams = () => {
     if (startTimestamp && endTimestamp) {
         dateRange.value = [dayjs(startTimestamp * 1000), dayjs(endTimestamp * 1000)] as any;
     }
-    searchToken.value = (paramsBaseDenom || '') + (paramsBaseDenomChainId || '');
+    searchToken.value = (paramsBaseDenom || '') + (paramsBaseDenomChain || '');
     if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
         searchToken.value = rmIbcPrefix(paramsDenom as string);
         inputFlag.value = true;
@@ -253,9 +253,9 @@ export const useRouteParams = () => {
                 ? [startTimestamp, endTimestamp]
                 : [0, Math.floor(new Date().getTime() / 1000)],
         status: paramsStatus || TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS,
-        chain_id: chainId,
+        chain: chain,
         base_denom: paramsBaseDenom,
-        base_denom_chain_id: paramsBaseDenomChainId,
+        base_denom_chain: paramsBaseDenomChain,
         denom: paramsDenom
     });
     return {
@@ -263,7 +263,7 @@ export const useRouteParams = () => {
         searchToken,
         inputFlag,
         dateRange,
-        chainId,
+        chain,
         queryParams
     };
 };
@@ -370,10 +370,10 @@ export const useQueryDatas = (
             .finally(() => {
                 if (use_count) {
                     if (
-                        !params.chain_id &&
+                        !params.chain &&
                         !params.denom &&
                         !params.base_denom &&
-                        !params.base_denom_chain_id &&
+                        !params.base_denom_chain &&
                         params.status === TX_STATUS_NUMBER.defaultStatus &&
                         isDateDefaultValue
                     ) {
@@ -396,13 +396,13 @@ export const useQueryDatas = (
         }
         const params = {
             status: queryParams.status?.toString(),
-            chain_id: queryParams.chain_id,
+            chain: queryParams.chain,
             date_range: queryParams.date_range?.toString(),
             base_denom: queryParams.base_denom,
-            base_denom_chain_id: queryParams.base_denom_chain_id,
+            base_denom_chain: queryParams.base_denom_chain,
             denom: queryParams.denom
         };
-        isShowValuedText.value = Boolean(queryParams.chain_id);
+        isShowValuedText.value = Boolean(queryParams.chain);
         countLoading.value = true;
         getIbcTxsData(params, 1, 10, true);
         getIbcTxsData(params, pagination.current, pagination.pageSize);
@@ -435,7 +435,7 @@ export const useSelectedParams = (
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const chainDropdown = ref();
-    const chainIds = ref<TDenom[]>(chainId ? (chainId as string).split(',') : []);
+    const chains = ref<TDenom[]>(chainId ? (chainId as string).split(',') : []);
     const startTime = (time: string | number | Date) => {
         const nowTimeDate = new Date(time);
         return nowTimeDate.setHours(0, 0, 0, 0);
@@ -457,7 +457,7 @@ export const useSelectedParams = (
                 groupName: 'Authed IBC Tokens',
                 children: ibcBaseDenomsSorted.value.map((v) => ({
                     title: v.symbol,
-                    id: v.denom + v.chain_id,
+                    id: v.denom + v.chain,
                     icon: v.icon || TOKEN_DEFAULT_ICON,
                     metaData: v
                 }))
@@ -488,8 +488,8 @@ export const useSelectedParams = (
             },
             {
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
-                    title: v.chain_name,
-                    id: v.chain_id,
+                    title: v.pretty_name,
+                    id: v.chain_name,
                     icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
@@ -509,8 +509,8 @@ export const useSelectedParams = (
     };
     const judgeQueryParams = () => {
         url = `/transfers?pageNum=${pagination.current}&pageSize=${pagination.pageSize}`;
-        if (queryParams?.chain_id) {
-            url += `&chain=${queryParams.chain_id}`;
+        if (queryParams?.chain) {
+            url += `&chain=${queryParams.chain}`;
         }
         if (queryParams?.denom) {
             url += `&denom=${queryParams.denom}`;
@@ -521,8 +521,8 @@ export const useSelectedParams = (
         ) {
             url += `&baseDenom=${queryParams.base_denom}`;
         }
-        if (queryParams?.base_denom_chain_id) {
-            url += `&baseDenomChainId=${queryParams.base_denom_chain_id}`;
+        if (queryParams?.base_denom_chain) {
+            url += `&baseDenomChain=${queryParams.base_denom_chain}`;
         }
         if (queryParams?.status) {
             url += `&status=${queryParams.status.join(',')}`;
@@ -550,25 +550,25 @@ export const useSelectedParams = (
         pagination.current = 1;
         const id = val?.id;
         const denom = val?.metaData?.denom;
-        const denomChainId = val?.metaData?.chain_id;
+        const denomChain = val?.metaData?.chain;
         if (id) {
             if (val?.inputFlag) {
                 inputFlag.value = true;
                 const transferId = (id as string).replace(/^ibc\//i, '');
                 queryParams.denom = id ? `ibc/${transferId.toUpperCase()}` : undefined;
                 queryParams.base_denom = undefined;
-                queryParams.base_denom_chain_id = undefined;
+                queryParams.base_denom_chain = undefined;
             } else {
                 inputFlag.value = false;
                 queryParams.base_denom = denom || id;
-                queryParams.base_denom_chain_id = denomChainId;
+                queryParams.base_denom_chain = denomChain;
                 queryParams.denom = undefined;
             }
             searchToken.value = id as string;
         } else {
             inputFlag.value = false;
             queryParams.base_denom = undefined;
-            queryParams.base_denom_chain_id = undefined;
+            queryParams.base_denom_chain = undefined;
             queryParams.denom = undefined;
             searchToken.value = '';
         }
@@ -577,9 +577,9 @@ export const useSelectedParams = (
     };
     const onSelectedChain = (vals: IDataItem[]) => {
         (window as any).gtag('event', 'Transfers-点击过滤条件Chain');
-        chainIds.value = vals?.map((v) => v.id);
-        const chain_id = chainIds.value.join(',');
-        queryParams.chain_id = chain_id !== 'allchain,allchain' ? chain_id : '';
+        chains.value = vals?.map((v) => v.id);
+        const chain = chains.value.join(',');
+        queryParams.chain = chain !== 'allchain,allchain' ? chain : '';
         pagination.current = 1;
         judgeQueryParams();
         queryDatas();
@@ -607,20 +607,20 @@ export const useSelectedParams = (
         dateRange.value = [];
         queryParams.date_range = [];
         queryParams.status = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
-        queryParams.chain_id = undefined;
+        queryParams.chain = undefined;
         queryParams.base_denom = undefined;
-        queryParams.base_denom_chain_id = undefined;
+        queryParams.base_denom_chain = undefined;
         queryParams.denom = undefined;
         pagination.current = 1;
         url = '/transfers';
         router.replace(url);
-        chainIds.value = [];
+        chains.value = [];
         searchToken.value = undefined;
         queryDatas();
     };
     return {
         chainDropdown,
-        chainIds,
+        chains,
         chainGetPopupContainer,
         tokenData,
         chainData,
@@ -663,8 +663,8 @@ export const useTransfersTable = (
         if (params?.baseDenom && (params?.baseDenom as string)?.toLowerCase() !== UNKNOWN_SYMBOL) {
             url += `&baseDenom=${params.baseDenom}`;
         }
-        if (params?.baseDenomChainId) {
-            url += `&baseDenomChainId=${params.baseDenomChainId}`;
+        if (params?.baseDenomChain) {
+            url += `&baseDenomChain=${params.baseDenomChain}`;
         }
         if (params?.status) {
             url += `&status=${params.status}`;
@@ -683,7 +683,7 @@ export const useTransfersTable = (
     };
     const findIbcChainIcon = (chainId: string) => {
         if (ibcChains && ibcChains.value.all) {
-            const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
+            const result = ibcChains.value.all.find((item) => item.chain_name === chainId);
             if (result) {
                 return result.icon || CHAIN_DEFAULT_ICON;
             }

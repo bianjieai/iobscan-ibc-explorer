@@ -48,7 +48,7 @@
     interface IProps {
         iconSize?: TTableCellIconSize;
         denom: string;
-        chainId: string;
+        chain: string;
         denomsData: IBaseDenom[];
         titleCanClick?: boolean;
         tokenType?: string;
@@ -62,7 +62,7 @@
 
     const tokenInfo = computed(() => {
         const filterData = props.denomsData.find(
-            (item) => item.denom === props.denom && item.chain_id == props.chainId
+            (item) => item.denom === props.denom && item.chain == props.chain
         );
         if (filterData) {
             return {

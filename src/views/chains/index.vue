@@ -14,22 +14,22 @@
             no-pagination
             :scroll="{ y: 610 }"
         >
-            <template #chain_id="{ record, column }">
+            <template #chain="{ record, column }">
                 <ChainIcon
-                    :chain-id="record[column.key]"
+                    :chain="record[column.key]"
                     :chains-data="ibcChains.all"
                     icon-size="small"
                 />
             </template>
 
             <template #channels="{ record, column }">
-                <div class="hover_cursor" @click="goChannels(`${record.chain_id},allchain`)">{{
+                <div class="hover_cursor" @click="goChannels(`${record.chain},allchain`)">{{
                     record[column.key]
                 }}</div>
             </template>
 
             <template #relayers="{ record, column }">
-                <div class="hover_cursor" @click="goRelayers(`${record.chain_id},allchain`, 1)">{{
+                <div class="hover_cursor" @click="goRelayers(`${record.chain},allchain`, 1)">{{
                     record[column.key]
                 }}</div>
             </template>
@@ -47,7 +47,7 @@
                     :title="record[column.key]"
                     :subtitle="record.transfer_txs_value"
                     :currency="record.currency"
-                    @on-title-click="goTransfer(record.chain_id)"
+                    @on-title-click="goTransfer(record.chain)"
                 />
             </template>
         </TableCommon>

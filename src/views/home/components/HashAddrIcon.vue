@@ -2,7 +2,7 @@
     <div class="out_hash">
         <div class="out_hash__address_wrap">
             <div class="out_hash__address_link">
-                <img class="out_hash__address_icon" :src="findIbcChainIcon(item.sc_chain_id)" />
+                <img class="out_hash__address_icon" :src="findIbcChainIcon(item.sc_chain)" />
             </div>
             <div class="out_hash__container">
                 <span class="out_hash__value">
@@ -34,7 +34,7 @@
         <img class="status_icon" :src="getImageUrl(item.status)" alt="status" />
         <div class="out_hash__address_wrap">
             <div class="out_hash__address_link">
-                <img class="out_hash__address_icon" :src="findIbcChainIcon(item.dc_chain_id)" />
+                <img class="out_hash__address_icon" :src="findIbcChainIcon(item.dc_chain)" />
             </div>
 
             <div class="out_hash__container">

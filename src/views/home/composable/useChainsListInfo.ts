@@ -27,8 +27,8 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
         }
     };
 
-    const findClassName = (chainName: string) => {
-        const chainQuery = chainName[0].toUpperCase();
+    const findClassName = (prettyName: string) => {
+        const chainQuery = prettyName[0].toUpperCase();
         const findAnchor = anchors.find((anchor) => anchor.collection.includes(chainQuery));
         const className = findAnchor?.title || '#';
         // 初始值,第一次选中第一个chain 对应的标签
@@ -67,9 +67,9 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
             res[key as TIbcChainsKeys] = chainList.value[key as TIbcChainsKeys]
                 .slice()
                 .sort((a: IIbcchain, b: IIbcchain) => {
-                    return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
+                    return a.pretty_name.toLowerCase() < b.pretty_name.toLowerCase()
                         ? -1
-                        : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
+                        : a.pretty_name.toLowerCase() > b.pretty_name.toLowerCase()
                         ? 1
                         : 0;
                 });
@@ -114,9 +114,9 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
         highlightedLabel(ANCHORS_DATAS[0].title);
         const currentChainList = chainList.value[currentMenu.value[0]];
         currentChainList.sort((a: IIbcchain, b: IIbcchain) => {
-            return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
+            return a.pretty_name.toLowerCase() < b.pretty_name.toLowerCase()
                 ? -1
-                : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
+                : a.pretty_name.toLowerCase() > b.pretty_name.toLowerCase()
                 ? 1
                 : 0;
         });
@@ -156,7 +156,7 @@ export const useAnchors = (chainList: Ref<IIbcChains>, emits: any) => {
         }
         // 如果没找到，以列表中第一个数据，来确定高亮的标签
         if (!isSuccess) {
-            label = findClassName(currentChainList[0].chain_name);
+            label = findClassName(currentChainList[0].pretty_name);
         }
         lock.value = true;
         setTimeout(() => {
