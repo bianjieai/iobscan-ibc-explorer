@@ -9,7 +9,7 @@ import {
 import { IDataItem } from '@/components/BjSelect/interface';
 import { useMatchBaseDenom } from '@/composables';
 import {
-    CHAINNAME,
+    PRETTYNAME,
     CHAIN_DEFAULT_ICON,
     RELAYER_DEFAULT_ICON,
     TOKEN_DEFAULT_ICON,
@@ -51,7 +51,6 @@ import {
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { formatString } from '@/utils/stringTools';
 import { calculatePercentage, getRoundingOffBigNumber } from '@/utils/calculate';
-import { handleImgLoadingSussess } from '@/utils/imageTools';
 import { getTextWidth } from '@/utils/urlTools';
 import { axiosCancel } from '@/utils/axios';
 
@@ -65,47 +64,46 @@ export const useGetRelayerDetailsInfo = () => {
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
     const channelPairsInfo = ref<IChannelChain[]>([]);
     const isShowModal = ref<boolean>(false);
-    const successLoadingImg = ref(false);
     // relayer_name 适配
     const displayAdaptor = ref<boolean>(false);
     // chain_name 先左右排，再上下排
     const sortChannelPairsByChainName = async (channelPairsInfoArr: IChannelChain[]) => {
         if (!channelPairsInfoArr?.length) return [];
-        const chainChannelLRSort = ChainHelper.sortByChainName(channelPairsInfoArr);
+        const chainChannelLRSort = ChainHelper.sortByPrettyName(channelPairsInfoArr);
         const chainChannelArr = [];
         for (const i in chainChannelLRSort) {
             const chainInfo = await ChainHelper.getChainInfoByKey(chainChannelLRSort[i].chain_a);
             if (chainInfo) {
                 chainChannelArr.push({
-                    chainName: chainInfo.chain_name,
+                    prettyName: chainInfo.pretty_name,
                     channelInfo: chainChannelLRSort[i]
                 });
             } else {
                 chainChannelArr.push({
-                    chainName: DEFAULT_DISPLAY_TEXT,
+                    prettyName: DEFAULT_DISPLAY_TEXT,
                     channelInfo: chainChannelLRSort[i]
                 });
             }
         }
         const cosmosChainChannel = chainChannelArr
-            .filter((item) => item.chainName === CHAINNAME.COSMOSHUB)
+            .filter((item) => item.prettyName === PRETTYNAME.COSMOSHUB)
             .map((item) => item.channelInfo);
 
         const irishubChainChannel = chainChannelArr
-            .filter((item) => item.chainName === CHAINNAME.IRISHUB)
+            .filter((item) => item.prettyName === PRETTYNAME.IRISHUB)
             .map((item) => item.channelInfo);
         const notSupportedChainChannel = chainChannelArr
-            .filter((item) => item.chainName === DEFAULT_DISPLAY_TEXT)
+            .filter((item) => item.prettyName === DEFAULT_DISPLAY_TEXT)
             .map((item) => item.channelInfo);
         const otherChainChannel = chainChannelArr
             .filter(
                 (item) =>
-                    item.chainName !== CHAINNAME.COSMOSHUB &&
-                    item.chainName !== CHAINNAME.IRISHUB &&
-                    item.chainName !== DEFAULT_DISPLAY_TEXT
+                    item.prettyName !== PRETTYNAME.COSMOSHUB &&
+                    item.prettyName !== PRETTYNAME.IRISHUB &&
+                    item.prettyName !== DEFAULT_DISPLAY_TEXT
             )
             .sort((a, b) => {
-                return a.chainName.localeCompare(b.chainName);
+                return a.prettyName.localeCompare(b.prettyName);
             })
             .map((item) => item.channelInfo);
 
@@ -160,20 +158,8 @@ export const useGetRelayerDetailsInfo = () => {
             isShowModal.value ? '--' : servedChainsInfo.value?.length
         } blockchains served`;
     });
-    const relayerImgSrc = computed(() => {
-        if (relayerIcon) {
-            return relayerIcon.value;
-        } else if (!relayerName) {
-            return RELAYER_DEFAULT_ICON;
-        } else {
-            return '';
-        }
-    });
-    watch(relayerImgSrc, (newValue) => {
-        handleImgLoadingSussess(newValue, successLoadingImg);
-    });
-    const displayRelayerImgSrc = computed(() => {
-        return successLoadingImg.value ? relayerImgSrc.value : RELAYER_DEFAULT_ICON;
+    const defaultRelayerImg = computed(() => {
+        return !relayerName ? RELAYER_DEFAULT_ICON : '';
     });
     // relayer_name
     const { width: widthClient } = useWindowSize();
@@ -201,6 +187,7 @@ export const useGetRelayerDetailsInfo = () => {
         getRelayerDetailsInfo();
     });
     return {
+        relayerIcon,
         relayerName,
         servedChainsInfo,
         relayedTotalTxs,
@@ -209,8 +196,7 @@ export const useGetRelayerDetailsInfo = () => {
         channelPairsInfo,
         isShowModal,
         subTitle,
-        relayerImgSrc,
-        displayRelayerImgSrc,
+        defaultRelayerImg,
         displayAdaptor
     };
 };
@@ -657,8 +643,8 @@ export const useSelectedSearch = (
         return [
             {
                 children: ChainHelper.sortArrsByNames(relayerChain.value).map((item) => ({
-                    title: item.chain_name,
-                    id: item.chain_id,
+                    title: item.pretty_name,
+                    id: item.chain_name,
                     icon: item.icon || CHAIN_DEFAULT_ICON,
                     metaData: item
                 }))

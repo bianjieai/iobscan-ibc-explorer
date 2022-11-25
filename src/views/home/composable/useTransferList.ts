@@ -26,9 +26,9 @@ export const useIsExpand = (emits: any, index: number) => {
     };
 };
 export const useFindIbcChainIcon = (props: any) => {
-    const findIbcChainIcon = (chainId: string) => {
+    const findIbcChainIcon = (chain: string) => {
         if (props.ibcChains && props.ibcChains.all) {
-            const result = props.ibcChains.all.find((item: any) => item.chain_id === chainId);
+            const result = props.ibcChains.all.find((item: any) => item.chain_name === chain);
             if (result) {
                 return result.icon || CHAIN_DEFAULT_ICON;
             }

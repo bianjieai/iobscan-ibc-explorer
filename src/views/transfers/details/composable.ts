@@ -205,7 +205,7 @@ export const useTokenInfo = (props: Readonly<IUseTokenInfo>) => {
         async (newTokenInfo) => {
             if (newTokenInfo) {
                 matchInfo.value = await useMatchBaseDenom(
-                    newTokenInfo.base_denom_chain_id,
+                    newTokenInfo.base_denom_chain,
                     newTokenInfo.base_denom,
                     newTokenInfo.amount
                 );
@@ -257,10 +257,6 @@ export const useChainInfo = (
                     label: 'Address',
                     value: newChainInfo.address || DEFAULT_DISPLAY_TEXT
                 };
-                chainInfoList.value = {
-                    label: 'Chain ID',
-                    value: newChainInfo.chain_id || DEFAULT_DISPLAY_TEXT
-                };
                 chainInfoListExpand.value = [
                     {
                         label: 'Port',
@@ -279,7 +275,11 @@ export const useChainInfo = (
                         value: newChainInfo.client_id || DEFAULT_DISPLAY_TEXT
                     }
                 ];
-                const { chainIcon } = useMatchChainInfo(chainInfoList.value.value);
+                const { chainIcon, currentChainId } = useMatchChainInfo(newChainInfo.chain || '');
+                chainInfoList.value = {
+                    label: 'Chain ID',
+                    value: currentChainId || DEFAULT_DISPLAY_TEXT
+                };
                 searchChainIcon.value = chainIcon;
                 calculateTextLength(chainInfoList.value.value, emits, CHAIN_ID_LABEL);
                 chainInfoListExpand.value.forEach((item) => {
@@ -355,21 +355,6 @@ export const useSequenceInfo = (
     };
 };
 
-export const useChainName = (fromChainId: string, toChainId: string) => {
-    const fromChainName = computed(() => {
-        const { chainName } = useMatchChainInfo(fromChainId);
-        return chainName;
-    });
-    const toChainName = computed(() => {
-        const { chainName } = useMatchChainInfo(toChainId);
-        return chainName;
-    });
-    return {
-        fromChainName,
-        toChainName
-    };
-};
-
 // ibc_tx_info
 export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo | undefined>) => {
     const leftTxImg = ref<string>(IBC_TX_INFO_STATUS.unknown);
@@ -382,7 +367,7 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
                 case IBC_TX_STATUS.success:
                     leftTxImg.value = IBC_TX_INFO_STATUS.success;
                     rightTxImg.value = IBC_TX_INFO_STATUS.success;
-                    ibcTxInfo.value?.refund_tx_info?.ack
+                    ibcTxInfo.value?.ack_timeout_tx_info?.ack
                         ? (progressData.value = SUCCESS_ARRIVE)
                         : (progressData.value = SUCCESS_NO_ACK);
                     break;
@@ -397,8 +382,8 @@ export const useIbcTxInfo = (ibcTxStatus: Ref<number>, ibcTxInfo: Ref<IIbcTxInfo
                     progressData.value = PROCCESSING_FIRST_ERROR;
                     break;
                 case IBC_TX_STATUS.refund:
-                    if (ibcTxInfo.value?.refund_tx_info) {
-                        switch (ibcTxInfo.value?.refund_tx_info.type) {
+                    if (ibcTxInfo.value?.ack_timeout_tx_info) {
+                        switch (ibcTxInfo.value?.ack_timeout_tx_info.type) {
                             case REFUND_TX_TYPE.acknowledge_packet:
                                 leftTxImg.value = IBC_TX_INFO_STATUS.success;
                                 rightTxImg.value = IBC_TX_INFO_STATUS.success;
@@ -545,20 +530,12 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
             case PROGRESS_STEP[3]:
             case PROGRESS_STEP[4]:
                 if (scInfo.value) {
-                    const result = await useMatchBaseDenom(
-                        scInfo.value.chain_id,
-                        feeDenom,
-                        feeAmount
-                    );
+                    const result = await useMatchBaseDenom(scInfo.value.chain, feeDenom, feeAmount);
                     return `${formatBigNumber(result.feeAmount)} ${result.symbol}`;
                 }
             case PROGRESS_STEP[2]:
                 if (dcInfo.value) {
-                    const result = await useMatchBaseDenom(
-                        dcInfo.value.chain_id,
-                        feeDenom,
-                        feeAmount
-                    );
+                    const result = await useMatchBaseDenom(dcInfo.value.chain, feeDenom, feeAmount);
                     return `${formatBigNumber(result.feeAmount)} ${result.symbol}`;
                 }
             default:
@@ -613,20 +590,20 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                     }
                     break;
                 case PROGRESS_STEP[3]:
-                    if (ibcTxInfo.value?.refund_tx_info) {
+                    if (ibcTxInfo.value?.ack_timeout_tx_info) {
                         changeProgressListAll(
                             PROGRESS_LIST,
                             PROGRESS_ACKNOWLEDGE_LIST,
-                            ibcTxInfo.value.refund_tx_info
+                            ibcTxInfo.value.ack_timeout_tx_info
                         );
                     }
                     break;
                 case PROGRESS_STEP[4]:
-                    if (ibcTxInfo.value?.refund_tx_info) {
+                    if (ibcTxInfo.value?.ack_timeout_tx_info) {
                         changeProgressListAll(
                             PROGRESS_LIST,
                             PROGRESS_TIMEOUT_LIST,
-                            ibcTxInfo.value.refund_tx_info
+                            ibcTxInfo.value.ack_timeout_tx_info
                         );
                     }
                     break;
@@ -680,13 +657,13 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
             expandedRowsChange([]);
         }
     };
-    const getIbcSource = async (hash: string, chainId: string, msgType: string) => {
+    const getIbcSource = async (hash: string, chain: string, msgType: string) => {
         loading && (loading.value = true);
         if (sourceMap.get(hash)) {
             loading && (loading.value = false);
             return sourceMap.get(hash);
         } else {
-            const params = { chain_id: chainId, msg_type: msgType };
+            const params = { chain: chain, msg_type: msgType };
             try {
                 const { code, message, data } = await getTxDetailsViewSourceByTxHashAPI(
                     hash,
@@ -723,7 +700,7 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
                 case PROGRESS_STEP[1]:
                     JSONSource.value = await getIbcSource(
                         ibcTxInfo.value.sc_tx_info.tx_hash,
-                        scInfo.value.chain_id,
+                        scInfo.value.chain,
                         ibcTxInfo.value.sc_tx_info.type
                     );
                     break;
@@ -731,26 +708,26 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
                     if (ibcTxInfo.value.dc_tx_info) {
                         JSONSource.value = await getIbcSource(
                             ibcTxInfo.value.dc_tx_info.tx_hash,
-                            dcInfo.value.chain_id,
+                            dcInfo.value.chain,
                             ibcTxInfo.value.dc_tx_info.type
                         );
                     }
                     break;
                 case PROGRESS_STEP[3]:
-                    if (ibcTxInfo.value.refund_tx_info) {
+                    if (ibcTxInfo.value.ack_timeout_tx_info) {
                         JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.refund_tx_info.tx_hash,
-                            scInfo.value.chain_id,
-                            ibcTxInfo.value.refund_tx_info.type
+                            ibcTxInfo.value.ack_timeout_tx_info.tx_hash,
+                            scInfo.value.chain,
+                            ibcTxInfo.value.ack_timeout_tx_info.type
                         );
                     }
                     break;
                 case PROGRESS_STEP[4]:
-                    if (ibcTxInfo.value.refund_tx_info) {
+                    if (ibcTxInfo.value.ack_timeout_tx_info) {
                         JSONSource.value = await getIbcSource(
-                            ibcTxInfo.value.refund_tx_info.tx_hash,
-                            scInfo.value.chain_id,
-                            ibcTxInfo.value.refund_tx_info.type
+                            ibcTxInfo.value.ack_timeout_tx_info.tx_hash,
+                            scInfo.value.chain,
+                            ibcTxInfo.value.ack_timeout_tx_info.type
                         );
                     }
                     break;

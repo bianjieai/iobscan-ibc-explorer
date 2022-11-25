@@ -1,12 +1,12 @@
 import { useIbcStatisticsChains } from '@/store/index';
 import { IBaseDenom } from '@/types/interface/index.interface';
 
-export const getDenomKey = (chainID: string, denom: string): string => {
-    return chainID + '-' + denom;
+export const getDenomKey = (chain: string, denom: string): string => {
+    return chain + '-' + denom;
 };
 
 export const getBaseDenomByKey = async (
-    chainID: string,
+    chain: string,
     denom: string
 ): Promise<IBaseDenom | undefined> => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -14,6 +14,6 @@ export const getBaseDenomByKey = async (
     if (Object.keys(ibcBaseDenomsUniqueKeyMapGetter).length <= 0) {
         await ibcStatisticsChainsStore.getIbcBaseDenomsAction();
     }
-    const key = getDenomKey(chainID, denom);
+    const key = getDenomKey(chain, denom);
     return ibcBaseDenomsUniqueKeyMapGetter[key];
 };

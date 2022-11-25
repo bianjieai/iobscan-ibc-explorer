@@ -8,7 +8,7 @@
             <div class="chain_popover_c">
                 <div
                     v-for="(chain, index) in displayChainList"
-                    :key="chain.chainName + chain.chainLogo"
+                    :key="chain.prettyName + chain.chainLogo"
                     class="chain_popover_c__item"
                     :class="{
                         chain_popover_c__item_last:
@@ -20,7 +20,7 @@
                             <img :src="chain.chainLogo" alt="" />
                         </div>
                         <span class="chain_popover_c__item__chain__text">{{
-                            chain.chainName
+                            chain.prettyName
                         }}</span>
                     </div>
                     <div

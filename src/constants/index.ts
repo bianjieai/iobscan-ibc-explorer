@@ -6,6 +6,7 @@ export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.
 export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', import.meta.url).href;
 export const RELAYER_DEFAULT_ICON = new URL('../assets/relayers/default.png', import.meta.url).href;
 export const TIP_ICON = new URL('../assets/tip.png', import.meta.url).href;
+export const IMAGE_LOADING = new URL('../assets/image_loading.gif', import.meta.url).href;
 
 export const ROUTE_INFO = {
     home: {
@@ -356,9 +357,9 @@ export const DEFAULT_TITLE = {
 
 export const UNKNOWN_SYMBOL = 'unknown';
 
-export const CHAINNAME = {
+export const PRETTYNAME = {
     COSMOSHUB: 'Cosmos Hub',
-    IRISHUB: 'IRIS Hub'
+    IRISHUB: 'IRISnet'
 };
 
 export const UNKNOWN = 'Unknown';
@@ -397,14 +398,14 @@ export const NEED_CUSTOM_COLUMN = {
     tokens: [
         'base_denom',
         'price',
-        'chain_id',
         'supply',
         'ibc_transfer_amount',
         'ibc_transfer_txs',
-        'chains_involved'
+        'chains_involved',
+        'chain'
     ],
-    ibcToken: ['denom', 'chain_id', 'ibc_hops', 'amount', 'receive_txs'],
-    chains: ['chain_id', 'channels', 'relayers', 'ibc_tokens', 'ibc_tokens_value', 'transfer_txs'],
+    ibcToken: ['denom', 'chain', 'ibc_hops', 'amount', 'receive_txs'],
+    chains: ['chain', 'channels', 'relayers', 'ibc_tokens', 'ibc_tokens_value', 'transfer_txs'],
     channels: [
         'chain_a',
         'status',

@@ -30,7 +30,7 @@
                                 v-ga="{
                                     gaEventName: 'Home-点击链接',
                                     params: {
-                                        clickLink: `点击${currentMenu[0]}列表中的${item.chain_name}`
+                                        clickLink: `点击${currentMenu[0]}列表中的${item.pretty_name}`
                                     }
                                 }"
                                 class="menu_card"
@@ -39,8 +39,8 @@
                                     class="menu_card__img"
                                     :src="item.icon ? item.icon : CHAIN_DEFAULT_ICON"
                                 />
-                                <p class="menu_card__title">{{ item.chain_name }}</p>
-                                <p class="menu_card__value">{{ formatChainID(item.chain_id) }}</p>
+                                <p class="menu_card__title">{{ item.pretty_name }}</p>
+                                <p class="menu_card__value">{{ item.current_chain_id }}</p>
                                 <div
                                     v-if="item.status === CHAIN_STATUS.offline"
                                     class="menu_card__inactive"
@@ -88,7 +88,6 @@
 <script setup lang="ts">
     import { useAnchors } from '../composable/useChainsListInfo';
     import { CHAIN_DEFAULT_ICON, CHAIN_STATUS } from '@/constants';
-    import ChainHelper from '@/helper/chainHelper';
     import { IIbcChains } from '@/types/interface/index.interface';
     import { Ref } from 'vue';
     const inActiveMask = new URL('../../../assets/home/mask.png', import.meta.url).href;
@@ -122,9 +121,6 @@
             }
         }
     );
-    const formatChainID = (chainId: string) => {
-        return ChainHelper.formatChainId(chainId);
-    };
     const isHaveData: Ref<boolean> = computed(() => {
         return Boolean(
             chainList.value[currentMenu.value[0]] && chainList.value[currentMenu.value[0]].length

@@ -5,8 +5,7 @@ export interface IChainsListParams extends IRequestPagination {
     loading?: Ref<boolean>;
 }
 export interface IResponseChainsListItem {
-    chainName: string;
-    chain_id: string;
+    chain: string;
     channels: number;
     connected_chains: number;
     currency: string;
@@ -15,6 +14,10 @@ export interface IResponseChainsListItem {
     relayers: number;
     transfer_txs: number;
     transfer_txs_value: string;
+}
+
+export interface IChainsListItem extends IResponseChainsListItem {
+    prettyName: string;
 }
 
 export interface IResponseChainsList {

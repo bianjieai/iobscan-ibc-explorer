@@ -3,11 +3,11 @@ import { TableColumnsType } from 'ant-design-vue';
 
 export const COLUMNS: TableColumnsType = [
     {
-        dataIndex: 'chain_id',
-        key: 'chain_id',
+        dataIndex: 'chain',
+        key: 'chain',
         title: 'Chain',
         width: 180,
-        sorter: (a, b) => a.chainName.localeCompare(b.chainName)
+        sorter: (a, b) => a.prettyName.localeCompare(b.prettyName)
     },
     {
         dataIndex: 'connected_chains',

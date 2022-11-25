@@ -39,8 +39,9 @@ export interface IResponsePageInfo {
 }
 
 export interface IIbcchain {
-    chain_id: string;
+    current_chain_id: string;
     chain_name: string;
+    pretty_name: string;
     icon: string;
     status: CHAIN_STATUS;
 }
@@ -56,7 +57,7 @@ export interface IIbcChains {
 
 export type TIbcChainsKeys = keyof IIbcChains;
 export interface IBaseDenom {
-    chain_id: string;
+    chain: string;
     denom: string;
     icon: string;
     scale: number;
