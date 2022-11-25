@@ -1,18 +1,14 @@
 import { isArray } from '@/utils/objectTools';
-import { BASE_PARAMS, CHAINNAME, UNKNOWN, CHAIN_DEFAULT_VALUE } from '@/constants';
+import { CHAINNAME, UNKNOWN, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { useIbcChains } from '@/composables';
 import { IResponseChainsListItem } from '@/types/interface/chains.interface';
 import { IResponseTokensListItem, ITokensListItem } from '@/types/interface/tokens.interface';
 import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { getRestString } from '@/helper/parseStringHelper';
-import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
-import {
-    IRelayersListItem,
-    IRequestRelayerList,
-    IResponseRelayerListItem
-} from '@/types/interface/relayers.interface';
 import { TData, TDenom, IDataItem } from '@/components/BjSelect/interface';
+import { useIbcStatisticsChains } from '@/store/index';
+
 const { ibcChains } = useIbcChains();
 export default class ChainHelper {
     static formatChainId(chainId: any) {
@@ -23,7 +19,8 @@ export default class ChainHelper {
     }
 
     // chain_name sort
-    static sortByChainName(sourceList: any, chain: any) {
+    // Todo shan 该方法中 ibcChains 可能存在没有值的情况，需要做处理
+    static sortByChainName(sourceList: any, chain?: any) {
         function changeChainsSort(item: any) {
             const saveChain = item.chain_a;
             item.chain_a = item.chain_b;
@@ -31,9 +28,16 @@ export default class ChainHelper {
             const saveChannel = item.channel_a;
             item.channel_a = item.channel_b;
             item.channel_b = saveChannel;
-            const saveAddress = item.chain_a_address;
-            item.chain_a_address = item.chain_b_address;
-            item.chain_b_address = saveAddress;
+            if (item.chain_a_address || item.chain_b_address) {
+                const saveAddress = item.chain_a_address;
+                item.chain_a_address = item.chain_b_address;
+                item.chain_b_address = saveAddress;
+            }
+            if (item.chain_a_addresses || item.chain_b_addresses) {
+                const saveAddresses = item.chain_a_addresses;
+                item.chain_a_addresses = item.chain_b_addresses;
+                item.chain_b_addresses = saveAddresses;
+            }
         }
         if (isArray(sourceList) && sourceList?.length) {
             const updateList = sourceList?.map((item: any) => {
@@ -50,7 +54,11 @@ export default class ChainHelper {
                     }
                     return item;
                 } else {
-                    if (
+                    if (!matchChainA?.chain_name) {
+                        if (matchChainB?.chain_name) {
+                            changeChainsSort(item);
+                        }
+                    } else if (
                         [matchChainA?.chain_name, matchChainB?.chain_name].indexOf(
                             CHAINNAME.COSMOSHUB
                         ) !== -1
@@ -115,9 +123,9 @@ export default class ChainHelper {
         const excludes = dropdownData.filter((v) => !sortNames.includes(v.chain_name));
 
         excludes.sort((a, b) => {
-            return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
+            return a.chain_name?.toLowerCase() < b.chain_name?.toLowerCase()
                 ? -1
-                : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
+                : a.chain_name?.toLowerCase() > b.chain_name?.toLowerCase()
                 ? 1
                 : 0;
         });
@@ -163,21 +171,6 @@ export default class ChainHelper {
             temp.push(item);
         }
         return temp;
-    }
-
-    static formatTransfer(data: IResponseRelayerListItem[], params: IRequestRelayerList) {
-        const relayersList = ref<IResponseRelayerListItem[]>([]);
-        const allParams = { ...BASE_PARAMS, ...params };
-        relayersList.value = ChainHelper.sortByChainName(data, allParams.chain)?.map(
-            (item: IRelayersListItem) => {
-                item.txs_success_rate = formatTransfer_success_txs(
-                    item.transfer_success_txs,
-                    item.transfer_total_txs
-                );
-                return item;
-            }
-        );
-        return relayersList.value;
     }
 
     // channels and relayers 选择框是否需要排序
@@ -226,5 +219,14 @@ export default class ChainHelper {
             }
         }
         return isLocaleCompare.value;
+    };
+
+    static getChainInfoByKey = async (chainID: string): Promise<IIbcchain | undefined> => {
+        const ibcStatisticsChainsStore = useIbcStatisticsChains();
+        const { ibcChainsUniqueKeyMapGetter } = ibcStatisticsChainsStore;
+        if (Object.keys(ibcChainsUniqueKeyMapGetter).length <= 0) {
+            await ibcStatisticsChainsStore.getIbcChainsAction();
+        }
+        return ibcChainsUniqueKeyMapGetter[chainID];
     };
 }

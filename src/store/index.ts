@@ -1,3 +1,6 @@
+import { removeSpaceAndToLowerCase } from '@/utils/stringTools';
+import { getRelayersNameListAPI } from '@/api/relayers';
+import { IIbcchain } from '@/types/interface/index.interface';
 import { getTxSearchCondition } from '@/api/transfers';
 import { defineStore } from 'pinia';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
@@ -27,6 +30,7 @@ export const useIbcStatisticsChains = defineStore('global', {
             isShow500: false,
             ibcTxs: [],
             isDocumentHidden: false,
+            relayerNames: [],
             txSearchTimeMin: 0
         };
     },
@@ -38,6 +42,13 @@ export const useIbcStatisticsChains = defineStore('global', {
                 ibcBaseDenomsUniqueKeyMap[key] = token;
             });
             return ibcBaseDenomsUniqueKeyMap;
+        },
+        ibcChainsUniqueKeyMapGetter(): { [key: string]: IIbcchain } {
+            const ibcChainUniqueKeyMap: { [key: string]: IIbcchain } = {};
+            this.ibcChains.all.forEach((chain: IIbcchain) => {
+                ibcChainUniqueKeyMap[chain.chain_id] = chain;
+            });
+            return ibcChainUniqueKeyMap;
         }
         // ibcDenomsMapGetter(): { [key: string]: IResponseIbcDenom } {
         //     const ibcDenomsMap: { [key: string]: IResponseIbcDenom } = {};
@@ -60,6 +71,9 @@ export const useIbcStatisticsChains = defineStore('global', {
             }
             if (this.ibcChains.all.length <= 0) {
                 promiseArray.push(this.getIbcChainsAction);
+            }
+            if (this.relayerNames.length <= 0) {
+                promiseArray.push(this.getIbcRelayerNamesAction);
             }
             promiseArray.push(this.getIbcTxSearchCondition);
             await Promise.all(promiseArray.map((item) => item()));
@@ -108,6 +122,25 @@ export const useIbcStatisticsChains = defineStore('global', {
         //         console.log('getIbcDenomsAPI', error);
         //     }
         // },
+        async getIbcRelayerNamesAction() {
+            try {
+                const { code, data } = await getRelayersNameListAPI();
+                if (code == API_CODE.success) {
+                    if (data && data.length > 0) {
+                        this.relayerNames = data.map((name) => {
+                            return {
+                                source: name,
+                                matching: removeSpaceAndToLowerCase(name)
+                            };
+                        });
+                    } else {
+                        this.relayerNames = [];
+                    }
+                }
+            } catch (error) {
+                console.log('getIbcRelayerNames', error);
+            }
+        },
         async getIbcTxsAction(queryParams: any, isNeedJudgeShow500 = true) {
             if (queryParams?.date_range) {
                 queryParams.date_range = queryParams.date_range?.toString();

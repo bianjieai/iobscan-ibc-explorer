@@ -10,7 +10,7 @@
             <div v-else>
                 <img
                     v-if="relayerImageSrc"
-                    :src="relayerImageSrc"
+                    :src="displayRelayerImageSrc"
                     alt=""
                     class="icon mr-8 small_icon"
                 />
@@ -25,12 +25,28 @@
             class="flex flex-col justify-around"
             :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }"
         >
-            <div class="title leading_none" :class="{ hover_cursor: titleCanClick }" @click="go">{{
-                relayer ? relayerName : title
-            }}</div>
-            <div v-if="subtitle" class="subtitle leading_none" :class="{ tag: subtitleIsTag }">{{
-                subtitle
-            }}</div>
+            <a-popover v-if="props.titlePopover" placement="topLeft">
+                <template #content>
+                    <div class="popover_c">
+                        <div>
+                            {{ relayerName }}
+                        </div>
+                    </div>
+                </template>
+                <div
+                    class="title leading_none"
+                    :class="{ hover_cursor: titleCanClick }"
+                    @click="go"
+                    >{{ relayerName }}</div
+                >
+            </a-popover>
+            <div
+                v-else
+                class="title leading_none"
+                :class="{ hover_cursor: titleCanClick }"
+                @click="go"
+                >{{ relayerName }}</div
+            >
         </div>
     </div>
 </template>
@@ -41,14 +57,14 @@
         TableCellIconSize,
         TTableCellIconSize
     } from '@/types/interface/components/table.interface';
-    import { UNKNOWN } from '@/constants';
+    import { RELAYER_DEFAULT_ICON, UNKNOWN } from '@/constants';
+    import { handleImgLoadingSussess } from '@/utils/imageTools';
 
     // 说明 现已将 token chain 拆除。 仅剩relayer
     interface IProps {
         iconSize?: TTableCellIconSize;
+        titlePopover?: boolean;
         title: string;
-        subtitle?: string;
-        subtitleIsTag?: boolean;
         imgSrc?: string;
         titleCanClick?: boolean;
         relayer?: boolean;
@@ -61,16 +77,32 @@
     });
 
     // relayer 处理
-    const relayerName = computed(() => (props.title ? props.title : UNKNOWN));
+    const relayerName = computed(() => props.title || UNKNOWN);
+
+    const successLoadingImg = ref(false);
 
     const relayerImageSrc = computed(() => {
         if (props.imgSrc) {
             return props.imgSrc;
         } else if (relayerName.value === UNKNOWN) {
-            return new URL('../../../assets/relayers/default.png', import.meta.url).href;
+            return RELAYER_DEFAULT_ICON;
         } else {
             return '';
         }
+    });
+
+    watch(
+        () => relayerImageSrc,
+        (newValue) => {
+            handleImgLoadingSussess(newValue.value, successLoadingImg);
+        },
+        {
+            immediate: true
+        }
+    );
+
+    const displayRelayerImageSrc = computed(() => {
+        return successLoadingImg.value ? relayerImageSrc.value : RELAYER_DEFAULT_ICON;
     });
 
     const emit = defineEmits<{
@@ -101,22 +133,6 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width: 80px;
-    }
-
-    .subtitle {
-        color: var(--bj-text-third);
-    }
-
-    .tag {
-        font-size: var(--bj-font-size-small);
-        color: var(--bj-primary-color);
-        padding: 2px 4px;
-        width: 53px;
-        border-radius: 8px;
-        background: rgba(61, 80, 255, 0.1);
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
     }
 
     .bg_text_c {

@@ -43,7 +43,7 @@
                         @on-change="onSelectedChain"
                     />
                     <BaseDropdown
-                        :status="JSON.stringify(queryParam.status)"
+                        :status="JSON.stringify(queryParams.status)"
                         :options="IBC_TX_STATUS_SELECT_OPTIONS"
                         @on-selected-change="handleSelectChange"
                     />
@@ -101,7 +101,7 @@
                         </template>
                         <img class="tip cursor" :src="TIP_ICON" />
                     </a-popover>
-                    <ResetButton @on-reset="onClickReset" />
+                    <TypeButton @on-reset="onClickReset" />
                 </div>
             </div>
             <div class="transfer__middle__bottom">
@@ -311,678 +311,90 @@
 <script setup lang="ts">
     import {
         IBC_TX_STATUS_SELECT_OPTIONS,
-        TRANSFERS_STATUS_OPTIONS,
         IBC_TX_STATUS,
-        UNKNOWN_SYMBOL,
-        TX_STATUS_NUMBER,
-        CHAINNAME,
         CHAIN_DEFAULT_VALUE,
-        TOTAL_BOUND,
-        CHAIN_DEFAULT_ICON,
         TOKEN_DEFAULT_ICON,
         TIP_ICON,
         PAGE_PARAMETERS,
-        BOTTOM_STATUS_DATA,
-        DEFAULT_DISPLAY_TEXT
+        BOTTOM_STATUS_DATA
     } from '@/constants';
-    import {
-        JSONparse,
-        getRestString,
-        formatNum,
-        rmIbcPrefix,
-        formatBigNumber
-    } from '@/helper/parseStringHelper';
+    import { getRestString, formatNum } from '@/helper/parseStringHelper';
     import ChainHelper from '@/helper/chainHelper';
     import { dayjsFormatDate } from '@/utils/timeTools';
-    import { usePagination, useGetTableColumns } from './composable';
+    import {
+        usePagination,
+        useGetTableColumns,
+        useSubTitleFilter,
+        useSelectedParams,
+        useTransfersTable,
+        useQueryDatas,
+        useRouteParams,
+        useSortIbcChains
+    } from './composable';
     import { useIbcStatistics } from '@/composables/home';
-    import dayjs from 'dayjs';
-    import { urlParser } from '@/utils/urlTools';
-    import { useGetIbcDenoms, useIbcChains, useNeedCustomColumns } from '@/composables';
-    import { IIbcTx } from '@/types/interface/transfers.interface';
-    import { axiosCancel } from '@/utils/axios';
-    import { IDataItem, TDenom } from '@/components/BjSelect/interface';
+    import { useIbcChains, useNeedCustomColumns, usePickerPlaceholder } from '@/composables';
     import { MODES } from '@/components/BjSelect/constants';
     import { TRANSFERS_TOKEN_DEFAULT_VALUE } from '@/constants/transfers';
-    import type { IIbcTxCount } from '@/types/interface/transfers.interface';
-    import { useIbcStatisticsChains } from '@/store';
 
-    const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
     const { pagination } = usePagination();
     const { ibcChains } = useIbcChains();
     const { tableColumns, showTransferLoading, tableDatas, getIbcTxs } = useGetTableColumns();
-    const chainDropdown = ref();
     const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(
         PAGE_PARAMETERS.transfers
     );
-
-    const isShowValuedText = ref(false);
-    const countLoading = ref(false);
-    const txsValue = ref<string>('');
     getIbcStatistics();
+    const { pickerPlaceholderColor, onOpenChangeRangePicker } = usePickerPlaceholder();
+    useSortIbcChains(ibcChains);
+    const { url, searchToken, inputFlag, dateRange, chainId, queryParams } = useRouteParams();
 
-    const pickerPlaceholderColor = ref('var(--bj-text-second)');
-
-    let paramsStatus = null,
-        paramsBaseDenom: string | undefined = undefined,
-        paramsBaseDenomChainId: string | undefined = undefined,
-        paramsDenom: string | undefined = undefined,
-        startTimestamp = 0,
-        endTimestamp = 0;
-    const dateRange = reactive({ value: [] });
-    let isHashFilterParams = ref(false);
-    let ibcTxTotalMoreThan500k = ref(false);
-    let pageNum = 1,
-        pageSize = 10;
-    let url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
-    const route = useRoute();
-    const router = useRouter();
-    const inputFlag = ref(false);
-    const changeInputFlag = (flag: boolean) => {
-        inputFlag.value = flag;
-    };
-
-    const getImageUrl = (status: string | number) => {
-        return new URL(`../../assets/status/transfer_status${status}.png`, import.meta.url).href;
-    };
-
-    const searchToken = ref<string | undefined>();
-    let chainId = route?.query.chain;
-    if (chainId) {
-        url += `&chain=${chainId}`;
-    }
-    if (route?.query?.denom) {
-        url += `&denom=${route.query.denom}`;
-        paramsDenom = route?.query.denom as string;
-    }
-    if (
-        route?.query?.baseDenom &&
-        (route?.query?.baseDenom as string)?.toLowerCase() !== UNKNOWN_SYMBOL
-    ) {
-        url += `&baseDenom=${route.query.baseDenom}`;
-        paramsBaseDenom = route?.query.baseDenom as string | undefined;
-    }
-    if (route?.query?.baseDenomChainId) {
-        url += `&baseDenomChainId=${route.query.baseDenomChainId}`;
-        paramsBaseDenomChainId = route?.query.baseDenomChainId as string | undefined;
-    }
-    searchToken.value = (paramsBaseDenom || '') + (paramsBaseDenomChainId || '');
-    if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
-        searchToken.value = rmIbcPrefix(paramsDenom as string);
-        inputFlag.value = true;
-    }
-    if (route?.query?.status) {
-        const defaultOptions = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
-        const successOptions = TRANSFERS_STATUS_OPTIONS.SUCCESS_OPTIONS;
-        const failedOptions = TRANSFERS_STATUS_OPTIONS.FAILED_OPTIONS;
-        const processingOptions = TRANSFERS_STATUS_OPTIONS.PROCESSING_OPTIONS;
-        paramsStatus = (route?.query?.status as string).split(',');
-        switch (JSON.stringify(paramsStatus)) {
-            case JSON.stringify(successOptions):
-                paramsStatus = successOptions;
-                break;
-            case JSON.stringify(failedOptions):
-                paramsStatus = failedOptions;
-                break;
-            case JSON.stringify(processingOptions):
-                paramsStatus = processingOptions;
-                break;
-            default:
-                paramsStatus = defaultOptions;
-                break;
-        }
-        url += `&status=${paramsStatus}`;
-    }
-
-    if (route?.query?.startTime) {
-        url += `&startTime=${route.query.startTime}`;
-        startTimestamp = dayjs(route.query.startTime as any).unix();
-    }
-
-    if (route?.query?.endTime) {
-        url += `&endTime=${route.query.endTime}`;
-        endTimestamp = dayjs(route.query.endTime as any)
-            .endOf('day')
-            .unix();
-    }
-
-    if (startTimestamp && endTimestamp) {
-        dateRange.value = [dayjs(startTimestamp * 1000), dayjs(endTimestamp * 1000)] as any;
-    }
-    const queryParam = reactive({
-        date_range:
-            startTimestamp && endTimestamp
-                ? [startTimestamp, endTimestamp]
-                : [0, Math.floor(new Date().getTime() / 1000)],
-        status: paramsStatus || TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS,
-        chain_id: chainId || undefined,
-        base_denom: paramsBaseDenom || undefined,
-        base_denom_chain_id: paramsBaseDenomChainId || undefined,
-        denom: paramsDenom || undefined
-    });
-
-    const queryDatas = () => {
-        showTransferLoading.value = true;
-        let isDateDefaultValue = false;
-        if (queryParam.date_range?.length === 2) {
-            const startTime = queryParam.date_range[0];
-            if (!startTime) {
-                isDateDefaultValue = true;
-            }
-        } else if (queryParam.date_range.length === 0) {
-            isDateDefaultValue = true;
-        }
-        const params = {
-            status: queryParam.status?.toString(),
-            chain_id: queryParam.chain_id,
-            date_range: queryParam.date_range?.toString(),
-            base_denom: queryParam.base_denom,
-            base_denom_chain_id: queryParam.base_denom_chain_id,
-            denom: queryParam.denom
-        };
-        isShowValuedText.value = Boolean(queryParam.chain_id);
-
-        countLoading.value = true;
-        getIbcTxs({
-            use_count: true,
-            ...params,
-            page_num: 1,
-            page_size: 10
-        })
-            .then((data) => {
-                pagination.total = (data as IIbcTxCount).txs_count;
-                txsValue.value = (data as IIbcTxCount).txs_value;
-                countLoading.value = false;
-            })
-            .catch((error) => {
-                console.log(error);
-            })
-            .finally(() => {
-                if (
-                    !params.chain_id &&
-                    !params.denom &&
-                    !params.base_denom &&
-                    !params.base_denom_chain_id &&
-                    params.status === TX_STATUS_NUMBER.defaultStatus &&
-                    isDateDefaultValue
-                ) {
-                    isHashFilterParams.value = false;
-                } else {
-                    isHashFilterParams.value = true;
-                }
-            });
-
-        getIbcTxs({
-            page_num: pagination.current,
-            page_size: pagination.pageSize,
-            use_count: false,
-            ...params
-        })
-            .then((data) => {
-                tableDatas.value = data as IIbcTx[];
-                showTransferLoading.value = false;
-            })
-            .catch((error) => {
-                if (!axiosCancel(error)) {
-                    showTransferLoading.value = false;
-                }
-                console.log(error);
-            });
-    };
-
-    queryDatas();
-    const startTime = (time: any) => {
-        const nowTimeDate = new Date(time);
-        return nowTimeDate.setHours(0, 0, 0, 0);
-    };
-
-    const disabledDate = (current: any) => {
-        const currentStart = dayjs(current).startOf('day');
-        const max = dayjs().endOf('day');
-        const min = dayjs((ibcStatisticsChainsStore.txSearchTimeMin || 1617007625) * 1000).startOf(
-            'day'
-        );
-        return currentStart && (currentStart < min || currentStart > max);
-    };
-
-    const getDisplaySubtitle = (
-        showDefault: boolean,
-        total: number,
-        showValuedText: boolean,
-        valuedText: string
-    ) => {
-        const displayTotal = showDefault ? total : DEFAULT_DISPLAY_TEXT;
-        const displayValued = showDefault
-            ? formatBigNumber(valuedText || '0', 0)
-            : DEFAULT_DISPLAY_TEXT;
-        return !showValuedText || total === 0
-            ? `${displayTotal} of the latest 500k transfers found`
-            : `${displayTotal} of the latest 500k transfers were found and valued at $${displayValued}`;
-    };
-
-    const isIbcTxTotalAndHashFilter = computed(() => {
-        if (ibcTxTotalMoreThan500k.value) {
-            if (isHashFilterParams.value) {
-                if (pagination.total === TOTAL_BOUND) {
-                    return 'Latest 500k transfers found';
-                }
-                return getDisplaySubtitle(
-                    !countLoading.value,
-                    pagination.total,
-                    isShowValuedText.value,
-                    txsValue.value
-                );
-            }
-            return 'Latest 500k transfers found';
-        } else {
-            if (isHashFilterParams.value) {
-                return getDisplaySubtitle(
-                    !countLoading.value,
-                    pagination.total,
-                    isShowValuedText.value,
-                    txsValue.value
-                );
-            }
-            return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
-        }
-    });
-    const setAllChains = (ibcChains: any) => {
-        if (ibcChains?.value?.all) {
-            const cosmosChain = ibcChains.value.all.filter(
-                (item: any) => item.chain_name === CHAINNAME.COSMOSHUB
-            );
-            const irishubChain = ibcChains.value.all.filter(
-                (item: any) => item.chain_name === CHAINNAME.IRISHUB
-            );
-            let notIncludesIrisAndCosmosChains: any = [];
-            ibcChains.value.all.forEach((item: any) => {
-                if (
-                    item.chain_name !== CHAINNAME.COSMOSHUB &&
-                    item.chain_name !== CHAINNAME.IRISHUB
-                ) {
-                    notIncludesIrisAndCosmosChains.push(item);
-                }
-            });
-            if (notIncludesIrisAndCosmosChains?.length) {
-                notIncludesIrisAndCosmosChains.sort((a: any, b: any) => {
-                    return a.chain_name.toLowerCase() < b.chain_name.toLowerCase()
-                        ? -1
-                        : a.chain_name.toLowerCase() > b.chain_name.toLowerCase()
-                        ? 1
-                        : 0;
-                });
-            }
-            ibcChains.value.all = [
-                ...cosmosChain,
-                ...irishubChain,
-                ...notIncludesIrisAndCosmosChains
-            ];
-        }
-    };
-    setAllChains(ibcChains);
-    watch(
-        () => ibcChains,
-        (newValue) => {
-            if (newValue?.value?.all) {
-                setAllChains(newValue);
-            }
-        }
+    const {
+        queryDatas,
+        getIbcTxsData,
+        isHashFilterParams,
+        isShowValuedText,
+        countLoading,
+        txsValue
+    } = useQueryDatas(showTransferLoading, pagination, getIbcTxs, tableDatas, queryParams);
+    const { isIbcTxTotalAndHashFilter } = useSubTitleFilter(
+        isHashFilterParams,
+        pagination,
+        ibcStatisticsTxs,
+        isShowValuedText,
+        countLoading,
+        txsValue
     );
-    const findIbcChainIcon = (chainId: string) => {
-        if (ibcChains && ibcChains.value.all) {
-            const result = ibcChains.value.all.find((item) => item.chain_id === chainId);
-            if (result) {
-                return result.icon || CHAIN_DEFAULT_ICON;
-            }
-        }
-        return CHAIN_DEFAULT_ICON;
-    };
-    const handleSelectChange = (item: any) => {
-        (window as any).gtag('event', 'Transfers-点击过滤条件Status');
-
-        pagination.current = 1;
-        queryParam.status = item ? JSONparse(item) : item;
-        url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
-        if (queryParam?.chain_id) {
-            url += `&chain=${queryParam.chain_id}`;
-        }
-        if (queryParam?.denom) {
-            url += `&denom=${queryParam.denom}`;
-        }
-        if (
-            queryParam?.base_denom &&
-            (queryParam?.base_denom as string)?.toLowerCase() !== UNKNOWN_SYMBOL
-        ) {
-            url += `&baseDenom=${queryParam.base_denom}`;
-        }
-        if (queryParam?.base_denom_chain_id) {
-            url += `&baseDenomChainId=${queryParam.base_denom_chain_id}`;
-        }
-        if (queryParam?.status) {
-            url += `&status=${queryParam.status.join(',')}`;
-        }
-        if (queryParam?.date_range?.length) {
-            if (queryParam?.date_range.length === 1) {
-                const timeStamp = queryParam.date_range[0];
-                const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=&endTime=${endTime}`;
-            }
-            if (queryParam?.date_range.length === 2) {
-                const startTimeStamp = queryParam.date_range[0];
-                const entTimeStamp = queryParam.date_range[1];
-                const startTime = startTimeStamp
-                    ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
-                    : '';
-                const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=${startTime}&endTime=${endTime}`;
-            }
-        }
-        router.replace(url);
-        queryDatas();
-    };
-
-    const onOpenChangeRangePicker = (open: boolean) => {
-        pickerPlaceholderColor.value = open ? 'var(--bj-text-third)' : 'var(--bj-text-second)';
-    };
-
-    const onChangeRangePicker = (dates: any) => {
-        (window as any).gtag('event', 'Transfers-点击过滤条件Date');
-
-        pagination.current = 1;
-        dateRange.value = dates;
-        queryParam.date_range[0] = Math.floor(startTime(dayjs(dates[0]).valueOf()) / 1000);
-        queryParam.date_range[1] = Math.floor(
-            startTime(dayjs(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1
-        );
-        url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
-
-        if (queryParam?.chain_id) {
-            url += `&chain=${queryParam.chain_id}`;
-        }
-        if (queryParam?.denom) {
-            url += `&denom=${queryParam.denom}`;
-        }
-        if (
-            queryParam?.base_denom &&
-            (queryParam?.base_denom as string)?.toLowerCase() !== UNKNOWN_SYMBOL
-        ) {
-            url += `&baseDenom=${queryParam.base_denom}`;
-        }
-        if (queryParam?.base_denom_chain_id) {
-            url += `&baseDenomChainId=${queryParam.base_denom_chain_id}`;
-        }
-        if (queryParam?.status) {
-            url += `&status=${queryParam.status.join(',')}`;
-        }
-        if (queryParam?.date_range?.length) {
-            if (queryParam?.date_range.length === 1) {
-                const timeStamp = queryParam.date_range[0];
-                const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=&endTime=${endTime}`;
-            }
-            if (queryParam?.date_range.length === 2) {
-                const startTimeStamp = queryParam.date_range[0];
-                const entTimeStamp = queryParam.date_range[1];
-                const startTime = dayjs(startTimeStamp * 1000).format('YYYY-MM-DD');
-                const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=${startTime}&endTime=${endTime}`;
-            }
-        }
-        router.replace(url);
-        queryDatas();
-    };
-    const onPaginationChange = (current: number, pageSize: number) => {
-        pagination.current = current;
-        const params: any = urlParser(url);
-        url = `/transfers?pageNum=${current}&pageSize=${pageSize}`;
-
-        if (params?.chain) {
-            url += `&chain=${params.chain}`;
-        }
-        if (params?.denom) {
-            url += `&denom=${params.denom}`;
-        }
-        if (params?.baseDenom && (params?.baseDenom as string)?.toLowerCase() !== UNKNOWN_SYMBOL) {
-            url += `&baseDenom=${params.baseDenom}`;
-        }
-        if (params?.baseDenomChainId) {
-            url += `&baseDenomChainId=${params.baseDenomChainId}`;
-        }
-        if (params?.status) {
-            url += `&status=${params.status}`;
-        }
-        if (params?.startTime || params.startTime === '') {
-            url += `&startTime=${params.startTime}`;
-        }
-        if (params?.endTime || params.endTime === '') {
-            url += `&endTime=${params.endTime}`;
-        }
-        router.replace(url);
-        showTransferLoading.value = true;
-        getIbcTxs({
-            page_num: pagination.current,
-            page_size: pagination.pageSize,
-            use_count: false,
-            ...queryParam
-        })
-            .then((data) => {
-                tableDatas.value = data as IIbcTx[];
-                showTransferLoading.value = false;
-            })
-            .catch((error) => {
-                if (!axiosCancel(error)) {
-                    showTransferLoading.value = false;
-                }
-                console.log(error);
-            });
-    };
-    const onClickReset = () => {
-        chainDropdown.value.selectedChain = [];
-        dateRange.value = [];
-        queryParam.date_range = [];
-        queryParam.status = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
-        queryParam.chain_id = undefined;
-        queryParam.base_denom = undefined;
-        queryParam.base_denom_chain_id = undefined;
-        queryParam.denom = undefined;
-        pagination.current = 1;
-        url = '/transfers';
-        router.replace(url);
-        chainIds.value = [];
-        searchToken.value = undefined;
-        queryDatas();
-    };
-
-    const chainIds = ref<TDenom[]>(chainId ? (chainId as string).split(',') : []);
-    const chainData = computed(() => {
-        return [
-            {
-                children: [
-                    {
-                        title: 'All Chains',
-                        doubleTime: true,
-                        id: CHAIN_DEFAULT_VALUE,
-                        metaData: null
-                    }
-                ]
-            },
-            {
-                children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
-                    title: v.chain_name,
-                    id: v.chain_id,
-                    icon: v.icon || CHAIN_DEFAULT_ICON,
-                    metaData: v
-                }))
-            }
-        ];
-    });
-    const chainGetPopupContainer = (): HTMLElement => document.querySelector('.transfer__middle')!;
-
-    const onSelectedChain = (vals: IDataItem[]) => {
-        (window as any).gtag('event', 'Transfers-点击过滤条件Chain');
-
-        chainIds.value = vals?.map((v) => v.id);
-        const chain_id = chainIds.value.join(',');
-
-        queryParam.chain_id = chain_id !== 'allchain,allchain' ? chain_id : '';
-        pagination.current = 1;
-        url = `/transfers?pageNum=${pagination.current}&pageSize=${pageSize}`;
-
-        if (queryParam?.chain_id) {
-            url += `&chain=${queryParam.chain_id}`;
-        }
-        if (queryParam?.denom) {
-            url += `&denom=${queryParam.denom}`;
-        }
-        if (
-            queryParam?.base_denom &&
-            (queryParam?.base_denom as string)?.toLowerCase() !== UNKNOWN_SYMBOL
-        ) {
-            url += `&baseDenom=${queryParam.base_denom}`;
-        }
-        if (queryParam?.base_denom_chain_id) {
-            url += `&baseDenomChainId=${queryParam.base_denom_chain_id}`;
-        }
-        if (queryParam?.status) {
-            url += `&status=${queryParam.status.join(',')}`;
-        }
-        if (queryParam?.date_range?.length) {
-            if (queryParam?.date_range.length === 1) {
-                const timeStamp = queryParam.date_range[0];
-                const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=&endTime=${endTime}`;
-            }
-            if (queryParam?.date_range.length === 2) {
-                const startTimeStamp = queryParam.date_range[0];
-                const entTimeStamp = queryParam.date_range[1];
-                const startTime =
-                    startTimeStamp > 0 ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD') : '';
-                const endTime =
-                    entTimeStamp > 0 ? dayjs(entTimeStamp * 1000).format('YYYY-MM-DD') : '';
-                url += `&startTime=${startTime}&endTime=${endTime}`;
-            }
-        }
-        router.replace(url);
-        queryDatas();
-    };
-
-    const handleClickRow = (record: any) => {
-        return {
-            onClick: () => {
-                router.push(`/transfers/details?txhash=${record.sc_tx_info.hash}`);
-            }
-        };
-    };
-
-    watch(ibcStatisticsTxs, (newValue) => {
-        if (newValue?.tx_all?.count <= TOTAL_BOUND) {
-            ibcTxTotalMoreThan500k.value = false;
-        } else {
-            ibcTxTotalMoreThan500k.value = true;
-        }
-    });
-
-    const tokenData = computed(() => {
-        return [
-            {
-                groupName: '',
-                children: [
-                    {
-                        title: 'All Tokens',
-                        id: '',
-                        metaData: null
-                    }
-                ]
-            },
-            {
-                groupName: 'Authed IBC Tokens',
-                children: ibcBaseDenomsSorted.value.map((v) => ({
-                    title: v.symbol,
-                    id: v.denom + v.chain_id,
-                    icon: v.icon || TOKEN_DEFAULT_ICON,
-                    metaData: v
-                }))
-            },
-            {
-                groupName: 'Other IBC Tokens',
-                children: [
-                    {
-                        id: 'Others',
-                        title: 'Others',
-                        icon: TOKEN_DEFAULT_ICON
-                    }
-                ]
-            }
-        ];
-    });
-
-    const onSelectedToken = (val?: IDataItem) => {
-        (window as any).gtag('event', 'Transfers-点击过滤条件Token');
-        pagination.current = 1;
-        const id = val?.id;
-        const denom = val?.metaData?.denom;
-        const denomChainId = val?.metaData?.chain_id;
-        if (id) {
-            if (val?.inputFlag) {
-                inputFlag.value = true;
-                const transferId = (id as string).replace(/^ibc\//i, '');
-                queryParam.denom = id ? `ibc/${transferId.toUpperCase()}` : undefined;
-                queryParam.base_denom = undefined;
-                queryParam.base_denom_chain_id = undefined;
-            } else {
-                inputFlag.value = false;
-                queryParam.base_denom = denom || id;
-                queryParam.base_denom_chain_id = denomChainId;
-                queryParam.denom = undefined;
-            }
-            searchToken.value = id as string;
-        } else {
-            inputFlag.value = false;
-            queryParam.base_denom = undefined;
-            queryParam.base_denom_chain_id = undefined;
-            queryParam.denom = undefined;
-            searchToken.value = '';
-        }
-        url = `/transfers?pageNum=${pageNum}&pageSize=${pageSize}`;
-        if (queryParam?.chain_id) {
-            url += `&chain=${queryParam.chain_id}`;
-        }
-        if (queryParam?.denom) {
-            url += `&denom=${queryParam.denom}`;
-        }
-        if (
-            queryParam?.base_denom &&
-            (queryParam?.base_denom as string)?.toLowerCase() !== UNKNOWN_SYMBOL
-        ) {
-            url += `&baseDenom=${queryParam.base_denom}`;
-        }
-        if (queryParam?.base_denom_chain_id) {
-            url += `&baseDenomChainId=${queryParam.base_denom_chain_id}`;
-        }
-        if (queryParam?.status) {
-            url += `&status=${queryParam.status.join(',')}`;
-        }
-        if (queryParam?.date_range?.length) {
-            if (queryParam?.date_range.length === 1) {
-                const timeStamp = queryParam.date_range[0];
-                const endTime = dayjs(timeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=&endTime=${endTime}`;
-            }
-            if (queryParam?.date_range.length === 2) {
-                const startTimeStamp = queryParam.date_range[0];
-                const entTimeStamp = queryParam.date_range[1];
-                const startTime = startTimeStamp
-                    ? dayjs(startTimeStamp * 1000).format('YYYY-MM-DD')
-                    : '';
-                const endTime = dayjs(entTimeStamp * 1000).format('YYYY-MM-DD');
-                url += `&startTime=${startTime}&endTime=${endTime}`;
-            }
-        }
-        router.replace(url);
-        queryDatas();
-    };
+    const {
+        chainDropdown,
+        chainIds,
+        chainGetPopupContainer,
+        tokenData,
+        chainData,
+        changeInputFlag,
+        disabledDate,
+        onSelectedToken,
+        onSelectedChain,
+        handleSelectChange,
+        onChangeRangePicker,
+        onClickReset
+    } = useSelectedParams(
+        pagination,
+        ibcChains,
+        queryParams,
+        searchToken,
+        chainId,
+        url,
+        inputFlag,
+        dateRange,
+        queryDatas
+    );
+    const { handleClickRow, onPaginationChange, getImageUrl, findIbcChainIcon } = useTransfersTable(
+        pagination,
+        url,
+        getIbcTxsData,
+        queryParams,
+        ibcChains
+    );
 </script>
 
 <style lang="less" scoped>
@@ -1086,15 +498,6 @@
                 width: 24px;
             }
         }
-        .thead_border_bottom {
-            position: absolute;
-            top: 48px;
-            left: 0;
-            right: 0;
-            background: var(--bj-border-color);
-            height: 1px;
-            z-index: 1;
-        }
         &__bottom {
             .flex(row, nowrap, space-between, center);
             font-family: GolosUI_Medium;
@@ -1150,7 +553,6 @@
     }
     .tip {
         width: 20px;
-
         &_color {
             color: var(--bj-font-color-65);
         }
@@ -1165,7 +567,6 @@
             vertical-align: middle;
         }
     }
-
     .tip_label {
         font-family: GolosUI_Medium;
     }
@@ -1203,10 +604,8 @@
                 .token {
                     &__icon {
                     }
-
                     &__num {
                     }
-
                     &__denom {
                     }
                 }
@@ -1253,10 +652,8 @@
                 .token {
                     &__icon {
                     }
-
                     &__num {
                     }
-
                     &__denom {
                     }
                 }
@@ -1277,22 +674,18 @@
     }
     @media screen and (max-width: 768px) {
         .transfer {
-            :deep(.page_title_container) {
+            :deep(.page_title) {
                 display: inline-flex;
                 text-align: left;
-
                 .flex {
                     display: block;
                 }
-
                 .icon {
                     display: none;
                 }
-
                 .inline_icon {
                     display: block;
                 }
-
                 .title_p {
                     position: relative;
                     display: inline-flex;
@@ -1329,10 +722,8 @@
                 .token {
                     &__icon {
                     }
-
                     &__num {
                     }
-
                     &__denom {
                     }
                 }
@@ -1343,7 +734,6 @@
                 & .status_tips {
                     .status_log {
                     }
-
                     .status_tip {
                         margin-left: 0;
                     }
@@ -1393,10 +783,8 @@
                 .token {
                     &__icon {
                     }
-
                     &__num {
                     }
-
                     &__denom {
                     }
                 }
@@ -1409,7 +797,6 @@
                     justify-content: flex-start;
                     .status_log {
                     }
-
                     .status_tip {
                         margin-left: 8px;
                     }
@@ -1458,10 +845,8 @@
                 .token {
                     &__icon {
                     }
-
                     &__num {
                     }
-
                     &__denom {
                     }
                 }
@@ -1477,7 +862,6 @@
                         width: 100%;
                         margin-bottom: 8px;
                     }
-
                     .status_tip {
                         margin-left: 0;
                         margin-bottom: 8px;
@@ -1523,10 +907,8 @@
                 .token {
                     &__icon {
                     }
-
                     &__num {
                     }
-
                     &__denom {
                     }
                 }
@@ -1537,7 +919,6 @@
                 & .status_tips {
                     .status_log {
                     }
-
                     .status_tip {
                         width: 50%;
                     }

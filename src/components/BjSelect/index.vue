@@ -5,11 +5,12 @@
         :overlay-style="{ zIndex: 1020 }"
         :destroy-popup-on-hide="true"
         :get-popup-container="dropdownProps?.getPopupContainer"
+        :disabled="isDisabled"
         @visible-change="visibleChange"
     >
         <div
             class="flex items-center default_color dropdown_container cursor"
-            :class="[{ visible_border: visible }]"
+            :class="[{ visible_border: visible, disabled_border: isDisabled }]"
         >
             <!--            多选单选的展示 start-->
             <template v-if="props.mode !== MODES.double">
@@ -161,7 +162,6 @@
     import { useInit } from './composable';
     import { getValByMode, closeByMode, inputItemsByMode, getLastArrs } from './helper';
     import { MODES } from './constants';
-
     /**
      * defineProps 使用外部引入的interface或者type会报错
      */
@@ -186,16 +186,18 @@
             btnTxt: string;
         };
         dropdownProps?: DropdownProps;
+        isDisabled?: boolean;
+        defaultValue?: IDataItem;
     }
 
     const props = withDefaults(defineProps<IProps>(), {
         data: () => []
     });
 
-    const { inputCtn, placeholder, hideIcon, badges, selectColorDefaultVal, dropdownProps } = {
+    const { inputCtn, hideIcon, badges, selectColorDefaultVal, dropdownProps } = {
         ...props
     };
-
+    const { defaultValue, placeholder } = toRefs(props);
     const { visible, selectItems, tokenInput, flatData, resetVal } = useInit(props);
 
     // 是否选中
@@ -241,7 +243,6 @@
     // 确认confirm时候
     const confirmChains = () => {
         const inputItems = inputItemsByMode(tokenInput.value, props.mode);
-
         // 双选时候，如果选择框没有值时候希望填充
         if (props.mode === MODES.double && inputItems.length === 0) {
             const matchItem: IDataItem | undefined = flatData.value.find(
@@ -250,6 +251,16 @@
 
             if (matchItem) {
                 selectItems.value = [matchItem, matchItem];
+            }
+        } else if (props.mode !== MODES.multiple) {
+            if (!inputItems.length && defaultValue) {
+                selectItems.value = [
+                    {
+                        id: defaultValue.value?.id as TDenom,
+                        title: defaultValue.value?.title as TDenom,
+                        inputFlag: false
+                    }
+                ];
             }
         }
         sumbitTokens(selectItems.value, true);
@@ -325,7 +336,6 @@
                 res = getLastArrs(inputItems);
                 break;
         }
-
         selectItems.value = res;
     };
 
@@ -433,6 +443,12 @@
             border-color: var(--bj-primary-color);
         }
     }
+    .disabled_border {
+        cursor: url('../../assets/forbidden.png'), not-allowed;
+        &:hover {
+            border-color: var(--bj-border-color);
+        }
+    }
 
     .multiple {
         border: 1px solid var(--bj-primary-color);
@@ -492,7 +508,7 @@
         }
 
         &.disabled {
-            cursor: not-allowed;
+            cursor: url('../../assets/forbidden.png'), not-allowed;
             filter: grayscale(100%);
 
             &:hover {
@@ -549,6 +565,10 @@
             max-width: 381px;
             max-height: 552px;
             overflow-y: auto;
+        }
+        .confirm_button {
+            margin-top: 12px;
+            margin-left: 0;
         }
     }
 

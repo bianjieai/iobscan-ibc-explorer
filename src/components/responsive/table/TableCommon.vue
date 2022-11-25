@@ -1,5 +1,6 @@
 <template>
-    <div class="table_wrapper">
+    <div class="table_wrapper" :class="{ table_padding_lr: hasPaddingLr }">
+        <div v-if="!hasPaddingLr" class="thead_border_top"></div>
         <a-config-provider>
             <a-table
                 v-if="dataSource"
@@ -34,7 +35,7 @@
                 <no-datas v-if="!loading && !data.length" />
             </template>
         </a-config-provider>
-        <div class="thead_border_bottom"></div>
+        <div v-if="hasPaddingLr" class="thead_border_bottom"></div>
         <div
             v-if="hasData || $slots.table_bottom_status"
             class="flex justify-between pt-16 items-center bottom"
@@ -46,6 +47,8 @@
             <a-pagination
                 v-if="hasData && !noPagination"
                 v-model:current="pageInfo.current"
+                class="table_pagination"
+                :class="{ android_adapter: isAndroid }"
                 :page-size="pageInfo.pageSize"
                 :total="pageInfo.total"
                 :show-title="false"
@@ -60,13 +63,13 @@
     import type { TableColumnsType } from 'ant-design-vue';
     import { GetComponentProps } from 'ant-design-vue/lib/vc-table/interface';
     import type { IIbcTx } from '@/types/interface/transfers.interface';
-    import type { IResponseRelayerListItem } from '@/types/interface/relayers.interface';
     import type { IResponseChannelsListItem } from '@/types/interface/channels.interface';
     import type { IResponseChainsListItem } from '@/types/interface/chains.interface';
     import type {
         IResponseIbcTokenListItem,
         ITokensListItem
     } from '@/types/interface/tokens.interface';
+    import { IRelayerTransferItem, RelayerListItem } from '@/types/interface/relayers.interface';
     import { CompareOrder } from '@/types/interface/components/table.interface';
     import { computed, onMounted, reactive, ref, watch } from 'vue';
     import { useRouter } from 'vue-router';
@@ -74,6 +77,8 @@
     import { formatLastUpdated } from '@/utils/timeTools';
     import { formatSupply } from '@/helper/tableCellHelper';
     import { useGetIbcDenoms, useTimeInterval } from '@/composables';
+    import { RelayersListKey } from '@/constants/relayers';
+    import { getIsAndroid } from '@/utils/systemTools';
 
     const router = useRouter();
     const { ibcBaseDenoms } = useGetIbcDenoms();
@@ -82,8 +87,9 @@
         | IResponseChainsListItem[]
         | ITokensListItem[]
         | IResponseIbcTokenListItem[]
-        | IResponseRelayerListItem[]
-        | IResponseChannelsListItem[];
+        | RelayerListItem[]
+        | IResponseChannelsListItem[]
+        | IRelayerTransferItem[];
     interface IProps {
         columns: TableColumnsType;
         data: TData;
@@ -99,14 +105,17 @@
         realTimeKey?: { scKey: string; dcKey: string }[] | null;
         loading: boolean;
         customRow?: GetComponentProps<any>;
+        hasPaddingLr?: boolean;
     }
+    // Todo shan hasPaddingLr 能否修改 Transfer 列表页等移入每一行两边有间距的情况
     let backUpDataSource: any[] = [];
     const props = withDefaults(defineProps<IProps>(), {
         pageSize: null,
         current: null,
         scroll: undefined,
         realTimeKey: null,
-        rowKey: 'record_id'
+        rowKey: 'record_id',
+        hasPaddingLr: true
     });
     const pageInfo = reactive({
         pageSize: props.pageSize || 10,
@@ -184,6 +193,7 @@
             dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
         }
     };
+    const isAndroid = getIsAndroid();
     const emits = defineEmits<{
         (e: 'onPageChange', current: number, pageSize: number): void;
     }>();
@@ -215,6 +225,33 @@
         return formatSupply(item[key], item.base_denom, ibcBaseDenoms.value, 2, false);
     };
     let tempColumn: any;
+    const relayerSort = (key: string, order: any) => {
+        let registeredTemp: any[] = [];
+        let unRegisteredTemp: any[] = [];
+        backUpDataSource.forEach((item) => {
+            item[RelayersListKey.relayersRelayerName]
+                ? registeredTemp.push(item)
+                : unRegisteredTemp.push(item);
+        });
+        registeredTemp = registeredTemp.sort((a, b) => {
+            return (
+                new BigNumber(a[key]).comparedTo(new BigNumber(b[key])) *
+                (order === CompareOrder.DESCEND ? -1 : 1)
+            );
+        });
+        unRegisteredTemp = unRegisteredTemp.sort((a, b) => {
+            return (
+                new BigNumber(a[key]).comparedTo(new BigNumber(b[key])) *
+                (order === CompareOrder.DESCEND ? -1 : 1)
+            );
+        });
+        backUpDataSource = [...registeredTemp, ...unRegisteredTemp].map(
+            (item: any, index: number) => ({
+                ...item,
+                _count: index + 1
+            })
+        );
+    };
     const onTableChange = (pagination: any, filters: any, sorter: any) => {
         let { columnKey, column, order } = sorter;
         column ? (tempColumn = column) : null;
@@ -227,7 +264,6 @@
                 item.sortOrder = null;
             }
         });
-        // todo duanjie => 待优化
         switch (columnKey) {
             case 'supply':
             case 'ibc_transfer_amount':
@@ -255,6 +291,14 @@
                         _count: index + 1
                     })
                 );
+                break;
+            case RelayersListKey.relayersServedChains:
+            case RelayersListKey.relayersSuccessRate:
+            case RelayersListKey.relayersIbcTransferTxs:
+            case RelayersListKey.relayersTotalRelayedValue:
+            case RelayersListKey.relayersTotalFeeCost:
+            case RelayersListKey.relayersLastUpdated:
+                relayerSort(columnKey, order);
                 break;
             default: // reset backup
                 if (tempColumn.key !== columnKey) {
@@ -290,7 +334,8 @@
     }
     :deep(.ant-table-container) {
         width: 1150px;
-        min-height: 300px;
+        // min-height: 300px;
+        min-height: 436px;
     }
     :deep(div.ant-table-body) {
         overflow-y: auto !important;
@@ -352,10 +397,21 @@
     }
     .table_wrapper {
         margin-top: 16px;
-        padding: 0 24px;
         background-color: #fff;
         border-radius: 4px;
         position: relative;
+    }
+    .table_padding_lr {
+        padding: 0 24px;
+    }
+    .thead_border_top {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background: rgba(61, 80, 255, 0.1);
+        height: 2px;
+        z-index: 1;
     }
     .thead_border_bottom {
         position: absolute;
@@ -365,6 +421,35 @@
         background: var(--bj-border-color);
         height: 1px;
         z-index: 1;
+    }
+    :deep(.ant-pagination) {
+        overflow: auto;
+        .ant-pagination-item {
+            min-width: auto;
+        }
+        .ant-pagination-jump-next-custom-icon,
+        .ant-pagination-jump-prev-custom-icon {
+            min-width: 30px;
+            .ant-pagination-item-link {
+                width: 100%;
+                height: 100%;
+                .ant-pagination-item-container {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                    .ant-pagination-item-ellipsis {
+                        line-height: 24px;
+                    }
+                }
+            }
+        }
+    }
+    .android_adapter {
+        :deep(.ant-pagination-item-ellipsis) {
+            letter-spacing: -5px;
+        }
     }
     // tablet
     @media screen and (max-width: 810px) {
@@ -379,6 +464,8 @@
     // mobile
     @media screen and (max-width: 530px) {
         .table_wrapper {
+        }
+        .table_padding_lr {
             padding: 0 16px;
         }
         .bottom {

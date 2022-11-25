@@ -3,7 +3,6 @@
         <PageTitle
             :title="`${baseDenomInfo.symbol} IBC Token`"
             :subtitle="subtitle"
-            has-icon
             :img-src="baseDenomInfo.imgSrc"
         />
         <div class="select flex items-center flex-wrap wrapRelative">
@@ -29,7 +28,7 @@
                 :options="IBC_STATUS_OPTIONS"
                 @on-selected-change="onSelectedStatus"
             />
-            <ResetButton @on-reset="resetSearchCondition" />
+            <TypeButton @on-reset="resetSearchCondition" />
         </div>
 
         <TableCommon

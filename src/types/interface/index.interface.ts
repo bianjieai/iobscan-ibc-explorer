@@ -88,3 +88,17 @@ export interface IBottomStatus {
     statusImg: string;
     status: string;
 }
+
+export interface IDenomStatistic {
+    [key: string]: {
+        statistics_name: string;
+        count: number | string;
+        no_link?: boolean;
+        unit?: string;
+    };
+}
+
+export interface IRelayerName {
+    source: string;
+    matching: string;
+}

@@ -1,6 +1,6 @@
 <template>
     <div class="block">
-        <div class="block__header">
+        <div v-if="title" class="block__header">
             <div :class="type === 'dark' ? 'block__header__line_dark' : 'block__header__line'">
                 <p
                     class="block__header__title"
@@ -24,23 +24,15 @@
 
 <script setup lang="ts">
     import { TIP_ICON } from '@/constants';
-    defineProps({
-        type: {
-            type: String,
-            default: ''
-        },
-        title: {
-            type: String,
-            required: true
-        },
-        showTip: {
-            type: Boolean,
-            default: false
-        },
-        tipMsg: {
-            type: String,
-            default: ''
-        }
+    interface IProps {
+        title?: string;
+        type?: string;
+        showTip?: boolean;
+        tipMsg?: string;
+    }
+
+    withDefaults(defineProps<IProps>(), {
+        showTip: false
     });
 </script>
 

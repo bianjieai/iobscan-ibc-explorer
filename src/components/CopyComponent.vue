@@ -5,7 +5,7 @@
         :data-clipboard-text="copyText"
         @click="handleCopy()"
     >
-        <span v-show="!isShowCopied" class="copied iconfont icon-fuzhi"></span>
+        <span v-show="!isShowCopied" class="copied iconfont icon-copy"></span>
         <span v-show="isShowCopied" class="copied iconfont icon-fuzhichenggong1">
             <span class="text">Copied</span></span
         >
@@ -22,8 +22,8 @@
     let isShowCopied = ref<boolean>(false);
     let copyTimer = ref<number>(0);
     const handleCopy = () => {
-        clearTimeout(copyTimer.value);
         if (isShowCopied.value) return;
+        clearTimeout(copyTimer.value);
         const clipboard = new Clipboard('#tag_copy');
         clipboard.on('success', () => {
             // 释放内存
@@ -47,14 +47,14 @@
         margin-left: 8px;
         display: inline-block;
         align-items: center;
-        font-size: var(--bj-font-size-sub-title);
         color: var(--bj-primary-color);
         user-select: none;
         .copied {
             .flex(row, nowrap, flex-start, center);
+            font-size: var(--bj-font-size-normal);
+            line-height: 14px;
             .text {
                 margin-left: 3px;
-                font-size: var(--bj-font-size-normal);
                 font-family: GolosUIWebRegular;
                 font-weight: 400;
                 line-height: 18px;
