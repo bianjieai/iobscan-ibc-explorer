@@ -91,8 +91,8 @@
                             </svg>
                         </template>
                     </a-range-picker>
-                    <a-popover destroy-tooltip-on-hide>
-                        <template #content>
+                    <a-tooltip>
+                        <template #title>
                             <div>
                                 <p class="popover_c">
                                     Supports filtering within the latest 500k transfers found.
@@ -100,7 +100,7 @@
                             </div>
                         </template>
                         <img class="tip cursor" :src="TIP_ICON" />
-                    </a-popover>
+                    </a-tooltip>
                     <TypeButton @on-reset="onClickReset" />
                 </div>
             </div>

@@ -38,7 +38,8 @@
                     <InfoCard
                         class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap"
                         icon="icon-a-transfertype"
-                        title="IBC Transfer Type"
+                        title="IBC Transaction Type"
+                        tip-msg="The proportion of the three types of relayed transactions (Receive, Acknowledge, and Timeout) to the total number of these transactions."
                     >
                         <loading-component
                             v-if="transferTypeLoading"
@@ -80,6 +81,7 @@
                         class="relayer_details__charts_wrap__left__bottom__success_rate"
                         icon="icon-a-successrate"
                         title="Success Rate"
+                        tip-msg="The success rate of all relayed transactions (Receive, Acknowledge, and Timeout)."
                     >
                         <loading-component
                             v-if="ibcStatisticsChainsStore.isShowLoading"
@@ -184,7 +186,6 @@
                         flex: 1;
                         &__nodatas {
                             margin: 1px 0;
-                            min-width: 380px;
                         }
                     }
                     &__transfer_type {
