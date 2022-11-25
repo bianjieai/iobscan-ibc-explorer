@@ -50,6 +50,12 @@
     @media screen and (max-width: 460px) {
         .transfer_type {
             width: 100%;
+            &:first-child {
+                padding-left: 16px;
+            }
+            &:last-child {
+                padding-right: 16px;
+            }
             &__type {
             }
         }

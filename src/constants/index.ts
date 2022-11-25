@@ -6,6 +6,7 @@ export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.
 export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', import.meta.url).href;
 export const RELAYER_DEFAULT_ICON = new URL('../assets/relayers/default.png', import.meta.url).href;
 export const TIP_ICON = new URL('../assets/tip.png', import.meta.url).href;
+export const IMAGE_LOADING = new URL('../assets/image_loading.gif', import.meta.url).href;
 
 export const ROUTE_INFO = {
     home: {

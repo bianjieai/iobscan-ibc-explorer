@@ -1,4 +1,4 @@
-import { onMounted, onBeforeUnmount } from 'vue';
+import { onMounted, onBeforeUnmount, Ref } from 'vue';
 import {
     AGE_TIMER_INTERVAL,
     PAGE_PARAMETERS,
@@ -14,6 +14,7 @@ import { DATA_REFRESH_GAP } from '@/constants/home';
 import { IBaseDenom } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import moveDecimal from 'move-decimal-point';
+import { handleImgLoadingSussess } from '@/utils/imageTools';
 
 export const useTimeInterval = (intervalCallBack: Function, interval = AGE_TIMER_INTERVAL) => {
     let timer: number | null = null;
@@ -251,5 +252,25 @@ export const usePickerPlaceholder = () => {
     return {
         pickerPlaceholderColor,
         onOpenChangeRangePicker
+    };
+};
+
+// 根据图片加载状态展示对应的图片
+export const useImageLoadStatus = (image: Ref<string>, defaultImg: Ref<string>) => {
+    const isSuccessLoadingImg = ref<boolean>(false);
+    const isLoadingImg = ref<boolean>(true);
+    watch(
+        image,
+        (newImage) => {
+            handleImgLoadingSussess(newImage, isSuccessLoadingImg, isLoadingImg);
+        },
+        { immediate: true }
+    );
+    const displayImageSrc = computed(() => {
+        return isSuccessLoadingImg.value ? image.value : defaultImg.value;
+    });
+    return {
+        isLoadingImg,
+        displayImageSrc
     };
 };
