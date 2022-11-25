@@ -2,7 +2,7 @@
     <div class="relayer_title">
         <ImageLoadStatus
             class="relayer_title__icon"
-            :success-img="relayerIcon"
+            :img-src="relayerIcon"
             :default-img="defaultRelayerImg"
             :width="40"
             :height="40"
@@ -13,7 +13,7 @@
             <div class="relayer_title__text">
                 <ImageLoadStatus
                     class="relayer_title__icon_mobile"
-                    :success-img="relayerIcon"
+                    :img-src="relayerIcon"
                     :default-img="defaultRelayerImg"
                     :width="40"
                     :height="40"

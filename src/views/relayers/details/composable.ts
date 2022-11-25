@@ -64,7 +64,6 @@ export const useGetRelayerDetailsInfo = () => {
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
     const channelPairsInfo = ref<IChannelChain[]>([]);
     const isShowModal = ref<boolean>(false);
-    const defaultRelayerImg = ref<string>('');
     // relayer_name 适配
     const displayAdaptor = ref<boolean>(false);
     // chain_name 先左右排，再上下排
@@ -159,9 +158,9 @@ export const useGetRelayerDetailsInfo = () => {
             isShowModal.value ? '--' : servedChainsInfo.value?.length
         } blockchains served`;
     });
-    if (!relayerName) {
-        defaultRelayerImg.value = RELAYER_DEFAULT_ICON;
-    }
+    const defaultRelayerImg = computed(() => {
+        return !relayerName ? RELAYER_DEFAULT_ICON : '';
+    });
     // relayer_name
     const { width: widthClient } = useWindowSize();
     watch([relayerName, widthClient], ([newRelayerName, newWidthClient]) => {

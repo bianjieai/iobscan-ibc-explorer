@@ -3,12 +3,12 @@
         <img
             v-if="isLoadingImg"
             :style="{ width: width + 'px', height: height + 'px' }"
-            :src="IMAGE_LOADING"
+            :src="imgLoading"
             alt=""
         />
         <img
-            v-else-if="!isLoadingImg && displayImageSrc(successImg, defaultImg)"
-            v-lazyload="displayImageSrc(successImg, defaultImg)"
+            v-else-if="!isLoadingImg && displayImageSrc"
+            :src="displayImageSrc"
             class="image_status__img"
             :style="{ width: width + 'px', height: height + 'px' }"
             alt=""
@@ -22,17 +22,19 @@
     import { IMAGE_LOADING } from '@/constants';
 
     interface IImageLoadStatus {
-        successImg: string;
+        imgSrc: string;
         defaultImg: string;
+        imgLoading?: string;
         width?: number;
         height?: number;
     }
     const props = withDefaults(defineProps<IImageLoadStatus>(), {
+        imgLoading: IMAGE_LOADING,
         width: 32,
         height: 32
     });
-    const { successImg } = toRefs(props);
-    const { isLoadingImg, displayImageSrc } = useImageLoadStatus(successImg);
+    const { imgSrc, defaultImg } = toRefs(props);
+    const { isLoadingImg, displayImageSrc } = useImageLoadStatus(imgSrc, defaultImg);
 </script>
 
 <style lang="less" scoped>

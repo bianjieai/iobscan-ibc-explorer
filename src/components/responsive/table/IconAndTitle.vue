@@ -7,7 +7,7 @@
                 class="icon mr-8"
                 :class="{ small_icon: iconSize === TableCellIconSize.SMALL }"
             />
-            <ImageLoadStatus v-else :success-img="imgSrc" :default-img="defaultImg">
+            <ImageLoadStatus v-else :img-src="imgSrc" :default-img="defaultImg">
                 <RLoadErrorImage :img-text="title" />
             </ImageLoadStatus>
         </div>
@@ -69,10 +69,9 @@
 
     // relayer 处理
     const relayerName = computed(() => props.title || UNKNOWN);
-    const defaultImg = ref<string>('');
-    if (relayerName.value === UNKNOWN) {
-        defaultImg.value = RELAYER_DEFAULT_ICON;
-    }
+    const defaultImg = computed(() => {
+        return relayerName.value === UNKNOWN ? RELAYER_DEFAULT_ICON : '';
+    });
     const emit = defineEmits<{
         (e: 'clickTitle'): void;
     }>();

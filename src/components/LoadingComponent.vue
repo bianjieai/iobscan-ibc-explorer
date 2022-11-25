@@ -10,7 +10,7 @@
             width: props.width + props.widthUnit
         }"
     >
-        <a-spin class="flex"></a-spin>
+        <a-spin></a-spin>
     </div>
 </template>
 
