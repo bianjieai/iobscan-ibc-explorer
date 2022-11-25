@@ -1,6 +1,11 @@
 import { App, Directive } from 'vue';
 
 export const imgLoadingDirective: Directive = {
+    created(el, binding) {
+        if (!binding.arg) {
+            el.src = binding.value;
+        }
+    },
     mounted(el, binding) {
         // 监听是否进入可视区域
         const observer = new IntersectionObserver(([{ isIntersecting }]) => {
@@ -12,7 +17,9 @@ export const imgLoadingDirective: Directive = {
                 observer.unobserve(el);
             }
         });
-        observer.observe(el);
+        if (binding.arg) {
+            observer.observe(el);
+        }
     }
 };
 

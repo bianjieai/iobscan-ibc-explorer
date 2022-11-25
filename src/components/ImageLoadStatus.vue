@@ -8,7 +8,7 @@
         />
         <img
             v-else-if="!isLoadingImg && displayImageSrc"
-            :src="displayImageSrc"
+            v-lazyload:[isLazyload]="displayImageSrc"
             class="image_status__img"
             :style="{ width: width + 'px', height: height + 'px' }"
             alt=""
@@ -25,10 +25,12 @@
         imgSrc: string;
         defaultImg: string;
         imgLoading?: string;
+        isLazyload?: boolean;
         width?: number;
         height?: number;
     }
     const props = withDefaults(defineProps<IImageLoadStatus>(), {
+        isLazyload: false,
         imgLoading: IMAGE_LOADING,
         width: 32,
         height: 32
