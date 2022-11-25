@@ -19,7 +19,7 @@ export const formatSubTitle = (
         if (!isHaveParams) {
             return `Latest 500k ${unit} found`;
         } else {
-            if (conditionCount === TOTAL_BOUND) {
+            if (conditionCount >= TOTAL_BOUND) {
                 return `Latest 500k ${unit} found`;
             }
             return `${formatBigNumber(conditionCount, 0)} of the latest 500k ${unit} found`;

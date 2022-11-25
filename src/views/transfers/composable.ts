@@ -283,7 +283,7 @@ export const useSubTitleFilter = (
         showValuedText: boolean,
         valuedText: string
     ) => {
-        const displayTotal = showDefault ? total : DEFAULT_DISPLAY_TEXT;
+        const displayTotal = showDefault ? formatBigNumber(total || '0', 0) : DEFAULT_DISPLAY_TEXT;
         const displayValued = showDefault
             ? formatBigNumber(valuedText || '0', 0)
             : DEFAULT_DISPLAY_TEXT;
@@ -294,7 +294,7 @@ export const useSubTitleFilter = (
     const isIbcTxTotalAndHashFilter = computed(() => {
         if (ibcTxTotalMoreThan500k.value) {
             if (isHashFilterParams.value) {
-                if (pagination.total === TOTAL_BOUND) {
+                if (pagination.total >= TOTAL_BOUND) {
                     return 'Latest 500k transfers found';
                 }
                 return getDisplaySubtitle(
@@ -314,7 +314,10 @@ export const useSubTitleFilter = (
                     txsValue.value
                 );
             }
-            return `A total of ${ibcStatisticsTxs.tx_all.count} transfers found`;
+            return `A total of ${formatBigNumber(
+                ibcStatisticsTxs.tx_all.count,
+                0
+            )} transfers found`;
         }
     });
     watch(ibcStatisticsTxs, (newValue) => {
