@@ -283,8 +283,8 @@ export const useSubTitleFilter = (
         showValuedText: boolean,
         valuedText: string
     ) => {
-        const displayTotal = showDefault ? formatBigNumber(total || '0', 0) : DEFAULT_DISPLAY_TEXT;
-        const displayValued = showDefault
+        const displayTotal = !showDefault ? formatBigNumber(total || '0', 0) : DEFAULT_DISPLAY_TEXT;
+        const displayValued = !showDefault
             ? formatBigNumber(valuedText || '0', 0)
             : DEFAULT_DISPLAY_TEXT;
         return !showValuedText || total === 0
@@ -292,33 +292,17 @@ export const useSubTitleFilter = (
             : `${displayTotal} of the latest 500k transfers were found and valued at $${displayValued}`;
     };
     const isIbcTxTotalAndHashFilter = computed(() => {
-        if (ibcTxTotalMoreThan500k.value) {
-            if (isHashFilterParams.value) {
-                if (pagination.total >= TOTAL_BOUND) {
-                    return 'Latest 500k transfers found';
-                }
-                return getDisplaySubtitle(
-                    !countLoading.value,
-                    pagination.total,
-                    isShowValuedText.value,
-                    txsValue.value
-                );
-            }
-            return 'Latest 500k transfers found';
-        } else {
-            if (isHashFilterParams.value) {
-                return getDisplaySubtitle(
-                    !countLoading.value,
-                    pagination.total,
-                    isShowValuedText.value,
-                    txsValue.value
-                );
-            }
-            return `A total of ${formatBigNumber(
-                ibcStatisticsTxs.tx_all.count,
-                0
-            )} transfers found`;
+        if (isHashFilterParams.value) {
+            return getDisplaySubtitle(
+                countLoading.value,
+                pagination.total,
+                isShowValuedText.value,
+                txsValue.value
+            );
         }
+        return ibcTxTotalMoreThan500k.value
+            ? 'Latest 500k transfers found'
+            : `A total of ${formatBigNumber(ibcStatisticsTxs.tx_all.count, 0)} transfers found`;
     });
     watch(ibcStatisticsTxs, (newValue) => {
         if (newValue?.tx_all?.count <= TOTAL_BOUND) {
@@ -390,10 +374,7 @@ export const useQueryDatas = (
     const queryDatas = () => {
         if (queryParams.date_range?.length === 2) {
             const startTime = queryParams.date_range[0];
-            if (!startTime) {
-                isDateDefaultValue = true;
-            }
-            isDateDefaultValue = false;
+            isDateDefaultValue = !startTime;
         } else if (queryParams.date_range.length === 0) {
             isDateDefaultValue = true;
         }
