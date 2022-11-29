@@ -330,8 +330,16 @@ export const useQueryDatas = (
     const isShowValuedText = ref(false);
     const countLoading = ref(false);
     const txsValue = ref<string>('');
-    const getIbcTxsData = (params: any, page_num: number, page_size: number, use_count = false) => {
+    const getIbcTxsData = async (
+        params: any,
+        page_num: number,
+        page_size: number,
+        use_count = false
+    ) => {
         showTransferLoading.value = true;
+        if (params.chain) {
+            params.chain = await ChainHelper.handleChainIdToChain(params.chain);
+        }
         getIbcTxs({
             page_num,
             page_size,
@@ -473,7 +481,7 @@ export const useSelectedParams = (
             {
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
                     title: v.pretty_name,
-                    id: v.chain_name,
+                    id: v.pretty_name,
                     icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))

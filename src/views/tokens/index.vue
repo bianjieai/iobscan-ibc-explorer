@@ -29,7 +29,7 @@
                 placeholder="All Chains"
                 :hide-icon="true"
                 :input-ctn="{
-                    placeholder: 'Search by Chain ID',
+                    placeholder: 'Search by Chain Name',
                     btnTxt: 'Confirm'
                 }"
                 :select-color-default-val="CHAIN_DEFAULT_VALUE"
