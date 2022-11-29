@@ -69,7 +69,12 @@
                 <a-popover v-if="+record[column.key] !== -1">
                     <template #content>
                         <div class="popover_c">
-                            {{ `${record.currency} ${formatPrice(record[column.key])}` }}
+                            {{
+                                `${record.currency} ${formatPrice(
+                                    record[column.key],
+                                    computDecimal(record[column.key])
+                                )}`
+                            }}
                         </div>
                     </template>
                     <div v-if="record[column.key] < THOUSAND_DECIMAL">
@@ -163,7 +168,12 @@
         useTokensColumnJump
     } from '@/views/tokens/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
-    import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
+    import {
+        formatPrice,
+        formatSupply,
+        formatAmount,
+        computDecimal
+    } from '@/helper/tableCellHelper';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
