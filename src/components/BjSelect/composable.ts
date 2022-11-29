@@ -42,7 +42,7 @@ export const useInit = (props: TUseInit) => {
         const inputItems: IDataItem[] = [];
         values.forEach((v) => {
             const temp = flatData.value.find((item) => item.id === v);
-            if (temp && !inputFlag) {
+            if (temp && (!inputFlag || !v)) {
                 selectItems.value.push(temp);
             } else {
                 inputItems.push({

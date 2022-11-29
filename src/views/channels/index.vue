@@ -11,7 +11,7 @@
                 :mode="MODES.double"
                 associate-id="allchain"
                 :input-ctn="{
-                    placeholder: 'Search by Chain ID,Chain ID',
+                    placeholder: 'Search by Chain Name,Chain Name',
                     btnTxt: 'Confirm'
                 }"
                 :select-color-default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"

@@ -49,6 +49,13 @@ export const useIbcStatisticsChains = defineStore('global', {
                 ibcChainUniqueKeyMap[chain.chain_name] = chain;
             });
             return ibcChainUniqueKeyMap;
+        },
+        ibcChainsPrettyNameKeyMapGetter(): { [key: string]: IIbcchain } {
+            const ibcChainPrettyNameKeyMap: { [key: string]: IIbcchain } = {};
+            this.ibcChains.all.forEach((chain: IIbcchain) => {
+                ibcChainPrettyNameKeyMap[chain.pretty_name] = chain;
+            });
+            return ibcChainPrettyNameKeyMap;
         }
         // ibcDenomsMapGetter(): { [key: string]: IResponseIbcDenom } {
         //     const ibcDenomsMap: { [key: string]: IResponseIbcDenom } = {};

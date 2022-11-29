@@ -202,7 +202,7 @@
 
     // 是否选中
     const isSelected = (val: TDenom) =>
-        selectItems.value.some((v) => v.id === val && !props.inputFlag);
+        selectItems.value.some((v) => v.id === val && !props.changeInputFlag);
 
     // 获取badges
     const getBadgeStr = (val: TDenom) => {
@@ -242,6 +242,7 @@
 
     // 确认confirm时候
     const confirmChains = () => {
+        props.changeInputFlag && props.changeInputFlag(true);
         const inputItems = inputItemsByMode(tokenInput.value, props.mode);
         // 双选时候，如果选择框没有值时候希望填充
         if (props.mode === MODES.double && inputItems.length === 0) {
@@ -253,7 +254,7 @@
                 selectItems.value = [matchItem, matchItem];
             }
         } else if (props.mode !== MODES.multiple) {
-            if (!inputItems.length && defaultValue) {
+            if (!inputItems.length && defaultValue?.value) {
                 selectItems.value = [
                     {
                         id: defaultValue.value?.id as TDenom,
@@ -308,7 +309,6 @@
     };
 
     const onInputChange = () => {
-        props.changeInputFlag && props.changeInputFlag(true);
         let res: IDataItem[] = [];
         const inputItems = inputItemsByMode(tokenInput.value, props.mode);
 
@@ -343,7 +343,7 @@
         if (item.disabled) {
             return;
         }
-
+        props.changeInputFlag && props.changeInputFlag(false);
         selectByMode();
 
         sumbitTokens(selectItems.value);

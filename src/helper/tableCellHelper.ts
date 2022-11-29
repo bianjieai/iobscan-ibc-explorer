@@ -22,6 +22,19 @@ export const formatPrice = (price: number | string, numberOfDecimal: number | un
     return `${formatBigNumber(Number(price), numberOfDecimal)}`;
 };
 
+export const computDecimal = (price: number | string, minDecimalNum = 4) => {
+    if (price === -1 || price === '-1') {
+        return minDecimalNum;
+    }
+    const temp = price.toString().split('.');
+    if (temp.length === 2) {
+        const decimalNum = temp[1].length;
+        return decimalNum > minDecimalNum ? decimalNum : minDecimalNum;
+    } else {
+        return minDecimalNum;
+    }
+};
+
 const getScale = (denomAndChain?: string, baseDenomData?: IBaseDenom[]) => {
     if (Array.isArray(baseDenomData) && denomAndChain) {
         const filterData = baseDenomData.filter(
