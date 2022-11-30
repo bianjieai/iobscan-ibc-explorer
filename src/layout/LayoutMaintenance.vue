@@ -3,12 +3,7 @@
         <div class="layout_main__header_container">
             <div class="layout_main__header_content">
                 <div class="layout_main__logo">
-                    <div class="layout_main__logo_icon">
-                        <img :src="logoIcon" alt="logo" />
-                    </div>
-                    <div class="layout_main__logo_text">
-                        <img :src="logoName" alt="">
-                    </div>
+                    <img :src="logoIcon" alt="logo" />
                 </div>
                 <a class="layout_main__ioblink" href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
                     <img src="/src/assets/ioblink.png" alt="icon" />
@@ -27,7 +22,6 @@
 <script setup>
     import { FOOTER_MODE } from '@/constants';
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
-    const logoName = new URL(import.meta.env.VITE_LOGO_NAME, import.meta.url).href;
 </script>
 
 <style lang="less" scoped>
@@ -52,18 +46,9 @@
         }
         &__logo {
             .flex(row, nowrap, space-between, center);
-        }
-        &__logo_icon {
             img {
-                width: 32px;
-                height: 34px;
-            }
-        }
-        &__logo_text {
-            margin-left: 9px;
-            img {
-                width: 100px;
-                height: 34px;
+                width: 138px;
+                height: 30px;
             }
         }
         &__ioblink {
