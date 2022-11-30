@@ -4,9 +4,12 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
+    "qa": "vite --mode qa",
+    "stage": "vite --mode staging",
+    "prod": "vite --mode production",
     "build:qa": "vue-tsc --noEmit && vite build --mode qa",
-    "build:staging": "vue-tsc --noEmit && vite build --mode staging",
-    "build": "vue-tsc --noEmit && vite build --mode production",
+    "build:stage": "vue-tsc --noEmit && vite build --mode staging",
+    "build:prod": "vue-tsc --noEmit && vite build --mode production",
     "preview": "vite preview",
     "params": "node config.js"
   },
