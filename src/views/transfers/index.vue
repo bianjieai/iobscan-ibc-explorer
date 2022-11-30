@@ -33,7 +33,7 @@
                         :mode="MODES.double"
                         associate-id="allchain"
                         :input-ctn="{
-                            placeholder: 'Search by Chain ID,Chain ID',
+                            placeholder: 'Search by Chain Name,Chain Name',
                             btnTxt: 'Confirm'
                         }"
                         :select-color-default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
@@ -91,8 +91,8 @@
                             </svg>
                         </template>
                     </a-range-picker>
-                    <a-popover destroy-tooltip-on-hide>
-                        <template #content>
+                    <a-tooltip>
+                        <template #title>
                             <div>
                                 <p class="popover_c">
                                     Supports filtering within the latest 500k transfers found.
@@ -100,7 +100,7 @@
                             </div>
                         </template>
                         <img class="tip cursor" :src="TIP_ICON" />
-                    </a-popover>
+                    </a-tooltip>
                     <TypeButton @on-reset="onClickReset" />
                 </div>
             </div>

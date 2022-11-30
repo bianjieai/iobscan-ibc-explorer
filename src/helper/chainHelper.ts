@@ -225,4 +225,31 @@ export default class ChainHelper {
         }
         return ibcChainsUniqueKeyMapGetter[chain];
     };
+
+    static getChainInfoByPrettyName = async (
+        prettyName: string
+    ): Promise<IIbcchain | undefined> => {
+        const ibcStatisticsChainsStore = useIbcStatisticsChains();
+        const { ibcChainsPrettyNameKeyMapGetter } = ibcStatisticsChainsStore;
+        if (Object.keys(ibcChainsPrettyNameKeyMapGetter).length <= 0) {
+            await ibcStatisticsChainsStore.getIbcChainsAction();
+        }
+        return ibcChainsPrettyNameKeyMapGetter[prettyName];
+    };
+
+    static handleChainIdToChain = async (comchainId: string) => {
+        const array = comchainId.split(',');
+        const resArray: string[] = [];
+        for (let i = 0; i < array.length; i++) {
+            const item = array[i];
+            if (item === 'allchain') {
+                resArray.push(item);
+            } else {
+                const formatRes = await this.getChainInfoByPrettyName(item);
+                const pushRes = formatRes?.chain_name || item;
+                resArray.push(pushRes);
+            }
+        }
+        return resArray.join(',');
+    };
 }

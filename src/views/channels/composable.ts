@@ -27,6 +27,9 @@ export const useGetChannelsList = () => {
             loading.value = true;
             delete params.loading;
         }
+        if (params.chain) {
+            params.chain = await ChainHelper.handleChainIdToChain(params.chain);
+        }
         let allData: IResponseChannelsListItem[] = [];
         const allParams = { ...BASE_PARAMS, ...params };
         const getAllData = async () => {
@@ -127,7 +130,7 @@ export const useChannelsSelected = (
             {
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v) => ({
                     title: v.pretty_name,
-                    id: v.chain_name,
+                    id: v.pretty_name,
                     icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
