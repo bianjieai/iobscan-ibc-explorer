@@ -1,14 +1,18 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import utc from 'dayjs/plugin/utc';
 import { formatBigNumber } from '../helper/parseStringHelper';
 import { ChannelStatus, TChannelStatus } from '@/types/interface/components/table.interface';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
+dayjs.extend(utc);
+
+export const dayjsUtc = dayjs.utc;
 
 export const dayjsFormatDate = (time: dayjs.ConfigType, format = 'MM-DD HH:mm:ss') => {
-    return dayjs(time).format(format);
+    return dayjsUtc(time).format(format);
 };
 
 /**
@@ -18,7 +22,7 @@ export const dayjsFormatDate = (time: dayjs.ConfigType, format = 'MM-DD HH:mm:ss
  */
 export const formatLastUpdated = (time: string | number) => {
     if (time === 0) return '--';
-    const obj = dayjs.duration(dayjs().valueOf() - Number(time) * 1000) as any;
+    const obj = dayjs.duration(dayjsUtc().unix() - Number(time)) as any;
     const { seconds, days, months, years, minutes, hours } = obj.$d;
 
     let ago = '';

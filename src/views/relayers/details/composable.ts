@@ -1,3 +1,4 @@
+import { dayjsUtc } from '@/utils/timeTools';
 import { getDenomKey } from '@/helper/baseDenomHelper';
 import { copyToClipboard } from '@/utils/clipboardTools';
 import { getChartTooltip } from '@/helper/relayerHelper';
@@ -34,7 +35,6 @@ import {
     IRequestRelayerTransfer,
     IRtTokenInfo
 } from '@/types/interface/relayers.interface';
-import dayjs from 'dayjs';
 import * as echarts from 'echarts';
 import { Ref } from 'vue';
 import { BigNumber } from 'bignumber.js';
@@ -620,7 +620,7 @@ export const useSelectedSearch = (
     const relayerTransferTableData = ref<IRelayerTransferItem[]>([]);
     const dateRange = reactive({ value: [] });
     const disabledDate = (current: any) =>
-        current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
+        current && (current > dayjsUtc().endOf('day') || current < dayjsUtc(1617007625 * 1000));
     const startTxTime = ref<number | undefined>(undefined);
     const endTxTime = ref<number | undefined>(undefined);
     const rtTableLoading = ref<boolean>(true);
@@ -728,16 +728,10 @@ export const useSelectedSearch = (
             });
         }
     };
-    const startTime = (time: string | number | Date) => {
-        const nowTimeDate = new Date(time);
-        return nowTimeDate.setHours(0, 0, 0, 0);
-    };
     const onChangeRangePicker = (dates: any) => {
         dateRange.value = dates;
-        startTxTime.value = Math.floor(startTime(dayjs(dates[0]).valueOf()) / 1000);
-        endTxTime.value = Math.floor(
-            startTime(dayjs(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1
-        );
+        startTxTime.value = dayjsUtc(dates[0]).startOf('day').unix();
+        endTxTime.value = dayjsUtc(dates[1]).endOf('day').unix();
         refreshList({
             chain: searchChain.value || defaultChain.value.id,
             tx_time_start: startTxTime.value?.toString(),
