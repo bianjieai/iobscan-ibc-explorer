@@ -5,10 +5,10 @@
   "scripts": {
     "dev": "vite",
     "qa": "vite --mode qa",
-    "stage": "vite --mode staging",
+    "stage": "vite --mode stage",
     "prod": "vite --mode production",
     "build:qa": "vue-tsc --noEmit && vite build --mode qa",
-    "build:stage": "vue-tsc --noEmit && vite build --mode staging",
+    "build:stage": "vue-tsc --noEmit && vite build --mode stage",
     "build:prod": "vue-tsc --noEmit && vite build --mode production",
     "preview": "vite preview",
     "params": "node config.js"
