@@ -21,11 +21,6 @@ function getLasttyString(string: string) {
     return string && string.length > 20 ? `${string.substring(0, 10)}...` : string;
 }
 
-function formatLongTitleString(string: any) {
-    if (!isString(string)) return string;
-    return string.length > 15 ? getRestString(string, 3, 8) : string;
-}
-
 function prefixInteger(num: any, n: any) {
     return (Array(n).join('0') + num).slice(-n);
 }
@@ -77,6 +72,5 @@ export {
     JSONparse,
     formatNum,
     getLasttyString,
-    formatBigNumber,
-    formatLongTitleString
+    formatBigNumber
 };

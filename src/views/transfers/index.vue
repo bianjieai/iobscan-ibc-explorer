@@ -195,7 +195,7 @@
                                     <p class="popover_c">{{ record.sc_addr }}</p>
                                 </div>
                             </template>
-                            <span>{{ getRestString(record.sc_addr, 3, 8) || '--' }}</span>
+                            <span>{{ getRestString(record.sc_addr, 6, 6) || '--' }}</span>
                         </a-popover>
                     </template>
                     <template #status="{ record }">
@@ -263,7 +263,7 @@
                                 </div>
                             </template>
                             <span class="cursor">{{
-                                getRestString(record.dc_addr, 3, 8) || '--'
+                                getRestString(record.dc_addr, 6, 6) || '--'
                             }}</span>
                         </a-popover>
                     </template>

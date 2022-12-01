@@ -52,7 +52,6 @@
         denomsData: IBaseDenom[];
         titleCanClick?: boolean;
         tokenType?: string;
-        basePage?: boolean; // 是否是 /tokens 页面
     }
 
     const props = withDefaults(defineProps<IProps>(), {
@@ -67,9 +66,7 @@
         if (filterData) {
             return {
                 defaultTitle: filterData.symbol,
-                title: props.basePage
-                    ? getRestString(filterData.symbol, 6, 0)
-                    : getRestString(filterData.symbol, 3, 8),
+                title: getRestString(filterData.symbol, 6, 0),
                 subtitle: 'Authed',
                 imgSrc: filterData.icon
                     ? filterData.icon
@@ -78,16 +75,14 @@
         } else {
             return {
                 defaultTitle: props.denom,
-                title: props.basePage
-                    ? getRestString(props.denom, 6, 0)
-                    : getRestString(props.denom, 3, 8),
+                title: getRestString(props.denom, 6, 0),
                 subtitle: 'Other',
                 imgSrc: new URL('../../../assets/token-default.png', import.meta.url).href
             };
         }
     });
 
-    const titleCanPopover = (t: string) => (props.basePage ? t.length > 6 : t.length > 11);
+    const titleCanPopover = (t: string) => t.length > 6;
 
     const emit = defineEmits<{
         (e: 'clickTitle'): void;

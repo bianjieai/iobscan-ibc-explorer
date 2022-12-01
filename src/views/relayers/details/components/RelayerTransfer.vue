@@ -95,7 +95,7 @@
                                 <p class="popover_c">{{ record.signer }}</p>
                             </div>
                         </template>
-                        <span>{{ getRestString(record.signer, 3, 8) }}</span>
+                        <span>{{ getRestString(record.signer, 6, 6) }}</span>
                     </a-popover>
                 </template>
                 <template #tx_time="{ record }">
