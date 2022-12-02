@@ -53,6 +53,7 @@
             font-family: GolosUI_Medium;
             color: var(--bj-text-normal);
             line-height: 20px;
+            white-space: nowrap;
         }
         &__channel {
             font-size: var(--bj-font-size-normal);

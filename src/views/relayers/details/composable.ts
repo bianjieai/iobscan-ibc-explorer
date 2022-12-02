@@ -636,6 +636,10 @@ export const useSelectedSearch = (
                 }
             }
             relayerChain.value = [...chainInfoArr];
+            if (!relayerChain.value.length) {
+                relayerTransferTableData.value = [];
+                rtTableLoading.value = false;
+            }
         };
         sortServedChainsInfo();
     });
@@ -728,6 +732,7 @@ export const useSelectedSearch = (
             });
         }
     };
+    // todo shan 考虑时间更改之后，使用 UTC 0
     const startTime = (time: string | number | Date) => {
         const nowTimeDate = new Date(time);
         return nowTimeDate.setHours(0, 0, 0, 0);

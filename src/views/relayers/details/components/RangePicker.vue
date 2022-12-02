@@ -1,4 +1,5 @@
 <template>
+    <!-- todo shan 抽离在公共组件中，Transfers 列表复用 -->
     <a-range-picker
         class="range_picker cursor"
         :value="(dateRange.value as any)"
