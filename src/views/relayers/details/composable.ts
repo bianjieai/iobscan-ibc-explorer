@@ -636,6 +636,10 @@ export const useSelectedSearch = (
                 }
             }
             relayerChain.value = [...chainInfoArr];
+            if (!relayerChain.value.length) {
+                relayerTransferTableData.value = [];
+                rtTableLoading.value = false;
+            }
         };
         sortServedChainsInfo();
     });

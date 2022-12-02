@@ -44,9 +44,11 @@
     interface IRangePicker {
         dateRange: { value: any[] };
         disabledDate: (current: any) => any;
-        isShowModal: boolean;
+        isShowModal?: boolean;
     }
-    defineProps<IRangePicker>();
+    withDefaults(defineProps<IRangePicker>(), {
+        isShowModal: false
+    });
     const emits = defineEmits<{
         (e: 'onChange'): void;
     }>();

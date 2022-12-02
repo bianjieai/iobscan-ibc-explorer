@@ -10,7 +10,7 @@
                 :dropdown-props="{
                     getPopupContainer: getPopupContainer
                 }"
-                :is-disabled="isShowModal"
+                :is-disabled="isShowModal || !relayerChainData[0].children.length"
                 :default-value="defaultChain"
                 @on-change="onSelectedChain"
             />
@@ -18,12 +18,12 @@
                 <RangePicker
                     :date-range="dateRange"
                     :disabled-date="disabledDate"
-                    :is-show-modal="isShowModal"
+                    :is-show-modal="isShowModal || !relayerChainData[0].children.length"
                     @change="onChangeRangePicker"
                 ></RangePicker>
                 <TypeButton
                     class="relayer_transfer__reset_btn"
-                    :is-disabled="isShowModal"
+                    :is-disabled="isShowModal || !relayerChainData[0].children.length"
                     @on-reset="onClickReset"
                 />
             </div>
@@ -107,7 +107,6 @@
 </template>
 
 <script setup lang="ts">
-    import RangePicker from './RangePicker.vue';
     import { RELAYER_TRANSFER_COLUMN } from '@/constants/relayers';
     import { getRestString } from '@/helper/parseStringHelper';
     import { formatTxStatus, changeColor } from '@/helper/tableCellHelper';

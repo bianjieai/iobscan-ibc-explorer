@@ -1,6 +1,6 @@
 <template>
     <div
-        class="rload_img flex items-center justify-center mr-8"
+        class="rload_img flex items-center justify-center"
         :class="{ rload_img__default_bg: imgText }"
         :style="{
             width: width + 'px',
