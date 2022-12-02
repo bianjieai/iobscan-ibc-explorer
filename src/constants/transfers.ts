@@ -217,7 +217,7 @@ export const PROGRESS_LIST: IInfoList[] = [
         value: '--'
     },
     {
-        label: 'Timestamp',
+        label: 'Time',
         dataKey: 'time',
         value: '--',
         isFormatTimestamp: true
@@ -231,7 +231,7 @@ export const PROGRESS_TRANSFER_LIST: IInfoList[] = [
         value: '--'
     },
     {
-        label: 'Timeout Timestamp',
+        label: 'Timeout Time',
         dataKey: 'timeout_timestamp',
         value: '--',
         isFormatTimeoutTimestamp: true
