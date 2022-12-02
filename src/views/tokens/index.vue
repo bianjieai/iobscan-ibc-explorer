@@ -56,7 +56,6 @@
         >
             <template #base_denom="{ record, column }">
                 <TokenIcon
-                    base-page
                     title-can-click
                     :token-type="record.token_type"
                     :denom="record[column.key]"
