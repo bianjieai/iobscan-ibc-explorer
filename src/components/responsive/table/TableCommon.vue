@@ -52,7 +52,7 @@
                 :page-size="pageInfo.pageSize"
                 :total="pageInfo.total"
                 :show-title="false"
-                :disabled="props.loading"
+                :disabled="disabledPagination"
                 @change="onPageChange"
             />
         </div>
@@ -152,6 +152,9 @@
             pageInfo.current = _new || 1;
         }
     );
+    const disabledPagination = computed(() => {
+        return props.loading || pageInfo.total <= 0;
+    });
     const needPagination = computed(
         () => !props.noPagination && !(props.current && props.pageSize)
     ); // 需要前端分页
