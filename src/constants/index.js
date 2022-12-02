@@ -414,7 +414,7 @@ const FOOTER_MODE = {
   light: 'light',
   dark: 'dark'
 }
-const COPYRIGHT = 'Copyright © 2022 IOBScan. All Rights Reserved.';
+const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan. All Rights Reserved.`;
 const ICON_LINK = [
   {
       iconName: 'icon-github',
