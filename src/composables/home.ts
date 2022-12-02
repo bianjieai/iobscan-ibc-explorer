@@ -22,6 +22,7 @@ export const useIbcStatistics = (timerInterval?: number) => {
             const { code, data } = await getIbcStatisticsAPI();
             if (code === API_CODE.success) {
                 const items: IResponseIbcStatisticItem[] = data.items;
+                // todo dj 改成 Map
                 ibcStatisticsChains.chains_24hr = findStatistics(items, 'chains_24hr');
                 ibcStatisticsChains.chain_all = findStatistics(items, 'chain_all');
                 ibcStatisticsChannels.channels_24hr = findStatistics(items, 'channels_24hr');
