@@ -13,7 +13,7 @@
                 placeholder="All Chains"
                 :hide-icon="true"
                 :input-ctn="{
-                    placeholder: 'Search by Chain ID',
+                    placeholder: 'Search by Chain Name',
                     btnTxt: 'Confirm'
                 }"
                 :select-color-default-val="''"
@@ -52,12 +52,9 @@
                     <div>{{ getRestString(rmIbcPrefix(record[column.key]), 3, 8) }}</div>
                 </a-popover>
                 <div v-else>
-                    <div
-                        v-if="getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol"
-                        >{{
-                            getBaseDenomInfoByDenom(record[column.key], record.chain_id)?.symbol
-                        }}</div
-                    >
+                    <div v-if="getBaseDenomInfoByDenom(record[column.key], record.chain)?.symbol">{{
+                        getBaseDenomInfoByDenom(record[column.key], record.chain)?.symbol
+                    }}</div>
                     <div v-else>
                         <a-popover v-if="record[column.key].length > 11" placement="topLeft">
                             <template #content>
@@ -69,11 +66,11 @@
                     </div>
                 </div>
             </template>
-            <template #chain_id="{ record, column }">
+            <template #chain="{ record, column }">
                 <ChainIcon
                     avatar-can-click
                     title-can-click
-                    :chain-id="record[column.key]"
+                    :chain="record[column.key]"
                     :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
@@ -89,15 +86,14 @@
                     <template #content>
                         <div class="popover_c">{{
                             `${
-                                formatAmount(record[column.key], baseDenomAndChainId, ibcBaseDenoms)
+                                formatAmount(record[column.key], baseDenomAndChain, ibcBaseDenoms)
                                     .popover
                             }`
                         }}</div>
                     </template>
                     <div>{{
                         `${
-                            formatAmount(record[column.key], baseDenomAndChainId, ibcBaseDenoms)
-                                .title
+                            formatAmount(record[column.key], baseDenomAndChain, ibcBaseDenoms).title
                         }`
                     }}</div>
                 </a-popover>
@@ -106,7 +102,7 @@
             <template #receive_txs="{ record, column }">
                 <div
                     class="hover_cursor"
-                    @click="goTransfer(`allchain,${record.chain_id}`, record.denom)"
+                    @click="goTransfer(`allchain,${record.chain}`, record.denom)"
                     >{{ formatBigNumber(record[column.key], 0) }}
                 </div>
             </template>
@@ -129,7 +125,7 @@
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();
     const { ibcBaseDenoms, getIbcBaseDenom, getBaseDenomInfoByDenom } = useGetIbcDenoms();
-    const { ibcTokenList, getIbcTokenList, subtitle, baseDenomQuery, baseDenomChainIdQuery } =
+    const { ibcTokenList, getIbcTokenList, subtitle, baseDenomQuery, baseDenomChainQuery } =
         useGetIbcTokenList();
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.ibcToken);
     const {
@@ -137,7 +133,7 @@
         statusDropdown,
         searchChain,
         chainData,
-        baseDenomAndChainId,
+        baseDenomAndChain,
         onSelectedChain,
         onSelectedStatus,
         baseDenomInfo,
@@ -149,7 +145,7 @@
         ibcBaseDenoms,
         loading,
         baseDenomQuery,
-        baseDenomChainIdQuery
+        baseDenomChainQuery
     );
     const { goChains, goTransfer, resetSearchCondition } = useIbcTokenColumnJump();
     const getPopupContainer = (): HTMLElement => document.querySelector('.wrapRelative')!;

@@ -69,7 +69,7 @@
                 </template>
                 <template #chain="{ record, column }">
                     <ChainIcon
-                        :chain-id="record[column.key]"
+                        :chain="record[column.key]"
                         :chains-data="ibcChains.all"
                         icon-size="small"
                     />

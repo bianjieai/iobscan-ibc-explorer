@@ -1,27 +1,25 @@
 <template>
     <div class="relayer_title">
-        <img v-if="relayerImgSrc" class="relayer_title__icon" :src="displayRelayerImgSrc" alt="" />
-        <div
-            v-else
-            class="relayer_title__icon relayer_title__icon_wrap flex items-center justify-center"
+        <ImageLoadStatus
+            class="relayer_title__icon"
+            :img-src="relayerIcon"
+            :default-img="defaultRelayerImg"
+            :width="40"
+            :height="40"
         >
-            <span class="relayer_title__icon_text">{{
-                (title.substring(0, 1) || '').toUpperCase()
-            }}</span>
-        </div>
+            <RLoadErrorImage :img-text="title" :width="40" :height="40" />
+        </ImageLoadStatus>
         <div class="relayer_title__wrap">
             <div class="relayer_title__text">
-                <img
-                    v-if="relayerImgSrc"
+                <ImageLoadStatus
                     class="relayer_title__icon_mobile"
-                    :src="displayRelayerImgSrc"
-                    alt=""
-                />
-                <div v-else class="relayer_title__icon_mobile relayer_title__icon_wrap">
-                    <span class="relayer_title__icon_text">{{
-                        (title.substring(0, 1) || '').toUpperCase()
-                    }}</span>
-                </div>
+                    :img-src="relayerIcon"
+                    :default-img="defaultRelayerImg"
+                    :width="40"
+                    :height="40"
+                >
+                    <RLoadErrorImage :img-text="title" :width="40" :height="40" />
+                </ImageLoadStatus>
                 <a-popover v-if="displayAdaptor" destroy-tooltip-on-hide>
                     <template #content>
                         <span>{{ title }}</span>
@@ -66,13 +64,14 @@
 </template>
 
 <script lang="ts" setup>
+    import RLoadErrorImage from './RLoadErrorImage.vue';
     interface IProps {
-        titleIcon?: string;
+        relayerIcon: string;
+        defaultRelayerImg: string;
         title: string;
+        titleIcon?: string;
         titleSuffix?: string;
         subtitle?: string;
-        relayerImgSrc?: string;
-        displayRelayerImgSrc?: string;
         displayAdaptor?: boolean;
     }
 
@@ -85,21 +84,6 @@
     .relayer_title {
         .flex(row, nowrap, flex-start, center);
         &__icon {
-            margin-right: 8px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-        }
-        &__icon_wrap {
-            background: url('../../../../assets/relayers/default_bg.png') no-repeat center center;
-            border-radius: 50%;
-        }
-        &__icon_text {
-            font-size: 22px;
-            background: linear-gradient(to right, #b3bbff, #8594ff);
-            background-size: cover;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
         }
         &__icon_mobile {
             display: none;
@@ -166,10 +150,6 @@
         .relayer_title {
             &__icon {
             }
-            &__icon_wrap {
-            }
-            &__icon_text {
-            }
             &__icon_mobile {
             }
             &__wrap {
@@ -200,10 +180,6 @@
     @media screen and(max-width: 1000px) {
         .relayer_title {
             &__icon {
-            }
-            &__icon_wrap {
-            }
-            &__icon_text {
             }
             &__icon_mobile {
             }
@@ -236,10 +212,6 @@
         .relayer_title {
             &__icon {
             }
-            &__icon_wrap {
-            }
-            &__icon_text {
-            }
             &__icon_mobile {
             }
             &__wrap {
@@ -270,17 +242,11 @@
     @media screen and(max-width: 580px) {
         .relayer_title {
             .flex(column, nowrap, flex-start, flex-start);
-            &__icon_wrap {
-            }
             &__icon {
                 display: none;
             }
             &__icon_mobile {
                 .flex(row, nowrap, center, center);
-                margin-right: 8px;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
             }
             &__wrap {
                 width: 100%;

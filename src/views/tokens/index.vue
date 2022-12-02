@@ -29,7 +29,7 @@
                 placeholder="All Chains"
                 :hide-icon="true"
                 :input-ctn="{
-                    placeholder: 'Search by Chain ID',
+                    placeholder: 'Search by Chain Name',
                     btnTxt: 'Confirm'
                 }"
                 :select-color-default-val="CHAIN_DEFAULT_VALUE"
@@ -60,16 +60,21 @@
                     title-can-click
                     :token-type="record.token_type"
                     :denom="record[column.key]"
-                    :chain-id="record.chain_id"
+                    :chain="record.chain"
                     :denoms-data="ibcBaseDenoms"
-                    @click-title="goIbcToken(record.base_denom, record.chain_id)"
+                    @click-title="goIbcToken(record.base_denom, record.chain)"
                 />
             </template>
             <template #price="{ record, column }">
                 <a-popover v-if="+record[column.key] !== -1">
                     <template #content>
                         <div class="popover_c">
-                            {{ `${record.currency} ${formatPrice(record[column.key])}` }}
+                            {{
+                                `${record.currency} ${formatPrice(
+                                    record[column.key],
+                                    computDecimal(record[column.key])
+                                )}`
+                            }}
                         </div>
                     </template>
                     <div v-if="record[column.key] < THOUSAND_DECIMAL">
@@ -87,7 +92,7 @@
                     >{{
                         `${formatSupply(
                             record[column.key],
-                            record.base_denom + record.chain_id,
+                            record.base_denom + record.chain,
                             ibcBaseDenoms
                         )}`
                     }}
@@ -102,7 +107,7 @@
                                 `${
                                     formatAmount(
                                         record[column.key],
-                                        record.base_denom + record.chain_id,
+                                        record.base_denom + record.chain,
                                         ibcBaseDenoms
                                     ).popover
                                 }`
@@ -113,7 +118,7 @@
                         `${
                             formatAmount(
                                 record[column.key],
-                                record.base_denom + record.chain_id,
+                                record.base_denom + record.chain,
                                 ibcBaseDenoms
                             ).title
                         }`
@@ -122,22 +127,22 @@
             </template>
 
             <template #ibc_transfer_txs="{ record, column }">
-                <div class="hover_cursor" @click="goTransfer(record.base_denom, record.chain_id)">{{
+                <div class="hover_cursor" @click="goTransfer(record.base_denom, record.chain)">{{
                     `${formatBigNumber(record[column.key], 0)}`
                 }}</div>
             </template>
 
             <template #chains_involved="{ record, column }">
-                <div class="hover_cursor" @click="goIbcToken(record.base_denom, record.chain_id)">{{
+                <div class="hover_cursor" @click="goIbcToken(record.base_denom, record.chain)">{{
                     record[column.key]
                 }}</div>
             </template>
 
-            <template #chain_id="{ record, column }">
+            <template #chain="{ record, column }">
                 <ChainIcon
                     title-can-click
                     avatar-can-click
-                    :chain-id="record[column.key]"
+                    :chain="record[column.key]"
                     :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
@@ -163,7 +168,12 @@
         useTokensColumnJump
     } from '@/views/tokens/composable';
     import { formatBigNumber } from '@/helper/parseStringHelper';
-    import { formatPrice, formatSupply, formatAmount } from '@/helper/tableCellHelper';
+    import {
+        formatPrice,
+        formatSupply,
+        formatAmount,
+        computDecimal
+    } from '@/helper/tableCellHelper';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();

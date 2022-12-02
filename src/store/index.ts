@@ -38,7 +38,7 @@ export const useIbcStatisticsChains = defineStore('global', {
         ibcBaseDenomsUniqueKeyMapGetter(): { [key: string]: IBaseDenom } {
             const ibcBaseDenomsUniqueKeyMap: { [key: string]: IBaseDenom } = {};
             this.ibcBaseDenoms.forEach((token: IBaseDenom) => {
-                const key = getDenomKey(token.chain_id, token.denom);
+                const key = getDenomKey(token.chain, token.denom);
                 ibcBaseDenomsUniqueKeyMap[key] = token;
             });
             return ibcBaseDenomsUniqueKeyMap;
@@ -46,14 +46,21 @@ export const useIbcStatisticsChains = defineStore('global', {
         ibcChainsUniqueKeyMapGetter(): { [key: string]: IIbcchain } {
             const ibcChainUniqueKeyMap: { [key: string]: IIbcchain } = {};
             this.ibcChains.all.forEach((chain: IIbcchain) => {
-                ibcChainUniqueKeyMap[chain.chain_id] = chain;
+                ibcChainUniqueKeyMap[chain.chain_name] = chain;
             });
             return ibcChainUniqueKeyMap;
+        },
+        ibcChainsPrettyNameKeyMapGetter(): { [key: string]: IIbcchain } {
+            const ibcChainPrettyNameKeyMap: { [key: string]: IIbcchain } = {};
+            this.ibcChains.all.forEach((chain: IIbcchain) => {
+                ibcChainPrettyNameKeyMap[chain.pretty_name] = chain;
+            });
+            return ibcChainPrettyNameKeyMap;
         }
         // ibcDenomsMapGetter(): { [key: string]: IResponseIbcDenom } {
         //     const ibcDenomsMap: { [key: string]: IResponseIbcDenom } = {};
         //     this.ibcDenoms.forEach((token: IResponseIbcDenom) => {
-        //         const key = getDenomKey(token.chain_id, token.denom);
+        //         const key = getDenomKey(token.chain, token.denom);
         //         ibcDenomsMap[key] = token;
         //     });
         //     return ibcDenomsMap;
@@ -166,10 +173,7 @@ export const useIbcStatisticsChains = defineStore('global', {
                         }
                         const getSymbolInfo = (data: IIbcTx[]) => {
                             return data.map((item: IIbcTx) => {
-                                const unikey = getDenomKey(
-                                    item.base_denom_chain_id,
-                                    item.base_denom
-                                );
+                                const unikey = getDenomKey(item.base_denom_chain, item.base_denom);
                                 const baseDenomsObj = this.ibcBaseDenomsUniqueKeyMapGetter[unikey];
                                 let symbolNum = item.sc_tx_info?.msg_amount?.amount || 0;
                                 let symbolDenom = item.base_denom || '';

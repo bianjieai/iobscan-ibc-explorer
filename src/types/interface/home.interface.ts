@@ -1,8 +1,8 @@
 export interface IResponseIbcDenom {
-    chain_id: string;
+    chain: string;
     denom: string;
     base_denom: string;
-    base_denom_chain_id: string;
+    base_denom_chain: string;
     denom_path: string;
     symbol: string;
 }

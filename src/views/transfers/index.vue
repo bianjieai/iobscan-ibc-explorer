@@ -26,14 +26,14 @@
                     <BjSelect
                         ref="chainDropdown"
                         :data="chainData"
-                        :value="chainIds"
+                        :value="chains"
                         :placeholders="['All Chains', 'All Chains']"
                         :hide-icon="true"
                         :badges="['Transfer', 'Receive']"
                         :mode="MODES.double"
                         associate-id="allchain"
                         :input-ctn="{
-                            placeholder: 'Search by Chain ID,Chain ID',
+                            placeholder: 'Search by Chain Name,Chain Name',
                             btnTxt: 'Confirm'
                         }"
                         :select-color-default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
@@ -91,8 +91,8 @@
                             </svg>
                         </template>
                     </a-range-picker>
-                    <a-popover destroy-tooltip-on-hide>
-                        <template #content>
+                    <a-tooltip>
+                        <template #title>
                             <div>
                                 <p class="popover_c">
                                     Supports filtering within the latest 500k transfers found.
@@ -100,7 +100,7 @@
                             </div>
                         </template>
                         <img class="tip cursor" :src="TIP_ICON" />
-                    </a-popover>
+                    </a-tooltip>
                     <TypeButton @on-reset="onClickReset" />
                 </div>
             </div>
@@ -156,8 +156,8 @@
                                 class="token__link hover"
                                 :to="
                                     record.status === IBC_TX_STATUS.SUCCESS
-                                        ? `/tokens/details?denom=${record.base_denom}&denomChainId=${record.base_denom_chain_id}&chain=${record.dc_chain_id}`
-                                        : `/tokens/details?denom=${record.base_denom}&denomChainId=${record.base_denom_chain_id}&chain=${record.sc_chain_id}`
+                                        ? `/tokens/details?denom=${record.base_denom}&denomChain=${record.base_denom_chain}&chain=${record.dc_chain}`
+                                        : `/tokens/details?denom=${record.base_denom}&denomChain=${record.base_denom_chain}&chain=${record.sc_chain}`
                                 "
                                 @click.stop=""
                             >
@@ -205,7 +205,7 @@
                                     <p class="popover_c">
                                         <span class="tip_label">Chain ID:</span>
                                         <span class="tip_value">{{
-                                            ChainHelper.formatChainId(record.sc_chain_id)
+                                            useMatchChainInfo(record.sc_chain).currentChainId
                                         }}</span>
                                     </p>
                                     <p class="popover_c">
@@ -221,10 +221,7 @@
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
-                                <img
-                                    class="status_icon"
-                                    :src="findIbcChainIcon(record.sc_chain_id)"
-                                />
+                                <img class="status_icon" :src="findIbcChainIcon(record.sc_chain)" />
                             </router-link>
                         </a-popover>
                         <img
@@ -238,7 +235,7 @@
                                     <p class="popover_c">
                                         <span class="tip_label">Chain ID:</span>
                                         <span class="tip_value">{{
-                                            ChainHelper.formatChainId(record.dc_chain_id)
+                                            useMatchChainInfo(record.dc_chain).currentChainId
                                         }}</span>
                                     </p>
                                     <p class="popover_c">
@@ -254,10 +251,7 @@
                                 </div>
                             </template>
                             <router-link :to="`/chains`" @click.stop="">
-                                <img
-                                    class="status_icon"
-                                    :src="findIbcChainIcon(record.dc_chain_id)"
-                                />
+                                <img class="status_icon" :src="findIbcChainIcon(record.dc_chain)" />
                             </router-link>
                         </a-popover>
                     </template>
@@ -319,7 +313,6 @@
         BOTTOM_STATUS_DATA
     } from '@/constants';
     import { getRestString, formatNum } from '@/helper/parseStringHelper';
-    import ChainHelper from '@/helper/chainHelper';
     import { dayjsFormatDate } from '@/utils/timeTools';
     import {
         usePagination,
@@ -332,7 +325,12 @@
         useSortIbcChains
     } from './composable';
     import { useIbcStatistics } from '@/composables/home';
-    import { useIbcChains, useNeedCustomColumns, usePickerPlaceholder } from '@/composables';
+    import {
+        useIbcChains,
+        useNeedCustomColumns,
+        usePickerPlaceholder,
+        useMatchChainInfo
+    } from '@/composables';
     import { MODES } from '@/components/BjSelect/constants';
     import { TRANSFERS_TOKEN_DEFAULT_VALUE } from '@/constants/transfers';
 
@@ -346,7 +344,7 @@
     getIbcStatistics();
     const { pickerPlaceholderColor, onOpenChangeRangePicker } = usePickerPlaceholder();
     useSortIbcChains(ibcChains);
-    const { url, searchToken, inputFlag, dateRange, chainId, queryParams } = useRouteParams();
+    const { url, searchToken, inputFlag, dateRange, chain, queryParams } = useRouteParams();
 
     const {
         queryDatas,
@@ -366,7 +364,7 @@
     );
     const {
         chainDropdown,
-        chainIds,
+        chains,
         chainGetPopupContainer,
         tokenData,
         chainData,
@@ -382,7 +380,7 @@
         ibcChains,
         queryParams,
         searchToken,
-        chainId,
+        chain,
         url,
         inputFlag,
         dateRange,

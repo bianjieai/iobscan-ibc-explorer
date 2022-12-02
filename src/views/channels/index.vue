@@ -11,7 +11,7 @@
                 :mode="MODES.double"
                 associate-id="allchain"
                 :input-ctn="{
-                    placeholder: 'Search by Chain ID,Chain ID',
+                    placeholder: 'Search by Chain Name,Chain Name',
                     btnTxt: 'Confirm'
                 }"
                 :select-color-default-val="[CHAIN_DEFAULT_VALUE, CHAIN_DEFAULT_VALUE]"
@@ -43,13 +43,13 @@
                             <p class="popover_c">
                                 <span class="tip_label">Chain Name:</span>
                                 <span class="tip_value ml-8">{{
-                                    useMatchChainInfo(record[column.key]).chainName
+                                    useMatchChainInfo(record[column.key]).prettyName
                                 }}</span>
                             </p>
                             <p class="popover_c mt-8">
                                 <span class="tip_label">Chain ID:</span>
                                 <span class="tip_value ml-8">
-                                    {{ ChainHelper.formatChainId(record[column.key]) }}
+                                    {{ useMatchChainInfo(record[column.key]).currentChainId }}
                                 </span>
                             </p>
                         </div>
@@ -58,7 +58,7 @@
                         avatar-can-click
                         :title="record.channel_a"
                         no-subtitle
-                        :chain-id="record[column.key]"
+                        :chain="record[column.key]"
                         :chains-data="ibcChains.all"
                         icon-size="small"
                         @click-avatar="goChains"
@@ -82,13 +82,13 @@
                             <p class="popover_c">
                                 <span class="tip_label">Chain Name:</span>
                                 <span class="tip_value ml-8">{{
-                                    useMatchChainInfo(record[column.key]).chainName
+                                    useMatchChainInfo(record[column.key]).prettyName
                                 }}</span>
                             </p>
                             <p class="popover_c mt-8">
                                 <span class="tip_label">Chain ID:</span>
                                 <span class="tip_value ml-8">
-                                    {{ ChainHelper.formatChainId(record[column.key]) }}
+                                    {{ useMatchChainInfo(record[column.key]).currentChainId }}
                                 </span>
                             </p>
                         </div>
@@ -97,7 +97,7 @@
                         avatar-can-click
                         :title="record.channel_b"
                         no-subtitle
-                        :chain-id="record[column.key]"
+                        :chain="record[column.key]"
                         :chains-data="ibcChains.all"
                         icon-size="small"
                         @click-avatar="goChains"
@@ -150,7 +150,6 @@
         useChannelsColumnJump
     } from '@/views/channels/composable';
     import { MODES } from '@/components/BjSelect/constants';
-    import ChainHelper from '@/helper/chainHelper';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();

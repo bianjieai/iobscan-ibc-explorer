@@ -24,12 +24,15 @@ export const useGetIbcTokenList = () => {
     const total = ref<number>(0);
     const isHaveParams = ref<boolean>(false);
     const baseDenomQuery = route.query.denom as string | undefined;
-    const baseDenomChainIdQuery = route.query.denomChainId as string | undefined;
+    const baseDenomChainQuery = route.query.denomChain as string | undefined;
     const getIbcTokenList = async (params: IRequestIbcTokenList) => {
         const { loading } = params;
         if (loading) {
             loading.value = true;
             delete params.loading;
+        }
+        if (params.chain) {
+            params.chain = await ChainHelper.handleChainIdToChain(params.chain);
         }
         let allData = [] as IResponseIbcTokenListItem[];
         const allParams = { ...BASE_PARAMS, ...params };
@@ -82,7 +85,7 @@ export const useGetIbcTokenList = () => {
     getIbcTokenList({
         ...BASE_PARAMS,
         base_denom: baseDenomQuery,
-        base_denom_chain_id: baseDenomChainIdQuery,
+        base_denom_chain: baseDenomChainQuery,
         use_count: true
     });
     const subtitle = computed(() => {
@@ -98,7 +101,7 @@ export const useGetIbcTokenList = () => {
         getIbcTokenList,
         subtitle,
         baseDenomQuery,
-        baseDenomChainIdQuery
+        baseDenomChainQuery
     };
 };
 
@@ -109,7 +112,7 @@ export const useIbcTokenSelected = (
     ibcBaseDenoms: Ref<IBaseDenom[]>,
     loading: Ref<boolean>,
     baseDenomQuery: string | undefined,
-    baseDenomChainIdQuery: string | undefined
+    baseDenomChainQuery: string | undefined
 ) => {
     const router = useRouter();
     const route = useRoute();
@@ -120,10 +123,10 @@ export const useIbcTokenSelected = (
     const statusQuery = route.query.status as TIbcTokenType;
     const searchChain = ref<string | undefined>(chainIdQuery ?? undefined);
     const searchStatus = ref<TIbcTokenType | undefined>(statusQuery);
-    const baseDenomAndChainId = `${route.query.denom || ''}${route.query.denomChainId || ''}`;
+    const baseDenomAndChain = `${route.query.denom || ''}${route.query.denomChain || ''}`;
     const baseDenomInfo = computed(() => {
         const filterData = ibcBaseDenoms.value.filter(
-            (item: IBaseDenom) => item.denom + item.chain_id === baseDenomAndChainId
+            (item: IBaseDenom) => item.denom + item.chain === baseDenomAndChain
         );
         let symbol = '';
         const filterSymbol = filterData[0]?.symbol;
@@ -157,8 +160,8 @@ export const useIbcTokenSelected = (
             },
             {
                 children: ChainHelper.sortArrsByNames(ibcChains.value?.all || []).map((v: any) => ({
-                    title: v.chain_name,
-                    id: v.chain_id,
+                    title: v.pretty_name,
+                    id: v.pretty_name,
                     icon: v.icon || CHAIN_DEFAULT_ICON,
                     metaData: v
                 }))
@@ -177,6 +180,7 @@ export const useIbcTokenSelected = (
             key: 'chain',
             value: chain as string
         });
+        router.replace(pageUrl);
         refreshList();
     };
     const onSelectedStatus = (status?: string | number) => {
@@ -197,7 +201,7 @@ export const useIbcTokenSelected = (
         getIbcTokenList({
             ...BASE_PARAMS,
             base_denom: baseDenomQuery,
-            base_denom_chain_id: baseDenomChainIdQuery,
+            base_denom_chain: baseDenomChainQuery,
             chain: searchChain.value,
             token_type: searchStatus.value,
             loading: loading
@@ -212,7 +216,7 @@ export const useIbcTokenSelected = (
         statusDropdown,
         searchChain,
         chainData,
-        baseDenomAndChainId,
+        baseDenomAndChain,
         onSelectedChain,
         onSelectedStatus,
         baseDenomInfo,
@@ -226,11 +230,11 @@ export const useIbcTokenColumnJump = () => {
     const goChains = () => {
         router.push('/chains');
     };
-    const goTransfer = (chain_id: string, denom: string) => {
+    const goTransfer = (chain: string, denom: string) => {
         router.push({
             path: '/transfers',
             query: {
-                chain: chain_id,
+                chain: chain,
                 denom
             }
         });
@@ -238,13 +242,13 @@ export const useIbcTokenColumnJump = () => {
     const resetSearchCondition = () => {
         const { resetSearch } = useResetSearch();
         const baseDenomQuery = route.query.denom;
-        const baseDenomChainIdQuery = route.query.denomChainId;
+        const baseDenomChainQuery = route.query.denomChain;
         let url = `/${PAGE_PARAMETERS.tokens}/details`;
-        if (baseDenomQuery || baseDenomChainIdQuery) {
+        if (baseDenomQuery || baseDenomChainQuery) {
             url += '?';
             baseDenomQuery ? (url += `denom=${baseDenomQuery}`) : '';
-            baseDenomChainIdQuery
-                ? (url += `${baseDenomQuery ? '&' : ''}denomChainId=${baseDenomChainIdQuery}`)
+            baseDenomChainQuery
+                ? (url += `${baseDenomQuery ? '&' : ''}denomChain=${baseDenomChainQuery}`)
                 : '';
         }
         resetSearch(url);

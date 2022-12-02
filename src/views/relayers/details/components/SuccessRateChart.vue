@@ -24,7 +24,7 @@
     .success_rate {
         .flex(row, nowrap, center, center);
         &__chart {
-            min-width: 200px;
+            min-width: 219px;
             height: 160px;
         }
     }

@@ -6,7 +6,7 @@
                 <span class="relayer_info__label">{{ relayerScInfoList.label }}</span>
                 <router-link
                     v-if="relayerScInfoList.value !== DEFAULT_DISPLAY_TEXT"
-                    :to="`/relayers?chain=${scInfo?.chain_id},${dcInfo?.chain_id}`"
+                    :to="`/relayers?chain=${scInfo?.chain},${dcInfo?.chain}`"
                     class="relayer_info__value"
                 >
                     <img :src="relayerScIcon" alt="" />

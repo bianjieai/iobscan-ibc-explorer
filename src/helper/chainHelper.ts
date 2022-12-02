@@ -1,7 +1,7 @@
 import { isArray } from '@/utils/objectTools';
-import { CHAINNAME, UNKNOWN, CHAIN_DEFAULT_VALUE } from '@/constants';
+import { PRETTYNAME, UNKNOWN, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { useIbcChains } from '@/composables';
-import { IResponseChainsListItem } from '@/types/interface/chains.interface';
+import { IChainsListItem, IResponseChainsListItem } from '@/types/interface/chains.interface';
 import { IResponseTokensListItem, ITokensListItem } from '@/types/interface/tokens.interface';
 import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
@@ -11,16 +11,9 @@ import { useIbcStatisticsChains } from '@/store/index';
 
 const { ibcChains } = useIbcChains();
 export default class ChainHelper {
-    static formatChainId(chainId: any) {
-        if (chainId && chainId !== '--') {
-            return chainId.replace(new RegExp('_', 'g'), '-');
-        }
-        return '--';
-    }
-
-    // chain_name sort
+    // pretty_name sort
     // Todo shan 该方法中 ibcChains 可能存在没有值的情况，需要做处理
-    static sortByChainName(sourceList: any, chain?: any) {
+    static sortByPrettyName(sourceList: any, chain?: any) {
         function changeChainsSort(item: any) {
             const saveChain = item.chain_a;
             item.chain_a = item.chain_b;
@@ -42,14 +35,14 @@ export default class ChainHelper {
         if (isArray(sourceList) && sourceList?.length) {
             const updateList = sourceList?.map((item: any) => {
                 const matchChainA = ibcChains?.value?.all?.find(
-                    (chain) => chain.chain_id === item.chain_a
+                    (chain) => chain.chain_name === item.chain_a
                 );
                 const matchChainB = ibcChains?.value?.all?.find(
-                    (chain) => chain.chain_id === item.chain_b
+                    (chain) => chain.chain_name === item.chain_b
                 );
                 // 满足单选情况
                 if (chain?.split(',')[0] !== 'allchain' && chain?.split(',')[1] === 'allchain') {
-                    if (matchChainB?.chain_id === chain?.split(',')[0]) {
+                    if (matchChainB?.chain_name === chain?.split(',')[0]) {
                         changeChainsSort(item);
                     }
                     return item;
@@ -59,25 +52,25 @@ export default class ChainHelper {
                             changeChainsSort(item);
                         }
                     } else if (
-                        [matchChainA?.chain_name, matchChainB?.chain_name].indexOf(
-                            CHAINNAME.COSMOSHUB
+                        [matchChainA?.pretty_name, matchChainB?.pretty_name].indexOf(
+                            PRETTYNAME.COSMOSHUB
                         ) !== -1
                     ) {
                         if (
-                            [matchChainA?.chain_name, matchChainB?.chain_name].indexOf(
-                                CHAINNAME.COSMOSHUB
+                            [matchChainA?.pretty_name, matchChainB?.pretty_name].indexOf(
+                                PRETTYNAME.COSMOSHUB
                             ) === 1
                         ) {
                             changeChainsSort(item);
                         }
                     } else if (
-                        [matchChainA?.chain_name, matchChainB?.chain_name].indexOf(
-                            CHAINNAME.IRISHUB
+                        [matchChainA?.pretty_name, matchChainB?.pretty_name].indexOf(
+                            PRETTYNAME.IRISHUB
                         ) !== -1
                     ) {
                         if (
-                            [matchChainA?.chain_name, matchChainB?.chain_name].indexOf(
-                                CHAINNAME.IRISHUB
+                            [matchChainA?.pretty_name, matchChainB?.pretty_name].indexOf(
+                                PRETTYNAME.IRISHUB
                             ) === 1
                         ) {
                             changeChainsSort(item);
@@ -89,8 +82,8 @@ export default class ChainHelper {
                          *  1 -- need
                          */
                         if (
-                            matchChainA?.chain_name.localeCompare(
-                                (matchChainB as any)?.chain_name
+                            matchChainA?.pretty_name.localeCompare(
+                                (matchChainB as any)?.pretty_name
                             ) === 1
                         ) {
                             changeChainsSort(item);
@@ -107,7 +100,7 @@ export default class ChainHelper {
     // 按照类型顺序重新排序（ChainDropDown.vue 中的setAllChains 函数修改）
     static sortArrsByNames(
         dropdownData: any[],
-        sortNames = [CHAINNAME.COSMOSHUB, CHAINNAME.IRISHUB]
+        sortNames = [PRETTYNAME.COSMOSHUB, PRETTYNAME.IRISHUB]
     ) {
         if (!dropdownData?.length) {
             return [];
@@ -116,16 +109,16 @@ export default class ChainHelper {
         const res = [];
 
         sortNames.forEach((v) => {
-            const mathItem = dropdownData.filter((item) => item.chain_name === v);
+            const mathItem = dropdownData.filter((item) => item.pretty_name === v);
             res.push(...mathItem);
         });
 
-        const excludes = dropdownData.filter((v) => !sortNames.includes(v.chain_name));
+        const excludes = dropdownData.filter((v) => !sortNames.includes(v.pretty_name));
 
         excludes.sort((a, b) => {
-            return a.chain_name?.toLowerCase() < b.chain_name?.toLowerCase()
+            return a.pretty_name?.toLowerCase() < b.pretty_name?.toLowerCase()
                 ? -1
-                : a.chain_name?.toLowerCase() > b.chain_name?.toLowerCase()
+                : a.pretty_name?.toLowerCase() > b.pretty_name?.toLowerCase()
                 ? 1
                 : 0;
         });
@@ -135,7 +128,7 @@ export default class ChainHelper {
         return res;
     }
 
-    static async getChainName(data: IResponseChainsListItem[]): Promise<IResponseChainsListItem[]> {
+    static async getChainName(data: IResponseChainsListItem[]): Promise<IChainsListItem[]> {
         if (data.length === 0) {
             return [];
         }
@@ -149,13 +142,16 @@ export default class ChainHelper {
         }
         const ibcChainsAllMap: IIbcchainMap = {};
         (ibcChains.value?.all || []).forEach((ibcChain: IIbcchain) => {
-            ibcChainsAllMap[ibcChain.chain_id] = ibcChain.chain_name;
+            ibcChainsAllMap[ibcChain.chain_name] = ibcChain.pretty_name;
         });
-        const chainsList = ref<IResponseChainsListItem[]>([]);
+        const chainsList = ref<IChainsListItem[]>([]);
         chainsList.value = data.map((item: IResponseChainsListItem) => {
-            const chainName = ibcChainsAllMap[item.chain_id];
-            item.chainName = chainName ? chainName : UNKNOWN;
-            return item;
+            const prettyName = ibcChainsAllMap[item.chain] || UNKNOWN;
+            const chain = {
+                ...item,
+                prettyName
+            };
+            return chain;
         });
         return chainsList.value;
     }
@@ -164,7 +160,7 @@ export default class ChainHelper {
         const temp: ITokensListItem[] = [];
         for (let i = 0; i < (data ?? []).length; i++) {
             const item: ITokensListItem = data[i];
-            const baseDenom = await getBaseDenomByKey(item.chain_id, item.base_denom);
+            const baseDenom = await getBaseDenomByKey(item.chain, item.base_denom);
             item['name'] = baseDenom
                 ? getRestString(baseDenom.symbol, 6, 0)
                 : getRestString(item.base_denom, 6, 0);
@@ -205,13 +201,13 @@ export default class ChainHelper {
             isLocaleCompare.value = true;
         } else if (chainIdArr[1] === CHAIN_DEFAULT_VALUE) {
             isLocaleCompare.value = false;
-        } else if (chainsName.indexOf(CHAINNAME.COSMOSHUB) === 0) {
+        } else if (chainsName.indexOf(PRETTYNAME.COSMOSHUB) === 0) {
             isLocaleCompare.value = false;
-        } else if (chainsName.indexOf(CHAINNAME.COSMOSHUB) === 1) {
+        } else if (chainsName.indexOf(PRETTYNAME.COSMOSHUB) === 1) {
             isLocaleCompare.value = true;
-        } else if (chainsName.indexOf(CHAINNAME.IRISHUB) === 0) {
+        } else if (chainsName.indexOf(PRETTYNAME.IRISHUB) === 0) {
             isLocaleCompare.value = false;
-        } else if (chainsName.indexOf(CHAINNAME.IRISHUB) === 1) {
+        } else if (chainsName.indexOf(PRETTYNAME.IRISHUB) === 1) {
             isLocaleCompare.value = true;
         } else if (chainsName[1]) {
             if ((chainsName[0] as string)?.localeCompare(chainsName[1] as string) === 1) {
@@ -221,12 +217,39 @@ export default class ChainHelper {
         return isLocaleCompare.value;
     };
 
-    static getChainInfoByKey = async (chainID: string): Promise<IIbcchain | undefined> => {
+    static getChainInfoByKey = async (chain: string): Promise<IIbcchain | undefined> => {
         const ibcStatisticsChainsStore = useIbcStatisticsChains();
         const { ibcChainsUniqueKeyMapGetter } = ibcStatisticsChainsStore;
         if (Object.keys(ibcChainsUniqueKeyMapGetter).length <= 0) {
             await ibcStatisticsChainsStore.getIbcChainsAction();
         }
-        return ibcChainsUniqueKeyMapGetter[chainID];
+        return ibcChainsUniqueKeyMapGetter[chain];
+    };
+
+    static getChainInfoByPrettyName = async (
+        prettyName: string
+    ): Promise<IIbcchain | undefined> => {
+        const ibcStatisticsChainsStore = useIbcStatisticsChains();
+        const { ibcChainsPrettyNameKeyMapGetter } = ibcStatisticsChainsStore;
+        if (Object.keys(ibcChainsPrettyNameKeyMapGetter).length <= 0) {
+            await ibcStatisticsChainsStore.getIbcChainsAction();
+        }
+        return ibcChainsPrettyNameKeyMapGetter[prettyName];
+    };
+
+    static handleChainIdToChain = async (comchainId: string) => {
+        const array = comchainId.split(',');
+        const resArray: string[] = [];
+        for (let i = 0; i < array.length; i++) {
+            const item = array[i];
+            if (item === 'allchain') {
+                resArray.push(item);
+            } else {
+                const formatRes = await this.getChainInfoByPrettyName(item);
+                const pushRes = formatRes?.chain_name || item;
+                resArray.push(pushRes);
+            }
+        }
+        return resArray.join(',');
     };
 }

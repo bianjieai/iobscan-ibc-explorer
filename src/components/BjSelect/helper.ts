@@ -60,7 +60,7 @@ export const inputItemsByMode = (inputVal: string | undefined, mode: ModeType): 
 
     tokens?.forEach((v) => {
         res.push({
-            id: v.replace(/-/, '_'),
+            id: v,
             title: v,
             inputFlag: true
         });

@@ -13,7 +13,7 @@
                     <span class="chain_info__icon">
                         <img :src="searchChainIcon" alt="" />
                     </span>
-                    <span>{{ ChainHelper.formatChainId(chainInfoList.value) }}</span>
+                    <span>{{ chainInfoList.value }}</span>
                 </router-link>
                 <span v-else class="chain_info__value chain_info__chain_id_value">
                     <span>{{ DEFAULT_DISPLAY_TEXT }}</span>
@@ -51,7 +51,6 @@
 
 <script setup lang="ts">
     import { ITxInfo } from '@/types/interface/transfers.interface';
-    import ChainHelper from '@/helper/chainHelper';
     import { useChainInfo } from '@/views/transfers/details/composable';
     import { DEFAULT_DISPLAY_TEXT } from '@/constants';
     import TitleCard from './TitleCard.vue';

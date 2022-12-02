@@ -5,8 +5,8 @@
             :title-suffix="'Relayer Details'"
             :title-icon="'icon-a-chainsserved'"
             :subtitle="subTitle"
-            :relayer-img-src="relayerImgSrc"
-            :display-relayer-img-src="displayRelayerImgSrc"
+            :relayer-icon="relayerIcon"
+            :default-relayer-img="defaultRelayerImg"
             :display-adaptor="displayAdaptor"
         />
         <layer-block class="relayer_details__statistic">
@@ -38,7 +38,8 @@
                     <InfoCard
                         class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap"
                         icon="icon-a-transfertype"
-                        title="IBC Transfer Type"
+                        title="IBC Transaction Type"
+                        tip-msg="The proportion of the three types of relayed transactions (Receive, Acknowledge, and Timeout) to the total number of these transactions."
                     >
                         <loading-component
                             v-if="transferTypeLoading"
@@ -80,6 +81,7 @@
                         class="relayer_details__charts_wrap__left__bottom__success_rate"
                         icon="icon-a-successrate"
                         title="Success Rate"
+                        tip-msg="The success rate of all relayed transactions (Receive, Acknowledge, and Timeout)."
                     >
                         <loading-component
                             v-if="ibcStatisticsChainsStore.isShowLoading"
@@ -132,6 +134,7 @@
 
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const {
+        relayerIcon,
         relayerName,
         servedChainsInfo,
         relayedTotalTxs,
@@ -140,8 +143,7 @@
         channelPairsInfo,
         isShowModal,
         subTitle,
-        relayerImgSrc,
-        displayRelayerImgSrc,
+        defaultRelayerImg,
         displayAdaptor
     } = useGetRelayerDetailsInfo();
     const {
@@ -184,7 +186,6 @@
                         flex: 1;
                         &__nodatas {
                             margin: 1px 0;
-                            min-width: 380px;
                         }
                     }
                     &__transfer_type {

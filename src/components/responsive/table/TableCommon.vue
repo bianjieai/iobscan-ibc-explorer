@@ -52,7 +52,7 @@
                 :page-size="pageInfo.pageSize"
                 :total="pageInfo.total"
                 :show-title="false"
-                :disabled="props.loading"
+                :disabled="disabledPagination"
                 @change="onPageChange"
             />
         </div>
@@ -64,7 +64,7 @@
     import { GetComponentProps } from 'ant-design-vue/lib/vc-table/interface';
     import type { IIbcTx } from '@/types/interface/transfers.interface';
     import type { IResponseChannelsListItem } from '@/types/interface/channels.interface';
-    import type { IResponseChainsListItem } from '@/types/interface/chains.interface';
+    import type { IChainsListItem } from '@/types/interface/chains.interface';
     import type {
         IResponseIbcTokenListItem,
         ITokensListItem
@@ -84,7 +84,7 @@
     const { ibcBaseDenoms } = useGetIbcDenoms();
     type TData =
         | IIbcTx[]
-        | IResponseChainsListItem[]
+        | IChainsListItem[]
         | ITokensListItem[]
         | IResponseIbcTokenListItem[]
         | RelayerListItem[]
@@ -152,6 +152,9 @@
             pageInfo.current = _new || 1;
         }
     );
+    const disabledPagination = computed(() => {
+        return props.loading || pageInfo.total <= 0;
+    });
     const needPagination = computed(
         () => !props.noPagination && !(props.current && props.pageSize)
     ); // 需要前端分页
