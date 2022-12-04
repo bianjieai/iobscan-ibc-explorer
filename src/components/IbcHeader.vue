@@ -51,7 +51,7 @@
     import { RouteLocationNormalized } from 'vue-router';
     type Key = string | number;
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
-    const homeUrl = new URL(import.meta.env.VITE_HOME_URL, import.meta.url).href;
+    const homeUrl = import.meta.env.VITE_HOME_URL;
     const isStage = import.meta.env.MODE === 'stage';
     const headerMenus = reactive(MENUS);
     const currentMenu = ref<Key[]>([]);

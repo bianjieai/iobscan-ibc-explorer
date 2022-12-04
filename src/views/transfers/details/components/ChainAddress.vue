@@ -5,7 +5,11 @@
             <span>{{ chainAddress.label }}</span>
         </span>
         <span class="address__value">
-            <span>{{ chainAddress.value }}</span>
+            <span
+                :class="{ cursor: judgeIsAddressCursor(chainAddress.value) }"
+                @click="goAddressDetails(chainAddress.value)"
+                >{{ chainAddress.value }}</span
+            >
             <CopyComponent
                 v-if="chainAddress.value !== DEFAULT_DISPLAY_TEXT"
                 :copy-text="chainAddress.value"
@@ -15,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-    import { useMatchChainInfo } from '@/composables';
+    import { useMatchChainInfo, useGoAddressDetail } from '@/composables';
     import type { IInfoList, ITxInfo } from '@/types/interface/transfers.interface';
     import { DEFAULT_DISPLAY_TEXT } from '@/constants';
     interface IProps {
@@ -29,6 +33,7 @@
             return prettyName || DEFAULT_DISPLAY_TEXT;
         }
     });
+    const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
 </script>
 
 <style lang="less" scoped>
