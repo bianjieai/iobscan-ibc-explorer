@@ -1,6 +1,5 @@
 import { API_CODE } from '@/constants/apiCode';
 import { getIbcStatisticsAPI } from '@/api/home';
-import { findStatistics } from '@/helper/findStatisticsHelper';
 import {
     IBC_STATISTICS_CHANNELS_DEFAULT,
     IBC_STATISTICS_DENOMS_DEFAULT,
@@ -22,20 +21,28 @@ export const useIbcStatistics = (timerInterval?: number) => {
             const { code, data } = await getIbcStatisticsAPI();
             if (code === API_CODE.success) {
                 const items: IResponseIbcStatisticItem[] = data.items;
-                // todo dj 改成 Map
-                ibcStatisticsChains.chains_24hr = findStatistics(items, 'chains_24hr');
-                ibcStatisticsChains.chain_all = findStatistics(items, 'chain_all');
-                ibcStatisticsChannels.channels_24hr = findStatistics(items, 'channels_24hr');
-                ibcStatisticsChannels.channel_all = findStatistics(items, 'channel_all');
-                ibcStatisticsChannels.channel_opened = findStatistics(items, 'channel_opened');
-                ibcStatisticsChannels.channel_closed = findStatistics(items, 'channel_closed');
-                ibcStatisticsDenoms.denom_all = findStatistics(items, 'denom_all');
+                const statisticsNameMap = new Map();
+                items.forEach((item) => {
+                    statisticsNameMap.set(item.statistics_name, item);
+                });
+                const findStatistics = (key: string) =>
+                    statisticsNameMap.get(key) || {
+                        statistics_name: key,
+                        count: 0
+                    };
+                ibcStatisticsChains.chains_24hr = findStatistics('chains_24hr');
+                ibcStatisticsChains.chain_all = findStatistics('chain_all');
+                ibcStatisticsChannels.channels_24hr = findStatistics('channels_24hr');
+                ibcStatisticsChannels.channel_all = findStatistics('channel_all');
+                ibcStatisticsChannels.channel_opened = findStatistics('channel_opened');
+                ibcStatisticsChannels.channel_closed = findStatistics('channel_closed');
+                ibcStatisticsDenoms.denom_all = findStatistics('denom_all');
                 ibcStatisticsDenoms.denom_all.no_link = true;
-                ibcStatisticsDenoms.base_denom_all = findStatistics(items, 'base_denom_all');
-                ibcStatisticsTxs.tx_24hr_all = findStatistics(items, 'tx_24hr_all');
-                ibcStatisticsTxs.tx_all = findStatistics(items, 'tx_all');
-                ibcStatisticsTxs.tx_success = findStatistics(items, 'tx_success');
-                ibcStatisticsTxs.tx_failed = findStatistics(items, 'tx_failed');
+                ibcStatisticsDenoms.base_denom_all = findStatistics('base_denom_all');
+                ibcStatisticsTxs.tx_24hr_all = findStatistics('tx_24hr_all');
+                ibcStatisticsTxs.tx_all = findStatistics('tx_all');
+                ibcStatisticsTxs.tx_success = findStatistics('tx_success');
+                ibcStatisticsTxs.tx_failed = findStatistics('tx_failed');
             }
         } catch (error) {
             console.log('getIbcStatisticsAPI', error);

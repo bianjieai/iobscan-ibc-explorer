@@ -15,11 +15,7 @@
             :scroll="{ y: 610 }"
         >
             <template #chain="{ record, column }">
-                <ChainIcon
-                    :chain="record[column.key]"
-                    :chains-data="ibcChains.all"
-                    icon-size="small"
-                />
+                <ChainIcon :chain="record[column.key]" icon-size="small" />
             </template>
 
             <template #channels="{ record, column }">
@@ -57,13 +53,12 @@
 <script lang="ts" setup>
     import { PAGE_PARAMETERS } from '@/constants';
     import { COLUMNS } from '@/constants/chains';
-    import { useIbcChains, useLoading, useNeedCustomColumns } from '@/composables';
+    import { useLoading, useNeedCustomColumns } from '@/composables';
     import { useGetChainsList, useChainsColumnJump } from '@/views/chains/composable';
     import { formatAmount } from '@/helper/tableCellHelper';
     import { formatBigNumber } from '@/helper/parseStringHelper';
 
     const { loading } = useLoading();
-    const { ibcChains } = useIbcChains();
     const { chainsList } = useGetChainsList(loading);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.chains);
     const { goChannels, goRelayers, goTransfer } = useChainsColumnJump();
