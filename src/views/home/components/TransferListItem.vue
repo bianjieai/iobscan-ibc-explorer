@@ -4,30 +4,29 @@
             <div class="list_item__expand_btn" @click="onClickExpandBtn">
                 <img :src="!item.expanded ? expandImg : packUpImg" alt="" />
             </div>
-            <router-link
-                v-ga="{
-                    gaEventName: 'Home-点击链接',
-                    params: {
-                        clickLink: '点击表格中的数据链接'
-                    }
-                }"
-                class="list_item__info"
-                :class="{ list_item__line: !item.expanded }"
-                :to="`/transfers/details?txhash=${item.sc_tx_info.hash}`"
-            >
+            <div class="list_item__info" :class="{ list_item__line: !item.expanded }">
                 <span class="list_item__number">{{ prefixInteger(index + 1, 3) }}</span>
-                <div class="list_item__link">
-                    <img
-                        class="list_item__icon"
-                        :src="item.symbolIcon || TOKEN_DEFAULT_ICON"
-                        alt="icon"
-                    />
-                </div>
                 <div
-                    class="list_subItem"
-                    :style="{ borderBottom: isFinal ? '' : '1px solid var(--bj-border-color)' }"
+                    v-ga="{
+                        gaEventName: 'Home-点击链接',
+                        params: {
+                            clickLink: '点击表格中的数据链接,跳转至交易详情页面'
+                        }
+                    }"
+                    class="list_item__info_token_c cursor"
+                    @click="goTransfersDetails(item.sc_tx_info.hash)"
                 >
-                    <div class="list_subItem__title_container">
+                    <div class="list_item__link">
+                        <img
+                            class="list_item__icon"
+                            :src="item.symbolIcon || TOKEN_DEFAULT_ICON"
+                            alt="icon"
+                        />
+                    </div>
+                    <div
+                        class="list_subItem__title_container"
+                        :class="{ list_subItem__title_container_border_bottom: !isFinal }"
+                    >
                         <span class="list_subItem__value">{{
                             formatNum(item.symbolNum) || 0
                         }}</span>
@@ -37,21 +36,21 @@
                         </a-popover>
                         <span v-else class="list_subItem__title">{{ item.symbolDenom || '' }}</span>
                     </div>
-
+                </div>
+                <div
+                    class="list_subItem"
+                    :style="{ borderBottom: isFinal ? '' : '1px solid var(--bj-border-color)' }"
+                >
                     <div class="list_subItem__adress_container">
-                        <hash-addr-icon :item="item" :ibc-chains="ibcChains"></hash-addr-icon>
+                        <hash-addr-icon :item="item"></hash-addr-icon>
                         <p class="list_item__ago">{{ item.parseTime }} ago</p>
                     </div>
                 </div>
-            </router-link>
+            </div>
         </div>
-        <router-link
-            v-if="item.expanded"
-            class="list_item__out_hash_wrap"
-            :to="`/transfers/details?txhash=${item.sc_tx_info.hash}`"
-        >
-            <hash-addr-icon :item="item" :ibc-chains="ibcChains"></hash-addr-icon>
-        </router-link>
+        <div v-if="item.expanded" class="list_item__out_hash_wrap">
+            <hash-addr-icon :item="item"></hash-addr-icon>
+        </div>
     </div>
 </template>
 
@@ -62,6 +61,7 @@
     import expandImg from '@/assets/expand.png';
     import packUpImg from '@/assets/pack_up.png';
     import { useIsExpand } from '../composable/useTransferList';
+    import { useGoTransfersDetail } from '@/composables';
 
     const props = defineProps({
         isFinal: Boolean,
@@ -72,14 +72,12 @@
         item: {
             type: Object,
             required: true
-        },
-        ibcChains: {
-            type: Object,
-            required: true
         }
     });
-    const emits = defineEmits(['clickItem', 'clickViewAll', 'itemDidExpand']);
+    const emits = defineEmits(['itemDidExpand']);
     const { onClickExpandBtn } = useIsExpand(emits, props.item.record_id);
+
+    const { goTransfersDetails } = useGoTransfersDetail();
 </script>
 
 <style lang="less" scoped>
@@ -108,12 +106,25 @@
                     .flex(row, nowrap, space-between, center);
                     margin-left: 8px;
                 }
-                &__title_container {
-                    .flex(column, nowrap, space-between, flex-start);
+            }
+            .list_item__info_token_c {
+                .flex(row, nowrap, space-between, center);
+                &:hover {
+                    .list_subItem__value,
+                    .list_subItem__title {
+                        color: var(--bj-primary-color);
+                    }
+                }
+                .list_subItem__title_container {
+                    .flex(column, nowrap,center, flex-start);
+                    height: 74.33px;
                     width: 100%;
                     max-width: 150px;
                 }
-                &__value {
+                .list_subItem__title_container_border_bottom {
+                    border-bottom: 1px solid var(--bj-border-color);
+                }
+                .list_subItem__value {
                     width: 100%;
                     text-align: left;
                     font-size: var(--bj-font-size-sub-title);
@@ -122,7 +133,7 @@
                     line-height: var(--bj-font-size-normal);
                 }
 
-                &__title {
+                .list_subItem__title {
                     text-align: left;
                     margin-top: 4px;
                     font-size: var(--bj-font-size-normal);
@@ -191,14 +202,19 @@
                             display: none;
                         }
                     }
-                    &__title_container {
+                }
+                .list_item__info_token_c {
+                    .list_subItem__title_container {
                         overflow: auto;
                         text-overflow: ellipsis;
                     }
-                    &__value {
+                    .list_subItem__title_container_border_bottom {
+                        border-bottom: none;
+                    }
+                    .list_subItem__value {
                     }
 
-                    &__title {
+                    .list_subItem__title {
                         width: 100%;
                     }
                 }
@@ -247,13 +263,17 @@
                         .out_hash {
                         }
                     }
-                    &__title_container {
+                }
+                .list_item__info_token_c {
+                    .list_subItem__title_container {
                         margin-left: 0;
                         margin-right: 0;
                     }
-                    &__value {
+                    .list_subItem__title_container_border_bottom {
                     }
-                    &__title {
+                    .list_subItem__value {
+                    }
+                    .list_subItem__title {
                     }
                 }
             }

@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { ref, defineEmits } from 'vue';
+    import { ref } from 'vue';
     import { RELAYER_REGISTE_ADDRESS, RELAYER_REGISTE_TEXT } from '@/constants/relayers';
     interface DialogProps {
         showModal: boolean;

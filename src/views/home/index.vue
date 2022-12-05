@@ -47,12 +47,10 @@
                     @click-item="onClickViewAll"
                 />
                 <transfer-list
-                    :ibc-chains="ibcChains"
                     :transfer-list="homeIbcTxs"
                     @click-view-all="
                         onClickViewAll(IBC_STATISTICS_TXS_DEFAULT.tx_all.statistics_name)
                     "
-                    @click-item="onClickViewAll"
                     @item-did-expand="setExpandByIndex"
                 />
             </layer-block>

@@ -63,6 +63,11 @@ export const ROUTE_INFO = {
         name: '404',
         title: 'IOBScan - IOB - 404',
         description: 'IOBScan 404 Info'
+    },
+    addressDetails: {
+        name: 'Address Details',
+        title: 'IOBScan - IOB - Address Details',
+        description: 'IBC Transfer Address Details'
     }
 };
 export const MENUS = [

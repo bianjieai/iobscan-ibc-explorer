@@ -9,7 +9,12 @@
                 :key="item"
                 class="channel_pair__chain_address_wrap"
             >
-                <span class="channel_pair__chain_address">{{ item }}</span>
+                <span
+                    class="channel_pair__chain_address"
+                    :class="{ cursor: judgeIsAddressCursor(item) }"
+                    @click="goAddressDetails(item)"
+                    >{{ item }}</span
+                >
                 <CopyComponent :copy-text="item"></CopyComponent>
             </div>
         </div>
@@ -18,6 +23,7 @@
 
 <script setup lang="ts">
     import ChainChannel from './ChainChannel.vue';
+    import { useGoAddressDetail } from '@/composables';
     interface IChannelPair {
         chain: string;
         channel: string;
@@ -25,6 +31,7 @@
         height: number;
     }
     defineProps<IChannelPair>();
+    const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
 </script>
 
 <style lang="less" scoped>

@@ -627,13 +627,6 @@ export const useTransfersTable = (
     ibcChains: Ref<IIbcChains>
 ) => {
     const router = useRouter();
-    const handleClickRow = (record: any) => {
-        return {
-            onClick: () => {
-                router.push(`/transfers/details?txhash=${record.sc_tx_info.hash}`);
-            }
-        };
-    };
     const onPaginationChange = (current: number, pageSize: number) => {
         pagination.current = current;
         const params = urlParser(url);
@@ -676,7 +669,6 @@ export const useTransfersTable = (
         return CHAIN_DEFAULT_ICON;
     };
     return {
-        handleClickRow,
         onPaginationChange,
         getImageUrl,
         findIbcChainIcon

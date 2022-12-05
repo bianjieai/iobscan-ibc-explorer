@@ -274,3 +274,29 @@ export const useImageLoadStatus = (image: Ref<string>, defaultImg: Ref<string>) 
         displayImageSrc
     };
 };
+
+export const useGoTransfersDetail = () => {
+    const router = useRouter();
+    const goTransfersDetails = (hash: string) => {
+        if (!hash) return;
+        router.push(`/transfers/details?txhash=${hash}`);
+    };
+    return {
+        goTransfersDetails
+    };
+};
+
+export const useGoAddressDetail = () => {
+    const router = useRouter();
+    const goAddressDetails = (address: string) => {
+        if (!address || address === DEFAULT_DISPLAY_TEXT) return;
+        router.push(`/address/${address}`);
+    };
+    const judgeIsAddressCursor = (address: string) => {
+        return address && address != DEFAULT_DISPLAY_TEXT;
+    };
+    return {
+        goAddressDetails,
+        judgeIsAddressCursor
+    };
+};

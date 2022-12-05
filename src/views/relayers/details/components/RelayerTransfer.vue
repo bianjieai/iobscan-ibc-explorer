@@ -95,7 +95,11 @@
                                 <p class="popover_c">{{ record.signer }}</p>
                             </div>
                         </template>
-                        <span>{{ getRestString(record.signer, 6, 6) }}</span>
+                        <span
+                            :class="{ cursor: judgeIsAddressCursor(record.signer) }"
+                            @click="goAddressDetails(record.signer)"
+                            >{{ getRestString(record.signer, 6, 6) }}</span
+                        >
                     </a-popover>
                 </template>
                 <template #tx_time="{ record }">
@@ -114,6 +118,7 @@
     import { useIbcChains, useNeedCustomColumns } from '@/composables';
     import { usePagination, useSelectedSearch } from '../composable';
     import { DEFAULT_TITLE, LoadingType, PAGE_PARAMETERS } from '@/constants';
+    import { useGoAddressDetail } from '@/composables';
     interface IRelayerTransfer {
         servedChainsInfo: string[];
         isShowModal: boolean;
@@ -139,6 +144,7 @@
     const getPopupContainer = (): HTMLElement =>
         document.querySelector('.relayer_transfer__search')!;
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayerDetails);
+    const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
 </script>
 
 <style lang="less" scoped>

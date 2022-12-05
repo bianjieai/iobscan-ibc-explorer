@@ -19,7 +19,7 @@
                     <a
                         v-ga="'导航栏-点击跨链门户'"
                         class="header_input__iobscan_io"
-                        href="https://www.iobscan.io"
+                        :href="homeUrl"
                         target="_blank"
                         rel="noreferrer noopener"
                     >
@@ -51,6 +51,7 @@
     import { RouteLocationNormalized } from 'vue-router';
     type Key = string | number;
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
+    const homeUrl = import.meta.env.VITE_HOME_URL;
     const isStage = import.meta.env.MODE === 'stage';
     const headerMenus = reactive(MENUS);
     const currentMenu = ref<Key[]>([]);
