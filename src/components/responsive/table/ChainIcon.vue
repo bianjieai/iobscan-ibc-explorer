@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center">
+    <div v-if="isLoadComplete" class="flex items-center">
         <img
             :src="chainInfo.imgSrc"
             class="icon mr-8"
@@ -48,18 +48,16 @@
 </template>
 
 <script setup lang="ts">
-    import { IIbcchain } from '@/types/interface/index.interface';
-    import { computed } from 'vue';
     import {
         TableCellIconSize,
         TTableCellIconSize
     } from '@/types/interface/components/table.interface';
+    import ChainHelper from '@/helper/chainHelper';
     import { CHAIN_DEFAULT_ICON, UNKNOWN } from '@/constants';
 
     interface IProps {
         iconSize?: TTableCellIconSize;
         chain: string;
-        chainsData: IIbcchain[];
         titleCanClick?: boolean;
         title?: string;
         noSubtitle?: boolean;
@@ -70,31 +68,36 @@
         iconSize: TableCellIconSize.NORMAL
     });
 
+    const isLoadComplete = ref(false);
+
+    const chainInfo = reactive({
+        title: UNKNOWN,
+        subtitle: '--',
+        imgSrc: CHAIN_DEFAULT_ICON
+    });
+
+    watch(
+        () => props.chain,
+        async () => {
+            const filterData = await ChainHelper.getChainInfoByKey(props.chain);
+            if (filterData) {
+                chainInfo.title = filterData.pretty_name;
+                chainInfo.subtitle = filterData.current_chain_id;
+                chainInfo.imgSrc = filterData?.icon || CHAIN_DEFAULT_ICON;
+            }
+            isLoadComplete.value = true;
+        },
+        { immediate: true }
+    );
+
     const computedTitle = computed(() => {
         let title = '';
         if (typeof props.title !== 'undefined') {
             title = props.title === '' ? 'channel- --' : props.title;
         } else {
-            title = chainInfo.value.title;
+            title = chainInfo.title;
         }
         return title;
-    });
-
-    const chainInfo = computed(() => {
-        const filterData = props.chainsData.find((item) => item.chain_name === props.chain);
-        if (filterData) {
-            return {
-                title: filterData.pretty_name,
-                subtitle: filterData.current_chain_id,
-                imgSrc: filterData.icon ? filterData.icon : CHAIN_DEFAULT_ICON
-            };
-        } else {
-            return {
-                title: UNKNOWN,
-                subtitle: '--',
-                imgSrc: CHAIN_DEFAULT_ICON
-            };
-        }
     });
 
     const emits = defineEmits<{

@@ -68,11 +68,7 @@
                     <span>{{ formatTransferType(record.tx_type) }}</span>
                 </template>
                 <template #chain="{ record, column }">
-                    <ChainIcon
-                        :chain="record[column.key]"
-                        :chains-data="ibcChains.all"
-                        icon-size="small"
-                    />
+                    <ChainIcon :chain="record[column.key]" icon-size="small" />
                 </template>
                 <template #denom_info="{ record, column }">
                     <TokenInfo :token-info="record.denom_info" :type="column.title" />
@@ -116,7 +112,7 @@
     import { getRestString } from '@/helper/parseStringHelper';
     import { formatTxStatus, changeColor } from '@/helper/tableCellHelper';
     import { dayjsFormatDate } from '@/utils/timeTools';
-    import { useIbcChains, useNeedCustomColumns } from '@/composables';
+    import { useNeedCustomColumns } from '@/composables';
     import { usePagination, useSelectedSearch } from '../composable';
     import { DEFAULT_TITLE, LoadingType, PAGE_PARAMETERS } from '@/constants';
     import { useGoAddressDetail } from '@/composables';
@@ -126,7 +122,6 @@
     }
     const props = defineProps<IRelayerTransfer>();
     const { servedChainsInfo } = toRefs(props);
-    const { ibcChains } = useIbcChains();
     const { pagination } = usePagination();
     const {
         defaultChain,
