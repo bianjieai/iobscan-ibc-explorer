@@ -414,23 +414,27 @@ const FOOTER_MODE = {
   light: 'light',
   dark: 'dark'
 }
-const COPYRIGHT = 'Copyright © 2022 IOBScan. All Rights Reserved.';
+const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan. All Rights Reserved.`;
 const ICON_LINK = [
   {
+      groupName: 'Github',
       iconName: 'icon-github',
       iconLink: 'https://github.com/irisnet'
   },
   {
+      groupName: 'Telegram',
       iconName: 'icon-telegram',
       iconLink: 'https://t.me/irisnetwork'
   },
   {
+      groupName: 'Medium',
       iconName: 'icon-medium',
-      iconLink: 'https://medium.com/irisnet-blog'
+      iconLink: 'https://medium.com/@IOBScan'
   },
   {
+      groupName: 'Twitter',
       iconName: 'icon-tweeter',
-      iconLink: 'https://twitter.com/irisnetwork'
+      iconLink: 'https://twitter.com/iobscan_ibc'
   }
 ];
   export {

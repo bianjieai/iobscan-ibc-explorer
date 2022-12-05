@@ -5,7 +5,7 @@
                 <div class="layout_main__logo">
                     <img :src="logoIcon" alt="logo" />
                 </div>
-                <a class="layout_main__ioblink" href="https://www.iobscan.io/#/" target="_blank" rel="noreferrer noopener">
+                <a v-ga="'导航栏-点击跨链门户'" class="layout_main__ioblink" :href="homeUrl" target="_blank" rel="noreferrer noopener">
                     <img src="/src/assets/ioblink.png" alt="icon" />
                 </a>
             </div>
@@ -22,6 +22,7 @@
 <script setup>
     import { FOOTER_MODE } from '@/constants';
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
+    const homeUrl = new URL(import.meta.env.VITE_HOME_URL, import.meta.url).href;
 </script>
 
 <style lang="less" scoped>
