@@ -71,7 +71,6 @@
                     avatar-can-click
                     title-can-click
                     :chain="record[column.key]"
-                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                     @click-title="goChains"
