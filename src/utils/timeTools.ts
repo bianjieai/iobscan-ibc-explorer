@@ -17,12 +17,12 @@ export const dayjsFormatDate = (time: dayjs.ConfigType, format = 'MM-DD HH:mm:ss
 
 /**
  *
- * @param time
+ * @param time seconds
  * @returns 1m ago / 1h ago / 1d ago
  */
 export const formatLastUpdated = (time: string | number) => {
     if (time === 0) return '--';
-    const obj = dayjs.duration(dayjsUtc().unix() - Number(time)) as any;
+    const obj = dayjs.duration(dayjsUtc().unix() - Number(time), 's') as any;
     const { seconds, days, months, years, minutes, hours } = obj.$d;
 
     let ago = '';
@@ -49,7 +49,7 @@ export const formatLastUpdated = (time: string | number) => {
  */
 export const formatOperatingPeriod = (time: number, status: TChannelStatus) => {
     if (String(status) === ChannelStatus.CLOSED || time == 0) return '--';
-    const obj = dayjs.duration(Number(time) * 1000) as any;
+    const obj = dayjs.duration(Number(time), 's') as any;
     const { days, months, years } = obj.$d;
     let day = days;
     if (!months && !years && time > 0) {
