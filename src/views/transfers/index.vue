@@ -116,7 +116,6 @@
                     :current="pagination.current"
                     :page-size="pagination.pageSize"
                     :total="pagination.total"
-                    :custom-row="handleClickRow"
                     @on-page-change="onPaginationChange"
                 >
                     <template #Token>
@@ -152,14 +151,9 @@
                                     </p>
                                 </div>
                             </template>
-                            <router-link
+                            <div
                                 class="token__link hover"
-                                :to="
-                                    record.status === IBC_TX_STATUS.SUCCESS
-                                        ? `/tokens/details?denom=${record.base_denom}&denomChain=${record.base_denom_chain}&chain=${record.dc_chain}`
-                                        : `/tokens/details?denom=${record.base_denom}&denomChain=${record.base_denom_chain}&chain=${record.sc_chain}`
-                                "
-                                @click.stop=""
+                                @click="goTransfersDetails(record.sc_tx_info.hash)"
                             >
                                 <img
                                     class="token__icon"
@@ -173,7 +167,7 @@
                                         getRestString(record.symbolDenom, 6, 0)
                                     }}</span>
                                 </span>
-                            </router-link>
+                            </div>
                         </a-popover>
                     </template>
                     <template #fromTxhash="{ record }">
@@ -183,9 +177,11 @@
                                     <p class="popover_c">{{ record.sc_tx_info.hash }}</p>
                                 </div>
                             </template>
-                            <span class="cursor">{{
-                                getRestString(record.sc_tx_info.hash, 4, 4)
-                            }}</span>
+                            <span
+                                class="cursor primary_color"
+                                @click="goTransfersDetails(record.sc_tx_info.hash)"
+                                >{{ getRestString(record.sc_tx_info.hash, 4, 4) }}</span
+                            >
                         </a-popover>
                     </template>
                     <template #from="{ record }">
@@ -195,7 +191,11 @@
                                     <p class="popover_c">{{ record.sc_addr }}</p>
                                 </div>
                             </template>
-                            <span>{{ getRestString(record.sc_addr, 3, 8) || '--' }}</span>
+                            <span
+                                :class="{ cursor: judgeIsAddressCursor(record.sc_addr) }"
+                                @click="goAddressDetails(record.sc_addr)"
+                                >{{ getRestString(record.sc_addr, 6, 6) || '--' }}</span
+                            >
                         </a-popover>
                     </template>
                     <template #status="{ record }">
@@ -262,23 +262,32 @@
                                     <p class="popover_c">{{ record.dc_addr || '--' }}</p>
                                 </div>
                             </template>
-                            <span class="cursor">{{
-                                getRestString(record.dc_addr, 3, 8) || '--'
-                            }}</span>
+                            <span
+                                :class="{ cursor: judgeIsAddressCursor(record.dc_addr) }"
+                                @click="goAddressDetails(record.dc_addr)"
+                                >{{ getRestString(record.dc_addr, 6, 6) || '--' }}</span
+                            >
                         </a-popover>
                     </template>
                     <template #toTxHash="{ record }">
                         <a-popover v-if="record.dc_tx_info.hash" destroy-tooltip-on-hide>
                             <template #content>
                                 <div>
-                                    <p class="popover_c">{{ record.dc_tx_info.hash || '--' }}</p>
+                                    <p class="popover_c">{{ record.dc_tx_info.hash }}</p>
                                 </div>
                             </template>
-                            <span class="cursor">{{
-                                getRestString(record.dc_tx_info.hash, 4, 4) || '--'
-                            }}</span>
+                            <span
+                                class="cursor primary_color"
+                                @click="goTransfersDetails(record.sc_tx_info.hash)"
+                                >{{ getRestString(record.dc_tx_info.hash, 4, 4) }}</span
+                            >
                         </a-popover>
-                        <span v-else>--</span>
+                        <span
+                            v-else
+                            class="cursor"
+                            @click="goTransfersDetails(record.sc_tx_info.hash)"
+                            >--</span
+                        >
                     </template>
                     <template #createTime="{ record }">
                         <span>{{ dayjsFormatDate(record.tx_time * 1000) }}</span>
@@ -305,7 +314,6 @@
 <script setup lang="ts">
     import {
         IBC_TX_STATUS_SELECT_OPTIONS,
-        IBC_TX_STATUS,
         CHAIN_DEFAULT_VALUE,
         TOKEN_DEFAULT_ICON,
         TIP_ICON,
@@ -329,11 +337,14 @@
         useIbcChains,
         useNeedCustomColumns,
         usePickerPlaceholder,
-        useMatchChainInfo
+        useMatchChainInfo,
+        useGoTransfersDetail
     } from '@/composables';
     import { MODES } from '@/components/BjSelect/constants';
     import { TRANSFERS_TOKEN_DEFAULT_VALUE } from '@/constants/transfers';
+    import { useGoAddressDetail } from '@/composables';
 
+    const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
     const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
     const { pagination } = usePagination();
     const { ibcChains } = useIbcChains();
@@ -386,13 +397,14 @@
         dateRange,
         queryDatas
     );
-    const { handleClickRow, onPaginationChange, getImageUrl, findIbcChainIcon } = useTransfersTable(
+    const { onPaginationChange, getImageUrl, findIbcChainIcon } = useTransfersTable(
         pagination,
         url,
         getIbcTxsData,
         queryParams,
         ibcChains
     );
+    const { goTransfersDetails } = useGoTransfersDetail();
 </script>
 
 <style lang="less" scoped>

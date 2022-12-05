@@ -15,8 +15,6 @@
                     :item="(item as any)"
                     :index="index"
                     :is-final="index >= transferList.length - 1"
-                    :ibc-chains="ibcChains"
-                    @click-item="clickListItem"
                     @item-did-expand="itemDidExpand"
                 />
             </div>
@@ -37,14 +35,10 @@
         transferList: {
             type: Array,
             required: true
-        },
-        ibcChains: {
-            type: Object,
-            required: true
         }
     });
-    const emits = defineEmits(['clickViewAll', 'clickItem', 'itemDidExpand']);
-    const { clickListItem, itemDidExpand } = useInterfaceActive(emits);
+    const emits = defineEmits(['itemDidExpand']);
+    const { itemDidExpand } = useInterfaceActive(emits);
 </script>
 
 <style lang="less" scoped>

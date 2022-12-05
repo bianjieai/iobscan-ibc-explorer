@@ -117,6 +117,19 @@ const routes: Array<RouteRecordRaw> = [
         ]
     },
     {
+        path: '/address/:address',
+        component: Layout,
+        meta: {},
+        children: [
+            {
+                path: '',
+                name: ROUTE_INFO.addressDetails.name,
+                component: () => import('../views/address/index.vue'),
+                meta: {}
+            }
+        ]
+    },
+    {
         path: '/:pathMatch(.*)*',
         component: LayoutError,
         meta: {},

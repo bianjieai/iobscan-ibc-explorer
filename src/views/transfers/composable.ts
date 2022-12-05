@@ -20,10 +20,9 @@ import {
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { API_CODE } from '@/constants/apiCode';
 import { useGetIbcDenoms } from '@/composables';
-import dayjs from 'dayjs';
 import { formatBigNumber, JSONparse, rmIbcPrefix } from '@/helper/parseStringHelper';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
-import { dayjsFormatDate } from '@/utils/timeTools';
+import { dayjsUtc, dayjsFormatDate } from '@/utils/timeTools';
 import ChainHelper from '@/helper/chainHelper';
 import { Ref } from 'vue';
 import { urlParser } from '@/utils/urlTools';
@@ -231,16 +230,16 @@ export const useRouteParams = () => {
     }
     if (route?.query?.startTime) {
         url += `&startTime=${route.query.startTime}`;
-        startTimestamp = dayjs(route.query.startTime as any).unix();
+        startTimestamp = dayjsUtc(route.query.startTime as any).unix();
     }
     if (route?.query?.endTime) {
         url += `&endTime=${route.query.endTime}`;
-        endTimestamp = dayjs(route.query.endTime as any)
+        endTimestamp = dayjsUtc(route.query.endTime as any)
             .endOf('day')
             .unix();
     }
     if (startTimestamp && endTimestamp) {
-        dateRange.value = [dayjs(startTimestamp * 1000), dayjs(endTimestamp * 1000)] as any;
+        dateRange.value = [dayjsUtc(startTimestamp * 1000), dayjsUtc(endTimestamp * 1000)] as any;
     }
     searchToken.value = (paramsBaseDenom || '') + (paramsBaseDenomChain || '');
     if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
@@ -428,10 +427,6 @@ export const useSelectedParams = (
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const chainDropdown = ref();
     const chains = ref<TDenom[]>(chainId ? (chainId as string).split(',') : []);
-    const startTime = (time: string | number | Date) => {
-        const nowTimeDate = new Date(time);
-        return nowTimeDate.setHours(0, 0, 0, 0);
-    };
     const chainGetPopupContainer = (): HTMLElement => document.querySelector('.transfer__middle')!;
     const tokenData = computed(() => {
         return [
@@ -492,11 +487,11 @@ export const useSelectedParams = (
         inputFlag.value = flag;
     };
     const disabledDate = (current: any) => {
-        const currentStart = dayjs(current).startOf('day');
-        const max = dayjs().endOf('day');
-        const min = dayjs((ibcStatisticsChainsStore.txSearchTimeMin || 1617007625) * 1000).startOf(
-            'day'
-        );
+        const currentStart = dayjsUtc(current).startOf('day');
+        const max = dayjsUtc().endOf('day');
+        const min = dayjsUtc(
+            (ibcStatisticsChainsStore.txSearchTimeMin || 1617007625) * 1000
+        ).startOf('day');
         return currentStart && (currentStart < min || currentStart > max);
     };
     const judgeQueryParams = () => {
@@ -587,10 +582,8 @@ export const useSelectedParams = (
         (window as any).gtag('event', 'Transfers-点击过滤条件Date');
         pagination.current = 1;
         dateRange.value = dates;
-        queryParams.date_range[0] = Math.floor(startTime(dayjs(dates[0]).valueOf()) / 1000);
-        queryParams.date_range[1] = Math.floor(
-            startTime(dayjs(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1
-        );
+        queryParams.date_range[0] = dayjsUtc(dates[0]).startOf('day').unix();
+        queryParams.date_range[1] = dayjsUtc(dates[1]).endOf('day').unix();
         judgeQueryParams();
         queryDatas();
     };
@@ -634,13 +627,6 @@ export const useTransfersTable = (
     ibcChains: Ref<IIbcChains>
 ) => {
     const router = useRouter();
-    const handleClickRow = (record: any) => {
-        return {
-            onClick: () => {
-                router.push(`/transfers/details?txhash=${record.sc_tx_info.hash}`);
-            }
-        };
-    };
     const onPaginationChange = (current: number, pageSize: number) => {
         pagination.current = current;
         const params = urlParser(url);
@@ -683,7 +669,6 @@ export const useTransfersTable = (
         return CHAIN_DEFAULT_ICON;
     };
     return {
-        handleClickRow,
         onPaginationChange,
         getImageUrl,
         findIbcChainIcon
