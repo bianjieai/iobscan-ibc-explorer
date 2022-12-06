@@ -22,7 +22,7 @@ export enum RELAYER_TRANSFER_KEY {
     rtFee = 'fee_info',
     rtResult = 'tx_status',
     rtSigner = 'signer',
-    rtTimestamp = 'tx_time'
+    rtTime = 'tx_time'
 }
 
 export const COLUMNS: TableColumnsType = [
@@ -190,9 +190,10 @@ export const RELAYER_TRANSFER_COLUMN: TableColumnsType = [
         key: RELAYER_TRANSFER_KEY.rtSigner
     },
     {
-        title: 'Timestamp',
-        dataIndex: RELAYER_TRANSFER_KEY.rtTimestamp,
-        key: RELAYER_TRANSFER_KEY.rtTimestamp
+        title: 'Time',
+        dataIndex: RELAYER_TRANSFER_KEY.rtTime,
+        key: RELAYER_TRANSFER_KEY.rtTime,
+        width: 152
     }
 ];
 export const RT_COLUMN_TYPE = {

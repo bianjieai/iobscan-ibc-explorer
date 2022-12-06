@@ -45,13 +45,30 @@
                 :loading="rtTableLoading"
                 :data="relayerTransferTableData"
                 row-key="record_id"
+                :need-custom-headers="needCustomHeaders"
                 :need-custom-columns="needCustomColumns"
                 :columns="RELAYER_TRANSFER_COLUMN"
                 :current="pagination.current"
                 :page-size="pagination.pageSize"
                 :total="pagination.total"
+                :real-time-key="[
+                    {
+                        scKey: 'tx_time',
+                        dcKey: 'relayers_tx_time'
+                    }
+                ]"
                 @on-page-change="onPaginationChange"
             >
+                <template #Time>
+                    <TimeUTCAge
+                        :tooltip-text="
+                            showUtc ? 'Click to show Age Format' : 'Click to show UTC0 Format'
+                        "
+                        :show-utc="showUtc"
+                        :column-name="'Time'"
+                        @change-show-utc-age="changeShowUtcAge"
+                    />
+                </template>
                 <template #tx_hash="{ record }">
                     <a-popover placement="topLeft" destroy-tooltip-on-hide>
                         <template #content>
@@ -99,7 +116,8 @@
                     </a-popover>
                 </template>
                 <template #tx_time="{ record }">
-                    <span>{{ dayjsFormatDate(record.tx_time * 1000) }}</span>
+                    <span v-if="showUtc">{{ dayjsFormatDate(record.tx_time * 1000) }}</span>
+                    <span v-else>{{ record.relayers_tx_time }}</span>
                 </template>
             </TableCommon>
         </div>
@@ -138,8 +156,14 @@
     } = useSelectedSearch(servedChainsInfo, pagination);
     const getPopupContainer = (): HTMLElement =>
         document.querySelector('.relayer_transfer__search')!;
-    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayerDetails);
+    const { needCustomHeaders, needCustomColumns } = useNeedCustomColumns(
+        PAGE_PARAMETERS.relayerDetails
+    );
     const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
+    const showUtc = ref<boolean>(true);
+    const changeShowUtcAge = (isShowUtc: boolean) => {
+        showUtc.value = isShowUtc;
+    };
 </script>
 
 <style lang="less" scoped>
@@ -171,12 +195,19 @@
                     tr {
                         th {
                             background: #f8fafd !important;
+                            &:last-child {
+                                padding-right: 16px;
+                            }
                         }
                     }
                 }
                 :deep(.ant-table-cell) {
                     &:nth-of-type(1) {
                         padding-left: 16px;
+                    }
+                    &:last-child {
+                        padding-right: 44px;
+                        text-align: right;
                     }
                 }
                 :deep(.ant-table-container) {
