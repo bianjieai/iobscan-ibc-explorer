@@ -15,9 +15,10 @@ import {
     RELAYER_DEFAULT_ICON,
     TOKEN_DEFAULT_ICON,
     TRANSFER_TYPE,
-    DEFAULT_DISPLAY_TEXT
+    DEFAULT_DISPLAY_TEXT,
+    NoDataType
 } from '@/constants';
-import { API_CODE, API_ERRPR_MESSAGE } from '@/constants/apiCode';
+import { API_CODE } from '@/constants/apiCode';
 import {
     DISPLAY_RELAYER_NAME_AREA,
     RELAYER_DETAILS_INFO,
@@ -843,17 +844,7 @@ export const useRelayedTrend = () => {
     const route = useRoute();
     const relayerId: string = route.params.relayerId as string;
     const relayedTrendLoading = ref(true);
-    const relayedTrendNoData = ref(false);
-    const relayedTrendNetworkError = ref(false);
-    const relayedAbnormalText = computed(() => {
-        if (relayedTrendNoData.value) {
-            return API_ERRPR_MESSAGE.noData;
-        } else if (relayedTrendNetworkError.value) {
-            return API_ERRPR_MESSAGE.networkError;
-        } else {
-            return '';
-        }
-    });
+    const relayedTrendNoDataType = ref<NoDataType | null>();
     const { width: widthClient } = useWindowSize();
     let relayedTrendChart: echarts.ECharts;
 
@@ -1102,8 +1093,7 @@ export const useRelayedTrend = () => {
     const getRelayedTrendData = async () => {
         try {
             relayedTrendLoading.value = true;
-            relayedTrendNoData.value = false;
-            relayedTrendNetworkError.value = false;
+            relayedTrendNoDataType.value = null;
             const { code, data, message } = await getRelayedTrendAPI({
                 relayer_id: relayerId
             });
@@ -1162,24 +1152,24 @@ export const useRelayedTrend = () => {
                     relayedTrendData.txs = txs;
                     relayedTrendData.txsValue = txsValue;
                 } else {
-                    relayedTrendNoData.value = true;
+                    relayedTrendNoDataType.value = NoDataType.noData;
                     relayedTrendData.date = [];
                     relayedTrendData.txs = [];
                     relayedTrendData.txsValue = [];
                 }
             } else if (code === API_CODE.unRegisteredRelayer) {
-                relayedTrendNoData.value = true;
+                relayedTrendNoDataType.value = NoDataType.noData;
                 relayedTrendData.date = [];
                 relayedTrendData.txs = [];
                 relayedTrendData.txsValue = [];
                 console.error(message);
             } else {
-                relayedTrendNetworkError.value = true;
+                relayedTrendNoDataType.value = NoDataType.loadFailed;
                 console.error(message);
             }
         } catch (error) {
             relayedTrendLoading.value = false;
-            relayedTrendNetworkError.value = true;
+            relayedTrendNoDataType.value = NoDataType.loadFailed;
             console.error(error);
         }
     };
@@ -1207,9 +1197,7 @@ export const useRelayedTrend = () => {
         relayedTrendChoose,
         relayedTrendChooseBtnFn,
         relayedTrendLoading,
-        relayedTrendNoData,
-        relayedTrendNetworkError,
-        relayedAbnormalText
+        relayedTrendNoDataType
     };
 };
 
@@ -1419,8 +1407,7 @@ export const useRelatedAssetChart = (
     };
     let relayedValueChart: echarts.ECharts;
     const relayedValueLoading = ref(true);
-    const relayedValueNoData = ref(false);
-    const relayedValueNetworkError = ref(false);
+    const relayedValueNoDataType = ref<NoDataType | null>();
     const totalRelayedValueData = reactive<RelayedValueData>({
         totalValue: DEFAULT_DISPLAY_TEXT,
         value: [],
@@ -1440,15 +1427,6 @@ export const useRelatedAssetChart = (
             return totalRelayedValueData.valueNoData;
         } else {
             return totalRelayedValueData.txsNoData;
-        }
-    });
-    const relayedValueAbnormalText = computed(() => {
-        if (relayedValueNoData.value) {
-            return API_ERRPR_MESSAGE.noData;
-        } else if (relayedValueNetworkError.value) {
-            return API_ERRPR_MESSAGE.networkError;
-        } else {
-            return '';
         }
     });
     const isRelayedValueType = computed(() => type.value === RelatedAssetsPieType.relayedValue);
@@ -1552,8 +1530,7 @@ export const useRelatedAssetChart = (
     const getRelayedValueData = async () => {
         try {
             relayedValueLoading.value = true;
-            relayedValueNoData.value = false;
-            relayedValueNetworkError.value = false;
+            relayedValueNoDataType.value = null;
             const getDataApi = isRelayedValueType.value
                 ? getTotalRelayedValueAPI
                 : getTotalFeeCostAPI;
@@ -1686,7 +1663,7 @@ export const useRelatedAssetChart = (
                     totalRelayedValueData.valueTwoLegend = totalRelayedValueData.value.length > 6;
                     totalRelayedValueData.txsTwoLegend = totalRelayedValueData.txs.length > 6;
                 } else {
-                    relayedValueNoData.value = true;
+                    relayedValueNoDataType.value = NoDataType.noData;
                     totalRelayedValueData.totalValue = DEFAULT_DISPLAY_TEXT;
                     totalRelayedValueData.value = [];
                     totalRelayedValueData.valueOpacity = [];
@@ -1697,14 +1674,14 @@ export const useRelatedAssetChart = (
                     totalRelayedValueData.txsNoData = true;
                 }
             } else if (code === API_CODE.unRegisteredRelayer) {
-                relayedValueNoData.value = true;
+                relayedValueNoDataType.value = NoDataType.noData;
                 console.error(message);
             } else {
-                relayedValueNetworkError.value = true;
+                relayedValueNoDataType.value = NoDataType.loadFailed;
                 console.error(message);
             }
         } catch (error) {
-            relayedValueNetworkError.value = true;
+            relayedValueNoDataType.value = NoDataType.loadFailed;
             console.error(error);
         } finally {
             relayedValueLoading.value = false;
@@ -1783,9 +1760,6 @@ export const useRelatedAssetChart = (
     return {
         totalRelayedTitle,
         relayedValueLoading,
-        relayedValueNoData,
-        relayedValueNetworkError,
-        relayedValueAbnormalText,
         twoLegendRelayedValue,
         relayedAssetsChooseBtnFn,
         relayedValueDom,
@@ -1793,6 +1767,7 @@ export const useRelatedAssetChart = (
         clientX,
         clientY,
         showToast,
-        isShowNoDataPie
+        isShowNoDataPie,
+        relayedValueNoDataType
     };
 };

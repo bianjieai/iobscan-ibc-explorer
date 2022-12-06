@@ -7,7 +7,7 @@ export enum API_CODE {
 }
 
 export enum API_ERRPR_MESSAGE {
-    networkError = 'network error',
+    loadFailed = 'Failed to Load',
     noData = 'No Data',
     wrongRequestParameters = 'Wrong Request Parameters',
     systemAbnormality = 'System Abnormality',

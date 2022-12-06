@@ -533,3 +533,8 @@ export enum LoadingType {
     container,
     position
 }
+
+export enum NoDataType {
+    noData,
+    loadFailed
+}

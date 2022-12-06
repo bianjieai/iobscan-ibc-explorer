@@ -687,12 +687,12 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
                         console.error(message);
                         break;
                     default:
-                        errorText.value = API_ERRPR_MESSAGE.networkError;
+                        errorText.value = API_ERRPR_MESSAGE.loadFailed;
                         break;
                 }
             } catch (error) {
                 console.log(error);
-                errorText.value = API_ERRPR_MESSAGE.networkError;
+                errorText.value = API_ERRPR_MESSAGE.loadFailed;
                 loading && (loading.value = false);
             }
         }
