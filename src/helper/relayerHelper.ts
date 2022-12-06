@@ -15,3 +15,10 @@ export const getChartTooltip = (chooseIndex: number): { key: string; symbol: str
         symbol
     };
 };
+
+export const getTransactionPluralSymbol = (key: CHART_TOOLTIP, value: string): string => {
+    if (key === CHART_TOOLTIP.txs) {
+        return Number(value) > 1 ? 's' : '';
+    }
+    return '';
+};

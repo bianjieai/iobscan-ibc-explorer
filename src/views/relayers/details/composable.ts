@@ -1,7 +1,7 @@
 import { dayjsUtc } from '@/utils/timeTools';
 import { getDenomKey } from '@/helper/baseDenomHelper';
 import { copyToClipboard } from '@/utils/clipboardTools';
-import { getChartTooltip } from '@/helper/relayerHelper';
+import { getChartTooltip, getTransactionPluralSymbol } from '@/helper/relayerHelper';
 import {
     getRelayerDetailsByRelayerIdAPI,
     getRelayerTransferListAPI,
@@ -882,6 +882,7 @@ export const useRelayedTrend = () => {
             extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
             formatter: (params: any) => {
                 // <div style="width: 100%; height: 8px; background-color: rgba(61, 80, 255, 0.1)"></div>
+                const s = getTransactionPluralSymbol(chartTooltip.value.key, params.data.value);
                 if (widthClient.value > tooltipBreakpoint) {
                     return `<div style="display: flex; flex-direction: column; align-items: center; transform: translate(0,6px);">
                                         <div
@@ -904,7 +905,7 @@ export const useRelayedTrend = () => {
                                                         font-weight: 500;
                                                         line-height: 18px;
                                                     "
-                                                    >${chartTooltip.value.key}:
+                                                    >${chartTooltip.value.key}${s}:
                                                 </span>
                                                 <span
                                                     style="
@@ -976,7 +977,7 @@ export const useRelayedTrend = () => {
                                                         font-weight: 500;
                                                         line-height: 18px;
                                                     "
-                                                    >${chartTooltip.value.key}:
+                                                    >${chartTooltip.value.key}${s}:
                                                 </span>
                                                 <span
                                                     style="
@@ -1264,6 +1265,7 @@ export const useRelatedAssetChart = (
             padding: 0,
             extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
             formatter: (params: any) => {
+                const s = getTransactionPluralSymbol(chartTooltip.value.key, params.data.value);
                 return `<div style="display: flex; align-items: center; transform: translate(6px, 0);">
                             <div
                                 style="
@@ -1302,7 +1304,7 @@ export const useRelatedAssetChart = (
                                                   font-weight: 500;
                                                   line-height: 18px;
                                               "
-                                              >${chartTooltip.value.key}:
+                                              >${chartTooltip.value.key}${s}:
                                           </span>
                                           <span
                                               style="
