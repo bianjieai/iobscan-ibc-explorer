@@ -70,10 +70,15 @@
         &__content {
             flex: 1;
             box-sizing: border-box;
+            display: flex;
             &__router_container {
+                flex: 1;
                 width: 100%;
+                display: flex;
             }
             &__error_container {
+                flex: 1;
+                display: flex;
             }
         }
         &__footer {

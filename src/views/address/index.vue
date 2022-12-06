@@ -1,10 +1,8 @@
 <template>
-    <div class="c"> address details </div>
+    <PageContainer>
+        <PageTitle title="Address Details" />
+    </PageContainer>
 </template>
 <script setup lang="ts"></script>
 
-<style lang="less" scoped>
-    .c {
-        background-color: blue;
-    }
-</style>
+<style lang="less" scoped></style>
