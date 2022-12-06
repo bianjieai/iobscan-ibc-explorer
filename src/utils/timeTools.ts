@@ -59,7 +59,8 @@ export const formatOperatingPeriod = (time: number, status: TChannelStatus) => {
 };
 
 /**
- * 根据展示的需求拼接字符串展示成 > xxdxxhxxmxxs ago 或者 xxdxxhxxmxxs ago 或者 xxdxxhxxmxxs
+ * @param time millisecond
+ * 根据展示的需求拼接字符串展示成 > xxdayxxhrxxminxxsec ago 或者 xxdayxxhrxxminxxsec ago 或者 xxdayxxhrxxminxxs
  */
 export const formatAge = (
     currentServerTime: number,

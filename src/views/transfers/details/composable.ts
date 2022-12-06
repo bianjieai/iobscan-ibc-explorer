@@ -686,6 +686,9 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
                         errorText.value = API_ERRPR_MESSAGE.nodeAccessError;
                         console.error(message);
                         break;
+                    default:
+                        errorText.value = API_ERRPR_MESSAGE.networkError;
+                        break;
                 }
             } catch (error) {
                 console.log(error);

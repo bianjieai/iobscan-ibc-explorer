@@ -76,9 +76,10 @@
     import BigNumber from 'bignumber.js';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { formatSupply } from '@/helper/tableCellHelper';
-    import { useGetIbcDenoms, useTimeInterval } from '@/composables';
+    import { useGetIbcDenoms } from '@/composables';
     import { RelayersListKey } from '@/constants/relayers';
     import { getIsAndroid } from '@/utils/systemTools';
+    import { AGE_TIMER_INTERVAL } from '@/constants';
 
     const router = useRouter();
     const { ibcBaseDenoms } = useGetIbcDenoms();
@@ -106,6 +107,7 @@
         loading: boolean;
         customRow?: GetComponentProps<any>;
         hasPaddingLr?: boolean;
+        isLaunchTimer?: boolean;
     }
     // Todo shan hasPaddingLr 能否修改 Transfer 列表页等移入每一行两边有间距的情况
     let backUpDataSource: any[] = [];
@@ -115,7 +117,8 @@
         scroll: undefined,
         realTimeKey: null,
         rowKey: 'record_id',
-        hasPaddingLr: true
+        hasPaddingLr: true,
+        isLaunchTimer: true
     });
     const pageInfo = reactive({
         pageSize: props.pageSize || 10,
@@ -323,11 +326,28 @@
             needPagination.value && onPageChange(1, 10, false); // reset去第一页
         }
     };
-    if (props.realTimeKey && props.realTimeKey.length) {
-        useTimeInterval(() => {
-            dataSource.value = formatDataSourceWithRealTime(dataSource.value);
-        });
-    }
+    let timeTimer: number;
+    watch(
+        () => props.isLaunchTimer,
+        (newValue) => {
+            if (props.realTimeKey && props.realTimeKey.length) {
+                if (newValue) {
+                    dataSource.value = formatDataSourceWithRealTime(dataSource.value);
+                    timeTimer = setInterval(() => {
+                        dataSource.value = formatDataSourceWithRealTime(dataSource.value);
+                    }, AGE_TIMER_INTERVAL);
+                } else {
+                    timeTimer && clearInterval(timeTimer);
+                }
+            }
+        },
+        {
+            immediate: true
+        }
+    );
+    onBeforeUnmount(() => {
+        timeTimer && clearInterval(timeTimer);
+    });
 </script>
 
 <style lang="less" scoped>
