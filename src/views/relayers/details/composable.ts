@@ -369,6 +369,7 @@ export const useTransferTypeChart = (
             {
                 type: 'pie',
                 radius: [34, 50],
+                minAngle: 4,
                 data: [
                     {
                         value: `${txsCount.value}`,
