@@ -70,7 +70,7 @@
             <div class="transfer__middle__bottom">
                 <TableCommon
                     class="transfer__table"
-                    :loading="showTransferLoading"
+                    :table-loading="showTransferLoading"
                     :data="tableDatas"
                     row-key="record_id"
                     :need-custom-headers="needCustomHeaders"
@@ -412,6 +412,12 @@
             :deep(.ant-table-tbody tr td) {
                 &:first-child {
                     padding-left: 0;
+                }
+                &:last-child {
+                    padding-right: 16px;
+                }
+                &:nth-last-child(2) {
+                    padding-right: 16px;
                 }
             }
             :deep(.ant-table-placeholder) {

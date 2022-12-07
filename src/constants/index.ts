@@ -344,13 +344,15 @@ export const TRANSFER_TABLE_COLUMN: TableColumnsType = [
         title: 'Create Time',
         dataIndex: 'createTime',
         key: 'createTime',
-        width: 180
+        width: 180,
+        align: 'right'
     },
     {
         title: 'End Time',
         dataIndex: 'endTime',
         key: 'endTime',
-        width: 180
+        width: 180,
+        align: 'right'
     }
 ];
 

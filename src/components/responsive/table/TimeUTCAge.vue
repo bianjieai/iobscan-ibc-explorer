@@ -1,15 +1,11 @@
 <template>
-    <div
-        class="time flex items-center cursor"
-        :class="{ time_right: !showUtc }"
-        @click="changeShowUtcAgeBtn"
-    >
+    <div class="time flex items-center">
         <span>{{ columnName }}</span>
         <a-popover destroy-tooltip-on-hide>
             <template #content>
                 <p class="popover_c">{{ tooltipText }}</p>
             </template>
-            <img class="time__tip" :src="tipIcon" />
+            <img class="time__tip cursor" :src="tipIcon" @click="changeShowUtcAgeBtn" />
         </a-popover>
     </div>
 </template>
@@ -39,15 +35,12 @@
 
 <style lang="less" scoped>
     .time {
-        .flex(row, nowrap, flex-start, center);
+        .flex(row, nowrap, flex-end, center);
         padding-left: 16px;
         &__tip {
             margin-left: 8px;
             width: 20px;
             height: 20px;
         }
-    }
-    .time_right {
-        justify-content: flex-end;
     }
 </style>

@@ -1,10 +1,13 @@
-import { dayjsUtc } from '@/utils/timeTools';
+import { dayjsFormatDate, dayjsUtc } from '@/utils/timeTools';
 import { getDenomKey } from '@/helper/baseDenomHelper';
 import { copyToClipboard } from '@/utils/clipboardTools';
 import { getChartTooltip, getTransactionPluralSymbol } from '@/helper/relayerHelper';
 import {
+    getRelayedTrendAPI,
     getRelayerDetailsByRelayerIdAPI,
     getRelayerTransferListAPI,
+    getTotalFeeCostAPI,
+    getTotalRelayedValueAPI,
     getTransferTypeTxsAPI
 } from '@/api/relayers';
 import { IDataItem } from '@/components/BjSelect/interface';
@@ -38,11 +41,9 @@ import {
 import * as echarts from 'echarts';
 import { Ref } from 'vue';
 import { BigNumber } from 'bignumber.js';
-import { getRelayedTrendAPI } from '@/api/relayers';
 import { RelayerTrendData, BarData } from '@/types/interface/relayers.interface';
 import { useWindowSize } from '@vueuse/core';
 import { PIE_COLOR_LIST, OPACITY_PIE_COLOR_LIST } from '@/constants/relayers';
-import { getTotalFeeCostAPI, getTotalRelayedValueAPI } from '@/api/relayers';
 import {
     RelayedValueData,
     FormatDenomItem,
@@ -624,6 +625,19 @@ export const useSelectedSearch = (
     const startTxTime = ref<number | undefined>(undefined);
     const endTxTime = ref<number | undefined>(undefined);
     const rtTableLoading = ref<boolean>(true);
+    const rtPageLoading = ref<boolean>(true);
+    const isDisplayDefaultText = ref<boolean>(true);
+    const rtNoData = ref(false);
+    const rtNetworkError = ref(false);
+    const rtExceptionLoadText = computed(() => {
+        if (rtNoData.value) {
+            return API_ERRPR_MESSAGE.noData;
+        } else if (rtNetworkError.value) {
+            return API_ERRPR_MESSAGE.networkError;
+        } else {
+            return '';
+        }
+    });
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
             if (!newServedChainsInfo?.length) return [];
@@ -639,6 +653,7 @@ export const useSelectedSearch = (
             if (!relayerChain.value.length) {
                 relayerTransferTableData.value = [];
                 rtTableLoading.value = false;
+                rtPageLoading.value = false;
             }
         };
         sortServedChainsInfo();
@@ -659,6 +674,15 @@ export const useSelectedSearch = (
         return relayerChainData.value[0]?.children[0];
     });
     const searchChain = ref<string>(defaultChain.value?.id);
+    const formatDate = (dateData: IRelayerTransferItem[]) => {
+        const formatDateData = dateData.map((item) => {
+            return {
+                ...item,
+                format_tx_time: dayjsFormatDate(item.tx_time * 1000)
+            };
+        });
+        return formatDateData;
+    };
     const getRelayerTransferTxs = (
         params: IRequestRelayerTransfer,
         page_num = 1,
@@ -666,6 +690,9 @@ export const useSelectedSearch = (
         use_count = false
     ) => {
         rtTableLoading.value = true;
+        rtPageLoading.value = false;
+        rtNoData.value = false;
+        rtNetworkError.value = false;
         const getRelayerTransferTxsData = async () => {
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
@@ -678,23 +705,33 @@ export const useSelectedSearch = (
                     if (data) {
                         if (typeof data === 'number') {
                             pagination.total = data;
+                            isDisplayDefaultText.value = false;
                         } else {
-                            relayerTransferTableData.value = data.items;
+                            relayerTransferTableData.value = formatDate(data.items);
                             rtTableLoading.value = false;
                         }
                     } else {
                         console.error(message);
                         rtTableLoading.value = false;
+                        rtNoData.value = true;
                     }
-                } else {
+                } else if (code === API_CODE.unRegisteredRelayer) {
                     console.error(message);
                     pagination.total = 0;
                     relayerTransferTableData.value = [];
                     rtTableLoading.value = false;
+                    rtNoData.value = true;
+                } else {
+                    relayerTransferTableData.value = [];
+                    rtTableLoading.value = false;
+                    rtNetworkError.value = true;
                 }
             } catch (error) {
                 if (!axiosCancel(error)) {
+                    relayerTransferTableData.value = [];
                     rtTableLoading.value = false;
+                    rtPageLoading.value = true;
+                    rtNetworkError.value = true;
                 }
                 console.error(error);
             }
@@ -703,6 +740,8 @@ export const useSelectedSearch = (
     };
     const queryDatas = (params: IRequestRelayerTransfer) => {
         getRelayerTransferTxs(params, 1, 5, true);
+        isDisplayDefaultText.value = true;
+        pagination.total = 0;
         getRelayerTransferTxs(params, pagination.current, pagination.pageSize, false);
     };
     watch(defaultChain, (newDefaultChain) => {
@@ -758,13 +797,18 @@ export const useSelectedSearch = (
     };
     const onPaginationChange = (current: number, pageSize: number) => {
         pagination.current = current;
-        refreshList({
-            chain: searchChain.value || defaultChain.value.id,
-            tx_time_start: startTxTime.value?.toString(),
-            tx_time_end: endTxTime.value?.toString(),
-            page_num: pagination.current,
-            page_size: pageSize
-        });
+        getRelayerTransferTxs(
+            {
+                chain: searchChain.value || defaultChain.value.id,
+                tx_time_start: startTxTime.value?.toString(),
+                tx_time_end: endTxTime.value?.toString(),
+                page_num: pagination.current,
+                page_size: pageSize
+            },
+            pagination.current,
+            pagination.pageSize,
+            false
+        );
     };
     const refreshList = (params: IRequestRelayerTransfer) => {
         queryDatas(params);
@@ -781,6 +825,13 @@ export const useSelectedSearch = (
                 return TRANSFER_TYPE.timeout.label;
         }
     };
+    const getRtSubtitle = (showDefault: boolean, total: number) => {
+        const displayTotal = !showDefault ? formatBigNumber(total || '0', 0) : DEFAULT_DISPLAY_TEXT;
+        return `A total of ${displayTotal} IBC Transactions found`;
+    };
+    const rtTableSubTitle = computed(() => {
+        return getRtSubtitle(isDisplayDefaultText.value, pagination.total);
+    });
     return {
         defaultChain,
         relayerChainData,
@@ -793,7 +844,12 @@ export const useSelectedSearch = (
         dateRange,
         disabledDate,
         onChangeRangePicker,
-        rtTableLoading
+        rtTableLoading,
+        rtPageLoading,
+        rtTableSubTitle,
+        rtNoData,
+        rtNetworkError,
+        rtExceptionLoadText
     };
 };
 

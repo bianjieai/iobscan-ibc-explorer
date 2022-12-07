@@ -193,7 +193,8 @@ export const RELAYER_TRANSFER_COLUMN: TableColumnsType = [
         title: 'Time',
         dataIndex: RELAYER_TRANSFER_KEY.rtTime,
         key: RELAYER_TRANSFER_KEY.rtTime,
-        width: 152
+        width: 152,
+        align: 'right'
     }
 ];
 export const RT_COLUMN_TYPE = {

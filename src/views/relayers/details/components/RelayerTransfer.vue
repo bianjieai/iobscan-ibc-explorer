@@ -1,134 +1,138 @@
 <template>
-    <div class="relayer_transfer">
-        <div class="relayer_transfer__search">
-            <BjSelect
-                ref="relayerChainDropdown"
-                :placeholder="defaultChain?.title || DEFAULT_TITLE.defaultChains"
-                :hide-icon="true"
-                :data="relayerChainData"
-                :value="searchChain || defaultChain?.id"
-                :dropdown-props="{
-                    getPopupContainer: getPopupContainer
-                }"
-                :is-disabled="isShowModal || !relayerChainData[0].children.length"
-                :default-value="defaultChain"
-                @on-change="onSelectedChain"
-            />
-            <div class="relayer_transfer__search_wrap">
-                <RangePicker
-                    :date-range="dateRange"
-                    :disabled-date="disabledDate"
-                    :is-show-modal="isShowModal || !relayerChainData[0].children.length"
-                    @change="onChangeRangePicker"
-                ></RangePicker>
-                <TypeButton
-                    class="relayer_transfer__reset_btn"
+    <InfoCard icon="icon-transactions" title="Transactions" :sub-title="rtTableSubTitle">
+        <div class="relayer_transfer">
+            <div class="relayer_transfer__search">
+                <BjSelect
+                    ref="relayerChainDropdown"
+                    :placeholder="defaultChain?.title || DEFAULT_TITLE.defaultChains"
+                    :hide-icon="true"
+                    :data="relayerChainData"
+                    :value="searchChain || defaultChain?.id"
+                    :dropdown-props="{
+                        getPopupContainer: getPopupContainer
+                    }"
                     :is-disabled="isShowModal || !relayerChainData[0].children.length"
-                    @on-reset="onClickReset"
+                    :default-value="defaultChain"
+                    @on-change="onSelectedChain"
                 />
+                <div class="relayer_transfer__search_wrap">
+                    <RangePicker
+                        :date-range="dateRange"
+                        :disabled-date="disabledDate"
+                        :is-show-modal="isShowModal || !relayerChainData[0].children.length"
+                        @change="onChangeRangePicker"
+                    ></RangePicker>
+                    <TypeButton
+                        class="relayer_transfer__reset_btn"
+                        :is-disabled="isShowModal || !relayerChainData[0].children.length"
+                        @on-reset="onClickReset"
+                    />
+                </div>
+            </div>
+            <div class="relayer_transfer__table">
+                <loading-component
+                    v-if="rtTableLoading && !relayerTransferTableData"
+                    :type="LoadingType.container"
+                    :height="300"
+                />
+                <no-datas
+                    v-else-if="isShowModal || rtNoData || rtNetworkError"
+                    class="relayer_transfer__table__nodatas"
+                    :text="rtExceptionLoadText"
+                />
+                <TableCommon
+                    v-else
+                    class="relayer_transfer__table__content"
+                    :has-padding-lr="false"
+                    :table-loading="rtTableLoading"
+                    :page-loading="rtPageLoading"
+                    :data="relayerTransferTableData"
+                    row-key="record_id"
+                    :need-custom-headers="needCustomHeaders"
+                    :need-custom-columns="needCustomColumns"
+                    :columns="RELAYER_TRANSFER_COLUMN"
+                    :current="pagination.current"
+                    :page-size="pagination.pageSize"
+                    :total="pagination.total"
+                    :is-launch-timer="!showUtc"
+                    :real-time-key="[
+                        {
+                            scKey: 'tx_time',
+                            dcKey: 'relayers_tx_time'
+                        }
+                    ]"
+                    @on-page-change="onPaginationChange"
+                >
+                    <template #Time>
+                        <TimeUTCAge
+                            :tooltip-text="
+                                showUtc ? 'Click to show Age Format' : 'Click to show UTC0 Format'
+                            "
+                            :show-utc="showUtc"
+                            :column-name="'Time'"
+                            @change-show-utc-age="changeShowUtcAge"
+                        />
+                    </template>
+                    <template #tx_hash="{ record }">
+                        <a-popover placement="topLeft" destroy-tooltip-on-hide>
+                            <template #content>
+                                <span class="popover_c">{{ record.tx_hash }}</span>
+                            </template>
+                            <router-link
+                                class="relayer_transfer__table__tx_hash cursor"
+                                :to="`/transfers/details?txhash=${record.tx_hash}`"
+                                >{{ getRestString(record.tx_hash, 4, 4) }}</router-link
+                            >
+                        </a-popover>
+                    </template>
+                    <template #tx_type="{ record }">
+                        <span>{{ formatTransferType(record.tx_type) }}</span>
+                    </template>
+                    <template #chain="{ record, column }">
+                        <ChainIcon :chain="record[column.key]" icon-size="small" />
+                    </template>
+                    <template #denom_info="{ record, column }">
+                        <TokenInfo :token-info="record.denom_info" :type="column.title" />
+                    </template>
+                    <template #fee_info="{ record, column }">
+                        <TokenInfo :token-info="record.fee_info" :type="column.title" />
+                    </template>
+                    <template #tx_status="{ record }">
+                        <span
+                            class="relayer_transfer__table__tx_status"
+                            :class="changeColor(record.tx_status)"
+                        >
+                            {{ formatTxStatus(record.tx_status) }}
+                        </span>
+                    </template>
+                    <template #signer="{ record }">
+                        <a-popover destroy-tooltip-on-hide>
+                            <template #content>
+                                <div>
+                                    <p class="popover_c">{{ record.signer }}</p>
+                                </div>
+                            </template>
+                            <span
+                                :class="{ cursor: judgeIsAddressCursor(record.signer) }"
+                                @click="goAddressDetails(record.signer)"
+                                >{{ getRestString(record.signer, 6, 6) }}</span
+                            >
+                        </a-popover>
+                    </template>
+                    <template #tx_time="{ record }">
+                        <span v-if="showUtc">{{ record.format_tx_time }}</span>
+                        <span v-else>{{ record.relayers_tx_time }}</span>
+                    </template>
+                </TableCommon>
             </div>
         </div>
-        <div class="relayer_transfer__table">
-            <loading-component
-                v-if="rtTableLoading && !relayerTransferTableData"
-                :type="LoadingType.container"
-                :height="300"
-            />
-            <no-datas
-                v-else-if="isShowModal || (!rtTableLoading && !relayerTransferTableData)"
-                class="relayer_transfer__table__nodatas"
-            />
-            <TableCommon
-                v-else
-                class="relayer_transfer__table__content"
-                :has-padding-lr="false"
-                :loading="rtTableLoading"
-                :data="relayerTransferTableData"
-                row-key="record_id"
-                :need-custom-headers="needCustomHeaders"
-                :need-custom-columns="needCustomColumns"
-                :columns="RELAYER_TRANSFER_COLUMN"
-                :current="pagination.current"
-                :page-size="pagination.pageSize"
-                :total="pagination.total"
-                :real-time-key="[
-                    {
-                        scKey: 'tx_time',
-                        dcKey: 'relayers_tx_time'
-                    }
-                ]"
-                @on-page-change="onPaginationChange"
-            >
-                <template #Time>
-                    <TimeUTCAge
-                        :tooltip-text="
-                            showUtc ? 'Click to show Age Format' : 'Click to show UTC0 Format'
-                        "
-                        :show-utc="showUtc"
-                        :column-name="'Time'"
-                        @change-show-utc-age="changeShowUtcAge"
-                    />
-                </template>
-                <template #tx_hash="{ record }">
-                    <a-popover placement="topLeft" destroy-tooltip-on-hide>
-                        <template #content>
-                            <span class="popover_c">{{ record.tx_hash }}</span>
-                        </template>
-                        <router-link
-                            class="relayer_transfer__table__tx_hash cursor"
-                            :to="`/transfers/details?txhash=${record.tx_hash}`"
-                            >{{ getRestString(record.tx_hash, 4, 4) }}</router-link
-                        >
-                    </a-popover>
-                </template>
-                <template #tx_type="{ record }">
-                    <span>{{ formatTransferType(record.tx_type) }}</span>
-                </template>
-                <template #chain="{ record, column }">
-                    <ChainIcon :chain="record[column.key]" icon-size="small" />
-                </template>
-                <template #denom_info="{ record, column }">
-                    <TokenInfo :token-info="record.denom_info" :type="column.title" />
-                </template>
-                <template #fee_info="{ record, column }">
-                    <TokenInfo :token-info="record.fee_info" :type="column.title" />
-                </template>
-                <template #tx_status="{ record }">
-                    <span
-                        class="relayer_transfer__table__tx_status"
-                        :class="changeColor(record.tx_status)"
-                    >
-                        {{ formatTxStatus(record.tx_status) }}
-                    </span>
-                </template>
-                <template #signer="{ record }">
-                    <a-popover destroy-tooltip-on-hide>
-                        <template #content>
-                            <div>
-                                <p class="popover_c">{{ record.signer }}</p>
-                            </div>
-                        </template>
-                        <span
-                            :class="{ cursor: judgeIsAddressCursor(record.signer) }"
-                            @click="goAddressDetails(record.signer)"
-                            >{{ getRestString(record.signer, 6, 6) }}</span
-                        >
-                    </a-popover>
-                </template>
-                <template #tx_time="{ record }">
-                    <span v-if="showUtc">{{ dayjsFormatDate(record.tx_time * 1000) }}</span>
-                    <span v-else>{{ record.relayers_tx_time }}</span>
-                </template>
-            </TableCommon>
-        </div>
-    </div>
+    </InfoCard>
 </template>
 
 <script setup lang="ts">
     import { RELAYER_TRANSFER_COLUMN } from '@/constants/relayers';
     import { getRestString } from '@/helper/parseStringHelper';
     import { formatTxStatus, changeColor } from '@/helper/tableCellHelper';
-    import { dayjsFormatDate } from '@/utils/timeTools';
     import { useNeedCustomColumns } from '@/composables';
     import { usePagination, useSelectedSearch } from '../composable';
     import { DEFAULT_TITLE, LoadingType, PAGE_PARAMETERS } from '@/constants';
@@ -152,7 +156,12 @@
         dateRange,
         disabledDate,
         onChangeRangePicker,
-        rtTableLoading
+        rtTableLoading,
+        rtPageLoading,
+        rtTableSubTitle,
+        rtNoData,
+        rtNetworkError,
+        rtExceptionLoadText
     } = useSelectedSearch(servedChainsInfo, pagination);
     const getPopupContainer = (): HTMLElement =>
         document.querySelector('.relayer_transfer__search')!;
@@ -195,9 +204,6 @@
                     tr {
                         th {
                             background: #f8fafd !important;
-                            &:last-child {
-                                padding-right: 16px;
-                            }
                         }
                     }
                 }
@@ -206,8 +212,7 @@
                         padding-left: 16px;
                     }
                     &:last-child {
-                        padding-right: 44px;
-                        text-align: right;
+                        padding-right: 16px;
                     }
                 }
                 :deep(.ant-table-container) {

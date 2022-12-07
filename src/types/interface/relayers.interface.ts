@@ -103,6 +103,7 @@ export interface IRelayerTransferItem {
     tx_status: number;
     signer: string;
     tx_time: number;
+    format_tx_time?: string;
 }
 export interface IRelayerTransferList {
     items: IRelayerTransferItem[];

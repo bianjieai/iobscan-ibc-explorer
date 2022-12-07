@@ -8,7 +8,7 @@
                 :columns="columnsSource"
                 :data-source="dataSource"
                 :pagination="false"
-                :loading="props.loading"
+                :loading="props.tableLoading"
                 :show-sorter-tooltip="false"
                 :scroll="scroll"
                 :custom-row="customRow"
@@ -32,7 +32,7 @@
                 </template>
             </a-table>
             <template #renderEmpty>
-                <no-datas v-if="!loading && !data.length" />
+                <no-datas v-if="!tableLoading && !data.length" />
             </template>
         </a-config-provider>
         <div v-if="hasPaddingLr" class="thead_border_bottom"></div>
@@ -104,10 +104,11 @@
         scroll?: { x?: number; y?: number } | undefined;
         rowKey?: string;
         realTimeKey?: { scKey: string; dcKey: string }[] | null;
-        loading: boolean;
+        tableLoading: boolean;
         customRow?: GetComponentProps<any>;
         hasPaddingLr?: boolean;
         isLaunchTimer?: boolean;
+        pageLoading?: boolean | undefined;
     }
     // Todo shan hasPaddingLr 能否修改 Transfer 列表页等移入每一行两边有间距的情况
     let backUpDataSource: any[] = [];
@@ -118,7 +119,8 @@
         realTimeKey: null,
         rowKey: 'record_id',
         hasPaddingLr: true,
-        isLaunchTimer: true
+        isLaunchTimer: true,
+        pageLoading: undefined
     });
     const pageInfo = reactive({
         pageSize: props.pageSize || 10,
@@ -156,7 +158,10 @@
         }
     );
     const disabledPagination = computed(() => {
-        return props.loading || pageInfo.total <= 0;
+        return (
+            (props.pageLoading === undefined ? props.tableLoading : props.pageLoading) ||
+            pageInfo.total <= 0
+        );
     });
     const needPagination = computed(
         () => !props.noPagination && !(props.current && props.pageSize)
