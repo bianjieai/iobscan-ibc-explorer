@@ -627,18 +627,8 @@ export const useSelectedSearch = (
     const endTxTime = ref<number | undefined>(undefined);
     const rtTableLoading = ref<boolean>(true);
     const rtPageLoading = ref<boolean>(true);
+    const rtNoDataType = ref<NoDataType | null>();
     const isDisplayDefaultText = ref<boolean>(true);
-    const rtNoData = ref(false);
-    const rtNetworkError = ref(false);
-    const rtExceptionLoadText = computed(() => {
-        if (rtNoData.value) {
-            return API_ERRPR_MESSAGE.noData;
-        } else if (rtNetworkError.value) {
-            return API_ERRPR_MESSAGE.networkError;
-        } else {
-            return '';
-        }
-    });
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
             if (!newServedChainsInfo?.length) return [];
@@ -692,8 +682,7 @@ export const useSelectedSearch = (
     ) => {
         rtTableLoading.value = true;
         rtPageLoading.value = false;
-        rtNoData.value = false;
-        rtNetworkError.value = false;
+        rtNoDataType.value = null;
         const getRelayerTransferTxsData = async () => {
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
@@ -714,25 +703,25 @@ export const useSelectedSearch = (
                     } else {
                         console.error(message);
                         rtTableLoading.value = false;
-                        rtNoData.value = true;
+                        rtNoDataType.value = NoDataType.noData;
                     }
                 } else if (code === API_CODE.unRegisteredRelayer) {
                     console.error(message);
                     pagination.total = 0;
                     relayerTransferTableData.value = [];
                     rtTableLoading.value = false;
-                    rtNoData.value = true;
+                    rtNoDataType.value = NoDataType.noData;
                 } else {
                     relayerTransferTableData.value = [];
                     rtTableLoading.value = false;
-                    rtNetworkError.value = true;
+                    rtNoDataType.value = NoDataType.loadFailed;
                 }
             } catch (error) {
                 if (!axiosCancel(error)) {
                     relayerTransferTableData.value = [];
                     rtTableLoading.value = false;
                     rtPageLoading.value = true;
-                    rtNetworkError.value = true;
+                    rtNoDataType.value = NoDataType.loadFailed;
                 }
                 console.error(error);
             }
@@ -848,9 +837,7 @@ export const useSelectedSearch = (
         rtTableLoading,
         rtPageLoading,
         rtTableSubTitle,
-        rtNoData,
-        rtNetworkError,
-        rtExceptionLoadText
+        rtNoDataType
     };
 };
 

@@ -36,9 +36,9 @@
                     :height="300"
                 />
                 <no-datas
-                    v-else-if="isShowModal || rtNoData || rtNetworkError"
+                    v-else-if="isShowModal || rtNoDataType"
                     class="relayer_transfer__table__nodatas"
-                    :text="rtExceptionLoadText"
+                    :type="rtNoDataType"
                 />
                 <TableCommon
                     v-else
@@ -159,9 +159,7 @@
         rtTableLoading,
         rtPageLoading,
         rtTableSubTitle,
-        rtNoData,
-        rtNetworkError,
-        rtExceptionLoadText
+        rtNoDataType
     } = useSelectedSearch(servedChainsInfo, pagination);
     const getPopupContainer = (): HTMLElement =>
         document.querySelector('.relayer_transfer__search')!;
