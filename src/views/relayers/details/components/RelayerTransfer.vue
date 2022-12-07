@@ -11,7 +11,7 @@
                     :dropdown-props="{
                         getPopupContainer: getPopupContainer
                     }"
-                    :is-disabled="isShowModal || !relayerChainData[0].children.length"
+                    :is-disabled="isShowModal || relayerChainDataNoChildren"
                     :default-value="defaultChain"
                     @on-change="onSelectedChain"
                 />
@@ -19,12 +19,12 @@
                     <RangePicker
                         :date-range="dateRange"
                         :disabled-date="disabledDate"
-                        :is-show-modal="isShowModal || !relayerChainData[0].children.length"
+                        :is-show-modal="isShowModal || relayerChainDataNoChildren"
                         @change="onChangeRangePicker"
                     ></RangePicker>
                     <TypeButton
                         class="relayer_transfer__reset_btn"
-                        :is-disabled="isShowModal || !relayerChainData[0].children.length"
+                        :is-disabled="isShowModal || relayerChainDataNoChildren"
                         @on-reset="onClickReset"
                     />
                 </div>
@@ -133,10 +133,9 @@
     import { RELAYER_TRANSFER_COLUMN } from '@/constants/relayers';
     import { getRestString } from '@/helper/parseStringHelper';
     import { formatTxStatus, changeColor } from '@/helper/tableCellHelper';
-    import { useNeedCustomColumns } from '@/composables';
+    import { useGoAddressDetail, useNeedCustomColumns, useTimeUtcAge } from '@/composables';
     import { usePagination, useSelectedSearch } from '../composable';
     import { DEFAULT_TITLE, LoadingType, PAGE_PARAMETERS } from '@/constants';
-    import { useGoAddressDetail } from '@/composables';
     interface IRelayerTransfer {
         servedChainsInfo: string[];
         isShowModal: boolean;
@@ -147,6 +146,7 @@
     const {
         defaultChain,
         relayerChainData,
+        relayerChainDataNoChildren,
         searchChain,
         onSelectedChain,
         relayerTransferTableData,
@@ -167,10 +167,7 @@
         PAGE_PARAMETERS.relayerDetails
     );
     const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
-    const showUtc = ref<boolean>(true);
-    const changeShowUtcAge = (isShowUtc: boolean) => {
-        showUtc.value = isShowUtc;
-    };
+    const { showUtc, changeShowUtcAge } = useTimeUtcAge();
 </script>
 
 <style lang="less" scoped>
@@ -190,7 +187,6 @@
             background: #fff;
             &:hover {
                 border-color: var(--bj-border-color);
-                cursor: url('../../../../assets/forbidden.png'), not-allowed;
             }
         }
         &__reset_btn {

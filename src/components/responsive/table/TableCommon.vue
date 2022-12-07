@@ -108,7 +108,7 @@
         customRow?: GetComponentProps<any>;
         hasPaddingLr?: boolean;
         isLaunchTimer?: boolean;
-        pageLoading?: boolean | undefined;
+        pageLoading?: boolean;
     }
     // Todo shan hasPaddingLr 能否修改 Transfer 列表页等移入每一行两边有间距的情况
     let backUpDataSource: any[] = [];
@@ -158,10 +158,9 @@
         }
     );
     const disabledPagination = computed(() => {
-        return (
-            (props.pageLoading === undefined ? props.tableLoading : props.pageLoading) ||
-            pageInfo.total <= 0
-        );
+        const paginationLoading =
+            props.pageLoading === undefined ? props.tableLoading : props.pageLoading;
+        return paginationLoading || pageInfo.total <= 0;
     });
     const needPagination = computed(
         () => !props.noPagination && !(props.current && props.pageSize)

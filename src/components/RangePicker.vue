@@ -1,7 +1,7 @@
 <template>
     <a-range-picker
         class="range_picker cursor"
-        :value="(dateRange.value as any)"
+        :value="dateRange"
         :disabled-date="disabledDate"
         :allow-clear="false"
         format="YYYY-MM-DD"
@@ -40,10 +40,11 @@
 
 <script setup lang="ts">
     import { usePickerPlaceholder } from '@/composables';
+    import { Dayjs } from 'dayjs';
 
     interface IRangePicker {
-        dateRange: { value: any[] };
-        disabledDate: (current: any) => any;
+        dateRange: [Dayjs, Dayjs] | undefined;
+        disabledDate: (current: Dayjs) => boolean;
         isShowModal?: boolean;
     }
     withDefaults(defineProps<IRangePicker>(), {
@@ -75,7 +76,7 @@
                 }
             }
             input[disabled] {
-                cursor: url('../../../../assets/forbidden.png'), not-allowed;
+                cursor: url('../assets/forbidden.png'), not-allowed;
             }
         }
         border: 1px solid var(--bj-border-color);
