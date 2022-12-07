@@ -28,13 +28,15 @@
 
 <style lang="less" scoped>
     .address_details {
+        .info_card {
+            margin-top: 16px;
+        }
         &__title {
         }
         &__base_info_c {
             margin-top: 36px;
         }
         &__tokens_c {
-            margin-top: 16px;
             .flex(row,nowrap);
             &__allocation {
                 flex: 1;
@@ -45,10 +47,8 @@
             }
         }
         &__transactions_c {
-            margin-top: 16px;
         }
         &__accounts_c {
-            margin-top: 16px;
             .flex(row,nowrap);
             &__account {
                 flex: 1;
