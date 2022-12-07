@@ -16,7 +16,7 @@ export const getChartTooltip = (chooseIndex: number): { key: string; symbol: str
     };
 };
 
-export const getTransactionPluralSymbol = (key: CHART_TOOLTIP, value: string): string => {
+export const getTransactionPluralSymbol = (key: string, value: string): string => {
     if (key === CHART_TOOLTIP.txs) {
         return Number(value) > 1 ? 's' : '';
     }
