@@ -627,7 +627,7 @@ export const useSelectedSearch = (
     const endTxTime = ref<number | undefined>(undefined);
     const rtTableLoading = ref<boolean>(true);
     const rtPageLoading = ref<boolean>(true);
-    const rtNoDataType = ref<NoDataType | null>();
+    const rtNoDataType = ref<NoDataType | undefined>();
     const isDisplayDefaultText = ref<boolean>(true);
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
@@ -682,7 +682,7 @@ export const useSelectedSearch = (
     ) => {
         rtTableLoading.value = true;
         rtPageLoading.value = false;
-        rtNoDataType.value = null;
+        rtNoDataType.value = undefined;
         const getRelayerTransferTxsData = async () => {
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
