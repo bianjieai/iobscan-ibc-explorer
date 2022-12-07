@@ -3,12 +3,9 @@
         <div class="related_asset_chart__title">{{ totalRelayedTitle }}</div>
         <div class="related_asset_chart__chart_wrap">
             <loading-component v-if="relayedValueLoading" :type="LoadingType.container" />
-            <no-datas
-                v-else-if="relayedValueNoData || relayedValueNetworkError"
-                :text="relayedValueAbnormalText"
-            />
+            <no-datas v-else-if="relayedValueNoDataType" :type="relayedValueNoDataType" />
             <div
-                v-show="!relayedValueLoading && !(relayedValueNoData || relayedValueNetworkError)"
+                v-show="!relayedValueLoading && !relayedValueNoDataType"
                 ref="relayedValueDom"
                 class="related_asset_chart__chart_wrap__chart"
                 :class="{ two_legend: twoLegendRelayedValue }"
@@ -39,9 +36,7 @@
     const {
         totalRelayedTitle,
         relayedValueLoading,
-        relayedValueNoData,
-        relayedValueNetworkError,
-        relayedValueAbnormalText,
+        relayedValueNoDataType,
         twoLegendRelayedValue,
         relayedValueDom,
         relayedAssetsChooseBtnFn,

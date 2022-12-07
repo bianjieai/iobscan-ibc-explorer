@@ -9,9 +9,9 @@
     >
         <loading-component v-if="relayedTrendLoading" :type="LoadingType.container" :height="300" />
         <no-datas
-            v-else-if="relayedTrendNoData || relayedTrendNetworkError"
+            v-else-if="relayedTrendNoDataType"
             class="relayed_trend_c__abnormal"
-            :text="relayedAbnormalText"
+            :type="relayedTrendNoDataType"
         />
         <div v-else class="relayed_trend_c__chart_wrap">
             <div ref="relayedTrendDom" class="relayed_trend_c__chart_wrap__chart"></div>
@@ -28,9 +28,7 @@
         relayedTrendChoose,
         relayedTrendChooseBtnFn,
         relayedTrendLoading,
-        relayedTrendNoData,
-        relayedTrendNetworkError,
-        relayedAbnormalText
+        relayedTrendNoDataType
     } = useRelayedTrend();
 </script>
 

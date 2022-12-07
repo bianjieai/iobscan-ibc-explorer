@@ -35,7 +35,7 @@
     }
     const props = withDefaults(defineProps<IProps>(), {
         tipText: 'There is no valid result.',
-        tipDescription: 'Try to search with Transaction.'
+        tipDescription: 'Try to search with Transaction/Address.'
     });
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-    <div class="error_network_container" :style="{ minHeight: `${minHeight}px` }">
+    <div class="error_network_container">
         <div class="content">
             <div class="content__img">
                 <img class="content__img__large" src="/src/assets/error/500_large.png" alt="" />
@@ -20,15 +20,7 @@
     import { useIbcStatisticsChains } from '@/store/index';
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     onBeforeUnmount(() => {
-        console.log('onBeforeUnmount======error 500');
         ibcStatisticsChainsStore.isShow500 = false;
-    });
-
-    const minHeight = ref();
-    onMounted(() => {
-        minHeight.value =
-            document.body.offsetHeight -
-            (document.querySelector('.layout__header')! as HTMLElement).offsetHeight;
     });
     const router = useRouter();
     const route = useRoute();
@@ -43,6 +35,7 @@
 
 <style scoped lang="less">
     .error_network_container {
+        flex: 1;
         overflow: auto;
         background: url('../../assets/error/default_bg.png') no-repeat center center;
         background-size: cover;
