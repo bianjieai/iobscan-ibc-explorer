@@ -74,11 +74,11 @@
             &__router_container {
                 flex: 1;
                 width: 100%;
-                display: flex;
+                .flex(column,nowrap);
             }
             &__error_container {
                 flex: 1;
-                display: flex;
+                .flex(column,nowrap);
             }
         }
         &__footer {
