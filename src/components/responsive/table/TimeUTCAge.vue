@@ -1,5 +1,5 @@
 <template>
-    <div class="time flex items-center">
+    <div class="time">
         <span>{{ columnName }}</span>
         <a-popover destroy-tooltip-on-hide>
             <template #content>

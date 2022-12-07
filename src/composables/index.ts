@@ -301,3 +301,14 @@ export const useGoAddressDetail = () => {
         judgeIsAddressCursor
     };
 };
+
+export const useTimeUtcAge = () => {
+    const showUtc = ref<boolean>(true);
+    const changeShowUtcAge = (isShowUtc: boolean) => {
+        showUtc.value = isShowUtc;
+    };
+    return {
+        showUtc,
+        changeShowUtcAge
+    };
+};
