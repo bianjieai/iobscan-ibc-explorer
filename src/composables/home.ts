@@ -3,6 +3,7 @@ import { getIbcStatisticsAPI } from '@/api/home';
 import {
     IBC_STATISTICS_CHANNELS_DEFAULT,
     IBC_STATISTICS_DENOMS_DEFAULT,
+    IBC_STATISTICS_RELAYER_DEFAULT,
     IBC_STATISTICS_TXS_DEFAULT,
     IBC_STATISTICS_CHAINS_DEFAULT
 } from '@/constants/index';
@@ -13,6 +14,7 @@ export const useIbcStatistics = (timerInterval?: number) => {
     const ibcStatisticsChains = reactive(IBC_STATISTICS_CHAINS_DEFAULT);
     const ibcStatisticsChannels = reactive(IBC_STATISTICS_CHANNELS_DEFAULT);
     const ibcStatisticsDenoms = reactive(IBC_STATISTICS_DENOMS_DEFAULT);
+    const ibcStatisticsRelayer = reactive(IBC_STATISTICS_RELAYER_DEFAULT);
     const ibcStatisticsTxs = reactive(IBC_STATISTICS_TXS_DEFAULT);
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
     const { isDocumentHidden } = storeToRefs(ibcStatisticsChainsStore);
@@ -36,9 +38,9 @@ export const useIbcStatistics = (timerInterval?: number) => {
                 ibcStatisticsChannels.channel_all = findStatistics('channel_all');
                 ibcStatisticsChannels.channel_opened = findStatistics('channel_opened');
                 ibcStatisticsChannels.channel_closed = findStatistics('channel_closed');
-                ibcStatisticsDenoms.denom_all = findStatistics('denom_all');
-                ibcStatisticsDenoms.denom_all.no_link = true;
                 ibcStatisticsDenoms.base_denom_all = findStatistics('base_denom_all');
+                // todo shan 需确认接口对应的 relayers 字段名
+                ibcStatisticsRelayer.relayers = findStatistics('relayers');
                 ibcStatisticsTxs.tx_24hr_all = findStatistics('tx_24hr_all');
                 ibcStatisticsTxs.tx_all = findStatistics('tx_all');
                 ibcStatisticsTxs.tx_success = findStatistics('tx_success');
@@ -73,6 +75,7 @@ export const useIbcStatistics = (timerInterval?: number) => {
         ibcStatisticsChains,
         ibcStatisticsChannels,
         ibcStatisticsDenoms,
+        ibcStatisticsRelayer,
         ibcStatisticsTxs,
         getIbcStatistics,
         intervalFunction
