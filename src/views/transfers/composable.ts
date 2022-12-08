@@ -187,7 +187,7 @@ export const useRouteParams = () => {
         endTimestamp = 0;
     const searchToken = ref<string | undefined>();
     const inputFlag = ref(false);
-    const dateRange = ref<[Dayjs, Dayjs] | undefined>(undefined);
+    const dateRange = ref<[Dayjs, Dayjs] | []>([]);
     const chain = route?.query.chain as string;
     if (chain) {
         url += `&chain=${chain}`;
@@ -418,7 +418,7 @@ export const useSelectedParams = (
     chainId: string,
     url: string,
     inputFlag: Ref<boolean>,
-    dateRange: Ref<[Dayjs, Dayjs] | undefined>,
+    dateRange: Ref<[Dayjs, Dayjs] | []>,
     queryDatas: () => void
 ) => {
     const router = useRouter();
@@ -588,7 +588,7 @@ export const useSelectedParams = (
     };
     const onClickReset = () => {
         chainDropdown.value.selectedChain = [];
-        dateRange.value = undefined;
+        dateRange.value = [];
         queryParams.date_range = [];
         queryParams.status = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
         queryParams.chain = undefined;
