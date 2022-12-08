@@ -43,7 +43,7 @@
     import { Dayjs } from 'dayjs';
 
     interface IRangePicker {
-        dateRange: [Dayjs, Dayjs] | undefined;
+        dateRange?: [Dayjs, Dayjs];
         disabledDate: (current: Dayjs) => boolean;
         isShowModal?: boolean;
     }

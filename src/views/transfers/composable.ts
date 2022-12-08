@@ -187,7 +187,7 @@ export const useRouteParams = () => {
         endTimestamp = 0;
     const searchToken = ref<string | undefined>();
     const inputFlag = ref(false);
-    const dateRange = ref<[Dayjs, Dayjs] | undefined>(undefined);
+    const dateRange = ref<[Dayjs, Dayjs] | undefined>();
     const chain = route?.query.chain as string;
     if (chain) {
         url += `&chain=${chain}`;

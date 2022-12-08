@@ -623,7 +623,7 @@ export const useSelectedSearch = (
     const relayerChain = ref<IIbcchain[]>([]);
     const relayerId: string = route?.params?.relayerId as string;
     const relayerTransferTableData = ref<IRelayerTransferItemFormat[]>([]);
-    const dateRange = ref<[Dayjs, Dayjs] | undefined>(undefined);
+    const dateRange = ref<[Dayjs, Dayjs] | undefined>();
     const disabledDate = (current: Dayjs): boolean =>
         current && (current > dayjsUtc().endOf('day') || current < dayjsUtc(1617007625 * 1000));
     const startTxTime = ref<number | undefined>(undefined);
