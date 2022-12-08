@@ -274,17 +274,6 @@
             }
         }
         .input_focus_style {
-            width: 300px;
-        }
-    }
-    @media screen and (max-width: 660px) {
-        .header_input {
-            .input_prefix {
-                .input_prefix_icon {
-                }
-            }
-        }
-        .input_focus_style {
             width: 280px;
         }
     }
