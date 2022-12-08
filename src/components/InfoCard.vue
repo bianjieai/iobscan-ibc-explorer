@@ -10,7 +10,10 @@
                     >
                     <img v-if="tipMsg" class="info_card__title__tip_icon cursor" :src="TIP_ICON" />
                 </a-tooltip>
-                <span v-if="subTitle" class="info_card__sub_title">{{ subTitle }}</span>
+                <span v-if="subTitle" class="info_card__sub_title">
+                    <i class="iconfont" :class="subIcon"></i>
+                    {{ subTitle }}
+                </span>
             </div>
             <div v-if="isShowChooseBtn" class="info_card__choose_btn">
                 <span
@@ -39,8 +42,10 @@
         defaultChooseBtn?: number; // 默认按钮索引
         tipMsg?: string;
         subTitle?: string;
+        subIcon?: string;
     }
     withDefaults(defineProps<IProps>(), {
+        subIcon: 'icon-shujuliebiao',
         isShowChooseBtn: false,
         defaultChooseBtn: 0
     });
@@ -76,9 +81,15 @@
             font-weight: 500;
             color: var(--bj-text-normal);
             white-space: nowrap;
+            line-height: 20px;
         }
         &__sub_title {
-            margin-left: 12px;
+            .flex(row);
+            line-height: 16px;
+            margin-left: 8px;
+            .iconfont {
+                margin-right: 4px;
+            }
         }
         &__choose_btn {
             background: #ebedff;
