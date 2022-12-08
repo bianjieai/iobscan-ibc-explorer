@@ -6,7 +6,7 @@
         <RelayerSearch class="relayer_search" @on-search="searchFn" />
         <TableCommon
             v-show="!searchNoResult"
-            :loading="loading"
+            :table-loading="loading"
             :data="relayersList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"

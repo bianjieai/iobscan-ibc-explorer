@@ -344,13 +344,15 @@ export const TRANSFER_TABLE_COLUMN: TableColumnsType = [
         title: 'Create Time',
         dataIndex: 'createTime',
         key: 'createTime',
-        width: 180
+        width: 180,
+        align: 'right'
     },
     {
         title: 'End Time',
         dataIndex: 'endTime',
         key: 'endTime',
-        width: 180
+        width: 180,
+        align: 'right'
     }
 ];
 
@@ -437,12 +439,13 @@ export const NEED_CUSTOM_COLUMN = {
         RELAYER_TRANSFER_KEY.rtFee,
         RELAYER_TRANSFER_KEY.rtResult,
         RELAYER_TRANSFER_KEY.rtSigner,
-        RELAYER_TRANSFER_KEY.rtTimestamp
+        RELAYER_TRANSFER_KEY.rtTime
     ]
 };
 
 export const NEED_CUSTOM_HEADER = {
-    transfers: ['Token']
+    transfers: ['Token'],
+    relayerDetails: ['Time']
 };
 
 export const BASE_PARAMS: IRequestPagination = {

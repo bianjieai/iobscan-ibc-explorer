@@ -32,7 +32,7 @@
         </div>
 
         <TableCommon
-            :loading="loading"
+            :table-loading="loading"
             :data="ibcTokenList"
             :need-custom-columns="needCustomColumns"
             :columns="IBC_COLUMNS"
