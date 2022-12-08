@@ -104,6 +104,9 @@ export interface IRelayerTransferItem {
     signer: string;
     tx_time: number;
 }
+export interface IRelayerTransferItemFormat extends IRelayerTransferItem {
+    format_tx_time: string;
+}
 export interface IRelayerTransferList {
     items: IRelayerTransferItem[];
     page_info: IResponsePageInfo;

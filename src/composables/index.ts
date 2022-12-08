@@ -71,6 +71,7 @@ export const useNeedCustomColumns = (whitePage: string) => {
             break;
         case PAGE_PARAMETERS.relayerDetails:
             needCustomColumns.value = NEED_CUSTOM_COLUMN.relayerDetails;
+            needCustomHeaders.value = NEED_CUSTOM_HEADER.relayerDetails;
     }
     return {
         needCustomColumns,
@@ -298,5 +299,16 @@ export const useGoAddressDetail = () => {
     return {
         goAddressDetails,
         judgeIsAddressCursor
+    };
+};
+
+export const useTimeUtcAge = () => {
+    const showUtc = ref<boolean>(true);
+    const changeShowUtcAge = (isShowUtc: boolean) => {
+        showUtc.value = isShowUtc;
+    };
+    return {
+        showUtc,
+        changeShowUtcAge
     };
 };

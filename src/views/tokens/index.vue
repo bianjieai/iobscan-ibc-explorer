@@ -48,7 +48,7 @@
         </div>
 
         <TableCommon
-            :loading="loading"
+            :table-loading="loading"
             :data="tokensList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"

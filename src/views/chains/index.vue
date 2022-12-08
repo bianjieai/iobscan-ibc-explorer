@@ -6,7 +6,7 @@
         />
 
         <TableCommon
-            :loading="loading"
+            :table-loading="loading"
             :data="chainsList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"

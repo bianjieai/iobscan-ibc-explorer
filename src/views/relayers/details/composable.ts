@@ -1,10 +1,13 @@
-import { dayjsUtc } from '@/utils/timeTools';
+import { dayjsFormatDate, dayjsUtc } from '@/utils/timeTools';
 import { getDenomKey } from '@/helper/baseDenomHelper';
 import { copyToClipboard } from '@/utils/clipboardTools';
 import { getChartTooltip, getTransactionPluralSymbol } from '@/helper/relayerHelper';
 import {
+    getRelayedTrendAPI,
     getRelayerDetailsByRelayerIdAPI,
     getRelayerTransferListAPI,
+    getTotalFeeCostAPI,
+    getTotalRelayedValueAPI,
     getTransferTypeTxsAPI
 } from '@/api/relayers';
 import { IDataItem } from '@/components/BjSelect/interface';
@@ -33,17 +36,16 @@ import { IDenomStatistic, IIbcchain, IPaginationParams } from '@/types/interface
 import {
     IChannelChain,
     IRelayerTransferItem,
+    IRelayerTransferItemFormat,
     IRequestRelayerTransfer,
     IRtTokenInfo
 } from '@/types/interface/relayers.interface';
 import * as echarts from 'echarts';
 import { Ref } from 'vue';
 import { BigNumber } from 'bignumber.js';
-import { getRelayedTrendAPI } from '@/api/relayers';
 import { RelayerTrendData, BarData } from '@/types/interface/relayers.interface';
 import { useWindowSize } from '@vueuse/core';
 import { PIE_COLOR_LIST, OPACITY_PIE_COLOR_LIST } from '@/constants/relayers';
-import { getTotalFeeCostAPI, getTotalRelayedValueAPI } from '@/api/relayers';
 import {
     RelayedValueData,
     FormatDenomItem,
@@ -54,6 +56,7 @@ import { formatString } from '@/utils/stringTools';
 import { calculatePercentage, getRoundingOffBigNumber } from '@/utils/calculate';
 import { getTextWidth } from '@/utils/urlTools';
 import { axiosCancel } from '@/utils/axios';
+import { Dayjs } from 'dayjs';
 
 export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -618,13 +621,16 @@ export const useSelectedSearch = (
     const route = useRoute();
     const relayerChain = ref<IIbcchain[]>([]);
     const relayerId: string = route?.params?.relayerId as string;
-    const relayerTransferTableData = ref<IRelayerTransferItem[]>([]);
-    const dateRange = reactive({ value: [] });
-    const disabledDate = (current: any) =>
+    const relayerTransferTableData = ref<IRelayerTransferItemFormat[]>([]);
+    const dateRange = ref<[Dayjs, Dayjs] | undefined>(undefined);
+    const disabledDate = (current: Dayjs): boolean =>
         current && (current > dayjsUtc().endOf('day') || current < dayjsUtc(1617007625 * 1000));
     const startTxTime = ref<number | undefined>(undefined);
     const endTxTime = ref<number | undefined>(undefined);
     const rtTableLoading = ref<boolean>(true);
+    const rtPageLoading = ref<boolean>(true);
+    const rtNoDataType = ref<NoDataType>();
+    const isDisplayDefaultText = ref<boolean>(true);
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
             if (!newServedChainsInfo?.length) return [];
@@ -637,6 +643,11 @@ export const useSelectedSearch = (
                 }
             }
             relayerChain.value = [...chainInfoArr];
+            if (!relayerChain.value.length) {
+                relayerTransferTableData.value = [];
+                rtTableLoading.value = false;
+                rtPageLoading.value = false;
+            }
         };
         sortServedChainsInfo();
     });
@@ -652,10 +663,22 @@ export const useSelectedSearch = (
             }
         ];
     });
+    const relayerChainDataNoChildren = computed(() => {
+        return !relayerChainData.value[0].children.length;
+    });
     const defaultChain = computed(() => {
         return relayerChainData.value[0]?.children[0];
     });
     const searchChain = ref<string>(defaultChain.value?.id);
+    const formatDate = (dateData: IRelayerTransferItem[]) => {
+        const formatDateData = dateData.map((item) => {
+            return {
+                ...item,
+                format_tx_time: dayjsFormatDate(item.tx_time * 1000)
+            };
+        });
+        return formatDateData;
+    };
     const getRelayerTransferTxs = (
         params: IRequestRelayerTransfer,
         page_num = 1,
@@ -663,6 +686,8 @@ export const useSelectedSearch = (
         use_count = false
     ) => {
         rtTableLoading.value = true;
+        rtPageLoading.value = true;
+        rtNoDataType.value = undefined;
         const getRelayerTransferTxsData = async () => {
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
@@ -675,23 +700,38 @@ export const useSelectedSearch = (
                     if (data) {
                         if (typeof data === 'number') {
                             pagination.total = data;
+                            isDisplayDefaultText.value = false;
+                            rtPageLoading.value = false;
                         } else {
-                            relayerTransferTableData.value = data.items;
+                            relayerTransferTableData.value = formatDate(data.items);
                             rtTableLoading.value = false;
+                            rtPageLoading.value = false;
                         }
                     } else {
                         console.error(message);
                         rtTableLoading.value = false;
+                        rtPageLoading.value = true;
+                        rtNoDataType.value = NoDataType.noData;
                     }
-                } else {
+                } else if (code === API_CODE.unRegisteredRelayer) {
                     console.error(message);
                     pagination.total = 0;
                     relayerTransferTableData.value = [];
                     rtTableLoading.value = false;
+                    rtPageLoading.value = true;
+                    rtNoDataType.value = NoDataType.noData;
+                } else {
+                    relayerTransferTableData.value = [];
+                    rtTableLoading.value = false;
+                    rtPageLoading.value = true;
+                    rtNoDataType.value = NoDataType.loadFailed;
                 }
             } catch (error) {
                 if (!axiosCancel(error)) {
+                    relayerTransferTableData.value = [];
                     rtTableLoading.value = false;
+                    rtPageLoading.value = true;
+                    rtNoDataType.value = NoDataType.loadFailed;
                 }
                 console.error(error);
             }
@@ -700,6 +740,8 @@ export const useSelectedSearch = (
     };
     const queryDatas = (params: IRequestRelayerTransfer) => {
         getRelayerTransferTxs(params, 1, 5, true);
+        isDisplayDefaultText.value = true;
+        pagination.total = 0;
         getRelayerTransferTxs(params, pagination.current, pagination.pageSize, false);
     };
     watch(defaultChain, (newDefaultChain) => {
@@ -720,7 +762,7 @@ export const useSelectedSearch = (
         const chain = selectedChainInfo?.id;
         searchChain.value = chain ? String(chain) : '';
         if (chain) {
-            refreshList({
+            queryDatas({
                 chain: chain as string,
                 tx_time_start: startTxTime.value?.toString(),
                 tx_time_end: endTxTime.value?.toString(),
@@ -729,11 +771,11 @@ export const useSelectedSearch = (
             });
         }
     };
-    const onChangeRangePicker = (dates: any) => {
+    const onChangeRangePicker = (dates: [Dayjs, Dayjs]) => {
         dateRange.value = dates;
         startTxTime.value = dayjsUtc(dates[0]).startOf('day').unix();
         endTxTime.value = dayjsUtc(dates[1]).endOf('day').unix();
-        refreshList({
+        queryDatas({
             chain: searchChain.value || defaultChain.value.id,
             tx_time_start: startTxTime.value?.toString(),
             tx_time_end: endTxTime.value?.toString(),
@@ -744,10 +786,10 @@ export const useSelectedSearch = (
     const onClickReset = () => {
         pagination.current = 1;
         searchChain.value = defaultChain.value.id;
-        dateRange.value = [];
+        dateRange.value = undefined;
         startTxTime.value = undefined;
         endTxTime.value = undefined;
-        refreshList({
+        queryDatas({
             chain: defaultChain.value.id,
             page_num: 1,
             page_size: 5
@@ -755,16 +797,18 @@ export const useSelectedSearch = (
     };
     const onPaginationChange = (current: number, pageSize: number) => {
         pagination.current = current;
-        refreshList({
-            chain: searchChain.value || defaultChain.value.id,
-            tx_time_start: startTxTime.value?.toString(),
-            tx_time_end: endTxTime.value?.toString(),
-            page_num: pagination.current,
-            page_size: pageSize
-        });
-    };
-    const refreshList = (params: IRequestRelayerTransfer) => {
-        queryDatas(params);
+        getRelayerTransferTxs(
+            {
+                chain: searchChain.value || defaultChain.value.id,
+                tx_time_start: startTxTime.value?.toString(),
+                tx_time_end: endTxTime.value?.toString(),
+                page_num: pagination.current,
+                page_size: pageSize
+            },
+            pagination.current,
+            pagination.pageSize,
+            false
+        );
     };
     const formatTransferType = (type: string) => {
         switch (type) {
@@ -778,9 +822,17 @@ export const useSelectedSearch = (
                 return TRANSFER_TYPE.timeout.label;
         }
     };
+    const getRtSubtitle = (showDefault: boolean, total: number) => {
+        const displayTotal = !showDefault ? formatBigNumber(total || '0', 0) : DEFAULT_DISPLAY_TEXT;
+        return `A total of ${displayTotal} IBC Transactions found`;
+    };
+    const rtTableSubTitle = computed(() => {
+        return getRtSubtitle(isDisplayDefaultText.value, pagination.total);
+    });
     return {
         defaultChain,
         relayerChainData,
+        relayerChainDataNoChildren,
         searchChain,
         onSelectedChain,
         relayerTransferTableData,
@@ -790,7 +842,10 @@ export const useSelectedSearch = (
         dateRange,
         disabledDate,
         onChangeRangePicker,
-        rtTableLoading
+        rtTableLoading,
+        rtPageLoading,
+        rtTableSubTitle,
+        rtNoDataType
     };
 };
 
@@ -844,7 +899,7 @@ export const useRelayedTrend = () => {
     const route = useRoute();
     const relayerId: string = route.params.relayerId as string;
     const relayedTrendLoading = ref(true);
-    const relayedTrendNoDataType = ref<NoDataType | null>();
+    const relayedTrendNoDataType = ref<NoDataType>();
     const { width: widthClient } = useWindowSize();
     let relayedTrendChart: echarts.ECharts;
 
@@ -1093,7 +1148,7 @@ export const useRelayedTrend = () => {
     const getRelayedTrendData = async () => {
         try {
             relayedTrendLoading.value = true;
-            relayedTrendNoDataType.value = null;
+            relayedTrendNoDataType.value = undefined;
             const { code, data, message } = await getRelayedTrendAPI({
                 relayer_id: relayerId
             });
@@ -1407,7 +1462,7 @@ export const useRelatedAssetChart = (
     };
     let relayedValueChart: echarts.ECharts;
     const relayedValueLoading = ref(true);
-    const relayedValueNoDataType = ref<NoDataType | null>();
+    const relayedValueNoDataType = ref<NoDataType>();
     const totalRelayedValueData = reactive<RelayedValueData>({
         totalValue: DEFAULT_DISPLAY_TEXT,
         value: [],
@@ -1530,7 +1585,7 @@ export const useRelatedAssetChart = (
     const getRelayedValueData = async () => {
         try {
             relayedValueLoading.value = true;
-            relayedValueNoDataType.value = null;
+            relayedValueNoDataType.value = undefined;
             const getDataApi = isRelayedValueType.value
                 ? getTotalRelayedValueAPI
                 : getTotalFeeCostAPI;

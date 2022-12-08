@@ -28,6 +28,7 @@ import { Ref } from 'vue';
 import { urlParser } from '@/utils/urlTools';
 import { axiosCancel } from '@/utils/axios';
 import { IIbcTx, IIbcTxCount, ITransfersQueryParams } from '@/types/interface/transfers.interface';
+import { Dayjs } from 'dayjs';
 
 export const usePagination = () => {
     const route = useRoute();
@@ -186,7 +187,7 @@ export const useRouteParams = () => {
         endTimestamp = 0;
     const searchToken = ref<string | undefined>();
     const inputFlag = ref(false);
-    const dateRange = reactive({ value: [] });
+    const dateRange = ref<[Dayjs, Dayjs] | undefined>(undefined);
     const chain = route?.query.chain as string;
     if (chain) {
         url += `&chain=${chain}`;
@@ -239,7 +240,7 @@ export const useRouteParams = () => {
             .unix();
     }
     if (startTimestamp && endTimestamp) {
-        dateRange.value = [dayjsUtc(startTimestamp * 1000), dayjsUtc(endTimestamp * 1000)] as any;
+        dateRange.value = [dayjsUtc(startTimestamp * 1000), dayjsUtc(endTimestamp * 1000)];
     }
     searchToken.value = (paramsBaseDenom || '') + (paramsBaseDenomChain || '');
     if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
@@ -417,9 +418,7 @@ export const useSelectedParams = (
     chainId: string,
     url: string,
     inputFlag: Ref<boolean>,
-    dateRange: {
-        value: never[];
-    },
+    dateRange: Ref<[Dayjs, Dayjs] | undefined>,
     queryDatas: () => void
 ) => {
     const router = useRouter();
@@ -486,7 +485,7 @@ export const useSelectedParams = (
     const changeInputFlag = (flag: boolean) => {
         inputFlag.value = flag;
     };
-    const disabledDate = (current: any) => {
+    const disabledDate = (current: Dayjs): boolean => {
         const currentStart = dayjsUtc(current).startOf('day');
         const max = dayjsUtc().endOf('day');
         const min = dayjsUtc(
@@ -578,7 +577,7 @@ export const useSelectedParams = (
         judgeQueryParams();
         queryDatas();
     };
-    const onChangeRangePicker = (dates: any) => {
+    const onChangeRangePicker = (dates: [Dayjs, Dayjs]) => {
         (window as any).gtag('event', 'Transfers-点击过滤条件Date');
         pagination.current = 1;
         dateRange.value = dates;
@@ -589,7 +588,7 @@ export const useSelectedParams = (
     };
     const onClickReset = () => {
         chainDropdown.value.selectedChain = [];
-        dateRange.value = [];
+        dateRange.value = undefined;
         queryParams.date_range = [];
         queryParams.status = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
         queryParams.chain = undefined;

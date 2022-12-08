@@ -30,7 +30,7 @@
             <TypeButton @on-reset="resetSearchCondition" />
         </div>
         <TableCommon
-            :loading="loading"
+            :table-loading="loading"
             :data="channelsList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"

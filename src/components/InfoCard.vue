@@ -10,6 +10,7 @@
                     >
                     <img v-if="tipMsg" class="info_card__title__tip_icon cursor" :src="TIP_ICON" />
                 </a-tooltip>
+                <span v-if="subTitle" class="info_card__sub_title">{{ subTitle }}</span>
             </div>
             <div v-if="isShowChooseBtn" class="info_card__choose_btn">
                 <span
@@ -37,6 +38,7 @@
         isShowChooseBtn?: boolean; // 右侧是否有按钮
         defaultChooseBtn?: number; // 默认按钮索引
         tipMsg?: string;
+        subTitle?: string;
     }
     withDefaults(defineProps<IProps>(), {
         isShowChooseBtn: false,
@@ -74,6 +76,9 @@
             font-weight: 500;
             color: var(--bj-text-normal);
             white-space: nowrap;
+        }
+        &__sub_title {
+            margin-left: 12px;
         }
         &__choose_btn {
             background: #ebedff;

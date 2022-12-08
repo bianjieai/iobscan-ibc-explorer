@@ -109,9 +109,7 @@
                 <RelatedAssets />
             </div>
         </div>
-        <InfoCard icon="icon-transactions" title="Transactions">
-            <RelayerTransfer :served-chains-info="servedChainsInfo" :is-show-modal="isShowModal" />
-        </InfoCard>
+        <RelayerTransfer :served-chains-info="servedChainsInfo" :is-show-modal="isShowModal" />
     </PageContainer>
     <IbcDialog v-if="isShowModal" :show-modal="isShowModal" :opacity="0.15"></IbcDialog>
 </template>
