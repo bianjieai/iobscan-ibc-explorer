@@ -138,7 +138,7 @@
             backUpData();
             if (needPagination.value) {
                 pageInfo.total = _new?.length;
-                needPagination.value && onPageChange(1, 10, false);
+                needPagination.value && onPageChange(1, pageInfo.pageSize, false);
             }
             if (_new?.length === 0) {
                 columnsSource.value = columnsSource.value.filter((item) => item.key !== '_count');
@@ -162,9 +162,9 @@
             props.pageLoading === undefined ? props.tableLoading : props.pageLoading;
         return paginationLoading || pageInfo.total <= 0;
     });
-    const needPagination = computed(
-        () => !props.noPagination && !(props.current && props.pageSize)
-    ); // 需要前端分页
+    const needPagination = computed(() => {
+        return !props.noPagination && !(props.current && props.pageSize);
+    }); // 需要前端分页
     const isKeyInNeedCustomColumns = computed(
         () => (key: string) => props.needCustomColumns.includes(key)
     ); // 判断key
@@ -327,7 +327,7 @@
         if (props.noPagination) {
             dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
         } else {
-            needPagination.value && onPageChange(1, 10, false); // reset去第一页
+            needPagination.value && onPageChange(1, pageInfo.pageSize, false); // reset去第一页
         }
     };
     let timeTimer: number;

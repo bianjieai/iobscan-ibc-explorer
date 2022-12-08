@@ -1,3 +1,4 @@
+import { AddressTokensListKey } from './address';
 import type { IDenomStatistic, IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
 import { RelayersListKey, RELAYER_TRANSFER_KEY } from '@/constants/relayers';
@@ -108,7 +109,8 @@ export const PAGE_PARAMETERS = {
     channels: 'channels',
     relayers: 'relayers',
     denom: 'denom',
-    relayerDetails: 'relayerDetails'
+    relayerDetails: 'relayerDetails',
+    addressDetailsToken: 'addressDetailsToken'
 };
 
 export const MSG_DESC = {
@@ -440,6 +442,12 @@ export const NEED_CUSTOM_COLUMN = {
         RELAYER_TRANSFER_KEY.rtResult,
         RELAYER_TRANSFER_KEY.rtSigner,
         RELAYER_TRANSFER_KEY.rtTime
+    ],
+    addressDetailsToken: [
+        AddressTokensListKey.total,
+        AddressTokensListKey.amount,
+        AddressTokensListKey.price,
+        AddressTokensListKey.totalValue
     ]
 };
 

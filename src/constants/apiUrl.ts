@@ -1,4 +1,5 @@
 export const urlReplacePlaceholder = '=%=';
+export const urlReplacePlaceholder2 = '==%==';
 
 export const API_URL = {
     ibcChainsUrl: '/ibc/chains',
@@ -19,5 +20,10 @@ export const API_URL = {
     ibcTxsSearchCondition: '/ibc/txs/searchCondition',
     ibcRelayedTrend: `/ibc/relayer/${urlReplacePlaceholder}/relayedTrend`,
     ibcTotalRelayedValue: `/ibc/relayer/${urlReplacePlaceholder}/totalRelayedValue`,
-    ibcTotalFeeCost: `/ibc/relayer/${urlReplacePlaceholder}/totalFeeCost`
+    ibcTotalFeeCost: `/ibc/relayer/${urlReplacePlaceholder}/totalFeeCost`,
+    ibcAddrBaseInfo: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder2}`,
+    ibcAddrTokenList: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder2}/tokens`,
+    ibcAddrTxs: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder2}/txs`,
+    ibcAddrTxsExport: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder2}/txs/export`,
+    ibcAddrAccountToken: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder2}/accounts`
 };

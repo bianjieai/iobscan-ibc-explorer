@@ -1796,7 +1796,7 @@ export const useRelatedAssetChart = (
             cancelShowTimer && clearInterval(cancelShowTimer);
             showToast.value = false;
             showTimer = setTimeout(() => {
-                copyToClipboard(params.name);
+                copyToClipboard(mapLegend[params.name] || params.name);
                 showToast.value = true;
             }, 0);
             cancelShowTimer = setTimeout(() => {
