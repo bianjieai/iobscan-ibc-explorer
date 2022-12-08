@@ -30,6 +30,9 @@
     .address_details {
         .info_card {
             margin-top: 16px;
+            .info_card__primary {
+                padding: 16px 24px;
+            }
         }
         &__title {
         }
