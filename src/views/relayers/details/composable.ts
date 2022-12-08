@@ -664,7 +664,7 @@ export const useSelectedSearch = (
             }
         ];
     });
-    const relayerChainDataNoChildren = computed(() => {
+    const relayerChainNoSupport = computed(() => {
         return !relayerChainData.value[0].children.length;
     });
     const defaultChain = computed(() => {
@@ -686,6 +686,7 @@ export const useSelectedSearch = (
         page_size = 5,
         use_count = false
     ) => {
+        // todo shan 分析不同请求的各类值赋值情况，并进行改造，考虑获取不到以及接口出错等各种情况
         rtTableLoading.value = true;
         rtPageLoading.value = true;
         rtNoDataType.value = undefined;
@@ -833,7 +834,7 @@ export const useSelectedSearch = (
     return {
         defaultChain,
         relayerChainData,
-        relayerChainDataNoChildren,
+        relayerChainNoSupport,
         searchChain,
         onSelectedChain,
         relayerTransferTableData,
