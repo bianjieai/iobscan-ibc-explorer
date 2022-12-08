@@ -1,7 +1,7 @@
 <template>
     <a-range-picker
         class="range_picker cursor"
-        :value="(dateRange as [Dayjs, Dayjs])"
+        :value="dateRange"
         :disabled-date="disabledDate"
         :allow-clear="false"
         format="YYYY-MM-DD"
@@ -43,7 +43,7 @@
     import { Dayjs } from 'dayjs';
 
     interface IRangePicker {
-        dateRange: [Dayjs, Dayjs] | [];
+        dateRange?: [Dayjs, Dayjs];
         disabledDate: (current: Dayjs) => boolean;
         isShowModal?: boolean;
     }
