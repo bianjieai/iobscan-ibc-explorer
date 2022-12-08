@@ -3,6 +3,6 @@
     <InfoCard icon="icon-transactions" title="Transactions"></InfoCard>
 </template>
 
-<script setup></script>
+<script setup lang="ts"></script>
 
 <style lang="less" scoped></style>
