@@ -95,7 +95,7 @@ export const useNoResult = () => {
             if (newValue.query?.chain) {
                 const searchChain = newValue.query.chain as string;
                 const chainInfo = await ChainHelper.getChainInfoByKey(searchChain);
-                searchChainPrettyName.value = chainInfo?.pretty_name;
+                searchChainPrettyName.value = chainInfo?.pretty_name || searchChain;
             }
         },
         { immediate: true }
