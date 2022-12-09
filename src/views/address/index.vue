@@ -2,7 +2,14 @@
     <PageContainer class="address_details">
         <PageTitle class="address_details__title" title="Address Details" />
         <div class="address_details__base_info_c">
-            <BaseInfo />
+            <!-- todo shan 需要修改 totalValue 的值 -->
+            <BaseInfo
+                :base-info-loading="baseInfoLoading"
+                :base-info="baseInfo"
+                :current-chain-info="currentChainInfo"
+                :is-show-tooltip="isShowTooltip"
+                :total-value="''"
+            />
         </div>
         <div class="address_details__tokens_c">
             <AddressAllocation class="address_details__tokens_c__allocation" />
@@ -24,6 +31,8 @@
     import AddressTransactions from './components/AddressTransactions.vue';
     import AccountTokensRatio from './components/AccountTokensRatio.vue';
     import AddresssAccount from './components/AddresssAccount.vue';
+    import { useGetBaseInfo } from './composable';
+    const { baseInfoLoading, baseInfo, currentChainInfo, isShowTooltip } = useGetBaseInfo();
 </script>
 
 <style lang="less" scoped>

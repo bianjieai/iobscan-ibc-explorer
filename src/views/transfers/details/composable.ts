@@ -119,7 +119,7 @@ export const useTransfersDetailsInfo = () => {
                         router.push('/transfers');
                     }
                 } else {
-                    router.replace(`/searchResult?${hash}`);
+                    router.replace(`/searchResult/${hash}`);
                 }
             } else {
                 console.error(message);

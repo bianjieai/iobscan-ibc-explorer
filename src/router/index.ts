@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
         ]
     },
     {
-        path: '/searchResult',
+        path: '/searchResult/:result',
         component: Layout,
         children: [
             {

@@ -82,27 +82,35 @@ export const useNoResult = () => {
     const route = useRoute();
     const router = useRouter();
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    watch(route, (newValue) => {
-        if (newValue?.query) {
-            searchInputValue.value = Object.keys(route.query);
-        }
-    });
-    const searchInputValue = reactive({
-        value: ['']
-    });
-    if (route?.query) {
-        if (/^[A-F0-9]{64}$/.test(Object.keys(route.query).join(''))) {
+    const seatchParams = route.params?.result as string;
+    const searchQueryChain = route.query?.chain as string;
+    const searchInputValue = ref<string>();
+    const searchChainPrettyName = ref<string>();
+    watch(
+        route,
+        async (newValue) => {
+            if (newValue.params?.result) {
+                searchInputValue.value = newValue.params.result as string;
+            }
+            if (newValue.query?.chain) {
+                const searchChain = newValue.query.chain as string;
+                const chainInfo = await ChainHelper.getChainInfoByKey(searchChain);
+                searchChainPrettyName.value = chainInfo?.pretty_name;
+            }
+        },
+        { immediate: true }
+    );
+    if (seatchParams) {
+        if (/^[A-F0-9]{64}$/.test(seatchParams)) {
             ibcStatisticsChainsStore.isShowLoading = true;
-            getTxDetailsByTxHashAPI(Object.keys(route.query).join(''))
+            getTxDetailsByTxHashAPI(seatchParams)
                 .then((result) => {
                     const { code, data } = result;
                     if (code === API_CODE.success) {
                         if (data) {
                             ibcStatisticsChainsStore.isShowLoading = false;
                             if (!data.is_list) {
-                                router.push(
-                                    `/transfers/details?txhash=${Object.keys(route.query).join('')}`
-                                );
+                                router.push(`/transfers/details?txhash=${seatchParams}`);
                             } else {
                                 router.push('/transfers');
                             }
@@ -115,16 +123,18 @@ export const useNoResult = () => {
                     ibcStatisticsChainsStore.isShowLoading = false;
                     console.log('getTxDetailsByTxHashAPI', error);
                 });
+        } else if (searchQueryChain) {
+            router.push(`/searchResult/${seatchParams}?chain=${searchQueryChain}`);
         } else {
-            router.push(`/searchResult?${Object.keys(route.query).join('')}`);
+            router.push(`/searchResult/${seatchParams}`);
         }
-        searchInputValue.value = Object.keys(route.query);
     }
     const toHome = () => {
         router.push('/home');
     };
     return {
         searchInputValue,
+        searchChainPrettyName,
         toHome
     };
 };

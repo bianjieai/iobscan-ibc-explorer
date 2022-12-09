@@ -32,13 +32,17 @@ import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber, formatNum } from '@/helper/parseStringHelper';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import { useIbcStatisticsChains } from '@/store';
-import { IDenomStatistic, IIbcchain, IPaginationParams } from '@/types/interface/index.interface';
-import {
+import type {
+    IDenomStatistic,
+    IIbcchain,
+    IPaginationParams,
+    IResponseTokenInfo
+} from '@/types/interface/index.interface';
+import type {
     IChannelChain,
     IRelayerTransferItem,
     IRelayerTransferItemFormat,
-    IRequestRelayerTransfer,
-    IRtTokenInfo
+    IRequestRelayerTransfer
 } from '@/types/interface/relayers.interface';
 import * as echarts from 'echarts';
 import { Ref } from 'vue';
@@ -851,7 +855,7 @@ export const useSelectedSearch = (
     };
 };
 
-export const useFormatTokenDenom = (tokenInfo: Ref<IRtTokenInfo>, type: Ref<string>) => {
+export const useFormatTokenDenom = (tokenInfo: Ref<IResponseTokenInfo>, type: Ref<string>) => {
     const chain = ref<string>('');
     const denom = ref<string>('');
     const amount = ref<string>('');

@@ -52,7 +52,7 @@
                 router.push(`/transfers/details?txhash=${inputValue.value}`);
                 inputValue.value = '';
             } else {
-                router.push(`/searchResult?${inputValue.value}`);
+                router.push(`/searchResult/${inputValue.value}`);
                 inputValue.value = '';
             }
         }
