@@ -1,8 +1,8 @@
 <template>
     <div class="pie_legend">
-        <div class="pie_legend__content">
+        <ibcToast :show-toast="showToast" :client-x="clientX" :client-y="clientY" />
+        <div class="pie_legend__content cursor" @click="copyAndClickEventFn(legendName, $event)">
             <div class="pie_legend__content__color_block" :style="{ color: lengedColor }"></div>
-            <!-- todo dj copy -->
             <div class="pie_legend__content__legend_name">{{ legendName }}</div>
         </div>
         <div class="pie_legend__line"></div>
@@ -11,12 +11,14 @@
 </template>
 
 <script setup lang="ts">
+    import { useCopyToast } from '@/helper/coypHelper';
     interface IProps {
         lengedColor: string;
         legendName: string;
         percentage: string;
     }
     defineProps<IProps>();
+    const { showToast, clientX, clientY, copyAndClickEventFn } = useCopyToast();
 </script>
 
 <style lang="less" scoped>

@@ -16,7 +16,7 @@
                         <PieLegend
                             v-for="legend in firstColumnLegendData"
                             :key="legend.key"
-                            class="allocation_pie_legend cursor"
+                            class="allocation_pie_legend"
                             :lenged-color="legend.lengedColor"
                             :legend-name="legend.legendName"
                             :percentage="legend.percentage"
@@ -232,7 +232,6 @@
             () => data?.value,
             (newValue) => {
                 if (newValue) {
-                    console.log(newValue);
                     totalValue.value = getTotalValue(newValue.total_value);
                     totalCount.value = newValue.tokens.length;
                     addressAllocationOption.series[0].label.formatter = `{text|Assets}\n\r\n\r{total|${totalCount.value}}`;
