@@ -1,3 +1,4 @@
+import { PIE_OTHERS } from '@/constants/index';
 import { useCopyToast } from '@/helper/coypHelper';
 import { dayjsFormatDate, dayjsUtc } from '@/utils/timeTools';
 import { getDenomKey } from '@/helper/baseDenomHelper';
@@ -1652,7 +1653,7 @@ export const useRelatedAssetChart = (
                         }, '0');
                         valueDenomList.push({
                             imgUrl: TOKEN_DEFAULT_ICON,
-                            name: 'Others',
+                            name: PIE_OTHERS,
                             base_denom: '',
                             base_denom_chain: '',
                             txs_value: spliceValueTotal,
@@ -1666,7 +1667,7 @@ export const useRelatedAssetChart = (
                         }, 0);
                         txsDenomList.push({
                             imgUrl: TOKEN_DEFAULT_ICON,
-                            name: 'Others',
+                            name: PIE_OTHERS,
                             base_denom: '',
                             base_denom_chain: '',
                             txs: spliceTxsTotal,

@@ -549,3 +549,5 @@ export enum NoDataType {
     noData,
     loadFailed
 }
+
+export const PIE_OTHERS = 'Others';

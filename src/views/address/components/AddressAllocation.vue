@@ -43,7 +43,7 @@
 </template>
 
 <script setup lang="ts">
-    import { PIE_COLOR_LIST, UNIT_SIGNS } from '@/constants/relayers';
+    import { OPACITY_PIE_COLOR_LIST, PIE_COLOR_LIST, UNIT_SIGNS } from '@/constants/relayers';
     import { formatBigNumber } from '@/helper/parseStringHelper';
     import { formatString } from '@/utils/stringTools';
     import PieLegend from './PieLegend.vue';
@@ -53,6 +53,8 @@
     import { getDenomKey } from '@/helper/baseDenomHelper';
     import { calculatePercentage } from '@/utils/calculate';
     import { PieData } from '@/types/interface/relayers.interface';
+    import BigNumber from 'bignumber.js';
+    import { PIE_OTHERS } from '@/constants/index';
 
     interface IProps {
         data?: ITokenList;
@@ -243,7 +245,34 @@
                         const allocationValueData: PieData[] = [];
                         const allocationValueOpacityData: PieData[] = [];
                         const templegendData: PieLegendData[] = [];
-                        newValue.tokens.forEach((token, i) => {
+                        const tokens = [...newValue.tokens];
+                        const needMaxNum = 8;
+                        if (tokens.length > needMaxNum) {
+                            const spliceValueDenomList = tokens.splice(needMaxNum - 1);
+                            const spliceValueTotal = spliceValueDenomList.reduce(
+                                (total, current) => {
+                                    return new BigNumber(total)
+                                        .plus(current.denom_value)
+                                        .toString();
+                                },
+                                '0'
+                            );
+                            tokens.push({
+                                denom: PIE_OTHERS,
+                                chain: '',
+                                base_denom: PIE_OTHERS,
+                                base_denom_chain: PIE_OTHERS,
+                                denom_type: 'Other',
+                                denom_amount: '',
+                                denom_avaliable_amount: '',
+                                price: 0,
+                                denom_value: spliceValueTotal,
+                                displayAmount: '',
+                                displayAvaliableAmount: '',
+                                chainInfo: undefined
+                            });
+                        }
+                        tokens.forEach((token, i) => {
                             const uniqueName = getDenomKey(
                                 token.base_denom_chain,
                                 token.base_denom
@@ -267,7 +296,7 @@
                             allocationValueOpacityData.push({
                                 value: token.denom_value,
                                 itemStyle: {
-                                    color: PIE_COLOR_LIST[i]
+                                    color: OPACITY_PIE_COLOR_LIST[i]
                                 }
                             });
                             templegendData.push({
