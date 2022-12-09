@@ -159,8 +159,9 @@ export const STATISTICS_NAME = {
     channel_all: 'All',
     channel_opened: 'Open',
     channel_closed: 'Closed',
-    denom_all: 'Tokens by Denom',
     base_denom_all: 'Tokens by Base Denom',
+    // todo shan 需跟接口确认 relayers 字段名
+    relayers: 'All Relayers',
     tx_24hr_all: 'Recent',
     tx_all: 'All',
     tx_success: 'Success',
@@ -202,12 +203,15 @@ export const IBC_STATISTICS_CHANNELS_DEFAULT: IDenomStatistic = {
 };
 
 export const IBC_STATISTICS_DENOMS_DEFAULT: IDenomStatistic = {
-    denom_all: {
-        statistics_name: 'denom_all',
-        count: 0
-    },
     base_denom_all: {
         statistics_name: 'base_denom_all',
+        count: 0
+    }
+};
+
+export const IBC_STATISTICS_RELAYER_DEFAULT: IDenomStatistic = {
+    relayers: {
+        statistics_name: 'relayers',
         count: 0
     }
 };

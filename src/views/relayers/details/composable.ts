@@ -371,6 +371,7 @@ export const useTransferTypeChart = (
             {
                 type: 'pie',
                 radius: [34, 50],
+                minAngle: 4,
                 data: [
                     {
                         value: `${txsCount.value}`,
@@ -622,7 +623,7 @@ export const useSelectedSearch = (
     const relayerChain = ref<IIbcchain[]>([]);
     const relayerId: string = route?.params?.relayerId as string;
     const relayerTransferTableData = ref<IRelayerTransferItemFormat[]>([]);
-    const dateRange = ref<[Dayjs, Dayjs] | undefined>(undefined);
+    const dateRange = ref<[Dayjs, Dayjs] | undefined>();
     const disabledDate = (current: Dayjs): boolean =>
         current && (current > dayjsUtc().endOf('day') || current < dayjsUtc(1617007625 * 1000));
     const startTxTime = ref<number | undefined>(undefined);
@@ -685,6 +686,7 @@ export const useSelectedSearch = (
         page_size = 5,
         use_count = false
     ) => {
+        // todo shan 列表和分页的请求，分析多种情况
         rtTableLoading.value = true;
         rtPageLoading.value = true;
         rtNoDataType.value = undefined;

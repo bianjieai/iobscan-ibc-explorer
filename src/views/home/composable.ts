@@ -4,7 +4,6 @@ import { formatAge, getTimestamp } from '@/utils/timeTools';
 import { useIbcStatisticsChains } from '@/store/index';
 import {
     IBC_STATISTICS_CHANNELS_DEFAULT,
-    IBC_STATISTICS_DENOMS_DEFAULT,
     CHANNELS_STATUS,
     PAGE_PARAMETERS,
     IBC_STATISTICS_TXS_DEFAULT,
@@ -159,11 +158,13 @@ export const useInterfaceActive = () => {
                 });
             }
         } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.denom)) {
-            if (msg !== IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name) {
-                router.push({
-                    name: 'Tokens'
-                });
-            }
+            router.push({
+                name: 'Tokens'
+            });
+        } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.relayers)) {
+            router.push({
+                name: 'Relayers'
+            });
         } else {
             // TODO shan 路由中不包含以上路由的提示
             // message.info({

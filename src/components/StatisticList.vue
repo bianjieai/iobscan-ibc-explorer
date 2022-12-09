@@ -136,6 +136,7 @@
             color: var(--bj-font-color-65);
             line-height: var(--bj-font-size-sub-title);
             margin-bottom: 16px;
+            white-space: nowrap;
         }
 
         &__value {
