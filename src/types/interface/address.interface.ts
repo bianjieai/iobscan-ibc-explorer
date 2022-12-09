@@ -1,3 +1,4 @@
+import { ITableTokenInfo } from './components/table.interface';
 import { IBaseDenom } from './index.interface';
 import { TIbcTokenType } from './tokens.interface';
 
@@ -19,6 +20,8 @@ export interface IResponseTokenList {
 }
 
 export interface ITokenListItem extends IResponseTokenListItem {
+    displayAmount: string;
+    displayAvaliableAmount: string;
     chainInfo?: IBaseDenom;
 }
 
@@ -32,4 +35,13 @@ export interface PieLegendData {
     lengedColor: string;
     percentage: string;
     legendName: string;
+}
+
+export interface IAddressTokenTableItem {
+    tokenId: string;
+    tokenInfo: ITableTokenInfo;
+    displayAmount: string;
+    displayAvaliable: string;
+    price: string;
+    totalValue: string;
 }

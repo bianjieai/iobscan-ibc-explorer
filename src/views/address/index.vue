@@ -4,6 +4,7 @@
         <div class="address_details__base_info_c">
             <BaseInfo />
         </div>
+        <!-- todo dj 三屏适配 -->
         <div class="address_details__tokens_c">
             <AddressAllocation
                 class="address_details__tokens_c__allocation"
@@ -11,7 +12,12 @@
                 :address-allocation-loading="tokensLoading"
                 :address-allocation-type="tokensNoDataType"
             />
-            <AddressTokens class="address_details__tokens_c__tokens" />
+            <AddressTokens
+                class="address_details__tokens_c__tokens"
+                :data="tokensData?.tokens"
+                :address-tokens-loading="tokensLoading"
+                :address-tokens-type="tokensNoDataType"
+            />
         </div>
         <div class="address_details__transactions_c">
             <AddressTransactions />
@@ -36,7 +42,10 @@
     import { ITokenList } from '@/types/interface/address.interface';
     import BigNumber from 'bignumber.js';
     import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
+    import moveDecimal from 'move-decimal-point';
 
+    // todo dj 待抽离
     const tokensLoading = ref(true);
     const tokensNoDataType = ref<NoDataType>();
     const tokensData = ref<ITokenList>();
@@ -57,14 +66,38 @@
                             item.base_denom_chain,
                             item.base_denom
                         );
+                        let displayAmount: string;
+                        let displayAvaliableAmount: string;
+                        if (baseDenom) {
+                            const tempAmount = moveDecimal(item.denom_amount, -baseDenom.scale);
+                            const tempAvaliableAmount = moveDecimal(
+                                item.denom_avaliable_amount,
+                                -baseDenom.scale
+                            );
+                            displayAmount = formatBigNumber(tempAmount, 6);
+                            displayAvaliableAmount = formatBigNumber(tempAvaliableAmount, 6);
+                        } else {
+                            displayAmount = formatBigNumber(item.denom_amount, 6);
+                            displayAvaliableAmount = formatBigNumber(
+                                item.denom_avaliable_amount,
+                                6
+                            );
+                        }
                         tokens.push({
                             ...item,
+                            displayAmount,
+                            displayAvaliableAmount,
                             chainInfo: baseDenom
                         });
                     }
                     tokensData.value = {
                         tokens,
                         total_value: data.total_value
+                    };
+                } else {
+                    tokensData.value = {
+                        tokens: [],
+                        total_value: '0'
                     };
                 }
             } else {

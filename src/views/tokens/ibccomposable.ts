@@ -1,3 +1,4 @@
+import { TOKEN_DEFAULT_ICON } from './../../constants/index';
 import { axiosCancel } from '@/utils/axios';
 import { getIbcTokenListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
@@ -142,9 +143,7 @@ export const useIbcTokenSelected = (
         }
         return {
             symbol,
-            imgSrc: filterData[0]?.icon
-                ? filterData[0]?.icon
-                : new URL('../../assets/token-default.png', import.meta.url).href
+            imgSrc: filterData[0]?.icon || TOKEN_DEFAULT_ICON
         };
     });
     const chainData = computed(() => {

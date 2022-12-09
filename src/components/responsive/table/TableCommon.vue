@@ -32,7 +32,7 @@
                 </template>
             </a-table>
             <template #renderEmpty>
-                <no-datas v-if="!tableLoading && !data.length" />
+                <no-datas v-if="!tableLoading && !data.length" :type="noDataType" />
             </template>
         </a-config-provider>
         <div v-if="hasPaddingLr" class="thead_border_bottom"></div>
@@ -79,7 +79,8 @@
     import { useGetIbcDenoms } from '@/composables';
     import { RelayersListKey } from '@/constants/relayers';
     import { getIsAndroid } from '@/utils/systemTools';
-    import { AGE_TIMER_INTERVAL } from '@/constants';
+    import { AGE_TIMER_INTERVAL, NoDataType } from '@/constants';
+    import { IAddressTokenTableItem } from '@/types/interface/address.interface';
 
     const router = useRouter();
     const { ibcBaseDenoms } = useGetIbcDenoms();
@@ -90,7 +91,8 @@
         | IResponseIbcTokenListItem[]
         | RelayerListItem[]
         | IResponseChannelsListItem[]
-        | IRelayerTransferItem[];
+        | IRelayerTransferItem[]
+        | IAddressTokenTableItem[];
     interface IProps {
         columns: TableColumnsType;
         data: TData;
@@ -109,6 +111,7 @@
         hasPaddingLr?: boolean;
         isLaunchTimer?: boolean;
         pageLoading?: boolean;
+        noDataType?: NoDataType;
     }
     // Todo shan hasPaddingLr 能否修改 Transfer 列表页等移入每一行两边有间距的情况
     let backUpDataSource: any[] = [];
@@ -415,9 +418,9 @@
     :deep(.ant-table-column-has-sorters) {
         cursor: pointer;
     }
-    :deep(.ant-pagination li) {
-        margin-bottom: 8px;
-    }
+    // :deep(.ant-pagination li) {
+    //     margin-bottom: 8px;
+    // }
 
     :deep(td.ant-table-column-sort) {
         background: transparent;
@@ -450,7 +453,7 @@
         z-index: 1;
     }
     :deep(.ant-pagination) {
-        overflow: auto;
+        // overflow: auto;
         .ant-pagination-item {
             min-width: auto;
         }

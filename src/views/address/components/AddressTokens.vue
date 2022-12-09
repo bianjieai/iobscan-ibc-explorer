@@ -1,24 +1,25 @@
 <template>
     <InfoCard
         class="address_tokens_c"
-        sub-title="A total of -- tokens found"
+        :sub-title="tokensSubTitle"
         icon="icon-a-relayedassets"
         title="Tokens"
     >
         <div class="address_tokens_c__table">
             <TableCommon
                 :has-padding-lr="false"
-                :table-loading="loading"
+                :table-loading="addressTokensLoading"
+                :no-data-type="addressTokensType"
                 :data="tokensList"
                 :columns="COLUMNS"
                 :page-size="5"
                 :need-custom-columns="needCustomColumns"
                 row-key="token_id"
             >
-                <!-- <template #token="{ record, column }">
-                    <div>token</div>
+                <template #token="{ record }">
+                    <BaseTokenIcon :token-info="record.tokenInfo" :title-can-popover="true" />
                 </template>
-                <template #amount="{ record, column }">
+                <template #amount="{ record }">
                     <a-popover placement="right" destroy-tooltip-on-hide>
                         <template #content>
                             <div class="address_token_amount_popover">
@@ -26,29 +27,29 @@
                                     <span class="address_token_amount_popover__item__key"
                                         >Avaliable:</span
                                     >
-                                    <span class="address_token_amount_popover__item__value"
-                                        >232,323.123323</span
-                                    >
+                                    <span class="address_token_amount_popover__item__value">{{
+                                        record.displayAvaliable
+                                    }}</span>
                                 </div>
                                 <div class="address_token_amount_popover__item">
                                     <span class="address_token_amount_popover__item__key"
                                         >Amount:</span
                                     >
-                                    <span class="address_token_amount_popover__item__value"
-                                        >2,323.123323</span
-                                    >
+                                    <span class="address_token_amount_popover__item__value">{{
+                                        record.displayAmount
+                                    }}</span>
                                 </div>
                             </div>
                         </template>
-                        <div>amount</div>
+                        <div>{{ record.displayAmount }}</div>
                     </a-popover>
                 </template>
-                <template #price="{ record, column }">
-                    <div>price</div>
+                <template #price="{ record }">
+                    <div>{{ record.price }}</div>
                 </template>
-                <template #totalValue="{ record, column }">
-                    <div>totalValue</div>
-                </template> -->
+                <template #totalValue="{ record }">
+                    <div>{{ record.totalValue }}</div>
+                </template>
             </TableCommon>
         </div>
     </InfoCard>
@@ -56,66 +57,85 @@
 
 <script setup lang="ts">
     import { useNeedCustomColumns } from '@/composables';
-    import { PAGE_PARAMETERS } from '@/constants';
+    import {
+        DEFAULT_DISPLAY_TEXT,
+        NoDataType,
+        PAGE_PARAMETERS,
+        TOKEN_DEFAULT_ICON,
+        UNKNOWN
+    } from '@/constants';
     import { COLUMNS } from '@/constants/address';
-    // todo dj logic
-    const loading = ref(false);
-    const tokensList = ref<any>([]);
-    setTimeout(() => {
-        tokensList.value = [
-            {
-                token: 'token',
-                amount: '113,177,023,289.1234',
-                price: '$0.09',
-                totalValue: '$ 25,959.12',
-                token_id: 'to'
-            },
-            {
-                token: 'token',
-                amount: '113,177,023,289.1234',
-                price: '$0.09',
-                totalValue: '$ 25,959.12',
-                token_id: 'to'
-            },
-            {
-                token: 'token',
-                amount: '113,177,023,289.1234',
-                price: '$0.09',
-                totalValue: '$ 25,959.12',
-                token_id: 'to'
-            },
-            {
-                token: 'token',
-                amount: '113,177,023,289.1234',
-                price: '$0.09',
-                totalValue: '$ 25,959.12',
-                token_id: 'to'
-            },
-            {
-                token: 'token',
-                amount: '113,177,023,289.1234',
-                price: '$0.09',
-                totalValue: '$ 25,959.12',
-                token_id: 'to'
-            },
-            {
-                token: 'token',
-                amount: '113,177,023,289.1234',
-                price: '$0.09',
-                totalValue: '$ 25,959.12',
-                token_id: 'to'
-            }
-        ];
-    });
+    import { UNIT_SIGNS } from '@/constants/relayers';
+    import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
+    import { IAddressTokenTableItem, ITokenListItem } from '@/types/interface/address.interface';
+
+    interface IProps {
+        data?: ITokenListItem[];
+        addressTokensLoading?: boolean;
+        addressTokensType?: NoDataType;
+    }
+    const props = defineProps<IProps>();
+    const { data, addressTokensLoading, addressTokensType } = toRefs(props);
+
+    // todo dj 待抽离
+    const tokensList = ref<IAddressTokenTableItem[]>([]);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.addressDetailsToken);
+    const tokensSubTitle = computed(() => {
+        if (addressTokensLoading?.value) return `A total of ${DEFAULT_DISPLAY_TEXT} tokens found`;
+        if (addressTokensType?.value === NoDataType.loadFailed) return '';
+        const num = tokensList.value.length;
+        return `A total of ${num} tokens found`;
+    });
+    const formatPriceAndTotalValue = (value: string, num = 2) => {
+        return `${UNIT_SIGNS} ${formatBigNumber(value, num)}`;
+    };
+    watch(
+        () => data?.value,
+        (newValue) => {
+            if (newValue) {
+                const temp: IAddressTokenTableItem[] = [];
+                newValue.forEach((token) => {
+                    const chainInfo = token.chainInfo;
+                    const tokenInfo = chainInfo
+                        ? {
+                              defaultTitle: token.denom,
+                              title: getRestString(chainInfo.symbol, 6, 0),
+                              subtitle: token.denom_type,
+                              imgSrc: chainInfo?.icon || TOKEN_DEFAULT_ICON
+                          }
+                        : {
+                              defaultTitle: token.denom,
+                              title: UNKNOWN,
+                              subtitle: token.denom_type,
+                              imgSrc: TOKEN_DEFAULT_ICON
+                          };
+                    temp.push({
+                        tokenId: token.chain + token.denom,
+                        tokenInfo,
+                        displayAmount: token.displayAmount,
+                        displayAvaliable: token.displayAvaliableAmount,
+                        price: formatPriceAndTotalValue(String(token.price)),
+                        totalValue: formatPriceAndTotalValue(token.denom_amount)
+                    });
+                });
+                tokensList.value = [...temp];
+            }
+        },
+        {
+            immediate: true
+        }
+    );
 </script>
 
 <style lang="less" scoped>
     .address_tokens_c {
         min-width: 650px;
+        :deep(.info_card__primary) {
+            padding: 16px 24px 0;
+        }
         :deep(.ant-table-container) {
             width: 100%;
-            // min-height: 300px;
+            min-height: 408px;
             .ant-table-thead {
                 tr {
                     th {

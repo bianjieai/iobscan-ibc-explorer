@@ -62,6 +62,7 @@
     const props = defineProps<IProps>();
     const { data, addressAllocationLoading, addressAllocationType } = toRefs(props);
 
+    // todo dj 待抽离
     const totalValue = ref('--');
     const totalCount = ref(0);
     const legendData = ref<PieLegendData[]>([]);
@@ -310,8 +311,8 @@
         min-width: 362px;
         .flex(column);
         :deep(.info_card__primary) {
+            height: 476px;
             padding: 0;
-            flex: 1;
             .flex(column,nowrap);
             & > div {
                 flex: 1;
