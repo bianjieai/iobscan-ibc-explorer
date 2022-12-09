@@ -37,32 +37,15 @@
                 </div>
             </div>
             <div class="base_info__right">
-                <div class="base_info__label_value flex">
-                    <span class="base_info__label">Address</span>
-                    <span class="base_info__value">
-                        <span>{{ baseInfo.address }}</span>
-                        <CopyComponent
-                            v-if="baseInfo.address !== DEFAULT_DISPLAY_TEXT"
-                            :copy-text="baseInfo.address"
-                        ></CopyComponent>
-                    </span>
-                </div>
-                <div class="base_info__label_value flex">
-                    <span class="base_info__label">Total Value</span>
-                    <span class="base_info__value">{{ totalValue }}</span>
-                </div>
-                <div class="base_info__label_value flex">
-                    <span class="base_info__label">Key Algorithm</span>
-                    <span class="base_info__value">{{ baseInfo.keyAlgorithm }}</span>
-                </div>
-                <div class="base_info__label_value flex">
-                    <span class="base_info__label">Account Sequence</span>
-                    <span class="base_info__value">{{ baseInfo.accountSequence }}</span>
-                </div>
-                <div class="base_info__label_value flex">
-                    <span class="base_info__label">Pub Key</span>
-                    <span class="base_info__value">{{ baseInfo.pubKey }}</span>
-                </div>
+                <label-value
+                    label="Address"
+                    :value="baseInfo.address"
+                    :allow-copy="baseInfo.address !== DEFAULT_DISPLAY_TEXT"
+                />
+                <label-value label="Total Value" :value="totalValue" />
+                <label-value label="Key Algorithm" :value="baseInfo.keyAlgorithm" />
+                <label-value label="Account Sequence" :value="baseInfo.accountSequence" />
+                <label-value label="Pub Key" :value="baseInfo.pubKey" />
             </div>
         </div>
     </InfoCard>
@@ -145,29 +128,6 @@
             flex: 1;
             margin-left: 52px;
         }
-        &__label_value {
-            margin-top: 16px;
-            line-height: 18px;
-            &:first-child {
-                margin-top: 0;
-            }
-        }
-        &__label {
-            width: 128px;
-            font-size: var(--bj-font-size-normal);
-            font-family: GolosUI_Medium;
-            font-weight: 500;
-            color: var(--bj-text-normal);
-            white-space: nowrap;
-        }
-        &__value {
-            flex: 1;
-            margin-left: 24px;
-            width: 100%;
-            font-size: var(--bj-font-size-normal);
-            color: var(--bj-text-second);
-            word-break: break-all;
-        }
     }
     @media screen and (max-width: 930px) {
         .base_info {
@@ -189,12 +149,6 @@
             }
             &__right {
                 margin-left: 24px;
-            }
-            &__label_value {
-            }
-            &__label {
-            }
-            &__value {
             }
         }
     }
@@ -220,12 +174,6 @@
                 right: 8px;
             }
             &__right {
-            }
-            &__label_value {
-            }
-            &__label {
-            }
-            &__value {
             }
         }
     }
@@ -253,12 +201,6 @@
                 margin-top: 16px;
                 margin-left: 0;
             }
-            &__label_value {
-            }
-            &__label {
-            }
-            &__value {
-            }
         }
     }
     @media screen and (max-width: 500px) {
@@ -281,16 +223,6 @@
             }
             &__right {
                 margin-top: 16px;
-                margin-left: 0;
-            }
-            &__label_value {
-                flex-direction: column;
-            }
-            &__label {
-                width: 100%;
-            }
-            &__value {
-                margin-top: 2px;
                 margin-left: 0;
             }
         }

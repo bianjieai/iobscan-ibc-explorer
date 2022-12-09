@@ -6,11 +6,19 @@ import { getTextWidth } from '@/utils/urlTools';
 import QRCode from 'qrcodejs2-fix';
 import { useWindowSize } from '@vueuse/core';
 
-export const useGetBaseInfo = () => {
-    const router = useRouter();
+export const useGetChainAddress = () => {
     const route = useRoute();
     const currentChain = route.query?.chain as string;
-    const currentAddress = route.params.address as string;
+    const currentAddress = (route.params.address as string).toLowerCase();
+    return {
+        currentChain,
+        currentAddress
+    };
+};
+
+export const useGetBaseInfo = () => {
+    const router = useRouter();
+    const { currentChain, currentAddress } = useGetChainAddress();
     const addressParams = {
         chain: currentChain,
         address: currentAddress
@@ -42,7 +50,7 @@ export const useGetBaseInfo = () => {
                     console.log(message);
                 }
             } else if (code === API_CODE.noMatchAddress) {
-                router.push(`/searchResult/${route.params.address}?chain=${currentChain}`);
+                router.push(`/searchResult/${currentAddress}?chain=${currentChain}`);
             } else {
                 console.log(message);
             }
@@ -89,8 +97,7 @@ export const useGetBaseInfo = () => {
 };
 
 export const useCreateQRCode = () => {
-    const route = useRoute();
-    const currentAddress = route.params.address as string;
+    const { currentAddress } = useGetChainAddress();
     const qrCodeDom = ref<HTMLElement>();
     const qrcode = ref();
     const createQRCode = (currentAddress: string) => {
