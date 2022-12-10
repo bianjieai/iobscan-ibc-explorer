@@ -95,7 +95,7 @@
             if (newValue) {
                 const temp: IAddressTokenTableItem[] = [];
                 newValue.forEach((token) => {
-                    const chainInfo = token.chainInfo;
+                    const chainInfo = token.tokenInfo;
                     const tokenInfo = chainInfo
                         ? {
                               defaultTitle: token.denom,
