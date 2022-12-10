@@ -72,7 +72,7 @@
         &__middle {
             margin-top: 10px;
             width: 100%;
-            height: 487px;
+            height: 532px;
             .transfer_list {
                 width: calc(100% - 48px);
                 height: 100%;
