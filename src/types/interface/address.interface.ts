@@ -1,5 +1,5 @@
 import { ITableTokenInfo } from './components/table.interface';
-import { IBaseDenom } from './index.interface';
+import { IBaseDenom, IIbcchain } from './index.interface';
 import { TIbcTokenType } from './tokens.interface';
 
 export interface IResponseTokenListItem {
@@ -13,16 +13,37 @@ export interface IResponseTokenListItem {
     price: number;
     denom_value: string;
 }
+export interface ITokenListItem extends IResponseTokenListItem {
+    displayAmount: string;
+    displayAvaliableAmount: string;
+    tokenInfo?: IBaseDenom;
+}
 
-export interface IResponseTokenList {
+export interface IResponseTokenData {
     tokens: IResponseTokenListItem[];
     total_value: string;
 }
 
-export interface ITokenListItem extends IResponseTokenListItem {
-    displayAmount: string;
-    displayAvaliableAmount: string;
-    chainInfo?: IBaseDenom;
+export interface IResponseAccountListItem {
+    chain: string;
+    address: string;
+    token_denom_num: number;
+    token_value: string;
+    last_update_time: number;
+}
+
+export interface IAccountListItem extends IResponseAccountListItem {
+    chainInfo?: IIbcchain;
+}
+
+export interface IAccountData {
+    accounts: IAccountListItem[];
+    total_value: string;
+}
+
+export interface IResponseAccountData {
+    accounts: IResponseAccountListItem[];
+    total_value: string;
 }
 
 export interface ITokenList {
@@ -44,4 +65,13 @@ export interface IAddressTokenTableItem {
     displayAvaliable: string;
     price: string;
     totalValue: string;
+}
+
+export interface IAddressAccountTableItem {
+    chain: string;
+    address: string;
+    tokenDenom: number;
+    totalValue: string;
+    formatLastUpdated: string;
+    lastUpdatedTimestamp: number;
 }

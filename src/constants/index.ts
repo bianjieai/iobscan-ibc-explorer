@@ -1,4 +1,4 @@
-import { AddressTokensListKey } from './address';
+import { AddressTokensTableKey, AddressAccountTableKey } from './address';
 import type { IDenomStatistic, IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
 import { RelayersListKey, RELAYER_TRANSFER_KEY } from '@/constants/relayers';
@@ -110,7 +110,8 @@ export const PAGE_PARAMETERS = {
     relayers: 'relayers',
     denom: 'denom',
     relayerDetails: 'relayerDetails',
-    addressDetailsToken: 'addressDetailsToken'
+    addressDetailsToken: 'addressDetailsToken',
+    addressDetailsAccount: 'addressDetailsAccount'
 };
 
 export const MSG_DESC = {
@@ -444,16 +445,24 @@ export const NEED_CUSTOM_COLUMN = {
         RELAYER_TRANSFER_KEY.rtTime
     ],
     addressDetailsToken: [
-        AddressTokensListKey.total,
-        AddressTokensListKey.amount,
-        AddressTokensListKey.price,
-        AddressTokensListKey.totalValue
+        AddressTokensTableKey.total,
+        AddressTokensTableKey.amount,
+        AddressTokensTableKey.price,
+        AddressTokensTableKey.totalValue
+    ],
+    addressDetailsAccount: [
+        AddressAccountTableKey.chain,
+        AddressAccountTableKey.address,
+        AddressAccountTableKey.tokenDenom,
+        AddressAccountTableKey.totalValue,
+        AddressAccountTableKey.lastUpdated
     ]
 };
 
 export const NEED_CUSTOM_HEADER = {
     transfers: ['Token'],
-    relayerDetails: ['Time']
+    relayerDetails: ['Time'],
+    addressDetailsAccount: ['LastUpdated']
 };
 
 export const BASE_PARAMS: IRequestPagination = {

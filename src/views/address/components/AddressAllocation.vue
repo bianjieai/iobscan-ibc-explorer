@@ -269,7 +269,7 @@
                                 denom_value: spliceValueTotal,
                                 displayAmount: '',
                                 displayAvaliableAmount: '',
-                                chainInfo: undefined
+                                tokenInfo: undefined
                             });
                         }
                         tokens.forEach((token, i) => {
@@ -282,12 +282,12 @@
                                 newValue.total_value,
                                 2
                             );
-                            const symbol = token.chainInfo?.symbol || token.denom;
+                            const symbol = token.tokenInfo?.symbol || token.denom;
                             allocationValueData.push({
                                 name: uniqueName,
                                 symbol: symbol,
                                 value: token.denom_value,
-                                imgUrl: token.chainInfo?.icon || TOKEN_DEFAULT_ICON,
+                                imgUrl: token.tokenInfo?.icon || TOKEN_DEFAULT_ICON,
                                 percent,
                                 itemStyle: {
                                     color: PIE_COLOR_LIST[i]

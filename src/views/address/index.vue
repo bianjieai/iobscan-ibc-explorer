@@ -23,7 +23,12 @@
             <AddressTransactions />
         </div>
         <div class="address_details__accounts_c">
-            <AddresssAccount class="address_details__accounts_c__account" />
+            <AddresssAccount
+                :data="accountsData?.accounts"
+                :address-account-loading="accountsLoading"
+                :address-account-type="accountsNoDataType"
+                class="address_details__accounts_c__account"
+            />
             <AccountTokensRatio class="address_details__accounts_c__account_tokens_ratio" />
         </div>
     </PageContainer>
@@ -36,82 +41,10 @@
     import AddressTransactions from './components/AddressTransactions.vue';
     import AccountTokensRatio from './components/AccountTokensRatio.vue';
     import AddresssAccount from './components/AddresssAccount.vue';
-    import { getAddrTokenListMock } from '@/api/address';
-    import { NoDataType } from '@/constants';
-    import { API_CODE } from '@/constants/apiCode';
-    import { ITokenList } from '@/types/interface/address.interface';
-    import BigNumber from 'bignumber.js';
-    import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
-    import { formatBigNumber } from '@/helper/parseStringHelper';
-    import moveDecimal from 'move-decimal-point';
+    import { useAddressTokens, useAddressAccounts } from './composable';
 
-    // todo dj 待抽离
-    const tokensLoading = ref(true);
-    const tokensNoDataType = ref<NoDataType>();
-    const tokensData = ref<ITokenList>();
-    const getAddrTokenList = async (chain: string, address: string) => {
-        try {
-            tokensLoading.value = true;
-            tokensNoDataType.value = undefined;
-            const { code, data, message } = await getAddrTokenListMock(chain, address);
-            if (code === API_CODE.success) {
-                if (data) {
-                    data.tokens = data.tokens.sort((a, b) =>
-                        new BigNumber(b.denom_value).comparedTo(a.denom_value)
-                    );
-                    const tokens = [];
-                    for (let i = 0; i < data.tokens.length; i++) {
-                        const item = data.tokens[i];
-                        const baseDenom = await getBaseDenomByKey(
-                            item.base_denom_chain,
-                            item.base_denom
-                        );
-                        let displayAmount: string;
-                        let displayAvaliableAmount: string;
-                        if (baseDenom) {
-                            const tempAmount = moveDecimal(item.denom_amount, -baseDenom.scale);
-                            const tempAvaliableAmount = moveDecimal(
-                                item.denom_avaliable_amount,
-                                -baseDenom.scale
-                            );
-                            displayAmount = formatBigNumber(tempAmount, 6);
-                            displayAvaliableAmount = formatBigNumber(tempAvaliableAmount, 6);
-                        } else {
-                            displayAmount = formatBigNumber(item.denom_amount, 6);
-                            displayAvaliableAmount = formatBigNumber(
-                                item.denom_avaliable_amount,
-                                6
-                            );
-                        }
-                        tokens.push({
-                            ...item,
-                            displayAmount,
-                            displayAvaliableAmount,
-                            chainInfo: baseDenom
-                        });
-                    }
-                    tokensData.value = {
-                        tokens,
-                        total_value: data.total_value
-                    };
-                } else {
-                    tokensData.value = {
-                        tokens: [],
-                        total_value: '0'
-                    };
-                }
-            } else {
-                tokensNoDataType.value = NoDataType.loadFailed;
-                console.error(message);
-            }
-        } catch (error) {
-            tokensNoDataType.value = NoDataType.loadFailed;
-            console.error(error);
-        } finally {
-            tokensLoading.value = false;
-        }
-    };
-    getAddrTokenList('chain', 'address');
+    const { tokensLoading, tokensNoDataType, tokensData } = useAddressTokens();
+    const { accountsLoading, accountsNoDataType, accountsData } = useAddressAccounts();
 </script>
 
 <style lang="less" scoped>

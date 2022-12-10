@@ -80,7 +80,10 @@
     import { RelayersListKey } from '@/constants/relayers';
     import { getIsAndroid } from '@/utils/systemTools';
     import { AGE_TIMER_INTERVAL, NoDataType } from '@/constants';
-    import { IAddressTokenTableItem } from '@/types/interface/address.interface';
+    import {
+        IAddressTokenTableItem,
+        IAddressAccountTableItem
+    } from '@/types/interface/address.interface';
 
     const router = useRouter();
     const { ibcBaseDenoms } = useGetIbcDenoms();
@@ -92,7 +95,8 @@
         | RelayerListItem[]
         | IResponseChannelsListItem[]
         | IRelayerTransferItem[]
-        | IAddressTokenTableItem[];
+        | IAddressTokenTableItem[]
+        | IAddressAccountTableItem[];
     interface IProps {
         columns: TableColumnsType;
         data: TData;

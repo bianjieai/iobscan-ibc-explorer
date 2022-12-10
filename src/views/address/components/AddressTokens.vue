@@ -11,7 +11,7 @@
                 :table-loading="addressTokensLoading"
                 :no-data-type="addressTokensType"
                 :data="tokensList"
-                :columns="COLUMNS"
+                :columns="ADDRESS_TOKENS_COLUMNS"
                 :page-size="5"
                 :need-custom-columns="needCustomColumns"
                 row-key="token_id"
@@ -64,7 +64,7 @@
         TOKEN_DEFAULT_ICON,
         UNKNOWN
     } from '@/constants';
-    import { COLUMNS } from '@/constants/address';
+    import { ADDRESS_TOKENS_COLUMNS } from '@/constants/address';
     import { UNIT_SIGNS } from '@/constants/relayers';
     import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
     import { IAddressTokenTableItem, ITokenListItem } from '@/types/interface/address.interface';
