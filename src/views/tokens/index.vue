@@ -55,7 +55,7 @@
             need-count
         >
             <template #base_denom="{ record, column }">
-                <!-- todo dj TokenIcon => BaseTokenIcon  -->
+                <!-- todo dj TokenIcon => BaseTokenIcon and remove TokenIcon -->
                 <TokenIcon
                     title-can-click
                     :token-type="record.token_type"

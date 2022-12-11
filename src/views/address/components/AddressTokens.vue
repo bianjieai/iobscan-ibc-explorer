@@ -56,74 +56,22 @@
 </template>
 
 <script setup lang="ts">
-    import { useNeedCustomColumns } from '@/composables';
-    import {
-        DEFAULT_DISPLAY_TEXT,
-        NoDataType,
-        PAGE_PARAMETERS,
-        TOKEN_DEFAULT_ICON,
-        UNKNOWN
-    } from '@/constants';
+    import { NoDataType } from '@/constants';
     import { ADDRESS_TOKENS_COLUMNS } from '@/constants/address';
-    import { UNIT_SIGNS } from '@/constants/relayers';
-    import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
-    import { IAddressTokenTableItem, ITokenListItem } from '@/types/interface/address.interface';
+    import { ITokenListItem } from '@/types/interface/address.interface';
+    import { useAddressTokens } from '../composable';
 
     interface IProps {
         data?: ITokenListItem[];
-        addressTokensLoading?: boolean;
-        addressTokensType?: NoDataType;
+        addressTokensLoading: boolean;
+        addressTokensType: NoDataType | undefined;
     }
     const props = defineProps<IProps>();
     const { data, addressTokensLoading, addressTokensType } = toRefs(props);
-
-    // todo dj 待抽离
-    const tokensList = ref<IAddressTokenTableItem[]>([]);
-    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.addressDetailsToken);
-    const tokensSubTitle = computed(() => {
-        if (addressTokensLoading?.value) return `A total of ${DEFAULT_DISPLAY_TEXT} tokens found`;
-        if (addressTokensType?.value === NoDataType.loadFailed) return '';
-        const num = tokensList.value.length;
-        return `A total of ${num} tokens found`;
-    });
-    const formatPriceAndTotalValue = (value: string, num = 2) => {
-        return `${UNIT_SIGNS} ${formatBigNumber(value, num)}`;
-    };
-    watch(
-        () => data?.value,
-        (newValue) => {
-            if (newValue) {
-                const temp: IAddressTokenTableItem[] = [];
-                newValue.forEach((token) => {
-                    const chainInfo = token.tokenInfo;
-                    const tokenInfo = chainInfo
-                        ? {
-                              defaultTitle: token.denom,
-                              title: getRestString(chainInfo.symbol, 6, 0),
-                              subtitle: token.denom_type,
-                              imgSrc: chainInfo?.icon || TOKEN_DEFAULT_ICON
-                          }
-                        : {
-                              defaultTitle: token.denom,
-                              title: UNKNOWN,
-                              subtitle: token.denom_type,
-                              imgSrc: TOKEN_DEFAULT_ICON
-                          };
-                    temp.push({
-                        tokenId: token.chain + token.denom,
-                        tokenInfo,
-                        displayAmount: token.displayAmount,
-                        displayAvaliable: token.displayAvaliableAmount,
-                        price: formatPriceAndTotalValue(String(token.price)),
-                        totalValue: formatPriceAndTotalValue(token.denom_amount)
-                    });
-                });
-                tokensList.value = [...temp];
-            }
-        },
-        {
-            immediate: true
-        }
+    const { tokensSubTitle, tokensList, needCustomColumns } = useAddressTokens(
+        data,
+        addressTokensLoading,
+        addressTokensType
     );
 </script>
 

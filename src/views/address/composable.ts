@@ -1,19 +1,40 @@
+import { Ref } from 'vue';
+import * as echarts from 'echarts';
+import moveDecimal from 'move-decimal-point';
+import BigNumber from 'bignumber.js';
 import ChainHelper from '@/helper/chainHelper';
+import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
+import { formatBigNumber } from '@/helper/parseStringHelper';
+import { getDenomKey } from '@/helper/baseDenomHelper';
+import { formatPriceAndTotalValue } from '@/helper/addressHelper';
+import { getRestString } from '@/helper/parseStringHelper';
+import { formatString } from '@/utils/stringTools';
+import { calculatePercentage } from '@/utils/calculate';
+import { dayjsFormatDate } from '@/utils/timeTools';
 import { getAddrTokenListMock, getAddrAccountListMock } from '@/api/address';
-import { NoDataType } from '@/constants';
+import {
+    NoDataType,
+    TOKEN_DEFAULT_ICON,
+    PIE_OTHERS,
+    DEFAULT_DISPLAY_TEXT,
+    PAGE_PARAMETERS,
+    UNKNOWN
+} from '@/constants';
+import { OPACITY_PIE_COLOR_LIST, PIE_COLOR_LIST, UNIT_SIGNS } from '@/constants/relayers';
 import { API_CODE } from '@/constants/apiCode';
 import {
     ITokenList,
     ITokenListItem,
     IAccountListItem,
-    IAccountData
+    IAddressTokenTableItem,
+    IAddressAccountTableItem,
+    IAccountData,
+    PieLegendData
 } from '@/types/interface/address.interface';
-import BigNumber from 'bignumber.js';
-import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
-import { formatBigNumber } from '@/helper/parseStringHelper';
-import moveDecimal from 'move-decimal-point';
+import { PieData } from '@/types/interface/relayers.interface';
+import { useNeedCustomColumns } from '@/composables';
 
-export const useAddressTokens = () => {
+export const useGetAddressTokens = () => {
     const tokensLoading = ref(true);
     const tokensNoDataType = ref<NoDataType>();
     const tokensData = ref<ITokenList>();
@@ -90,7 +111,7 @@ export const useAddressTokens = () => {
     };
 };
 
-export const useAddressAccounts = () => {
+export const useGetAddressAccounts = () => {
     const accountsLoading = ref(true);
     const accountsNoDataType = ref<NoDataType>();
     const accountsData = ref<IAccountData>();
@@ -142,5 +163,403 @@ export const useAddressAccounts = () => {
         accountsLoading,
         accountsNoDataType,
         accountsData
+    };
+};
+
+export const useAddressAllocation = (
+    data: Ref<ITokenList | undefined>,
+    addressAllocationLoading: Ref<boolean | undefined>,
+    addressAllocationType: Ref<NoDataType | undefined>
+) => {
+    const totalValue = ref('--');
+    const totalCount = ref(0);
+    const legendData = ref<PieLegendData[]>([]);
+    const addressAllocationChartDom = ref();
+    let addressAllocationChart: echarts.ECharts;
+
+    const firstColumnLegendData = computed(() => {
+        return legendData.value.length > 0 ? legendData.value.slice(0, 4) : [];
+    });
+    const secondColumnLegendData = computed(() => {
+        return legendData.value.length > 4 ? legendData.value.slice(4, 8) : [];
+    });
+    const getTotalValue = (totalValue: string) => {
+        if (!totalValue || Number(totalValue) === 0) return '0';
+        return formatBigNumber(totalValue, 2);
+    };
+    const isShowAddressAllocationChart = computed(() => {
+        return !addressAllocationLoading?.value && !addressAllocationType?.value;
+    });
+    const addressAllocationOption: any = {
+        tooltip: {
+            trigger: 'item',
+            backgroundColor: null,
+            borderWidth: 0,
+            padding: 0,
+            extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
+            formatter: (params: any) => {
+                return `<div style="display: flex; align-items: center; transform: translate(6px, 0)">
+                            <div
+                                style="
+                                    display: flex;
+                                    margin-left: 4px;
+                                    background: #ffffff;
+                                    box-shadow: 0px 2px 8px 0px #d9deec;
+                                    border-radius: 4px;
+                                    border: 1px solid #d9dfee;
+                                "
+                            >
+                                <div>
+                                    <div style="display: flex; justify-content: flex-start; padding: 12px 12px 6px">
+                                        <img src="${
+                                            params.data.imgUrl
+                                        }" style="width: 20px; height: 20px" />
+                                        <span
+                                            style="
+                                                margin-left: 8px;
+                                                font-size: 16px;
+                                                font-family: 'GolosUI_Medium';
+                                                font-weight: 500;
+                                                color: #000000;
+                                                line-height: 20px;
+                                            "
+                                            >${formatString(params.data.symbol)}</span
+                                        >
+                                    </div>
+                                    <div style="display: flex; justify-content: flex-start; padding: 0px 12px 14px">
+                                        <span
+                                            style="
+                                                font-size: 14px;
+                                                font-family: 'GolosUI_Medium';
+                                                color: #000;
+                                                font-weight: 500;
+                                                line-height: 18px;
+                                            "
+                                            >Value:
+                                        </span>
+                                        <span
+                                            style="
+                                                margin-left: 8px;
+                                                font-size: 14px;
+                                                color: rgba(0, 0, 0, 0.75);
+                                                font-family: 'GolosUIWebRegular';
+                                                font-weight: 400;
+                                                line-height: 18px;
+                                            "
+                                            >${UNIT_SIGNS} ${formatBigNumber(
+                    params.data.value,
+                    0
+                )}</span
+                                        ></div
+                                    >
+                                </div>
+                            </div>
+                        </div>`;
+            },
+            confine: false
+        },
+        legend: {
+            show: false
+        },
+        series: [
+            {
+                type: 'pie',
+                silent: true,
+                radius: [78, 92],
+                minAngle: 2,
+                center: 'center',
+                itemStyle: {
+                    borderColor: '#fff',
+                    borderWidth: 2,
+                    opacity: 1
+                },
+                label: {
+                    show: true,
+                    formatter: `{text|Assets}\n\r\n\r{total|${totalCount.value}}`,
+                    top: 'middle',
+                    position: 'center',
+                    padding: [7, 0, 0, 0],
+                    opacity: 1,
+                    rich: {
+                        text: {
+                            color: 'rgba(0, 0, 0, 0.75)',
+                            fontWeight: 400,
+                            fontFamily: 'GolosUIWebRegular',
+                            fontSize: 16,
+                            lineHeight: 16
+                        },
+                        total: {
+                            color: '#000000',
+                            fontWeight: 600,
+                            fontFamily: 'GolosUIWebRegular',
+                            fontSize: 24,
+                            lineHeight: 24
+                        }
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                data: []
+            },
+            {
+                type: 'pie',
+                radius: [92, 116],
+                center: 'center',
+                minAngle: 2,
+                itemStyle: {
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false
+                },
+                labelLine: {
+                    show: false
+                },
+                emphasis: {
+                    scaleSize: 5
+                },
+                data: []
+            }
+        ]
+    };
+    const addressAllocationChartSizeFn = () => {
+        addressAllocationChart && addressAllocationChart.resize();
+    };
+    const handleChangeNoDataOption = () => {
+        addressAllocationOption.series[0].itemStyle.color = '#F9F9F9';
+        addressAllocationOption.series[0].data = [0];
+        addressAllocationOption.series[1].itemStyle.color = '#F2F2F2';
+        addressAllocationOption.series[1].data = [0];
+        addressAllocationOption.series[1].silent = true;
+    };
+    onMounted(async () => {
+        addressAllocationChart = echarts.init(addressAllocationChartDom.value as HTMLElement);
+        window.addEventListener('resize', addressAllocationChartSizeFn);
+        watch(
+            () => data?.value,
+            (newValue) => {
+                if (newValue) {
+                    totalValue.value = getTotalValue(newValue.total_value);
+                    totalCount.value = newValue.tokens.length;
+                    addressAllocationOption.series[0].label.formatter = `{text|Assets}\n\r\n\r{total|${totalCount.value}}`;
+                    if (totalCount.value <= 0) {
+                        handleChangeNoDataOption();
+                        legendData.value = [];
+                    } else {
+                        const allocationValueData: PieData[] = [];
+                        const allocationValueOpacityData: PieData[] = [];
+                        const templegendData: PieLegendData[] = [];
+                        const tokens = [...newValue.tokens];
+                        const needMaxNum = 8;
+                        if (tokens.length > needMaxNum) {
+                            const spliceValueDenomList = tokens.splice(needMaxNum - 1);
+                            const spliceValueTotal = spliceValueDenomList.reduce(
+                                (total, current) => {
+                                    return new BigNumber(total)
+                                        .plus(current.denom_value)
+                                        .toString();
+                                },
+                                '0'
+                            );
+                            tokens.push({
+                                denom: PIE_OTHERS,
+                                chain: '',
+                                base_denom: PIE_OTHERS,
+                                base_denom_chain: PIE_OTHERS,
+                                denom_type: 'Other',
+                                denom_amount: '',
+                                denom_avaliable_amount: '',
+                                price: 0,
+                                denom_value: spliceValueTotal,
+                                displayAmount: '',
+                                displayAvaliableAmount: '',
+                                tokenInfo: undefined
+                            });
+                        }
+                        tokens.forEach((token, i) => {
+                            const uniqueName = getDenomKey(
+                                token.base_denom_chain,
+                                token.base_denom
+                            );
+                            const percent = calculatePercentage(
+                                token.denom_value,
+                                newValue.total_value,
+                                2
+                            );
+                            const symbol = token.tokenInfo?.symbol || token.denom;
+                            allocationValueData.push({
+                                name: uniqueName,
+                                symbol: symbol,
+                                value: token.denom_value,
+                                imgUrl: token.tokenInfo?.icon || TOKEN_DEFAULT_ICON,
+                                percent,
+                                itemStyle: {
+                                    color: PIE_COLOR_LIST[i]
+                                }
+                            });
+                            allocationValueOpacityData.push({
+                                value: token.denom_value,
+                                itemStyle: {
+                                    color: OPACITY_PIE_COLOR_LIST[i]
+                                }
+                            });
+                            templegendData.push({
+                                key: uniqueName,
+                                lengedColor: PIE_COLOR_LIST[i],
+                                percentage: percent + '%',
+                                legendName: symbol
+                            });
+                        });
+                        legendData.value = [...templegendData];
+                        addressAllocationOption.series[0].data = [...allocationValueOpacityData];
+                        addressAllocationOption.series[1].data = [...allocationValueData];
+                    }
+                    nextTick(() => {
+                        addressAllocationChart.resize();
+                        addressAllocationChart.setOption(addressAllocationOption, true);
+                    });
+                }
+            },
+            {
+                immediate: true
+            }
+        );
+    });
+    const highlightFn = (key: string, isOpen: boolean) => {
+        addressAllocationChart &&
+            addressAllocationChart.dispatchAction({
+                type: isOpen ? 'highlight' : 'downplay',
+                seriesIndex: 1,
+                name: key
+            });
+    };
+    onBeforeUnmount(() => {
+        window.removeEventListener('resize', addressAllocationChartSizeFn);
+    });
+    return {
+        addressAllocationChartDom,
+        totalValue,
+        firstColumnLegendData,
+        secondColumnLegendData,
+        isShowAddressAllocationChart,
+        highlightFn
+    };
+};
+
+export const useAddressTokens = (
+    data: Ref<ITokenListItem[] | undefined> | undefined,
+    addressTokensLoading: Ref<boolean | undefined>,
+    addressTokensType: Ref<NoDataType | undefined>
+) => {
+    const tokensList = ref<IAddressTokenTableItem[]>([]);
+    const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.addressDetailsToken);
+    const tokensSubTitle = computed(() => {
+        if (addressTokensLoading?.value) return `A total of ${DEFAULT_DISPLAY_TEXT} tokens found`;
+        if (addressTokensType?.value === NoDataType.loadFailed) return '';
+        const num = tokensList.value.length;
+        return `A total of ${num} tokens found`;
+    });
+
+    watch(
+        () => data?.value,
+        (newValue) => {
+            if (newValue) {
+                const temp: IAddressTokenTableItem[] = [];
+                newValue.forEach((token) => {
+                    const chainInfo = token.tokenInfo;
+                    const tokenInfo = chainInfo
+                        ? {
+                              defaultTitle: token.denom,
+                              title: getRestString(chainInfo.symbol, 6, 0),
+                              subtitle: token.denom_type,
+                              imgSrc: chainInfo?.icon || TOKEN_DEFAULT_ICON
+                          }
+                        : {
+                              defaultTitle: token.denom,
+                              title: UNKNOWN,
+                              subtitle: token.denom_type,
+                              imgSrc: TOKEN_DEFAULT_ICON
+                          };
+                    temp.push({
+                        tokenId: token.chain + token.denom,
+                        tokenInfo,
+                        displayAmount: token.displayAmount,
+                        displayAvaliable: token.displayAvaliableAmount,
+                        price: formatPriceAndTotalValue(String(token.price)),
+                        totalValue: formatPriceAndTotalValue(token.denom_amount)
+                    });
+                });
+                tokensList.value = [...temp];
+            }
+        },
+        {
+            immediate: true
+        }
+    );
+    return {
+        tokensSubTitle,
+        tokensList,
+        needCustomColumns
+    };
+};
+
+export const usAddressAccount = (
+    data: Ref<IAccountListItem[] | undefined> | undefined,
+    addressAccountLoading: Ref<boolean | undefined>,
+    addressAccountType: Ref<NoDataType | undefined>
+) => {
+    const router = useRouter();
+    const goAddress = (isJumpAddress: boolean, chain: string, address: string) => {
+        if (isJumpAddress) {
+            // todo dj 跳转路径待确认
+            router.push(`/address/${address}?chain=${chain}`);
+        }
+    };
+    const accountsList = ref<IAddressAccountTableItem[]>([]);
+    const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(
+        PAGE_PARAMETERS.addressDetailsAccount
+    );
+    const accountsSubTitle = computed(() => {
+        if (addressAccountLoading?.value)
+            return `A total of ${DEFAULT_DISPLAY_TEXT} addresses found`;
+        if (addressAccountType?.value === NoDataType.loadFailed) return '';
+        const num = accountsList.value.length;
+        return `A total of ${num} addresses found`;
+    });
+
+    watch(
+        () => data?.value,
+        (newValue) => {
+            if (newValue) {
+                const temp: IAddressAccountTableItem[] = [];
+                newValue.forEach((account) => {
+                    temp.push({
+                        chain: account.chain,
+                        // todo dj address 待处理
+                        isJumpAddress:
+                            account.address !== 'cosmos16dc379m0qj64g4pr4nkl7ewak52qy2srf6xl03',
+                        address: account.address,
+                        tokenDenom: account.token_denom_num,
+                        totalValue: formatPriceAndTotalValue(account.token_value),
+                        formatLastUpdated: dayjsFormatDate(account.last_update_time),
+                        lastUpdatedTimestamp: account.last_update_time
+                    });
+                });
+                accountsList.value = [...temp];
+            }
+        },
+        {
+            immediate: true
+        }
+    );
+
+    return {
+        accountsSubTitle,
+        needCustomColumns,
+        needCustomHeaders,
+        accountsList,
+        goAddress
     };
 };

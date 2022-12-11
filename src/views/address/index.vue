@@ -22,6 +22,7 @@
         <div class="address_details__transactions_c">
             <AddressTransactions />
         </div>
+        <!-- todo dj 三屏适配 -->
         <div class="address_details__accounts_c">
             <AddresssAccount
                 :data="accountsData?.accounts"
@@ -41,10 +42,10 @@
     import AddressTransactions from './components/AddressTransactions.vue';
     import AccountTokensRatio from './components/AccountTokensRatio.vue';
     import AddresssAccount from './components/AddresssAccount.vue';
-    import { useAddressTokens, useAddressAccounts } from './composable';
+    import { useGetAddressTokens, useGetAddressAccounts } from './composable';
 
-    const { tokensLoading, tokensNoDataType, tokensData } = useAddressTokens();
-    const { accountsLoading, accountsNoDataType, accountsData } = useAddressAccounts();
+    const { tokensLoading, tokensNoDataType, tokensData } = useGetAddressTokens();
+    const { accountsLoading, accountsNoDataType, accountsData } = useGetAddressAccounts();
 </script>
 
 <style lang="less" scoped>

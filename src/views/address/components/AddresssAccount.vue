@@ -40,7 +40,14 @@
                     <ChainIcon :chain="record.chain" icon-size="small" />
                 </template>
                 <template #address="{ record }">
-                    <div>{{ getRestString(record.address, 6, 6) }}</div>
+                    <div
+                        :class="{
+                            cursor: record.isJumpAddress,
+                            primary_color: record.isJumpAddress
+                        }"
+                        @click="goAddress(record.isJumpAddress, record.chain, record.address)"
+                        >{{ getRestString(record.address, 6, 6) }}</div
+                    >
                 </template>
                 <template #tokenDenom="{ record }">
                     <div>{{ record.tokenDenom }}</div>
@@ -57,68 +64,23 @@
 </template>
 
 <script setup lang="ts">
-    import { useNeedCustomColumns, useTimeUtcAge } from '@/composables';
-    import { DEFAULT_DISPLAY_TEXT, NoDataType, PAGE_PARAMETERS } from '@/constants';
+    import { useTimeUtcAge } from '@/composables';
+    import { NoDataType } from '@/constants';
     import { ADDRESS_ACCOUNT_COLUMNS } from '@/constants/address';
-    import { UNIT_SIGNS } from '@/constants/relayers';
-    import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
-    import {
-        IAccountListItem,
-        IAddressAccountTableItem
-    } from '@/types/interface/address.interface';
-    import { dayjsFormatDate } from '@/utils/timeTools';
+    import { getRestString } from '@/helper/parseStringHelper';
+    import { IAccountListItem } from '@/types/interface/address.interface';
+    import { usAddressAccount } from '../composable';
 
     interface IProps {
         data?: IAccountListItem[];
-        addressAccountLoading?: boolean;
-        addressAccountType?: NoDataType;
+        addressAccountLoading: boolean;
+        addressAccountType: NoDataType | undefined;
     }
     const props = defineProps<IProps>();
     const { data, addressAccountLoading, addressAccountType } = toRefs(props);
-
+    const { accountsSubTitle, needCustomColumns, needCustomHeaders, accountsList, goAddress } =
+        usAddressAccount(data, addressAccountLoading, addressAccountType);
     const { showUtc, changeShowUtcAge } = useTimeUtcAge(false);
-
-    // todo dj 待抽离
-    const accountsList = ref<IAddressAccountTableItem[]>([]);
-    const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(
-        PAGE_PARAMETERS.addressDetailsAccount
-    );
-    const accountsSubTitle = computed(() => {
-        if (addressAccountLoading?.value)
-            return `A total of ${DEFAULT_DISPLAY_TEXT} addresses found`;
-        if (addressAccountType?.value === NoDataType.loadFailed) return '';
-        const num = accountsList.value.length;
-        return `A total of ${num} addresses found`;
-    });
-
-    // todo dj 待抽离，逻辑可复用
-    const formatPriceAndTotalValue = (value: string, num = 2) => {
-        return `${UNIT_SIGNS} ${formatBigNumber(value, num)}`;
-    };
-    formatPriceAndTotalValue('test', 2);
-
-    watch(
-        () => data?.value,
-        (newValue) => {
-            if (newValue) {
-                const temp: IAddressAccountTableItem[] = [];
-                newValue.forEach((account) => {
-                    temp.push({
-                        chain: account.chain,
-                        address: account.address,
-                        tokenDenom: account.token_denom_num,
-                        totalValue: account.token_value,
-                        formatLastUpdated: dayjsFormatDate(account.last_update_time),
-                        lastUpdatedTimestamp: account.last_update_time
-                    });
-                });
-                accountsList.value = [...temp];
-            }
-        },
-        {
-            immediate: true
-        }
-    );
 </script>
 
 <style lang="less" scoped>
