@@ -1,8 +1,7 @@
-import { TOKEN_DEFAULT_ICON } from './../../constants/index';
 import { axiosCancel } from '@/utils/axios';
 import { getIbcTokenListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
-import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON } from '@/constants';
+import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON, TOKEN_DEFAULT_ICON } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { getRestString } from '@/helper/parseStringHelper';
 import { IBaseDenom, IIbcChains } from '@/types/interface/index.interface';
