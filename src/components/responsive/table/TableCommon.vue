@@ -69,7 +69,11 @@
         IResponseIbcTokenListItem,
         ITokensListItem
     } from '@/types/interface/tokens.interface';
-    import { IRelayerTransferItem, RelayerListItem } from '@/types/interface/relayers.interface';
+    import type {
+        IRelayerTransferItem,
+        RelayerListItem
+    } from '@/types/interface/relayers.interface';
+    import type { IResponseAddressTxsFormat } from '@/types/interface/address.interface';
     import { CompareOrder } from '@/types/interface/components/table.interface';
     import { computed, onMounted, reactive, ref, watch } from 'vue';
     import { useRouter } from 'vue-router';
@@ -90,7 +94,8 @@
         | IResponseIbcTokenListItem[]
         | RelayerListItem[]
         | IResponseChannelsListItem[]
-        | IRelayerTransferItem[];
+        | IRelayerTransferItem[]
+        | IResponseAddressTxsFormat[];
     interface IProps {
         columns: TableColumnsType;
         data: TData;

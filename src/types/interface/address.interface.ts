@@ -1,6 +1,11 @@
-import { IResponseTokenInfo } from './index.interface';
+import type { IRequestPagination, IResponsePageInfo, IResponseTokenInfo } from './index.interface';
 
 export interface IRequestAddress {
+    chain: string;
+    address: string;
+}
+
+export interface IRequestAddressTxs extends IRequestPagination {
     chain: string;
     address: string;
 }
@@ -26,6 +31,15 @@ export interface IResponseAddressTxs {
     fee_info: IResponseTokenInfo;
     tx_time: number;
     ibc_version: string;
+}
+export interface IResponseAddressTxsFormat extends IResponseAddressTxs {
+    format_tx_time: string;
+    tag?: string;
+}
+
+export interface IResponseAddressTxsData {
+    txs: IResponseAddressTxs[];
+    page_info: IResponsePageInfo;
 }
 
 export interface IAddressBaseInfo {

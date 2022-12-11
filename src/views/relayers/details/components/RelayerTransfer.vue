@@ -134,8 +134,14 @@
     import { RELAYER_TRANSFER_COLUMN } from '@/constants/relayers';
     import { getRestString } from '@/helper/parseStringHelper';
     import { formatTxStatus, changeColor } from '@/helper/tableCellHelper';
-    import { useGoAddressDetail, useNeedCustomColumns, useTimeUtcAge } from '@/composables';
-    import { usePagination, useSelectedSearch } from '../composable';
+    import {
+        useGoAddressDetail,
+        useNeedCustomColumns,
+        usePagination,
+        useTimeUtcAge,
+        formatTransferType
+    } from '@/composables';
+    import { useSelectedSearch } from '../composable';
     import { DEFAULT_TITLE, LoadingType, PAGE_PARAMETERS } from '@/constants';
     interface IRelayerTransfer {
         servedChainsInfo: string[];
@@ -151,7 +157,6 @@
         searchChain,
         onSelectedChain,
         relayerTransferTableData,
-        formatTransferType,
         onPaginationChange,
         onClickReset,
         dateRange,

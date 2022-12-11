@@ -607,17 +607,6 @@ export const useSuccessRateChart = (
     };
 };
 
-export const usePagination = () => {
-    const pagination = reactive<IPaginationParams>({
-        total: 0,
-        current: 1,
-        pageSize: 5
-    });
-    return {
-        pagination
-    };
-};
-
 export const useSelectedSearch = (
     servedChainsInfo: Ref<string[]>,
     pagination: IPaginationParams
@@ -816,18 +805,6 @@ export const useSelectedSearch = (
             false
         );
     };
-    const formatTransferType = (type: string) => {
-        switch (type) {
-            case TRANSFER_TYPE.transfer.type:
-                return TRANSFER_TYPE.transfer.label;
-            case TRANSFER_TYPE.receive.type:
-                return TRANSFER_TYPE.receive.label;
-            case TRANSFER_TYPE.acknowledge.type:
-                return TRANSFER_TYPE.acknowledge.label;
-            case TRANSFER_TYPE.timeout.type:
-                return TRANSFER_TYPE.timeout.label;
-        }
-    };
     const getRtSubtitle = (showDefault: boolean, total: number) => {
         const displayTotal = !showDefault ? formatBigNumber(total || '0', 0) : DEFAULT_DISPLAY_TEXT;
         return `A total of ${displayTotal} IBC Transactions found`;
@@ -842,7 +819,6 @@ export const useSelectedSearch = (
         searchChain,
         onSelectedChain,
         relayerTransferTableData,
-        formatTransferType,
         onPaginationChange,
         onClickReset,
         dateRange,

@@ -1,31 +1,53 @@
 <template>
     <div class="info_card">
         <div class="info_card__title_wrap">
-            <div class="info_card__title">
-                <svg-icon :icon-name="icon"></svg-icon>
-                <span class="info_card__text">{{ title }}</span>
-                <a-tooltip>
-                    <template #title
-                        ><span class="popover_c">{{ tipMsg }}</span></template
+            <div class="flex justify-between">
+                <div class="info_card__title">
+                    <svg-icon :icon-name="icon"></svg-icon>
+                    <span class="info_card__text">{{ title }}</span>
+                    <a-tooltip>
+                        <template #title
+                            ><span class="popover_c">{{ tipMsg }}</span></template
+                        >
+                        <img
+                            v-if="tipMsg"
+                            class="info_card__title__tip_icon cursor"
+                            :src="TIP_ICON"
+                        />
+                    </a-tooltip>
+                    <span v-if="subTitle" class="info_card__sub_title">
+                        <i class="iconfont" :class="subIcon"></i>
+                        {{ subTitle }}
+                    </span>
+                </div>
+                <div v-if="isShowChooseBtn" class="info_card__choose_btn">
+                    <span
+                        v-for="(item, index) in CHOOSE_BTN_TEXT"
+                        :key="item"
+                        class="info_card__item cursor"
+                        :class="{ info_card__active_btn: defaultChooseBtn === index }"
+                        @click="changeChooseBtn(index)"
                     >
-                    <img v-if="tipMsg" class="info_card__title__tip_icon cursor" :src="TIP_ICON" />
-                </a-tooltip>
-                <span v-if="subTitle" class="info_card__sub_title">
-                    <i class="iconfont" :class="subIcon"></i>
-                    {{ subTitle }}
-                </span>
+                        {{ item }}
+                    </span>
+                </div>
+                <div v-if="downloadTip" class="info_card__download">
+                    <a-tooltip>
+                        <template #title>
+                            <span class="popover_c">{{ downloadTip }}</span>
+                        </template>
+                        <a target="_blank" download class="flex items-center">
+                            <!-- todo shan 需要更换 icon -->
+                            <svg-icon icon-name="icon-a-relayedassets" />
+                            <span class="info_card__download__text">CSV Export</span>
+                        </a>
+                    </a-tooltip>
+                </div>
             </div>
-            <div v-if="isShowChooseBtn" class="info_card__choose_btn">
-                <span
-                    v-for="(item, index) in CHOOSE_BTN_TEXT"
-                    :key="item"
-                    class="info_card__item cursor"
-                    :class="{ info_card__active_btn: defaultChooseBtn === index }"
-                    @click="changeChooseBtn(index)"
-                >
-                    {{ item }}
-                </span>
-            </div>
+            <span v-if="subTitle" class="info_card__sub_title_mobile">
+                <i class="iconfont" :class="subIcon"></i>
+                {{ subTitle }}
+            </span>
         </div>
         <div class="info_card__primary">
             <slot></slot>
@@ -40,6 +62,7 @@
         title: string;
         isShowChooseBtn?: boolean; // 右侧是否有按钮
         defaultChooseBtn?: number; // 默认按钮索引
+        downloadTip?: string;
         tipMsg?: string;
         subTitle?: string;
         subIcon?: string;
@@ -63,7 +86,6 @@
         background: #ffffff;
         border-radius: var(--border-radius-normal);
         &__title_wrap {
-            .flex(row, nowrap, space-between, center);
             padding: 12px 24px;
             border-bottom: 1px solid var(--bj-border-color);
         }
@@ -91,6 +113,9 @@
                 margin-right: 4px;
             }
         }
+        &__sub_title_mobile {
+            display: none;
+        }
         &__choose_btn {
             background: #ebedff;
             border-radius: var(--border-radius-normal);
@@ -110,6 +135,15 @@
             background: #ffffff;
             border: 1px solid rgba(61, 80, 255, 0.2);
             border-radius: var(--border-radius-normal);
+        }
+        &__download {
+            &__text {
+                margin-left: 4px;
+                font-size: var(--bj-font-size-normal);
+                font-weight: 400;
+                color: #3d50ff;
+                line-height: 18px;
+            }
         }
         &__primary {
             padding: 16px 24px 24px;

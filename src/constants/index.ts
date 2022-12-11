@@ -1,6 +1,7 @@
 import type { IDenomStatistic, IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
 import { RelayersListKey, RELAYER_TRANSFER_KEY } from '@/constants/relayers';
+import { ADDRESS_TXS_KEY } from './address';
 
 export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.meta.url).href;
 export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', import.meta.url).href;
@@ -104,7 +105,8 @@ export const PAGE_PARAMETERS = {
     channels: 'channels',
     relayers: 'relayers',
     denom: 'denom',
-    relayerDetails: 'relayerDetails'
+    relayerDetails: 'relayerDetails',
+    addressDetails: 'addressDetails'
 };
 
 export const MSG_DESC = {
@@ -440,12 +442,23 @@ export const NEED_CUSTOM_COLUMN = {
         RELAYER_TRANSFER_KEY.rtResult,
         RELAYER_TRANSFER_KEY.rtSigner,
         RELAYER_TRANSFER_KEY.rtTime
+    ],
+    addressDetails: [
+        ADDRESS_TXS_KEY.txHash,
+        ADDRESS_TXS_KEY.type,
+        ADDRESS_TXS_KEY.port,
+        ADDRESS_TXS_KEY.from,
+        ADDRESS_TXS_KEY.to,
+        ADDRESS_TXS_KEY.amount,
+        ADDRESS_TXS_KEY.fee,
+        ADDRESS_TXS_KEY.time
     ]
 };
 
 export const NEED_CUSTOM_HEADER = {
     transfers: ['Token'],
-    relayerDetails: ['Time']
+    relayerDetails: ['Time'],
+    addressDetails: ['Time']
 };
 
 export const BASE_PARAMS: IRequestPagination = {
