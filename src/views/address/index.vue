@@ -25,12 +25,17 @@
         <!-- todo dj 三屏适配 -->
         <div class="address_details__accounts_c">
             <AddresssAccount
+                class="address_details__accounts_c__account"
                 :data="accountsData?.accounts"
                 :address-account-loading="accountsLoading"
                 :address-account-type="accountsNoDataType"
-                class="address_details__accounts_c__account"
             />
-            <AccountTokensRatio class="address_details__accounts_c__account_tokens_ratio" />
+            <AccountTokensRatio
+                class="address_details__accounts_c__account_tokens_ratio"
+                :data="accountsData"
+                :address-ratio-loading="accountsLoading"
+                :address-ratio-type="accountsNoDataType"
+            />
         </div>
     </PageContainer>
 </template>

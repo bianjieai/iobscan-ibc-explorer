@@ -15,6 +15,7 @@ import { getAddrTokenListMock, getAddrAccountListMock } from '@/api/address';
 import {
     NoDataType,
     TOKEN_DEFAULT_ICON,
+    CHAIN_DEFAULT_ICON,
     PIE_OTHERS,
     DEFAULT_DISPLAY_TEXT,
     PAGE_PARAMETERS,
@@ -223,7 +224,7 @@ export const useAddressAllocation = (
                                                 color: #000000;
                                                 line-height: 20px;
                                             "
-                                            >${formatString(params.data.symbol)}</span
+                                            >${formatString(params.data.displayName)}</span
                                         >
                                     </div>
                                     <div style="display: flex; justify-content: flex-start; padding: 0px 12px 14px">
@@ -248,7 +249,7 @@ export const useAddressAllocation = (
                                             "
                                             >${UNIT_SIGNS} ${formatBigNumber(
                     params.data.value,
-                    0
+                    2
                 )}</span
                                         ></div
                                     >
@@ -391,7 +392,7 @@ export const useAddressAllocation = (
                             const symbol = token.tokenInfo?.symbol || token.denom;
                             allocationValueData.push({
                                 name: uniqueName,
-                                symbol: symbol,
+                                displayName: symbol,
                                 value: token.denom_value,
                                 imgUrl: token.tokenInfo?.icon || TOKEN_DEFAULT_ICON,
                                 percent,
@@ -561,5 +562,246 @@ export const usAddressAccount = (
         needCustomHeaders,
         accountsList,
         goAddress
+    };
+};
+
+export const useAddressAccountTokensRatio = (
+    data: Ref<IAccountData | undefined>,
+    addressRatioLoading: Ref<boolean | undefined>,
+    addressRatioType: Ref<NoDataType | undefined>
+) => {
+    const totalValue = ref('--');
+    const legendData = ref<PieLegendData[]>([]);
+    const addressAccountTokenRatioChartDom = ref();
+    let addressAccountTokenRatioChart: echarts.ECharts;
+    const firstColumnLegendData = computed(() => {
+        return legendData.value.length > 0 ? legendData.value.slice(0, 4) : [];
+    });
+    const secondColumnLegendData = computed(() => {
+        return legendData.value.length > 4 ? legendData.value.slice(4, 8) : [];
+    });
+    const getTotalValue = (totalValue: string) => {
+        if (!totalValue || Number(totalValue) === 0) return '0';
+        return formatBigNumber(totalValue, 2);
+    };
+    const isShowAddressAccountTokenRatioChart = computed(() => {
+        return !addressRatioLoading?.value && !addressRatioType?.value;
+    });
+    const addressAccountTokenRatioOption: any = {
+        legend: {
+            show: false
+        },
+        series: [
+            {
+                type: 'pie',
+                silent: true,
+                radius: [66, 90],
+                minAngle: 2,
+                center: 'center',
+                itemStyle: {
+                    borderColor: '#fff',
+                    borderWidth: 2,
+                    opacity: 1
+                },
+                label: {
+                    show: false
+                },
+                labelLine: {
+                    show: false
+                },
+                data: []
+            },
+            {
+                type: 'pie',
+                radius: [90, 114],
+                center: 'center',
+                minAngle: 2,
+                itemStyle: {
+                    borderColor: '#fff',
+                    borderWidth: 2
+                },
+                label: {
+                    show: false,
+                    formatter: (params: any) => {
+                        // todo dj displayName 展示规则
+                        const displayName = params.data.displayName;
+                        return `{text|${displayName}}\n\r\n\r{value|${UNIT_SIGNS}${getTotalValue(
+                            params.data.value
+                        )}}`;
+                    },
+                    top: 'middle',
+                    position: 'center',
+                    padding: [7, 0, 0, 0],
+                    opacity: 1,
+                    rich: {
+                        text: {
+                            color: 'rgba(0, 0, 0, 0.75)',
+                            fontWeight: 400,
+                            fontFamily: 'GolosUIWebRegular',
+                            fontSize: 16,
+                            lineHeight: 10
+                        },
+                        value: {
+                            color: '#000000',
+                            fontWeight: 500,
+                            fontFamily: 'GolosUI_Medium',
+                            fontSize: 16,
+                            lineHeight: 16
+                        }
+                    }
+                },
+                labelLine: {
+                    show: false
+                },
+                emphasis: {
+                    label: {
+                        show: true
+                    },
+                    scaleSize: 5
+                },
+                data: []
+            }
+        ]
+    };
+    const addressAccountTokenRatioChartSizeFn = () => {
+        addressAccountTokenRatioChart && addressAccountTokenRatioChart.resize();
+    };
+    const handleChangeNoDataOption = () => {
+        addressAccountTokenRatioOption.series[0].itemStyle.color = '#F9F9F9';
+        addressAccountTokenRatioOption.series[0].data = [0];
+        addressAccountTokenRatioOption.series[0].radius = [66, 90];
+        addressAccountTokenRatioOption.series[1].itemStyle.color = '#F2F2F2';
+        addressAccountTokenRatioOption.series[1].data = [0];
+        addressAccountTokenRatioOption.series[1].radius = [90, 114];
+        addressAccountTokenRatioOption.series[1].silent = true;
+    };
+    const highlightArr: string[] = [];
+    let once = true;
+    const highlightFn = (key: string) => {
+        if (once) {
+            addressAccountTokenRatioOption.series[0].radius = [73, 90];
+            addressAccountTokenRatioChart &&
+                addressAccountTokenRatioChart.setOption(addressAccountTokenRatioOption);
+            once = false;
+        }
+        highlightArr.forEach((item) => {
+            addressAccountTokenRatioChart.dispatchAction({
+                type: 'downplay',
+                seriesIndex: 1,
+                name: item
+            });
+        });
+        highlightArr.length = 0;
+        addressAccountTokenRatioChart.dispatchAction({
+            type: 'highlight',
+            seriesIndex: 1,
+            name: key
+        });
+        highlightArr.push(key);
+    };
+    onMounted(async () => {
+        addressAccountTokenRatioChart = echarts.init(
+            addressAccountTokenRatioChartDom.value as HTMLElement
+        );
+        window.addEventListener('resize', addressAccountTokenRatioChartSizeFn);
+        watch(
+            () => data?.value,
+            (newValue) => {
+                if (newValue) {
+                    totalValue.value = getTotalValue(newValue.total_value);
+                    const tokenNum = newValue.accounts.length;
+                    if (tokenNum <= 0) {
+                        handleChangeNoDataOption();
+                        legendData.value = [];
+                    } else {
+                        const tokenRatioValueData: PieData[] = [];
+                        const tokenRatioValueOpacityData: PieData[] = [];
+                        const templegendData: PieLegendData[] = [];
+                        const accounts = [...newValue.accounts];
+                        const needMaxNum = 8;
+                        if (accounts.length > needMaxNum) {
+                            const spliceValueDenomList = accounts.splice(needMaxNum - 1);
+                            const spliceValueTotal = spliceValueDenomList.reduce(
+                                (total, current) => {
+                                    return new BigNumber(total)
+                                        .plus(current.token_value)
+                                        .toString();
+                                },
+                                '0'
+                            );
+                            accounts.push({
+                                chain: PIE_OTHERS,
+                                address: '',
+                                token_denom_num: 0,
+                                token_value: spliceValueTotal,
+                                last_update_time: 0,
+                                chainInfo: undefined
+                            });
+                        }
+                        accounts.forEach((account, i) => {
+                            const uniqueName = account.chain;
+                            const percent = calculatePercentage(
+                                account.token_value,
+                                newValue.total_value,
+                                2
+                            );
+                            const prettyName = account.chainInfo?.pretty_name || account.chain;
+                            tokenRatioValueData.push({
+                                name: uniqueName,
+                                displayName: prettyName,
+                                value: account.token_value,
+                                imgUrl: account.chainInfo?.icon || CHAIN_DEFAULT_ICON,
+                                percent,
+                                itemStyle: {
+                                    color: PIE_COLOR_LIST[i]
+                                }
+                            });
+                            tokenRatioValueOpacityData.push({
+                                value: account.token_value,
+                                itemStyle: {
+                                    color: OPACITY_PIE_COLOR_LIST[i]
+                                }
+                            });
+                            templegendData.push({
+                                key: uniqueName,
+                                lengedColor: PIE_COLOR_LIST[i],
+                                percentage: percent + '%',
+                                legendName: prettyName
+                            });
+                        });
+                        legendData.value = [...templegendData];
+                        addressAccountTokenRatioOption.series[0].data = [
+                            ...tokenRatioValueOpacityData
+                        ];
+                        addressAccountTokenRatioOption.series[1].data = [...tokenRatioValueData];
+                    }
+                    nextTick(() => {
+                        addressAccountTokenRatioChart.resize();
+                        addressAccountTokenRatioChart.setOption(
+                            addressAccountTokenRatioOption,
+                            true
+                        );
+                        addressAccountTokenRatioChart.on('mouseover', (params) => {
+                            highlightFn(params.name);
+                        });
+                    });
+                }
+            },
+            {
+                immediate: true
+            }
+        );
+    });
+
+    onBeforeUnmount(() => {
+        window.removeEventListener('resize', addressAccountTokenRatioChartSizeFn);
+    });
+    return {
+        addressAccountTokenRatioChartDom,
+        totalValue,
+        firstColumnLegendData,
+        secondColumnLegendData,
+        isShowAddressAccountTokenRatioChart,
+        highlightFn
     };
 };

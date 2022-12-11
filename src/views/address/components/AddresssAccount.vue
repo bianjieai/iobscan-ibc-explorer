@@ -85,6 +85,7 @@
 
 <style lang="less" scoped>
     .address_accounts_c {
+        max-width: 806px;
         min-width: 650px;
         :deep(.info_card__primary) {
             padding: 16px 24px 0;

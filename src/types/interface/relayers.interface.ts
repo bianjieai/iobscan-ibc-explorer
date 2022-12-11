@@ -167,7 +167,7 @@ export interface RelayerTrendData {
 
 export interface PieData {
     name?: string;
-    symbol?: string;
+    displayName?: string;
     value: string | number;
     imgUrl?: string;
     percent?: string;
