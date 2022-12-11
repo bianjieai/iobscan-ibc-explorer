@@ -103,3 +103,11 @@ export interface IRelayerName {
     source: string;
     matching: string;
 }
+
+export interface IResponseTokenInfo {
+    denom: string;
+    denom_chain: string;
+    base_denom?: string;
+    base_denom_chain?: string;
+    amount: string;
+}

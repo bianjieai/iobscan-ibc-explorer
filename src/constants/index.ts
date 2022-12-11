@@ -73,10 +73,6 @@ export const ROUTE_INFO = {
 };
 export const MENUS = [
     {
-        label: 'Home',
-        value: 'Home'
-    },
-    {
         label: 'Transfers',
         value: 'Transfers'
     },

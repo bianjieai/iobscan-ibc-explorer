@@ -33,13 +33,17 @@ import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber, formatNum } from '@/helper/parseStringHelper';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import { useIbcStatisticsChains } from '@/store';
-import { IDenomStatistic, IIbcchain, IPaginationParams } from '@/types/interface/index.interface';
-import {
+import type {
+    IDenomStatistic,
+    IIbcchain,
+    IPaginationParams,
+    IResponseTokenInfo
+} from '@/types/interface/index.interface';
+import type {
     IChannelChain,
     IRelayerTransferItem,
     IRelayerTransferItemFormat,
-    IRequestRelayerTransfer,
-    IRtTokenInfo
+    IRequestRelayerTransfer
 } from '@/types/interface/relayers.interface';
 import * as echarts from 'echarts';
 import { Ref } from 'vue';
@@ -665,7 +669,7 @@ export const useSelectedSearch = (
             }
         ];
     });
-    const relayerChainDataNoChildren = computed(() => {
+    const relayerChainNoSupport = computed(() => {
         return !relayerChainData.value[0].children.length;
     });
     const defaultChain = computed(() => {
@@ -687,7 +691,7 @@ export const useSelectedSearch = (
         page_size = 5,
         use_count = false
     ) => {
-        // todo shan 列表和分页的请求，分析多种情况
+        // todo shan 分析不同请求的各类值赋值情况，并进行改造，考虑获取不到以及接口出错等各种情况
         rtTableLoading.value = true;
         rtPageLoading.value = true;
         rtNoDataType.value = undefined;
@@ -835,7 +839,7 @@ export const useSelectedSearch = (
     return {
         defaultChain,
         relayerChainData,
-        relayerChainDataNoChildren,
+        relayerChainNoSupport,
         searchChain,
         onSelectedChain,
         relayerTransferTableData,
@@ -852,7 +856,7 @@ export const useSelectedSearch = (
     };
 };
 
-export const useFormatTokenDenom = (tokenInfo: Ref<IRtTokenInfo>, type: Ref<string>) => {
+export const useFormatTokenDenom = (tokenInfo: Ref<IResponseTokenInfo>, type: Ref<string>) => {
     const chain = ref<string>('');
     const denom = ref<string>('');
     const amount = ref<string>('');

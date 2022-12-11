@@ -11,7 +11,7 @@
                     :dropdown-props="{
                         getPopupContainer: getPopupContainer
                     }"
-                    :is-disabled="isShowModal || relayerChainDataNoChildren"
+                    :is-disabled="isShowModal || relayerChainNoSupport"
                     :default-value="defaultChain"
                     @on-change="onSelectedChain"
                 />
@@ -19,17 +19,18 @@
                     <RangePicker
                         :date-range="dateRange"
                         :disabled-date="disabledDate"
-                        :is-show-modal="isShowModal || relayerChainDataNoChildren"
+                        :is-show-modal="isShowModal || relayerChainNoSupport"
                         @change="onChangeRangePicker"
                     ></RangePicker>
                     <TypeButton
                         class="relayer_transfer__reset_btn"
-                        :is-disabled="isShowModal || relayerChainDataNoChildren"
+                        :is-disabled="isShowModal || relayerChainNoSupport"
                         @on-reset="onClickReset"
                     />
                 </div>
             </div>
             <div class="relayer_transfer__table">
+                <!-- todo shan 表格无数据、加载错误、加载中状态修改，在表格内部完成 -->
                 <loading-component
                     v-if="rtTableLoading && !relayerTransferTableData"
                     :type="LoadingType.container"
@@ -146,7 +147,7 @@
     const {
         defaultChain,
         relayerChainData,
-        relayerChainDataNoChildren,
+        relayerChainNoSupport,
         searchChain,
         onSelectedChain,
         relayerTransferTableData,
