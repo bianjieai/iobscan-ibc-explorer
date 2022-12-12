@@ -469,9 +469,12 @@ export const useAddressAllocation = (
         addressAllocationOption.series[1].data = [0];
         addressAllocationOption.series[1].silent = true;
     };
-    onMounted(async () => {
+    const initEchart = () => {
         addressAllocationChart = echarts.init(addressAllocationChartDom.value as HTMLElement);
+        addressAllocationChart.setOption(addressAllocationOption, true);
         window.addEventListener('resize', addressAllocationChartSizeFn);
+    };
+    onMounted(() => {
         watch(
             () => data?.value,
             (newValue) => {
@@ -552,8 +555,7 @@ export const useAddressAllocation = (
                         addressAllocationOption.series[1].data = [...allocationValueData];
                     }
                     nextTick(() => {
-                        addressAllocationChart.resize();
-                        addressAllocationChart.setOption(addressAllocationOption, true);
+                        initEchart();
                     });
                 }
             },
@@ -830,11 +832,17 @@ export const useAddressAccountTokensRatio = (
         });
         highlightArr.push(key);
     };
-    onMounted(async () => {
+    const initEchart = () => {
         addressAccountTokenRatioChart = echarts.init(
             addressAccountTokenRatioChartDom.value as HTMLElement
         );
+        addressAccountTokenRatioChart.setOption(addressAccountTokenRatioOption, true);
+        addressAccountTokenRatioChart.on('mouseover', (params) => {
+            highlightFn(params.name);
+        });
         window.addEventListener('resize', addressAccountTokenRatioChartSizeFn);
+    };
+    onMounted(async () => {
         watch(
             () => data?.value,
             (newValue) => {
@@ -907,14 +915,7 @@ export const useAddressAccountTokensRatio = (
                         addressAccountTokenRatioOption.series[1].data = [...tokenRatioValueData];
                     }
                     nextTick(() => {
-                        addressAccountTokenRatioChart.resize();
-                        addressAccountTokenRatioChart.setOption(
-                            addressAccountTokenRatioOption,
-                            true
-                        );
-                        addressAccountTokenRatioChart.on('mouseover', (params) => {
-                            highlightFn(params.name);
-                        });
+                        initEchart();
                     });
                 }
             },
