@@ -9,6 +9,8 @@
     import { NoDataType } from '@/constants';
     import { API_ERRPR_MESSAGE } from '@/constants/apiCode';
     import noDataImg from '@/assets/no_datas.png';
+    import loadingFailedImg from '@/assets/loading_failed.png';
+
     interface IProps {
         text?: string;
         type?: NoDataType;
@@ -21,8 +23,7 @@
             case NoDataType.noData:
                 return noDataImg;
             case NoDataType.loadFailed:
-                // todo dj UI loading failed 图片待替换
-                return noDataImg;
+                return loadingFailedImg;
         }
     });
     const displayText = computed(() => {

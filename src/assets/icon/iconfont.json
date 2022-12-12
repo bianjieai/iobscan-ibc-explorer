@@ -6,6 +6,48 @@
     "description": "",
     "glyphs": [
         {
+            "icon_id": "33344172",
+            "name": "Ratio",
+            "font_class": "Ratio",
+            "unicode": "e7a9",
+            "unicode_decimal": 59305
+        },
+        {
+            "icon_id": "33344184",
+            "name": "time",
+            "font_class": "time",
+            "unicode": "e7aa",
+            "unicode_decimal": 59306
+        },
+        {
+            "icon_id": "33344414",
+            "name": "download",
+            "font_class": "download",
+            "unicode": "e7ab",
+            "unicode_decimal": 59307
+        },
+        {
+            "icon_id": "33344129",
+            "name": "Tokens",
+            "font_class": "Tokens",
+            "unicode": "e7a7",
+            "unicode_decimal": 59303
+        },
+        {
+            "icon_id": "33344140",
+            "name": "account",
+            "font_class": "account",
+            "unicode": "e7a8",
+            "unicode_decimal": 59304
+        },
+        {
+            "icon_id": "33007236",
+            "name": "reset",
+            "font_class": "reset1",
+            "unicode": "e7a6",
+            "unicode_decimal": 59302
+        },
+        {
             "icon_id": "32692308",
             "name": "copy",
             "font_class": "copy",
