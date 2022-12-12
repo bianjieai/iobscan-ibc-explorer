@@ -32,7 +32,7 @@
                 </template>
             </a-table>
             <template #renderEmpty>
-                <no-datas v-if="!tableLoading && !data.length" />
+                <no-datas v-if="!tableLoading && !data.length" :type="noDataType" />
             </template>
         </a-config-provider>
         <div v-if="hasPaddingLr" class="thead_border_bottom"></div>
@@ -79,7 +79,11 @@
     import { useGetIbcDenoms } from '@/composables';
     import { RelayersListKey } from '@/constants/relayers';
     import { getIsAndroid } from '@/utils/systemTools';
-    import { AGE_TIMER_INTERVAL } from '@/constants';
+    import { AGE_TIMER_INTERVAL, NoDataType } from '@/constants';
+    import {
+        IAddressTokenTableItem,
+        IAddressAccountTableItem
+    } from '@/types/interface/address.interface';
 
     const router = useRouter();
     const { ibcBaseDenoms } = useGetIbcDenoms();
@@ -90,7 +94,9 @@
         | IResponseIbcTokenListItem[]
         | RelayerListItem[]
         | IResponseChannelsListItem[]
-        | IRelayerTransferItem[];
+        | IRelayerTransferItem[]
+        | IAddressTokenTableItem[]
+        | IAddressAccountTableItem[];
     interface IProps {
         columns: TableColumnsType;
         data: TData;
@@ -109,6 +115,7 @@
         hasPaddingLr?: boolean;
         isLaunchTimer?: boolean;
         pageLoading?: boolean;
+        noDataType?: NoDataType;
     }
     // Todo shan hasPaddingLr 能否修改 Transfer 列表页等移入每一行两边有间距的情况
     let backUpDataSource: any[] = [];
@@ -138,7 +145,7 @@
             backUpData();
             if (needPagination.value) {
                 pageInfo.total = _new?.length;
-                needPagination.value && onPageChange(1, 10, false);
+                needPagination.value && onPageChange(1, pageInfo.pageSize, false);
             }
             if (_new?.length === 0) {
                 columnsSource.value = columnsSource.value.filter((item) => item.key !== '_count');
@@ -162,9 +169,9 @@
             props.pageLoading === undefined ? props.tableLoading : props.pageLoading;
         return paginationLoading || pageInfo.total <= 0;
     });
-    const needPagination = computed(
-        () => !props.noPagination && !(props.current && props.pageSize)
-    ); // 需要前端分页
+    const needPagination = computed(() => {
+        return !props.noPagination && !(props.current && props.pageSize);
+    }); // 需要前端分页
     const isKeyInNeedCustomColumns = computed(
         () => (key: string) => props.needCustomColumns.includes(key)
     ); // 判断key
@@ -327,7 +334,7 @@
         if (props.noPagination) {
             dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
         } else {
-            needPagination.value && onPageChange(1, 10, false); // reset去第一页
+            needPagination.value && onPageChange(1, pageInfo.pageSize, false); // reset去第一页
         }
     };
     let timeTimer: number;
@@ -404,9 +411,13 @@
         padding-left: 0;
         white-space: nowrap;
     }
-    :deep(.ant-table-thead
-            > tr
-            > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before) {
+    :deep(
+            .ant-table-thead
+                > tr
+                > th:not(:last-child):not(.ant-table-selection-column):not(
+                    .ant-table-row-expand-icon-cell
+                ):not([colspan])::before
+        ) {
         width: 0;
     }
     :deep(.ant-table-column-sorter) {
@@ -415,9 +426,9 @@
     :deep(.ant-table-column-has-sorters) {
         cursor: pointer;
     }
-    :deep(.ant-pagination li) {
-        margin-bottom: 8px;
-    }
+    // :deep(.ant-pagination li) {
+    //     margin-bottom: 8px;
+    // }
 
     :deep(td.ant-table-column-sort) {
         background: transparent;
@@ -450,7 +461,7 @@
         z-index: 1;
     }
     :deep(.ant-pagination) {
-        overflow: auto;
+        // overflow: auto;
         .ant-pagination-item {
             min-width: auto;
         }

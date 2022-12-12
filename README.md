@@ -7,19 +7,19 @@ IBC Explorer Frontend
 step1 安装依赖
 
 ```
- 	yarn install
+ 	pnpm install
 ```
 
 step2 服务启动, 后端服务地址可修改.env.development
 
 ```
-  yarn dev
+  pnpm dev
 ```
 
 step3 preview
 
 ```
-	yarn preview
+	pnpm preview
 ```
 
 ## qa
@@ -27,13 +27,13 @@ step3 preview
 step1 安装依赖
 
 ```
- 	yarn install
+ 	pnpm install
 ```
 
 step2 build
 
 ```
-  yarn build:qa
+  pnpm build:qa
 ```
 
 ## stage
@@ -41,13 +41,13 @@ step2 build
 step1 安装依赖
 
 ```
- 	yarn install
+ 	pnpm install
 ```
 
 step2 build
 
 ```
-  yarn build:stage
+  pnpm build:stage
 ```
 
 ## production
@@ -55,11 +55,11 @@ step2 build
 step1 安装依赖
 
 ```
- 	yarn install
+ 	pnpm install
 ```
 
 step2 build
 
 ```
-  yarn build:prod
+  pnpm build:prod
 ```

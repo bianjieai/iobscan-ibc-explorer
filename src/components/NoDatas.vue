@@ -21,7 +21,7 @@
             case NoDataType.noData:
                 return noDataImg;
             case NoDataType.loadFailed:
-                // todo dj  loading failed 图片待替换
+                // todo dj UI loading failed 图片待替换
                 return noDataImg;
         }
     });
