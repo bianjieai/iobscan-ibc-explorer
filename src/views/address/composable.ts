@@ -125,6 +125,7 @@ export const useGetAddressTokens = () => {
     };
 };
 
+// todo dj accountsData.total_value 如果不可用，单独处理一个字段供 baseInfo 使用
 export const useGetAddressAccounts = () => {
     const accountsLoading = ref(true);
     const accountsNoDataType = ref<NoDataType>();
