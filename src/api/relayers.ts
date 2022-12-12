@@ -88,7 +88,7 @@ export const getRelayerTransferListAPI = async (
     params: IRequestRelayerTransfer
 ) => {
     executeCancel(params.use_count);
-    return request<IResponse<IRelayerTransferList>>({
+    return request<IResponse<IRelayerTransferList | number>>({
         url: `${API_URL.ibcRelayerDetailsUrl}${relayerId}/txs`,
         method: 'get',
         params: params,

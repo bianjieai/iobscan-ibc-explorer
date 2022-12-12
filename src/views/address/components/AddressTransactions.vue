@@ -23,7 +23,7 @@
                     dcKey: 'txs_tx_time'
                 }
             ]"
-            :page-loading="addressPageisDisabled"
+            :page-disabled="addressPageisDisabled"
             :current="pagination.current"
             :page-size="5"
             :total="pagination.total"
@@ -97,7 +97,7 @@
             <template #denom_info="{ record, column }">
                 <div v-if="showMoreIcon(record.ibc_version)">
                     <router-link :to="`/address/${currentAddress}?chain=${currentChain}`">
-                        <i class="iconfont icon-more"></i>
+                        <i class="iconfont icon-more ml-8 mr-4"></i>
                         <span>More</span>
                     </router-link>
                 </div>

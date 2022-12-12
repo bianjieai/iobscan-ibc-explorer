@@ -8,8 +8,8 @@
         <loading-component v-if="addressAllocationLoading" :type="LoadingType.container" />
         <no-datas v-else-if="addressAllocationType" :type="addressAllocationType" />
         <div v-show="isShowAddressAllocationChart" class="address_allocation__chart_c">
-            <div class="address_allocation__chart_c__title"
-                >Total Value&nbsp;&nbsp;{{ UNIT_SIGNS }} {{ totalValue }}
+            <div class="address_allocation__chart_c__title">
+                Total Value&nbsp;&nbsp;{{ totalValue }}
             </div>
             <div class="address_allocation__chart_c__content_c">
                 <div class="address_allocation__chart_c__content_c__wrap">
@@ -66,7 +66,6 @@
     import PieLegend from './PieLegend.vue';
     import { LoadingType, NoDataType } from '@/constants';
     import { ITokenList } from '@/types/interface/address.interface';
-    import { UNIT_SIGNS } from '@/constants/relayers';
     import { useAddressAllocation } from '../composable';
 
     interface IProps {

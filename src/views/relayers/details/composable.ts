@@ -43,6 +43,7 @@ import type {
     IChannelChain,
     IRelayerTransferItem,
     IRelayerTransferItemFormat,
+    IRelayerTransferList,
     IRequestRelayerTransfer
 } from '@/types/interface/relayers.interface';
 import * as echarts from 'echarts';
@@ -175,16 +176,16 @@ export const useGetRelayerDetailsInfo = () => {
     watch([relayerName, widthClient], ([newRelayerName, newWidthClient]) => {
         const relayerNameWidth = getTextWidth(newRelayerName, '22px Eurocine-regular');
         if (relayerNameWidth) {
-            if (newWidthClient > 1200) {
+            if (newWidthClient.value > 1200) {
                 displayAdaptor.value =
                     relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more1200 ? true : false;
-            } else if (newWidthClient > 1000) {
+            } else if (newWidthClient.value > 1000) {
                 displayAdaptor.value =
                     relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more1000 ? true : false;
-            } else if (newWidthClient > 768) {
+            } else if (newWidthClient.value > 768) {
                 displayAdaptor.value =
                     relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more768 ? true : false;
-            } else if (newWidthClient > 580) {
+            } else if (newWidthClient.value > 580) {
                 displayAdaptor.value =
                     relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more580 ? true : false;
             } else {
@@ -623,9 +624,8 @@ export const useSelectedSearch = (
     const startTxTime = ref<number | undefined>(undefined);
     const endTxTime = ref<number | undefined>(undefined);
     const rtTableLoading = ref<boolean>(true);
-    const rtPageLoading = ref<boolean>(true);
+    const rtPageisDisabled = ref<boolean>(true);
     const rtNoDataType = ref<NoDataType>();
-    const isDisplayDefaultText = ref<boolean>(true);
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
             if (!newServedChainsInfo?.length) return [];
@@ -641,7 +641,8 @@ export const useSelectedSearch = (
             if (!relayerChain.value.length) {
                 relayerTransferTableData.value = [];
                 rtTableLoading.value = false;
-                rtPageLoading.value = false;
+                rtPageisDisabled.value = true;
+                rtNoDataType.value = NoDataType.noData;
             }
         };
         sortServedChainsInfo();
@@ -680,9 +681,11 @@ export const useSelectedSearch = (
         page_size = 5,
         use_count = false
     ) => {
-        // todo shan 分析不同请求的各类值赋值情况，并进行改造，考虑获取不到以及接口出错等各种情况
-        rtTableLoading.value = true;
-        rtPageLoading.value = true;
+        if (use_count) {
+            rtPageisDisabled.value = true;
+        } else {
+            rtTableLoading.value = true;
+        }
         rtNoDataType.value = undefined;
         const getRelayerTransferTxsData = async () => {
             try {
@@ -693,41 +696,47 @@ export const useSelectedSearch = (
                     use_count
                 });
                 if (code === API_CODE.success) {
-                    if (data) {
-                        if (typeof data === 'number') {
-                            pagination.total = data;
-                            isDisplayDefaultText.value = false;
-                            rtPageLoading.value = false;
-                        } else {
-                            relayerTransferTableData.value = formatDate(data.items);
-                            rtTableLoading.value = false;
-                            rtPageLoading.value = false;
+                    if (use_count) {
+                        pagination.total = data as number;
+                        rtPageisDisabled.value = false;
+                        if (pagination.total === 0) {
+                            rtPageisDisabled.value = true;
                         }
                     } else {
-                        console.error(message);
+                        if ((data as IRelayerTransferList).items?.length) {
+                            relayerTransferTableData.value = formatDate(
+                                (data as IRelayerTransferList).items
+                            );
+                            rtNoDataType.value = undefined;
+                        } else {
+                            relayerTransferTableData.value = [];
+                            rtNoDataType.value = NoDataType.noData;
+                            rtPageisDisabled.value = true;
+                        }
                         rtTableLoading.value = false;
-                        rtPageLoading.value = true;
-                        rtNoDataType.value = NoDataType.noData;
                     }
                 } else if (code === API_CODE.unRegisteredRelayer) {
                     console.error(message);
                     pagination.total = 0;
-                    relayerTransferTableData.value = [];
                     rtTableLoading.value = false;
-                    rtPageLoading.value = true;
+                    rtPageisDisabled.value = true;
                     rtNoDataType.value = NoDataType.noData;
                 } else {
-                    relayerTransferTableData.value = [];
-                    rtTableLoading.value = false;
-                    rtPageLoading.value = true;
-                    rtNoDataType.value = NoDataType.loadFailed;
+                    if (use_count) {
+                        rtPageisDisabled.value = true;
+                    } else {
+                        rtTableLoading.value = false;
+                        rtNoDataType.value = NoDataType.loadFailed;
+                    }
                 }
             } catch (error) {
                 if (!axiosCancel(error)) {
-                    relayerTransferTableData.value = [];
-                    rtTableLoading.value = false;
-                    rtPageLoading.value = true;
-                    rtNoDataType.value = NoDataType.loadFailed;
+                    if (use_count) {
+                        rtPageisDisabled.value = true;
+                    } else {
+                        rtTableLoading.value = false;
+                        rtNoDataType.value = NoDataType.loadFailed;
+                    }
                 }
                 console.error(error);
             }
@@ -736,8 +745,6 @@ export const useSelectedSearch = (
     };
     const queryDatas = (params: IRequestRelayerTransfer) => {
         getRelayerTransferTxs(params, 1, 5, true);
-        isDisplayDefaultText.value = true;
-        pagination.total = 0;
         getRelayerTransferTxs(params, pagination.current, pagination.pageSize, false);
     };
     watch(defaultChain, (newDefaultChain) => {
@@ -806,13 +813,6 @@ export const useSelectedSearch = (
             false
         );
     };
-    const getRtSubtitle = (showDefault: boolean, total: number) => {
-        const displayTotal = !showDefault ? formatBigNumber(total || '0', 0) : DEFAULT_DISPLAY_TEXT;
-        return `A total of ${displayTotal} IBC Transactions found`;
-    };
-    const rtTableSubTitle = computed(() => {
-        return getRtSubtitle(isDisplayDefaultText.value, pagination.total);
-    });
     return {
         defaultChain,
         relayerChainData,
@@ -826,8 +826,7 @@ export const useSelectedSearch = (
         disabledDate,
         onChangeRangePicker,
         rtTableLoading,
-        rtPageLoading,
-        rtTableSubTitle,
+        rtPageisDisabled,
         rtNoDataType
     };
 };

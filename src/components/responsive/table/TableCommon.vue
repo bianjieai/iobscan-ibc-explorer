@@ -119,7 +119,7 @@
         customRow?: GetComponentProps<any>;
         hasPaddingLr?: boolean;
         isLaunchTimer?: boolean;
-        pageLoading?: boolean;
+        pageDisabled?: boolean;
         noDataType?: NoDataType;
     }
     // Todo shan hasPaddingLr 能否修改 Transfer 列表页等移入每一行两边有间距的情况
@@ -132,7 +132,7 @@
         rowKey: 'record_id',
         hasPaddingLr: true,
         isLaunchTimer: true,
-        pageLoading: undefined
+        pageDisabled: undefined
     });
     const pageInfo = reactive({
         pageSize: props.pageSize || 10,
@@ -171,7 +171,7 @@
     );
     const disabledPagination = computed(() => {
         const paginationLoading =
-            props.pageLoading === undefined ? props.tableLoading : props.pageLoading;
+            props.pageDisabled === undefined ? props.tableLoading : props.pageDisabled;
         return paginationLoading || pageInfo.total <= 0;
     });
     const needPagination = computed(() => {

@@ -1,5 +1,5 @@
 <template>
-    <InfoCard icon="icon-transactions" title="Transactions" :sub-title="rtTableSubTitle">
+    <InfoCard icon="icon-transactions" title="Transactions">
         <div class="relayer_transfer">
             <div class="relayer_transfer__search">
                 <BjSelect
@@ -46,7 +46,7 @@
                     class="relayer_transfer__table__content"
                     :has-padding-lr="false"
                     :table-loading="rtTableLoading"
-                    :page-loading="rtPageLoading"
+                    :page-disabled="rtPageisDisabled"
                     :data="relayerTransferTableData"
                     row-key="record_id"
                     :need-custom-headers="needCustomHeaders"
@@ -162,8 +162,7 @@
         disabledDate,
         onChangeRangePicker,
         rtTableLoading,
-        rtPageLoading,
-        rtTableSubTitle,
+        rtPageisDisabled,
         rtNoDataType
     } = useSelectedSearch(servedChainsInfo, pagination);
     const getPopupContainer = (): HTMLElement =>
