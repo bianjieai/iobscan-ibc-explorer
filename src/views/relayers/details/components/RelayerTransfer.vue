@@ -30,19 +30,7 @@
                 </div>
             </div>
             <div class="relayer_transfer__table">
-                <!-- todo shan 表格无数据、加载错误、加载中状态修改，在表格内部完成 -->
-                <loading-component
-                    v-if="rtTableLoading && !relayerTransferTableData"
-                    :type="LoadingType.container"
-                    :height="300"
-                />
-                <no-datas
-                    v-else-if="isShowModal || rtNoDataType"
-                    class="relayer_transfer__table__nodatas"
-                    :type="rtNoDataType"
-                />
                 <TableCommon
-                    v-else
                     class="relayer_transfer__table__content"
                     :has-padding-lr="false"
                     :table-loading="rtTableLoading"
@@ -51,6 +39,7 @@
                     row-key="record_id"
                     :need-custom-headers="needCustomHeaders"
                     :need-custom-columns="needCustomColumns"
+                    :no-data-type="rtNoDataType"
                     :columns="RELAYER_TRANSFER_COLUMN"
                     :current="pagination.current"
                     :page-size="pagination.pageSize"
@@ -141,7 +130,7 @@
         formatTransferType
     } from '@/composables';
     import { useSelectedSearch } from '../composable';
-    import { DEFAULT_TITLE, LoadingType, PAGE_PARAMETERS } from '@/constants';
+    import { DEFAULT_TITLE, PAGE_PARAMETERS } from '@/constants';
     interface IRelayerTransfer {
         servedChainsInfo: string[];
         isShowModal: boolean;
