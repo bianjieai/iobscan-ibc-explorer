@@ -38,19 +38,15 @@ import {
 import { PieData } from '@/types/interface/relayers.interface';
 import { useNeedCustomColumns } from '@/composables';
 
-export const useGetChainAddress = () => {
-    const route = useRoute();
-    const currentChain = route.query?.chain as string;
-    const currentAddress = (route.params.address as string).toLowerCase();
-    return {
-        currentChain,
-        currentAddress
-    };
+export const getTotalValue = (totalValue: string) => {
+    if (!totalValue || Number(totalValue) === 0) return '0';
+    return `${UNIT_SIGNS} ${formatBigNumber(totalValue, 2)}`;
 };
 
 export const useGetBaseInfo = () => {
     const router = useRouter();
-    const { currentChain, currentAddress } = useGetChainAddress();
+    const { currentChain, currentAddress, handleNoChainFn } = useGetChainAddress();
+    handleNoChainFn();
     const addressParams = {
         chain: currentChain,
         address: currentAddress
@@ -116,12 +112,8 @@ export const useGetBaseInfo = () => {
         }
     });
     onMounted(() => {
-        if (!currentChain) {
-            router.push(`/searchResult/${currentAddress}`);
-        } else {
-            getAddressBaseInfo();
-            getMatchChainInfo();
-        }
+        getAddressBaseInfo();
+        getMatchChainInfo();
     });
     return {
         baseInfoLoading,
@@ -158,15 +150,34 @@ export const useCreateQRCode = () => {
     };
 };
 
+export const useGetChainAddress = () => {
+    const route = useRoute();
+    const router = useRouter();
+    const currentChain = (route.query?.chain || '') as string;
+    const currentAddress = (route.params.address as string).toLowerCase();
+    const handleNoChainFn = () => {
+        if (!currentChain) {
+            router.replace(`/searchResult/${currentAddress}`);
+        }
+    };
+    return {
+        currentChain,
+        currentAddress,
+        handleNoChainFn
+    };
+};
+
 export const useGetAddressTokens = () => {
     const tokensLoading = ref(true);
     const tokensNoDataType = ref<NoDataType>();
     const tokensData = ref<ITokenList>();
+    const baseInfoTotalValue = ref(DEFAULT_DISPLAY_TEXT);
 
     const getAddrTokenList = async (chain: string, address: string) => {
         try {
             tokensLoading.value = true;
             tokensNoDataType.value = undefined;
+            baseInfoTotalValue.value = DEFAULT_DISPLAY_TEXT;
             const { code, data, message } = await getAddrTokenListMock(chain, address);
             if (code === API_CODE.success) {
                 if (data) {
@@ -208,11 +219,13 @@ export const useGetAddressTokens = () => {
                         tokens,
                         total_value: data.total_value
                     };
+                    baseInfoTotalValue.value = getTotalValue(data.total_value);
                 } else {
                     tokensData.value = {
                         tokens: [],
                         total_value: '0'
                     };
+                    baseInfoTotalValue.value = getTotalValue('');
                 }
             } else {
                 tokensNoDataType.value = NoDataType.loadFailed;
@@ -225,17 +238,16 @@ export const useGetAddressTokens = () => {
             tokensLoading.value = false;
         }
     };
-
-    // todo dj 接口入参待处理
-    getAddrTokenList('chain', 'address');
+    const { currentChain, currentAddress } = useGetChainAddress();
+    currentChain && getAddrTokenList(currentChain, currentAddress);
     return {
         tokensLoading,
         tokensNoDataType,
-        tokensData
+        tokensData,
+        baseInfoTotalValue
     };
 };
 
-// todo dj accountsData.total_value 如果不可用，单独处理一个字段供 baseInfo 使用
 export const useGetAddressAccounts = () => {
     const accountsLoading = ref(true);
     const accountsNoDataType = ref<NoDataType>();
@@ -282,8 +294,8 @@ export const useGetAddressAccounts = () => {
         }
     };
 
-    // todo dj 接口入参待处理
-    getAddrAccountList('chain', 'address');
+    const { currentChain, currentAddress } = useGetChainAddress();
+    currentChain && getAddrAccountList(currentChain, currentAddress);
     return {
         accountsLoading,
         accountsNoDataType,
@@ -310,10 +322,6 @@ export const useAddressAllocation = (
     const secondColumnLegendData = computed(() => {
         return legendData.value.length > 4 ? legendData.value.slice(4, 8) : [];
     });
-    const getTotalValue = (totalValue: string) => {
-        if (!totalValue || Number(totalValue) === 0) return '0';
-        return formatBigNumber(totalValue, 2);
-    };
     const isShowAddressAllocationChart = computed(() => {
         return !addressAllocationLoading?.value && !addressAllocationType?.value;
     });
@@ -643,10 +651,10 @@ export const usAddressAccount = (
     const router = useRouter();
     const goAddress = (isJumpAddress: boolean, chain: string, address: string) => {
         if (isJumpAddress) {
-            // todo dj 跳转路径待确认
             router.push(`/address/${address}?chain=${chain}`);
         }
     };
+    const { currentAddress } = useGetChainAddress();
     const accountsList = ref<IAddressAccountTableItem[]>([]);
     const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(
         PAGE_PARAMETERS.addressDetailsAccount
@@ -667,9 +675,7 @@ export const usAddressAccount = (
                 newValue.forEach((account) => {
                     temp.push({
                         chain: account.chain,
-                        // todo dj address 待处理
-                        isJumpAddress:
-                            account.address !== 'cosmos16dc379m0qj64g4pr4nkl7ewak52qy2srf6xl03',
+                        isJumpAddress: account.address !== currentAddress,
                         address: account.address,
                         tokenDenom: account.token_denom_num,
                         totalValue: formatPriceAndTotalValue(account.token_value),
@@ -709,10 +715,6 @@ export const useAddressAccountTokensRatio = (
     const secondColumnLegendData = computed(() => {
         return legendData.value.length > 4 ? legendData.value.slice(4, 8) : [];
     });
-    const getTotalValue = (totalValue: string) => {
-        if (!totalValue || Number(totalValue) === 0) return '0';
-        return formatBigNumber(totalValue, 2);
-    };
     const isShowAddressAccountTokenRatioChart = computed(() => {
         return !addressRatioLoading?.value && !addressRatioType?.value;
     });
@@ -754,7 +756,7 @@ export const useAddressAccountTokensRatio = (
                     formatter: (params: any) => {
                         // todo dj displayName 展示规则
                         const displayName = params.data.displayName;
-                        return `{text|${displayName}}\n\r\n\r{value|${UNIT_SIGNS}${getTotalValue(
+                        return `{text|${displayName}}\n\r\n\r{value|${getTotalValue(
                             params.data.value
                         )}}`;
                     },

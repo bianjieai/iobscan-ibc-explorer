@@ -2,13 +2,12 @@
     <PageContainer class="address_details">
         <PageTitle class="address_details__title" title="Address Details" />
         <div class="address_details__base_info_c">
-            <!-- todo shan 需要修改 totalValue 的值 -->
             <BaseInfo
                 :base-info-loading="baseInfoLoading"
                 :base-info="baseInfo"
                 :current-chain-info="currentChainInfo"
                 :is-show-tooltip="isShowTooltip"
-                :total-value="''"
+                :total-value="baseInfoTotalValue"
             />
         </div>
         <div class="address_details__tokens_c">
@@ -56,7 +55,8 @@
     import { useGetAddressTokens, useGetAddressAccounts, useGetBaseInfo } from './composable';
 
     const { baseInfoLoading, baseInfo, currentChainInfo, isShowTooltip } = useGetBaseInfo();
-    const { tokensLoading, tokensNoDataType, tokensData } = useGetAddressTokens();
+    const { tokensLoading, tokensNoDataType, tokensData, baseInfoTotalValue } =
+        useGetAddressTokens();
     const { accountsLoading, accountsNoDataType, accountsData } = useGetAddressAccounts();
 </script>
 
