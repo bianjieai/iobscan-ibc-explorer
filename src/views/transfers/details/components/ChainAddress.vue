@@ -6,8 +6,10 @@
         </span>
         <span class="address__value">
             <span
-                :class="{ cursor: judgeIsAddressCursor(chainAddress.value) }"
-                @click="goAddressDetails(chainAddress.value)"
+                :class="{
+                    cursor: judgeIsAddressCursor(chainAddress.value, chainInfo?.chain || '')
+                }"
+                @click="goAddressDetails(chainAddress.value, chainInfo?.chain || '')"
                 >{{ chainAddress.value }}</span
             >
             <CopyComponent

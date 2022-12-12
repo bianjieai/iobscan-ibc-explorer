@@ -3,13 +3,15 @@
         <HashAddrIconItem
             :hash="item.sc_tx_info.hash"
             :go-hash-value="item.sc_tx_info.hash"
-            :address="item.sc_addr"
+            :chain="sc_chain"
             :chain-logo-url="scChainIcon"
+            :address="item.sc_addr"
         />
         <img class="status_icon" :src="getImageUrl(item.status)" alt="status" />
         <HashAddrIconItem
             :hash="item?.dc_tx_info?.hash || ''"
             :go-hash-value="item.sc_tx_info.hash"
+            :chain="dc_chain"
             :chain-logo-url="dcChainIcon"
             :address="item.dc_addr"
         />
@@ -26,6 +28,7 @@
         }
     });
     const { sc_chain, dc_chain } = toRefs(props.item);
+
     const { getImageUrl, scChainIcon, dcChainIcon } = useHashAddrIcon(sc_chain, dc_chain);
 </script>
 

@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-    import { useCopyToast } from '@/helper/coypHelper';
+    import { useCopyToast } from '@/helper/copyHelper';
     interface IProps {
         lengedColor: string;
         legendName: string;

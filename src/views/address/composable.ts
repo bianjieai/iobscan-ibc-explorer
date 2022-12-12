@@ -38,15 +38,146 @@ import {
 import { PieData } from '@/types/interface/relayers.interface';
 import { useNeedCustomColumns } from '@/composables';
 
+export const getTotalValue = (totalValue: string) => {
+    if (!totalValue || Number(totalValue) === 0) return '0';
+    return `${UNIT_SIGNS} ${formatBigNumber(totalValue, 2)}`;
+};
+
+export const useGetBaseInfo = () => {
+    const router = useRouter();
+    const { currentChain, currentAddress, handleNoChainFn } = useGetChainAddress();
+    handleNoChainFn();
+    const addressParams = {
+        chain: currentChain,
+        address: currentAddress
+    };
+    const currentChainInfo = reactive({
+        chainLogo: CHAIN_DEFAULT_ICON,
+        prettyName: DEFAULT_DISPLAY_TEXT,
+        isShowTooltip: false
+    });
+    const baseInfoLoading = ref<boolean>(true);
+    const baseInfo = reactive({
+        address: currentAddress,
+        keyAlgorithm: DEFAULT_DISPLAY_TEXT,
+        accountSequence: DEFAULT_DISPLAY_TEXT,
+        pubKey: DEFAULT_DISPLAY_TEXT
+    });
+    const { width: widthClient } = useWindowSize();
+    const isShowTooltip = ref<boolean>(false);
+    const getAddressBaseInfo = async () => {
+        baseInfoLoading.value = true;
+        try {
+            const { code, message, data } = await getAddressBaseInfoAPI(
+                addressParams.chain,
+                addressParams.address
+            );
+            if (code === API_CODE.success) {
+                if (data) {
+                    baseInfo.keyAlgorithm = data.pub_key_algorithm || DEFAULT_DISPLAY_TEXT;
+                    baseInfo.accountSequence = data.account_sequence || DEFAULT_DISPLAY_TEXT;
+                    baseInfo.pubKey = data.pub_key || DEFAULT_DISPLAY_TEXT;
+                } else {
+                    console.log(message);
+                }
+            } else if (code === API_CODE.noMatchAddress) {
+                router.push(`/searchResult/${currentAddress}?chain=${currentChain}`);
+            } else {
+                console.log(message);
+            }
+            baseInfoLoading.value = false;
+        } catch (error) {
+            console.log(error);
+            baseInfoLoading.value = false;
+        }
+    };
+    const getMatchChainInfo = async () => {
+        const chainInfo = await ChainHelper.getChainInfoByKey(currentChain);
+        if (chainInfo) {
+            currentChainInfo.chainLogo = chainInfo.icon;
+            currentChainInfo.prettyName = chainInfo.pretty_name;
+        } else {
+            currentChainInfo.chainLogo = CHAIN_DEFAULT_ICON;
+            currentChainInfo.prettyName = DEFAULT_DISPLAY_TEXT;
+        }
+    };
+    const prettyNameSize = computed(() => {
+        return getTextWidth(currentChainInfo.prettyName, '16px GolosUI_Medium');
+    });
+    watch([prettyNameSize, widthClient], ([newPrettyNameSize, newWidthClient]) => {
+        if (newWidthClient > 895) {
+            isShowTooltip.value = newPrettyNameSize > 120;
+        } else {
+            isShowTooltip.value = newPrettyNameSize > 240;
+        }
+    });
+    onMounted(() => {
+        getAddressBaseInfo();
+        getMatchChainInfo();
+    });
+    return {
+        baseInfoLoading,
+        baseInfo,
+        currentChainInfo,
+        isShowTooltip
+    };
+};
+
+export const useCreateQRCode = () => {
+    const { currentAddress } = useGetChainAddress();
+    const qrCodeDom = ref<HTMLElement>();
+    const qrcode = ref();
+    const createQRCode = (currentAddress: string) => {
+        const addressQRCode = qrCodeDom.value;
+        qrcode.value = new QRCode(addressQRCode, {
+            width: 80,
+            height: 80,
+            colorDark: '#000000',
+            colorLight: '#ffffff',
+            correctLevel: QRCode.CorrectLevel.L
+        });
+        qrcode.value.clear();
+        qrcode.value.makeCode(currentAddress);
+    };
+    onMounted(() => {
+        createQRCode(currentAddress);
+    });
+    onBeforeUnmount(() => {
+        qrcode.value.clear();
+    });
+    return {
+        qrCodeDom
+    };
+};
+
+export const useGetChainAddress = () => {
+    const route = useRoute();
+    const router = useRouter();
+    const currentChain = (route.query?.chain || '') as string;
+    const currentAddress = (route.params.address as string).toLowerCase();
+    const handleNoChainFn = () => {
+        if (!currentChain) {
+            router.replace(`/searchResult/${currentAddress}`);
+        }
+    };
+    return {
+        currentChain,
+        currentAddress,
+        handleNoChainFn
+    };
+};
+
 export const useGetAddressTokens = () => {
     const tokensLoading = ref(true);
     const tokensNoDataType = ref<NoDataType>();
     const tokensData = ref<ITokenList>();
+    const baseInfoTotalValue = ref(DEFAULT_DISPLAY_TEXT);
 
     const getAddrTokenList = async (chain: string, address: string) => {
         try {
             tokensLoading.value = true;
             tokensNoDataType.value = undefined;
+            baseInfoTotalValue.value = DEFAULT_DISPLAY_TEXT;
             const { code, data, message } = await getAddrTokenListMock(chain, address);
             if (code === API_CODE.success) {
                 if (data) {
@@ -88,11 +219,13 @@ export const useGetAddressTokens = () => {
                         tokens,
                         total_value: data.total_value
                     };
+                    baseInfoTotalValue.value = getTotalValue(data.total_value);
                 } else {
                     tokensData.value = {
                         tokens: [],
                         total_value: '0'
                     };
+                    baseInfoTotalValue.value = getTotalValue('');
                 }
             } else {
                 tokensNoDataType.value = NoDataType.loadFailed;
@@ -105,13 +238,13 @@ export const useGetAddressTokens = () => {
             tokensLoading.value = false;
         }
     };
-
-    // todo dj 接口入参待处理
-    getAddrTokenList('chain', 'address');
+    const { currentChain, currentAddress } = useGetChainAddress();
+    currentChain && getAddrTokenList(currentChain, currentAddress);
     return {
         tokensLoading,
         tokensNoDataType,
-        tokensData
+        tokensData,
+        baseInfoTotalValue
     };
 };
 
@@ -161,8 +294,8 @@ export const useGetAddressAccounts = () => {
         }
     };
 
-    // todo dj 接口入参待处理
-    getAddrAccountList('chain', 'address');
+    const { currentChain, currentAddress } = useGetChainAddress();
+    currentChain && getAddrAccountList(currentChain, currentAddress);
     return {
         accountsLoading,
         accountsNoDataType,
@@ -181,16 +314,14 @@ export const useAddressAllocation = (
     const addressAllocationChartDom = ref();
     let addressAllocationChart: echarts.ECharts;
 
+    const isFailed = computed(() => addressAllocationType.value === NoDataType.loadFailed);
+
     const firstColumnLegendData = computed(() => {
         return legendData.value.length > 0 ? legendData.value.slice(0, 4) : [];
     });
     const secondColumnLegendData = computed(() => {
         return legendData.value.length > 4 ? legendData.value.slice(4, 8) : [];
     });
-    const getTotalValue = (totalValue: string) => {
-        if (!totalValue || Number(totalValue) === 0) return '0';
-        return formatBigNumber(totalValue, 2);
-    };
     const isShowAddressAllocationChart = computed(() => {
         return !addressAllocationLoading?.value && !addressAllocationType?.value;
     });
@@ -338,9 +469,12 @@ export const useAddressAllocation = (
         addressAllocationOption.series[1].data = [0];
         addressAllocationOption.series[1].silent = true;
     };
-    onMounted(async () => {
+    const initEchart = () => {
         addressAllocationChart = echarts.init(addressAllocationChartDom.value as HTMLElement);
+        addressAllocationChart.setOption(addressAllocationOption, true);
         window.addEventListener('resize', addressAllocationChartSizeFn);
+    };
+    onMounted(() => {
         watch(
             () => data?.value,
             (newValue) => {
@@ -421,8 +555,7 @@ export const useAddressAllocation = (
                         addressAllocationOption.series[1].data = [...allocationValueData];
                     }
                     nextTick(() => {
-                        addressAllocationChart.resize();
-                        addressAllocationChart.setOption(addressAllocationOption, true);
+                        initEchart();
                     });
                 }
             },
@@ -448,7 +581,8 @@ export const useAddressAllocation = (
         firstColumnLegendData,
         secondColumnLegendData,
         isShowAddressAllocationChart,
-        highlightFn
+        highlightFn,
+        isFailed
     };
 };
 
@@ -465,6 +599,7 @@ export const useAddressTokens = (
         const num = tokensList.value.length;
         return `A total of ${num} tokens found`;
     });
+    const isFailed = computed(() => addressTokensType.value === NoDataType.loadFailed);
 
     watch(
         () => data?.value,
@@ -505,7 +640,8 @@ export const useAddressTokens = (
     return {
         tokensSubTitle,
         tokensList,
-        needCustomColumns
+        needCustomColumns,
+        isFailed
     };
 };
 
@@ -517,10 +653,10 @@ export const usAddressAccount = (
     const router = useRouter();
     const goAddress = (isJumpAddress: boolean, chain: string, address: string) => {
         if (isJumpAddress) {
-            // todo dj 跳转路径待确认
             router.push(`/address/${address}?chain=${chain}`);
         }
     };
+    const { currentAddress } = useGetChainAddress();
     const accountsList = ref<IAddressAccountTableItem[]>([]);
     const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(
         PAGE_PARAMETERS.addressDetailsAccount
@@ -541,9 +677,7 @@ export const usAddressAccount = (
                 newValue.forEach((account) => {
                     temp.push({
                         chain: account.chain,
-                        // todo dj address 待处理
-                        isJumpAddress:
-                            account.address !== 'cosmos16dc379m0qj64g4pr4nkl7ewak52qy2srf6xl03',
+                        isJumpAddress: account.address !== currentAddress,
                         address: account.address,
                         tokenDenom: account.token_denom_num,
                         totalValue: formatPriceAndTotalValue(account.token_value),
@@ -583,10 +717,6 @@ export const useAddressAccountTokensRatio = (
     const secondColumnLegendData = computed(() => {
         return legendData.value.length > 4 ? legendData.value.slice(4, 8) : [];
     });
-    const getTotalValue = (totalValue: string) => {
-        if (!totalValue || Number(totalValue) === 0) return '0';
-        return formatBigNumber(totalValue, 2);
-    };
     const isShowAddressAccountTokenRatioChart = computed(() => {
         return !addressRatioLoading?.value && !addressRatioType?.value;
     });
@@ -626,9 +756,9 @@ export const useAddressAccountTokensRatio = (
                 label: {
                     show: false,
                     formatter: (params: any) => {
-                        // todo dj displayName 展示规则
+                        // todo dj pretty Name 展示规则
                         const displayName = params.data.displayName;
-                        return `{text|${displayName}}\n\r\n\r{value|${UNIT_SIGNS}${getTotalValue(
+                        return `{text|${displayName}}\n\r\n\r{value|${getTotalValue(
                             params.data.value
                         )}}`;
                     },
@@ -702,11 +832,17 @@ export const useAddressAccountTokensRatio = (
         });
         highlightArr.push(key);
     };
-    onMounted(async () => {
+    const initEchart = () => {
         addressAccountTokenRatioChart = echarts.init(
             addressAccountTokenRatioChartDom.value as HTMLElement
         );
+        addressAccountTokenRatioChart.setOption(addressAccountTokenRatioOption, true);
+        addressAccountTokenRatioChart.on('mouseover', (params) => {
+            highlightFn(params.name);
+        });
         window.addEventListener('resize', addressAccountTokenRatioChartSizeFn);
+    };
+    onMounted(async () => {
         watch(
             () => data?.value,
             (newValue) => {
@@ -779,14 +915,7 @@ export const useAddressAccountTokensRatio = (
                         addressAccountTokenRatioOption.series[1].data = [...tokenRatioValueData];
                     }
                     nextTick(() => {
-                        addressAccountTokenRatioChart.resize();
-                        addressAccountTokenRatioChart.setOption(
-                            addressAccountTokenRatioOption,
-                            true
-                        );
-                        addressAccountTokenRatioChart.on('mouseover', (params) => {
-                            highlightFn(params.name);
-                        });
+                        initEchart();
                     });
                 }
             },
@@ -806,125 +935,5 @@ export const useAddressAccountTokensRatio = (
         secondColumnLegendData,
         isShowAddressAccountTokenRatioChart,
         highlightFn
-    };
-};
-
-export const useGetChainAddress = () => {
-    const route = useRoute();
-    const currentChain = route.query?.chain as string;
-    const currentAddress = (route.params.address as string).toLowerCase();
-    return {
-        currentChain,
-        currentAddress
-    };
-};
-
-export const useGetBaseInfo = () => {
-    const router = useRouter();
-    const { currentChain, currentAddress } = useGetChainAddress();
-    const addressParams = {
-        chain: currentChain,
-        address: currentAddress
-    };
-    const currentChainInfo = reactive({
-        chainLogo: CHAIN_DEFAULT_ICON,
-        prettyName: DEFAULT_DISPLAY_TEXT,
-        isShowTooltip: false
-    });
-    const baseInfoLoading = ref<boolean>(true);
-    const baseInfo = reactive({
-        address: currentAddress,
-        keyAlgorithm: DEFAULT_DISPLAY_TEXT,
-        accountSequence: DEFAULT_DISPLAY_TEXT,
-        pubKey: DEFAULT_DISPLAY_TEXT
-    });
-    const { width: widthClient } = useWindowSize();
-    const isShowTooltip = ref<boolean>(false);
-    const getAddressBaseInfo = async () => {
-        baseInfoLoading.value = true;
-        try {
-            const { code, message, data } = await getAddressBaseInfoAPI(
-                addressParams.chain,
-                addressParams.address
-            );
-            if (code === API_CODE.success) {
-                if (data) {
-                    baseInfo.keyAlgorithm = data.pub_key_algorithm || DEFAULT_DISPLAY_TEXT;
-                    baseInfo.accountSequence = data.account_sequence || DEFAULT_DISPLAY_TEXT;
-                    baseInfo.pubKey = data.pub_key || DEFAULT_DISPLAY_TEXT;
-                } else {
-                    console.log(message);
-                }
-            } else if (code === API_CODE.noMatchAddress) {
-                router.push(`/searchResult/${currentAddress}?chain=${currentChain}`);
-            } else {
-                console.log(message);
-            }
-            baseInfoLoading.value = false;
-        } catch (error) {
-            console.log(error);
-            baseInfoLoading.value = false;
-        }
-    };
-    const getMatchChainInfo = async () => {
-        const chainInfo = await ChainHelper.getChainInfoByKey(currentChain);
-        if (chainInfo) {
-            currentChainInfo.chainLogo = chainInfo.icon;
-            currentChainInfo.prettyName = chainInfo.pretty_name;
-        } else {
-            currentChainInfo.chainLogo = CHAIN_DEFAULT_ICON;
-            currentChainInfo.prettyName = DEFAULT_DISPLAY_TEXT;
-        }
-    };
-    const prettyNameSize = computed(() => {
-        return getTextWidth(currentChainInfo.prettyName, '16px GolosUI_Medium');
-    });
-    watch([prettyNameSize, widthClient], ([newPrettyNameSize, newWidthClient]) => {
-        if (newWidthClient > 895) {
-            isShowTooltip.value = newPrettyNameSize > 120;
-        } else {
-            isShowTooltip.value = newPrettyNameSize > 240;
-        }
-    });
-    onMounted(() => {
-        if (!currentChain) {
-            router.push(`/searchResult/${currentAddress}`);
-        } else {
-            getAddressBaseInfo();
-            getMatchChainInfo();
-        }
-    });
-    return {
-        baseInfoLoading,
-        baseInfo,
-        currentChainInfo,
-        isShowTooltip
-    };
-};
-
-export const useCreateQRCode = () => {
-    const { currentAddress } = useGetChainAddress();
-    const qrCodeDom = ref<HTMLElement>();
-    const qrcode = ref();
-    const createQRCode = (currentAddress: string) => {
-        const addressQRCode = qrCodeDom.value;
-        qrcode.value = new QRCode(addressQRCode, {
-            width: 80,
-            height: 80,
-            colorDark: '#000000',
-            colorLight: '#ffffff',
-            correctLevel: QRCode.CorrectLevel.L
-        });
-        qrcode.value.clear();
-        qrcode.value.makeCode(currentAddress);
-    };
-    onMounted(() => {
-        createQRCode(currentAddress);
-    });
-    onBeforeUnmount(() => {
-        qrcode.value.clear();
-    });
-    return {
-        qrCodeDom
     };
 };

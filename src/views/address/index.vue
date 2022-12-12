@@ -2,16 +2,14 @@
     <PageContainer class="address_details">
         <PageTitle class="address_details__title" title="Address Details" />
         <div class="address_details__base_info_c">
-            <!-- todo shan 需要修改 totalValue 的值 -->
             <BaseInfo
                 :base-info-loading="baseInfoLoading"
                 :base-info="baseInfo"
                 :current-chain-info="currentChainInfo"
                 :is-show-tooltip="isShowTooltip"
-                :total-value="''"
+                :total-value="baseInfoTotalValue"
             />
         </div>
-        <!-- todo dj 三屏适配 -->
         <div class="address_details__tokens_c">
             <AddressAllocation
                 class="address_details__tokens_c__allocation"
@@ -57,12 +55,14 @@
     import { useGetAddressTokens, useGetAddressAccounts, useGetBaseInfo } from './composable';
 
     const { baseInfoLoading, baseInfo, currentChainInfo, isShowTooltip } = useGetBaseInfo();
-    const { tokensLoading, tokensNoDataType, tokensData } = useGetAddressTokens();
+    const { tokensLoading, tokensNoDataType, tokensData, baseInfoTotalValue } =
+        useGetAddressTokens();
     const { accountsLoading, accountsNoDataType, accountsData } = useGetAddressAccounts();
 </script>
 
 <style lang="less" scoped>
     .address_details {
+        padding: 48px 32px 100px !important;
         .info_card {
             margin-top: 16px;
         }
@@ -85,12 +85,93 @@
         }
         &__accounts_c {
             .flex(row,nowrap);
+            // todo dj 适配之后注释 display: none
+            display: none;
             &__account {
                 flex: 1;
                 margin-right: 16px;
             }
             &__account_tokens_ratio {
                 flex: 1;
+            }
+        }
+    }
+
+    @media screen and (max-width: 1091px) {
+        .address_details {
+            .info_card {
+            }
+            &__title {
+            }
+            &__base_info_c {
+            }
+            &__tokens_c {
+                .flex(column,nowrap);
+                &__allocation {
+                    flex: none;
+                    margin-right: 0;
+                }
+                &__tokens {
+                    flex: none;
+                }
+            }
+            &__transactions_c {
+            }
+            &__accounts_c {
+                &__account {
+                }
+                &__account_tokens_ratio {
+                }
+            }
+        }
+    }
+    @media screen and (max-width: 768px) {
+        .address_details {
+            padding: 40px 24px 60px !important;
+            .info_card {
+            }
+            &__title {
+            }
+            &__base_info_c {
+            }
+            &__tokens_c {
+                &__allocation {
+                }
+                &__tokens {
+                }
+            }
+            &__transactions_c {
+            }
+            &__accounts_c {
+                &__account {
+                }
+                &__account_tokens_ratio {
+                }
+            }
+        }
+    }
+    @media screen and (max-width: 530px) {
+        .address_details {
+            padding: 24px 16px 60px !important;
+            .info_card {
+            }
+            &__title {
+            }
+            &__base_info_c {
+            }
+            &__tokens_c {
+                &__allocation {
+                }
+                &__tokens {
+                }
+            }
+            &__transactions_c {
+            }
+            &__accounts_c {
+                &__account {
+                }
+                &__account_tokens_ratio {
+                }
             }
         }
     }

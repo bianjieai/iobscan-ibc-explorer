@@ -555,8 +555,8 @@ export enum LoadingType {
 }
 
 export enum NoDataType {
-    noData,
-    loadFailed
+    noData = 1,
+    loadFailed = 2
 }
 
 export const PIE_OTHERS = 'Others';
