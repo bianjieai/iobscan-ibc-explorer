@@ -12,8 +12,8 @@
             <span
                 v-else-if="item.isFormatSigner"
                 class="progress_list__value"
-                :class="{ cursor: judgeIsAddressCursor(item.value) }"
-                @click="goAddressDetails(item.value)"
+                :class="{ cursor: judgeIsAddressCursor(item.value, currentChain) }"
+                @click="goAddressDetails(item.value, currentChain)"
                 >{{ item.value }}</span
             >
             <span v-else class="progress_list__value">{{ item.value }}</span>
@@ -35,7 +35,7 @@
         dcInfo: ITxInfo | undefined;
     }
     const props = defineProps<IProps>();
-    const { progressListAll } = useProgressList(props);
+    const { progressListAll, currentChain } = useProgressList(props);
     const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
 </script>
 

@@ -33,7 +33,7 @@
                     hash_addr_icon__hover: isAddressCursor
                 }"
                 style="margin-top: 14px"
-                @click="goAddressDetails(address)"
+                @click="goAddressDetails(address, chain)"
             >
                 <img
                     class="hash_addr_icon__icon"
@@ -61,6 +61,7 @@
         goHashValue: string;
         address: string;
         chainLogoUrl: string;
+        chain: string;
     }
     const props = defineProps<IProps>();
     const { goTransfersDetails } = useGoTransfersDetail();
@@ -70,7 +71,7 @@
         isHover.value = flag;
     };
     const isAddressCursor = computed(() => {
-        return judgeIsAddressCursor(props.address);
+        return judgeIsAddressCursor(props.address, props.chain);
     });
 </script>
 

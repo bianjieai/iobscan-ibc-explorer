@@ -302,12 +302,18 @@ export const useGoTransfersDetail = () => {
 
 export const useGoAddressDetail = () => {
     const router = useRouter();
-    const goAddressDetails = (address: string) => {
-        if (!address || address === DEFAULT_DISPLAY_TEXT) return;
-        router.push(`/address/${address}`);
+    const goAddressDetails = (address: string, chain: string) => {
+        if (
+            !address ||
+            address === DEFAULT_DISPLAY_TEXT ||
+            !chain ||
+            chain === DEFAULT_DISPLAY_TEXT
+        )
+            return;
+        router.push(`/address/${address}?chain=${chain}`);
     };
-    const judgeIsAddressCursor = (address: string) => {
-        return address && address != DEFAULT_DISPLAY_TEXT;
+    const judgeIsAddressCursor = (address: string, chain: string) => {
+        return address && address != DEFAULT_DISPLAY_TEXT && chain && chain != DEFAULT_DISPLAY_TEXT;
     };
     return {
         goAddressDetails,

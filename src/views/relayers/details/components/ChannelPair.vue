@@ -11,8 +11,8 @@
             >
                 <span
                     class="channel_pair__chain_address"
-                    :class="{ cursor: judgeIsAddressCursor(item) }"
-                    @click="goAddressDetails(item)"
+                    :class="{ cursor: judgeIsAddressCursor(item, chain) }"
+                    @click="goAddressDetails(item, chain)"
                     >{{ item }}</span
                 >
                 <CopyComponent :copy-text="item"></CopyComponent>
