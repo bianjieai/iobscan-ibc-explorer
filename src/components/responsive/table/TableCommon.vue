@@ -411,9 +411,13 @@
         padding-left: 0;
         white-space: nowrap;
     }
-    :deep(.ant-table-thead
-            > tr
-            > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before) {
+    :deep(
+            .ant-table-thead
+                > tr
+                > th:not(:last-child):not(.ant-table-selection-column):not(
+                    .ant-table-row-expand-icon-cell
+                ):not([colspan])::before
+        ) {
         width: 0;
     }
     :deep(.ant-table-column-sorter) {
