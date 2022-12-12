@@ -11,7 +11,6 @@
                 :total-value="''"
             />
         </div>
-        <!-- todo dj 三屏适配 -->
         <div class="address_details__tokens_c">
             <AddressAllocation
                 class="address_details__tokens_c__allocation"
@@ -86,6 +85,8 @@
         }
         &__accounts_c {
             .flex(row,nowrap);
+            // todo dj 适配之后注释 display: none
+            display: none;
             &__account {
                 flex: 1;
                 margin-right: 16px;
