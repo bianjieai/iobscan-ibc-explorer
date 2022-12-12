@@ -76,6 +76,14 @@ export const useNeedCustomColumns = (whitePage: string) => {
         case PAGE_PARAMETERS.addressDetails:
             needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetails;
             needCustomHeaders.value = NEED_CUSTOM_HEADER.addressDetails;
+            break;
+        case PAGE_PARAMETERS.addressDetailsToken:
+            needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetailsToken;
+            break;
+        case PAGE_PARAMETERS.addressDetailsAccount:
+            needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetailsAccount;
+            needCustomHeaders.value = NEED_CUSTOM_HEADER.addressDetailsAccount;
+            break;
     }
     return {
         needCustomColumns,
@@ -306,8 +314,8 @@ export const useGoAddressDetail = () => {
     };
 };
 
-export const useTimeUtcAge = () => {
-    const showUtc = ref<boolean>(true);
+export const useTimeUtcAge = (showUtcInitialValue = true) => {
+    const showUtc = ref<boolean>(showUtcInitialValue);
     const changeShowUtcAge = (isShowUtc: boolean) => {
         showUtc.value = isShowUtc;
     };

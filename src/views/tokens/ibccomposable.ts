@@ -1,7 +1,7 @@
 import { axiosCancel } from '@/utils/axios';
 import { getIbcTokenListAPI } from '@/api/tokens';
 import { useResetSearch } from '@/composables';
-import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON } from '@/constants';
+import { BASE_PARAMS, PAGE_PARAMETERS, CHAIN_DEFAULT_ICON, TOKEN_DEFAULT_ICON } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { getRestString } from '@/helper/parseStringHelper';
 import { IBaseDenom, IIbcChains } from '@/types/interface/index.interface';
@@ -142,9 +142,7 @@ export const useIbcTokenSelected = (
         }
         return {
             symbol,
-            imgSrc: filterData[0]?.icon
-                ? filterData[0]?.icon
-                : new URL('../../assets/token-default.png', import.meta.url).href
+            imgSrc: filterData[0]?.icon || TOKEN_DEFAULT_ICON
         };
     });
     const chainData = computed(() => {

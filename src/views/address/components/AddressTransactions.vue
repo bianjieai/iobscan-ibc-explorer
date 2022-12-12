@@ -18,7 +18,7 @@
             :is-launch-timer="!showUtc"
             :real-time-key="[
                 {
-                    scKey: ADDRESS_TXS_KEY.time,
+                    scKey: AddressTxsKey.time,
                     dcKey: 'txs_tx_time'
                 }
             ]"
@@ -120,7 +120,7 @@
         formatTransferType
     } from '@/composables';
     import { PAGE_PARAMETERS } from '@/constants';
-    import { ADDRESS_TXS_KEY, ADDRESS_TXS_COLUMN, IN_OUT_TAG } from '@/constants/address';
+    import { AddressTxsKey, ADDRESS_TXS_COLUMN, IN_OUT_TAG } from '@/constants/address';
     import { getRestString } from '@/helper/parseStringHelper';
     import { useGetAddressTxs } from '../composable';
     const { pagination } = usePagination();

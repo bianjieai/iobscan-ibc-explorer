@@ -1,7 +1,8 @@
+import { AddressTokensTableKey, AddressAccountTableKey } from './address';
 import type { IDenomStatistic, IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
 import { RelayersListKey, RELAYER_TRANSFER_KEY } from '@/constants/relayers';
-import { ADDRESS_TXS_KEY } from './address';
+import { AddressTxsKey } from './address';
 
 export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.meta.url).href;
 export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', import.meta.url).href;
@@ -106,7 +107,9 @@ export const PAGE_PARAMETERS = {
     relayers: 'relayers',
     denom: 'denom',
     relayerDetails: 'relayerDetails',
-    addressDetails: 'addressDetails'
+    addressDetails: 'addressDetails',
+    addressDetailsToken: 'addressDetailsToken',
+    addressDetailsAccount: 'addressDetailsAccount'
 };
 
 export const MSG_DESC = {
@@ -444,21 +447,35 @@ export const NEED_CUSTOM_COLUMN = {
         RELAYER_TRANSFER_KEY.rtTime
     ],
     addressDetails: [
-        ADDRESS_TXS_KEY.txHash,
-        ADDRESS_TXS_KEY.type,
-        ADDRESS_TXS_KEY.port,
-        ADDRESS_TXS_KEY.from,
-        ADDRESS_TXS_KEY.to,
-        ADDRESS_TXS_KEY.amount,
-        ADDRESS_TXS_KEY.fee,
-        ADDRESS_TXS_KEY.time
+        AddressTxsKey.txHash,
+        AddressTxsKey.type,
+        AddressTxsKey.port,
+        AddressTxsKey.from,
+        AddressTxsKey.to,
+        AddressTxsKey.amount,
+        AddressTxsKey.fee,
+        AddressTxsKey.time
+    ],
+    addressDetailsToken: [
+        AddressTokensTableKey.total,
+        AddressTokensTableKey.amount,
+        AddressTokensTableKey.price,
+        AddressTokensTableKey.totalValue
+    ],
+    addressDetailsAccount: [
+        AddressAccountTableKey.chain,
+        AddressAccountTableKey.address,
+        AddressAccountTableKey.tokenDenom,
+        AddressAccountTableKey.totalValue,
+        AddressAccountTableKey.lastUpdated
     ]
 };
 
 export const NEED_CUSTOM_HEADER = {
     transfers: ['Token'],
     relayerDetails: ['Time'],
-    addressDetails: ['Time']
+    addressDetails: ['Time'],
+    addressDetailsAccount: ['LastUpdated']
 };
 
 export const BASE_PARAMS: IRequestPagination = {
@@ -554,3 +571,5 @@ export enum NoDataType {
     noData,
     loadFailed
 }
+
+export const PIE_OTHERS = 'Others';
