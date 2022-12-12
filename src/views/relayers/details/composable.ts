@@ -1,6 +1,7 @@
+import { PIE_OTHERS } from '@/constants/index';
+import { useCopyToast } from '@/helper/coypHelper';
 import { dayjsFormatDate, dayjsUtc } from '@/utils/timeTools';
 import { getDenomKey } from '@/helper/baseDenomHelper';
-import { copyToClipboard } from '@/utils/clipboardTools';
 import { getChartTooltip, getTransactionPluralSymbol } from '@/helper/relayerHelper';
 import {
     getRelayedTrendAPI,
@@ -1295,6 +1296,7 @@ export const useRelatedAssetChart = (
     relayedAssetsChoose: Ref<number>,
     type: Ref<RelatedAssetsPieType>
 ) => {
+    const { showToast, clientX, clientY, clickEventFn, copyFn } = useCopyToast();
     const route = useRoute();
     const relayerId: string = route.params.relayerId as string;
     const relayedValueDom = ref<HTMLElement>();
@@ -1657,7 +1659,7 @@ export const useRelatedAssetChart = (
                         }, '0');
                         valueDenomList.push({
                             imgUrl: TOKEN_DEFAULT_ICON,
-                            name: 'Others',
+                            name: PIE_OTHERS,
                             base_denom: '',
                             base_denom_chain: '',
                             txs_value: spliceValueTotal,
@@ -1671,7 +1673,7 @@ export const useRelatedAssetChart = (
                         }, 0);
                         txsDenomList.push({
                             imgUrl: TOKEN_DEFAULT_ICON,
-                            name: 'Others',
+                            name: PIE_OTHERS,
                             base_denom: '',
                             base_denom_chain: '',
                             txs: spliceTxsTotal,
@@ -1782,15 +1784,6 @@ export const useRelatedAssetChart = (
             relayedValueSizeFn();
         }, 0);
     };
-    const showToast = ref(false);
-    const clientX = ref(0);
-    const clientY = ref(0);
-    const clickEventFn = (e: MouseEvent) => {
-        clientX.value = e.clientX || 0;
-        clientY.value = e.clientY || 0;
-    };
-    let showTimer: number;
-    let cancelShowTimer: number;
     onMounted(async () => {
         await getRelayedValueData();
         relayedValueChart = echarts.init(relayedValueDom.value as HTMLElement);
@@ -1798,16 +1791,7 @@ export const useRelatedAssetChart = (
             relayedValueChart.setOption({
                 legend: { selected: { [params.name]: true } }
             });
-            showTimer && clearInterval(showTimer);
-            cancelShowTimer && clearInterval(cancelShowTimer);
-            showToast.value = false;
-            showTimer = setTimeout(() => {
-                copyToClipboard(params.name);
-                showToast.value = true;
-            }, 0);
-            cancelShowTimer = setTimeout(() => {
-                showToast.value = false;
-            }, 600);
+            copyFn(mapLegend[params.name] || params.name);
         });
         relayedAssetsChooseBtnFn(0);
         changeRelayedValueOption();
