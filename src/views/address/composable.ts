@@ -182,6 +182,8 @@ export const useAddressAllocation = (
     const addressAllocationChartDom = ref();
     let addressAllocationChart: echarts.ECharts;
 
+    const isFailed = computed(() => addressAllocationType.value === NoDataType.loadFailed);
+
     const firstColumnLegendData = computed(() => {
         return legendData.value.length > 0 ? legendData.value.slice(0, 4) : [];
     });
@@ -449,7 +451,8 @@ export const useAddressAllocation = (
         firstColumnLegendData,
         secondColumnLegendData,
         isShowAddressAllocationChart,
-        highlightFn
+        highlightFn,
+        isFailed
     };
 };
 
@@ -466,6 +469,7 @@ export const useAddressTokens = (
         const num = tokensList.value.length;
         return `A total of ${num} tokens found`;
     });
+    const isFailed = computed(() => addressTokensType.value === NoDataType.loadFailed);
 
     watch(
         () => data?.value,
@@ -506,7 +510,8 @@ export const useAddressTokens = (
     return {
         tokensSubTitle,
         tokensList,
-        needCustomColumns
+        needCustomColumns,
+        isFailed
     };
 };
 

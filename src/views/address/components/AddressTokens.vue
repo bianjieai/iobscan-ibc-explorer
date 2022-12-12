@@ -1,6 +1,7 @@
 <template>
     <InfoCard
         class="address_tokens_c"
+        :class="{ failed: isFailed }"
         :sub-title="tokensSubTitle"
         icon="icon-a-relayedassets"
         title="Tokens"
@@ -68,7 +69,7 @@
     }
     const props = defineProps<IProps>();
     const { data, addressTokensLoading, addressTokensType } = toRefs(props);
-    const { tokensSubTitle, tokensList, needCustomColumns } = useAddressTokens(
+    const { tokensSubTitle, tokensList, needCustomColumns, isFailed } = useAddressTokens(
         data,
         addressTokensLoading,
         addressTokensType
@@ -101,7 +102,15 @@
         &__table {
             .table_wrapper {
                 margin-top: 0;
+                :deep(table) {
+                    min-width: 602px;
+                }
             }
+        }
+    }
+    .failed {
+        :deep(.ant-table-container) {
+            min-height: 334px;
         }
     }
     .address_token_amount_popover {
@@ -119,6 +128,37 @@
                 font-size: 14px;
                 color: #000000;
                 line-height: 18px;
+            }
+        }
+    }
+    @media screen and (max-width: 1091px) {
+        .address_tokens_c {
+            min-width: auto;
+            :deep(.info_card__primary) {
+            }
+            :deep(.ant-table-container) {
+                .ant-table-thead {
+                    tr {
+                        th {
+                        }
+                    }
+                }
+                .ant-table-cell {
+                    &:nth-of-type(1) {
+                    }
+                }
+            }
+            &__table {
+                .table_wrapper {
+                }
+            }
+        }
+        .address_token_amount_popover {
+            &__item {
+                &__key {
+                }
+                &__value {
+                }
             }
         }
     }

@@ -63,6 +63,7 @@
 
 <style lang="less" scoped>
     .address_details {
+        padding: 48px 32px 100px !important;
         .info_card {
             margin-top: 16px;
         }
@@ -91,6 +92,85 @@
             }
             &__account_tokens_ratio {
                 flex: 1;
+            }
+        }
+    }
+
+    @media screen and (max-width: 1091px) {
+        .address_details {
+            .info_card {
+            }
+            &__title {
+            }
+            &__base_info_c {
+            }
+            &__tokens_c {
+                .flex(column,nowrap);
+                &__allocation {
+                    flex: none;
+                    margin-right: 0;
+                }
+                &__tokens {
+                    flex: none;
+                }
+            }
+            &__transactions_c {
+            }
+            &__accounts_c {
+                &__account {
+                }
+                &__account_tokens_ratio {
+                }
+            }
+        }
+    }
+    @media screen and (max-width: 768px) {
+        .address_details {
+            padding: 40px 24px 60px !important;
+            .info_card {
+            }
+            &__title {
+            }
+            &__base_info_c {
+            }
+            &__tokens_c {
+                &__allocation {
+                }
+                &__tokens {
+                }
+            }
+            &__transactions_c {
+            }
+            &__accounts_c {
+                &__account {
+                }
+                &__account_tokens_ratio {
+                }
+            }
+        }
+    }
+    @media screen and (max-width: 530px) {
+        .address_details {
+            padding: 24px 16px 60px !important;
+            .info_card {
+            }
+            &__title {
+            }
+            &__base_info_c {
+            }
+            &__tokens_c {
+                &__allocation {
+                }
+                &__tokens {
+                }
+            }
+            &__transactions_c {
+            }
+            &__accounts_c {
+                &__account {
+                }
+                &__account_tokens_ratio {
+                }
             }
         }
     }

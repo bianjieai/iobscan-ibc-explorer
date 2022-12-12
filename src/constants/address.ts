@@ -12,26 +12,29 @@ export const ADDRESS_TOKENS_COLUMNS: TableColumnsType = [
         title: 'Token',
         dataIndex: AddressTokensTableKey.total,
         key: AddressTokensTableKey.total,
-        align: 'left'
+        align: 'left',
+        width: 80
     },
     {
         title: 'Amount',
         dataIndex: AddressTokensTableKey.amount,
         key: AddressTokensTableKey.amount,
         align: 'right',
-        width: 200
+        width: 160
     },
     {
         title: 'Price',
         dataIndex: AddressTokensTableKey.price,
         key: AddressTokensTableKey.price,
-        align: 'right'
+        align: 'right',
+        width: 120
     },
     {
         title: 'Total Value',
         dataIndex: AddressTokensTableKey.totalValue,
         key: AddressTokensTableKey.totalValue,
-        align: 'right'
+        align: 'right',
+        width: 160
     }
 ];
 
