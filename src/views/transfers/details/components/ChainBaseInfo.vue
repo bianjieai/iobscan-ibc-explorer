@@ -2,7 +2,7 @@
     <div class="chain_info">
         <TitleCard :title="title"></TitleCard>
         <div class="chain_info__details" :class="{ chain_info__details_column: isFlexColumn }">
-            <ChainAddress :chain-address="chainAddress"></ChainAddress>
+            <ChainAddress :chain-address="chainAddress" :chain-info="chainInfo"></ChainAddress>
             <div class="chain_info__chain_id" :class="{ chain_info__column: isFlexColumn }">
                 <span class="chain_info__label">{{ chainInfoList.label }}</span>
                 <router-link

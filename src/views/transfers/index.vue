@@ -155,8 +155,10 @@
                                 </div>
                             </template>
                             <span
-                                :class="{ cursor: judgeIsAddressCursor(record.sc_addr) }"
-                                @click="goAddressDetails(record.sc_addr)"
+                                :class="{
+                                    cursor: judgeIsAddressCursor(record.sc_addr, record.sc_chain)
+                                }"
+                                @click="goAddressDetails(record.sc_addr, record.sc_chain)"
                                 >{{ getRestString(record.sc_addr, 6, 6) || '--' }}</span
                             >
                         </a-popover>
@@ -226,8 +228,10 @@
                                 </div>
                             </template>
                             <span
-                                :class="{ cursor: judgeIsAddressCursor(record.dc_addr) }"
-                                @click="goAddressDetails(record.dc_addr)"
+                                :class="{
+                                    cursor: judgeIsAddressCursor(record.dc_addr, record.dc_chain)
+                                }"
+                                @click="goAddressDetails(record.dc_addr, record.dc_chain)"
                                 >{{ getRestString(record.dc_addr, 6, 6) || '--' }}</span
                             >
                         </a-popover>

@@ -114,8 +114,10 @@
                                 </div>
                             </template>
                             <span
-                                :class="{ cursor: judgeIsAddressCursor(record.signer) }"
-                                @click="goAddressDetails(record.signer)"
+                                :class="{
+                                    cursor: judgeIsAddressCursor(record.signer, record.chain)
+                                }"
+                                @click="goAddressDetails(record.signer, record.chain)"
                                 >{{ getRestString(record.signer, 6, 6) }}</span
                             >
                         </a-popover>
