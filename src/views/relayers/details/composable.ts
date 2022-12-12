@@ -1,5 +1,5 @@
 import { PIE_OTHERS } from '@/constants/index';
-import { useCopyToast } from '@/helper/coypHelper';
+import { useCopyToast } from '@/helper/copyHelper';
 import { dayjsFormatDate, dayjsUtc } from '@/utils/timeTools';
 import { getDenomKey } from '@/helper/baseDenomHelper';
 import { getChartTooltip, getTransactionPluralSymbol } from '@/helper/relayerHelper';

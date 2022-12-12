@@ -28,7 +28,7 @@
                         <PieLegend
                             v-for="legend in secondColumnLegendData"
                             :key="legend.key"
-                            class="allocation_pie_legend cursor"
+                            class="allocation_pie_legend"
                             :lenged-color="legend.lengedColor"
                             :legend-name="legend.legendName"
                             :percentage="legend.percentage"
