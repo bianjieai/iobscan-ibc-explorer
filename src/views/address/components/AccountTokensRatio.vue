@@ -1,5 +1,5 @@
 <template>
-    <!-- todo dj icon -->
+    <!-- todo dj UI icon -->
     <InfoCard
         class="address_account_token_ratio"
         icon="icon-a-relayedassets"

@@ -1,5 +1,5 @@
 <template>
-    <!-- todo dj icon -->
+    <!-- todo dj UI icon -->
     <InfoCard
         class="address_accounts_c"
         tip-msg="All addresses found by the same pub key."
