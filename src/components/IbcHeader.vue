@@ -1,20 +1,24 @@
 <template>
     <div class="header_container">
         <div class="header_content">
-            <div v-ga="'导航栏-Logo'" class="logo cursor" @click="onClickLogo">
-                <div class="logo__img" :class="{ stage_logo__img: isStage }">
-                    <img :src="logoIcon" alt="logo" />
+            <div class="header_content__left">
+                <div v-ga="'导航栏-Logo'" class="logo cursor" @click="onClickLogo">
+                    <div class="logo__img" :class="{ stage_logo__img: isStage }">
+                        <img :src="logoIcon" alt="logo" />
+                    </div>
                 </div>
+                <navigation
+                    class="header_navigation"
+                    :menus="headerMenus"
+                    :current-menu="currentMenu"
+                    :is-show-nav="isShowNav"
+                    @click-menu="clickMenu"
+                />
             </div>
-            <navigation
-                class="header_navigation"
-                :menus="headerMenus"
-                :current-menu="currentMenu"
-                :is-show-nav="isShowNav"
-                @click-menu="clickMenu"
-            />
             <div class="header_input_wrapper">
-                <header-input class="header_input_layout" disabled />
+                <div class="flex items-center header_input_focus">
+                    <header-input class="header_input_layout" />
+                </div>
                 <div class="header_input_icon_wrapper">
                     <a
                         v-ga="'导航栏-点击跨链门户'"
@@ -41,7 +45,7 @@
             </div>
         </div>
         <div class="header_container__input">
-            <header-input class="header_container__input_layout" disabled />
+            <header-input class="header_container__input_layout" />
         </div>
     </div>
 </template>
@@ -58,7 +62,6 @@
     const isShowNav = ref(false);
     const router = useRouter();
     const route = useRoute();
-
     const clickMenu = (val: string) => {
         (window as any).gtag('event', '导航栏-点击页面标签', {
             menuName: val
@@ -128,6 +131,9 @@
             width: 100%;
             max-width: 1200px;
             height: 100%;
+            &__left {
+                .flex(row, nowrap, flex-start, center);
+            }
             .logo {
                 .flex(row, nowrap, center, center);
                 &__img {
@@ -144,6 +150,7 @@
                 }
             }
             .header_navigation {
+                margin-left: 37px;
                 z-index: 1;
             }
             .header_content {
@@ -152,7 +159,7 @@
                 .flex(row, nowrap, space-between, center);
                 .header_input_icon_wrapper {
                     .flex(row, nowrap, space-between, center);
-                    margin-left: 12px;
+                    margin-left: 24px;
                     a {
                         .flex(row, nowrap, center, center);
                         .header_input_icon {
@@ -170,6 +177,9 @@
                         }
                     }
                 }
+            }
+            .header_input_focus {
+                position: relative;
             }
         }
         &__input {
@@ -242,6 +252,7 @@
                     }
                 }
                 .header_navigation {
+                    margin-left: 0;
                 }
                 .header_input_wrapper {
                     .header_input_icon_wrapper {
@@ -287,7 +298,7 @@
             }
         }
     }
-    @media screen and (max-width: 545px) {
+    @media screen and (max-width: 620px) {
         .header_container {
             .header_content {
                 .logo {

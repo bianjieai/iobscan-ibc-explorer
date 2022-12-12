@@ -19,5 +19,7 @@ export const API_URL = {
     ibcTxsSearchCondition: '/ibc/txs/searchCondition',
     ibcRelayedTrend: `/ibc/relayer/${urlReplacePlaceholder}/relayedTrend`,
     ibcTotalRelayedValue: `/ibc/relayer/${urlReplacePlaceholder}/totalRelayedValue`,
-    ibcTotalFeeCost: `/ibc/relayer/${urlReplacePlaceholder}/totalFeeCost`
+    ibcTotalFeeCost: `/ibc/relayer/${urlReplacePlaceholder}/totalFeeCost`,
+    ibcAddressChain: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder}`,
+    ibcAddressChainTxs: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder}/txs`
 };

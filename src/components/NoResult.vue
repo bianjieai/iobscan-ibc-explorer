@@ -4,6 +4,10 @@
             <p v-show="props.titleLabel" class="search_result">
                 <span class="search_result__label">{{ props.titleLabel }}</span>
                 <span class="search_result__value">{{ props.titleValue }}</span>
+                <span v-if="titleChain" class="search_result__value">
+                    <span>on</span>
+                    <span class="search_result__value">{{ titleChain }}</span>
+                </span>
             </p>
             <div class="result_icon">
                 <div class="result_icon__wrap">
@@ -29,6 +33,7 @@
     interface IProps {
         titleLabel?: string;
         titleValue?: string;
+        titleChain?: string;
         buttonFn?: () => void;
         tipText?: string;
         tipDescription?: string;
