@@ -121,8 +121,7 @@
                         </a-popover>
                     </template>
                     <template #tx_time="{ record }">
-                        <span v-if="showUtc">{{ record.format_tx_time }}</span>
-                        <span v-else>{{ record.relayers_tx_time }}</span>
+                        <span>{{ showUtc ? record.format_tx_time : record.relayers_tx_time }}</span>
                     </template>
                 </TableCommon>
             </div>

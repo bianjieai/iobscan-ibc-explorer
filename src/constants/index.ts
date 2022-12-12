@@ -107,7 +107,7 @@ export const PAGE_PARAMETERS = {
     relayers: 'relayers',
     denom: 'denom',
     relayerDetails: 'relayerDetails',
-    addressDetails: 'addressDetails',
+    addressDetailsTxs: 'addressDetailsTxs',
     addressDetailsToken: 'addressDetailsToken',
     addressDetailsAccount: 'addressDetailsAccount'
 };
@@ -446,7 +446,7 @@ export const NEED_CUSTOM_COLUMN = {
         RELAYER_TRANSFER_KEY.rtSigner,
         RELAYER_TRANSFER_KEY.rtTime
     ],
-    addressDetails: [
+    addressDetailsTxs: [
         AddressTxsKey.txHash,
         AddressTxsKey.type,
         AddressTxsKey.port,
@@ -474,7 +474,7 @@ export const NEED_CUSTOM_COLUMN = {
 export const NEED_CUSTOM_HEADER = {
     transfers: ['Token'],
     relayerDetails: ['Time'],
-    addressDetails: ['Time'],
+    addressDetailsTxs: ['Time'],
     addressDetailsAccount: ['LastUpdated']
 };
 
@@ -573,3 +573,9 @@ export enum NoDataType {
 }
 
 export const PIE_OTHERS = 'Others';
+
+export enum IbcVersion {
+    'ICS-20' = 'ics20',
+    'ICS-27' = 'ics27',
+    'ICS-721' = 'ics721'
+}

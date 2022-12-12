@@ -66,6 +66,15 @@ export const getAddrTxsAPI = async (params: IRequestAddressTxs) => {
     });
 };
 
+export const exportAddressTxsAPI = async (chain: string, address: string) => {
+    let url = API_URL.ibcAddrTxsExport.replace(urlReplacePlaceholder, chain);
+    url = url.replace(urlReplacePlaceholder2, address);
+    return requestMock<IResponse>({
+        url,
+        method: 'get'
+    });
+};
+
 /*
 // todo shan 待替换为真实请求
 export const getAddrBaseInfoAPI = async (chain: string, address: string) => {
@@ -88,4 +97,14 @@ export const getAddrTxsAPI = async (params: IRequestAddressTxs) => {
         cancelToken: setExecuteCancel(params.use_count)
     });
 };
+
+export const exportAddressTxsAPI = async (chain: string, address: string) => {
+    let url = API_URL.ibcAddrTxsExport.replace(urlReplacePlaceholder, chain);
+    url = url.replace(urlReplacePlaceholder, address);
+    return request<IResponse>({
+        url,
+        method: 'get'
+    });
+};
+
 */

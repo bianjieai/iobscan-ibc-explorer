@@ -16,7 +16,7 @@ export const ADDRESS_TXS_COLUMN: TableColumnsType = [
         title: 'TxHash',
         dataIndex: AddressTxsKey.txHash,
         key: AddressTxsKey.txHash,
-        width: 150
+        width: 180
     },
     {
         title: 'Type',

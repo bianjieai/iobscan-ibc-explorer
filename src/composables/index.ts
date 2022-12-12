@@ -73,9 +73,10 @@ export const useNeedCustomColumns = (whitePage: string) => {
         case PAGE_PARAMETERS.relayerDetails:
             needCustomColumns.value = NEED_CUSTOM_COLUMN.relayerDetails;
             needCustomHeaders.value = NEED_CUSTOM_HEADER.relayerDetails;
-        case PAGE_PARAMETERS.addressDetails:
-            needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetails;
-            needCustomHeaders.value = NEED_CUSTOM_HEADER.addressDetails;
+            break;
+        case PAGE_PARAMETERS.addressDetailsTxs:
+            needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetailsTxs;
+            needCustomHeaders.value = NEED_CUSTOM_HEADER.addressDetailsTxs;
             break;
         case PAGE_PARAMETERS.addressDetailsToken:
             needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetailsToken;

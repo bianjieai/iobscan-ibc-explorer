@@ -8,6 +8,7 @@ import ChainHelper from '@/helper/chainHelper';
 import {
     CHAIN_DEFAULT_ICON,
     DEFAULT_DISPLAY_TEXT,
+    IbcVersion,
     NoDataType,
     PAGE_PARAMETERS,
     PIE_OTHERS,
@@ -29,6 +30,7 @@ import type {
     PieLegendData
 } from '@/types/interface/address.interface';
 import {
+    exportAddressTxsAPI,
     getAddrAccountListMock,
     getAddrBaseInfoAPI,
     getAddrTokenListMock,
@@ -896,7 +898,7 @@ export const useGetBaseInfo = () => {
         return getTextWidth(currentChainInfo.prettyName, '16px GolosUI_Medium');
     });
     watch([prettyNameSize, widthClient], ([newPrettyNameSize, newWidthClient]) => {
-        if (newWidthClient > 895) {
+        if (newWidthClient.value > 895) {
             isShowTooltip.value = newPrettyNameSize > 120;
         } else {
             isShowTooltip.value = newPrettyNameSize > 240;
@@ -979,7 +981,6 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
         });
         return formatDateData;
     };
-    // 发请求获取表格数据
     const getAddressTxs = async (params: IRequestAddressTxs) => {
         if (params.use_count) {
             addressPageisDisabled.value = true;
@@ -1008,8 +1009,6 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
                     loadingCondition.value = NoDataType.noData;
                     console.log(message);
                 }
-            } else if (code === API_CODE.noMatchAddress) {
-                // todo shan 确定此处的展示情况：chain 和 address 未找到对应匹配情况
             } else {
                 addressTxsLoading.value = false;
                 addressPageisDisabled.value = false;
@@ -1043,6 +1042,9 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
     const subTitle = computed(() => {
         return showSubTitle ? getTxsSubtitle(showDefaultTotal.value, pagination.total) : '';
     });
+    const showMoreIcon = (ibcVersion: string) => {
+        return ibcVersion === IbcVersion['ICS-27'] || ibcVersion === IbcVersion['ICS-721'];
+    };
     onMounted(() => {
         getAddressTxs({
             chain: currentChain,
@@ -1064,9 +1066,19 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
         currentAddress,
         addressTxsLoading,
         addressPageisDisabled,
-        // loadingCondition,
+        loadingCondition,
         addressTxsList,
         onPaginationChange,
-        subTitle
+        subTitle,
+        showMoreIcon
+    };
+};
+
+export const useExportAddressTxs = () => {
+    const exportAddressTxs = (chain: string, address: string) => {
+        exportAddressTxsAPI(chain, address);
+    };
+    return {
+        exportAddressTxs
     };
 };
