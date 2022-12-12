@@ -754,7 +754,7 @@ export const useAddressAccountTokensRatio = (
                 label: {
                     show: false,
                     formatter: (params: any) => {
-                        // todo dj displayName 展示规则
+                        // todo dj pretty Name 展示规则
                         const displayName = params.data.displayName;
                         return `{text|${displayName}}\n\r\n\r{value|${getTotalValue(
                             params.data.value
