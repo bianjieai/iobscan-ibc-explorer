@@ -1,10 +1,9 @@
 <template>
-    <!-- todo dj UI icon -->
     <InfoCard
         class="address_accounts_c"
         tip-msg="All addresses found by the same pub key."
         :sub-title="accountsSubTitle"
-        icon="icon-a-relayedassets"
+        icon="icon-account"
         title="Account"
     >
         <div class="address_accounts_c__table">

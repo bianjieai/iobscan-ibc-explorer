@@ -1,10 +1,5 @@
 <template>
-    <!-- todo dj UI icon -->
-    <InfoCard
-        class="address_account_token_ratio"
-        icon="icon-a-relayedassets"
-        title="Account Tokens Ratio"
-    >
+    <InfoCard class="address_account_token_ratio" icon="icon-Ratio" title="Account Tokens Ratio">
         <loading-component v-if="addressRatioLoading" :type="LoadingType.container" />
         <no-datas v-else-if="addressRatioType" :type="addressRatioType" />
         <div
