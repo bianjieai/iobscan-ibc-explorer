@@ -1,5 +1,7 @@
 import { API_URL } from '@/constants/apiUrl';
 import request from '@/utils/axios';
+// todo shan delete mock
+import requestMock from '@/utils/axiosMock';
 import type {
     IResponse,
     IIbcChains,
@@ -9,7 +11,8 @@ import type {
 import type { ISearchPoint } from '@/types/interface/home.interface';
 
 export const getIbcChainsAPI = () => {
-    return request<IResponse<IResponseData<IIbcChains[]>>>({
+    // todo shan delete mock
+    return requestMock<IResponse<IResponseData<IIbcChains[]>>>({
         url: API_URL.ibcChainsUrl,
         method: 'get'
     });

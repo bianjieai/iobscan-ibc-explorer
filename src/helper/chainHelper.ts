@@ -3,7 +3,7 @@ import { PRETTYNAME, UNKNOWN, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { useIbcChains } from '@/composables';
 import { IChainsListItem, IResponseChainsListItem } from '@/types/interface/chains.interface';
 import { IResponseTokensListItem, ITokensListItem } from '@/types/interface/tokens.interface';
-import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
+import { IIbcchain, IIbcchainMap, IPrefixChain } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { getRestString } from '@/helper/parseStringHelper';
 import { TData, TDenom, IDataItem } from '@/components/BjSelect/interface';
@@ -253,5 +253,14 @@ export default class ChainHelper {
             }
         }
         return resArray.join(',');
+    };
+
+    static getChainInfoByPrefix = async (prefix: string): Promise<IPrefixChain[] | undefined> => {
+        const ibcStatisticsChainsStore = useIbcStatisticsChains();
+        const { ibcChainsPrefixMapGetter } = ibcStatisticsChainsStore;
+        if (Object.keys(ibcChainsPrefixMapGetter).length <= 0) {
+            await ibcStatisticsChainsStore.getIbcChainsAction();
+        }
+        return ibcChainsPrefixMapGetter[prefix];
     };
 }

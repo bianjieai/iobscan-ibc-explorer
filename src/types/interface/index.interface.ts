@@ -46,6 +46,11 @@ export interface IIbcchain {
     status: CHAIN_STATUS;
     addr_prefix: string[];
 }
+
+export interface IPrefixChain {
+    chain_name: string;
+    pretty_name: string;
+}
 export interface IIbcchainMap {
     [propName: string]: string;
 }
