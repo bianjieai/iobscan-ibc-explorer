@@ -191,12 +191,10 @@
                             }
                         }
                         &__legend {
-                            flex: none;
                             .flex(row);
                             padding: 24px 0 0 8px;
                             &__left {
                                 .flex(column,nowrap,center,flex-start);
-                                flex: 1;
                                 .allocation_pie_legend {
                                     margin-bottom: 16px;
                                     &:last-child {
@@ -205,7 +203,6 @@
                             }
                             &__right {
                                 .flex(column,nowrap,center,flex-start);
-                                flex: 1;
                                 .allocation_pie_legend {
                                     margin-bottom: 16px;
                                     &:last-child {

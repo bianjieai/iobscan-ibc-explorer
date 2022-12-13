@@ -681,6 +681,8 @@ export const usAddressAccount = (
         return `A total of ${num} addresses found`;
     });
 
+    const isFailed = computed(() => addressAccountType.value === NoDataType.loadFailed);
+
     watch(
         () => data?.value,
         (newValue) => {
@@ -710,7 +712,8 @@ export const usAddressAccount = (
         needCustomColumns,
         needCustomHeaders,
         accountsList,
-        goAddress
+        goAddress,
+        isFailed
     };
 };
 
@@ -732,6 +735,7 @@ export const useAddressAccountTokensRatio = (
     const isShowAddressAccountTokenRatioChart = computed(() => {
         return !addressRatioLoading?.value && !addressRatioType?.value;
     });
+    const isFailed = computed(() => addressRatioType.value === NoDataType.loadFailed);
     const addressAccountTokenRatioOption: any = {
         legend: {
             show: false
@@ -946,7 +950,8 @@ export const useAddressAccountTokensRatio = (
         firstColumnLegendData,
         secondColumnLegendData,
         isShowAddressAccountTokenRatioChart,
-        highlightFn
+        highlightFn,
+        isFailed
     };
 };
 
@@ -998,7 +1003,8 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
             const { code, message, data } = await getAddrTxsAPI({ ...params });
             if (code === API_CODE.success) {
                 if (params.use_count) {
-                    pagination.total = data as number;
+                    // todo shanshan
+                    pagination.total = 5; // data as number;
                     addressPageisDisabled.value = false;
                     if (pagination.total === 0) {
                         addressPageisDisabled.value = true;

@@ -1,6 +1,7 @@
 <template>
     <InfoCard
         class="address_accounts_c"
+        :class="{ failed: isFailed }"
         tip-msg="All addresses found by the same pub key."
         :sub-title="accountsSubTitle"
         icon="icon-account"
@@ -39,6 +40,7 @@
                     <ChainIcon :chain="record.chain" icon-size="small" />
                 </template>
                 <template #address="{ record }">
+                    <!-- todo dj 使用 addressDiff 组件 -->
                     <div
                         :class="{
                             cursor: record.isJumpAddress,
@@ -77,21 +79,26 @@
     }
     const props = defineProps<IProps>();
     const { data, addressAccountLoading, addressAccountType } = toRefs(props);
-    const { accountsSubTitle, needCustomColumns, needCustomHeaders, accountsList, goAddress } =
-        usAddressAccount(data, addressAccountLoading, addressAccountType);
+    const {
+        accountsSubTitle,
+        needCustomColumns,
+        needCustomHeaders,
+        accountsList,
+        goAddress,
+        isFailed
+    } = usAddressAccount(data, addressAccountLoading, addressAccountType);
     const { showUtc, changeShowUtcAge } = useTimeUtcAge(false);
 </script>
 
 <style lang="less" scoped>
     .address_accounts_c {
-        max-width: 806px;
-        min-width: 650px;
+        min-width: 806px;
         :deep(.info_card__primary) {
             padding: 16px 24px 0;
         }
         :deep(.ant-table-container) {
             width: 100%;
-            min-height: 408px;
+            min-height: 400px;
             .ant-table-thead {
                 tr {
                     th {
@@ -109,6 +116,39 @@
         &__table {
             .table_wrapper {
                 margin-top: 0;
+                :deep(table) {
+                    min-width: 758px;
+                }
+            }
+        }
+    }
+    .failed {
+        :deep(.ant-table-container) {
+            min-height: 334px;
+        }
+    }
+    @media screen and (max-width: 1247px) {
+        .address_accounts_c {
+            min-width: auto;
+            :deep(.info_card__primary) {
+            }
+            :deep(.ant-table-container) {
+                .ant-table-thead {
+                    tr {
+                        th {
+                        }
+                    }
+                }
+                .ant-table-cell {
+                    &:nth-of-type(1) {
+                    }
+                }
+            }
+            &__table {
+                .table_wrapper {
+                    :deep(table) {
+                    }
+                }
             }
         }
     }

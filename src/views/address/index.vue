@@ -85,14 +85,40 @@
         }
         &__accounts_c {
             .flex(row,nowrap);
-            // todo dj 适配之后注释 display: none
-            display: none;
             &__account {
                 flex: 1;
                 margin-right: 16px;
             }
             &__account_tokens_ratio {
                 flex: 1;
+            }
+        }
+    }
+    @media screen and (max-width: 1247px) {
+        .address_details {
+            .info_card {
+            }
+            &__title {
+            }
+            &__base_info_c {
+            }
+            &__tokens_c {
+                &__allocation {
+                }
+                &__tokens {
+                }
+            }
+            &__transactions_c {
+            }
+            &__accounts_c {
+                .flex(column;nowrap);
+                &__account {
+                    flex: none;
+                    margin-right: 0;
+                }
+                &__account_tokens_ratio {
+                    flex: none;
+                }
             }
         }
     }
