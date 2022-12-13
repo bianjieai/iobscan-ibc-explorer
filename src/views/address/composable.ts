@@ -725,7 +725,6 @@ export const usAddressAccount = (
                 newValue.forEach((account) => {
                     temp.push({
                         chain: account.chain,
-                        isJumpAddress: account.address !== currentAddress,
                         address: account.address,
                         tokenDenom: account.token_denom_num,
                         totalValue: formatPriceAndTotalValue(account.token_value),
