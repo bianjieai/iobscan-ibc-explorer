@@ -27,7 +27,6 @@
         <div class="address_details__transactions_c">
             <AddressTransactions />
         </div>
-        <!-- todo dj 三屏适配 -->
         <div class="address_details__accounts_c">
             <AddresssAccount
                 class="address_details__accounts_c__account"
