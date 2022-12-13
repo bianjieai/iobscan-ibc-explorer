@@ -2,6 +2,7 @@ import { AddressTokensTableKey, AddressAccountTableKey } from './address';
 import type { IDenomStatistic, IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
 import { RelayersListKey, RELAYER_TRANSFER_KEY } from '@/constants/relayers';
+import { AddressTxsKey } from './address';
 
 export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.meta.url).href;
 export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', import.meta.url).href;
@@ -106,6 +107,7 @@ export const PAGE_PARAMETERS = {
     relayers: 'relayers',
     denom: 'denom',
     relayerDetails: 'relayerDetails',
+    addressDetailsTxs: 'addressDetailsTxs',
     addressDetailsToken: 'addressDetailsToken',
     addressDetailsAccount: 'addressDetailsAccount'
 };
@@ -444,6 +446,16 @@ export const NEED_CUSTOM_COLUMN = {
         RELAYER_TRANSFER_KEY.rtSigner,
         RELAYER_TRANSFER_KEY.rtTime
     ],
+    addressDetailsTxs: [
+        AddressTxsKey.txHash,
+        AddressTxsKey.type,
+        AddressTxsKey.port,
+        AddressTxsKey.from,
+        AddressTxsKey.to,
+        AddressTxsKey.amount,
+        AddressTxsKey.fee,
+        AddressTxsKey.time
+    ],
     addressDetailsToken: [
         AddressTokensTableKey.total,
         AddressTokensTableKey.amount,
@@ -462,6 +474,7 @@ export const NEED_CUSTOM_COLUMN = {
 export const NEED_CUSTOM_HEADER = {
     transfers: ['Token'],
     relayerDetails: ['Time'],
+    addressDetailsTxs: ['Time'],
     addressDetailsAccount: ['LastUpdated']
 };
 
@@ -560,3 +573,9 @@ export enum NoDataType {
 }
 
 export const PIE_OTHERS = 'Others';
+
+export enum IbcVersion {
+    'ICS-20' = 'ics20',
+    'ICS-27' = 'ics27',
+    'ICS-721' = 'ics721'
+}

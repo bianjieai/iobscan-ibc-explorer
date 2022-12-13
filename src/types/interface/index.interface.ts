@@ -44,6 +44,7 @@ export interface IIbcchain {
     pretty_name: string;
     icon: string;
     status: CHAIN_STATUS;
+    addr_prefix: string[];
 }
 export interface IIbcchainMap {
     [propName: string]: string;

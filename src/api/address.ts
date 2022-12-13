@@ -1,10 +1,14 @@
+// todo shan 切换 request 引入，txs 需要
+// import request, { executeCancel, setExecuteCancel } from '@/utils/axios';
 import request from '@/utils/axios';
 import requestMock from '@/utils/axiosMock';
 import { IResponse } from '@/types/interface/index.interface';
 import {
+    IRequestAddressTxs,
+    IResponseAddressBaseInfo,
+    IResponseAddressTxsData,
     IResponseTokenData,
-    IResponseAccountData,
-    IResponseAddressBaseInfo
+    IResponseAccountData
 } from '@/types/interface/address.interface';
 import { API_URL, urlReplacePlaceholder, urlReplacePlaceholder2 } from '@/constants/apiUrl';
 
@@ -44,7 +48,7 @@ export const getAddrAccountListMock = async (chain: string, address: string) => 
     });
 };
 
-export const getAddressBaseInfoAPI = async (chain: string, address: string) => {
+export const getAddrBaseInfoAPI = async (chain: string, address: string) => {
     let url = API_URL.ibcAddrBaseInfo.replace(urlReplacePlaceholder, chain);
     url = url.replace(urlReplacePlaceholder2, address);
     return requestMock<IResponse<IResponseAddressBaseInfo>>({
@@ -53,12 +57,55 @@ export const getAddressBaseInfoAPI = async (chain: string, address: string) => {
     });
 };
 
-/* // todo shan 待替换为真实请求
-export const getAddressBaseInfoAPI = async (chain: string, address: string) => {
-    let url = API_URL.ibcAddrBaseInfo.replace(urlReplacePlaceholder, chain);
+export const getAddrTxsAPI = async (params: IRequestAddressTxs) => {
+    let url = API_URL.ibcAddrTxs.replace(urlReplacePlaceholder, params.chain);
+    url = url.replace(urlReplacePlaceholder2, params.address);
+    return requestMock<IResponse<IResponseAddressTxsData | number>>({
+        url,
+        method: 'get',
+        params: params
+    });
+};
+
+export const exportAddressTxsAPI = async (chain: string, address: string) => {
+    let url = API_URL.ibcAddrTxsExport.replace(urlReplacePlaceholder, chain);
     url = url.replace(urlReplacePlaceholder2, address);
-    return request<IResponse<IResponseAddress>>({
+    return requestMock<IResponse>({
         url,
         method: 'get'
     });
-}; */
+};
+
+/*
+// todo shan 待替换为真实请求
+export const getAddrBaseInfoAPI = async (chain: string, address: string) => {
+    let url = API_URL.ibcAddrBaseInfo.replace(urlReplacePlaceholder, chain);
+    url = url.replace(urlReplacePlaceholder2, address);
+    return request<IResponse<IResponseAddressBaseInfo>>({
+        url,
+        method: 'get'
+    });
+};
+
+export const getAddrTxsAPI = async (params: IRequestAddressTxs) => {
+    executeCancel(params.use_count);
+    let url = API_URL.ibcAddrTxs.replace(urlReplacePlaceholder, params.chain);
+    url = url.replace(urlReplacePlaceholder2, params.address);
+    return request<IResponse<IResponseAddressTxsData | number>>({
+        url,
+        method: 'get',
+        params: params,
+        cancelToken: setExecuteCancel(params.use_count)
+    });
+};
+
+export const exportAddressTxsAPI = async (chain: string, address: string) => {
+    let url = API_URL.ibcAddrTxsExport.replace(urlReplacePlaceholder, chain);
+    url = url.replace(urlReplacePlaceholder, address);
+    return request<IResponse>({
+        url,
+        method: 'get'
+    });
+};
+
+*/

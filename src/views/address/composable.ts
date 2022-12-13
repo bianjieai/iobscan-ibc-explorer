@@ -5,42 +5,71 @@ import moveDecimal from 'move-decimal-point';
 import BigNumber from 'bignumber.js';
 import QRCode from 'qrcodejs2-fix';
 import ChainHelper from '@/helper/chainHelper';
-import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
-import { formatBigNumber } from '@/helper/parseStringHelper';
-import { getDenomKey } from '@/helper/baseDenomHelper';
-import { formatPriceAndTotalValue } from '@/helper/addressHelper';
-import { getRestString } from '@/helper/parseStringHelper';
-import { formatString } from '@/utils/stringTools';
-import { calculatePercentage } from '@/utils/calculate';
-import { dayjsFormatDate } from '@/utils/timeTools';
-import { getTextWidth } from '@/utils/urlTools';
-import { getAddrTokenListMock, getAddrAccountListMock, getAddressBaseInfoAPI } from '@/api/address';
 import {
-    NoDataType,
-    TOKEN_DEFAULT_ICON,
     CHAIN_DEFAULT_ICON,
-    PIE_OTHERS,
     DEFAULT_DISPLAY_TEXT,
+    IbcVersion,
+    NoDataType,
     PAGE_PARAMETERS,
+    PIE_OTHERS,
+    TOKEN_DEFAULT_ICON,
+    TRANSFER_TYPE,
     UNKNOWN
 } from '@/constants';
-import { OPACITY_PIE_COLOR_LIST, PIE_COLOR_LIST, UNIT_SIGNS } from '@/constants/relayers';
-import { API_CODE } from '@/constants/apiCode';
-import {
+import type {
+    IAccountData,
+    IAccountListItem,
+    IAddressAccountTableItem,
+    IAddressTokenTableItem,
+    IRequestAddressTxs,
+    IResponseAddressTxs,
+    IResponseAddressTxsData,
+    IResponseAddressTxsFormat,
     ITokenList,
     ITokenListItem,
-    IAccountListItem,
-    IAddressTokenTableItem,
-    IAddressAccountTableItem,
-    IAccountData,
     PieLegendData
 } from '@/types/interface/address.interface';
-import { PieData } from '@/types/interface/relayers.interface';
+import {
+    exportAddressTxsAPI,
+    getAddrAccountListMock,
+    getAddrBaseInfoAPI,
+    getAddrTokenListMock,
+    getAddrTxsAPI
+} from '@/api/address';
+import { API_CODE } from '@/constants/apiCode';
+import { getBaseDenomByKey, getDenomKey } from '@/helper/baseDenomHelper';
+import { formatBigNumber, getRestString } from '@/helper/parseStringHelper';
+import { formatString } from '@/utils/stringTools';
+import { OPACITY_PIE_COLOR_LIST, PIE_COLOR_LIST, UNIT_SIGNS } from '@/constants/relayers';
+import type { PieData } from '@/types/interface/relayers.interface';
+import { calculatePercentage } from '@/utils/calculate';
 import { useNeedCustomColumns } from '@/composables';
+import { formatPriceAndTotalValue } from '@/helper/addressHelper';
+import { dayjsFormatDate } from '@/utils/timeTools';
+import { getTextWidth } from '@/utils/urlTools';
+import type { IPaginationParams } from '@/types/interface/index.interface';
+import { IN_OUT_TAG } from '@/constants/address';
 
 export const getTotalValue = (totalValue: string) => {
     if (!totalValue || Number(totalValue) === 0) return '0';
     return `${UNIT_SIGNS} ${formatBigNumber(totalValue, 2)}`;
+};
+
+export const useGetChainAddress = () => {
+    const route = useRoute();
+    const router = useRouter();
+    const currentChain = (route.query?.chain || '') as string;
+    const currentAddress = (route.params.address as string).toLowerCase();
+    const handleNoChainFn = () => {
+        if (!currentChain) {
+            router.replace(`/searchResult/${currentAddress}`);
+        }
+    };
+    return {
+        currentChain,
+        currentAddress,
+        handleNoChainFn
+    };
 };
 
 export const useGetBaseInfo = () => {
@@ -68,7 +97,7 @@ export const useGetBaseInfo = () => {
     const getAddressBaseInfo = async () => {
         baseInfoLoading.value = true;
         try {
-            const { code, message, data } = await getAddressBaseInfoAPI(
+            const { code, message, data } = await getAddrBaseInfoAPI(
                 addressParams.chain,
                 addressParams.address
             );
@@ -105,7 +134,7 @@ export const useGetBaseInfo = () => {
         return getTextWidth(currentChainInfo.prettyName, '16px GolosUI_Medium');
     });
     watch([prettyNameSize, widthClient], ([newPrettyNameSize, newWidthClient]) => {
-        if (newWidthClient > 895) {
+        if (newWidthClient.value > 895) {
             isShowTooltip.value = newPrettyNameSize > 120;
         } else {
             isShowTooltip.value = newPrettyNameSize > 240;
@@ -147,23 +176,6 @@ export const useCreateQRCode = () => {
     });
     return {
         qrCodeDom
-    };
-};
-
-export const useGetChainAddress = () => {
-    const route = useRoute();
-    const router = useRouter();
-    const currentChain = (route.query?.chain || '') as string;
-    const currentAddress = (route.params.address as string).toLowerCase();
-    const handleNoChainFn = () => {
-        if (!currentChain) {
-            router.replace(`/searchResult/${currentAddress}`);
-        }
-    };
-    return {
-        currentChain,
-        currentAddress,
-        handleNoChainFn
     };
 };
 
@@ -935,5 +947,145 @@ export const useAddressAccountTokensRatio = (
         secondColumnLegendData,
         isShowAddressAccountTokenRatioChart,
         highlightFn
+    };
+};
+
+export const useGetAddressTxs = (pagination: IPaginationParams) => {
+    const { currentAddress, currentChain } = useGetChainAddress();
+    const addressTxsLoading = ref<boolean>(true);
+    const addressPageisDisabled = ref<boolean>(true);
+    const loadingCondition = ref<NoDataType>();
+    const addressTxsList = ref<IResponseAddressTxsFormat[]>([]);
+    const showSubTitle = ref<boolean>(true);
+    const showDefaultTotal = ref<boolean>(true);
+    const formatData = (dateData: IResponseAddressTxs[]) => {
+        const formatDateData = dateData.map((item) => {
+            let tag: string;
+            if (
+                item.tx_type === TRANSFER_TYPE.acknowledge.type ||
+                item.tx_type === TRANSFER_TYPE.timeout.type
+            ) {
+                item.sender = DEFAULT_DISPLAY_TEXT;
+                item.receiver = DEFAULT_DISPLAY_TEXT;
+                tag = '';
+            } else if (item.tx_type === TRANSFER_TYPE.receive.type) {
+                tag = IN_OUT_TAG.in;
+            } else if (item.tx_type === TRANSFER_TYPE.transfer.type) {
+                tag = IN_OUT_TAG.out;
+            } else {
+                tag = '';
+            }
+            const format_tx_time = dayjsFormatDate(item.tx_time * 1000, 'YY-MM-DD HH:mm:ss');
+            return {
+                ...item,
+                format_tx_time,
+                tag
+            };
+        });
+        return formatDateData;
+    };
+    const getAddressTxs = async (params: IRequestAddressTxs) => {
+        if (params.use_count) {
+            addressPageisDisabled.value = true;
+            showDefaultTotal.value = true;
+        } else {
+            addressTxsLoading.value = true;
+            showDefaultTotal.value = false;
+        }
+        loadingCondition.value = undefined;
+        showSubTitle.value = true;
+        try {
+            const { code, message, data } = await getAddrTxsAPI({ ...params });
+            if (code === API_CODE.success) {
+                if (params.use_count) {
+                    pagination.total = data as number;
+                    addressPageisDisabled.value = false;
+                    if (pagination.total === 0) {
+                        addressPageisDisabled.value = true;
+                    }
+                } else {
+                    if ((data as IResponseAddressTxsData).txs?.length) {
+                        addressTxsList.value = formatData((data as IResponseAddressTxsData).txs);
+                        loadingCondition.value = undefined;
+                    } else {
+                        addressTxsList.value = [];
+                        loadingCondition.value = NoDataType.noData;
+                    }
+                    addressTxsLoading.value = false;
+                }
+                showDefaultTotal.value = false;
+            } else {
+                addressTxsLoading.value = false;
+                addressPageisDisabled.value = true;
+                loadingCondition.value = NoDataType.loadFailed;
+                showSubTitle.value = false;
+                console.log(message);
+            }
+        } catch (error) {
+            if (params.use_count) {
+                addressPageisDisabled.value = true;
+            } else {
+                addressTxsLoading.value = false;
+            }
+            loadingCondition.value = NoDataType.loadFailed;
+            showSubTitle.value = false;
+            console.log(error);
+        }
+    };
+    const onPaginationChange = (current: number, pageSize: number) => {
+        pagination.current = current;
+        getAddressTxs({
+            chain: currentChain,
+            address: currentAddress,
+            page_num: pagination.current,
+            page_size: pageSize,
+            use_count: false
+        });
+    };
+    const getTxsSubtitle = (showDefault: boolean, total: number) => {
+        const displayTotal = !showDefault ? formatBigNumber(total || '0', 0) : DEFAULT_DISPLAY_TEXT;
+        return `A total of ${displayTotal} IBC Transactions found`;
+    };
+    const subTitle = computed(() => {
+        return showSubTitle ? getTxsSubtitle(showDefaultTotal.value, pagination.total) : '';
+    });
+    const showMoreIcon = (ibcVersion: string) => {
+        return ibcVersion === IbcVersion['ICS-27'] || ibcVersion === IbcVersion['ICS-721'];
+    };
+    onMounted(() => {
+        getAddressTxs({
+            chain: currentChain,
+            address: currentAddress,
+            page_num: 1,
+            page_size: 5,
+            use_count: true
+        });
+        getAddressTxs({
+            chain: currentChain,
+            address: currentAddress,
+            page_num: pagination.current,
+            page_size: pagination.pageSize,
+            use_count: false
+        });
+    });
+    return {
+        currentChain,
+        currentAddress,
+        addressTxsLoading,
+        addressPageisDisabled,
+        loadingCondition,
+        addressTxsList,
+        onPaginationChange,
+        subTitle,
+        showMoreIcon
+    };
+};
+
+export const useExportAddressTxs = () => {
+    const exportAddressTxs = (chain: string, address: string) => {
+        exportAddressTxsAPI(chain, address);
+    };
+    return {
+        exportAddressTxs
     };
 };

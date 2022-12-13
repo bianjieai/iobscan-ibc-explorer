@@ -7,11 +7,12 @@ import {
     SYMBOL,
     NEED_CUSTOM_HEADER,
     TOKEN_DEFAULT_ICON,
-    DEFAULT_DISPLAY_TEXT
+    DEFAULT_DISPLAY_TEXT,
+    TRANSFER_TYPE
 } from '@/constants';
 import { useIbcStatisticsChains } from '@/store';
 import { DATA_REFRESH_GAP } from '@/constants/home';
-import { IBaseDenom } from '@/types/interface/index.interface';
+import { IBaseDenom, IPaginationParams } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import moveDecimal from 'move-decimal-point';
 import { handleImgLoadingSussess } from '@/utils/imageTools';
@@ -72,6 +73,10 @@ export const useNeedCustomColumns = (whitePage: string) => {
         case PAGE_PARAMETERS.relayerDetails:
             needCustomColumns.value = NEED_CUSTOM_COLUMN.relayerDetails;
             needCustomHeaders.value = NEED_CUSTOM_HEADER.relayerDetails;
+            break;
+        case PAGE_PARAMETERS.addressDetailsTxs:
+            needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetailsTxs;
+            needCustomHeaders.value = NEED_CUSTOM_HEADER.addressDetailsTxs;
             break;
         case PAGE_PARAMETERS.addressDetailsToken:
             needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetailsToken;
@@ -325,4 +330,28 @@ export const useTimeUtcAge = (showUtcInitialValue = true) => {
         showUtc,
         changeShowUtcAge
     };
+};
+
+export const usePagination = (current?: number, pageSize?: number) => {
+    const pagination = reactive<IPaginationParams>({
+        total: 0,
+        current: current || 1,
+        pageSize: pageSize || 5
+    });
+    return {
+        pagination
+    };
+};
+
+export const formatTransferType = (type: string) => {
+    switch (type) {
+        case TRANSFER_TYPE.transfer.type:
+            return TRANSFER_TYPE.transfer.label;
+        case TRANSFER_TYPE.receive.type:
+            return TRANSFER_TYPE.receive.label;
+        case TRANSFER_TYPE.acknowledge.type:
+            return TRANSFER_TYPE.acknowledge.label;
+        case TRANSFER_TYPE.timeout.type:
+            return TRANSFER_TYPE.timeout.label;
+    }
 };

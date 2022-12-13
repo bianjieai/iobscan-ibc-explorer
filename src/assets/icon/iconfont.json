@@ -6,6 +6,13 @@
     "description": "",
     "glyphs": [
         {
+            "icon_id": "33352432",
+            "name": "more",
+            "font_class": "more",
+            "unicode": "e7ac",
+            "unicode_decimal": 59308
+        },
+        {
             "icon_id": "33344172",
             "name": "Ratio",
             "font_class": "Ratio",

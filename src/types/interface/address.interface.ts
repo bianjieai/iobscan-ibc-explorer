@@ -1,6 +1,12 @@
-import { ITableTokenInfo } from './components/table.interface';
-import { IBaseDenom, IIbcchain, IResponseTokenInfo } from './index.interface';
-import { TIbcTokenType } from './tokens.interface';
+import type { ITableTokenInfo } from './components/table.interface';
+import type {
+    IBaseDenom,
+    IIbcchain,
+    IRequestPagination,
+    IResponsePageInfo,
+    IResponseTokenInfo
+} from './index.interface';
+import type { TIbcTokenType } from './tokens.interface';
 
 export interface IResponseTokenListItem {
     denom: string;
@@ -77,6 +83,11 @@ export interface IAddressAccountTableItem {
     lastUpdatedTimestamp: number;
 }
 
+export interface IRequestAddressTxs extends IRequestPagination {
+    chain: string;
+    address: string;
+}
+
 export interface IResponseAddressBaseInfo {
     address: string;
     chain: string;
@@ -98,6 +109,15 @@ export interface IResponseAddressTxs {
     fee_info: IResponseTokenInfo;
     tx_time: number;
     ibc_version: string;
+}
+export interface IResponseAddressTxsFormat extends IResponseAddressTxs {
+    format_tx_time: string;
+    tag?: string;
+}
+
+export interface IResponseAddressTxsData {
+    txs: IResponseAddressTxs[];
+    page_info: IResponsePageInfo;
 }
 
 export interface IAddressBaseInfo {

@@ -1,5 +1,5 @@
 <template>
-    <InfoCard icon="icon-transactions" title="Transactions" :sub-title="rtTableSubTitle">
+    <InfoCard icon="icon-transactions" title="Transactions">
         <div class="relayer_transfer">
             <div class="relayer_transfer__search">
                 <BjSelect
@@ -30,27 +30,16 @@
                 </div>
             </div>
             <div class="relayer_transfer__table">
-                <!-- todo shan 表格无数据、加载错误、加载中状态修改，在表格内部完成 -->
-                <loading-component
-                    v-if="rtTableLoading && !relayerTransferTableData"
-                    :type="LoadingType.container"
-                    :height="300"
-                />
-                <no-datas
-                    v-else-if="isShowModal || rtNoDataType"
-                    class="relayer_transfer__table__nodatas"
-                    :type="rtNoDataType"
-                />
                 <TableCommon
-                    v-else
                     class="relayer_transfer__table__content"
                     :has-padding-lr="false"
                     :table-loading="rtTableLoading"
-                    :page-loading="rtPageLoading"
+                    :page-disabled="rtPageisDisabled"
                     :data="relayerTransferTableData"
                     row-key="record_id"
                     :need-custom-headers="needCustomHeaders"
                     :need-custom-columns="needCustomColumns"
+                    :no-data-type="rtNoDataType"
                     :columns="RELAYER_TRANSFER_COLUMN"
                     :current="pagination.current"
                     :page-size="pagination.pageSize"
@@ -70,7 +59,6 @@
                                 showUtc ? 'Click to show Age Format' : 'Click to show UTC0 Format'
                             "
                             :show-utc="showUtc"
-                            :column-name="'Time'"
                             @change-show-utc-age="changeShowUtcAge"
                         />
                     </template>
@@ -123,8 +111,7 @@
                         </a-popover>
                     </template>
                     <template #tx_time="{ record }">
-                        <span v-if="showUtc">{{ record.format_tx_time }}</span>
-                        <span v-else>{{ record.relayers_tx_time }}</span>
+                        <span>{{ showUtc ? record.format_tx_time : record.relayers_tx_time }}</span>
                     </template>
                 </TableCommon>
             </div>
@@ -136,9 +123,15 @@
     import { RELAYER_TRANSFER_COLUMN } from '@/constants/relayers';
     import { getRestString } from '@/helper/parseStringHelper';
     import { formatTxStatus, changeColor } from '@/helper/tableCellHelper';
-    import { useGoAddressDetail, useNeedCustomColumns, useTimeUtcAge } from '@/composables';
-    import { usePagination, useSelectedSearch } from '../composable';
-    import { DEFAULT_TITLE, LoadingType, PAGE_PARAMETERS } from '@/constants';
+    import {
+        useGoAddressDetail,
+        useNeedCustomColumns,
+        usePagination,
+        useTimeUtcAge,
+        formatTransferType
+    } from '@/composables';
+    import { useSelectedSearch } from '../composable';
+    import { DEFAULT_TITLE, PAGE_PARAMETERS } from '@/constants';
     interface IRelayerTransfer {
         servedChainsInfo: string[];
         isShowModal: boolean;
@@ -153,15 +146,13 @@
         searchChain,
         onSelectedChain,
         relayerTransferTableData,
-        formatTransferType,
         onPaginationChange,
         onClickReset,
         dateRange,
         disabledDate,
         onChangeRangePicker,
         rtTableLoading,
-        rtPageLoading,
-        rtTableSubTitle,
+        rtPageisDisabled,
         rtNoDataType
     } = useSelectedSearch(servedChainsInfo, pagination);
     const getPopupContainer = (): HTMLElement =>

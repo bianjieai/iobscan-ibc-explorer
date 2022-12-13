@@ -1,5 +1,62 @@
 import { TableColumnsType } from 'ant-design-vue';
 
+export enum AddressTxsKey {
+    txHash = 'tx_hash',
+    type = 'tx_type',
+    port = 'port',
+    from = 'sender',
+    to = 'receiver',
+    amount = 'denom_info',
+    fee = 'fee_info',
+    time = 'tx_time'
+}
+
+export const ADDRESS_TXS_COLUMN: TableColumnsType = [
+    {
+        title: 'TxHash',
+        dataIndex: AddressTxsKey.txHash,
+        key: AddressTxsKey.txHash,
+        width: 180
+    },
+    {
+        title: 'Type',
+        dataIndex: AddressTxsKey.type,
+        key: AddressTxsKey.type
+    },
+    {
+        title: 'Port',
+        dataIndex: AddressTxsKey.port,
+        key: AddressTxsKey.port
+    },
+    {
+        title: 'From',
+        dataIndex: AddressTxsKey.from,
+        key: AddressTxsKey.from
+    },
+    {
+        title: 'To',
+        dataIndex: AddressTxsKey.to,
+        key: AddressTxsKey.to
+    },
+    {
+        title: 'Amount',
+        dataIndex: AddressTxsKey.amount,
+        key: AddressTxsKey.amount
+    },
+    {
+        title: 'Fee',
+        dataIndex: AddressTxsKey.fee,
+        key: AddressTxsKey.fee
+    },
+    {
+        title: 'Time',
+        dataIndex: AddressTxsKey.time,
+        key: AddressTxsKey.time,
+        width: 152,
+        align: 'right'
+    }
+];
+
 export enum AddressTokensTableKey {
     total = 'token',
     amount = 'amount',
@@ -80,3 +137,8 @@ export const ADDRESS_ACCOUNT_COLUMNS: TableColumnsType = [
         align: 'right'
     }
 ];
+
+export enum IN_OUT_TAG {
+    in = 'In',
+    out = 'Out'
+}

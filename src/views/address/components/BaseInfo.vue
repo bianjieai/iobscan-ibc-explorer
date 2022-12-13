@@ -117,12 +117,12 @@
         }
         &__chain_icon_bg {
             position: absolute;
-            // todo shan 需要跟 UI 确认透明度及位置
-            top: 0px;
-            right: -16px;
+            // todo shan 适配时位置调整
+            top: -7px;
+            right: -18px;
             width: 80px;
             height: 80px;
-            opacity: 0.2;
+            opacity: 0.1;
         }
         &__right {
             flex: 1;
@@ -170,8 +170,6 @@
             &__chain_name {
             }
             &__chain_icon_bg {
-                top: 8px;
-                right: 8px;
             }
             &__right {
             }

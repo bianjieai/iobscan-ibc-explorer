@@ -47,9 +47,9 @@
             font-weight: 500;
             color: var(--bj-text-normal);
             line-height: 18px;
+            white-space: nowrap;
         }
         &__value {
-            margin-top: 2px;
             font-size: var(--bj-font-size-normal);
             font-weight: 400;
             color: var(--bj-text-second);
@@ -81,6 +81,7 @@
                 width: 100%;
             }
             &__value {
+                margin-top: 2px;
                 margin-left: 0;
             }
             &__chain_name {

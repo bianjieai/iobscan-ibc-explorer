@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'iconfont'; /* Project id 2812235 */
-    src: url('iconfont.woff2?t=1670830347984') format('woff2'),
-        url('iconfont.woff?t=1670830347984') format('woff'),
-        url('iconfont.ttf?t=1670830347984') format('truetype');
+    src: url('iconfont.woff2?t=1670832704079') format('woff2'),
+        url('iconfont.woff?t=1670832704079') format('woff'),
+        url('iconfont.ttf?t=1670832704079') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-more:before {
+    content: '\e7ac';
 }
 
 .icon-Ratio:before {
