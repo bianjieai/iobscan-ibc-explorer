@@ -69,7 +69,7 @@
                 <span>{{ record.port }}</span>
             </template>
             <template #sender="{ record }">
-                <address-diff
+                <AddressDiff
                     :current-chain="currentChain"
                     :current-address="currentAddress"
                     :tx-address="record.sender"
@@ -86,7 +86,7 @@
                         }"
                         >{{ record.tag }}</span
                     >
-                    <address-diff
+                    <AddressDiff
                         :current-chain="currentChain"
                         :current-address="currentAddress"
                         :tx-address="record.receiver"

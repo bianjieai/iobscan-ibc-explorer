@@ -5,7 +5,7 @@
             class="addr_diff__text addr_diff__text_default"
             >{{ DEFAULT_DISPLAY_TEXT }}</span
         >
-        <a-popover v-else placement="topLeft" destroy-tooltip-on-hide>
+        <a-popover v-else destroy-tooltip-on-hide>
             <template #content>
                 <span class="popover_c">{{ txAddress }}</span>
             </template>
