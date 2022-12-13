@@ -290,29 +290,30 @@
     import { getRestString, formatNum } from '@/helper/parseStringHelper';
     import { dayjsFormatDate } from '@/utils/timeTools';
     import {
-        usePagination,
         useGetTableColumns,
         useSubTitleFilter,
         useSelectedParams,
         useTransfersTable,
         useQueryDatas,
         useRouteParams,
-        useSortIbcChains
+        useSortIbcChains,
+        useCurrentPage
     } from './composable';
     import { useIbcStatistics } from '@/composables/home';
     import {
         useIbcChains,
         useNeedCustomColumns,
         useMatchChainInfo,
-        useGoTransfersDetail
+        useGoTransfersDetail,
+        usePagination
     } from '@/composables';
     import { MODES } from '@/components/BjSelect/constants';
     import { TRANSFERS_TOKEN_DEFAULT_VALUE } from '@/constants/transfers';
     import { useGoAddressDetail } from '@/composables';
-
+    const { currentPage, pageSize } = useCurrentPage();
     const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
     const { ibcStatisticsTxs, getIbcStatistics } = useIbcStatistics();
-    const { pagination } = usePagination();
+    const { pagination } = usePagination(currentPage, pageSize);
     const { ibcChains } = useIbcChains();
     const { tableColumns, showTransferLoading, tableDatas, getIbcTxs } = useGetTableColumns();
     const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(

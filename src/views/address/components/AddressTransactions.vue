@@ -36,7 +36,6 @@
                         showUtc ? 'Click to show Age Format' : 'Click to show UTC0 Format'
                     "
                     :show-utc="showUtc"
-                    :column-name="'Time'"
                     @change-show-utc-age="changeShowUtcAge"
                 />
             </template>

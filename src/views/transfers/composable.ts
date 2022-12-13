@@ -30,15 +30,13 @@ import { axiosCancel } from '@/utils/axios';
 import { IIbcTx, IIbcTxCount, ITransfersQueryParams } from '@/types/interface/transfers.interface';
 import { Dayjs } from 'dayjs';
 
-export const usePagination = () => {
+export const useCurrentPage = () => {
     const route = useRoute();
-    const pagination = reactive<IPaginationParams>({
-        total: 0,
-        current: Number(route?.query?.pageNum) || 1,
-        pageSize: 10
-    });
+    const currentPage = Number(route?.query?.pageNum) || 1;
+    const pageSize = 10;
     return {
-        pagination
+        currentPage,
+        pageSize
     };
 };
 

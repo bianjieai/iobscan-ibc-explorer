@@ -5,14 +5,16 @@
             <template #content>
                 <p class="popover_c">{{ tooltipText }}</p>
             </template>
-            <img class="time__tip cursor" :src="tipIcon" @click="changeShowUtcAgeBtn" />
+            <svg-icon
+                class="time__tip cursor"
+                :icon-name="tipIcon"
+                @click="changeShowUtcAgeBtn"
+            ></svg-icon>
         </a-popover>
     </div>
 </template>
 
 <script setup lang="ts">
-    import { TIP_ICON } from '@/constants';
-
     interface ITimeUTCAge {
         tooltipText: string;
         showUtc?: boolean;
@@ -22,7 +24,7 @@
     const props = withDefaults(defineProps<ITimeUTCAge>(), {
         showUtc: true,
         columnName: 'Time',
-        tipIcon: TIP_ICON
+        tipIcon: 'icon-time'
     });
     const { showUtc } = toRefs(props);
     const emits = defineEmits<{
@@ -38,9 +40,7 @@
         .flex(row, nowrap, flex-end, center);
         padding-left: 16px;
         &__tip {
-            margin-left: 8px;
-            width: 20px;
-            height: 20px;
+            margin-left: 4px;
         }
     }
 </style>

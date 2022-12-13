@@ -34,5 +34,6 @@
         position: relative;
         fill: currentColor;
         vertical-align: -2px;
+        outline: 0;
     }
 </style>

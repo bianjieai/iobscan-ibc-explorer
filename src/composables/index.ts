@@ -332,11 +332,11 @@ export const useTimeUtcAge = (showUtcInitialValue = true) => {
     };
 };
 
-export const usePagination = () => {
+export const usePagination = (current?: number, pageSize?: number) => {
     const pagination = reactive<IPaginationParams>({
         total: 0,
-        current: 1,
-        pageSize: 5
+        current: current || 1,
+        pageSize: pageSize || 5
     });
     return {
         pagination
