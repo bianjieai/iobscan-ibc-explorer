@@ -32,6 +32,10 @@
                     <div class="address_account_token_ratio__chart_c__content_c__wrap__legend">
                         <div
                             class="address_account_token_ratio__chart_c__content_c__wrap__legend__left"
+                            :class="{
+                                address_account_token_ratio__chart_c__content_c__wrap__legend__no_marin_right:
+                                    secondColumnLegendData.length <= 0
+                            }"
                         >
                             <PieLegend
                                 v-for="legend in firstColumnLegendData"
@@ -147,6 +151,9 @@
                                     margin-bottom: 0;
                                 }
                             }
+                        }
+                        &__no_marin_right {
+                            margin-right: 0;
                         }
                     }
                 }

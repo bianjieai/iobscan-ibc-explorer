@@ -40,15 +40,11 @@
                     <ChainIcon :chain="record.chain" icon-size="small" />
                 </template>
                 <template #address="{ record }">
-                    <!-- todo dj 使用 addressDiff 组件 -->
-                    <div
-                        :class="{
-                            cursor: record.isJumpAddress,
-                            primary_color: record.isJumpAddress
-                        }"
-                        @click="goAddress(record.isJumpAddress, record.chain, record.address)"
-                        >{{ getRestString(record.address, 6, 6) }}</div
-                    >
+                    <AddressDiff
+                        :current-chain="record.chain"
+                        :current-address="currentAddress"
+                        :tx-address="record.address"
+                    />
                 </template>
                 <template #tokenDenom="{ record }">
                     <div>{{ record.tokenDenom }}</div>
@@ -68,9 +64,9 @@
     import { useTimeUtcAge } from '@/composables';
     import { NoDataType } from '@/constants';
     import { ADDRESS_ACCOUNT_COLUMNS } from '@/constants/address';
-    import { getRestString } from '@/helper/parseStringHelper';
     import { IAccountListItem } from '@/types/interface/address.interface';
     import { usAddressAccount } from '../composable';
+    import AddressDiff from './AddressDiff.vue';
 
     interface IProps {
         data?: IAccountListItem[];
@@ -84,7 +80,7 @@
         needCustomColumns,
         needCustomHeaders,
         accountsList,
-        goAddress,
+        currentAddress,
         isFailed
     } = usAddressAccount(data, addressAccountLoading, addressAccountType);
     const { showUtc, changeShowUtcAge } = useTimeUtcAge(false);

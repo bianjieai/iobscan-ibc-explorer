@@ -662,12 +662,6 @@ export const usAddressAccount = (
     addressAccountLoading: Ref<boolean | undefined>,
     addressAccountType: Ref<NoDataType | undefined>
 ) => {
-    const router = useRouter();
-    const goAddress = (isJumpAddress: boolean, chain: string, address: string) => {
-        if (isJumpAddress) {
-            router.push(`/address/${address}?chain=${chain}`);
-        }
-    };
     const { currentAddress } = useGetChainAddress();
     const accountsList = ref<IAddressAccountTableItem[]>([]);
     const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(
@@ -712,7 +706,7 @@ export const usAddressAccount = (
         needCustomColumns,
         needCustomHeaders,
         accountsList,
-        goAddress,
+        currentAddress,
         isFailed
     };
 };
@@ -772,7 +766,6 @@ export const useAddressAccountTokensRatio = (
                 label: {
                     show: false,
                     formatter: (params: any) => {
-                        // todo dj pretty Name 展示规则
                         const displayName = params.data.displayName;
                         return `{text|${displayName}}\n\r\n\r{value|${getTotalValue(
                             params.data.value
@@ -782,6 +775,9 @@ export const useAddressAccountTokensRatio = (
                     position: 'center',
                     padding: [7, 0, 0, 0],
                     opacity: 1,
+                    overflow: 'truncate',
+                    ellipsis: '...',
+                    width: 145,
                     rich: {
                         text: {
                             color: 'rgba(0, 0, 0, 0.75)',
