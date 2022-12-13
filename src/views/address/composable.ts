@@ -5,6 +5,7 @@ import moveDecimal from 'move-decimal-point';
 import BigNumber from 'bignumber.js';
 import QRCode from 'qrcodejs2-fix';
 import ChainHelper from '@/helper/chainHelper';
+import { isAddressDetailsName } from '@/helper/routerHelper';
 import {
     CHAIN_DEFAULT_ICON,
     DEFAULT_DISPLAY_TEXT,
@@ -58,24 +59,34 @@ export const getTotalValue = (totalValue: string) => {
 export const useGetChainAddress = () => {
     const route = useRoute();
     const router = useRouter();
-    const currentChain = (route.query?.chain || '') as string;
-    const currentAddress = (route.params.address as string).toLowerCase();
-    const handleNoChainFn = () => {
-        if (!currentChain) {
-            router.replace(`/searchResult/${currentAddress}`);
+    const getChainAddress = () => {
+        const currentChain = (route.query?.chain || '') as string;
+        const currentAddress = (route.params.address as string).toLowerCase();
+        return {
+            currentChain,
+            currentAddress
+        };
+    };
+    const handleNoChainFn = (chain?: string) => {
+        if (!chain) {
+            router.replace(`/searchResult/${chain}`);
         }
     };
+    const { currentChain, currentAddress } = getChainAddress();
     return {
         currentChain,
         currentAddress,
-        handleNoChainFn
+        handleNoChainFn,
+        getChainAddress,
+        route,
+        router
     };
 };
 
 export const useGetBaseInfo = () => {
     const router = useRouter();
     const { currentChain, currentAddress, handleNoChainFn } = useGetChainAddress();
-    handleNoChainFn();
+    handleNoChainFn(currentChain);
     const addressParams = {
         chain: currentChain,
         address: currentAddress
@@ -184,11 +195,13 @@ export const useGetAddressTokens = () => {
     const tokensNoDataType = ref<NoDataType>();
     const tokensData = ref<ITokenList>();
     const baseInfoTotalValue = ref(DEFAULT_DISPLAY_TEXT);
+    const { route, getChainAddress } = useGetChainAddress();
 
     const getAddrTokenList = async (chain: string, address: string) => {
         try {
             tokensLoading.value = true;
             tokensNoDataType.value = undefined;
+            tokensData.value = undefined;
             baseInfoTotalValue.value = DEFAULT_DISPLAY_TEXT;
             const { code, data, message } = await getAddrTokenListMock(chain, address);
             if (code === API_CODE.success) {
@@ -250,8 +263,18 @@ export const useGetAddressTokens = () => {
             tokensLoading.value = false;
         }
     };
-    const { currentChain, currentAddress } = useGetChainAddress();
-    currentChain && getAddrTokenList(currentChain, currentAddress);
+
+    const initData = () => {
+        const { currentChain, currentAddress } = getChainAddress();
+        getAddrTokenList(currentChain, currentAddress);
+    };
+
+    initData();
+    watch(route, (newVal) => {
+        if (isAddressDetailsName(newVal.name as string)) {
+            initData();
+        }
+    });
     return {
         tokensLoading,
         tokensNoDataType,
@@ -264,11 +287,13 @@ export const useGetAddressAccounts = () => {
     const accountsLoading = ref(true);
     const accountsNoDataType = ref<NoDataType>();
     const accountsData = ref<IAccountData>();
+    const { route, getChainAddress } = useGetChainAddress();
 
     const getAddrAccountList = async (chain: string, address: string) => {
         try {
             accountsLoading.value = true;
             accountsNoDataType.value = undefined;
+            accountsData.value = undefined;
             const { code, data, message } = await getAddrAccountListMock(chain, address);
             if (code === API_CODE.success) {
                 if (data) {
@@ -306,8 +331,17 @@ export const useGetAddressAccounts = () => {
         }
     };
 
-    const { currentChain, currentAddress } = useGetChainAddress();
-    currentChain && getAddrAccountList(currentChain, currentAddress);
+    const initData = () => {
+        const { currentChain, currentAddress } = getChainAddress();
+        getAddrAccountList(currentChain, currentAddress);
+    };
+
+    initData();
+    watch(route, (newVal) => {
+        if (isAddressDetailsName(newVal.name as string)) {
+            initData();
+        }
+    });
     return {
         accountsLoading,
         accountsNoDataType,
@@ -643,6 +677,8 @@ export const useAddressTokens = (
                     });
                 });
                 tokensList.value = [...temp];
+            } else {
+                tokensList.value = [];
             }
         },
         {
@@ -662,7 +698,11 @@ export const usAddressAccount = (
     addressAccountLoading: Ref<boolean | undefined>,
     addressAccountType: Ref<NoDataType | undefined>
 ) => {
-    const { currentAddress } = useGetChainAddress();
+    const { getChainAddress, route } = useGetChainAddress();
+    const currentAddress = ref('');
+    const updateCurrAddress = () => {
+        currentAddress.value = getChainAddress().currentAddress;
+    };
     const accountsList = ref<IAddressAccountTableItem[]>([]);
     const { needCustomColumns, needCustomHeaders } = useNeedCustomColumns(
         PAGE_PARAMETERS.addressDetailsAccount
@@ -694,12 +734,21 @@ export const usAddressAccount = (
                     });
                 });
                 accountsList.value = [...temp];
+            } else {
+                accountsList.value = [];
             }
         },
         {
             immediate: true
         }
     );
+
+    updateCurrAddress();
+    watch(route, (newVal) => {
+        if (isAddressDetailsName(newVal.name as string)) {
+            updateCurrAddress();
+        }
+    });
 
     return {
         accountsSubTitle,
