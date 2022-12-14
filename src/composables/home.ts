@@ -39,7 +39,6 @@ export const useIbcStatistics = (timerInterval?: number) => {
                 ibcStatisticsChannels.channel_opened = findStatistics('channel_opened');
                 ibcStatisticsChannels.channel_closed = findStatistics('channel_closed');
                 ibcStatisticsDenoms.base_denom_all = findStatistics('base_denom_all');
-                // todo shan 需确认接口对应的 relayers 字段名
                 ibcStatisticsRelayer.relayers = findStatistics('relayers');
                 ibcStatisticsTxs.tx_24hr_all = findStatistics('tx_24hr_all');
                 ibcStatisticsTxs.tx_all = findStatistics('tx_all');

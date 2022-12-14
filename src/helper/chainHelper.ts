@@ -3,19 +3,18 @@ import { PRETTYNAME, UNKNOWN, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { useIbcChains } from '@/composables';
 import { IChainsListItem, IResponseChainsListItem } from '@/types/interface/chains.interface';
 import { IResponseTokensListItem, ITokensListItem } from '@/types/interface/tokens.interface';
-import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
+import { IIbcchain, IIbcchainMap, IPrefixChain } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { getRestString } from '@/helper/parseStringHelper';
 import { TData, TDenom, IDataItem } from '@/components/BjSelect/interface';
 import { useIbcStatisticsChains } from '@/store/index';
-
-const { ibcChains } = useIbcChains();
 
 // todo dj 改造 export default => export
 export default class ChainHelper {
     // pretty_name sort
     // Todo shan 该方法中 ibcChains 可能存在没有值的情况，需要做处理
     static sortByPrettyName(sourceList: any, chain?: any) {
+        const { ibcChains } = useIbcChains();
         function changeChainsSort(item: any) {
             const saveChain = item.chain_a;
             item.chain_a = item.chain_b;
@@ -253,5 +252,20 @@ export default class ChainHelper {
             }
         }
         return resArray.join(',');
+    };
+
+    static getChainInfoByPrefix = async (
+        prefix?: string
+    ): Promise<{ [key: string]: IPrefixChain[] } | IPrefixChain[] | undefined> => {
+        const ibcStatisticsChainsStore = useIbcStatisticsChains();
+        const { ibcChainsPrefixMapGetter } = ibcStatisticsChainsStore;
+        if (Object.keys(ibcChainsPrefixMapGetter).length <= 0) {
+            await ibcStatisticsChainsStore.getIbcChainsAction();
+        }
+        if (prefix) {
+            return ibcChainsPrefixMapGetter[prefix];
+        } else {
+            return ibcChainsPrefixMapGetter;
+        }
     };
 }

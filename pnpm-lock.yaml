@@ -16,6 +16,7 @@ specifiers:
   ant-design-vue: ^3.2.7
   autoprefixer: ^10.4.7
   axios: ^0.27.2
+  bech32: ^2.0.0
   bignumber.js: ^9.0.2
   clipboard: ^2.0.11
   commitizen: ^4.2.5
@@ -55,6 +56,7 @@ dependencies:
   '@vueuse/core': registry.npmmirror.com/@vueuse/core/9.6.0_vue@3.2.45
   ant-design-vue: registry.npmmirror.com/ant-design-vue/3.2.15_vue@3.2.45
   axios: registry.npmmirror.com/axios/0.27.2
+  bech32: 2.0.0
   bignumber.js: registry.npmmirror.com/bignumber.js/9.1.1
   clipboard: registry.npmmirror.com/clipboard/2.0.11
   dayjs: registry.npmmirror.com/dayjs/1.11.7
@@ -153,6 +155,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /bech32/2.0.0:
+    resolution: {integrity: sha512-LcknSilhIGatDAsY1ak2I8VtGaHNhgMSYVxFrGLXv+xLHytaKZKcaUJJUE7qmBr7h33o5YQwP55pMI0xmkpJwg==}
+    dev: false
 
   /errno/0.1.8:
     resolution: {integrity: sha512-dJ6oBr5SQ1VSd9qkk7ByRgb/1SH4JZjCHSW/mr63/QcXO9zLVxvJ6Oy13nio03rxpSnVDDjFor75SjVeZWPW/A==}

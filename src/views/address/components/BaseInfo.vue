@@ -117,7 +117,6 @@
         }
         &__chain_icon_bg {
             position: absolute;
-            // todo shan 适配时位置调整
             top: -7px;
             right: -18px;
             width: 80px;
@@ -170,6 +169,8 @@
             &__chain_name {
             }
             &__chain_icon_bg {
+                top: -7px;
+                right: -4px;
             }
             &__right {
             }
@@ -194,6 +195,8 @@
             &__chain_name {
             }
             &__chain_icon_bg {
+                top: -7px;
+                right: -4px;
             }
             &__right {
                 margin-top: 16px;

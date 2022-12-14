@@ -176,16 +176,16 @@ export const useGetRelayerDetailsInfo = () => {
     watch([relayerName, widthClient], ([newRelayerName, newWidthClient]) => {
         const relayerNameWidth = getTextWidth(newRelayerName, '22px Eurocine-regular');
         if (relayerNameWidth) {
-            if (newWidthClient.value > 1200) {
+            if (newWidthClient > 1200) {
                 displayAdaptor.value =
                     relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more1200 ? true : false;
-            } else if (newWidthClient.value > 1000) {
+            } else if (newWidthClient > 1000) {
                 displayAdaptor.value =
                     relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more1000 ? true : false;
-            } else if (newWidthClient.value > 768) {
+            } else if (newWidthClient > 768) {
                 displayAdaptor.value =
                     relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more768 ? true : false;
-            } else if (newWidthClient.value > 580) {
+            } else if (newWidthClient > 580) {
                 displayAdaptor.value =
                     relayerNameWidth > DISPLAY_RELAYER_NAME_AREA.more580 ? true : false;
             } else {

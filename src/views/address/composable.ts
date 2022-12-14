@@ -84,13 +84,7 @@ export const useGetChainAddress = () => {
 };
 
 export const useGetBaseInfo = () => {
-    const router = useRouter();
-    const { currentChain, currentAddress, handleNoChainFn } = useGetChainAddress();
-    handleNoChainFn(currentChain);
-    const addressParams = {
-        chain: currentChain,
-        address: currentAddress
-    };
+    const { handleNoChainFn, getChainAddress, route, router } = useGetChainAddress();
     const currentChainInfo = reactive({
         chainLogo: CHAIN_DEFAULT_ICON,
         prettyName: DEFAULT_DISPLAY_TEXT,
@@ -98,20 +92,17 @@ export const useGetBaseInfo = () => {
     });
     const baseInfoLoading = ref<boolean>(true);
     const baseInfo = reactive({
-        address: currentAddress,
+        address: DEFAULT_DISPLAY_TEXT,
         keyAlgorithm: DEFAULT_DISPLAY_TEXT,
         accountSequence: DEFAULT_DISPLAY_TEXT,
         pubKey: DEFAULT_DISPLAY_TEXT
     });
     const { width: widthClient } = useWindowSize();
     const isShowTooltip = ref<boolean>(false);
-    const getAddressBaseInfo = async () => {
+    const getAddressBaseInfo = async (chain: string, address: string) => {
         baseInfoLoading.value = true;
         try {
-            const { code, message, data } = await getAddrBaseInfoAPI(
-                addressParams.chain,
-                addressParams.address
-            );
+            const { code, message, data } = await getAddrBaseInfoAPI(chain, address);
             if (code === API_CODE.success) {
                 if (data) {
                     baseInfo.keyAlgorithm = data.pub_key_algorithm || DEFAULT_DISPLAY_TEXT;
@@ -121,7 +112,7 @@ export const useGetBaseInfo = () => {
                     console.log(message);
                 }
             } else if (code === API_CODE.noMatchAddress) {
-                router.push(`/searchResult/${currentAddress}?chain=${currentChain}`);
+                router.replace(`/searchResult/${address}?chain=${chain}`);
             } else {
                 console.log(message);
             }
@@ -131,8 +122,8 @@ export const useGetBaseInfo = () => {
             baseInfoLoading.value = false;
         }
     };
-    const getMatchChainInfo = async () => {
-        const chainInfo = await ChainHelper.getChainInfoByKey(currentChain);
+    const getMatchChainInfo = async (chain: string) => {
+        const chainInfo = await ChainHelper.getChainInfoByKey(chain);
         if (chainInfo) {
             currentChainInfo.chainLogo = chainInfo.icon;
             currentChainInfo.prettyName = chainInfo.pretty_name;
@@ -144,16 +135,27 @@ export const useGetBaseInfo = () => {
     const prettyNameSize = computed(() => {
         return getTextWidth(currentChainInfo.prettyName, '16px GolosUI_Medium');
     });
+    const initBaseInfo = () => {
+        const { currentChain, currentAddress } = getChainAddress();
+        handleNoChainFn(currentChain);
+        baseInfo.address = currentAddress;
+        getAddressBaseInfo(currentChain, currentAddress);
+        getMatchChainInfo(currentChain);
+    };
     watch([prettyNameSize, widthClient], ([newPrettyNameSize, newWidthClient]) => {
-        if (newWidthClient.value > 895) {
+        if (newWidthClient > 895) {
             isShowTooltip.value = newPrettyNameSize > 120;
         } else {
             isShowTooltip.value = newPrettyNameSize > 240;
         }
     });
+    watch(route, (newRoute) => {
+        if (isAddressDetailsName(newRoute.name as string)) {
+            initBaseInfo();
+        }
+    });
     onMounted(() => {
-        getAddressBaseInfo();
-        getMatchChainInfo();
+        initBaseInfo();
     });
     return {
         baseInfoLoading,
@@ -1000,7 +1002,9 @@ export const useAddressAccountTokensRatio = (
 };
 
 export const useGetAddressTxs = (pagination: IPaginationParams) => {
-    const { currentAddress, currentChain } = useGetChainAddress();
+    const { getChainAddress, route } = useGetChainAddress();
+    const routeChain = ref<string>('');
+    const routeAddress = ref<string>('');
     const addressTxsLoading = ref<boolean>(true);
     const addressPageisDisabled = ref<boolean>(true);
     const loadingCondition = ref<NoDataType>();
@@ -1047,8 +1051,7 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
             const { code, message, data } = await getAddrTxsAPI({ ...params });
             if (code === API_CODE.success) {
                 if (params.use_count) {
-                    // todo shanshan
-                    pagination.total = 5; // data as number;
+                    pagination.total = data as number;
                     addressPageisDisabled.value = false;
                     if (pagination.total === 0) {
                         addressPageisDisabled.value = true;
@@ -1085,8 +1088,8 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
     const onPaginationChange = (current: number, pageSize: number) => {
         pagination.current = current;
         getAddressTxs({
-            chain: currentChain,
-            address: currentAddress,
+            chain: routeChain.value,
+            address: routeAddress.value,
             page_num: pagination.current,
             page_size: pageSize,
             use_count: false
@@ -1102,25 +1105,36 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
     const showMoreIcon = (ibcVersion: string) => {
         return ibcVersion === IbcVersion['ICS-27'] || ibcVersion === IbcVersion['ICS-721'];
     };
-    onMounted(() => {
+    const initAddrTxs = () => {
+        const { currentChain, currentAddress } = getChainAddress();
+        routeChain.value = currentChain;
+        routeAddress.value = currentAddress;
         getAddressTxs({
-            chain: currentChain,
-            address: currentAddress,
+            chain: routeChain.value,
+            address: routeAddress.value,
             page_num: 1,
             page_size: 5,
             use_count: true
         });
         getAddressTxs({
-            chain: currentChain,
-            address: currentAddress,
+            chain: routeChain.value,
+            address: routeAddress.value,
             page_num: pagination.current,
             page_size: pagination.pageSize,
             use_count: false
         });
+    };
+    watch(route, (newRoute) => {
+        if (isAddressDetailsName(newRoute.name as string)) {
+            initAddrTxs();
+        }
+    });
+    onMounted(() => {
+        initAddrTxs();
     });
     return {
-        currentChain,
-        currentAddress,
+        routeChain,
+        routeAddress,
         addressTxsLoading,
         addressPageisDisabled,
         loadingCondition,
