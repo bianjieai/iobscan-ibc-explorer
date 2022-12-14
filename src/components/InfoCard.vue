@@ -26,17 +26,23 @@
                         @change-choose-btn="changeChooseBtn"
                     />
                 </div>
-                <div v-if="downloadTip" class="info_card__download" @click="clickExportAddressTxs">
+                <a
+                    v-if="downloadTip"
+                    class="info_card__download"
+                    :href="downloadUrl"
+                    download
+                    @click="clickExportAddressTxs"
+                >
                     <a-tooltip>
                         <template #title>
                             <span class="popover_c">{{ downloadTip }}</span>
                         </template>
-                        <a target="_blank" class="flex items-center">
+                        <a class="flex items-center">
                             <svg-icon icon-name="icon-download" />
                             <span class="info_card__download__text">CSV Export</span>
                         </a>
                     </a-tooltip>
-                </div>
+                </a>
             </div>
             <span v-if="subTitle" class="info_card__sub_title_mobile">
                 <i class="iconfont" :class="subIcon"></i>
@@ -60,11 +66,13 @@
         tipMsg?: string;
         subTitle?: string;
         subIcon?: string;
+        downloadUrl?: string;
     }
     withDefaults(defineProps<IProps>(), {
         subIcon: 'icon-shujuliebiao',
         isShowChooseBtn: false,
-        defaultChooseBtn: 0
+        defaultChooseBtn: 0,
+        downloadUrl: ''
     });
     const emits = defineEmits<{
         (e: 'changeChooseBtn', index: number): void;

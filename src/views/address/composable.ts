@@ -1146,10 +1146,12 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
 };
 
 export const useExportAddressTxs = () => {
+    const downloadUrl = ref<string>('');
     const exportAddressTxs = (chain: string, address: string) => {
-        exportAddressTxsAPI(chain, address);
+        downloadUrl.value = exportAddressTxsAPI(chain, address);
     };
     return {
-        exportAddressTxs
+        exportAddressTxs,
+        downloadUrl
     };
 };
