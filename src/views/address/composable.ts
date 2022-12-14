@@ -112,7 +112,7 @@ export const useGetBaseInfo = () => {
                     console.log(message);
                 }
             } else if (code === API_CODE.noMatchAddress) {
-                router.push(`/searchResult/${address}?chain=${chain}`);
+                router.replace(`/searchResult/${address}?chain=${chain}`);
             } else {
                 console.log(message);
             }
