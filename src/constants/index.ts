@@ -161,7 +161,6 @@ export const STATISTICS_NAME = {
     channel_opened: 'Open',
     channel_closed: 'Closed',
     base_denom_all: 'Tokens by Base Denom',
-    // todo shan 需跟接口确认 relayers 字段名
     relayers: 'All Relayers',
     tx_24hr_all: 'Recent',
     tx_all: 'All',

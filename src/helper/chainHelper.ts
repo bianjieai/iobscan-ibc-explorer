@@ -9,13 +9,12 @@ import { getRestString } from '@/helper/parseStringHelper';
 import { TData, TDenom, IDataItem } from '@/components/BjSelect/interface';
 import { useIbcStatisticsChains } from '@/store/index';
 
-const { ibcChains } = useIbcChains();
-
 // todo dj 改造 export default => export
 export default class ChainHelper {
     // pretty_name sort
     // Todo shan 该方法中 ibcChains 可能存在没有值的情况，需要做处理
     static sortByPrettyName(sourceList: any, chain?: any) {
+        const { ibcChains } = useIbcChains();
         function changeChainsSort(item: any) {
             const saveChain = item.chain_a;
             item.chain_a = item.chain_b;
@@ -255,12 +254,18 @@ export default class ChainHelper {
         return resArray.join(',');
     };
 
-    static getChainInfoByPrefix = async (prefix: string): Promise<IPrefixChain[] | undefined> => {
+    static getChainInfoByPrefix = async (
+        prefix?: string
+    ): Promise<{ [key: string]: IPrefixChain[] } | IPrefixChain[] | undefined> => {
         const ibcStatisticsChainsStore = useIbcStatisticsChains();
         const { ibcChainsPrefixMapGetter } = ibcStatisticsChainsStore;
         if (Object.keys(ibcChainsPrefixMapGetter).length <= 0) {
             await ibcStatisticsChainsStore.getIbcChainsAction();
         }
-        return ibcChainsPrefixMapGetter[prefix];
+        if (prefix) {
+            return ibcChainsPrefixMapGetter[prefix];
+        } else {
+            return ibcChainsPrefixMapGetter;
+        }
     };
 }

@@ -51,6 +51,12 @@ export interface IPrefixChain {
     chain_name: string;
     pretty_name: string;
 }
+
+export interface IHeaderInputOption {
+    text: string;
+    value: string;
+    addrPrefix: string;
+}
 export interface IIbcchainMap {
     [propName: string]: string;
 }

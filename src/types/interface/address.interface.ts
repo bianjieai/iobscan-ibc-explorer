@@ -103,7 +103,9 @@ export interface IResponseAddressTxs {
     tx_type: string;
     port: string;
     sender: string;
+    sc_chain: string;
     receiver: string;
+    dc_chain: string;
     denom_info: IResponseTokenInfo;
     fee_info: IResponseTokenInfo;
     tx_time: number;

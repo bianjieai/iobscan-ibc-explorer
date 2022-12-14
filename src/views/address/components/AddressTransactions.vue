@@ -5,7 +5,7 @@
         tip-msg="Display ICS-20 related transactions"
         :sub-title="subTitle"
         download-tip="The latest 1,000 records will be exported"
-        @export-address-txs="exportAddressTxs(currentChain, currentAddress)"
+        @export-address-txs="exportAddressTxs(routeChain, routeAddress)"
     >
         <TableCommon
             class="txs_table"
@@ -70,8 +70,8 @@
             </template>
             <template #sender="{ record }">
                 <AddressDiff
-                    :current-chain="currentChain"
-                    :current-address="currentAddress"
+                    :current-chain="record.sc_chain"
+                    :current-address="routeAddress"
                     :tx-address="record.sender"
                 />
             </template>
@@ -87,15 +87,15 @@
                         >{{ record.tag }}</span
                     >
                     <AddressDiff
-                        :current-chain="currentChain"
-                        :current-address="currentAddress"
+                        :current-chain="record.dc_chain"
+                        :current-address="routeAddress"
                         :tx-address="record.receiver"
                     />
                 </div>
             </template>
             <template #denom_info="{ record, column }">
                 <div v-if="showMoreIcon(record.ibc_version)">
-                    <router-link :to="`/address/${currentAddress}?chain=${currentChain}`">
+                    <router-link :to="`/address/${routeAddress}?chain=${routeChain}`">
                         <i class="iconfont icon-more ml-8 mr-4"></i>
                         <span>More</span>
                     </router-link>
@@ -130,8 +130,8 @@
         PAGE_PARAMETERS.addressDetailsTxs
     );
     const {
-        currentChain,
-        currentAddress,
+        routeChain,
+        routeAddress,
         addressTxsLoading,
         addressPageisDisabled,
         loadingCondition,

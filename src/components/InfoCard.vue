@@ -31,7 +31,7 @@
                         <template #title>
                             <span class="popover_c">{{ downloadTip }}</span>
                         </template>
-                        <a target="_blank" download class="flex items-center">
+                        <a target="_blank" class="flex items-center">
                             <svg-icon icon-name="icon-download" />
                             <span class="info_card__download__text">CSV Export</span>
                         </a>

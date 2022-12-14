@@ -7,33 +7,48 @@
             input_focus_style: inputHasFocus
         }"
         :options="inputOptions"
+        :default-active-first-option="false"
+        dropdown-class-name="auto_complete__dropdown"
+        :get-popup-container="getPopupContainer"
         @focus="setInputBorderStyle"
         @blur="removeInputBorderStyle"
         @search="onSearchInputText"
     >
-        <template #default>
-            <a-input
-                v-model:value="inputValue"
-                class="auto_complete__input"
-                :class="{ auto_complete__input_focus: inputHasFocus }"
-                placeholder="Search by TxHash/Address"
-                allow-clear
-                @press-enter="searchInput"
-                @change="changeValue"
+        <!-- todo shan 清除选择之后回填的数据 -->
+        <template #option="item">
+            <div
+                class="auto_complete__option"
+                :title="''"
+                @click="!isInvalid ? jumpAddrandStyle(inputValue, item.text) : ''"
             >
-                <template #suffix>
-                    <div class="auto_complete__input_prefix cursor" @click="searchInput">
-                        <span class="auto_complete__input_icon iconfont icon-search"></span>
-                    </div>
-                </template>
-            </a-input>
+                <span>Search for</span>
+                <span class="auto_complete__option__chain">{{ item.value }}</span>
+                <span>address</span>
+                <span v-if="isInvalid" class="auto_complete__option__invalid">(invalid)</span>
+            </div>
         </template>
+        <a-input
+            v-model:value="inputValue"
+            class="auto_complete__input"
+            :class="{ auto_complete__input_focus: inputHasFocus }"
+            placeholder="Search by TxHash/Address"
+            allow-clear
+            @press-enter="searchInput"
+            @change="changeValue"
+        >
+            <template #suffix>
+                <div class="auto_complete__input_prefix cursor" @click="searchInput">
+                    <span class="auto_complete__input_icon iconfont icon-search"></span>
+                </div>
+            </template>
+        </a-input>
     </a-auto-complete>
 </template>
 
 <script setup lang="ts">
     import { useHeaderInputSearch } from '@/composables/input';
     const {
+        getPopupContainer,
         inputValue,
         inputOptions,
         searchInput,
@@ -42,13 +57,48 @@
         isActiveInputStyle,
         setInputBorderStyle,
         removeInputBorderStyle,
-        onSearchInputText
+        onSearchInputText,
+        isInvalid,
+        jumpAddrandStyle
     } = useHeaderInputSearch();
 </script>
 
 <style lang="less" scoped>
     .auto_complete {
         border-radius: 20px;
+        :deep(&__dropdown) {
+            padding: 0;
+        }
+        :deep(.rc-virtual-list-holder-inner) {
+            .ant-select-item {
+                padding: 0 16px;
+                min-height: auto;
+                &:last-child {
+                    .ant-select-item-option-content {
+                        .auto_complete__option {
+                            border-bottom: none;
+                        }
+                    }
+                }
+            }
+        }
+        &__option {
+            padding: 12px 0;
+            font-size: var(--bj-font-size-normal);
+            font-weight: 400;
+            color: var(--bj-text-second);
+            line-height: 18px;
+            text-align: left;
+            border-bottom: 1px solid rgba(151, 151, 151, 0.2);
+            &__chain {
+                margin: 0 4px;
+                font-family: GolosUI_Medium;
+            }
+            &__invalid {
+                margin-left: 4px;
+                color: var(--bj-failed);
+            }
+        }
         &__input {
             height: 40px;
             background-color: rgba(255, 255, 255, 0.1);
@@ -344,6 +394,7 @@
     }
     @media screen and (max-width: 620px) {
         .auto_complete {
+            width: 100%;
             &__input {
             }
             &__input_prefix {
