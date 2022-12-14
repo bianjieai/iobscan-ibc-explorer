@@ -102,6 +102,7 @@
                                 </div>
                             </template>
                             <span
+                                class="relayer_transfer__table__address"
                                 :class="{
                                     cursor: judgeIsAddressCursor(record.signer, record.chain)
                                 }"
@@ -213,6 +214,11 @@
                     color: var(--bj-primary-color);
                 }
             }
+            &__address {
+                &:hover {
+                    color: var(--bj-primary-color);
+                }
+            }
         }
     }
     .success_color {
@@ -241,6 +247,8 @@
                 &__content {
                 }
                 &__tx_hash {
+                }
+                &__address {
                 }
             }
         }

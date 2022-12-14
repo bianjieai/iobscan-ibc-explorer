@@ -155,6 +155,7 @@
                                 </div>
                             </template>
                             <span
+                                class="transfer__table__address"
                                 :class="{
                                     cursor: judgeIsAddressCursor(record.sc_addr, record.sc_chain)
                                 }"
@@ -228,6 +229,7 @@
                                 </div>
                             </template>
                             <span
+                                class="transfer__table__address"
                                 :class="{
                                     cursor: judgeIsAddressCursor(record.dc_addr, record.dc_chain)
                                 }"
@@ -408,6 +410,11 @@
         &__table {
             font-size: 14px;
             font-weight: 400;
+            &__address {
+                &:hover {
+                    color: var(--bj-primary-color);
+                }
+            }
             :deep(.ant-table-thead tr th) {
                 border-bottom: 0;
                 &:first-child {
@@ -557,6 +564,8 @@
             }
             &__table {
                 width: 100%;
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -607,6 +616,8 @@
                 }
             }
             &__table {
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -679,6 +690,8 @@
                 }
             }
             &__table {
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -740,6 +753,8 @@
                 }
             }
             &__table {
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -802,6 +817,8 @@
                 }
             }
             &__table {
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -861,6 +878,8 @@
                 }
             }
             &__table {
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
