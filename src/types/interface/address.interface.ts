@@ -76,7 +76,6 @@ export interface IAddressTokenTableItem {
 export interface IAddressAccountTableItem {
     chain: string;
     address: string;
-    isJumpAddress: boolean;
     tokenDenom: number;
     totalValue: string;
     formatLastUpdated: string;

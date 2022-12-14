@@ -108,32 +108,35 @@ export const ADDRESS_ACCOUNT_COLUMNS: TableColumnsType = [
         title: 'Chain',
         dataIndex: AddressAccountTableKey.chain,
         key: AddressAccountTableKey.chain,
-        align: 'left'
+        align: 'left',
+        width: 240
     },
     {
         title: 'Address',
         dataIndex: AddressAccountTableKey.address,
         key: AddressAccountTableKey.address,
         align: 'left',
-        width: 200
+        width: 150
     },
     {
         title: 'Token Denom',
         dataIndex: AddressAccountTableKey.tokenDenom,
         key: AddressAccountTableKey.tokenDenom,
-        align: 'right'
+        align: 'right',
+        width: 120
     },
     {
         title: 'Total Value',
         dataIndex: AddressAccountTableKey.totalValue,
         key: AddressAccountTableKey.totalValue,
-        align: 'right'
+        align: 'right',
+        width: 180
     },
     {
         title: 'LastUpdated',
         dataIndex: AddressAccountTableKey.lastUpdated,
         key: AddressAccountTableKey.lastUpdated,
-        width: 152,
+        width: 160,
         align: 'right'
     }
 ];
