@@ -6,9 +6,11 @@
         </span>
         <span class="address__value">
             <span
-                class="address__value__text"
                 :class="{
-                    cursor: judgeIsAddressCursor(chainAddress.value, chainInfo?.chain || '')
+                    'cursor address__value__text': judgeIsAddressCursor(
+                        chainAddress.value,
+                        chainInfo?.chain || ''
+                    )
                 }"
                 @click="goAddressDetails(chainAddress.value, chainInfo?.chain || '')"
                 >{{ chainAddress.value }}</span

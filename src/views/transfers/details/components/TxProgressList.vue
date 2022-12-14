@@ -11,8 +11,10 @@
             </span>
             <span
                 v-else-if="item.isFormatSigner"
-                class="progress_list__value progress_list__address"
-                :class="{ cursor: judgeIsAddressCursor(item.value, currentChain) }"
+                class="progress_list__value"
+                :class="{
+                    'cursor progress_list__address': judgeIsAddressCursor(item.value, currentChain)
+                }"
                 @click="goAddressDetails(item.value, currentChain)"
                 >{{ item.value }}</span
             >

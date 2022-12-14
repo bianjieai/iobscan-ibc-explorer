@@ -102,9 +102,11 @@
                                 </div>
                             </template>
                             <span
-                                class="relayer_transfer__table__address"
                                 :class="{
-                                    cursor: judgeIsAddressCursor(record.signer, record.chain)
+                                    'cursor relayer_transfer__table__address': judgeIsAddressCursor(
+                                        record.signer,
+                                        record.chain
+                                    )
                                 }"
                                 @click="goAddressDetails(record.signer, record.chain)"
                                 >{{ getRestString(record.signer, 6, 6) }}</span

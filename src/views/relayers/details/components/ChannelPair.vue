@@ -10,12 +10,16 @@
                 class="channel_pair__chain_address_wrap"
             >
                 <span
-                    class="channel_pair__chain_address"
-                    :class="{ cursor: judgeIsAddressCursor(item, chain) }"
+                    :class="{
+                        'cursor channel_pair__chain_address': judgeIsAddressCursor(item, chain)
+                    }"
                     @click="goAddressDetails(item, chain)"
                     >{{ item }}</span
                 >
-                <CopyComponent :copy-text="item"></CopyComponent>
+                <CopyComponent
+                    v-if="judgeIsAddressCursor(item, chain)"
+                    :copy-text="item"
+                ></CopyComponent>
             </div>
         </div>
     </div>

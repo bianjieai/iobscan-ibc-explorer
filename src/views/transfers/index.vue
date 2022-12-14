@@ -155,9 +155,11 @@
                                 </div>
                             </template>
                             <span
-                                class="transfer__table__address"
                                 :class="{
-                                    cursor: judgeIsAddressCursor(record.sc_addr, record.sc_chain)
+                                    'cursor transfer__table__address': judgeIsAddressCursor(
+                                        record.sc_addr,
+                                        record.sc_chain
+                                    )
                                 }"
                                 @click="goAddressDetails(record.sc_addr, record.sc_chain)"
                                 >{{ getRestString(record.sc_addr, 6, 6) || '--' }}</span
@@ -229,9 +231,11 @@
                                 </div>
                             </template>
                             <span
-                                class="transfer__table__address"
                                 :class="{
-                                    cursor: judgeIsAddressCursor(record.dc_addr, record.dc_chain)
+                                    'cursor transfer__table__address': judgeIsAddressCursor(
+                                        record.dc_addr,
+                                        record.dc_chain
+                                    )
                                 }"
                                 @click="goAddressDetails(record.dc_addr, record.dc_chain)"
                                 >{{ getRestString(record.dc_addr, 6, 6) || '--' }}</span
