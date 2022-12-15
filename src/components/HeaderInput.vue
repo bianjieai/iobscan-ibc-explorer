@@ -1,11 +1,13 @@
 <template>
     <a-auto-complete
         v-model:value="inputValue"
-        class="auto_complete"
-        :class="{
-            active_input_style: isActiveInputStyle,
-            input_focus_style: inputHasFocus
-        }"
+        :class="[
+            optionClass,
+            {
+                active_input_style: isActiveInputStyle,
+                input_focus_style: inputHasFocus
+            }
+        ]"
         :options="inputOptions"
         :default-active-first-option="false"
         dropdown-class-name="auto_complete__dropdown"
@@ -13,13 +15,13 @@
         @focus="setInputBorderStyle"
         @blur="removeInputBorderStyle"
         @search="onSearchInputText"
+        @select="onSelect"
     >
-        <!-- todo shan 清除选择之后回填的数据 -->
         <template #option="item">
             <div
                 class="auto_complete__option"
                 :title="''"
-                @click="!isInvalid ? jumpAddrandStyle(inputValue, item.text) : ''"
+                @click="!isInvalid ? jumpAddrandStyle(item.text) : ''"
             >
                 <span>Search for</span>
                 <span class="auto_complete__option__chain">{{ item.value }}</span>
@@ -47,6 +49,12 @@
 
 <script setup lang="ts">
     import { useHeaderInputSearch } from '@/composables/input';
+    interface IProps {
+        optionClass?: string;
+    }
+    const props = withDefaults(defineProps<IProps>(), {
+        optionClass: 'auto_complete'
+    });
     const {
         getPopupContainer,
         inputValue,
@@ -59,12 +67,14 @@
         removeInputBorderStyle,
         onSearchInputText,
         isInvalid,
-        jumpAddrandStyle
-    } = useHeaderInputSearch();
+        jumpAddrandStyle,
+        onSelect
+    } = useHeaderInputSearch(props.optionClass);
 </script>
 
 <style lang="less" scoped>
-    .auto_complete {
+    .auto_complete,
+    .auto_complete__mobile {
         border-radius: 20px;
         :deep(&__dropdown) {
             padding: 0;
@@ -138,7 +148,7 @@
     }
     .ant-input-affix-wrapper {
         padding-right: 0;
-        min-width: 280px;
+        min-width: 350px;
     }
     .active_input_style {
         border-color: rgba(61, 80, 255, 1) !important;
@@ -155,15 +165,14 @@
         }
     }
     @media screen and (max-width: 1200px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 770px;
@@ -172,15 +181,14 @@
         }
     }
     @media screen and (max-width: 1180px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 750px;
@@ -189,15 +197,14 @@
         }
     }
     @media screen and (max-width: 1160px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 730px;
@@ -206,15 +213,14 @@
         }
     }
     @media screen and (max-width: 1140px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 710px;
@@ -223,15 +229,14 @@
         }
     }
     @media screen and (max-width: 1120px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 690px;
@@ -240,15 +245,14 @@
         }
     }
     @media screen and (max-width: 1100px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 670px;
@@ -257,15 +261,14 @@
         }
     }
     @media screen and (max-width: 1080px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 650px;
@@ -274,15 +277,14 @@
         }
     }
     @media screen and (max-width: 1060px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 630px;
@@ -291,15 +293,14 @@
         }
     }
     @media screen and (max-width: 1040px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 610px;
@@ -308,15 +309,14 @@
         }
     }
     @media screen and (max-width: 970px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 500px;
@@ -325,15 +325,14 @@
         }
     }
     @media screen and (max-width: 860px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 456px;
@@ -342,15 +341,14 @@
         }
     }
     @media screen and (max-width: 800px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 400px;
@@ -359,15 +357,14 @@
         }
     }
     @media screen and (max-width: 730px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
             &__input {
             }
             &__input_prefix {
             }
             &__input_icon {
             }
-        }
-        .input_focus_style {
         }
         .input_focus_style {
             width: 350px;
@@ -376,24 +373,9 @@
         }
     }
     @media screen and (max-width: 670px) {
-        .auto_complete {
-            &__input {
-            }
-            &__input_prefix {
-            }
-            &__input_icon {
-            }
-        }
-        .input_focus_style {
-        }
-        .input_focus_style {
-            width: 280px;
-            .auto_complete__input {
-            }
-        }
-    }
-    @media screen and (max-width: 620px) {
-        .auto_complete {
+        .auto_complete,
+        .auto_complete__mobile {
+            position: relative;
             width: 100%;
             &__input {
             }
@@ -403,9 +385,6 @@
             }
         }
         .input_focus_style {
-        }
-        .input_focus_style {
-            position: relative;
             width: 100%;
             .auto_complete__input {
             }

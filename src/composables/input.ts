@@ -4,11 +4,12 @@ import { postIPAndInput } from '@/api';
 import ChainHelper from '@/helper/chainHelper';
 import { IHeaderInputOption, IPrefixChain } from '@/types/interface/index.interface';
 import { bech32 } from 'bech32';
-export const useHeaderInputSearch = () => {
+export const useHeaderInputSearch = (optionClass: string) => {
     const router = useRouter();
-    const getPopupContainer = (): HTMLElement => document.querySelector('.auto_complete')!;
+    const getPopupContainer = (): HTMLElement => document.querySelector(`.${optionClass}`)!;
     const inputHasFocus = ref<boolean>(false);
     const isActiveInputStyle = ref(false);
+    const inputOptions = ref<IHeaderInputOption[]>([]);
     const setInputBorderStyle = () => {
         isActiveInputStyle.value = true;
         inputHasFocus.value = true;
@@ -16,6 +17,8 @@ export const useHeaderInputSearch = () => {
     const removeInputBorderStyle = () => {
         isActiveInputStyle.value = false;
         inputHasFocus.value = false;
+        inputValue.value = '';
+        inputOptions.value = [];
     };
     const isInvalid = ref<boolean>(false);
     const IP = (window as any)?.returnCitySN?.cip || '';
@@ -24,7 +27,6 @@ export const useHeaderInputSearch = () => {
     }
     const inputValue = ref<string>('');
     let content: string;
-    const inputOptions = ref<IHeaderInputOption[]>([]);
     const onSearchInputText = (inputText: string) => {
         inputOptions.value = [];
         handleInputOptions(inputText);
@@ -125,9 +127,18 @@ export const useHeaderInputSearch = () => {
             isInvalid.value = false;
         }
     };
-    const jumpAddrandStyle = (address: string, chain: string) => {
-        router.push(`/address/${address}?chain=${chain}`);
-        removeInputBorderStyle();
+    const jumpAddrandStyle = (chain: string) => {
+        const dealWidthInputText = removeSpaceAndToLowerCase(inputValue.value);
+        if (judgeIsAddress(dealWidthInputText)) {
+            router.push(`/address/${dealWidthInputText}?chain=${chain}`);
+            removeInputBorderStyle();
+        } else {
+            inputValue.value = '';
+            inputOptions.value = [];
+        }
+    };
+    const onSelect = () => {
+        inputValue.value = '';
         inputOptions.value = [];
     };
     return {
@@ -142,6 +153,7 @@ export const useHeaderInputSearch = () => {
         removeInputBorderStyle,
         onSearchInputText,
         isInvalid,
-        jumpAddrandStyle
+        jumpAddrandStyle,
+        onSelect
     };
 };

@@ -45,7 +45,9 @@
             </div>
         </div>
         <div class="header_container__input">
-            <header-input class="header_container__input_layout" />
+            <div class="flex items-center">
+                <header-input :option-class="'auto_complete__mobile'" />
+            </div>
         </div>
     </div>
 </template>
@@ -177,9 +179,9 @@
                         }
                     }
                 }
-            }
-            .header_input_focus {
-                position: relative;
+                .header_input_focus {
+                    position: relative;
+                }
             }
         }
         &__input {
@@ -210,6 +212,8 @@
                         }
                     }
                 }
+                .header_input_focus {
+                }
             }
         }
     }
@@ -237,11 +241,13 @@
                             }
                         }
                     }
+                    .header_input_focus {
+                    }
                 }
             }
         }
     }
-    @media screen and (max-width: 1030px) {
+    @media screen and (max-width: 1130px) {
         .header_container {
             .header_content {
                 position: relative;
@@ -265,6 +271,8 @@
                             img {
                             }
                         }
+                    }
+                    .header_input_focus {
                     }
                 }
             }
@@ -294,11 +302,13 @@
                             }
                         }
                     }
+                    .header_input_focus {
+                    }
                 }
             }
         }
     }
-    @media screen and (max-width: 620px) {
+    @media screen and (max-width: 670px) {
         .header_container {
             .header_content {
                 .logo {
@@ -323,11 +333,14 @@
                             }
                         }
                     }
+                    .header_input_focus {
+                    }
                 }
             }
             &__input {
                 display: block;
-                padding: 0 32px;
+                padding: 16px 32px;
+                line-height: 80px;
             }
         }
     }
@@ -358,10 +371,11 @@
                         }
                     }
                 }
+                .header_input_focus {
+                }
             }
             &__input {
-                display: block;
-                padding: 0 16px;
+                padding: 16px;
             }
         }
     }

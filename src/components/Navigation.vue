@@ -97,7 +97,7 @@
             }
         }
     }
-    @media screen and (max-width: 1030px) {
+    @media screen and (max-width: 1130px) {
         .header_menu_hide {
             visibility: hidden;
         }
