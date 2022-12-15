@@ -1100,7 +1100,7 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
         return `A total of ${displayTotal} IBC Transactions found`;
     };
     const subTitle = computed(() => {
-        return showSubTitle ? getTxsSubtitle(showDefaultTotal.value, pagination.total) : '';
+        return showSubTitle.value ? getTxsSubtitle(showDefaultTotal.value, pagination.total) : '';
     });
     const showMoreIcon = (ibcVersion: string) => {
         return ibcVersion === IbcVersion['ICS-27'] || ibcVersion === IbcVersion['ICS-721'];

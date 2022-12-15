@@ -221,7 +221,7 @@
         .header_container {
             .header_content {
                 .logo {
-                    margin-left: 48px;
+                    margin-left: 32px;
                     &__img {
                     }
                     .stage_logo__img {
@@ -230,7 +230,7 @@
                 .header_navigation {
                 }
                 .header_input_wrapper {
-                    margin-right: 48px;
+                    margin-right: 32px;
                     .header_input_icon_wrapper {
                         a {
                             .header_input_icon {
@@ -268,36 +268,6 @@
                         }
                         .header_btn_mobile {
                             display: inline-block;
-                            img {
-                            }
-                        }
-                    }
-                    .header_input_focus {
-                    }
-                }
-            }
-        }
-    }
-    @media screen and (max-width: 768px) {
-        .header_container {
-            .header_content {
-                .logo {
-                    margin-left: 32px;
-                    &__img {
-                    }
-                    .stage_logo__img {
-                    }
-                }
-                .header_navigation {
-                }
-                .header_input_wrapper {
-                    margin-right: 32px;
-                    .header_input_icon_wrapper {
-                        a {
-                            .header_input_icon {
-                            }
-                        }
-                        .header_btn_mobile {
                             img {
                             }
                         }
