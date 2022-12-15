@@ -2,7 +2,10 @@
     <div class="pie_legend">
         <ibcToast :show-toast="showToast" :client-x="clientX" :client-y="clientY" />
         <div class="pie_legend__content cursor" @click="copyAndClickEventFn(legendName, $event)">
-            <div class="pie_legend__content__color_block" :style="{ color: lengedColor }"></div>
+            <div
+                class="pie_legend__content__color_block"
+                :style="{ backgroundColor: lengedColor }"
+            ></div>
             <div class="pie_legend__content__legend_name">{{ legendName }}</div>
         </div>
         <div class="pie_legend__line"></div>
