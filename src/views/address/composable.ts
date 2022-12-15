@@ -32,9 +32,9 @@ import type {
 } from '@/types/interface/address.interface';
 import {
     exportAddressTxsAPI,
-    getAddrAccountListMock,
     getAddrBaseInfoAPI,
-    getAddrTokenListMock,
+    getAddrAccountListAPI,
+    getAddrTokenListAPI,
     getAddrTxsAPI
 } from '@/api/address';
 import { API_CODE } from '@/constants/apiCode';
@@ -52,7 +52,7 @@ import type { IPaginationParams } from '@/types/interface/index.interface';
 import { IN_OUT_TAG } from '@/constants/address';
 
 export const getTotalValue = (totalValue: string) => {
-    if (!totalValue || Number(totalValue) === 0) return '0';
+    if (!totalValue || Number(totalValue) === 0) return `${UNIT_SIGNS} 0`;
     return `${UNIT_SIGNS} ${formatBigNumber(totalValue, 2)}`;
 };
 
@@ -205,7 +205,7 @@ export const useGetAddressTokens = () => {
             tokensNoDataType.value = undefined;
             tokensData.value = undefined;
             baseInfoTotalValue.value = DEFAULT_DISPLAY_TEXT;
-            const { code, data, message } = await getAddrTokenListMock(chain, address);
+            const { code, data, message } = await getAddrTokenListAPI(chain, address);
             if (code === API_CODE.success) {
                 if (data) {
                     data.tokens = data.tokens.sort((a, b) =>
@@ -296,7 +296,7 @@ export const useGetAddressAccounts = () => {
             accountsLoading.value = true;
             accountsNoDataType.value = undefined;
             accountsData.value = undefined;
-            const { code, data, message } = await getAddrAccountListMock(chain, address);
+            const { code, data, message } = await getAddrAccountListAPI(chain, address);
             if (code === API_CODE.success) {
                 if (data) {
                     data.accounts = data.accounts.sort((a, b) =>
@@ -730,7 +730,9 @@ export const usAddressAccount = (
                         address: account.address,
                         tokenDenom: account.token_denom_num,
                         totalValue: formatPriceAndTotalValue(account.token_value),
-                        formatLastUpdated: dayjsFormatDate(account.last_update_time),
+                        formatLastUpdated: account.last_update_time
+                            ? dayjsFormatDate(account.last_update_time)
+                            : DEFAULT_DISPLAY_TEXT,
                         lastUpdatedTimestamp: account.last_update_time
                     });
                 });
