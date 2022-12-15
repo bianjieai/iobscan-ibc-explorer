@@ -102,7 +102,7 @@
             }
         }
     }
-    @media screen and (max-width: 620px) {
+    @media screen and (max-width: 670px) {
         .layout {
             padding-top: 160px;
             &__header {
