@@ -8,8 +8,14 @@ const service = axios.create({
     transformResponse: (data) => {
         try {
             return jsonBig.parse(data);
-        } catch {
-            return data;
+        } catch (error) {
+            console.error('error', error);
+            try {
+                return JSON.parse(data);
+            } catch (error) {
+                console.error('error', error);
+                return data;
+            }
         }
     }
 });
