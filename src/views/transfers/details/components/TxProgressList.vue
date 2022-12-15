@@ -12,7 +12,9 @@
             <span
                 v-else-if="item.isFormatSigner"
                 class="progress_list__value"
-                :class="{ cursor: judgeIsAddressCursor(item.value, currentChain) }"
+                :class="{
+                    'cursor progress_list__address': judgeIsAddressCursor(item.value, currentChain)
+                }"
                 @click="goAddressDetails(item.value, currentChain)"
                 >{{ item.value }}</span
             >
@@ -64,6 +66,11 @@
             color: var(--bj-text-second);
             word-break: break-word;
         }
+        &__address {
+            &:hover {
+                color: var(--bj-primary-color);
+            }
+        }
     }
     .success_color {
         font-family: GolosUI_Medium;
@@ -86,6 +93,8 @@
             &__value {
                 margin-top: 2;
                 margin-left: 0;
+            }
+            &__address {
             }
         }
     }

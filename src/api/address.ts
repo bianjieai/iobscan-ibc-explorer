@@ -67,11 +67,9 @@ export const getAddrTxsAPI = async (params: IRequestAddressTxs) => {
     });
 };
 
-export const exportAddressTxsAPI = async (chain: string, address: string) => {
+export const exportAddressTxsAPI = (chain: string, address: string) => {
+    const serverAPI = import.meta.env.VITE_BASE_GO_API;
     let url = API_URL.ibcAddrTxsExport.replace(urlReplacePlaceholder, chain);
     url = url.replace(urlReplacePlaceholder2, address);
-    return request<IResponse>({
-        url,
-        method: 'get'
-    });
+    return `${serverAPI}${url}`;
 };

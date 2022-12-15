@@ -156,7 +156,10 @@
                             </template>
                             <span
                                 :class="{
-                                    cursor: judgeIsAddressCursor(record.sc_addr, record.sc_chain)
+                                    'cursor transfer__table__address': judgeIsAddressCursor(
+                                        record.sc_addr,
+                                        record.sc_chain
+                                    )
                                 }"
                                 @click="goAddressDetails(record.sc_addr, record.sc_chain)"
                                 >{{ getRestString(record.sc_addr, 6, 6) || '--' }}</span
@@ -229,7 +232,10 @@
                             </template>
                             <span
                                 :class="{
-                                    cursor: judgeIsAddressCursor(record.dc_addr, record.dc_chain)
+                                    'cursor transfer__table__address': judgeIsAddressCursor(
+                                        record.dc_addr,
+                                        record.dc_chain
+                                    )
                                 }"
                                 @click="goAddressDetails(record.dc_addr, record.dc_chain)"
                                 >{{ getRestString(record.dc_addr, 6, 6) || '--' }}</span
@@ -408,6 +414,11 @@
         &__table {
             font-size: 14px;
             font-weight: 400;
+            &__address {
+                &:hover {
+                    color: var(--bj-primary-color);
+                }
+            }
             :deep(.ant-table-thead tr th) {
                 border-bottom: 0;
                 &:first-child {
@@ -557,6 +568,8 @@
             }
             &__table {
                 width: 100%;
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -607,6 +620,8 @@
                 }
             }
             &__table {
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -679,6 +694,8 @@
                 }
             }
             &__table {
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -740,6 +757,8 @@
                 }
             }
             &__table {
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -802,6 +821,8 @@
                 }
             }
             &__table {
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {
@@ -861,6 +882,8 @@
                 }
             }
             &__table {
+                &__address {
+                }
                 :deep(.ant-table-placeholder) {
                 }
                 :deep(a, span) {

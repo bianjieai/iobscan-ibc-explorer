@@ -5,6 +5,7 @@
         tip-msg="Display ICS-20 related transactions"
         :sub-title="subTitle"
         download-tip="The latest 1,000 records will be exported"
+        :download-url="downloadUrl"
         @export-address-txs="exportAddressTxs(routeChain, routeAddress)"
     >
         <TableCommon
@@ -140,7 +141,7 @@
         subTitle,
         showMoreIcon
     } = useGetAddressTxs(pagination);
-    const { exportAddressTxs } = useExportAddressTxs();
+    const { exportAddressTxs, downloadUrl } = useExportAddressTxs();
 </script>
 
 <style lang="less" scoped>

@@ -7,7 +7,10 @@
         <span class="address__value">
             <span
                 :class="{
-                    cursor: judgeIsAddressCursor(chainAddress.value, chainInfo?.chain || '')
+                    'cursor address__value__text': judgeIsAddressCursor(
+                        chainAddress.value,
+                        chainInfo?.chain || ''
+                    )
                 }"
                 @click="goAddressDetails(chainAddress.value, chainInfo?.chain || '')"
                 >{{ chainAddress.value }}</span
@@ -55,6 +58,11 @@
             color: var(--bj-text-second);
             line-height: 18px;
             word-break: break-all;
+            &__text {
+                &:hover {
+                    color: var(--bj-primary-color);
+                }
+            }
         }
         &__chain_name {
             margin-right: 4px;
@@ -69,6 +77,8 @@
             &__value {
                 flex: 1;
                 margin-left: 24px;
+                &__text {
+                }
             }
             &__chain_name {
             }
@@ -83,6 +93,8 @@
             &__value {
                 margin-top: 2px;
                 margin-left: 0;
+                &__text {
+                }
             }
             &__chain_name {
             }
