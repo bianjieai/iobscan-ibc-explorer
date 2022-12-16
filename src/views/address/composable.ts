@@ -87,8 +87,7 @@ export const useGetBaseInfo = () => {
     const { handleNoChainFn, getChainAddress, route, router } = useGetChainAddress();
     const currentChainInfo = reactive({
         chainLogo: CHAIN_DEFAULT_ICON,
-        prettyName: DEFAULT_DISPLAY_TEXT,
-        isShowTooltip: false
+        prettyName: DEFAULT_DISPLAY_TEXT
     });
     const baseInfoLoading = ref<boolean>(true);
     const baseInfo = reactive({
@@ -124,13 +123,8 @@ export const useGetBaseInfo = () => {
     };
     const getMatchChainInfo = async (chain: string) => {
         const chainInfo = await ChainHelper.getChainInfoByKey(chain);
-        if (chainInfo) {
-            currentChainInfo.chainLogo = chainInfo.icon;
-            currentChainInfo.prettyName = chainInfo.pretty_name;
-        } else {
-            currentChainInfo.chainLogo = CHAIN_DEFAULT_ICON;
-            currentChainInfo.prettyName = DEFAULT_DISPLAY_TEXT;
-        }
+        currentChainInfo.chainLogo = chainInfo?.icon || CHAIN_DEFAULT_ICON;
+        currentChainInfo.prettyName = chainInfo?.pretty_name || DEFAULT_DISPLAY_TEXT;
     };
     const prettyNameSize = computed(() => {
         return getTextWidth(currentChainInfo.prettyName, '16px GolosUI_Medium');
