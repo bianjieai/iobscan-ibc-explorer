@@ -675,7 +675,7 @@ export const useAddressTokens = (
                         displayAmount: token.displayAmount,
                         displayAvaliable: token.displayAvaliableAmount,
                         price: formatPriceAndTotalValue(String(token.price)),
-                        totalValue: formatPriceAndTotalValue(token.denom_amount)
+                        totalValue: formatPriceAndTotalValue(token.denom_value)
                     });
                 });
                 tokensList.value = [...temp];
