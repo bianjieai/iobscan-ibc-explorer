@@ -21,7 +21,7 @@
                             <template #content>
                                 <span>{{ currentChainInfo.prettyName }}</span>
                             </template>
-                            <span class="base_info__chain_name cursor">{{
+                            <span class="base_info__chain_name">{{
                                 currentChainInfo.prettyName
                             }}</span>
                         </a-popover>

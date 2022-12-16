@@ -44,7 +44,7 @@ import { formatString } from '@/utils/stringTools';
 import { OPACITY_PIE_COLOR_LIST, PIE_COLOR_LIST, UNIT_SIGNS } from '@/constants/relayers';
 import type { PieData } from '@/types/interface/relayers.interface';
 import { calculatePercentage } from '@/utils/calculate';
-import { useNeedCustomColumns } from '@/composables';
+import { useNeedCustomColumns, useShowUtcIcon } from '@/composables';
 import { formatPriceAndTotalValue } from '@/helper/addressHelper';
 import { dayjsFormatDate } from '@/utils/timeTools';
 import { getTextWidth } from '@/utils/urlTools';
@@ -87,8 +87,7 @@ export const useGetBaseInfo = () => {
     const { handleNoChainFn, getChainAddress, route, router } = useGetChainAddress();
     const currentChainInfo = reactive({
         chainLogo: CHAIN_DEFAULT_ICON,
-        prettyName: DEFAULT_DISPLAY_TEXT,
-        isShowTooltip: false
+        prettyName: DEFAULT_DISPLAY_TEXT
     });
     const baseInfoLoading = ref<boolean>(true);
     const baseInfo = reactive({
@@ -124,13 +123,8 @@ export const useGetBaseInfo = () => {
     };
     const getMatchChainInfo = async (chain: string) => {
         const chainInfo = await ChainHelper.getChainInfoByKey(chain);
-        if (chainInfo) {
-            currentChainInfo.chainLogo = chainInfo.icon;
-            currentChainInfo.prettyName = chainInfo.pretty_name;
-        } else {
-            currentChainInfo.chainLogo = CHAIN_DEFAULT_ICON;
-            currentChainInfo.prettyName = DEFAULT_DISPLAY_TEXT;
-        }
+        currentChainInfo.chainLogo = chainInfo?.icon || CHAIN_DEFAULT_ICON;
+        currentChainInfo.prettyName = chainInfo?.pretty_name || DEFAULT_DISPLAY_TEXT;
     };
     const prettyNameSize = computed(() => {
         return getTextWidth(currentChainInfo.prettyName, '16px GolosUI_Medium');
@@ -718,7 +712,7 @@ export const usAddressAccount = (
     });
 
     const isFailed = computed(() => addressAccountType.value === NoDataType.loadFailed);
-
+    const { showUtcIcon } = useShowUtcIcon(addressAccountLoading, addressAccountType);
     watch(
         () => data?.value,
         (newValue) => {
@@ -759,7 +753,8 @@ export const usAddressAccount = (
         needCustomHeaders,
         accountsList,
         currentAddress,
-        isFailed
+        isFailed,
+        showUtcIcon
     };
 };
 
@@ -1126,6 +1121,8 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
             use_count: false
         });
     };
+    const { showUtcIcon } = useShowUtcIcon(addressTxsLoading, loadingCondition);
+
     watch(route, (newRoute) => {
         if (isAddressDetailsName(newRoute.name as string)) {
             initAddrTxs();
@@ -1143,7 +1140,8 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
         addressTxsList,
         onPaginationChange,
         subTitle,
-        showMoreIcon
+        showMoreIcon,
+        showUtcIcon
     };
 };
 
