@@ -21,7 +21,7 @@ export interface IResponseTokenListItem {
 }
 export interface ITokenListItem extends IResponseTokenListItem {
     displayAmount: string;
-    displayAvaliableAmount: string;
+    displayAvailableAmount: string;
     tokenInfo?: IBaseDenom;
 }
 
@@ -68,7 +68,7 @@ export interface IAddressTokenTableItem {
     tokenId: string;
     tokenInfo: ITableTokenInfo;
     displayAmount: string;
-    displayAvaliable: string;
+    displayAvailable: string;
     price: string;
     totalValue: string;
 }

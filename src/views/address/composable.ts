@@ -219,18 +219,18 @@ export const useGetAddressTokens = () => {
                             item.base_denom
                         );
                         let displayAmount: string;
-                        let displayAvaliableAmount: string;
+                        let displayAvailableAmount: string;
                         if (baseDenom) {
                             const tempAmount = moveDecimal(item.denom_amount, -baseDenom.scale);
-                            const tempAvaliableAmount = moveDecimal(
+                            const tempAvailableAmount = moveDecimal(
                                 item.denom_available_amount,
                                 -baseDenom.scale
                             );
                             displayAmount = formatBigNumber(tempAmount, 6);
-                            displayAvaliableAmount = formatBigNumber(tempAvaliableAmount, 6);
+                            displayAvailableAmount = formatBigNumber(tempAvailableAmount, 6);
                         } else {
                             displayAmount = formatBigNumber(item.denom_amount, 6);
-                            displayAvaliableAmount = formatBigNumber(
+                            displayAvailableAmount = formatBigNumber(
                                 item.denom_available_amount,
                                 6
                             );
@@ -238,7 +238,7 @@ export const useGetAddressTokens = () => {
                         tokens.push({
                             ...item,
                             displayAmount,
-                            displayAvaliableAmount,
+                            displayAvailableAmount,
                             tokenInfo: baseDenom
                         });
                     }
@@ -560,7 +560,7 @@ export const useAddressAllocation = (
                                 price: 0,
                                 denom_value: spliceValueTotal,
                                 displayAmount: '',
-                                displayAvaliableAmount: '',
+                                displayAvailableAmount: '',
                                 tokenInfo: undefined
                             });
                         }
@@ -673,7 +673,7 @@ export const useAddressTokens = (
                         tokenId: token.chain + token.denom,
                         tokenInfo,
                         displayAmount: token.displayAmount,
-                        displayAvaliable: token.displayAvaliableAmount,
+                        displayAvailable: token.displayAvailableAmount,
                         price: formatPriceAndTotalValue(String(token.price)),
                         totalValue: formatPriceAndTotalValue(token.denom_value)
                     });
