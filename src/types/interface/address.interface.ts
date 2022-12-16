@@ -15,13 +15,13 @@ export interface IResponseTokenListItem {
     base_denom_chain: string;
     denom_type: TIbcTokenType;
     denom_amount: string;
-    denom_avaliable_amount: string;
+    denom_available_amount: string;
     price: number;
     denom_value: string;
 }
 export interface ITokenListItem extends IResponseTokenListItem {
     displayAmount: string;
-    displayAvaliableAmount: string;
+    displayAvailableAmount: string;
     tokenInfo?: IBaseDenom;
 }
 
@@ -68,7 +68,7 @@ export interface IAddressTokenTableItem {
     tokenId: string;
     tokenInfo: ITableTokenInfo;
     displayAmount: string;
-    displayAvaliable: string;
+    displayAvailable: string;
     price: string;
     totalValue: string;
 }

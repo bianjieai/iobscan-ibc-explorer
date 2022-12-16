@@ -202,7 +202,7 @@
                                 }
                             }
                             &__right {
-                                .flex(column,nowrap,center,flex-start);
+                                .flex(column,nowrap,flex-start,flex-start);
                                 .allocation_pie_legend {
                                     margin-bottom: 16px;
                                     &:last-child {

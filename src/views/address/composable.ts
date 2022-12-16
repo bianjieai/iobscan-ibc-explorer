@@ -213,26 +213,26 @@ export const useGetAddressTokens = () => {
                             item.base_denom
                         );
                         let displayAmount: string;
-                        let displayAvaliableAmount: string;
+                        let displayAvailableAmount: string;
                         if (baseDenom) {
                             const tempAmount = moveDecimal(item.denom_amount, -baseDenom.scale);
-                            const tempAvaliableAmount = moveDecimal(
-                                item.denom_avaliable_amount,
+                            const tempAvailableAmount = moveDecimal(
+                                item.denom_available_amount,
                                 -baseDenom.scale
                             );
                             displayAmount = formatBigNumber(tempAmount, 6);
-                            displayAvaliableAmount = formatBigNumber(tempAvaliableAmount, 6);
+                            displayAvailableAmount = formatBigNumber(tempAvailableAmount, 6);
                         } else {
                             displayAmount = formatBigNumber(item.denom_amount, 6);
-                            displayAvaliableAmount = formatBigNumber(
-                                item.denom_avaliable_amount,
+                            displayAvailableAmount = formatBigNumber(
+                                item.denom_available_amount,
                                 6
                             );
                         }
                         tokens.push({
                             ...item,
                             displayAmount,
-                            displayAvaliableAmount,
+                            displayAvailableAmount,
                             tokenInfo: baseDenom
                         });
                     }
@@ -550,11 +550,11 @@ export const useAddressAllocation = (
                                 base_denom_chain: PIE_OTHERS,
                                 denom_type: 'Other',
                                 denom_amount: '',
-                                denom_avaliable_amount: '',
+                                denom_available_amount: '',
                                 price: 0,
                                 denom_value: spliceValueTotal,
                                 displayAmount: '',
-                                displayAvaliableAmount: '',
+                                displayAvailableAmount: '',
                                 tokenInfo: undefined
                             });
                         }
@@ -667,9 +667,9 @@ export const useAddressTokens = (
                         tokenId: token.chain + token.denom,
                         tokenInfo,
                         displayAmount: token.displayAmount,
-                        displayAvaliable: token.displayAvaliableAmount,
+                        displayAvailable: token.displayAvailableAmount,
                         price: formatPriceAndTotalValue(String(token.price)),
-                        totalValue: formatPriceAndTotalValue(token.denom_amount)
+                        totalValue: formatPriceAndTotalValue(token.denom_value)
                     });
                 });
                 tokensList.value = [...temp];
