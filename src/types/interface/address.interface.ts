@@ -15,7 +15,7 @@ export interface IResponseTokenListItem {
     base_denom_chain: string;
     denom_type: TIbcTokenType;
     denom_amount: string;
-    denom_avaliable_amount: string;
+    denom_available_amount: string;
     price: number;
     denom_value: string;
 }

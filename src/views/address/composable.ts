@@ -223,7 +223,7 @@ export const useGetAddressTokens = () => {
                         if (baseDenom) {
                             const tempAmount = moveDecimal(item.denom_amount, -baseDenom.scale);
                             const tempAvaliableAmount = moveDecimal(
-                                item.denom_avaliable_amount,
+                                item.denom_available_amount,
                                 -baseDenom.scale
                             );
                             displayAmount = formatBigNumber(tempAmount, 6);
@@ -231,7 +231,7 @@ export const useGetAddressTokens = () => {
                         } else {
                             displayAmount = formatBigNumber(item.denom_amount, 6);
                             displayAvaliableAmount = formatBigNumber(
-                                item.denom_avaliable_amount,
+                                item.denom_available_amount,
                                 6
                             );
                         }
@@ -556,7 +556,7 @@ export const useAddressAllocation = (
                                 base_denom_chain: PIE_OTHERS,
                                 denom_type: 'Other',
                                 denom_amount: '',
-                                denom_avaliable_amount: '',
+                                denom_available_amount: '',
                                 price: 0,
                                 denom_value: spliceValueTotal,
                                 displayAmount: '',
