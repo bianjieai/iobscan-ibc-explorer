@@ -197,10 +197,6 @@ export const RELAYER_TRANSFER_COLUMN: TableColumnsType = [
         align: 'right'
     }
 ];
-export const RT_COLUMN_TYPE = {
-    token: 'Token',
-    fee: 'Fee'
-};
 
 export const PIE_COLOR_LIST = [
     'rgba(13, 71, 161, 1)',

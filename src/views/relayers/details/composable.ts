@@ -1,4 +1,4 @@
-import { PIE_OTHERS } from '@/constants/index';
+import { COLUMN_TOKEN_INFO_TYPE, PIE_OTHERS } from '@/constants/index';
 import { useCopyToast } from '@/helper/copyHelper';
 import { dayjsFormatDate, dayjsUtc } from '@/utils/timeTools';
 import { getDenomKey } from '@/helper/baseDenomHelper';
@@ -26,7 +26,6 @@ import { API_CODE } from '@/constants/apiCode';
 import {
     DISPLAY_RELAYER_NAME_AREA,
     RELAYER_DETAILS_INFO,
-    RT_COLUMN_TYPE,
     SINGLE_ADDRESS_HEIGHT
 } from '@/constants/relayers';
 import ChainHelper from '@/helper/chainHelper';
@@ -852,12 +851,13 @@ export const useFormatTokenDenom = (tokenInfo: Ref<IResponseTokenInfo>, type: Re
         [tokenInfo, type],
         ([newTokenInfo, newType]) => {
             switch (newType) {
-                case RT_COLUMN_TYPE.token:
+                case COLUMN_TOKEN_INFO_TYPE.token:
+                case COLUMN_TOKEN_INFO_TYPE.amount:
                     chain.value = newTokenInfo.base_denom_chain || '';
                     denom.value = newTokenInfo.base_denom || '';
                     amount.value = newTokenInfo.amount;
                     break;
-                case RT_COLUMN_TYPE.fee:
+                case COLUMN_TOKEN_INFO_TYPE.fee:
                     chain.value = newTokenInfo.denom_chain || '';
                     denom.value = newTokenInfo.denom || '';
                     amount.value = newTokenInfo.amount;

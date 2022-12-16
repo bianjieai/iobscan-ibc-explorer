@@ -578,3 +578,9 @@ export enum IbcVersion {
     'ICS-27' = 'ics27',
     'ICS-721' = 'ics721'
 }
+
+export const COLUMN_TOKEN_INFO_TYPE = {
+    token: 'Token',
+    amount: 'Amount',
+    fee: 'Fee'
+};
