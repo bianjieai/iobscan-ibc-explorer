@@ -8,7 +8,8 @@ import {
     NEED_CUSTOM_HEADER,
     TOKEN_DEFAULT_ICON,
     DEFAULT_DISPLAY_TEXT,
-    TRANSFER_TYPE
+    TRANSFER_TYPE,
+    NoDataType
 } from '@/constants';
 import { useIbcStatisticsChains } from '@/store';
 import { DATA_REFRESH_GAP } from '@/constants/home';
@@ -354,4 +355,16 @@ export const formatTransferType = (type: string) => {
         case TRANSFER_TYPE.timeout.type:
             return TRANSFER_TYPE.timeout.label;
     }
+};
+
+export const useShowUtcIcon = (
+    loading: Ref<boolean | undefined>,
+    noDataType: Ref<NoDataType | undefined>
+) => {
+    const showUtcIcon = computed(() => {
+        return !loading.value && !noDataType.value;
+    });
+    return {
+        showUtcIcon
+    };
 };

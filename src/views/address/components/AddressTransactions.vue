@@ -36,7 +36,7 @@
                     :tooltip-text="
                         showUtc ? 'Click to show Age Format' : 'Click to show UTC0 Format'
                     "
-                    :is-show-utc-icon="isShowUtcIcon"
+                    :show-utc-icon="showUtcIcon"
                     :show-utc="showUtc"
                     @change-show-utc-age="changeShowUtcAge"
                 />
@@ -140,7 +140,7 @@
         onPaginationChange,
         subTitle,
         showMoreIcon,
-        isShowUtcIcon
+        showUtcIcon
     } = useGetAddressTxs(pagination);
     const { showUtc, changeShowUtcAge } = useTimeUtcAge();
     const { exportAddressTxs, downloadUrl } = useExportAddressTxs();

@@ -44,7 +44,7 @@ import { formatString } from '@/utils/stringTools';
 import { OPACITY_PIE_COLOR_LIST, PIE_COLOR_LIST, UNIT_SIGNS } from '@/constants/relayers';
 import type { PieData } from '@/types/interface/relayers.interface';
 import { calculatePercentage } from '@/utils/calculate';
-import { useNeedCustomColumns } from '@/composables';
+import { useNeedCustomColumns, useShowUtcIcon } from '@/composables';
 import { formatPriceAndTotalValue } from '@/helper/addressHelper';
 import { dayjsFormatDate } from '@/utils/timeTools';
 import { getTextWidth } from '@/utils/urlTools';
@@ -718,10 +718,7 @@ export const usAddressAccount = (
     });
 
     const isFailed = computed(() => addressAccountType.value === NoDataType.loadFailed);
-    const isShowUtcIcon = computed(() => {
-        return !addressAccountLoading.value && !addressAccountType.value;
-    });
-
+    const { showUtcIcon } = useShowUtcIcon(addressAccountLoading, addressAccountType);
     watch(
         () => data?.value,
         (newValue) => {
@@ -763,7 +760,7 @@ export const usAddressAccount = (
         accountsList,
         currentAddress,
         isFailed,
-        isShowUtcIcon
+        showUtcIcon
     };
 };
 
@@ -1130,9 +1127,8 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
             use_count: false
         });
     };
-    const isShowUtcIcon = computed(() => {
-        return !addressTxsLoading.value && !loadingCondition.value;
-    });
+    const { showUtcIcon } = useShowUtcIcon(addressTxsLoading, loadingCondition);
+
     watch(route, (newRoute) => {
         if (isAddressDetailsName(newRoute.name as string)) {
             initAddrTxs();
@@ -1151,7 +1147,7 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
         onPaginationChange,
         subTitle,
         showMoreIcon,
-        isShowUtcIcon
+        showUtcIcon
     };
 };
 

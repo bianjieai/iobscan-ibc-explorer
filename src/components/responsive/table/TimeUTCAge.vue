@@ -6,7 +6,7 @@
                 <p class="popover_c">{{ tooltipText }}</p>
             </template>
             <svg-icon
-                v-if="isShowUtcIcon"
+                v-if="showUtcIcon"
                 class="time__tip cursor"
                 :icon-name="tipIcon"
                 @click="changeShowUtcAgeBtn"
@@ -18,13 +18,13 @@
 <script setup lang="ts">
     interface ITimeUTCAge {
         tooltipText: string;
-        isShowUtcIcon?: boolean;
+        showUtcIcon?: boolean;
         showUtc?: boolean;
         columnName?: string;
         tipIcon?: string;
     }
     const props = withDefaults(defineProps<ITimeUTCAge>(), {
-        isShowUtcIcon: true,
+        showUtcIcon: true,
         showUtc: true,
         columnName: 'Time',
         tipIcon: 'icon-time'
