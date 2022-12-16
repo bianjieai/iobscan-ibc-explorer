@@ -205,38 +205,6 @@
             }
         }
     }
-    // 1247px
-    @media screen and (max-width: 1200px) {
-        .relayer_details {
-            padding: 38px 48px 100px !important;
-            &__statistic {
-            }
-            &__channel_pairs {
-                :deep(.info_card__primary) {
-                }
-            }
-            &__charts_wrap {
-                &__left {
-                    &__top {
-                    }
-                    &__bottom {
-                        &__transfer_type_wrap {
-                            &__nodatas {
-                            }
-                        }
-                        &__transfer_type {
-                        }
-                        &__success_rate {
-                            &__nodatas {
-                            }
-                        }
-                    }
-                }
-                &__right {
-                }
-            }
-        }
-    }
     @media screen and (max-width: 1183px) {
         .relayer_details {
             &__statistic {
