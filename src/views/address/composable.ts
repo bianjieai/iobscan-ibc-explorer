@@ -731,7 +731,7 @@ export const usAddressAccount = (
                         tokenDenom: account.token_denom_num,
                         totalValue: formatPriceAndTotalValue(account.token_value),
                         formatLastUpdated: account.last_update_time
-                            ? dayjsFormatDate(account.last_update_time)
+                            ? dayjsFormatDate(account.last_update_time * 1000, 'YY-MM-DD HH:mm:ss')
                             : DEFAULT_DISPLAY_TEXT,
                         lastUpdatedTimestamp: account.last_update_time
                     });
