@@ -719,7 +719,7 @@ export const usAddressAccount = (
 
     const isFailed = computed(() => addressAccountType.value === NoDataType.loadFailed);
     const isShowUtcIcon = computed(() => {
-        return !addressAccountType.value;
+        return !addressAccountLoading.value && !addressAccountType.value;
     });
 
     watch(
@@ -1131,7 +1131,7 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
         });
     };
     const isShowUtcIcon = computed(() => {
-        return !loadingCondition.value;
+        return !addressTxsLoading.value && !loadingCondition.value;
     });
     watch(route, (newRoute) => {
         if (isAddressDetailsName(newRoute.name as string)) {
