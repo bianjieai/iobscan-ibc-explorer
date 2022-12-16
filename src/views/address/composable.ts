@@ -512,10 +512,12 @@ export const useAddressAllocation = (
         addressAllocationOption.series[1].silent = true;
     };
     const initEchart = () => {
-        addressAllocationChart = echarts.init(addressAllocationChartDom.value as HTMLElement);
+        addressAllocationChart ||
+            (addressAllocationChart = echarts.init(addressAllocationChartDom.value as HTMLElement));
         addressAllocationChart.setOption(addressAllocationOption, true);
         window.addEventListener('resize', addressAllocationChartSizeFn);
     };
+    let keyIndex = 0;
     onMounted(() => {
         watch(
             () => data?.value,
@@ -559,10 +561,8 @@ export const useAddressAllocation = (
                             });
                         }
                         tokens.forEach((token, i) => {
-                            const uniqueName = getDenomKey(
-                                token.base_denom_chain,
-                                token.base_denom
-                            );
+                            const uniqueName =
+                                getDenomKey(token.base_denom_chain, token.base_denom) + keyIndex++;
                             const percent = calculatePercentage(
                                 token.denom_value,
                                 newValue.total_value,
@@ -892,15 +892,17 @@ export const useAddressAccountTokensRatio = (
         highlightArr.push(key);
     };
     const initEchart = () => {
-        addressAccountTokenRatioChart = echarts.init(
-            addressAccountTokenRatioChartDom.value as HTMLElement
-        );
+        addressAccountTokenRatioChart ||
+            (addressAccountTokenRatioChart = echarts.init(
+                addressAccountTokenRatioChartDom.value as HTMLElement
+            ));
         addressAccountTokenRatioChart.setOption(addressAccountTokenRatioOption, true);
         addressAccountTokenRatioChart.on('mouseover', (params) => {
             highlightFn(params.name);
         });
         window.addEventListener('resize', addressAccountTokenRatioChartSizeFn);
     };
+    let keyIndex = 0;
     onMounted(async () => {
         watch(
             () => data?.value,
@@ -937,7 +939,7 @@ export const useAddressAccountTokensRatio = (
                             });
                         }
                         accounts.forEach((account, i) => {
-                            const uniqueName = account.chain;
+                            const uniqueName = account.chain + keyIndex++;
                             const percent = calculatePercentage(
                                 account.token_value,
                                 newValue.total_value,

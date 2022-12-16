@@ -130,5 +130,4 @@ export interface IAddressBaseInfo {
 export interface IAddressChainInfo {
     chainLogo: string;
     prettyName: string;
-    isShowTooltip: boolean;
 }
