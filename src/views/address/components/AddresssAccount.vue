@@ -31,6 +31,7 @@
                         :tooltip-text="
                             showUtc ? 'Click to show Age Format' : 'Click to show UTC0 Format'
                         "
+                        :is-show-utc-icon="isShowUtcIcon"
                         :show-utc="showUtc"
                         column-name="Last Updated"
                         @change-show-utc-age="changeShowUtcAge"
@@ -81,7 +82,8 @@
         needCustomHeaders,
         accountsList,
         currentAddress,
-        isFailed
+        isFailed,
+        isShowUtcIcon
     } = usAddressAccount(data, addressAccountLoading, addressAccountType);
     const { showUtc, changeShowUtcAge } = useTimeUtcAge(false);
 </script>

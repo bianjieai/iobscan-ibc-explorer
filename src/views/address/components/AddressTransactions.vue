@@ -142,7 +142,7 @@
         showMoreIcon,
         isShowUtcIcon
     } = useGetAddressTxs(pagination);
-    const { showUtc, changeShowUtcAge } = useTimeUtcAge(isShowUtcIcon.value);
+    const { showUtc, changeShowUtcAge } = useTimeUtcAge();
     const { exportAddressTxs, downloadUrl } = useExportAddressTxs();
 </script>
 

@@ -718,6 +718,9 @@ export const usAddressAccount = (
     });
 
     const isFailed = computed(() => addressAccountType.value === NoDataType.loadFailed);
+    const isShowUtcIcon = computed(() => {
+        return !addressAccountType.value;
+    });
 
     watch(
         () => data?.value,
@@ -759,7 +762,8 @@ export const usAddressAccount = (
         needCustomHeaders,
         accountsList,
         currentAddress,
-        isFailed
+        isFailed,
+        isShowUtcIcon
     };
 };
 
