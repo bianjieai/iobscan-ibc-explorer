@@ -1126,6 +1126,9 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
             use_count: false
         });
     };
+    const isShowUtcIcon = computed(() => {
+        return !loadingCondition.value;
+    });
     watch(route, (newRoute) => {
         if (isAddressDetailsName(newRoute.name as string)) {
             initAddrTxs();
@@ -1143,7 +1146,8 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
         addressTxsList,
         onPaginationChange,
         subTitle,
-        showMoreIcon
+        showMoreIcon,
+        isShowUtcIcon
     };
 };
 

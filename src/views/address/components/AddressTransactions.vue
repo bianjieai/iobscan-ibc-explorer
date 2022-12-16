@@ -36,6 +36,7 @@
                     :tooltip-text="
                         showUtc ? 'Click to show Age Format' : 'Click to show UTC0 Format'
                     "
+                    :is-show-utc-icon="isShowUtcIcon"
                     :show-utc="showUtc"
                     @change-show-utc-age="changeShowUtcAge"
                 />
@@ -126,7 +127,6 @@
     import { getRestString } from '@/helper/parseStringHelper';
     import { useExportAddressTxs, useGetAddressTxs } from '../composable';
     const { pagination } = usePagination();
-    const { showUtc, changeShowUtcAge } = useTimeUtcAge();
     const { needCustomHeaders, needCustomColumns } = useNeedCustomColumns(
         PAGE_PARAMETERS.addressDetailsTxs
     );
@@ -139,8 +139,10 @@
         addressTxsList,
         onPaginationChange,
         subTitle,
-        showMoreIcon
+        showMoreIcon,
+        isShowUtcIcon
     } = useGetAddressTxs(pagination);
+    const { showUtc, changeShowUtcAge } = useTimeUtcAge(isShowUtcIcon.value);
     const { exportAddressTxs, downloadUrl } = useExportAddressTxs();
 </script>
 
