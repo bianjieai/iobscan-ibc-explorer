@@ -11,6 +11,9 @@ dayjs.extend(utc);
 
 export const dayjsUtc = dayjs.utc;
 
+/**
+ * @param time millisecond
+ */
 export const dayjsFormatDate = (time: dayjs.ConfigType, format = 'MM-DD HH:mm:ss') => {
     return dayjsUtc(time).format(format);
 };
