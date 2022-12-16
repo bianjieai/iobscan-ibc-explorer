@@ -209,7 +209,7 @@
                                 }
                             }
                             &__right {
-                                .flex(column,nowrap,center,flex-start);
+                                .flex(column,nowrap,flex-start,flex-start);
                                 .token_ratio_pie_legend {
                                     margin-bottom: 16px;
                                     &:last-child {

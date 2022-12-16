@@ -26,10 +26,10 @@
                             <div class="address_token_amount_popover">
                                 <div class="address_token_amount_popover__item">
                                     <span class="address_token_amount_popover__item__key"
-                                        >Avaliable:</span
+                                        >Available:</span
                                     >
                                     <span class="address_token_amount_popover__item__value">{{
-                                        record.displayAvaliable
+                                        record.displayAvailable
                                     }}</span>
                                 </div>
                                 <div class="address_token_amount_popover__item">
