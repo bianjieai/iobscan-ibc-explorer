@@ -180,9 +180,9 @@ export const useMatchChainInfo = (chain: string) => {
     const { ibcChains } = useIbcChains(DATA_REFRESH_GAP);
     const matchChain = ibcChains.value.all.find((item) => item.chain_name === chain);
     if (matchChain) {
-        chainIcon = matchChain.icon;
-        prettyName = matchChain.pretty_name;
-        currentChainId = matchChain.current_chain_id;
+        chainIcon = matchChain.icon || CHAIN_DEFAULT_ICON;
+        prettyName = matchChain.pretty_name || DEFAULT_DISPLAY_TEXT;
+        currentChainId = matchChain.current_chain_id || DEFAULT_DISPLAY_TEXT;
     }
     return {
         currentChainId,

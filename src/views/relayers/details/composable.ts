@@ -1,4 +1,4 @@
-import { COLUMN_TOKEN_INFO_TYPE, PIE_OTHERS } from '@/constants/index';
+import { COLUMN_TOKEN_INFO_TYPE, PIE_OTHERS, UNKNOWN } from '@/constants/index';
 import { useCopyToast } from '@/helper/copyHelper';
 import { dayjsFormatDate, dayjsUtc } from '@/utils/timeTools';
 import { getDenomKey } from '@/helper/baseDenomHelper';
@@ -65,14 +65,13 @@ import { Dayjs } from 'dayjs';
 
 export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const relayerIcon = ref<string>('');
-    const relayerName = ref<string>('');
+    const relayerIcon = ref<string>(RELAYER_DEFAULT_ICON);
+    const relayerName = ref<string>(UNKNOWN);
     const servedChainsInfo = ref<string[]>([]);
     const relayedTotalTxs = ref<number>(0);
     const relayedSuccessTxs = ref<number>(0);
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
     const channelPairsInfo = ref<IChannelChain[]>([]);
-    const isShowModal = ref<boolean>(false);
     // relayer_name 适配
     const displayAdaptor = ref<boolean>(false);
     // chain_name 先左右排，再上下排
@@ -132,8 +131,8 @@ export const useGetRelayerDetailsInfo = () => {
                 const { code, data, message } = await getRelayerDetailsByRelayerIdAPI(relayerId);
                 if (code === API_CODE.success) {
                     if (data) {
-                        relayerIcon.value = data.relayer_icon;
-                        relayerName.value = data.relayer_name;
+                        relayerIcon.value = data.relayer_icon || RELAYER_DEFAULT_ICON;
+                        relayerName.value = data.relayer_name || UNKNOWN;
                         servedChainsInfo.value = data.served_chains_info;
                         relayedTotalTxs.value = data.relayed_total_txs;
                         relayedSuccessTxs.value = data.relayed_success_txs;
@@ -146,9 +145,6 @@ export const useGetRelayerDetailsInfo = () => {
                             data.channel_pair_info
                         );
                     }
-                } else if (code === API_CODE.unRegisteredRelayer) {
-                    relayerIcon.value = RELAYER_DEFAULT_ICON;
-                    isShowModal.value = true;
                 } else {
                     ibcStatisticsChainsStore.isShow500 = true;
                     console.error(message);
@@ -163,9 +159,7 @@ export const useGetRelayerDetailsInfo = () => {
         getRelayerDetailsByRelayerId();
     };
     const subTitle = computed(() => {
-        return `A total of ${
-            isShowModal.value ? '--' : servedChainsInfo.value?.length
-        } blockchains served`;
+        return `A total of ${servedChainsInfo.value?.length} blockchains served`;
     });
     const defaultRelayerImg = computed(() => {
         return !relayerName ? RELAYER_DEFAULT_ICON : '';
@@ -203,7 +197,6 @@ export const useGetRelayerDetailsInfo = () => {
         relayedSuccessTxs,
         relayerInfo,
         channelPairsInfo,
-        isShowModal,
         subTitle,
         defaultRelayerImg,
         displayAdaptor
@@ -214,12 +207,24 @@ export const useChannelPairsAddressHeight = () => {
     const getPairAddressListHeight = (item: IChannelChain) => {
         const chainAAddressList = item.chain_a_addresses;
         const chainBAddressList = item.chain_b_addresses;
-        const maxChainLength = Math.max(chainAAddressList.length, chainBAddressList.length);
+        const maxChainLength = Math.max(chainAAddressList?.length, chainBAddressList?.length);
         const maxHeight = maxChainLength * SINGLE_ADDRESS_HEIGHT;
         return maxHeight;
     };
     return {
         getPairAddressListHeight
+    };
+};
+
+export const useChannelChainsList = (chainAddressList: Ref<string[]>) => {
+    const chainAddressAllList = computed(() => {
+        if (!chainAddressList?.value?.length) {
+            return [DEFAULT_DISPLAY_TEXT];
+        }
+        return chainAddressList.value;
+    });
+    return {
+        chainAddressAllList
     };
 };
 

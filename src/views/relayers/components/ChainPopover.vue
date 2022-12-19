@@ -37,7 +37,7 @@
                 <div
                     v-show="showViewAll"
                     class="chain_popover_c__bottom"
-                    @click="goRelayersDetails(props.isRegistered, props.relayerId)"
+                    @click="goRelayersDetails(props.relayerId)"
                 >
                     <div class="chain_popover_c__bottom__ellipsis">……</div>
                     <div class="chain_popover_c__bottom__botton">
@@ -69,7 +69,7 @@
     const { chainList } = toRefs(props);
     const { showViewAll, displayChainList } = useChainPopover(chainList);
 
-    const { goRelayersDetails } = useGoRelayersDetails(props.changeModal);
+    const { goRelayersDetails } = useGoRelayersDetails();
 </script>
 <style lang="less" scoped>
     :global(.relayers_chain_popover .ant-popover-inner-content) {

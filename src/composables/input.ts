@@ -28,6 +28,7 @@ export const useHeaderInputSearch = (optionClass: string) => {
     const inputValue = ref<string>('');
     let content: string;
     const onSearchInputText = (inputText: string) => {
+        setInputBorderStyle();
         inputOptions.value = [];
         handleInputOptions(inputText);
     };
@@ -109,7 +110,7 @@ export const useHeaderInputSearch = (optionClass: string) => {
             } else {
                 router.push(`/searchResult/${inputValue.value}`);
             }
-            inputValue.value = '';
+            removeInputBorderStyle();
         }
         // 调取埋点接口
         const params = {
@@ -131,15 +132,11 @@ export const useHeaderInputSearch = (optionClass: string) => {
         const dealWidthInputText = removeSpaceAndToLowerCase(inputValue.value);
         if (judgeIsAddress(dealWidthInputText)) {
             router.push(`/address/${dealWidthInputText}?chain=${chain}`);
-            removeInputBorderStyle();
-        } else {
-            inputValue.value = '';
-            inputOptions.value = [];
         }
+        removeInputBorderStyle();
     };
     const onSelect = () => {
-        inputValue.value = '';
-        inputOptions.value = [];
+        removeInputBorderStyle();
     };
     return {
         getPopupContainer,
