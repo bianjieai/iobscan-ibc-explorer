@@ -202,6 +202,13 @@ export const useGetAddressTokens = () => {
             const { code, data, message } = await getAddrTokenListAPI(chain, address);
             if (code === API_CODE.success) {
                 if (data) {
+                    data.total_value = data.total_value || '0';
+                    data.tokens = data.tokens.map((token) => {
+                        token.denom_amount = token.denom_amount || '0';
+                        token.denom_available_amount = token.denom_available_amount || '0';
+                        token.denom_value = token.denom_value || '0';
+                        return token;
+                    });
                     data.tokens = data.tokens.sort((a, b) =>
                         new BigNumber(b.denom_value).comparedTo(a.denom_value)
                     );
@@ -293,6 +300,11 @@ export const useGetAddressAccounts = () => {
             const { code, data, message } = await getAddrAccountListAPI(chain, address);
             if (code === API_CODE.success) {
                 if (data) {
+                    data.total_value = data.total_value || '0';
+                    data.accounts = data.accounts.map((account) => {
+                        account.token_value = account.token_value || '0';
+                        return account;
+                    });
                     data.accounts = data.accounts.sort((a, b) =>
                         new BigNumber(b.token_value).comparedTo(a.token_value)
                     );
