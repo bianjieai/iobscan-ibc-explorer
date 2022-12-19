@@ -1,5 +1,5 @@
 <template>
-    <div class="flex items-center token_icon">
+    <div class="flex items-center" :class="{ token_icon: titleCanClick }">
         <img
             :src="tokenInfo.imgSrc"
             class="icon mr-8"
