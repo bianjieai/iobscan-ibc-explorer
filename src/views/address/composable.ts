@@ -202,9 +202,15 @@ export const useGetAddressTokens = () => {
             const { code, data, message } = await getAddrTokenListAPI(chain, address);
             if (code === API_CODE.success) {
                 if (data) {
-                    data.tokens = data.tokens.sort((a, b) =>
-                        new BigNumber(b.denom_value).comparedTo(a.denom_value)
-                    );
+                    data.total_value = data.total_value || '0';
+                    data.tokens = data.tokens
+                        .map((token) => {
+                            token.denom_amount = token.denom_amount || '0';
+                            token.denom_available_amount = token.denom_available_amount || '0';
+                            token.denom_value = token.denom_value || '0';
+                            return token;
+                        })
+                        .sort((a, b) => new BigNumber(b.denom_value).comparedTo(a.denom_value));
                     const tokens: ITokenListItem[] = [];
                     for (let i = 0; i < data.tokens.length; i++) {
                         const item = data.tokens[i];
@@ -293,9 +299,13 @@ export const useGetAddressAccounts = () => {
             const { code, data, message } = await getAddrAccountListAPI(chain, address);
             if (code === API_CODE.success) {
                 if (data) {
-                    data.accounts = data.accounts.sort((a, b) =>
-                        new BigNumber(b.token_value).comparedTo(a.token_value)
-                    );
+                    data.total_value = data.total_value || '0';
+                    data.accounts = data.accounts
+                        .map((account) => {
+                            account.token_value = account.token_value || '0';
+                            return account;
+                        })
+                        .sort((a, b) => new BigNumber(b.token_value).comparedTo(a.token_value));
                     const accounts: IAccountListItem[] = [];
                     for (let i = 0; i < data.accounts.length; i++) {
                         const item = data.accounts[i];
@@ -452,7 +462,10 @@ export const useAddressAllocation = (
                 },
                 label: {
                     show: true,
-                    formatter: `{text|Assets}\n\r\n\r{total|${totalCount.value}}`,
+                    formatter: `{text|Assets}\n\r\n\r{total|${formatBigNumber(
+                        totalCount.value,
+                        0
+                    )}}`,
                     top: 'middle',
                     position: 'center',
                     padding: [7, 0, 0, 0],
@@ -525,7 +538,10 @@ export const useAddressAllocation = (
                 if (newValue) {
                     totalValue.value = getTotalValue(newValue.total_value);
                     totalCount.value = newValue.tokens.length;
-                    addressAllocationOption.series[0].label.formatter = `{text|Assets}\n\r\n\r{total|${totalCount.value}}`;
+                    addressAllocationOption.series[0].label.formatter = `{text|Assets}\n\r\n\r{total|${formatBigNumber(
+                        totalCount.value,
+                        0
+                    )}}`;
                     if (totalCount.value <= 0) {
                         handleChangeNoDataOption();
                         legendData.value = [];
@@ -638,7 +654,7 @@ export const useAddressTokens = (
     const tokensSubTitle = computed(() => {
         if (addressTokensLoading?.value) return `A total of ${DEFAULT_DISPLAY_TEXT} tokens found`;
         if (addressTokensType?.value === NoDataType.loadFailed) return '';
-        const num = tokensList.value.length;
+        const num = formatBigNumber(tokensList.value.length, 0);
         return `A total of ${num} tokens found`;
     });
     const isFailed = computed(() => addressTokensType.value === NoDataType.loadFailed);
@@ -707,7 +723,7 @@ export const usAddressAccount = (
         if (addressAccountLoading?.value)
             return `A total of ${DEFAULT_DISPLAY_TEXT} addresses found`;
         if (addressAccountType?.value === NoDataType.loadFailed) return '';
-        const num = accountsList.value.length;
+        const num = formatBigNumber(accountsList.value.length, 0);
         return `A total of ${num} addresses found`;
     });
 
