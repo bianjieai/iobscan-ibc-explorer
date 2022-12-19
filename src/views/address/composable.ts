@@ -203,15 +203,14 @@ export const useGetAddressTokens = () => {
             if (code === API_CODE.success) {
                 if (data) {
                     data.total_value = data.total_value || '0';
-                    data.tokens = data.tokens.map((token) => {
-                        token.denom_amount = token.denom_amount || '0';
-                        token.denom_available_amount = token.denom_available_amount || '0';
-                        token.denom_value = token.denom_value || '0';
-                        return token;
-                    });
-                    data.tokens = data.tokens.sort((a, b) =>
-                        new BigNumber(b.denom_value).comparedTo(a.denom_value)
-                    );
+                    data.tokens = data.tokens
+                        .map((token) => {
+                            token.denom_amount = token.denom_amount || '0';
+                            token.denom_available_amount = token.denom_available_amount || '0';
+                            token.denom_value = token.denom_value || '0';
+                            return token;
+                        })
+                        .sort((a, b) => new BigNumber(b.denom_value).comparedTo(a.denom_value));
                     const tokens: ITokenListItem[] = [];
                     for (let i = 0; i < data.tokens.length; i++) {
                         const item = data.tokens[i];
@@ -301,13 +300,12 @@ export const useGetAddressAccounts = () => {
             if (code === API_CODE.success) {
                 if (data) {
                     data.total_value = data.total_value || '0';
-                    data.accounts = data.accounts.map((account) => {
-                        account.token_value = account.token_value || '0';
-                        return account;
-                    });
-                    data.accounts = data.accounts.sort((a, b) =>
-                        new BigNumber(b.token_value).comparedTo(a.token_value)
-                    );
+                    data.accounts = data.accounts
+                        .map((account) => {
+                            account.token_value = account.token_value || '0';
+                            return account;
+                        })
+                        .sort((a, b) => new BigNumber(b.token_value).comparedTo(a.token_value));
                     const accounts: IAccountListItem[] = [];
                     for (let i = 0; i < data.accounts.length; i++) {
                         const item = data.accounts[i];
