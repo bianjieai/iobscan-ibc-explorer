@@ -11,7 +11,7 @@
                     :dropdown-props="{
                         getPopupContainer: getPopupContainer
                     }"
-                    :is-disabled="isShowModal || relayerChainNoSupport"
+                    :is-disabled="relayerChainNoSupport"
                     :default-value="defaultChain"
                     @on-change="onSelectedChain"
                 />
@@ -19,12 +19,11 @@
                     <RangePicker
                         :date-range="dateRange"
                         :disabled-date="disabledDate"
-                        :is-show-modal="isShowModal || relayerChainNoSupport"
                         @change="onChangeRangePicker"
                     ></RangePicker>
                     <TypeButton
                         class="relayer_transfer__reset_btn"
-                        :is-disabled="isShowModal || relayerChainNoSupport"
+                        :is-disabled="relayerChainNoSupport"
                         @on-reset="onClickReset"
                     />
                 </div>
@@ -137,7 +136,6 @@
     import { DEFAULT_TITLE, PAGE_PARAMETERS } from '@/constants';
     interface IRelayerTransfer {
         servedChainsInfo: string[];
-        isShowModal: boolean;
     }
     const props = defineProps<IRelayerTransfer>();
     const { servedChainsInfo } = toRefs(props);

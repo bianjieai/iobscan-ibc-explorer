@@ -48,7 +48,7 @@
                             :height="200"
                         />
                         <no-datas
-                            v-else-if="isShowModal || (!transferTypeLoading && !totalTxsCount)"
+                            v-else-if="!transferTypeLoading && !totalTxsCount"
                             class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap__nodatas"
                         />
                         <div
@@ -90,10 +90,7 @@
                             :height="200"
                         />
                         <no-datas
-                            v-else-if="
-                                isShowModal ||
-                                (!ibcStatisticsChainsStore.isShowLoading && !relayedTotalTxs)
-                            "
+                            v-else-if="!ibcStatisticsChainsStore.isShowLoading && !relayedTotalTxs"
                             class="relayer_details__charts_wrap__left__bottom__success_rate__nodatas"
                         />
                         <SuccessRateChart
@@ -109,9 +106,8 @@
                 <RelatedAssets />
             </div>
         </div>
-        <RelayerTransfer :served-chains-info="servedChainsInfo" :is-show-modal="isShowModal" />
+        <RelayerTransfer :served-chains-info="servedChainsInfo" />
     </PageContainer>
-    <IbcDialog v-if="isShowModal" :show-modal="isShowModal" :opacity="0.15"></IbcDialog>
 </template>
 
 <script setup lang="ts">
@@ -139,7 +135,6 @@
         relayedSuccessTxs,
         relayerInfo,
         channelPairsInfo,
-        isShowModal,
         subTitle,
         defaultRelayerImg,
         displayAdaptor
