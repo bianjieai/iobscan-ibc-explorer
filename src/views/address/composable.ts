@@ -452,7 +452,10 @@ export const useAddressAllocation = (
                 },
                 label: {
                     show: true,
-                    formatter: `{text|Assets}\n\r\n\r{total|${totalCount.value}}`,
+                    formatter: `{text|Assets}\n\r\n\r{total|${formatBigNumber(
+                        totalCount.value,
+                        0
+                    )}}`,
                     top: 'middle',
                     position: 'center',
                     padding: [7, 0, 0, 0],
@@ -525,7 +528,10 @@ export const useAddressAllocation = (
                 if (newValue) {
                     totalValue.value = getTotalValue(newValue.total_value);
                     totalCount.value = newValue.tokens.length;
-                    addressAllocationOption.series[0].label.formatter = `{text|Assets}\n\r\n\r{total|${totalCount.value}}`;
+                    addressAllocationOption.series[0].label.formatter = `{text|Assets}\n\r\n\r{total|${formatBigNumber(
+                        totalCount.value,
+                        0
+                    )}}`;
                     if (totalCount.value <= 0) {
                         handleChangeNoDataOption();
                         legendData.value = [];
