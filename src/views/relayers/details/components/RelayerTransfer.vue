@@ -19,6 +19,7 @@
                     <RangePicker
                         :date-range="dateRange"
                         :disabled-date="disabledDate"
+                        :is-disabled="relayerChainNoSupport"
                         @change="onChangeRangePicker"
                     ></RangePicker>
                     <TypeButton
