@@ -644,7 +644,7 @@ export const useAddressTokens = (
     const tokensSubTitle = computed(() => {
         if (addressTokensLoading?.value) return `A total of ${DEFAULT_DISPLAY_TEXT} tokens found`;
         if (addressTokensType?.value === NoDataType.loadFailed) return '';
-        const num = tokensList.value.length;
+        const num = formatBigNumber(tokensList.value.length, 0);
         return `A total of ${num} tokens found`;
     });
     const isFailed = computed(() => addressTokensType.value === NoDataType.loadFailed);
@@ -713,7 +713,7 @@ export const usAddressAccount = (
         if (addressAccountLoading?.value)
             return `A total of ${DEFAULT_DISPLAY_TEXT} addresses found`;
         if (addressAccountType?.value === NoDataType.loadFailed) return '';
-        const num = accountsList.value.length;
+        const num = formatBigNumber(accountsList.value.length, 0);
         return `A total of ${num} addresses found`;
     });
 
