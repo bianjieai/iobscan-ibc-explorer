@@ -28,7 +28,7 @@
                     :img-src="record.relayer_icon"
                     relayer
                     icon-size="small"
-                    @click="goRelayersDetails(record.is_registered, record.relayer_id)"
+                    @click="goRelayersDetails(record.relayer_id)"
                 />
             </template>
 
@@ -96,7 +96,7 @@
     const { showModal, changeModal } = useShowModal();
     const { relayersList, subtitle, searchFn, searchNoResult } = useGetRelayersList(loading);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.relayers);
-    const { goRelayersDetails } = useGoRelayersDetails(changeModal);
+    const { goRelayersDetails } = useGoRelayersDetails();
 </script>
 
 <style lang="less" scoped>

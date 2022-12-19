@@ -7,7 +7,7 @@
         format="YYYY-MM-DD"
         separator="-"
         :placeholder="['Start Date', 'End Date']"
-        :disabled="isShowModal"
+        :disabled="isDisabled"
         @open-change="onOpenChangeRangePicker"
         @on-change="onChangeRangePicker"
     >
@@ -45,10 +45,10 @@
     interface IRangePicker {
         dateRange?: [Dayjs, Dayjs];
         disabledDate: (current: Dayjs) => boolean;
-        isShowModal?: boolean;
+        isDisabled?: boolean;
     }
     withDefaults(defineProps<IRangePicker>(), {
-        isShowModal: false
+        isDisabled: false
     });
     const emits = defineEmits<{
         (e: 'onChange'): void;
