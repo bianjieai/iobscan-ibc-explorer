@@ -148,6 +148,7 @@
 
 <style lang="less" scoped>
     .txs_table {
+        margin-top: 0;
         &__tx_hash {
             .iconfont {
                 display: inline-block;
@@ -191,19 +192,23 @@
             background: var(--bj-primary-color);
             border-radius: 50%;
         }
-        :deep(.ant-table-thead) {
+    }
+    :deep(.info_card__primary) {
+        padding: 16px 24px 0;
+    }
+    :deep(.ant-table-container) {
+        min-height: 400px;
+        .ant-table-thead {
             tr {
-                .ant-table-cell {
+                th {
                     background: #f8fafd !important;
                 }
             }
         }
-        :deep(.ant-table-cell) {
-            &:first-child {
+        .ant-table-cell {
+            padding-right: 16px;
+            &:nth-of-type(1) {
                 padding-left: 16px;
-            }
-            &:last-child {
-                padding-right: 16px;
             }
         }
     }
