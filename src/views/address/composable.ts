@@ -1024,8 +1024,6 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
     const addressPageisDisabled = ref<boolean>(true);
     const loadingCondition = ref<NoDataType>();
     const addressTxsList = ref<IResponseAddressTxsFormat[]>([]);
-    const showSubTitle = ref<boolean>(true);
-    const showDefaultTotal = ref<boolean>(true);
     const formatData = (dateData: IResponseAddressTxs[]) => {
         const formatDateData = dateData.map((item) => {
             let tag: string;
@@ -1055,13 +1053,10 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
     const getAddressTxs = async (params: IRequestAddressTxs) => {
         if (params.use_count) {
             addressPageisDisabled.value = true;
-            showDefaultTotal.value = true;
         } else {
             addressTxsLoading.value = true;
-            showDefaultTotal.value = false;
         }
         loadingCondition.value = undefined;
-        showSubTitle.value = true;
         try {
             const { code, message, data } = await getAddrTxsAPI({ ...params });
             if (code === API_CODE.success) {
@@ -1081,12 +1076,10 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
                     }
                     addressTxsLoading.value = false;
                 }
-                showDefaultTotal.value = false;
             } else {
                 addressTxsLoading.value = false;
                 addressPageisDisabled.value = true;
                 loadingCondition.value = NoDataType.loadFailed;
-                showSubTitle.value = false;
                 console.log(message);
             }
         } catch (error) {
@@ -1096,7 +1089,6 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
                 addressTxsLoading.value = false;
             }
             loadingCondition.value = NoDataType.loadFailed;
-            showSubTitle.value = false;
             console.log(error);
         }
     };
@@ -1110,12 +1102,11 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
             use_count: false
         });
     };
-    const getTxsSubtitle = (showDefault: boolean, total: number) => {
-        const displayTotal = !showDefault ? formatBigNumber(total || '0', 0) : DEFAULT_DISPLAY_TEXT;
-        return `A total of ${displayTotal} IBC Transactions found`;
-    };
     const subTitle = computed(() => {
-        return showSubTitle.value ? getTxsSubtitle(showDefaultTotal.value, pagination.total) : '';
+        if (loadingCondition?.value === NoDataType.loadFailed) return '';
+        if (addressPageisDisabled?.value)
+            return `A total of ${DEFAULT_DISPLAY_TEXT} IBC Transactions found`;
+        return `A total of ${formatBigNumber(pagination.total || '0', 0)} IBC Transactions found`;
     });
     const showMoreIcon = (ibcVersion: string) => {
         return ibcVersion === IbcVersion['ICS-27'] || ibcVersion === IbcVersion['ICS-721'];

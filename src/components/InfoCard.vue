@@ -5,7 +5,7 @@
                 <div class="info_card__title">
                     <svg-icon :icon-name="icon"></svg-icon>
                     <span class="info_card__text">{{ title }}</span>
-                    <a-tooltip>
+                    <a-tooltip destroy-tooltip-on-hide>
                         <template #title
                             ><span class="popover_c">{{ tipMsg }}</span></template
                         >
@@ -33,7 +33,7 @@
                     download
                     @click="clickExportAddressTxs"
                 >
-                    <a-tooltip>
+                    <a-tooltip placement="topRight" arrow-point-at-center destroy-tooltip-on-hide>
                         <template #title>
                             <span class="popover_c">{{ downloadTip }}</span>
                         </template>

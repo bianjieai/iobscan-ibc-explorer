@@ -3,7 +3,7 @@
         <span>{{ columnName }}</span>
         <a-popover destroy-tooltip-on-hide>
             <template #content>
-                <p class="popover_c">{{ tooltipText }}</p>
+                <p class="popover_c time__tooltip">{{ tooltipText }}</p>
             </template>
             <svg-icon
                 v-if="showUtcIcon"
@@ -42,6 +42,9 @@
     .time {
         .flex(row, nowrap, flex-end, center);
         padding-left: 16px;
+        &__tooltip {
+            white-space: nowrap;
+        }
         &__tip {
             margin-left: 4px;
         }
