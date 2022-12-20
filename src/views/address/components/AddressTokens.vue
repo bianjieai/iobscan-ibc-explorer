@@ -3,7 +3,7 @@
         class="address_tokens_c"
         :class="{ failed: isFailed }"
         :sub-title="tokensSubTitle"
-        icon="icon-a-relayedassets"
+        icon="icon-Tokens"
         title="Tokens"
     >
         <div class="address_tokens_c__table">
