@@ -738,7 +738,7 @@ export const usAddressAccount = (
                     temp.push({
                         chain: account.chain,
                         address: account.address,
-                        tokenDenom: account.token_denom_num,
+                        tokenDenom: formatBigNumber(account.token_denom_num, 0),
                         totalValue: formatPriceAndTotalValue(account.token_value),
                         formatLastUpdated: account.last_update_time
                             ? dayjsFormatDate(account.last_update_time * 1000, 'YY-MM-DD HH:mm:ss')
