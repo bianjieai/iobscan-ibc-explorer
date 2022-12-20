@@ -220,22 +220,22 @@ export default class ChainHelper {
 
     static getChainInfoByKey = async (chain: string): Promise<IIbcchain | undefined> => {
         const ibcStatisticsChainsStore = useIbcStatisticsChains();
-        const { ibcChainsUniqueKeyMapGetter } = ibcStatisticsChainsStore;
-        if (Object.keys(ibcChainsUniqueKeyMapGetter).length <= 0) {
+        const { ibcChainsUniqueKeyMapGetter } = toRefs(ibcStatisticsChainsStore);
+        if (Object.keys(ibcChainsUniqueKeyMapGetter.value).length <= 0) {
             await ibcStatisticsChainsStore.getIbcChainsAction();
         }
-        return ibcChainsUniqueKeyMapGetter[chain];
+        return ibcChainsUniqueKeyMapGetter.value[chain];
     };
 
     static getChainInfoByPrettyName = async (
         prettyName: string
     ): Promise<IIbcchain | undefined> => {
         const ibcStatisticsChainsStore = useIbcStatisticsChains();
-        const { ibcChainsPrettyNameKeyMapGetter } = ibcStatisticsChainsStore;
-        if (Object.keys(ibcChainsPrettyNameKeyMapGetter).length <= 0) {
+        const { ibcChainsPrettyNameKeyMapGetter } = toRefs(ibcStatisticsChainsStore);
+        if (Object.keys(ibcChainsPrettyNameKeyMapGetter.value).length <= 0) {
             await ibcStatisticsChainsStore.getIbcChainsAction();
         }
-        return ibcChainsPrettyNameKeyMapGetter[prettyName];
+        return ibcChainsPrettyNameKeyMapGetter.value[prettyName];
     };
 
     static handleChainIdToChain = async (comchainId: string) => {
@@ -258,14 +258,14 @@ export default class ChainHelper {
         prefix?: string
     ): Promise<{ [key: string]: IPrefixChain[] } | IPrefixChain[] | undefined> => {
         const ibcStatisticsChainsStore = useIbcStatisticsChains();
-        const { ibcChainsPrefixMapGetter } = ibcStatisticsChainsStore;
-        if (Object.keys(ibcChainsPrefixMapGetter).length <= 0) {
+        const { ibcChainsPrefixMapGetter } = toRefs(ibcStatisticsChainsStore);
+        if (Object.keys(ibcChainsPrefixMapGetter.value).length <= 0) {
             await ibcStatisticsChainsStore.getIbcChainsAction();
         }
         if (prefix) {
-            return ibcChainsPrefixMapGetter[prefix];
+            return ibcChainsPrefixMapGetter.value[prefix];
         } else {
-            return ibcChainsPrefixMapGetter;
+            return ibcChainsPrefixMapGetter.value;
         }
     };
 }

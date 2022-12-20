@@ -44,7 +44,7 @@ import { formatString } from '@/utils/stringTools';
 import { OPACITY_PIE_COLOR_LIST, PIE_COLOR_LIST, UNIT_SIGNS } from '@/constants/relayers';
 import type { PieData } from '@/types/interface/relayers.interface';
 import { calculatePercentage } from '@/utils/calculate';
-import { useIbcChains, useNeedCustomColumns, useShowUtcIcon } from '@/composables';
+import { useNeedCustomColumns, useShowUtcIcon } from '@/composables';
 import { formatPriceAndTotalValue } from '@/helper/addressHelper';
 import { dayjsFormatDate } from '@/utils/timeTools';
 import { getTextWidth } from '@/utils/urlTools';
@@ -136,7 +136,6 @@ export const useGetBaseInfo = () => {
         getAddressBaseInfo(currentChain, currentAddress);
         getMatchChainInfo(currentChain);
     };
-    const { ibcChains } = useIbcChains();
     watch([prettyNameSize, widthClient], ([newPrettyNameSize, newWidthClient]) => {
         if (newWidthClient > 895) {
             isShowTooltip.value = newPrettyNameSize > 120;
@@ -148,10 +147,6 @@ export const useGetBaseInfo = () => {
         if (isAddressDetailsName(newRoute.name as string)) {
             initBaseInfo();
         }
-    });
-    watch(ibcChains, () => {
-        const { currentChain } = getChainAddress();
-        getMatchChainInfo(currentChain);
     });
     onMounted(() => {
         initBaseInfo();
