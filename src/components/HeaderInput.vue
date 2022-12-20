@@ -30,9 +30,9 @@
             </div>
         </template>
         <a-input
+            ref="inputDom"
             v-model:value="inputValue"
             class="auto_complete__input"
-            :class="{ auto_complete__input_focus: inputHasFocus }"
             placeholder="Search by TxHash/Address"
             allow-clear
             @press-enter="searchInput"
@@ -56,6 +56,7 @@
         optionClass: 'auto_complete'
     });
     const {
+        inputDom,
         getPopupContainer,
         inputValue,
         inputOptions,

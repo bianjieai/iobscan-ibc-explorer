@@ -10,17 +10,19 @@ export const useHeaderInputSearch = (optionClass: string) => {
     const inputHasFocus = ref<boolean>(false);
     const isActiveInputStyle = ref(false);
     const inputOptions = ref<IHeaderInputOption[]>([]);
+    const inputDom = ref();
     const setInputBorderStyle = () => {
         isActiveInputStyle.value = true;
         inputHasFocus.value = true;
     };
     const removeInputBorderStyle = () => {
         const inputDropdownDom = document.getElementsByClassName('auto_complete__dropdown');
-        (inputDropdownDom[0] as HTMLElement).style.display = 'none';
+        inputDropdownDom[0] && ((inputDropdownDom[0] as HTMLElement).style.display = 'none');
         inputValue.value = '';
         inputOptions.value = [];
         inputHasFocus.value = false;
         isActiveInputStyle.value = false;
+        inputDom.value?.input.blur();
     };
     const isInvalid = ref<boolean>(false);
     const IP = (window as any)?.returnCitySN?.cip || '';
@@ -141,6 +143,7 @@ export const useHeaderInputSearch = (optionClass: string) => {
         removeInputBorderStyle();
     };
     return {
+        inputDom,
         getPopupContainer,
         inputValue,
         inputOptions,

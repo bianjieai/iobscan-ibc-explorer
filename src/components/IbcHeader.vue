@@ -182,6 +182,9 @@
                 .header_input_focus {
                     position: relative;
                     min-width: 350px;
+                    .header_input_layout {
+                        z-index: 1;
+                    }
                 }
             }
         }
