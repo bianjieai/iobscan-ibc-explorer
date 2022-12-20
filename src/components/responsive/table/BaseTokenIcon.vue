@@ -10,7 +10,7 @@
             class="flex flex-col justify-around"
             :style="{ height: iconSize === TableCellIconSize.SMALL ? '32px' : '40px' }"
         >
-            <a-popover v-if="titleCanPopover" placement="right">
+            <a-popover v-if="titleCanPopover" :placement="placement">
                 <template #content>
                     <div class="popover_c">{{ tokenInfo.defaultTitle }}</div>
                 </template>
@@ -46,11 +46,13 @@
         tokenType?: string;
         tokenInfo: ITableTokenInfo;
         titleCanPopover?: boolean;
+        placement?: string;
     }
 
     withDefaults(defineProps<IProps>(), {
         tokenType: '',
-        iconSize: TableCellIconSize.NORMAL
+        iconSize: TableCellIconSize.NORMAL,
+        placement: 'right'
     });
 
     const emit = defineEmits<{
@@ -102,5 +104,18 @@
         display: inline-flex;
         justify-content: center;
         align-items: center;
+    }
+    .popover_c {
+        max-width: 450px;
+    }
+    @media screen and (max-width: 710px) {
+        .popover_c {
+            max-width: 200px;
+        }
+    }
+    @media screen and (max-width: 450px) {
+        .popover_c {
+            max-width: 150px;
+        }
     }
 </style>
