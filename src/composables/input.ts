@@ -15,10 +15,12 @@ export const useHeaderInputSearch = (optionClass: string) => {
         inputHasFocus.value = true;
     };
     const removeInputBorderStyle = () => {
-        isActiveInputStyle.value = false;
-        inputHasFocus.value = false;
+        const inputDropdownDom = document.getElementsByClassName('auto_complete__dropdown');
+        (inputDropdownDom[0] as HTMLElement).style.display = 'none';
         inputValue.value = '';
         inputOptions.value = [];
+        inputHasFocus.value = false;
+        isActiveInputStyle.value = false;
     };
     const isInvalid = ref<boolean>(false);
     const IP = (window as any)?.returnCitySN?.cip || '';

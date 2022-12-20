@@ -111,13 +111,13 @@
         }
         &__input {
             height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: #1c214c;
             border: 0;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-right: none;
             border-radius: 20px;
             :deep(.ant-input) {
-                background-color: transparent;
+                background-color: #1c214c;
                 color: #ffffff;
                 font-family: GolosUIWebRegular;
             }
@@ -161,7 +161,7 @@
         width: 860px;
         transition: width 0.3s linear;
         .auto_complete__input {
-            background-color: #1c214c;
+            // background-color: #1c214c;
         }
     }
     @media screen and (max-width: 1200px) {
