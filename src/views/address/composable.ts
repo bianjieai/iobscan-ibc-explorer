@@ -1063,9 +1063,6 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
                 if (params.use_count) {
                     pagination.total = data as number;
                     addressPageisDisabled.value = false;
-                    if (pagination.total === 0) {
-                        addressPageisDisabled.value = true;
-                    }
                 } else {
                     if ((data as IResponseAddressTxsData).txs?.length) {
                         addressTxsList.value = formatData((data as IResponseAddressTxsData).txs);
