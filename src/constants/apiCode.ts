@@ -2,7 +2,6 @@ export enum API_CODE {
     success = 0,
     wrongRequestParameters = 40000,
     systemAbnormality = 50000,
-    unRegisteredRelayer = 50001,
     nodeAccessError = 60000,
     noMatchAddress = 41000
 }

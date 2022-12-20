@@ -719,19 +719,15 @@ export const useSelectedSearch = (
                         }
                         rtTableLoading.value = false;
                     }
-                } else if (code === API_CODE.unRegisteredRelayer) {
-                    console.error(message);
-                    pagination.total = 0;
-                    rtTableLoading.value = false;
-                    rtPageisDisabled.value = true;
-                    rtNoDataType.value = NoDataType.noData;
                 } else {
                     if (use_count) {
                         rtPageisDisabled.value = true;
                     } else {
                         rtTableLoading.value = false;
+                        relayerTransferTableData.value = [];
                         rtNoDataType.value = NoDataType.loadFailed;
                     }
+                    console.log(message);
                 }
             } catch (error) {
                 if (!axiosCancel(error)) {
@@ -739,6 +735,7 @@ export const useSelectedSearch = (
                         rtPageisDisabled.value = true;
                     } else {
                         rtTableLoading.value = false;
+                        relayerTransferTableData.value = [];
                         rtNoDataType.value = NoDataType.loadFailed;
                     }
                 }
@@ -1199,12 +1196,6 @@ export const useRelayedTrend = () => {
                     relayedTrendData.txs = [];
                     relayedTrendData.txsValue = [];
                 }
-            } else if (code === API_CODE.unRegisteredRelayer) {
-                relayedTrendNoDataType.value = NoDataType.noData;
-                relayedTrendData.date = [];
-                relayedTrendData.txs = [];
-                relayedTrendData.txsValue = [];
-                console.error(message);
             } else {
                 relayedTrendNoDataType.value = NoDataType.loadFailed;
                 console.error(message);
@@ -1716,9 +1707,6 @@ export const useRelatedAssetChart = (
                     totalRelayedValueData.valueNoData = true;
                     totalRelayedValueData.txsNoData = true;
                 }
-            } else if (code === API_CODE.unRegisteredRelayer) {
-                relayedValueNoDataType.value = NoDataType.noData;
-                console.error(message);
             } else {
                 relayedValueNoDataType.value = NoDataType.loadFailed;
                 console.error(message);

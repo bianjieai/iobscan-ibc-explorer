@@ -15,10 +15,20 @@ export const useHeaderInputSearch = (optionClass: string) => {
         inputHasFocus.value = true;
     };
     const removeInputBorderStyle = () => {
-        isActiveInputStyle.value = false;
-        inputHasFocus.value = false;
+        // const autoCompleteDom = document.getElementsByClassName('auto_complete');
+        // const inputDom = document.getElementsByClassName('auto_complete__input');
+        const inputDropdownDom = document.getElementsByClassName('auto_complete__dropdown');
+        // if (autoCompleteDom[0].classList.contains('ant-select-focused')) {
+        //     inputDom[0].classList.remove('ant-select-focused');
+        // }
+        // if (inputDom[0].classList.contains('ant-input-affix-wrapper-focused')) {
+        //     inputDom[0].classList.remove('ant-input-affix-wrapper-focused');
+        // }
+        (inputDropdownDom[0] as HTMLElement).style.display = 'none';
         inputValue.value = '';
         inputOptions.value = [];
+        inputHasFocus.value = false;
+        isActiveInputStyle.value = false;
     };
     const isInvalid = ref<boolean>(false);
     const IP = (window as any)?.returnCitySN?.cip || '';
