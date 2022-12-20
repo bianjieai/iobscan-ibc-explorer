@@ -122,7 +122,7 @@ export const useGetBaseInfo = () => {
         }
     };
     const getMatchChainInfo = async (chain: string) => {
-        const chainInfo = await ChainHelper.getChainInfoByKey(chain, true);
+        const chainInfo = await ChainHelper.getChainInfoByKey(chain);
         currentChainInfo.chainLogo = chainInfo?.icon || CHAIN_DEFAULT_ICON;
         currentChainInfo.prettyName = chainInfo?.pretty_name || DEFAULT_DISPLAY_TEXT;
     };
