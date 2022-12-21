@@ -251,7 +251,7 @@
             }
         }
     }
-    @media screen and (max-width: 1130px) {
+    @media screen and (max-width: 1090px) {
         .header_container {
             .header_content {
                 position: relative;
