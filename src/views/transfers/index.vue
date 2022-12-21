@@ -115,7 +115,7 @@
                                 </div>
                             </template>
                             <div
-                                class="token__link hover"
+                                class="token__link hover cursor"
                                 @click="goTransfersDetails(record.sc_tx_info.hash)"
                             >
                                 <img
@@ -530,11 +530,6 @@
         width: 20px;
         &_color {
             color: var(--bj-font-color-65);
-        }
-    }
-    :deep(.ant-table-row) {
-        &:hover {
-            cursor: pointer;
         }
     }
     :deep(tbody) {
