@@ -1,5 +1,6 @@
 <template>
     <InfoCard
+        class="address_transactions_c"
         icon="icon-transactions"
         title="Transactions"
         tip-msg="Display ICS-20 related transactions"
@@ -147,68 +148,70 @@
 </script>
 
 <style lang="less" scoped>
-    .txs_table {
-        margin-top: 0;
-        &__tx_hash {
-            .iconfont {
-                display: inline-block;
-                margin-right: 4px;
-                font-size: var(--bj-font-size-sub-title);
-            }
-        }
-        &__hash {
-            color: var(--bj-text-second);
-            &:hover {
-                color: var(--bj-primary-color);
-            }
-        }
-        &__success {
-            color: var(--bj-success);
-        }
-        &__failed {
-            color: var(--bj-failed);
-        }
-        &__tag {
-            margin-right: 4px;
-            min-width: 28px;
-            min-height: 16px;
-            font-size: var(--bj-font-size-small);
-            font-family: GolosUI_Medium;
-            border-radius: 8px;
-        }
-        &__in_style {
-            color: var(--bj-in-color);
-            background: var(--bj-in-color-o-10);
-        }
-        &__out_style {
-            color: var(--bj-out-color);
-            background: var(--bj-out-color-o-10);
-        }
-        &__icon {
-            width: 16px;
-            height: 16px;
-            line-height: 16px;
-            color: #fff;
-            background: var(--bj-primary-color);
-            border-radius: 50%;
-        }
-    }
-    :deep(.info_card__primary) {
-        padding: 16px 24px 0;
-    }
-    :deep(.ant-table-container) {
-        min-height: 400px;
-        .ant-table-thead {
-            tr {
-                th {
-                    background: #f8fafd !important;
+    .address_transactions_c {
+        .txs_table {
+            margin-top: 0;
+            &__tx_hash {
+                .iconfont {
+                    display: inline-block;
+                    margin-right: 4px;
+                    font-size: var(--bj-font-size-sub-title);
                 }
             }
+            &__hash {
+                color: var(--bj-text-second);
+                &:hover {
+                    color: var(--bj-primary-color);
+                }
+            }
+            &__success {
+                color: var(--bj-success);
+            }
+            &__failed {
+                color: var(--bj-failed);
+            }
+            &__tag {
+                margin-right: 4px;
+                min-width: 28px;
+                min-height: 16px;
+                font-size: var(--bj-font-size-small);
+                font-family: GolosUI_Medium;
+                border-radius: 8px;
+            }
+            &__in_style {
+                color: var(--bj-in-color);
+                background: var(--bj-in-color-o-10);
+            }
+            &__out_style {
+                color: var(--bj-out-color);
+                background: var(--bj-out-color-o-10);
+            }
+            &__icon {
+                width: 16px;
+                height: 16px;
+                line-height: 16px;
+                color: #fff;
+                background: var(--bj-primary-color);
+                border-radius: 50%;
+            }
         }
-        .ant-table-cell {
-            padding-right: 16px;
-            &:nth-of-type(1) {
-                padding-left: 16px;
+        :deep(.info_card__primary) {
+            padding: 16px 24px 0;
+        }
+        :deep(.ant-table-container) {
+            min-height: 400px;
+            .ant-table-thead {
+                tr {
+                    th {
+                        background: #f8fafd !important;
+                    }
+                }
+            }
+            .ant-table-cell {
+                padding-right: 16px;
+                &:nth-of-type(1) {
+                    padding-left: 16px;
+                }
             }
         }
     }
