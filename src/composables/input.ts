@@ -49,8 +49,8 @@ export const useHeaderInputSearch = (optionClass: string) => {
         const prefixMap = (await ChainHelper.getChainInfoByPrefix()) as {
             [key: string]: IPrefixChain[];
         };
-        const matchPrefix = Object.keys(prefixMap).filter((prefixChain) =>
-            dealWidthInputText.startsWith(prefixChain)
+        const matchPrefix = Object.keys(prefixMap).filter(
+            (prefixChain) => prefixChain && dealWidthInputText.startsWith(prefixChain)
         );
         if (matchPrefix.length) {
             const matchPrefixMap = (await ChainHelper.getChainInfoByPrefix(matchPrefix[0])) as
