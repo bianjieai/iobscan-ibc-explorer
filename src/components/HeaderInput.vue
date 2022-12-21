@@ -176,7 +176,7 @@
             }
         }
         .input_focus_style {
-            width: 770px;
+            width: 800px;
             .auto_complete__input {
             }
         }
@@ -192,7 +192,7 @@
             }
         }
         .input_focus_style {
-            width: 750px;
+            width: 780px;
             .auto_complete__input {
             }
         }
@@ -208,7 +208,7 @@
             }
         }
         .input_focus_style {
-            width: 730px;
+            width: 760px;
             .auto_complete__input {
             }
         }
@@ -224,7 +224,7 @@
             }
         }
         .input_focus_style {
-            width: 710px;
+            width: 740px;
             .auto_complete__input {
             }
         }
@@ -240,7 +240,7 @@
             }
         }
         .input_focus_style {
-            width: 690px;
+            width: 720px;
             .auto_complete__input {
             }
         }
@@ -256,7 +256,7 @@
             }
         }
         .input_focus_style {
-            width: 670px;
+            width: 700px;
             .auto_complete__input {
             }
         }
@@ -272,7 +272,7 @@
             }
         }
         .input_focus_style {
-            width: 650px;
+            width: 680px;
             .auto_complete__input {
             }
         }
