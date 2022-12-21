@@ -6,6 +6,7 @@
         icon="icon-Tokens"
         title="Tokens"
     >
+        <!-- 此处修改类名需注意，全局搜一下 -->
         <div class="address_tokens_c__table">
             <TableCommon
                 :has-padding-lr="false"
@@ -21,7 +22,11 @@
                     <BaseTokenIcon :token-info="record.tokenInfo" :title-can-popover="true" />
                 </template>
                 <template #amount="{ record }">
-                    <a-popover placement="right" destroy-tooltip-on-hide>
+                    <a-popover
+                        :placement="amountPopoverPlacement"
+                        destroy-tooltip-on-hide
+                        :get-popup-container="getPopupContainer"
+                    >
                         <template #content>
                             <div class="address_token_amount_popover">
                                 <div class="address_token_amount_popover__item">
@@ -69,11 +74,14 @@
     }
     const props = defineProps<IProps>();
     const { data, addressTokensLoading, addressTokensType } = toRefs(props);
-    const { tokensSubTitle, tokensList, needCustomColumns, isFailed } = useAddressTokens(
-        data,
-        addressTokensLoading,
-        addressTokensType
-    );
+    const {
+        tokensSubTitle,
+        tokensList,
+        needCustomColumns,
+        isFailed,
+        getPopupContainer,
+        amountPopoverPlacement
+    } = useAddressTokens(data, addressTokensLoading, addressTokensType);
 </script>
 
 <style lang="less" scoped>
@@ -149,6 +157,39 @@
                 }
             }
             &__table {
+                .table_wrapper {
+                }
+            }
+        }
+        .address_token_amount_popover {
+            &__item {
+                &__key {
+                }
+                &__value {
+                }
+            }
+        }
+    }
+    @media screen and (max-width: 689px) {
+        .address_tokens_c {
+            :deep(.info_card__primary) {
+            }
+            :deep(.ant-table-container) {
+                .ant-table-thead {
+                    tr {
+                        th {
+                        }
+                    }
+                }
+                .ant-table-cell {
+                    &:nth-of-type(1) {
+                    }
+                }
+            }
+            &__table {
+                :deep(.ant-popover-arrow) {
+                    display: none;
+                }
                 .table_wrapper {
                 }
             }
