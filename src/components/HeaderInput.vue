@@ -38,13 +38,11 @@
             @press-enter="searchInput"
             @change="changeValue"
         >
-            <template #suffix>
-                <div class="auto_complete__input_prefix cursor" @click="searchInput">
-                    <span class="auto_complete__input_icon iconfont icon-search"></span>
-                </div>
-            </template>
         </a-input>
     </a-auto-complete>
+    <div class="input_prefix cursor" @click="searchInput(true)">
+        <span class="input_prefix__icon iconfont icon-search"></span>
+    </div>
 </template>
 
 <script setup lang="ts">
@@ -76,6 +74,7 @@
 <style lang="less" scoped>
     .auto_complete,
     .auto_complete__mobile {
+        min-width: 302px;
         border-radius: 20px;
         :deep(&__dropdown) {
             padding: 0;
@@ -116,7 +115,7 @@
             border: 0;
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-right: none;
-            border-radius: 20px;
+            border-radius: 20px 0 0 20px;
             :deep(.ant-input) {
                 background-color: #1c214c;
                 color: #ffffff;
@@ -126,20 +125,19 @@
                 color: #fff;
             }
         }
-        &__input_prefix {
-            height: 40px;
-            border-radius: 0 20px 20px 0;
-            padding: 8px 12px;
-            background: #3d50ff;
-            display: flex;
-            align-items: center;
-            justify-items: center;
-            &:hover {
-                background: #667aff;
-                border-color: #667aff;
-            }
+    }
+    .input_prefix {
+        .flex(row, nowrap, center, center);
+        height: 40px;
+        border-radius: 0 20px 20px 0;
+        padding: 8px 12px;
+        background: #3d50ff;
+        z-index: 2;
+        &:hover {
+            background: #667aff;
+            border-color: #667aff;
         }
-        &__input_icon {
+        &__icon {
             font-size: var(--bj-font-size-home-number);
             color: rgba(255, 255, 255, 0.7);
         }
@@ -149,7 +147,7 @@
     }
     .ant-input-affix-wrapper {
         padding-right: 0;
-        min-width: 350px;
+        min-width: 302px;
     }
     .active_input_style {
         border-color: rgba(61, 80, 255, 1) !important;
@@ -158,12 +156,9 @@
     // todo shan 考虑失去焦点时，缓慢变换宽度
     .input_focus_style {
         position: absolute;
-        right: 0;
-        width: 860px;
+        right: 48px;
+        width: 812px;
         transition: width 0.3s linear;
-        .auto_complete__input {
-            // background-color: #1c214c;
-        }
     }
     @media screen and (max-width: 1200px) {
         .auto_complete,
@@ -176,7 +171,7 @@
             }
         }
         .input_focus_style {
-            width: 800px;
+            width: 752px;
             .auto_complete__input {
             }
         }
@@ -192,7 +187,7 @@
             }
         }
         .input_focus_style {
-            width: 780px;
+            width: 732px;
             .auto_complete__input {
             }
         }
@@ -208,7 +203,7 @@
             }
         }
         .input_focus_style {
-            width: 760px;
+            width: 712px;
             .auto_complete__input {
             }
         }
@@ -224,7 +219,7 @@
             }
         }
         .input_focus_style {
-            width: 740px;
+            width: 698px;
             .auto_complete__input {
             }
         }
@@ -240,7 +235,7 @@
             }
         }
         .input_focus_style {
-            width: 720px;
+            width: 672px;
             .auto_complete__input {
             }
         }
@@ -256,7 +251,7 @@
             }
         }
         .input_focus_style {
-            width: 700px;
+            width: 652px;
             .auto_complete__input {
             }
         }
@@ -272,7 +267,7 @@
             }
         }
         .input_focus_style {
-            width: 680px;
+            width: 632px;
             .auto_complete__input {
             }
         }
@@ -288,7 +283,7 @@
             }
         }
         .input_focus_style {
-            width: 630px;
+            width: 582px;
             .auto_complete__input {
             }
         }
@@ -304,7 +299,7 @@
             }
         }
         .input_focus_style {
-            width: 610px;
+            width: 562px;
             .auto_complete__input {
             }
         }
@@ -320,7 +315,7 @@
             }
         }
         .input_focus_style {
-            width: 500px;
+            width: 452px;
             .auto_complete__input {
             }
         }
@@ -336,7 +331,7 @@
             }
         }
         .input_focus_style {
-            width: 456px;
+            width: 408px;
             .auto_complete__input {
             }
         }
@@ -352,7 +347,7 @@
             }
         }
         .input_focus_style {
-            width: 400px;
+            width: 352px;
             .auto_complete__input {
             }
         }
@@ -368,7 +363,7 @@
             }
         }
         .input_focus_style {
-            width: 350px;
+            width: 302px;
             .auto_complete__input {
             }
         }
@@ -386,6 +381,8 @@
             }
         }
         .input_focus_style {
+            position: relative;
+            right: 0;
             width: 100%;
             .auto_complete__input {
             }

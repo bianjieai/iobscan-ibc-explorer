@@ -15,6 +15,7 @@ export const useHeaderInputSearch = (optionClass: string) => {
         isActiveInputStyle.value = true;
         inputHasFocus.value = true;
     };
+    let clearContentTimer: number;
     const removeInputBorderStyle = () => {
         const inputDropdownDom = document.getElementsByClassName('auto_complete__dropdown');
         inputDropdownDom[0] && ((inputDropdownDom[0] as HTMLElement).style.display = 'none');
@@ -23,6 +24,10 @@ export const useHeaderInputSearch = (optionClass: string) => {
         inputHasFocus.value = false;
         isActiveInputStyle.value = false;
         inputDom.value?.input.blur();
+        clearContentTimer && clearTimeout(clearContentTimer);
+        clearContentTimer = setTimeout(() => {
+            content = '';
+        }, 500);
     };
     const isInvalid = ref<boolean>(false);
     const IP = (window as any)?.returnCitySN?.cip || '';
@@ -89,17 +94,12 @@ export const useHeaderInputSearch = (optionClass: string) => {
             }
         }
     };
-    const searchInput = async () => {
-        (window as any).gtag('event', '导航栏-点击搜索', {
-            searchValue: content
-        });
-        if (inputValue.value !== '') {
-            if (/^[A-F0-9]{64}$/.test(inputValue.value)) {
-                router.push(`/transfers/details?txhash=${inputValue.value}`);
-            } else if (/^[A-z]/.test(inputValue.value)) {
-                const { dealWidthInputText, matchPrefix } = await judgeInputPrefix(
-                    inputValue.value
-                );
+    const searchBoxJump = async (searchContent: string) => {
+        if (searchContent) {
+            if (/^[A-F0-9]{64}$/.test(searchContent)) {
+                router.push(`/transfers/details?txhash=${searchContent}`);
+            } else if (/^[A-z]/.test(searchContent)) {
+                const { dealWidthInputText, matchPrefix } = await judgeInputPrefix(searchContent);
                 if (matchPrefix.length) {
                     if (judgeIsAddress(dealWidthInputText)) {
                         const currentChain = inputOptions.value.filter((item) => {
@@ -112,10 +112,20 @@ export const useHeaderInputSearch = (optionClass: string) => {
                     router.push(`/searchResult/${dealWidthInputText}`);
                 }
             } else {
-                router.push(`/searchResult/${inputValue.value}`);
+                router.push(`/searchResult/${searchContent}`);
             }
-            removeInputBorderStyle();
         }
+    };
+    const searchInput = async (isSearchBtn?: boolean) => {
+        (window as any).gtag('event', '导航栏-点击搜索', {
+            searchValue: content
+        });
+        if (!isSearchBtn) {
+            searchBoxJump(inputValue.value || '');
+        } else {
+            searchBoxJump(content || '');
+        }
+        removeInputBorderStyle();
         // 调取埋点接口
         const params = {
             ip: IP,

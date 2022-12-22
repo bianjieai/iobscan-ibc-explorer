@@ -17,7 +17,7 @@
             </div>
             <div class="header_input_wrapper">
                 <div class="flex items-center header_input_focus">
-                    <header-input class="header_input_layout" />
+                    <header-input />
                 </div>
                 <div class="header_input_icon_wrapper">
                     <a
@@ -181,10 +181,8 @@
                 }
                 .header_input_focus {
                     position: relative;
-                    min-width: 350px;
-                    .header_input_layout {
-                        z-index: 1;
-                    }
+                    justify-content: flex-end;
+                    z-index: 1;
                 }
             }
         }
@@ -294,9 +292,6 @@
                 .header_navigation {
                 }
                 .header_input_wrapper {
-                    .header_input_layout {
-                        display: none;
-                    }
                     .header_input_icon_wrapper {
                         a {
                             .header_input_icon {
@@ -308,7 +303,7 @@
                         }
                     }
                     .header_input_focus {
-                        min-width: auto;
+                        display: none;
                     }
                 }
             }
@@ -333,8 +328,6 @@
                 }
                 .header_input_wrapper {
                     margin-right: 16px;
-                    .header_input_layout {
-                    }
                     .header_input_icon_wrapper {
                         a {
                             .header_input_icon {

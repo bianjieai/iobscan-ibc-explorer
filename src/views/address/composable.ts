@@ -652,8 +652,8 @@ export const useAddressTokens = (
     const tokensList = ref<IAddressTokenTableItem[]>([]);
     const { needCustomColumns } = useNeedCustomColumns(PAGE_PARAMETERS.addressDetailsToken);
     const tokensSubTitle = computed(() => {
-        if (addressTokensLoading?.value) return `A total of ${DEFAULT_DISPLAY_TEXT} tokens found`;
-        if (addressTokensType?.value === NoDataType.loadFailed) return '';
+        if (addressTokensLoading?.value || addressTokensType?.value === NoDataType.loadFailed)
+            return `A total of ${DEFAULT_DISPLAY_TEXT} tokens found`;
         const num = formatBigNumber(tokensList.value.length, 0);
         return `A total of ${num} tokens found`;
     });
@@ -734,9 +734,8 @@ export const usAddressAccount = (
         PAGE_PARAMETERS.addressDetailsAccount
     );
     const accountsSubTitle = computed(() => {
-        if (addressAccountLoading?.value)
+        if (addressAccountLoading?.value || addressAccountType?.value === NoDataType.loadFailed)
             return `A total of ${DEFAULT_DISPLAY_TEXT} addresses found`;
-        if (addressAccountType?.value === NoDataType.loadFailed) return '';
         const num = formatBigNumber(accountsList.value.length, 0);
         return `A total of ${num} addresses found`;
     });
@@ -1114,8 +1113,7 @@ export const useGetAddressTxs = (pagination: IPaginationParams) => {
         });
     };
     const subTitle = computed(() => {
-        if (loadingCondition?.value === NoDataType.loadFailed) return '';
-        if (addressPageisDisabled?.value)
+        if (addressPageisDisabled?.value || loadingCondition.value === NoDataType.loadFailed)
             return `A total of ${DEFAULT_DISPLAY_TEXT} IBC Transactions found`;
         return `A total of ${formatBigNumber(pagination.total || '0', 0)} IBC Transactions found`;
     });

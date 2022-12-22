@@ -44,7 +44,7 @@
                             @click-item="onClickViewAll"
                         />
                     </layer-block>
-                    <layer-block title="Relayer" style="margin-top: 32px">
+                    <layer-block title="Relayers" style="margin-top: 32px">
                         <statistic-list
                             type="vertical"
                             :msg="ibcStatisticsRelayer"
