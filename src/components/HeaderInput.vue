@@ -40,7 +40,7 @@
         >
         </a-input>
     </a-auto-complete>
-    <div class="input_prefix cursor" @click="searchInput">
+    <div class="input_prefix cursor" @click="searchInput('searchBtn')">
         <span class="input_prefix__icon iconfont icon-search"></span>
     </div>
 </template>
