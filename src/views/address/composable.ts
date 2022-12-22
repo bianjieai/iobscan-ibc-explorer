@@ -1,4 +1,4 @@
-import { Ref } from 'vue';
+import { Ref, watch } from 'vue';
 import { useWindowSize } from '@vueuse/core';
 import * as echarts from 'echarts';
 import moveDecimal from 'move-decimal-point';
@@ -658,7 +658,19 @@ export const useAddressTokens = (
         return `A total of ${num} tokens found`;
     });
     const isFailed = computed(() => addressTokensType.value === NoDataType.loadFailed);
-
+    const { width: widthClient } = useWindowSize();
+    const getPopupContainer = (): HTMLElement =>
+        document.querySelector('.address_tokens_c__table')!;
+    const amountPopoverPlacement = ref('right');
+    watch(
+        () => widthClient.value,
+        (newValue) => {
+            amountPopoverPlacement.value = newValue > 689 ? 'right' : 'top';
+        },
+        {
+            immediate: true
+        }
+    );
     watch(
         () => data?.value,
         (newValue) => {
@@ -701,7 +713,9 @@ export const useAddressTokens = (
         tokensSubTitle,
         tokensList,
         needCustomColumns,
-        isFailed
+        isFailed,
+        getPopupContainer,
+        amountPopoverPlacement
     };
 };
 
