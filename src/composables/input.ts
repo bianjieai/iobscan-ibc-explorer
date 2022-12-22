@@ -15,6 +15,7 @@ export const useHeaderInputSearch = (optionClass: string) => {
         isActiveInputStyle.value = true;
         inputHasFocus.value = true;
     };
+    let clearContentTimer: number;
     const removeInputBorderStyle = () => {
         const inputDropdownDom = document.getElementsByClassName('auto_complete__dropdown');
         inputDropdownDom[0] && ((inputDropdownDom[0] as HTMLElement).style.display = 'none');
@@ -23,6 +24,10 @@ export const useHeaderInputSearch = (optionClass: string) => {
         inputHasFocus.value = false;
         isActiveInputStyle.value = false;
         inputDom.value?.input.blur();
+        clearContentTimer && clearTimeout(clearContentTimer);
+        clearContentTimer = setTimeout(() => {
+            content = '';
+        }, 500);
     };
     const isInvalid = ref<boolean>(false);
     const IP = (window as any)?.returnCitySN?.cip || '';
@@ -90,7 +95,7 @@ export const useHeaderInputSearch = (optionClass: string) => {
         }
     };
     const searchBoxJump = async (searchContent: string) => {
-        if (searchContent !== '') {
+        if (searchContent) {
             if (/^[A-F0-9]{64}$/.test(searchContent)) {
                 router.push(`/transfers/details?txhash=${searchContent}`);
             } else if (/^[A-z]/.test(searchContent)) {
@@ -116,9 +121,9 @@ export const useHeaderInputSearch = (optionClass: string) => {
             searchValue: content
         });
         if (!isSearchBtn) {
-            searchBoxJump(inputValue.value);
+            searchBoxJump(inputValue.value || '');
         } else {
-            searchBoxJump(content);
+            searchBoxJump(content || '');
         }
         removeInputBorderStyle();
         // 调取埋点接口
