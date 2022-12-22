@@ -181,6 +181,7 @@
                 }
                 .header_input_focus {
                     position: relative;
+                    justify-content: flex-end;
                     z-index: 1;
                 }
             }
