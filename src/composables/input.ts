@@ -89,62 +89,36 @@ export const useHeaderInputSearch = (optionClass: string) => {
             }
         }
     };
-    const searchInput = async (signer?: string) => {
+    const searchBoxJump = async (searchContent: string) => {
+        if (searchContent !== '') {
+            if (/^[A-F0-9]{64}$/.test(searchContent)) {
+                router.push(`/transfers/details?txhash=${searchContent}`);
+            } else if (/^[A-z]/.test(searchContent)) {
+                const { dealWidthInputText, matchPrefix } = await judgeInputPrefix(searchContent);
+                if (matchPrefix.length) {
+                    if (judgeIsAddress(dealWidthInputText)) {
+                        const currentChain = inputOptions.value.filter((item) => {
+                            return item.addrPrefix === judgeIsAddress(dealWidthInputText)?.prefix;
+                        });
+                        inputOptions.value = [];
+                        router.push(`/address/${dealWidthInputText}?chain=${currentChain[0].text}`);
+                    }
+                } else {
+                    router.push(`/searchResult/${dealWidthInputText}`);
+                }
+            } else {
+                router.push(`/searchResult/${searchContent}`);
+            }
+        }
+    };
+    const searchInput = async (isSearchBtn?: boolean) => {
         (window as any).gtag('event', '导航栏-点击搜索', {
             searchValue: content
         });
-        if (!signer) {
-            if (inputValue.value !== '') {
-                if (/^[A-F0-9]{64}$/.test(inputValue.value)) {
-                    router.push(`/transfers/details?txhash=${inputValue.value}`);
-                } else if (/^[A-z]/.test(inputValue.value)) {
-                    const { dealWidthInputText, matchPrefix } = await judgeInputPrefix(
-                        inputValue.value
-                    );
-                    if (matchPrefix.length) {
-                        if (judgeIsAddress(dealWidthInputText)) {
-                            const currentChain = inputOptions.value.filter((item) => {
-                                return (
-                                    item.addrPrefix === judgeIsAddress(dealWidthInputText)?.prefix
-                                );
-                            });
-                            inputOptions.value = [];
-                            router.push(
-                                `/address/${dealWidthInputText}?chain=${currentChain[0].text}`
-                            );
-                        }
-                    } else {
-                        router.push(`/searchResult/${dealWidthInputText}`);
-                    }
-                } else {
-                    router.push(`/searchResult/${inputValue.value}`);
-                }
-            }
+        if (!isSearchBtn) {
+            searchBoxJump(inputValue.value);
         } else {
-            if (content !== '') {
-                if (/^[A-F0-9]{64}$/.test(content)) {
-                    router.push(`/transfers/details?txhash=${content}`);
-                } else if (/^[A-z]/.test(content)) {
-                    const { dealWidthInputText, matchPrefix } = await judgeInputPrefix(content);
-                    if (matchPrefix.length) {
-                        if (judgeIsAddress(dealWidthInputText)) {
-                            const currentChain = inputOptions.value.filter((item) => {
-                                return (
-                                    item.addrPrefix === judgeIsAddress(dealWidthInputText)?.prefix
-                                );
-                            });
-                            inputOptions.value = [];
-                            router.push(
-                                `/address/${dealWidthInputText}?chain=${currentChain[0].text}`
-                            );
-                        }
-                    } else {
-                        router.push(`/searchResult/${dealWidthInputText}`);
-                    }
-                } else {
-                    router.push(`/searchResult/${content}`);
-                }
-            }
+            searchBoxJump(content);
         }
         removeInputBorderStyle();
         // 调取埋点接口
