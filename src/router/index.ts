@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
         ]
     },
     {
-        path: '/searchResult',
+        path: '/searchResult/:result',
         component: Layout,
         children: [
             {
@@ -112,6 +112,19 @@ const routes: Array<RouteRecordRaw> = [
                 path: 'details/:relayerId',
                 name: ROUTE_INFO.relayerDetails.name,
                 component: () => import('../views/relayers/details/index.vue'),
+                meta: {}
+            }
+        ]
+    },
+    {
+        path: '/address/:address',
+        component: Layout,
+        meta: {},
+        children: [
+            {
+                path: '',
+                name: ROUTE_INFO.addressDetails.name,
+                component: () => import('../views/address/index.vue'),
                 meta: {}
             }
         ]

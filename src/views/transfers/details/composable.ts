@@ -119,7 +119,7 @@ export const useTransfersDetailsInfo = () => {
                         router.push('/transfers');
                     }
                 } else {
-                    router.replace(`/searchResult?${hash}`);
+                    router.replace(`/searchResult/${hash}`);
                 }
             } else {
                 console.error(message);
@@ -542,6 +542,18 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
                 return DEFAULT_DISPLAY_TEXT;
         }
     };
+    const currentChain = computed(() => {
+        switch (mark.value.step) {
+            case PROGRESS_STEP[1]:
+            case PROGRESS_STEP[3]:
+            case PROGRESS_STEP[4]:
+                return scInfo.value?.chain || '';
+            case PROGRESS_STEP[2]:
+                return dcInfo.value?.chain || '';
+            default:
+                return DEFAULT_DISPLAY_TEXT;
+        }
+    });
     const formatSigner = (signers: string[] | string) => {
         if (typeof signers === 'string') return signers;
         return (signers && signers[0]) || DEFAULT_DISPLAY_TEXT;
@@ -618,7 +630,8 @@ export const useProgressList = (props: Readonly<IUseProgressList>) => {
     return {
         progressListAll,
         formatTimestamp,
-        formatTimeoutTimestamp
+        formatTimeoutTimestamp,
+        currentChain
     };
 };
 
@@ -686,10 +699,13 @@ export const useViewSource = (props: IUseViewSOurce, loading: Ref<boolean>) => {
                         errorText.value = API_ERRPR_MESSAGE.nodeAccessError;
                         console.error(message);
                         break;
+                    default:
+                        errorText.value = API_ERRPR_MESSAGE.loadFailed;
+                        break;
                 }
             } catch (error) {
                 console.log(error);
-                errorText.value = API_ERRPR_MESSAGE.networkError;
+                errorText.value = API_ERRPR_MESSAGE.loadFailed;
                 loading && (loading.value = false);
             }
         }

@@ -44,6 +44,18 @@ export interface IIbcchain {
     pretty_name: string;
     icon: string;
     status: CHAIN_STATUS;
+    addr_prefix: string[];
+}
+
+export interface IPrefixChain {
+    chain_name: string;
+    pretty_name: string;
+}
+
+export interface IHeaderInputOption {
+    text: string;
+    value: string;
+    addrPrefix: string;
 }
 export interface IIbcchainMap {
     [propName: string]: string;
@@ -102,4 +114,12 @@ export interface IDenomStatistic {
 export interface IRelayerName {
     source: string;
     matching: string;
+}
+
+export interface IResponseTokenInfo {
+    denom: string;
+    denom_chain: string;
+    base_denom?: string;
+    base_denom_chain?: string;
+    amount: string;
 }

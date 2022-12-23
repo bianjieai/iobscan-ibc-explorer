@@ -1,9 +1,14 @@
+import { COLUMN_TOKEN_INFO_TYPE, PIE_OTHERS, UNKNOWN } from '@/constants/index';
+import { useCopyToast } from '@/helper/copyHelper';
+import { dayjsFormatDate, dayjsUtc } from '@/utils/timeTools';
 import { getDenomKey } from '@/helper/baseDenomHelper';
-import { copyToClipboard } from '@/utils/clipboardTools';
-import { getChartTooltip } from '@/helper/relayerHelper';
+import { getChartTooltip, getTransactionPluralSymbol } from '@/helper/relayerHelper';
 import {
+    getRelayedTrendAPI,
     getRelayerDetailsByRelayerIdAPI,
     getRelayerTransferListAPI,
+    getTotalFeeCostAPI,
+    getTotalRelayedValueAPI,
     getTransferTypeTxsAPI
 } from '@/api/relayers';
 import { IDataItem } from '@/components/BjSelect/interface';
@@ -14,35 +19,38 @@ import {
     RELAYER_DEFAULT_ICON,
     TOKEN_DEFAULT_ICON,
     TRANSFER_TYPE,
-    DEFAULT_DISPLAY_TEXT
+    DEFAULT_DISPLAY_TEXT,
+    NoDataType
 } from '@/constants';
-import { API_CODE, API_ERRPR_MESSAGE } from '@/constants/apiCode';
+import { API_CODE } from '@/constants/apiCode';
 import {
     DISPLAY_RELAYER_NAME_AREA,
     RELAYER_DETAILS_INFO,
-    RT_COLUMN_TYPE,
     SINGLE_ADDRESS_HEIGHT
 } from '@/constants/relayers';
 import ChainHelper from '@/helper/chainHelper';
 import { formatBigNumber, formatNum } from '@/helper/parseStringHelper';
 import { formatTransfer_success_txs } from '@/helper/tableCellHelper';
 import { useIbcStatisticsChains } from '@/store';
-import { IDenomStatistic, IIbcchain, IPaginationParams } from '@/types/interface/index.interface';
-import {
+import type {
+    IDenomStatistic,
+    IIbcchain,
+    IPaginationParams,
+    IResponseTokenInfo
+} from '@/types/interface/index.interface';
+import type {
     IChannelChain,
     IRelayerTransferItem,
-    IRequestRelayerTransfer,
-    IRtTokenInfo
+    IRelayerTransferItemFormat,
+    IRelayerTransferList,
+    IRequestRelayerTransfer
 } from '@/types/interface/relayers.interface';
-import dayjs from 'dayjs';
 import * as echarts from 'echarts';
 import { Ref } from 'vue';
 import { BigNumber } from 'bignumber.js';
-import { getRelayedTrendAPI } from '@/api/relayers';
 import { RelayerTrendData, BarData } from '@/types/interface/relayers.interface';
 import { useWindowSize } from '@vueuse/core';
 import { PIE_COLOR_LIST, OPACITY_PIE_COLOR_LIST } from '@/constants/relayers';
-import { getTotalFeeCostAPI, getTotalRelayedValueAPI } from '@/api/relayers';
 import {
     RelayedValueData,
     FormatDenomItem,
@@ -53,17 +61,17 @@ import { formatString } from '@/utils/stringTools';
 import { calculatePercentage, getRoundingOffBigNumber } from '@/utils/calculate';
 import { getTextWidth } from '@/utils/urlTools';
 import { axiosCancel } from '@/utils/axios';
+import { Dayjs } from 'dayjs';
 
 export const useGetRelayerDetailsInfo = () => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    const relayerIcon = ref<string>('');
-    const relayerName = ref<string>('');
+    const relayerIcon = ref<string>(RELAYER_DEFAULT_ICON);
+    const relayerName = ref<string>(UNKNOWN);
     const servedChainsInfo = ref<string[]>([]);
     const relayedTotalTxs = ref<number>(0);
     const relayedSuccessTxs = ref<number>(0);
     const relayerInfo = ref<IDenomStatistic>(RELAYER_DETAILS_INFO);
     const channelPairsInfo = ref<IChannelChain[]>([]);
-    const isShowModal = ref<boolean>(false);
     // relayer_name 适配
     const displayAdaptor = ref<boolean>(false);
     // chain_name 先左右排，再上下排
@@ -123,8 +131,8 @@ export const useGetRelayerDetailsInfo = () => {
                 const { code, data, message } = await getRelayerDetailsByRelayerIdAPI(relayerId);
                 if (code === API_CODE.success) {
                     if (data) {
-                        relayerIcon.value = data.relayer_icon;
-                        relayerName.value = data.relayer_name;
+                        relayerIcon.value = data.relayer_icon || RELAYER_DEFAULT_ICON;
+                        relayerName.value = data.relayer_name || UNKNOWN;
                         servedChainsInfo.value = data.served_chains_info;
                         relayedTotalTxs.value = data.relayed_total_txs;
                         relayedSuccessTxs.value = data.relayed_success_txs;
@@ -137,9 +145,6 @@ export const useGetRelayerDetailsInfo = () => {
                             data.channel_pair_info
                         );
                     }
-                } else if (code === API_CODE.unRegisteredRelayer) {
-                    relayerIcon.value = RELAYER_DEFAULT_ICON;
-                    isShowModal.value = true;
                 } else {
                     ibcStatisticsChainsStore.isShow500 = true;
                     console.error(message);
@@ -154,9 +159,7 @@ export const useGetRelayerDetailsInfo = () => {
         getRelayerDetailsByRelayerId();
     };
     const subTitle = computed(() => {
-        return `A total of ${
-            isShowModal.value ? '--' : servedChainsInfo.value?.length
-        } blockchains served`;
+        return `A total of ${servedChainsInfo.value?.length} blockchains served`;
     });
     const defaultRelayerImg = computed(() => {
         return !relayerName ? RELAYER_DEFAULT_ICON : '';
@@ -194,7 +197,6 @@ export const useGetRelayerDetailsInfo = () => {
         relayedSuccessTxs,
         relayerInfo,
         channelPairsInfo,
-        isShowModal,
         subTitle,
         defaultRelayerImg,
         displayAdaptor
@@ -205,12 +207,24 @@ export const useChannelPairsAddressHeight = () => {
     const getPairAddressListHeight = (item: IChannelChain) => {
         const chainAAddressList = item.chain_a_addresses;
         const chainBAddressList = item.chain_b_addresses;
-        const maxChainLength = Math.max(chainAAddressList.length, chainBAddressList.length);
+        const maxChainLength = Math.max(chainAAddressList?.length, chainBAddressList?.length);
         const maxHeight = maxChainLength * SINGLE_ADDRESS_HEIGHT;
         return maxHeight;
     };
     return {
         getPairAddressListHeight
+    };
+};
+
+export const useChannelChainsList = (chainAddressList: Ref<string[]>) => {
+    const chainAddressAllList = computed(() => {
+        if (!chainAddressList?.value?.length) {
+            return [DEFAULT_DISPLAY_TEXT];
+        }
+        return chainAddressList.value;
+    });
+    return {
+        chainAddressAllList
     };
 };
 
@@ -367,6 +381,7 @@ export const useTransferTypeChart = (
             {
                 type: 'pie',
                 radius: [34, 50],
+                minAngle: 4,
                 data: [
                     {
                         value: `${txsCount.value}`,
@@ -598,17 +613,6 @@ export const useSuccessRateChart = (
     };
 };
 
-export const usePagination = () => {
-    const pagination = reactive<IPaginationParams>({
-        total: 0,
-        current: 1,
-        pageSize: 5
-    });
-    return {
-        pagination
-    };
-};
-
 export const useSelectedSearch = (
     servedChainsInfo: Ref<string[]>,
     pagination: IPaginationParams
@@ -617,13 +621,15 @@ export const useSelectedSearch = (
     const route = useRoute();
     const relayerChain = ref<IIbcchain[]>([]);
     const relayerId: string = route?.params?.relayerId as string;
-    const relayerTransferTableData = ref<IRelayerTransferItem[]>([]);
-    const dateRange = reactive({ value: [] });
-    const disabledDate = (current: any) =>
-        current && (current > dayjs().endOf('day') || current < dayjs(1617007625 * 1000));
+    const relayerTransferTableData = ref<IRelayerTransferItemFormat[]>([]);
+    const dateRange = ref<[Dayjs, Dayjs] | undefined>();
+    const disabledDate = (current: Dayjs): boolean =>
+        current && (current > dayjsUtc().endOf('day') || current < dayjsUtc(1617007625 * 1000));
     const startTxTime = ref<number | undefined>(undefined);
     const endTxTime = ref<number | undefined>(undefined);
     const rtTableLoading = ref<boolean>(true);
+    const rtPageisDisabled = ref<boolean>(true);
+    const rtNoDataType = ref<NoDataType>();
     watch(servedChainsInfo, (newServedChainsInfo) => {
         const sortServedChainsInfo = async () => {
             if (!newServedChainsInfo?.length) return [];
@@ -636,6 +642,12 @@ export const useSelectedSearch = (
                 }
             }
             relayerChain.value = [...chainInfoArr];
+            if (!relayerChain.value.length) {
+                relayerTransferTableData.value = [];
+                rtTableLoading.value = false;
+                rtPageisDisabled.value = true;
+                rtNoDataType.value = NoDataType.noData;
+            }
         };
         sortServedChainsInfo();
     });
@@ -651,17 +663,34 @@ export const useSelectedSearch = (
             }
         ];
     });
+    const relayerChainNoSupport = computed(() => {
+        return !relayerChainData.value[0].children.length;
+    });
     const defaultChain = computed(() => {
         return relayerChainData.value[0]?.children[0];
     });
     const searchChain = ref<string>(defaultChain.value?.id);
+    const formatDate = (dateData: IRelayerTransferItem[]) => {
+        const formatDateData = dateData.map((item) => {
+            return {
+                ...item,
+                format_tx_time: dayjsFormatDate(item.tx_time * 1000)
+            };
+        });
+        return formatDateData;
+    };
     const getRelayerTransferTxs = (
         params: IRequestRelayerTransfer,
         page_num = 1,
         page_size = 5,
         use_count = false
     ) => {
-        rtTableLoading.value = true;
+        if (use_count) {
+            rtPageisDisabled.value = true;
+        } else {
+            rtTableLoading.value = true;
+        }
+        rtNoDataType.value = undefined;
         const getRelayerTransferTxsData = async () => {
             try {
                 const { code, data, message } = await getRelayerTransferListAPI(relayerId, {
@@ -671,26 +700,44 @@ export const useSelectedSearch = (
                     use_count
                 });
                 if (code === API_CODE.success) {
-                    if (data) {
-                        if (typeof data === 'number') {
-                            pagination.total = data;
-                        } else {
-                            relayerTransferTableData.value = data.items;
-                            rtTableLoading.value = false;
+                    if (use_count) {
+                        pagination.total = data as number;
+                        rtPageisDisabled.value = false;
+                        if (pagination.total === 0) {
+                            rtPageisDisabled.value = true;
                         }
                     } else {
-                        console.error(message);
+                        if ((data as IRelayerTransferList).items?.length) {
+                            relayerTransferTableData.value = formatDate(
+                                (data as IRelayerTransferList).items
+                            );
+                            rtNoDataType.value = undefined;
+                        } else {
+                            relayerTransferTableData.value = [];
+                            rtNoDataType.value = NoDataType.noData;
+                            rtPageisDisabled.value = true;
+                        }
                         rtTableLoading.value = false;
                     }
                 } else {
-                    console.error(message);
-                    pagination.total = 0;
-                    relayerTransferTableData.value = [];
-                    rtTableLoading.value = false;
+                    if (use_count) {
+                        rtPageisDisabled.value = true;
+                    } else {
+                        rtTableLoading.value = false;
+                        relayerTransferTableData.value = [];
+                        rtNoDataType.value = NoDataType.loadFailed;
+                    }
+                    console.log(message);
                 }
             } catch (error) {
                 if (!axiosCancel(error)) {
-                    rtTableLoading.value = false;
+                    if (use_count) {
+                        rtPageisDisabled.value = true;
+                    } else {
+                        rtTableLoading.value = false;
+                        relayerTransferTableData.value = [];
+                        rtNoDataType.value = NoDataType.loadFailed;
+                    }
                 }
                 console.error(error);
             }
@@ -719,7 +766,7 @@ export const useSelectedSearch = (
         const chain = selectedChainInfo?.id;
         searchChain.value = chain ? String(chain) : '';
         if (chain) {
-            refreshList({
+            queryDatas({
                 chain: chain as string,
                 tx_time_start: startTxTime.value?.toString(),
                 tx_time_end: endTxTime.value?.toString(),
@@ -728,17 +775,11 @@ export const useSelectedSearch = (
             });
         }
     };
-    const startTime = (time: string | number | Date) => {
-        const nowTimeDate = new Date(time);
-        return nowTimeDate.setHours(0, 0, 0, 0);
-    };
-    const onChangeRangePicker = (dates: any) => {
+    const onChangeRangePicker = (dates: [Dayjs, Dayjs]) => {
         dateRange.value = dates;
-        startTxTime.value = Math.floor(startTime(dayjs(dates[0]).valueOf()) / 1000);
-        endTxTime.value = Math.floor(
-            startTime(dayjs(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1
-        );
-        refreshList({
+        startTxTime.value = dayjsUtc(dates[0]).startOf('day').unix();
+        endTxTime.value = dayjsUtc(dates[1]).endOf('day').unix();
+        queryDatas({
             chain: searchChain.value || defaultChain.value.id,
             tx_time_start: startTxTime.value?.toString(),
             tx_time_end: endTxTime.value?.toString(),
@@ -749,10 +790,10 @@ export const useSelectedSearch = (
     const onClickReset = () => {
         pagination.current = 1;
         searchChain.value = defaultChain.value.id;
-        dateRange.value = [];
+        dateRange.value = undefined;
         startTxTime.value = undefined;
         endTxTime.value = undefined;
-        refreshList({
+        queryDatas({
             chain: defaultChain.value.id,
             page_num: 1,
             page_size: 5
@@ -760,46 +801,38 @@ export const useSelectedSearch = (
     };
     const onPaginationChange = (current: number, pageSize: number) => {
         pagination.current = current;
-        refreshList({
-            chain: searchChain.value || defaultChain.value.id,
-            tx_time_start: startTxTime.value?.toString(),
-            tx_time_end: endTxTime.value?.toString(),
-            page_num: pagination.current,
-            page_size: pageSize
-        });
-    };
-    const refreshList = (params: IRequestRelayerTransfer) => {
-        queryDatas(params);
-    };
-    const formatTransferType = (type: string) => {
-        switch (type) {
-            case TRANSFER_TYPE.transfer.type:
-                return TRANSFER_TYPE.transfer.label;
-            case TRANSFER_TYPE.receive.type:
-                return TRANSFER_TYPE.receive.label;
-            case TRANSFER_TYPE.acknowledge.type:
-                return TRANSFER_TYPE.acknowledge.label;
-            case TRANSFER_TYPE.timeout.type:
-                return TRANSFER_TYPE.timeout.label;
-        }
+        getRelayerTransferTxs(
+            {
+                chain: searchChain.value || defaultChain.value.id,
+                tx_time_start: startTxTime.value?.toString(),
+                tx_time_end: endTxTime.value?.toString(),
+                page_num: pagination.current,
+                page_size: pageSize
+            },
+            pagination.current,
+            pagination.pageSize,
+            false
+        );
     };
     return {
         defaultChain,
         relayerChainData,
+        relayerChainNoSupport,
         searchChain,
         onSelectedChain,
         relayerTransferTableData,
-        formatTransferType,
         onPaginationChange,
         onClickReset,
         dateRange,
         disabledDate,
         onChangeRangePicker,
-        rtTableLoading
+        rtTableLoading,
+        rtPageisDisabled,
+        rtNoDataType
     };
 };
 
-export const useFormatTokenDenom = (tokenInfo: Ref<IRtTokenInfo>, type: Ref<string>) => {
+export const useFormatTokenDenom = (tokenInfo: Ref<IResponseTokenInfo>, type: Ref<string>) => {
     const chain = ref<string>('');
     const denom = ref<string>('');
     const amount = ref<string>('');
@@ -820,12 +853,13 @@ export const useFormatTokenDenom = (tokenInfo: Ref<IRtTokenInfo>, type: Ref<stri
         [tokenInfo, type],
         ([newTokenInfo, newType]) => {
             switch (newType) {
-                case RT_COLUMN_TYPE.token:
+                case COLUMN_TOKEN_INFO_TYPE.token:
+                case COLUMN_TOKEN_INFO_TYPE.amount:
                     chain.value = newTokenInfo.base_denom_chain || '';
                     denom.value = newTokenInfo.base_denom || '';
                     amount.value = newTokenInfo.amount;
                     break;
-                case RT_COLUMN_TYPE.fee:
+                case COLUMN_TOKEN_INFO_TYPE.fee:
                     chain.value = newTokenInfo.denom_chain || '';
                     denom.value = newTokenInfo.denom || '';
                     amount.value = newTokenInfo.amount;
@@ -849,17 +883,7 @@ export const useRelayedTrend = () => {
     const route = useRoute();
     const relayerId: string = route.params.relayerId as string;
     const relayedTrendLoading = ref(true);
-    const relayedTrendNoData = ref(false);
-    const relayedTrendNetworkError = ref(false);
-    const relayedAbnormalText = computed(() => {
-        if (relayedTrendNoData.value) {
-            return API_ERRPR_MESSAGE.noData;
-        } else if (relayedTrendNetworkError.value) {
-            return API_ERRPR_MESSAGE.networkError;
-        } else {
-            return '';
-        }
-    });
+    const relayedTrendNoDataType = ref<NoDataType>();
     const { width: widthClient } = useWindowSize();
     let relayedTrendChart: echarts.ECharts;
 
@@ -884,6 +908,7 @@ export const useRelayedTrend = () => {
             extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
             formatter: (params: any) => {
                 // <div style="width: 100%; height: 8px; background-color: rgba(61, 80, 255, 0.1)"></div>
+                const s = getTransactionPluralSymbol(chartTooltip.value.key, params.data.value);
                 if (widthClient.value > tooltipBreakpoint) {
                     return `<div style="display: flex; flex-direction: column; align-items: center; transform: translate(0,6px);">
                                         <div
@@ -906,7 +931,7 @@ export const useRelayedTrend = () => {
                                                         font-weight: 500;
                                                         line-height: 18px;
                                                     "
-                                                    >${chartTooltip.value.key}:
+                                                    >${chartTooltip.value.key}${s}:
                                                 </span>
                                                 <span
                                                     style="
@@ -978,7 +1003,7 @@ export const useRelayedTrend = () => {
                                                         font-weight: 500;
                                                         line-height: 18px;
                                                     "
-                                                    >${chartTooltip.value.key}:
+                                                    >${chartTooltip.value.key}${s}:
                                                 </span>
                                                 <span
                                                     style="
@@ -1107,8 +1132,7 @@ export const useRelayedTrend = () => {
     const getRelayedTrendData = async () => {
         try {
             relayedTrendLoading.value = true;
-            relayedTrendNoData.value = false;
-            relayedTrendNetworkError.value = false;
+            relayedTrendNoDataType.value = undefined;
             const { code, data, message } = await getRelayedTrendAPI({
                 relayer_id: relayerId
             });
@@ -1167,24 +1191,18 @@ export const useRelayedTrend = () => {
                     relayedTrendData.txs = txs;
                     relayedTrendData.txsValue = txsValue;
                 } else {
-                    relayedTrendNoData.value = true;
+                    relayedTrendNoDataType.value = NoDataType.noData;
                     relayedTrendData.date = [];
                     relayedTrendData.txs = [];
                     relayedTrendData.txsValue = [];
                 }
-            } else if (code === API_CODE.unRegisteredRelayer) {
-                relayedTrendNoData.value = true;
-                relayedTrendData.date = [];
-                relayedTrendData.txs = [];
-                relayedTrendData.txsValue = [];
-                console.error(message);
             } else {
-                relayedTrendNetworkError.value = true;
+                relayedTrendNoDataType.value = NoDataType.loadFailed;
                 console.error(message);
             }
         } catch (error) {
             relayedTrendLoading.value = false;
-            relayedTrendNetworkError.value = true;
+            relayedTrendNoDataType.value = NoDataType.loadFailed;
             console.error(error);
         }
     };
@@ -1212,9 +1230,7 @@ export const useRelayedTrend = () => {
         relayedTrendChoose,
         relayedTrendChooseBtnFn,
         relayedTrendLoading,
-        relayedTrendNoData,
-        relayedTrendNetworkError,
-        relayedAbnormalText
+        relayedTrendNoDataType
     };
 };
 
@@ -1251,6 +1267,7 @@ export const useRelatedAssetChart = (
     relayedAssetsChoose: Ref<number>,
     type: Ref<RelatedAssetsPieType>
 ) => {
+    const { showToast, clientX, clientY, clickEventFn, copyFn } = useCopyToast();
     const route = useRoute();
     const relayerId: string = route.params.relayerId as string;
     const relayedValueDom = ref<HTMLElement>();
@@ -1266,6 +1283,7 @@ export const useRelatedAssetChart = (
             padding: 0,
             extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
             formatter: (params: any) => {
+                const s = getTransactionPluralSymbol(chartTooltip.value.key, params.data.value);
                 return `<div style="display: flex; align-items: center; transform: translate(6px, 0);">
                             <div
                                 style="
@@ -1304,7 +1322,7 @@ export const useRelatedAssetChart = (
                                                   font-weight: 500;
                                                   line-height: 18px;
                                               "
-                                              >${chartTooltip.value.key}:
+                                              >${chartTooltip.value.key}${s}:
                                           </span>
                                           <span
                                               style="
@@ -1423,8 +1441,7 @@ export const useRelatedAssetChart = (
     };
     let relayedValueChart: echarts.ECharts;
     const relayedValueLoading = ref(true);
-    const relayedValueNoData = ref(false);
-    const relayedValueNetworkError = ref(false);
+    const relayedValueNoDataType = ref<NoDataType>();
     const totalRelayedValueData = reactive<RelayedValueData>({
         totalValue: DEFAULT_DISPLAY_TEXT,
         value: [],
@@ -1444,15 +1461,6 @@ export const useRelatedAssetChart = (
             return totalRelayedValueData.valueNoData;
         } else {
             return totalRelayedValueData.txsNoData;
-        }
-    });
-    const relayedValueAbnormalText = computed(() => {
-        if (relayedValueNoData.value) {
-            return API_ERRPR_MESSAGE.noData;
-        } else if (relayedValueNetworkError.value) {
-            return API_ERRPR_MESSAGE.networkError;
-        } else {
-            return '';
         }
     });
     const isRelayedValueType = computed(() => type.value === RelatedAssetsPieType.relayedValue);
@@ -1556,8 +1564,7 @@ export const useRelatedAssetChart = (
     const getRelayedValueData = async () => {
         try {
             relayedValueLoading.value = true;
-            relayedValueNoData.value = false;
-            relayedValueNetworkError.value = false;
+            relayedValueNoDataType.value = undefined;
             const getDataApi = isRelayedValueType.value
                 ? getTotalRelayedValueAPI
                 : getTotalFeeCostAPI;
@@ -1623,7 +1630,7 @@ export const useRelatedAssetChart = (
                         }, '0');
                         valueDenomList.push({
                             imgUrl: TOKEN_DEFAULT_ICON,
-                            name: 'Others',
+                            name: PIE_OTHERS,
                             base_denom: '',
                             base_denom_chain: '',
                             txs_value: spliceValueTotal,
@@ -1637,7 +1644,7 @@ export const useRelatedAssetChart = (
                         }, 0);
                         txsDenomList.push({
                             imgUrl: TOKEN_DEFAULT_ICON,
-                            name: 'Others',
+                            name: PIE_OTHERS,
                             base_denom: '',
                             base_denom_chain: '',
                             txs: spliceTxsTotal,
@@ -1690,7 +1697,7 @@ export const useRelatedAssetChart = (
                     totalRelayedValueData.valueTwoLegend = totalRelayedValueData.value.length > 6;
                     totalRelayedValueData.txsTwoLegend = totalRelayedValueData.txs.length > 6;
                 } else {
-                    relayedValueNoData.value = true;
+                    relayedValueNoDataType.value = NoDataType.noData;
                     totalRelayedValueData.totalValue = DEFAULT_DISPLAY_TEXT;
                     totalRelayedValueData.value = [];
                     totalRelayedValueData.valueOpacity = [];
@@ -1700,15 +1707,12 @@ export const useRelatedAssetChart = (
                     totalRelayedValueData.valueNoData = true;
                     totalRelayedValueData.txsNoData = true;
                 }
-            } else if (code === API_CODE.unRegisteredRelayer) {
-                relayedValueNoData.value = true;
-                console.error(message);
             } else {
-                relayedValueNetworkError.value = true;
+                relayedValueNoDataType.value = NoDataType.loadFailed;
                 console.error(message);
             }
         } catch (error) {
-            relayedValueNetworkError.value = true;
+            relayedValueNoDataType.value = NoDataType.loadFailed;
             console.error(error);
         } finally {
             relayedValueLoading.value = false;
@@ -1748,15 +1752,6 @@ export const useRelatedAssetChart = (
             relayedValueSizeFn();
         }, 0);
     };
-    const showToast = ref(false);
-    const clientX = ref(0);
-    const clientY = ref(0);
-    const clickEventFn = (e: MouseEvent) => {
-        clientX.value = e.clientX || 0;
-        clientY.value = e.clientY || 0;
-    };
-    let showTimer: number;
-    let cancelShowTimer: number;
     onMounted(async () => {
         await getRelayedValueData();
         relayedValueChart = echarts.init(relayedValueDom.value as HTMLElement);
@@ -1764,16 +1759,7 @@ export const useRelatedAssetChart = (
             relayedValueChart.setOption({
                 legend: { selected: { [params.name]: true } }
             });
-            showTimer && clearInterval(showTimer);
-            cancelShowTimer && clearInterval(cancelShowTimer);
-            showToast.value = false;
-            showTimer = setTimeout(() => {
-                copyToClipboard(params.name);
-                showToast.value = true;
-            }, 0);
-            cancelShowTimer = setTimeout(() => {
-                showToast.value = false;
-            }, 600);
+            copyFn(mapLegend[params.name] || params.name);
         });
         relayedAssetsChooseBtnFn(0);
         changeRelayedValueOption();
@@ -1787,9 +1773,6 @@ export const useRelatedAssetChart = (
     return {
         totalRelayedTitle,
         relayedValueLoading,
-        relayedValueNoData,
-        relayedValueNetworkError,
-        relayedValueAbnormalText,
         twoLegendRelayedValue,
         relayedAssetsChooseBtnFn,
         relayedValueDom,
@@ -1797,6 +1780,7 @@ export const useRelatedAssetChart = (
         clientX,
         clientY,
         showToast,
-        isShowNoDataPie
+        isShowNoDataPie,
+        relayedValueNoDataType
     };
 };

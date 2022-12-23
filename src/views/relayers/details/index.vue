@@ -48,7 +48,7 @@
                             :height="200"
                         />
                         <no-datas
-                            v-else-if="isShowModal || (!transferTypeLoading && !totalTxsCount)"
+                            v-else-if="!transferTypeLoading && !totalTxsCount"
                             class="relayer_details__charts_wrap__left__bottom__transfer_type_wrap__nodatas"
                         />
                         <div
@@ -90,10 +90,7 @@
                             :height="200"
                         />
                         <no-datas
-                            v-else-if="
-                                isShowModal ||
-                                (!ibcStatisticsChainsStore.isShowLoading && !relayedTotalTxs)
-                            "
+                            v-else-if="!ibcStatisticsChainsStore.isShowLoading && !relayedTotalTxs"
                             class="relayer_details__charts_wrap__left__bottom__success_rate__nodatas"
                         />
                         <SuccessRateChart
@@ -109,11 +106,8 @@
                 <RelatedAssets />
             </div>
         </div>
-        <InfoCard icon="icon-transactions" title="Transactions">
-            <RelayerTransfer :served-chains-info="servedChainsInfo" :is-show-modal="isShowModal" />
-        </InfoCard>
+        <RelayerTransfer :served-chains-info="servedChainsInfo" />
     </PageContainer>
-    <IbcDialog v-if="isShowModal" :show-modal="isShowModal" :opacity="0.15"></IbcDialog>
 </template>
 
 <script setup lang="ts">
@@ -141,7 +135,6 @@
         relayedSuccessTxs,
         relayerInfo,
         channelPairsInfo,
-        isShowModal,
         subTitle,
         defaultRelayerImg,
         displayAdaptor
@@ -204,38 +197,6 @@
                 margin-left: 16px;
                 flex: 1;
                 max-width: 428px;
-            }
-        }
-    }
-    // 1247px
-    @media screen and (max-width: 1200px) {
-        .relayer_details {
-            padding: 38px 48px 100px !important;
-            &__statistic {
-            }
-            &__channel_pairs {
-                :deep(.info_card__primary) {
-                }
-            }
-            &__charts_wrap {
-                &__left {
-                    &__top {
-                    }
-                    &__bottom {
-                        &__transfer_type_wrap {
-                            &__nodatas {
-                            }
-                        }
-                        &__transfer_type {
-                        }
-                        &__success_rate {
-                            &__nodatas {
-                            }
-                        }
-                    }
-                }
-                &__right {
-                }
             }
         }
     }

@@ -1,10 +1,11 @@
-import { IChainsListItem } from './../../types/interface/chains.interface';
+import { IChainsListItem } from '@/types/interface/chains.interface';
 import { getChainsListAPI } from '@/api/chains';
 import { BASE_PARAMS } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { IResponseChainsList, IResponseChainsListItem } from '@/types/interface/chains.interface';
 import ChainHelper from '@/helper/chainHelper';
 import { Ref } from 'vue';
+
 export const useGetChainsList = (loading?: Ref<boolean>) => {
     const chainsList = ref<IChainsListItem[]>([]);
     const getChainsList = async (loading?: Ref<boolean>) => {

@@ -1,5 +1,9 @@
 import { RelayersListKey } from '@/constants/relayers';
-import { IRequestPagination, IResponsePageInfo } from '@/types/interface/index.interface';
+import type {
+    IRequestPagination,
+    IResponsePageInfo,
+    IResponseTokenInfo
+} from '@/types/interface/index.interface';
 import { LinearGradientObject } from 'echarts';
 import { Ref } from 'vue';
 export type TTxsSuccessRate = string | number | undefined;
@@ -87,22 +91,18 @@ export interface IRequestRelayerTransfer extends IRequestPagination {
     tx_time_end?: string;
 }
 
-export interface IRtTokenInfo {
-    denom: string;
-    denom_chain: string;
-    base_denom?: string;
-    base_denom_chain?: string;
-    amount: string;
-}
 export interface IRelayerTransferItem {
     tx_hash: string;
     tx_type: string;
     chain: string;
-    denom_info: IRtTokenInfo;
-    fee_info: IRtTokenInfo;
+    denom_info: IResponseTokenInfo;
+    fee_info: IResponseTokenInfo;
     tx_status: number;
     signer: string;
     tx_time: number;
+}
+export interface IRelayerTransferItemFormat extends IRelayerTransferItem {
+    format_tx_time: string;
 }
 export interface IRelayerTransferList {
     items: IRelayerTransferItem[];
@@ -163,10 +163,11 @@ export interface RelayerTrendData {
 }
 
 export interface PieData {
+    name?: string;
+    displayName?: string;
     value: string | number;
     imgUrl?: string;
     percent?: string;
-    name?: string;
     itemStyle: {
         color: string;
     };

@@ -70,10 +70,15 @@
         &__content {
             flex: 1;
             box-sizing: border-box;
+            display: flex;
             &__router_container {
+                flex: 1;
                 width: 100%;
+                .flex(column,nowrap);
             }
             &__error_container {
+                flex: 1;
+                .flex(column,nowrap);
             }
         }
         &__footer {
@@ -97,7 +102,7 @@
             }
         }
     }
-    @media screen and (max-width: 545px) {
+    @media screen and (max-width: 670px) {
         .layout {
             padding-top: 160px;
             &__header {

@@ -1,6 +1,6 @@
 import { removeSpaceAndToLowerCase } from '@/utils/stringTools';
 import { getRelayersNameListAPI } from '@/api/relayers';
-import { IIbcchain } from '@/types/interface/index.interface';
+import type { IIbcchain, IPrefixChain } from '@/types/interface/index.interface';
 import { getTxSearchCondition } from '@/api/transfers';
 import { defineStore } from 'pinia';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
@@ -9,9 +9,9 @@ import { getIbcChainsAPI, getIbcBaseDenomsAPI } from '@/api/index';
 import { API_CODE } from '@/constants/apiCode';
 import { getIbcTxsAPI } from '@/api/transfers';
 import { getDenomKey } from '@/helper/baseDenomHelper';
-import { GlobalState } from '@/types/interface/store.interface';
-import { IBaseDenom, IResponsePagingData } from '@/types/interface/index.interface';
-import { IIbcTx } from '@/types/interface/transfers.interface';
+import type { GlobalState } from '@/types/interface/store.interface';
+import type { IBaseDenom, IResponsePagingData } from '@/types/interface/index.interface';
+import type { IIbcTx } from '@/types/interface/transfers.interface';
 import { axiosCancel } from '@/utils/axios';
 // import { getIbcDenomsAPI } from '@/api/home';
 // import { IResponseIbcDenom } from '@/types/interface/home.interface';
@@ -56,6 +56,23 @@ export const useIbcStatisticsChains = defineStore('global', {
                 ibcChainPrettyNameKeyMap[chain.pretty_name] = chain;
             });
             return ibcChainPrettyNameKeyMap;
+        },
+        ibcChainsPrefixMapGetter(): { [key: string]: IPrefixChain[] } {
+            const ibcChainAddrPrefixMap: { [key: string]: IPrefixChain[] } = {};
+            this.ibcChains.all.forEach((chain: IIbcchain) => {
+                const chainInfo = {
+                    chain_name: chain.chain_name,
+                    pretty_name: chain.pretty_name
+                };
+                chain.addr_prefix.forEach((prefix: string) => {
+                    if (ibcChainAddrPrefixMap[prefix]) {
+                        ibcChainAddrPrefixMap[prefix].push(chainInfo);
+                    } else {
+                        ibcChainAddrPrefixMap[prefix] = [chainInfo];
+                    }
+                });
+            });
+            return ibcChainAddrPrefixMap;
         }
         // ibcDenomsMapGetter(): { [key: string]: IResponseIbcDenom } {
         //     const ibcDenomsMap: { [key: string]: IResponseIbcDenom } = {};

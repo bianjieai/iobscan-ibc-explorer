@@ -8,7 +8,7 @@
                 :columns="columnsSource"
                 :data-source="dataSource"
                 :pagination="false"
-                :loading="props.loading"
+                :loading="props.tableLoading"
                 :show-sorter-tooltip="false"
                 :scroll="scroll"
                 :custom-row="customRow"
@@ -32,7 +32,7 @@
                 </template>
             </a-table>
             <template #renderEmpty>
-                <no-datas v-if="!loading && !data.length" />
+                <no-datas v-if="!tableLoading && !data.length" :type="noDataType" />
             </template>
         </a-config-provider>
         <div v-if="hasPaddingLr" class="thead_border_bottom"></div>
@@ -69,16 +69,25 @@
         IResponseIbcTokenListItem,
         ITokensListItem
     } from '@/types/interface/tokens.interface';
-    import { IRelayerTransferItem, RelayerListItem } from '@/types/interface/relayers.interface';
+    import type {
+        IRelayerTransferItem,
+        RelayerListItem
+    } from '@/types/interface/relayers.interface';
+    import type { IResponseAddressTxsFormat } from '@/types/interface/address.interface';
     import { CompareOrder } from '@/types/interface/components/table.interface';
     import { computed, onMounted, reactive, ref, watch } from 'vue';
     import { useRouter } from 'vue-router';
     import BigNumber from 'bignumber.js';
     import { formatLastUpdated } from '@/utils/timeTools';
     import { formatSupply } from '@/helper/tableCellHelper';
-    import { useGetIbcDenoms, useTimeInterval } from '@/composables';
+    import { useGetIbcDenoms } from '@/composables';
     import { RelayersListKey } from '@/constants/relayers';
     import { getIsAndroid } from '@/utils/systemTools';
+    import { AGE_TIMER_INTERVAL, NoDataType } from '@/constants';
+    import {
+        IAddressTokenTableItem,
+        IAddressAccountTableItem
+    } from '@/types/interface/address.interface';
 
     const router = useRouter();
     const { ibcBaseDenoms } = useGetIbcDenoms();
@@ -89,7 +98,10 @@
         | IResponseIbcTokenListItem[]
         | RelayerListItem[]
         | IResponseChannelsListItem[]
-        | IRelayerTransferItem[];
+        | IRelayerTransferItem[]
+        | IResponseAddressTxsFormat[]
+        | IAddressTokenTableItem[]
+        | IAddressAccountTableItem[];
     interface IProps {
         columns: TableColumnsType;
         data: TData;
@@ -103,9 +115,12 @@
         scroll?: { x?: number; y?: number } | undefined;
         rowKey?: string;
         realTimeKey?: { scKey: string; dcKey: string }[] | null;
-        loading: boolean;
+        tableLoading: boolean;
         customRow?: GetComponentProps<any>;
         hasPaddingLr?: boolean;
+        isLaunchTimer?: boolean;
+        pageDisabled?: boolean;
+        noDataType?: NoDataType;
     }
     // Todo shan hasPaddingLr 能否修改 Transfer 列表页等移入每一行两边有间距的情况
     let backUpDataSource: any[] = [];
@@ -115,7 +130,9 @@
         scroll: undefined,
         realTimeKey: null,
         rowKey: 'record_id',
-        hasPaddingLr: true
+        hasPaddingLr: true,
+        isLaunchTimer: true,
+        pageDisabled: undefined
     });
     const pageInfo = reactive({
         pageSize: props.pageSize || 10,
@@ -133,7 +150,7 @@
             backUpData();
             if (needPagination.value) {
                 pageInfo.total = _new?.length;
-                needPagination.value && onPageChange(1, 10, false);
+                needPagination.value && onPageChange(1, pageInfo.pageSize, false);
             }
             if (_new?.length === 0) {
                 columnsSource.value = columnsSource.value.filter((item) => item.key !== '_count');
@@ -153,11 +170,13 @@
         }
     );
     const disabledPagination = computed(() => {
-        return props.loading || pageInfo.total <= 0;
+        const paginationLoading =
+            props.pageDisabled === undefined ? props.tableLoading : props.pageDisabled;
+        return paginationLoading || pageInfo.total <= 0;
     });
-    const needPagination = computed(
-        () => !props.noPagination && !(props.current && props.pageSize)
-    ); // 需要前端分页
+    const needPagination = computed(() => {
+        return !props.noPagination && !(props.current && props.pageSize);
+    }); // 需要前端分页
     const isKeyInNeedCustomColumns = computed(
         () => (key: string) => props.needCustomColumns.includes(key)
     ); // 判断key
@@ -320,14 +339,31 @@
         if (props.noPagination) {
             dataSource.value = formatDataSourceWithRealTime(backUpDataSource);
         } else {
-            needPagination.value && onPageChange(1, 10, false); // reset去第一页
+            needPagination.value && onPageChange(1, pageInfo.pageSize, false); // reset去第一页
         }
     };
-    if (props.realTimeKey && props.realTimeKey.length) {
-        useTimeInterval(() => {
-            dataSource.value = formatDataSourceWithRealTime(dataSource.value);
-        });
-    }
+    let timeTimer: number;
+    watch(
+        () => props.isLaunchTimer,
+        (newValue) => {
+            if (props.realTimeKey && props.realTimeKey.length) {
+                if (newValue) {
+                    dataSource.value = formatDataSourceWithRealTime(dataSource.value);
+                    timeTimer = setInterval(() => {
+                        dataSource.value = formatDataSourceWithRealTime(dataSource.value);
+                    }, AGE_TIMER_INTERVAL);
+                } else {
+                    timeTimer && clearInterval(timeTimer);
+                }
+            }
+        },
+        {
+            immediate: true
+        }
+    );
+    onBeforeUnmount(() => {
+        timeTimer && clearInterval(timeTimer);
+    });
 </script>
 
 <style lang="less" scoped>
@@ -380,9 +416,13 @@
         padding-left: 0;
         white-space: nowrap;
     }
-    :deep(.ant-table-thead
-            > tr
-            > th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before) {
+    :deep(
+            .ant-table-thead
+                > tr
+                > th:not(:last-child):not(.ant-table-selection-column):not(
+                    .ant-table-row-expand-icon-cell
+                ):not([colspan])::before
+        ) {
         width: 0;
     }
     :deep(.ant-table-column-sorter) {
@@ -391,9 +431,9 @@
     :deep(.ant-table-column-has-sorters) {
         cursor: pointer;
     }
-    :deep(.ant-pagination li) {
-        margin-bottom: 8px;
-    }
+    // :deep(.ant-pagination li) {
+    //     margin-bottom: 8px;
+    // }
 
     :deep(td.ant-table-column-sort) {
         background: transparent;
@@ -426,7 +466,7 @@
         z-index: 1;
     }
     :deep(.ant-pagination) {
-        overflow: auto;
+        // overflow: auto;
         .ant-pagination-item {
             min-width: auto;
         }

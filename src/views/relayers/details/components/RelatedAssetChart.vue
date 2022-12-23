@@ -3,23 +3,15 @@
         <div class="related_asset_chart__title">{{ totalRelayedTitle }}</div>
         <div class="related_asset_chart__chart_wrap">
             <loading-component v-if="relayedValueLoading" :type="LoadingType.container" />
-            <no-datas
-                v-else-if="relayedValueNoData || relayedValueNetworkError"
-                :text="relayedValueAbnormalText"
-            />
+            <no-datas v-else-if="relayedValueNoDataType" :type="relayedValueNoDataType" />
             <div
-                v-show="!relayedValueLoading && !(relayedValueNoData || relayedValueNetworkError)"
+                v-show="!relayedValueLoading && !relayedValueNoDataType"
                 ref="relayedValueDom"
                 class="related_asset_chart__chart_wrap__chart"
                 :class="{ two_legend: twoLegendRelayedValue }"
                 @click="clickEventFn"
             ></div>
-            <div
-                v-show="showToast"
-                :style="{ left: clientX + 'px', top: clientY + 'px' }"
-                class="related_asset_chart__chart_wrap__toast"
-                >Copied</div
-            >
+            <ibcToast :show-toast="showToast" :client-x="clientX" :client-y="clientY" />
         </div>
     </div>
 </template>
@@ -39,9 +31,7 @@
     const {
         totalRelayedTitle,
         relayedValueLoading,
-        relayedValueNoData,
-        relayedValueNetworkError,
-        relayedValueAbnormalText,
+        relayedValueNoDataType,
         twoLegendRelayedValue,
         relayedValueDom,
         relayedAssetsChooseBtnFn,
@@ -81,19 +71,6 @@
             .two_legend {
                 width: 100%;
                 padding: 0 10px;
-            }
-            &__toast {
-                position: fixed;
-                top: 0;
-                left: 0;
-                transform: translate(-50%, -120%);
-                width: 50px;
-                height: 20px;
-                background-color: black;
-                border-radius: 8px;
-                color: white;
-                line-height: 20px;
-                text-align: center;
             }
         }
     }

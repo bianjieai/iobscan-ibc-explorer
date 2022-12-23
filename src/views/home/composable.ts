@@ -1,16 +1,18 @@
-import { IIbcTx } from './../../types/interface/transfers.interface';
+import { Ref } from 'vue';
+import { IIbcTx } from '@/types/interface/transfers.interface';
 import { formatAge, getTimestamp } from '@/utils/timeTools';
 import { useIbcStatisticsChains } from '@/store/index';
 import {
     IBC_STATISTICS_CHANNELS_DEFAULT,
-    IBC_STATISTICS_DENOMS_DEFAULT,
     CHANNELS_STATUS,
     PAGE_PARAMETERS,
     IBC_STATISTICS_TXS_DEFAULT,
     TX_STATUS_NUMBER,
-    MSG_DESC
+    MSG_DESC,
+    CHAIN_DEFAULT_ICON
 } from '@/constants';
 import { useTimeInterval } from '@/composables';
+import ChainHelper from '@/helper/chainHelper';
 
 export const useIbcTxs = (timerInterval?: number) => {
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
@@ -156,11 +158,13 @@ export const useInterfaceActive = () => {
                 });
             }
         } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.denom)) {
-            if (msg !== IBC_STATISTICS_DENOMS_DEFAULT.denom_all.statistics_name) {
-                router.push({
-                    name: 'Tokens'
-                });
-            }
+            router.push({
+                name: 'Tokens'
+            });
+        } else if (msg?.includes && msg.includes(PAGE_PARAMETERS.relayers)) {
+            router.push({
+                name: 'Relayers'
+            });
         } else {
             // TODO shan 路由中不包含以上路由的提示
             // message.info({
@@ -177,5 +181,40 @@ export const useInterfaceActive = () => {
         tipMsg,
         onClickViewAll,
         onMenuSelected
+    };
+};
+
+export const useHashAddrIcon = (scChain: Ref<string>, dcChain: Ref<string>) => {
+    const getImageUrl = (name: string | number) => {
+        return new URL(`../../assets/status/transfer_status${name}.png`, import.meta.url).href;
+    };
+    const findIbcChainIcon = async (chain: string) => {
+        const chainInfo = await ChainHelper.getChainInfoByKey(chain);
+        return chainInfo?.icon || CHAIN_DEFAULT_ICON;
+    };
+    const scChainIcon = ref<string>(CHAIN_DEFAULT_ICON);
+    const dcChainIcon = ref<string>(CHAIN_DEFAULT_ICON);
+    watch(
+        scChain,
+        async (newValue) => {
+            scChainIcon.value = await findIbcChainIcon(newValue);
+        },
+        {
+            immediate: true
+        }
+    );
+    watch(
+        dcChain,
+        async (newValue) => {
+            dcChainIcon.value = await findIbcChainIcon(newValue);
+        },
+        {
+            immediate: true
+        }
+    );
+    return {
+        getImageUrl,
+        scChainIcon,
+        dcChainIcon
     };
 };

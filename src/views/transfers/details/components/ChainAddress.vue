@@ -5,7 +5,16 @@
             <span>{{ chainAddress.label }}</span>
         </span>
         <span class="address__value">
-            <span>{{ chainAddress.value }}</span>
+            <span
+                :class="{
+                    'cursor address__value__text': judgeIsAddressCursor(
+                        chainAddress.value,
+                        chainInfo?.chain || ''
+                    )
+                }"
+                @click="goAddressDetails(chainAddress.value, chainInfo?.chain || '')"
+                >{{ chainAddress.value }}</span
+            >
             <CopyComponent
                 v-if="chainAddress.value !== DEFAULT_DISPLAY_TEXT"
                 :copy-text="chainAddress.value"
@@ -15,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-    import { useMatchChainInfo } from '@/composables';
+    import { useMatchChainInfo, useGoAddressDetail } from '@/composables';
     import type { IInfoList, ITxInfo } from '@/types/interface/transfers.interface';
     import { DEFAULT_DISPLAY_TEXT } from '@/constants';
     interface IProps {
@@ -29,6 +38,7 @@
             return prettyName || DEFAULT_DISPLAY_TEXT;
         }
     });
+    const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
 </script>
 
 <style lang="less" scoped>
@@ -40,14 +50,19 @@
             font-weight: 500;
             color: var(--bj-text-normal);
             line-height: 18px;
+            white-space: nowrap;
         }
         &__value {
-            margin-top: 2px;
             font-size: var(--bj-font-size-normal);
             font-weight: 400;
             color: var(--bj-text-second);
             line-height: 18px;
             word-break: break-all;
+            &__text {
+                &:hover {
+                    color: var(--bj-primary-color);
+                }
+            }
         }
         &__chain_name {
             margin-right: 4px;
@@ -62,6 +77,8 @@
             &__value {
                 flex: 1;
                 margin-left: 24px;
+                &__text {
+                }
             }
             &__chain_name {
             }
@@ -74,7 +91,10 @@
                 width: 100%;
             }
             &__value {
+                margin-top: 2px;
                 margin-left: 0;
+                &__text {
+                }
             }
             &__chain_name {
             }

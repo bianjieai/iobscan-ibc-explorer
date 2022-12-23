@@ -48,15 +48,15 @@
         </div>
 
         <TableCommon
-            :loading="loading"
+            :table-loading="loading"
             :data="tokensList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"
             need-count
         >
             <template #base_denom="{ record, column }">
+                <!-- todo dj TokenIcon => BaseTokenIcon and remove TokenIcon -->
                 <TokenIcon
-                    base-page
                     title-can-click
                     :token-type="record.token_type"
                     :denom="record[column.key]"
@@ -143,7 +143,6 @@
                     title-can-click
                     avatar-can-click
                     :chain="record[column.key]"
-                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                     @click-title="goChains"

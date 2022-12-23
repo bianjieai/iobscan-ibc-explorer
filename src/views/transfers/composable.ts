@@ -20,25 +20,23 @@ import {
 import { getTxDetailsByTxHashAPI } from '@/api/transfers';
 import { API_CODE } from '@/constants/apiCode';
 import { useGetIbcDenoms } from '@/composables';
-import dayjs from 'dayjs';
 import { formatBigNumber, JSONparse, rmIbcPrefix } from '@/helper/parseStringHelper';
 import { IDataItem, TDenom } from '@/components/BjSelect/interface';
-import { dayjsFormatDate } from '@/utils/timeTools';
+import { dayjsUtc, dayjsFormatDate } from '@/utils/timeTools';
 import ChainHelper from '@/helper/chainHelper';
 import { Ref } from 'vue';
 import { urlParser } from '@/utils/urlTools';
 import { axiosCancel } from '@/utils/axios';
 import { IIbcTx, IIbcTxCount, ITransfersQueryParams } from '@/types/interface/transfers.interface';
+import { Dayjs } from 'dayjs';
 
-export const usePagination = () => {
+export const useCurrentPage = () => {
     const route = useRoute();
-    const pagination = reactive<IPaginationParams>({
-        total: 0,
-        current: Number(route?.query?.pageNum) || 1,
-        pageSize: 10
-    });
+    const currentPage = Number(route?.query?.pageNum) || 1;
+    const pageSize = 10;
     return {
-        pagination
+        currentPage,
+        pageSize
     };
 };
 
@@ -82,27 +80,35 @@ export const useNoResult = () => {
     const route = useRoute();
     const router = useRouter();
     const ibcStatisticsChainsStore = useIbcStatisticsChains();
-    watch(route, (newValue) => {
-        if (newValue?.query) {
-            searchInputValue.value = Object.keys(route.query);
-        }
-    });
-    const searchInputValue = reactive({
-        value: ['']
-    });
-    if (route?.query) {
-        if (/^[A-F0-9]{64}$/.test(Object.keys(route.query).join(''))) {
+    const seatchParams = route.params?.result as string;
+    const searchQueryChain = route.query?.chain as string;
+    const searchInputValue = ref<string>();
+    const searchChainPrettyName = ref<string>();
+    watch(
+        route,
+        async (newValue) => {
+            if (newValue.params?.result) {
+                searchInputValue.value = newValue.params.result as string;
+            }
+            if (newValue.query?.chain) {
+                const searchChain = newValue.query.chain as string;
+                const chainInfo = await ChainHelper.getChainInfoByKey(searchChain);
+                searchChainPrettyName.value = chainInfo?.pretty_name || searchChain;
+            }
+        },
+        { immediate: true }
+    );
+    if (seatchParams) {
+        if (/^[A-F0-9]{64}$/.test(seatchParams)) {
             ibcStatisticsChainsStore.isShowLoading = true;
-            getTxDetailsByTxHashAPI(Object.keys(route.query).join(''))
+            getTxDetailsByTxHashAPI(seatchParams)
                 .then((result) => {
                     const { code, data } = result;
                     if (code === API_CODE.success) {
                         if (data) {
                             ibcStatisticsChainsStore.isShowLoading = false;
                             if (!data.is_list) {
-                                router.push(
-                                    `/transfers/details?txhash=${Object.keys(route.query).join('')}`
-                                );
+                                router.push(`/transfers/details?txhash=${seatchParams}`);
                             } else {
                                 router.push('/transfers');
                             }
@@ -115,16 +121,18 @@ export const useNoResult = () => {
                     ibcStatisticsChainsStore.isShowLoading = false;
                     console.log('getTxDetailsByTxHashAPI', error);
                 });
+        } else if (searchQueryChain) {
+            router.push(`/searchResult/${seatchParams}?chain=${searchQueryChain}`);
         } else {
-            router.push(`/searchResult?${Object.keys(route.query).join('')}`);
+            router.push(`/searchResult/${seatchParams}`);
         }
-        searchInputValue.value = Object.keys(route.query);
     }
     const toHome = () => {
         router.push('/home');
     };
     return {
         searchInputValue,
+        searchChainPrettyName,
         toHome
     };
 };
@@ -187,7 +195,7 @@ export const useRouteParams = () => {
         endTimestamp = 0;
     const searchToken = ref<string | undefined>();
     const inputFlag = ref(false);
-    const dateRange = reactive({ value: [] });
+    const dateRange = ref<[Dayjs, Dayjs] | undefined>();
     const chain = route?.query.chain as string;
     if (chain) {
         url += `&chain=${chain}`;
@@ -231,16 +239,16 @@ export const useRouteParams = () => {
     }
     if (route?.query?.startTime) {
         url += `&startTime=${route.query.startTime}`;
-        startTimestamp = dayjs(route.query.startTime as any).unix();
+        startTimestamp = dayjsUtc(route.query.startTime as any).unix();
     }
     if (route?.query?.endTime) {
         url += `&endTime=${route.query.endTime}`;
-        endTimestamp = dayjs(route.query.endTime as any)
+        endTimestamp = dayjsUtc(route.query.endTime as any)
             .endOf('day')
             .unix();
     }
     if (startTimestamp && endTimestamp) {
-        dateRange.value = [dayjs(startTimestamp * 1000), dayjs(endTimestamp * 1000)] as any;
+        dateRange.value = [dayjsUtc(startTimestamp * 1000), dayjsUtc(endTimestamp * 1000)];
     }
     searchToken.value = (paramsBaseDenom || '') + (paramsBaseDenomChain || '');
     if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
@@ -418,9 +426,7 @@ export const useSelectedParams = (
     chainId: string,
     url: string,
     inputFlag: Ref<boolean>,
-    dateRange: {
-        value: never[];
-    },
+    dateRange: Ref<[Dayjs, Dayjs] | undefined>,
     queryDatas: () => void
 ) => {
     const router = useRouter();
@@ -428,10 +434,6 @@ export const useSelectedParams = (
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const chainDropdown = ref();
     const chains = ref<TDenom[]>(chainId ? (chainId as string).split(',') : []);
-    const startTime = (time: string | number | Date) => {
-        const nowTimeDate = new Date(time);
-        return nowTimeDate.setHours(0, 0, 0, 0);
-    };
     const chainGetPopupContainer = (): HTMLElement => document.querySelector('.transfer__middle')!;
     const tokenData = computed(() => {
         return [
@@ -491,12 +493,12 @@ export const useSelectedParams = (
     const changeInputFlag = (flag: boolean) => {
         inputFlag.value = flag;
     };
-    const disabledDate = (current: any) => {
-        const currentStart = dayjs(current).startOf('day');
-        const max = dayjs().endOf('day');
-        const min = dayjs((ibcStatisticsChainsStore.txSearchTimeMin || 1617007625) * 1000).startOf(
-            'day'
-        );
+    const disabledDate = (current: Dayjs): boolean => {
+        const currentStart = dayjsUtc(current).startOf('day');
+        const max = dayjsUtc().endOf('day');
+        const min = dayjsUtc(
+            (ibcStatisticsChainsStore.txSearchTimeMin || 1617007625) * 1000
+        ).startOf('day');
         return currentStart && (currentStart < min || currentStart > max);
     };
     const judgeQueryParams = () => {
@@ -583,20 +585,18 @@ export const useSelectedParams = (
         judgeQueryParams();
         queryDatas();
     };
-    const onChangeRangePicker = (dates: any) => {
+    const onChangeRangePicker = (dates: [Dayjs, Dayjs]) => {
         (window as any).gtag('event', 'Transfers-点击过滤条件Date');
         pagination.current = 1;
         dateRange.value = dates;
-        queryParams.date_range[0] = Math.floor(startTime(dayjs(dates[0]).valueOf()) / 1000);
-        queryParams.date_range[1] = Math.floor(
-            startTime(dayjs(dates[1]).valueOf()) / 1000 + 60 * 60 * 24 - 1
-        );
+        queryParams.date_range[0] = dayjsUtc(dates[0]).startOf('day').unix();
+        queryParams.date_range[1] = dayjsUtc(dates[1]).endOf('day').unix();
         judgeQueryParams();
         queryDatas();
     };
     const onClickReset = () => {
         chainDropdown.value.selectedChain = [];
-        dateRange.value = [];
+        dateRange.value = undefined;
         queryParams.date_range = [];
         queryParams.status = TRANSFERS_STATUS_OPTIONS.DEFAULT_OPTIONS;
         queryParams.chain = undefined;
@@ -634,13 +634,6 @@ export const useTransfersTable = (
     ibcChains: Ref<IIbcChains>
 ) => {
     const router = useRouter();
-    const handleClickRow = (record: any) => {
-        return {
-            onClick: () => {
-                router.push(`/transfers/details?txhash=${record.sc_tx_info.hash}`);
-            }
-        };
-    };
     const onPaginationChange = (current: number, pageSize: number) => {
         pagination.current = current;
         const params = urlParser(url);
@@ -683,7 +676,6 @@ export const useTransfersTable = (
         return CHAIN_DEFAULT_ICON;
     };
     return {
-        handleClickRow,
         onPaginationChange,
         getImageUrl,
         findIbcChainIcon

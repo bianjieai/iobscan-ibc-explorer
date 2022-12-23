@@ -7,6 +7,14 @@ export enum BottomStatusType {
 }
 
 export type TTableCellIconSize = 'small' | 'normal';
+
+export interface ITableTokenInfo {
+    defaultTitle: string;
+    title: string;
+    subtitle: string;
+    imgSrc: string;
+}
+
 //tablecell icon size
 export enum TableCellIconSize {
     SMALL = 'small',

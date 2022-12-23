@@ -1,6 +1,8 @@
+import { AddressTokensTableKey, AddressAccountTableKey } from './address';
 import type { IDenomStatistic, IRequestPagination } from '@/types/interface/index.interface';
 import { TableColumnsType } from 'ant-design-vue';
 import { RelayersListKey, RELAYER_TRANSFER_KEY } from '@/constants/relayers';
+import { AddressTxsKey } from './address';
 
 export const TOKEN_DEFAULT_ICON = new URL('../assets/token-default.png', import.meta.url).href;
 export const CHAIN_DEFAULT_ICON = new URL('../assets/home/chain-default.png', import.meta.url).href;
@@ -63,13 +65,14 @@ export const ROUTE_INFO = {
         name: '404',
         title: 'IOBScan - IOB - 404',
         description: 'IOBScan 404 Info'
+    },
+    addressDetails: {
+        name: 'Address Details',
+        title: 'IOBScan - IOB - Address Details',
+        description: 'IBC Transfer Address Details'
     }
 };
 export const MENUS = [
-    {
-        label: 'Home',
-        value: 'Home'
-    },
     {
         label: 'Transfers',
         value: 'Transfers'
@@ -103,7 +106,10 @@ export const PAGE_PARAMETERS = {
     channels: 'channels',
     relayers: 'relayers',
     denom: 'denom',
-    relayerDetails: 'relayerDetails'
+    relayerDetails: 'relayerDetails',
+    addressDetailsTxs: 'addressDetailsTxs',
+    addressDetailsToken: 'addressDetailsToken',
+    addressDetailsAccount: 'addressDetailsAccount'
 };
 
 export const MSG_DESC = {
@@ -154,8 +160,8 @@ export const STATISTICS_NAME = {
     channel_all: 'All',
     channel_opened: 'Open',
     channel_closed: 'Closed',
-    denom_all: 'Tokens by Denom',
     base_denom_all: 'Tokens by Base Denom',
+    relayers: 'All Relayers',
     tx_24hr_all: 'Recent',
     tx_all: 'All',
     tx_success: 'Success',
@@ -197,12 +203,15 @@ export const IBC_STATISTICS_CHANNELS_DEFAULT: IDenomStatistic = {
 };
 
 export const IBC_STATISTICS_DENOMS_DEFAULT: IDenomStatistic = {
-    denom_all: {
-        statistics_name: 'denom_all',
-        count: 0
-    },
     base_denom_all: {
         statistics_name: 'base_denom_all',
+        count: 0
+    }
+};
+
+export const IBC_STATISTICS_RELAYER_DEFAULT: IDenomStatistic = {
+    relayers: {
+        statistics_name: 'relayers',
         count: 0
     }
 };
@@ -339,13 +348,15 @@ export const TRANSFER_TABLE_COLUMN: TableColumnsType = [
         title: 'Create Time',
         dataIndex: 'createTime',
         key: 'createTime',
-        width: 180
+        width: 180,
+        align: 'right'
     },
     {
         title: 'End Time',
         dataIndex: 'endTime',
         key: 'endTime',
-        width: 180
+        width: 180,
+        align: 'right'
     }
 ];
 
@@ -432,12 +443,38 @@ export const NEED_CUSTOM_COLUMN = {
         RELAYER_TRANSFER_KEY.rtFee,
         RELAYER_TRANSFER_KEY.rtResult,
         RELAYER_TRANSFER_KEY.rtSigner,
-        RELAYER_TRANSFER_KEY.rtTimestamp
+        RELAYER_TRANSFER_KEY.rtTime
+    ],
+    addressDetailsTxs: [
+        AddressTxsKey.txHash,
+        AddressTxsKey.type,
+        AddressTxsKey.port,
+        AddressTxsKey.from,
+        AddressTxsKey.to,
+        AddressTxsKey.amount,
+        AddressTxsKey.fee,
+        AddressTxsKey.time
+    ],
+    addressDetailsToken: [
+        AddressTokensTableKey.total,
+        AddressTokensTableKey.amount,
+        AddressTokensTableKey.price,
+        AddressTokensTableKey.totalValue
+    ],
+    addressDetailsAccount: [
+        AddressAccountTableKey.chain,
+        AddressAccountTableKey.address,
+        AddressAccountTableKey.tokenDenom,
+        AddressAccountTableKey.totalValue,
+        AddressAccountTableKey.lastUpdated
     ]
 };
 
 export const NEED_CUSTOM_HEADER = {
-    transfers: ['Token']
+    transfers: ['Token'],
+    relayerDetails: ['Time'],
+    addressDetailsTxs: ['Time'],
+    addressDetailsAccount: ['LastUpdated']
 };
 
 export const BASE_PARAMS: IRequestPagination = {
@@ -528,3 +565,22 @@ export enum LoadingType {
     container,
     position
 }
+
+export enum NoDataType {
+    noData = 1,
+    loadFailed = 2
+}
+
+export const PIE_OTHERS = 'Others';
+
+export enum IbcVersion {
+    'ICS-20' = 'ics20',
+    'ICS-27' = 'ics27',
+    'ICS-721' = 'ics721'
+}
+
+export const COLUMN_TOKEN_INFO_TYPE = {
+    token: 'Token',
+    amount: 'Amount',
+    fee: 'Fee'
+};

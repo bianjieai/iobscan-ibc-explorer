@@ -227,16 +227,12 @@ export const useShowModal = () => {
     };
 };
 
-export const useGoRelayersDetails = (changeModal: (flag: boolean) => void) => {
+export const useGoRelayersDetails = () => {
     const router = useRouter();
-    const goRelayersDetails = (isRegistered: boolean, relayerId?: string) => {
-        if (isRegistered) {
-            router.push({
-                path: '/relayers/details/' + relayerId
-            });
-        } else {
-            changeModal(true);
-        }
+    const goRelayersDetails = (relayerId?: string) => {
+        router.push({
+            path: '/relayers/details/' + relayerId
+        });
     };
     return {
         goRelayersDetails

@@ -1,24 +1,31 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import duration from 'dayjs/plugin/duration';
+import utc from 'dayjs/plugin/utc';
 import { formatBigNumber } from '../helper/parseStringHelper';
 import { ChannelStatus, TChannelStatus } from '@/types/interface/components/table.interface';
 
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
+dayjs.extend(utc);
 
+export const dayjsUtc = dayjs.utc;
+
+/**
+ * @param time millisecond
+ */
 export const dayjsFormatDate = (time: dayjs.ConfigType, format = 'MM-DD HH:mm:ss') => {
-    return dayjs(time).format(format);
+    return dayjsUtc(time).format(format);
 };
 
 /**
  *
- * @param time
+ * @param time seconds
  * @returns 1m ago / 1h ago / 1d ago
  */
 export const formatLastUpdated = (time: string | number) => {
     if (time === 0) return '--';
-    const obj = dayjs.duration(dayjs().valueOf() - Number(time) * 1000) as any;
+    const obj = dayjs.duration(dayjsUtc().unix() - Number(time), 's') as any;
     const { seconds, days, months, years, minutes, hours } = obj.$d;
 
     let ago = '';
@@ -45,7 +52,7 @@ export const formatLastUpdated = (time: string | number) => {
  */
 export const formatOperatingPeriod = (time: number, status: TChannelStatus) => {
     if (String(status) === ChannelStatus.CLOSED || time == 0) return '--';
-    const obj = dayjs.duration(Number(time) * 1000) as any;
+    const obj = dayjs.duration(Number(time), 's') as any;
     const { days, months, years } = obj.$d;
     let day = days;
     if (!months && !years && time > 0) {
@@ -55,7 +62,8 @@ export const formatOperatingPeriod = (time: number, status: TChannelStatus) => {
 };
 
 /**
- * 根据展示的需求拼接字符串展示成 > xxdxxhxxmxxs ago 或者 xxdxxhxxmxxs ago 或者 xxdxxhxxmxxs
+ * @param time millisecond
+ * 根据展示的需求拼接字符串展示成 > xxdayxxhrxxminxxsec ago 或者 xxdayxxhrxxminxxsec ago 或者 xxdayxxhrxxminxxs
  */
 export const formatAge = (
     currentServerTime: number,

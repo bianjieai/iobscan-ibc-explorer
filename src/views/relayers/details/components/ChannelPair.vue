@@ -5,12 +5,21 @@
         </div>
         <div class="channel_pair__bottom" :style="{ height: `${height}px` }">
             <div
-                v-for="item in chainAddressList"
+                v-for="item in chainAddressAllList"
                 :key="item"
                 class="channel_pair__chain_address_wrap"
             >
-                <span class="channel_pair__chain_address">{{ item }}</span>
-                <CopyComponent :copy-text="item"></CopyComponent>
+                <span
+                    :class="{
+                        'cursor channel_pair__chain_address': judgeIsAddressCursor(item, chain)
+                    }"
+                    @click="goAddressDetails(item, chain)"
+                    >{{ item }}</span
+                >
+                <CopyComponent
+                    v-if="judgeIsAddressCursor(item, chain)"
+                    :copy-text="item"
+                ></CopyComponent>
             </div>
         </div>
     </div>
@@ -18,13 +27,18 @@
 
 <script setup lang="ts">
     import ChainChannel from './ChainChannel.vue';
+    import { useGoAddressDetail } from '@/composables';
+    import { useChannelChainsList } from '../composable';
     interface IChannelPair {
         chain: string;
         channel: string;
         chainAddressList: string[];
         height: number;
     }
-    defineProps<IChannelPair>();
+    const props = defineProps<IChannelPair>();
+    const { chainAddressList } = toRefs(props);
+    const { chainAddressAllList } = useChannelChainsList(chainAddressList);
+    const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
 </script>
 
 <style lang="less" scoped>
@@ -56,6 +70,9 @@
             font-weight: 400;
             color: var(--bj-text-second);
             line-height: 18px;
+            &:hover {
+                color: var(--bj-primary-color);
+            }
         }
         &__visible_border {
             border: 1px solid var(--bj-primary-color) !important;

@@ -7,11 +7,13 @@ import {
     SYMBOL,
     NEED_CUSTOM_HEADER,
     TOKEN_DEFAULT_ICON,
-    DEFAULT_DISPLAY_TEXT
+    DEFAULT_DISPLAY_TEXT,
+    TRANSFER_TYPE,
+    NoDataType
 } from '@/constants';
 import { useIbcStatisticsChains } from '@/store';
 import { DATA_REFRESH_GAP } from '@/constants/home';
-import { IBaseDenom } from '@/types/interface/index.interface';
+import { IBaseDenom, IPaginationParams } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import moveDecimal from 'move-decimal-point';
 import { handleImgLoadingSussess } from '@/utils/imageTools';
@@ -71,6 +73,19 @@ export const useNeedCustomColumns = (whitePage: string) => {
             break;
         case PAGE_PARAMETERS.relayerDetails:
             needCustomColumns.value = NEED_CUSTOM_COLUMN.relayerDetails;
+            needCustomHeaders.value = NEED_CUSTOM_HEADER.relayerDetails;
+            break;
+        case PAGE_PARAMETERS.addressDetailsTxs:
+            needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetailsTxs;
+            needCustomHeaders.value = NEED_CUSTOM_HEADER.addressDetailsTxs;
+            break;
+        case PAGE_PARAMETERS.addressDetailsToken:
+            needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetailsToken;
+            break;
+        case PAGE_PARAMETERS.addressDetailsAccount:
+            needCustomColumns.value = NEED_CUSTOM_COLUMN.addressDetailsAccount;
+            needCustomHeaders.value = NEED_CUSTOM_HEADER.addressDetailsAccount;
+            break;
     }
     return {
         needCustomColumns,
@@ -165,9 +180,9 @@ export const useMatchChainInfo = (chain: string) => {
     const { ibcChains } = useIbcChains(DATA_REFRESH_GAP);
     const matchChain = ibcChains.value.all.find((item) => item.chain_name === chain);
     if (matchChain) {
-        chainIcon = matchChain.icon;
-        prettyName = matchChain.pretty_name;
-        currentChainId = matchChain.current_chain_id;
+        chainIcon = matchChain.icon || CHAIN_DEFAULT_ICON;
+        prettyName = matchChain.pretty_name || DEFAULT_DISPLAY_TEXT;
+        currentChainId = matchChain.current_chain_id || DEFAULT_DISPLAY_TEXT;
     }
     return {
         currentChainId,
@@ -272,5 +287,84 @@ export const useImageLoadStatus = (image: Ref<string>, defaultImg: Ref<string>) 
     return {
         isLoadingImg,
         displayImageSrc
+    };
+};
+
+export const useGoTransfersDetail = () => {
+    const router = useRouter();
+    const goTransfersDetails = (hash: string) => {
+        if (!hash) return;
+        router.push(`/transfers/details?txhash=${hash}`);
+    };
+    return {
+        goTransfersDetails
+    };
+};
+
+export const useGoAddressDetail = () => {
+    const router = useRouter();
+    const goAddressDetails = (address: string, chain: string) => {
+        if (
+            !address ||
+            address === DEFAULT_DISPLAY_TEXT ||
+            !chain ||
+            chain === DEFAULT_DISPLAY_TEXT
+        )
+            return;
+        router.push(`/address/${address}?chain=${chain}`);
+    };
+    const judgeIsAddressCursor = (address: string, chain: string) => {
+        return address && address != DEFAULT_DISPLAY_TEXT && chain && chain != DEFAULT_DISPLAY_TEXT;
+    };
+    return {
+        goAddressDetails,
+        judgeIsAddressCursor
+    };
+};
+
+export const useTimeUtcAge = (showUtcInitialValue = true) => {
+    const showUtc = ref<boolean>(showUtcInitialValue);
+    const changeShowUtcAge = (isShowUtc: boolean) => {
+        showUtc.value = isShowUtc;
+    };
+    return {
+        showUtc,
+        changeShowUtcAge
+    };
+};
+
+export const usePagination = (current?: number, pageSize?: number) => {
+    const pagination = reactive<IPaginationParams>({
+        total: 0,
+        current: current || 1,
+        pageSize: pageSize || 5
+    });
+    return {
+        pagination
+    };
+};
+
+export const formatTransferType = (type: string) => {
+    switch (type) {
+        case TRANSFER_TYPE.transfer.type:
+            return TRANSFER_TYPE.transfer.label;
+        case TRANSFER_TYPE.receive.type:
+            return TRANSFER_TYPE.receive.label;
+        case TRANSFER_TYPE.acknowledge.type:
+            return TRANSFER_TYPE.acknowledge.label;
+        case TRANSFER_TYPE.timeout.type:
+            return TRANSFER_TYPE.timeout.label;
+    }
+};
+
+export const useShowUtcIcon = (
+    loading: Ref<boolean | undefined>,
+    noDataType: Ref<NoDataType | undefined>
+) => {
+    const showUtcIcon = computed(() => {
+        return !loading.value && !noDataType.value;
+    });
+    return {
+        showUtcIcon
     };
 };

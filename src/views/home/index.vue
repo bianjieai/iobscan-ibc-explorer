@@ -31,14 +31,27 @@
                         @click-item="onClickViewAll"
                     />
                 </layer-block>
-
-                <layer-block title="IBC Tokens" style="margin-top: 47px" show-tip :tip-msg="tipMsg">
-                    <statistic-list
-                        type="vertical"
-                        :msg="ibcStatisticsDenoms"
-                        @click-item="onClickViewAll"
-                    />
-                </layer-block>
+                <div class="home__bottom__left__bottom">
+                    <layer-block
+                        title="IBC Tokens"
+                        style="margin-top: 32px"
+                        show-tip
+                        :tip-msg="tipMsg"
+                    >
+                        <statistic-list
+                            type="vertical"
+                            :msg="ibcStatisticsDenoms"
+                            @click-item="onClickViewAll"
+                        />
+                    </layer-block>
+                    <layer-block title="Relayers" style="margin-top: 32px">
+                        <statistic-list
+                            type="vertical"
+                            :msg="ibcStatisticsRelayer"
+                            @click-item="onClickViewAll"
+                        />
+                    </layer-block>
+                </div>
             </div>
             <layer-block class="home__bottom__right" title="IBC Token Transfers">
                 <statistic-list
@@ -47,12 +60,10 @@
                     @click-item="onClickViewAll"
                 />
                 <transfer-list
-                    :ibc-chains="ibcChains"
                     :transfer-list="homeIbcTxs"
                     @click-view-all="
                         onClickViewAll(IBC_STATISTICS_TXS_DEFAULT.tx_all.statistics_name)
                     "
-                    @click-item="onClickViewAll"
                     @item-did-expand="setExpandByIndex"
                 />
             </layer-block>
@@ -73,6 +84,7 @@
         ibcStatisticsChains,
         ibcStatisticsChannels,
         ibcStatisticsDenoms,
+        ibcStatisticsRelayer,
         ibcStatisticsTxs,
         intervalFunction
     } = useIbcStatistics(DATA_REFRESH_GAP);
@@ -116,6 +128,8 @@
             &__left {
                 margin-right: 24px;
                 width: 274px;
+                &__bottom {
+                }
             }
             &__right {
                 flex: 1;
@@ -152,6 +166,15 @@
                 &__left {
                     margin-right: 0;
                     width: 100%;
+                    &__bottom {
+                        .flex(row, nowrap, flex-start, center);
+                        .block {
+                            width: 50%;
+                            &:nth-of-type(2) {
+                                margin-left: 24px;
+                            }
+                        }
+                    }
                 }
                 &__right {
                     margin-top: 40px !important;
@@ -180,6 +203,8 @@
             }
             &__bottom {
                 &__left {
+                    &__bottom {
+                    }
                 }
                 &__right {
                 }
@@ -203,6 +228,15 @@
             }
             &__bottom {
                 &__left {
+                    &__bottom {
+                        .flex(column, nowrap, flex-start, flex-start);
+                        .block {
+                            width: 100%;
+                            &:nth-of-type(2) {
+                                margin-left: 0;
+                            }
+                        }
+                    }
                 }
                 &__right {
                 }

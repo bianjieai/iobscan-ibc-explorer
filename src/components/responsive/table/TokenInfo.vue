@@ -16,10 +16,10 @@
 
 <script setup lang="ts">
     import { getRestString } from '@/helper/parseStringHelper';
-    import type { IRtTokenInfo } from '@/types/interface/relayers.interface';
+    import type { IResponseTokenInfo } from '@/types/interface/index.interface';
     import { useFormatTokenDenom } from '@/views/relayers/details/composable';
     interface ITokenInfo {
-        tokenInfo: IRtTokenInfo;
+        tokenInfo: IResponseTokenInfo;
         type: string;
     }
     const props = defineProps<ITokenInfo>();

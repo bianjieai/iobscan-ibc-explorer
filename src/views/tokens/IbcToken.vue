@@ -32,7 +32,7 @@
         </div>
 
         <TableCommon
-            :loading="loading"
+            :table-loading="loading"
             :data="ibcTokenList"
             :need-custom-columns="needCustomColumns"
             :columns="IBC_COLUMNS"
@@ -71,7 +71,6 @@
                     avatar-can-click
                     title-can-click
                     :chain="record[column.key]"
-                    :chains-data="ibcChains.all"
                     icon-size="small"
                     @click-avatar="goChains"
                     @click-title="goChains"

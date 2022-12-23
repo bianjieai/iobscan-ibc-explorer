@@ -30,7 +30,7 @@
             <TypeButton @on-reset="resetSearchCondition" />
         </div>
         <TableCommon
-            :loading="loading"
+            :table-loading="loading"
             :data="channelsList"
             :need-custom-columns="needCustomColumns"
             :columns="COLUMNS"
@@ -59,7 +59,6 @@
                         :title="record.channel_a"
                         no-subtitle
                         :chain="record[column.key]"
-                        :chains-data="ibcChains.all"
                         icon-size="small"
                         @click-avatar="goChains"
                     />
@@ -98,7 +97,6 @@
                         :title="record.channel_b"
                         no-subtitle
                         :chain="record[column.key]"
-                        :chains-data="ibcChains.all"
                         icon-size="small"
                         @click-avatar="goChains"
                     />

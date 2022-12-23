@@ -3,17 +3,18 @@ import { PRETTYNAME, UNKNOWN, CHAIN_DEFAULT_VALUE } from '@/constants';
 import { useIbcChains } from '@/composables';
 import { IChainsListItem, IResponseChainsListItem } from '@/types/interface/chains.interface';
 import { IResponseTokensListItem, ITokensListItem } from '@/types/interface/tokens.interface';
-import { IIbcchain, IIbcchainMap } from '@/types/interface/index.interface';
+import { IIbcchain, IIbcchainMap, IPrefixChain } from '@/types/interface/index.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { getRestString } from '@/helper/parseStringHelper';
 import { TData, TDenom, IDataItem } from '@/components/BjSelect/interface';
 import { useIbcStatisticsChains } from '@/store/index';
 
-const { ibcChains } = useIbcChains();
+// todo dj 改造 export default => export
 export default class ChainHelper {
     // pretty_name sort
     // Todo shan 该方法中 ibcChains 可能存在没有值的情况，需要做处理
     static sortByPrettyName(sourceList: any, chain?: any) {
+        const { ibcChains } = useIbcChains();
         function changeChainsSort(item: any) {
             const saveChain = item.chain_a;
             item.chain_a = item.chain_b;
@@ -219,22 +220,22 @@ export default class ChainHelper {
 
     static getChainInfoByKey = async (chain: string): Promise<IIbcchain | undefined> => {
         const ibcStatisticsChainsStore = useIbcStatisticsChains();
-        const { ibcChainsUniqueKeyMapGetter } = ibcStatisticsChainsStore;
-        if (Object.keys(ibcChainsUniqueKeyMapGetter).length <= 0) {
+        const { ibcChainsUniqueKeyMapGetter } = toRefs(ibcStatisticsChainsStore);
+        if (Object.keys(ibcChainsUniqueKeyMapGetter.value).length <= 0) {
             await ibcStatisticsChainsStore.getIbcChainsAction();
         }
-        return ibcChainsUniqueKeyMapGetter[chain];
+        return ibcChainsUniqueKeyMapGetter.value[chain];
     };
 
     static getChainInfoByPrettyName = async (
         prettyName: string
     ): Promise<IIbcchain | undefined> => {
         const ibcStatisticsChainsStore = useIbcStatisticsChains();
-        const { ibcChainsPrettyNameKeyMapGetter } = ibcStatisticsChainsStore;
-        if (Object.keys(ibcChainsPrettyNameKeyMapGetter).length <= 0) {
+        const { ibcChainsPrettyNameKeyMapGetter } = toRefs(ibcStatisticsChainsStore);
+        if (Object.keys(ibcChainsPrettyNameKeyMapGetter.value).length <= 0) {
             await ibcStatisticsChainsStore.getIbcChainsAction();
         }
-        return ibcChainsPrettyNameKeyMapGetter[prettyName];
+        return ibcChainsPrettyNameKeyMapGetter.value[prettyName];
     };
 
     static handleChainIdToChain = async (comchainId: string) => {
@@ -251,5 +252,20 @@ export default class ChainHelper {
             }
         }
         return resArray.join(',');
+    };
+
+    static getChainInfoByPrefix = async (
+        prefix?: string
+    ): Promise<{ [key: string]: IPrefixChain[] } | IPrefixChain[] | undefined> => {
+        const ibcStatisticsChainsStore = useIbcStatisticsChains();
+        const { ibcChainsPrefixMapGetter } = toRefs(ibcStatisticsChainsStore);
+        if (Object.keys(ibcChainsPrefixMapGetter.value).length <= 0) {
+            await ibcStatisticsChainsStore.getIbcChainsAction();
+        }
+        if (prefix) {
+            return ibcChainsPrefixMapGetter.value[prefix];
+        } else {
+            return ibcChainsPrefixMapGetter.value;
+        }
     };
 }

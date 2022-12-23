@@ -9,6 +9,15 @@
             >
                 {{ item.value }}
             </span>
+            <span
+                v-else-if="item.isFormatSigner"
+                class="progress_list__value"
+                :class="{
+                    'cursor progress_list__address': judgeIsAddressCursor(item.value, currentChain)
+                }"
+                @click="goAddressDetails(item.value, currentChain)"
+                >{{ item.value }}</span
+            >
             <span v-else class="progress_list__value">{{ item.value }}</span>
         </li>
     </ul>
@@ -18,6 +27,7 @@
     import type { IIbcTxInfo, IProgress, ITxInfo } from '@/types/interface/transfers.interface';
     import { changeColor } from '@/helper/tableCellHelper';
     import { useProgressList } from '../composable';
+    import { useGoAddressDetail } from '@/composables';
 
     interface IProps {
         ibcTxInfo: IIbcTxInfo | undefined;
@@ -27,7 +37,8 @@
         dcInfo: ITxInfo | undefined;
     }
     const props = defineProps<IProps>();
-    const { progressListAll } = useProgressList(props);
+    const { progressListAll, currentChain } = useProgressList(props);
+    const { goAddressDetails, judgeIsAddressCursor } = useGoAddressDetail();
 </script>
 
 <style lang="less" scoped>
@@ -55,6 +66,11 @@
             color: var(--bj-text-second);
             word-break: break-word;
         }
+        &__address {
+            &:hover {
+                color: var(--bj-primary-color);
+            }
+        }
     }
     .success_color {
         font-family: GolosUI_Medium;
@@ -77,6 +93,8 @@
             &__value {
                 margin-top: 2;
                 margin-left: 0;
+            }
+            &__address {
             }
         }
     }

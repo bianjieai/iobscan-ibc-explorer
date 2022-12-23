@@ -100,5 +100,6 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         max-width: 80px;
+        line-height: 18px;
     }
 </style>
