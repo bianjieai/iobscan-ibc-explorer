@@ -74,7 +74,7 @@ function formatBigNumber(value: any, num?: number) {
 }
 
 /**
- * Token Overview
+ * Overview
  * @param dimensionValue 需要格式化的数据
  * @param decimal 需要保留的小数位数，默认 2
  * @returns
