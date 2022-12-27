@@ -35,10 +35,10 @@ export const COLUMNS: TableColumnsType = [
         align: 'right'
     },
     {
-        dataIndex: 'relayers',
-        key: 'relayers',
-        title: 'Relayers',
-        sorter: (a, b) => a.relayers - b.relayers,
+        dataIndex: 'pending_txs',
+        key: 'pending_txs',
+        title: 'Pending Tx',
+        sorter: (a, b) => a.pending_txs - b.pending_txs,
         sortDirections: ['descend', 'ascend'],
         align: 'right'
     },

@@ -18,7 +18,7 @@ export interface IResponseChannelsListItem {
     ibc_transfer_txs_value: string;
     last_updated: number;
     operating_period: number;
-    relayers: number;
+    pending_txs: number;
     status: number;
 }
 

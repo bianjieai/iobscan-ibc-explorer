@@ -34,6 +34,7 @@ export const useGetChannelsList = () => {
         const allParams = { ...BASE_PARAMS, ...params };
         const getAllData = async () => {
             try {
+                // todo dj 接口联调 relayers  =>  pending_txs
                 const result = await getChannelsListAPI(allParams);
                 const { code, data, message } = result;
                 if (code === API_CODE.success) {
