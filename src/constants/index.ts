@@ -427,6 +427,7 @@ export const NEED_CUSTOM_COLUMN = {
         'chain_b',
         'operating_period',
         'last_updated',
+        'pending_txs',
         'ibc_transfer_txs'
     ],
     relayers: [
