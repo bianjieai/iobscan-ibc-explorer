@@ -375,6 +375,10 @@ export const PRETTYNAME = {
 
 export const UNKNOWN = 'Unknown';
 export const THOUSAND_DECIMAL = 0.0001;
+export const TRILLION = 1000000000000;
+export const BILLION = 1000000000;
+export const MILLION = 1000000;
+export const THOUNDSAND = 1000;
 
 export const SYMBOL = {
     ATOM: 'ATOM',

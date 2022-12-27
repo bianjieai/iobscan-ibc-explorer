@@ -1,7 +1,15 @@
 import { floor } from 'lodash-es';
 import { BigNumber } from 'bignumber.js';
 import { isString } from '@/utils/objectTools';
-import { DEFAULT_DISPLAY_TEXT, THOUSAND_DECIMAL } from '@/constants';
+import {
+    BILLION,
+    DEFAULT_DISPLAY_TEXT,
+    MILLION,
+    THOUNDSAND,
+    THOUSAND_DECIMAL,
+    TRILLION
+} from '@/constants';
+import { bigNumberCompared, bigNumberDivide } from '@/utils/calculate';
 
 function getRestString(string: any, left: number, right: number) {
     if (!isString(string)) return;
@@ -65,6 +73,31 @@ function formatBigNumber(value: any, num?: number) {
     return new BigNumber(value).toFormat(num);
 }
 
+/**
+ * Overview
+ * @param dimensionValue 需要格式化的数据
+ * @param decimal 需要保留的小数位数，默认 2
+ * @returns
+ */
+function formatDimension(dimensionValue: string | number, decimal = 2) {
+    const num = Number(dimensionValue);
+    let result: number | string = 0;
+    if (bigNumberCompared(num, TRILLION) !== '-1') {
+        result = `${formatBigNumber(bigNumberDivide(num, TRILLION), decimal)} T`;
+    } else if (bigNumberCompared(num, BILLION) !== '-1') {
+        result = `${formatBigNumber(bigNumberDivide(num, BILLION), decimal)} B`;
+    } else if (bigNumberCompared(num, MILLION) !== '-1') {
+        result = `${formatBigNumber(bigNumberDivide(num, MILLION), decimal)} M`;
+    } else if (bigNumberCompared(num, THOUNDSAND) !== '-1') {
+        result = `${formatBigNumber(bigNumberDivide(num, THOUNDSAND), decimal)} K`;
+    } else if (bigNumberCompared(num, THOUSAND_DECIMAL) === '-1') {
+        result = `< ${THOUSAND_DECIMAL}`;
+    } else {
+        result = floor(num, decimal);
+    }
+    return result;
+}
+
 export {
     getRestString,
     rmIbcPrefix,
@@ -72,5 +105,6 @@ export {
     JSONparse,
     formatNum,
     getLasttyString,
-    formatBigNumber
+    formatBigNumber,
+    formatDimension
 };
