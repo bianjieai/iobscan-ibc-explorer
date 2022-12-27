@@ -130,6 +130,31 @@ const routes: Array<RouteRecordRaw> = [
         ]
     },
     {
+        path: '/overview',
+        component: Layout,
+        meta: {},
+        children: [
+            {
+                path: 'heatmap',
+                name: ROUTE_INFO.overviewHeatmap.name,
+                component: () => import('../views/overview/heatmap/index.vue'),
+                meta: {}
+            },
+            {
+                path: 'volume',
+                name: ROUTE_INFO.overviewVolume.name,
+                component: () => import('../views/overview/volume/index.vue'),
+                meta: {}
+            },
+            {
+                path: 'distribution',
+                name: ROUTE_INFO.overviewDistribution.name,
+                component: () => import('../views/overview/distribution/index.vue'),
+                meta: {}
+            }
+        ]
+    },
+    {
         path: '/:pathMatch(.*)*',
         component: LayoutError,
         meta: {},

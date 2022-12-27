@@ -69,7 +69,23 @@ export const ROUTE_INFO = {
     addressDetails: {
         name: 'Address Details',
         title: 'IOBScan - IOB - Address Details',
-        description: 'IBC Transfer Address Details'
+        description: 'IBC Address Details Information'
+    },
+    // todo dj 待和产品确认 title、description
+    overviewHeatmap: {
+        name: 'IBC Token Market Heatmap',
+        title: 'IOBScan - IOB - Token Market Heatmap',
+        description: 'IOBScan - IOB - Token Market Heatmap Information'
+    },
+    overviewVolume: {
+        name: 'IBC Transfer Volume',
+        title: 'IOBScan - IOB - Transfer Volume',
+        description: 'IOBScan - IOB - Transfer Volume Information'
+    },
+    overviewDistribution: {
+        name: 'IBC Token Distribution',
+        title: 'IOBScan - IOB - Token Distribution',
+        description: 'IOBScan - IOB - Token Distribution Information'
     }
 };
 export const MENUS = [
