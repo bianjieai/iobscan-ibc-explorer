@@ -2,7 +2,7 @@ import { getOverviewHeatmapAPI } from '@/api/overview';
 import { DEFAULT_DISPLAY_TEXT, NoDataType } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import { GROWTH_RATE } from '@/constants/overview';
-import { formatDimension } from '@/helper/parseStringHelper';
+import { formatBigNumber, formatDimension } from '@/helper/parseStringHelper';
 import type {
     ILegendInfo,
     IResponseHeatmapTotalInfoFormat
@@ -28,8 +28,6 @@ export const useGetOverviewHeatmapInfo = () => {
         return moveDecimal(Number(valueOrigin) || 0, 2);
     };
     const formatMarketCapTrend = (marketCapTrend: string) => {
-        console.log(marketCapTrend, 'marketCapTrend');
-
         switch (marketCapTrend) {
             case GROWTH_RATE.increase.sign:
                 return GROWTH_RATE.increase.label;
@@ -50,7 +48,7 @@ export const useGetOverviewHeatmapInfo = () => {
                 heatmapTotalInfo.total_market_cap = formatDimension(
                     data.total_info.total_market_cap
                 );
-                heatmapTotalInfo.total_denom_number = formatDimension(
+                heatmapTotalInfo.total_denom_number = formatBigNumber(
                     data.total_info.total_denom_number
                 );
                 heatmapTotalInfo.market_cap_growth_rate = formatMoveDecimal(

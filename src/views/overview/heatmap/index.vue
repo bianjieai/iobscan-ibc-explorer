@@ -1,10 +1,8 @@
 <template>
     <PageContainer class="heatmap">
-        <!-- todo shan 更换 icon -->
-        <!-- todo shan 更新 subtitle: -- 替换为接口中数值 -->
         <PageTitle
             title="IBC Token Market Heatmap"
-            :title-icon="'icon-Sequence'"
+            :title-icon="'icon-assets'"
             :subtitle="`${heatmapTotalInfo.total_denom_number} Assets`"
         />
         <div class="heatmap__container">
