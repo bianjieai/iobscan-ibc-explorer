@@ -80,6 +80,7 @@ function formatBigNumber(value: any, num?: number) {
  * @returns
  */
 function formatDimension(dimensionValue: string | number, decimal = 2) {
+    if (dimensionValue === DEFAULT_DISPLAY_TEXT) return dimensionValue;
     const num = Number(dimensionValue);
     let result: number | string = 0;
     if (bigNumberCompared(num, TRILLION) !== '-1') {
@@ -90,8 +91,6 @@ function formatDimension(dimensionValue: string | number, decimal = 2) {
         result = `${formatBigNumber(bigNumberDivide(num, MILLION), decimal)} M`;
     } else if (bigNumberCompared(num, THOUNDSAND) !== '-1') {
         result = `${formatBigNumber(bigNumberDivide(num, THOUNDSAND), decimal)} K`;
-    } else if (bigNumberCompared(num, THOUSAND_DECIMAL) === '-1') {
-        result = `< ${THOUSAND_DECIMAL}`;
     } else {
         result = floor(num, decimal);
     }
