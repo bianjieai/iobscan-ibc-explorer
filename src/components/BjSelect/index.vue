@@ -453,6 +453,9 @@
         & > div {
             opacity: 0.5;
         }
+        :deep(.selected_info_title) {
+            color: rgba(0, 0, 0, 0.5);
+        }
     }
 
     .multiple {
