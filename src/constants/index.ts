@@ -110,6 +110,31 @@ export const MENUS = [
         value: 'Relayers'
     }
 ];
+export const MORE_MENU = [
+    {
+        label: 'IOBScan open APIs docs',
+        value: 'IOBScan open APIs docs',
+        link: 'https://docs.apis.iobscan.io/'
+    },
+    {
+        label: 'Overview Charts & Stats',
+        value: 'Overview Charts & Stats',
+        subMenus: [
+            {
+                label: ROUTE_INFO.overviewHeatmap.name,
+                value: ROUTE_INFO.overviewHeatmap.name
+            },
+            {
+                label: ROUTE_INFO.overviewVolume.name,
+                value: ROUTE_INFO.overviewVolume.name
+            },
+            {
+                label: ROUTE_INFO.overviewDistribution.name,
+                value: ROUTE_INFO.overviewDistribution.name
+            }
+        ]
+    }
+];
 
 export const PAGE_PARAMETERS = {
     tx: 'tx',
