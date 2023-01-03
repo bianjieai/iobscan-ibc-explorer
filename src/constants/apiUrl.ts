@@ -25,5 +25,7 @@ export const API_URL = {
     ibcAddrTokenList: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder2}/tokens`,
     ibcAddrTxs: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder2}/txs`,
     ibcAddrTxsExport: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder2}/txs/export`,
-    ibcAddrAccountToken: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder2}/accounts`
+    ibcAddrAccountToken: `/ibc/chain/${urlReplacePlaceholder}/address/${urlReplacePlaceholder2}/accounts`,
+    ibcOverviewMarketHeatmap: '/ibc/overview/market_heatmap',
+    ibcOverviewTokenDistribution: '/ibc/overview/token_distribution'
 };

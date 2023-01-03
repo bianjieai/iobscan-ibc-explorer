@@ -34,6 +34,60 @@ export const useTimeInterval = (intervalCallBack: Function, interval = AGE_TIMER
     return timer;
 };
 
+export const useMoreMenu = () => {
+    const router = useRouter();
+    const route = useRoute();
+    const activeMenu = ref<boolean>(false);
+    const showSubMenu = ref<boolean>(false);
+    const expandMore = ref<boolean>(false);
+    const expand = ref<boolean>(false);
+    const changeShowSubMenu = () => {
+        showSubMenu.value = true;
+    };
+    const changeHiddenSubMenu = () => {
+        showSubMenu.value = false;
+    };
+    const changeExpandMore = () => {
+        expandMore.value = !expandMore.value;
+    };
+    const changeExpand = (changeExpand: boolean) => {
+        expand.value = changeExpand;
+    };
+    const clickSubMenu = (routeName: string) => {
+        (window as any).gtag('event', '导航栏-点击页面标签', {
+            menuName: routeName
+        });
+        router.push({
+            name: routeName
+        });
+        changeHiddenSubMenu();
+        changeExpand(false);
+        expandMore.value = false;
+    };
+    watch(
+        route,
+        (newRoute) => {
+            if (newRoute.path.indexOf('overview') !== -1) {
+                activeMenu.value = true;
+            } else {
+                activeMenu.value = false;
+            }
+        },
+        { immediate: true }
+    );
+    return {
+        activeMenu,
+        showSubMenu,
+        expandMore,
+        expand,
+        changeExpandMore,
+        changeExpand,
+        changeShowSubMenu,
+        changeHiddenSubMenu,
+        clickSubMenu
+    };
+};
+
 export const useChangeTitleAndIcon = () => {
     const link: HTMLLinkElement =
         document.querySelector('link[rel *= "icon"]') || document.createElement('link');

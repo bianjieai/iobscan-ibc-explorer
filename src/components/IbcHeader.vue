@@ -13,6 +13,7 @@
                     :current-menu="currentMenu"
                     :is-show-nav="isShowNav"
                     @click-menu="clickMenu"
+                    @close-show-nav="closeShowNav"
                 />
             </div>
             <div class="header_input_wrapper">
@@ -94,24 +95,12 @@
         }
         return [];
     };
-    const htmlClickFn = (e: MouseEvent) => {
-        if (
-            (e.target as Element)?.className !== 'header_btn_img' &&
-            (e.target as Element)?.className !==
-                'ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light header_menu header_navigation'
-        ) {
-            //不是该选择器的class
-            isShowNav.value = false;
-        }
+    const closeShowNav = (showNav: boolean) => {
+        isShowNav.value = showNav;
     };
     onMounted(() => {
         currentMenu.value = getCurrentRouterNames(route) as Key[];
-        document.addEventListener('click', htmlClickFn);
     });
-    onBeforeUnmount(() => {
-        document.removeEventListener('click', htmlClickFn);
-    });
-
     router.beforeEach((to: RouteLocationNormalized) => {
         currentMenu.value = getCurrentRouterNames(to) as Key[];
     });
@@ -153,7 +142,7 @@
             }
             .header_navigation {
                 margin-left: 37px;
-                z-index: 1;
+                z-index: 3;
             }
             .header_content {
             }
@@ -249,7 +238,7 @@
             }
         }
     }
-    @media screen and (max-width: 1090px) {
+    @media screen and (max-width: 1150px) {
         .header_container {
             .header_content {
                 position: relative;
