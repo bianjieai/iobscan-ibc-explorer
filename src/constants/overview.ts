@@ -45,3 +45,10 @@ export const LEGEND_PRECENT = reactive([
         status: true
     }
 ]);
+
+export enum VOLUME_COLOR {
+    in = '#1890FF',
+    out = '#FA8C16'
+}
+
+export const VOLUME_ALL_CHAIN = 'all_chain';

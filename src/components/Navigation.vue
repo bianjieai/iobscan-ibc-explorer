@@ -1,5 +1,5 @@
 <template>
-    <div class="menu">
+    <div v-show="isShowNav" class="menu">
         <a-menu
             :class="isShowNav ? 'header_menu' : 'header_menu_hide header_menu'"
             :selected-keys="currentMenu"

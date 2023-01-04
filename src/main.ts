@@ -8,7 +8,7 @@ import { createPinia } from 'pinia';
 import { gaDirectiveInstall } from '@/directive/ga';
 import { injectGtag } from '@/utils/injectGtag';
 import { imgLoadingDirectiveInstall } from '@/directive/imageLoading';
-import 'default-passive-events';
+// import 'default-passive-events';
 
 injectGtag();
 
