@@ -8,6 +8,7 @@
                     </div>
                 </div>
                 <navigation
+                    ref="headerRef"
                     class="header_navigation"
                     :menus="headerMenus"
                     :current-index="currentIndex"
@@ -65,6 +66,7 @@
 </template>
 
 <script setup lang="ts">
+    import { onClickOutside } from '@vueuse/core';
     import { useMoreMenu } from '@/composables';
     import { MENUS } from '@/constants';
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
@@ -74,6 +76,7 @@
     const currentIndex = ref<number>();
     const isShowNav = ref(false);
     const router = useRouter();
+    const headerRef = ref();
     const {
         activeMenu,
         showSubMenu,
@@ -113,6 +116,11 @@
     const closeShowNav = (showNav: boolean) => {
         isShowNav.value = showNav;
     };
+    onClickOutside(headerRef, () => {
+        isShowNav.value = false;
+        expandMore.value = false;
+        expand.value = false;
+    });
 </script>
 
 <style lang="less" scoped>

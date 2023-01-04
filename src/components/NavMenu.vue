@@ -117,21 +117,10 @@
             }
         }
     }
-    @media screen and (max-width: 768px) {
-        .header_menu {
-            &__item {
-                &__img {
-                }
-                &__img_active {
-                }
-            }
-            &__active_item {
-            }
-        }
-    }
     @media screen and (max-width: 530px) {
         .header_menu {
             &__item {
+                padding: 10px 16px;
                 &__img {
                 }
                 &__img_active {
