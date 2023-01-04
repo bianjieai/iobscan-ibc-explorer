@@ -102,13 +102,16 @@ export const useIbcStatisticsChains = defineStore('global', {
             promiseArray.push(this.getIbcTxSearchCondition);
             await Promise.all(promiseArray.map((item) => item()));
         },
-        async getIbcBaseDenomsAction() {
+        async getIbcBaseDenomsAction(isNeedJudgeShow500 = true) {
             try {
                 const { code, data } = await getIbcBaseDenomsAPI();
                 if (code == API_CODE.success && data && data.items && data.items.length > 0) {
                     this.ibcBaseDenoms = data.items;
                 }
             } catch (error) {
+                if (isNeedJudgeShow500 === true) {
+                    this.isShow500 = true;
+                }
                 console.log('getIbcBaseDenomsAction', error);
             }
         },

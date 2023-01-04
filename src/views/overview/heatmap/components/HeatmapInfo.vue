@@ -19,14 +19,14 @@
         </div>
         <div class="token_info__bottom">
             <span
-                v-for="(item, index) in LEGEND_PRECENT"
+                v-for="(item, index) in legendPrecent"
                 :key="item.label"
                 class="token_info__legend cursor"
                 :style="{
                     color: item.status ? '#fff' : 'rgba(0, 0, 0, 0.15)',
                     backgroundColor: item.status ? item.bgColor : '#EEF0F6'
                 }"
-                @click="changeCurrentLegend(index, item)"
+                @click="changeCurrentLegend(index)"
             >
                 {{ item.label }}
             </span>
@@ -35,26 +35,33 @@
 </template>
 
 <script setup lang="ts">
-    import { LEGEND_PRECENT } from '@/constants/overview';
-    import type {
-        ILegendInfo,
-        IResponseHeatmapTotalInfoFormat
-    } from '@/types/interface/overview.interface';
+    import { HEATMAP_COLOR } from '@/constants/overview';
+    import type { IResponseHeatmapTotalInfoFormat } from '@/types/interface/overview.interface';
 
     interface IHeatmapInfo {
         heatmapTotalInfo: IResponseHeatmapTotalInfoFormat;
-        currentChooseLegend: number;
     }
     defineProps<IHeatmapInfo>();
     const emits = defineEmits<{
-        (e: 'changeCurrentChooseLegend', currentLegendInfo: ILegendInfo): void;
+        (e: 'changeChooseLegend', legendPrecent: string[]): void;
     }>();
-    const changeCurrentLegend = (currentLegend: number, legendInfo: any) => {
-        LEGEND_PRECENT[currentLegend].status = !LEGEND_PRECENT[currentLegend].status;
-        emits('changeCurrentChooseLegend', {
-            currentLegend: currentLegend,
-            currentLegendStatus: legendInfo.status
-        });
+
+    const legendPrecent = reactive(
+        Object.keys(HEATMAP_COLOR).map((key) => {
+            return {
+                label: key,
+                bgColor: HEATMAP_COLOR[key],
+                status: true
+            };
+        })
+    );
+    const changeCurrentLegend = (currentLegendIndex: number) => {
+        legendPrecent[currentLegendIndex].status = !legendPrecent[currentLegendIndex].status;
+        const filterData = legendPrecent.filter((item) => item.status);
+        emits(
+            'changeChooseLegend',
+            filterData.map((item) => item.label)
+        );
     };
 </script>
 
