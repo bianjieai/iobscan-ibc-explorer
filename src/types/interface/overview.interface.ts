@@ -28,3 +28,25 @@ export interface ILegendInfo {
     currentLegend: number;
     currentLegendStatus: boolean;
 }
+
+export interface IResponseTransferVolumeItem {
+    chain: string;
+    transfer_volume_in: number; // todo dj 三个值，建议改成string
+    transfer_volume_out: number;
+    transfer_volume_total: number;
+}
+
+export interface ITransferVolumeItem extends IResponseTransferVolumeItem {
+    pretty_name: string;
+}
+
+export interface IVolumeItem {
+    datetime: string;
+    value: string;
+}
+
+export interface IResponseTransferVolumeTrend {
+    volume_in: IVolumeItem[];
+    volume_out: IVolumeItem[];
+    chain: string;
+}

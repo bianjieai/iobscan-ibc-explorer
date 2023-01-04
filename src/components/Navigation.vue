@@ -250,6 +250,7 @@
                     }
                 }
                 &__left {
+                    font-size: var(--bj-font-size-sub-title);
                 }
                 &__img {
                     margin-right: 4px;

@@ -64,11 +64,11 @@
 <style lang="less" scoped>
     .type_button {
         .flex(row,nowrap,center,center);
+        transition: none;
         &[disabled] {
-            opacity: 0.8;
             color: #fff;
-            border-color: var(--bj-primary-color);
-            background: var(--bj-primary-color);
+            background: #9ba5fc;
+            border: none;
         }
     }
 </style>
