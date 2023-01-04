@@ -36,6 +36,7 @@
     }>();
     const clickMenuItemFn = (key: string, index: number) => {
         emits('clickMenuItem', key, index);
+        emits('closeShowNav', false);
     };
 </script>
 

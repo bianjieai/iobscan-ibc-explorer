@@ -63,6 +63,9 @@ export const useMoreMenu = () => {
         changeExpand(false);
         expandMore.value = false;
     };
+    const changeActiveMenu = (menuActive: boolean) => {
+        activeMenu.value = menuActive;
+    };
     return {
         activeMenu,
         showSubMenu,
@@ -72,7 +75,8 @@ export const useMoreMenu = () => {
         changeExpand,
         changeShowSubMenu,
         changeHiddenSubMenu,
-        clickSubMenu
+        clickSubMenu,
+        changeActiveMenu
     };
 };
 

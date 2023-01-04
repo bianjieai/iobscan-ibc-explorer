@@ -12,9 +12,19 @@
                     :menus="headerMenus"
                     :current-index="currentIndex"
                     :is-show-nav="isShowNav"
+                    :active-menu="activeMenu"
+                    :show-sub-menu="showSubMenu"
+                    :expand-more="expandMore"
+                    :expand="expand"
+                    @change-expand-more="changeExpandMore"
+                    @change-expand="changeExpand"
+                    @change-show-sub-menu="changeShowSubMenu"
+                    @change-hidden-sub-menu="changeHiddenSubMenu"
+                    @click-sub-menu="clickSubMenu"
                     @click-menu="clickMenu"
                     @close-show-nav="closeShowNav"
                     @change-current-index="changeCurrentIndex"
+                    @change-active-menu="changeActiveMenu"
                 />
             </div>
             <div class="header_input_wrapper">
@@ -55,6 +65,7 @@
 </template>
 
 <script setup lang="ts">
+    import { useMoreMenu } from '@/composables';
     import { MENUS } from '@/constants';
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
     const homeUrl = import.meta.env.VITE_HOME_URL;
@@ -63,6 +74,18 @@
     const currentIndex = ref<number>();
     const isShowNav = ref(false);
     const router = useRouter();
+    const {
+        activeMenu,
+        showSubMenu,
+        expandMore,
+        expand,
+        changeExpandMore,
+        changeExpand,
+        changeShowSubMenu,
+        changeHiddenSubMenu,
+        clickSubMenu,
+        changeActiveMenu
+    } = useMoreMenu();
     const clickMenu = (val: string) => {
         (window as any).gtag('event', '导航栏-点击页面标签', {
             menuName: val
@@ -84,6 +107,8 @@
 
     const changeShowNav = () => {
         isShowNav.value = !isShowNav.value;
+        expandMore.value = false;
+        expand.value = false;
     };
     const closeShowNav = (showNav: boolean) => {
         isShowNav.value = showNav;

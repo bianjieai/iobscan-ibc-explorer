@@ -11,16 +11,16 @@
             <div
                 class="menu__more"
                 :class="{ menu__more_active: activeMenu }"
-                @mouseenter="changeShowSubMenu"
-                @mouseleave="changeHiddenSubMenu"
+                @mouseenter="changeShowSubMenuFn"
+                @mouseleave="changeHiddenSubMenuFn"
             >
                 <span>More</span>
                 <MoreMenu
                     v-if="showSubMenu"
                     class="menu__more__submenu"
                     :expand="expand"
-                    @change-expand="changeExpand"
-                    @click-sub-menu="clickSubMenu"
+                    @change-expand="changeExpandFn"
+                    @click-sub-menu="clickSubMenuFn"
                 ></MoreMenu>
             </div>
         </div>
@@ -37,7 +37,7 @@
                 class="menu__mobile__more cursor"
                 :class="{ menu__mobile__more_active: activeMenu }"
             >
-                <span class="menu__mobile__text" @click="changeExpandMore">
+                <span class="menu__mobile__text" @click="changeExpandMoreFn">
                     <span class="menu__mobile__left">
                         <img class="menu__mobile__img" src="../assets/nav/tips_icon.png" alt="" />
                         <span>More</span>
@@ -53,8 +53,8 @@
                     v-if="expandMore"
                     class="menu__mobile__submenu"
                     :expand="expand"
-                    @change-expand="changeExpand"
-                    @click-sub-menu="clickSubMenu"
+                    @change-expand="changeExpandFn"
+                    @click-sub-menu="clickSubMenuFn"
                     @close-show-nav="closeShowNav"
                 ></MoreMenu>
             </div>
@@ -63,7 +63,6 @@
 </template>
 
 <script lang="ts" setup>
-    import { useMoreMenu } from '@/composables';
     interface IMenu {
         label: string;
         value: string;
@@ -72,12 +71,22 @@
         menus: IMenu[];
         currentIndex?: number;
         isShowNav: boolean;
+        activeMenu: boolean;
+        showSubMenu: boolean;
+        expandMore: boolean;
+        expand: boolean;
     }
     const props = defineProps<IProps>();
     const emits = defineEmits<{
         (e: 'clickMenu', key: string): void;
         (e: 'closeShowNav', showNav: boolean): void;
         (e: 'changeCurrentIndex', index: number | undefined): void;
+        (e: 'changeExpandMore', expandMore: boolean): void;
+        (e: 'changeExpand', expand: boolean): void;
+        (e: 'changeShowSubMenu'): void;
+        (e: 'changeHiddenSubMenu'): void;
+        (e: 'clickSubMenu', subMenu: string): void;
+        (e: 'changeActiveMenu', menuActive: boolean): void;
     }>();
     const clickMenuItem = (key: string, index: number) => {
         emits('clickMenu', key);
@@ -86,23 +95,27 @@
     const closeShowNav = (showNav: boolean) => {
         emits('closeShowNav', showNav);
     };
-    const {
-        activeMenu,
-        showSubMenu,
-        expandMore,
-        expand,
-        changeExpandMore,
-        changeExpand,
-        changeShowSubMenu,
-        changeHiddenSubMenu,
-        clickSubMenu
-    } = useMoreMenu();
+    const changeShowSubMenuFn = () => {
+        emits('changeShowSubMenu');
+    };
+    const changeHiddenSubMenuFn = () => {
+        emits('changeHiddenSubMenu');
+    };
+    const changeExpandFn = () => {
+        emits('changeExpand', !props.expand);
+    };
+    const changeExpandMoreFn = () => {
+        emits('changeExpandMore', !props.expandMore);
+    };
+    const clickSubMenuFn = (subMenu: string) => {
+        emits('clickSubMenu', subMenu);
+    };
     const route = useRoute();
     watch(
         route,
         (newRoute) => {
             if (newRoute.path.indexOf('overview') !== -1) {
-                activeMenu.value = true;
+                emits('changeActiveMenu', true);
                 emits('changeCurrentIndex', undefined);
             } else {
                 if (
@@ -117,7 +130,7 @@
                         }
                     });
                 }
-                activeMenu.value = false;
+                emits('changeActiveMenu', false);
             }
         },
         { immediate: true }
