@@ -36,7 +36,6 @@ export const useTimeInterval = (intervalCallBack: Function, interval = AGE_TIMER
 
 export const useMoreMenu = () => {
     const router = useRouter();
-    const route = useRoute();
     const activeMenu = ref<boolean>(false);
     const showSubMenu = ref<boolean>(false);
     const expandMore = ref<boolean>(false);
@@ -64,17 +63,6 @@ export const useMoreMenu = () => {
         changeExpand(false);
         expandMore.value = false;
     };
-    watch(
-        route,
-        (newRoute) => {
-            if (newRoute.path.indexOf('overview') !== -1) {
-                activeMenu.value = true;
-            } else {
-                activeMenu.value = false;
-            }
-        },
-        { immediate: true }
-    );
     return {
         activeMenu,
         showSubMenu,

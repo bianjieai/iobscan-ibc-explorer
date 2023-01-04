@@ -10,10 +10,11 @@
                 <navigation
                     class="header_navigation"
                     :menus="headerMenus"
-                    :current-menu="currentMenu"
+                    :current-index="currentIndex"
                     :is-show-nav="isShowNav"
                     @click-menu="clickMenu"
                     @close-show-nav="closeShowNav"
+                    @change-current-index="changeCurrentIndex"
                 />
             </div>
             <div class="header_input_wrapper">
@@ -55,16 +56,13 @@
 
 <script setup lang="ts">
     import { MENUS } from '@/constants';
-    import { RouteLocationNormalized } from 'vue-router';
-    type Key = string | number;
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
     const homeUrl = import.meta.env.VITE_HOME_URL;
     const isStage = import.meta.env.MODE === 'stage';
     const headerMenus = reactive(MENUS);
-    const currentMenu = ref<Key[]>([]);
+    const currentIndex = ref<number>();
     const isShowNav = ref(false);
     const router = useRouter();
-    const route = useRoute();
     const clickMenu = (val: string) => {
         (window as any).gtag('event', '导航栏-点击页面标签', {
             menuName: val
@@ -73,6 +71,9 @@
         router.push({
             name: val
         });
+    };
+    const changeCurrentIndex = (index: number | undefined) => {
+        currentIndex.value = index;
     };
 
     const onClickLogo = () => {
@@ -84,26 +85,9 @@
     const changeShowNav = () => {
         isShowNav.value = !isShowNav.value;
     };
-
-    const getCurrentRouterNames = (r: RouteLocationNormalized): Key[] => {
-        if (r) {
-            const name = r?.matched[0].children.map((item) => item.name);
-            if (name && name.length > 0) {
-                return name as Key[];
-            }
-            return [];
-        }
-        return [];
-    };
     const closeShowNav = (showNav: boolean) => {
         isShowNav.value = showNav;
     };
-    onMounted(() => {
-        currentMenu.value = getCurrentRouterNames(route) as Key[];
-    });
-    router.beforeEach((to: RouteLocationNormalized) => {
-        currentMenu.value = getCurrentRouterNames(to) as Key[];
-    });
 </script>
 
 <style lang="less" scoped>
