@@ -1,10 +1,5 @@
 <template>
-    <a-button
-        class="type_button"
-        :class="{ disabled_style: isDisabled }"
-        type="primary"
-        @click="reset"
-    >
+    <a-button class="type_button" type="primary" :disabled="isDisabled" @click="reset">
         <template #icon>
             <svg
                 v-show="props.type === TypeButtonProp.reset"
@@ -61,6 +56,7 @@
         (e: 'onReset'): void;
     }>();
     const reset = debounce(() => {
+        if (props.isDisabled) return;
         emits('onReset');
     }, 300);
 </script>
@@ -68,11 +64,11 @@
 <style lang="less" scoped>
     .type_button {
         .flex(row,nowrap,center,center);
-    }
-    .disabled_style {
-        &:hover {
+        &[disabled] {
+            opacity: 0.8;
+            color: #fff;
+            border-color: var(--bj-primary-color);
             background: var(--bj-primary-color);
-            cursor: url('../../assets/forbidden.png'), not-allowed;
         }
     }
 </style>
