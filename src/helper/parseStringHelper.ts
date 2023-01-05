@@ -79,10 +79,10 @@ function formatBigNumber(value: any, num?: number) {
  * @param decimal 需要保留的小数位数，默认 2
  * @returns
  */
-function formatDimension(dimensionValue: string | number, decimal = 2) {
+function formatDimension(dimensionValue: string | number, decimal = 2): string {
     if (dimensionValue === DEFAULT_DISPLAY_TEXT) return dimensionValue;
     const num = Number(dimensionValue);
-    let result: number | string = 0;
+    let result = '0';
     if (bigNumberCompared(num, TRILLION) !== '-1') {
         result = `${formatBigNumber(bigNumberDivide(num, TRILLION), decimal)}T`;
     } else if (bigNumberCompared(num, BILLION) !== '-1') {
@@ -92,7 +92,7 @@ function formatDimension(dimensionValue: string | number, decimal = 2) {
     } else if (bigNumberCompared(num, THOUNDSAND) !== '-1') {
         result = `${formatBigNumber(bigNumberDivide(num, THOUNDSAND), decimal)}K`;
     } else {
-        result = floor(num, decimal);
+        result = String(floor(num, decimal));
     }
     return result;
 }

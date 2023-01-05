@@ -185,7 +185,7 @@ export const useVolume = () => {
             backgroundColor: null,
             borderWidth: 0,
             padding: 0,
-            extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
+            extraCssText: 'z-index:1;',
             formatter: (params: any) => {
                 const date = params[0].name;
                 const dataOut = params[0]?.value || '0';

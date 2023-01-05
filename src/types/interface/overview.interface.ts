@@ -24,9 +24,22 @@ export interface IResponseHeatmap {
     items: IResponseHeatmapItem[];
     total_info: IResponseHeatmapTotalInfo;
 }
-export interface ILegendInfo {
-    currentLegend: number;
-    currentLegendStatus: boolean;
+
+export interface IHeartmapDataItem {
+    value: string;
+    itemStyle: {
+        color: string;
+    };
+    otherInfo: {
+        prettyName: string;
+        symbol: string;
+        formatPrice: string;
+        formatVolume: string;
+        formatMarketCap: string;
+        priceTrend: string;
+        formatPriceGrowthRate: string;
+        level: string;
+    };
 }
 
 export interface IResponseTransferVolumeItem {

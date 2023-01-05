@@ -9,12 +9,25 @@
             <div class="heatmap__left">
                 <HeatmapInfo
                     :heatmap-total-info="heatmapTotalInfo"
-                    :current-choose-legend="currentChooseLegend"
-                    @change-current-choose-legend="changeCurrentChooseLegend"
+                    @change-choose-legend="changeChooseLegend"
                 />
             </div>
             <div class="heatmap__right">
-                <!-- todo dj 待补充热力图及适配 -->
+                <loading-component
+                    v-if="heatmapLoading"
+                    class="heatmap__right__loading"
+                    :type="LoadingType.container"
+                />
+                <no-datas
+                    v-else-if="heatmapNoDataType"
+                    :type="heatmapNoDataType"
+                    class="heatmap__right__failed"
+                />
+                <div
+                    v-show="!(heatmapLoading || heatmapNoDataType)"
+                    ref="heatmapChartRefDom"
+                    class="heatmap__right__chart"
+                ></div>
             </div>
         </div>
     </PageContainer>
@@ -22,10 +35,16 @@
 
 <script setup lang="ts">
     import HeatmapInfo from './components/HeatmapInfo.vue';
-    import { useGetOverviewHeatmapInfo, useHeatmapChart } from './composable';
+    import { useOverviewHeatmap } from './composable';
+    import { LoadingType } from '@/constants';
 
-    const { heatmapTotalInfo } = useGetOverviewHeatmapInfo();
-    const { currentChooseLegend, changeCurrentChooseLegend } = useHeatmapChart();
+    const {
+        heatmapLoading,
+        heatmapNoDataType,
+        heatmapChartRefDom,
+        heatmapTotalInfo,
+        changeChooseLegend
+    } = useOverviewHeatmap();
 </script>
 
 <style lang="less" scoped>
@@ -45,9 +64,22 @@
         }
         &__right {
             margin-left: 16px;
+            .flex(column,nowrap,center,center);
             width: 748px;
             height: 528px;
-            background: pink;
+            padding: 12px;
+            background: #f8fafd;
+            &__loading {
+                width: 100%;
+                height: 100%;
+            }
+            &__failed {
+            }
+            &__chart {
+                width: 100%;
+                height: 100%;
+                min-width: 634px;
+            }
         }
     }
     @media screen and (max-width: 1176px) {
@@ -61,6 +93,12 @@
                 margin-top: 16px;
                 margin-left: 0;
                 width: 100%;
+                &__loading {
+                }
+                &__failed {
+                }
+                &__chart {
+                }
             }
         }
     }
@@ -72,6 +110,13 @@
             &__left {
             }
             &__right {
+                overflow-x: auto;
+                &__loading {
+                }
+                &__failed {
+                }
+                &__chart {
+                }
             }
         }
     }
@@ -83,6 +128,12 @@
             &__left {
             }
             &__right {
+                &__loading {
+                }
+                &__failed {
+                }
+                &__chart {
+                }
             }
         }
     }
