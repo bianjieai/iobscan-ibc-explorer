@@ -171,7 +171,7 @@ export const useOverviewHeatmap = () => {
                     fontWeight: 600,
                     fontFamily: 'GolosUIWebRegular'
                 },
-                visualMin: 0,
+                visibleMin: 0,
                 data: []
             }
         ]
