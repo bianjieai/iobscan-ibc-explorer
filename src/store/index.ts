@@ -107,6 +107,10 @@ export const useIbcStatisticsChains = defineStore('global', {
                 const { code, data } = await getIbcBaseDenomsAPI();
                 if (code == API_CODE.success && data && data.items && data.items.length > 0) {
                     this.ibcBaseDenoms = data.items;
+                } else {
+                    if (isNeedJudgeShow500 === true) {
+                        this.isShow500 = true;
+                    }
                 }
             } catch (error) {
                 if (isNeedJudgeShow500 === true) {
@@ -120,6 +124,10 @@ export const useIbcStatisticsChains = defineStore('global', {
                 const { code, data } = await getIbcChainsAPI();
                 if (code == API_CODE.success && data && data.items && data.items.length > 0) {
                     this.ibcChains = data.items[0];
+                } else {
+                    if (isNeedJudgeShow500 === true) {
+                        this.isShow500 = true;
+                    }
                 }
             } catch (error) {
                 if (isNeedJudgeShow500 === true) {
