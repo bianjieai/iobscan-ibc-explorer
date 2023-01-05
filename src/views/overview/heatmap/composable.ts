@@ -23,22 +23,7 @@ export const useOverviewHeatmap = () => {
     const heartmapData = ref<IHeartmapDataItem[]>([]);
     const rangeData = ref(Object.keys(HEATMAP_COLOR));
 
-    // todo dj 默认不会展示特别小的数据
     const heatmapChartOption: any = {
-        labelLayout: function (params: any) {
-            if (params.rect.width < minWidth || params.rect.height < minWidth) {
-                return {
-                    fontSize: 0
-                };
-            }
-            const fontSize = Math.max(
-                Math.sqrt(params.rect.width * params.rect.height) / 10,
-                minFontSize
-            );
-            return {
-                fontSize: fontSize
-            };
-        },
         tooltip: {
             trigger: 'item',
             backgroundColor: null,
@@ -46,7 +31,6 @@ export const useOverviewHeatmap = () => {
             padding: 0,
             extraCssText: 'z-index:1;',
             formatter: (params: any) => {
-                // console.log('tooltip formatter', params);
                 if (!params.data.otherInfo) return '';
                 const otherInfo = params.data.otherInfo || {};
                 const title = `${otherInfo.prettyName} (${otherInfo.symbol})`;
@@ -159,6 +143,20 @@ export const useOverviewHeatmap = () => {
                     gapWidth: 1,
                     borderColor: '#fff'
                 },
+                labelLayout: function (params: any) {
+                    if (params.rect.width < minWidth || params.rect.height < minWidth) {
+                        return {
+                            fontSize: 0
+                        };
+                    }
+                    const fontSize = Math.max(
+                        Math.sqrt(params.rect.width * params.rect.height) / 10,
+                        minFontSize
+                    );
+                    return {
+                        fontSize: fontSize
+                    };
+                },
                 label: {
                     show: true,
                     formatter: (params: any) => {
@@ -171,7 +169,7 @@ export const useOverviewHeatmap = () => {
                     fontWeight: 600,
                     fontFamily: 'GolosUIWebRegular'
                 },
-                visibleMin: 0,
+                visibleMin: 20,
                 data: []
             }
         ]
@@ -310,9 +308,7 @@ export const useOverviewHeatmap = () => {
             heatmapChartOption.series[0].data = [...temp];
             nextTick(() => {
                 heatmapChartSizeFn();
-                // temp.forEach((item) => console.log(item.otherInfo.prettyName, item.value));
-                // console.log(JSON.stringify(heatmapChartOption));
-                console.log(heatmapChartOption.series);
+                // console.log(heatmapChartOption.series);
                 heatmapChart && heatmapChart.setOption(heatmapChartOption, true);
             });
         } else {

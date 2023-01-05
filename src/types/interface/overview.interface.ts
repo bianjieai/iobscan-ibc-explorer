@@ -44,9 +44,9 @@ export interface IHeartmapDataItem {
 
 export interface IResponseTransferVolumeItem {
     chain: string;
-    transfer_volume_in: number; // todo dj 三个值，建议改成string
-    transfer_volume_out: number;
-    transfer_volume_total: number;
+    transfer_volume_in: string;
+    transfer_volume_out: string;
+    transfer_volume_total: string;
 }
 
 export interface ITransferVolumeItem extends IResponseTransferVolumeItem {
