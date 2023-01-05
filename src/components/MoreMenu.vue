@@ -94,12 +94,11 @@
             position: relative;
             left: 0;
             padding: 0;
-            background: rgba(61, 80, 255, 0.2);
+            background: #0c1033;
             border: 0;
-            border-radius: 0 0 4px 4px;
             box-shadow: none;
             &__item {
-                padding: 12px 32px 12px 42px;
+                padding: 12px 32px 12px 54px;
                 &:hover {
                     background: none;
                     .submenu__item_link {
@@ -121,18 +120,19 @@
                 background: #12184b;
             }
             &__item_submenu {
-                padding: 10px 32px 10px 54px;
+                padding: 12px 32px 10px 66px;
                 color: rgba(255, 255, 255, 0.65);
+                text-align: left;
                 &:hover {
                     color: #fff;
                 }
             }
         }
     }
-    @media screen and (max-width: 768px) {
+    @media screen and (max-width: 530px) {
         .submenu {
             &__item {
-                padding-right: 20px;
+                padding: 12px 16px 12px 42px;
             }
             &__item_wrap {
             }
@@ -141,20 +141,7 @@
             &__item_submenu_wrap {
             }
             &__item_submenu {
-            }
-        }
-    }
-    @media screen and (max-width: 500px) {
-        .submenu {
-            &__item {
-            }
-            &__item_wrap {
-            }
-            &__item_link {
-            }
-            &__item_submenu_wrap {
-            }
-            &__item_submenu {
+                padding: 12px 32px 10px 54px;
             }
         }
     }

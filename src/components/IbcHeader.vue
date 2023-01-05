@@ -8,12 +8,24 @@
                     </div>
                 </div>
                 <navigation
+                    ref="headerRef"
                     class="header_navigation"
                     :menus="headerMenus"
-                    :current-menu="currentMenu"
+                    :current-index="currentIndex"
                     :is-show-nav="isShowNav"
+                    :active-menu="activeMenu"
+                    :show-sub-menu="showSubMenu"
+                    :expand-more="expandMore"
+                    :expand="expand"
+                    @change-expand-more="changeExpandMore"
+                    @change-expand="changeExpand"
+                    @change-show-sub-menu="changeShowSubMenu"
+                    @change-hidden-sub-menu="changeHiddenSubMenu"
+                    @click-sub-menu="clickSubMenu"
                     @click-menu="clickMenu"
                     @close-show-nav="closeShowNav"
+                    @change-current-index="changeCurrentIndex"
+                    @change-active-menu="changeActiveMenu"
                 />
             </div>
             <div class="header_input_wrapper">
@@ -54,17 +66,29 @@
 </template>
 
 <script setup lang="ts">
+    import { onClickOutside } from '@vueuse/core';
+    import { useMoreMenu } from '@/composables';
     import { MENUS } from '@/constants';
-    import { RouteLocationNormalized } from 'vue-router';
-    type Key = string | number;
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
     const homeUrl = import.meta.env.VITE_HOME_URL;
     const isStage = import.meta.env.MODE === 'stage';
     const headerMenus = reactive(MENUS);
-    const currentMenu = ref<Key[]>([]);
+    const currentIndex = ref<number>();
     const isShowNav = ref(false);
     const router = useRouter();
-    const route = useRoute();
+    const headerRef = ref();
+    const {
+        activeMenu,
+        showSubMenu,
+        expandMore,
+        expand,
+        changeExpandMore,
+        changeExpand,
+        changeShowSubMenu,
+        changeHiddenSubMenu,
+        clickSubMenu,
+        changeActiveMenu
+    } = useMoreMenu();
     const clickMenu = (val: string) => {
         (window as any).gtag('event', '导航栏-点击页面标签', {
             menuName: val
@@ -73,6 +97,9 @@
         router.push({
             name: val
         });
+    };
+    const changeCurrentIndex = (index: number | undefined) => {
+        currentIndex.value = index;
     };
 
     const onClickLogo = () => {
@@ -83,26 +110,16 @@
 
     const changeShowNav = () => {
         isShowNav.value = !isShowNav.value;
-    };
-
-    const getCurrentRouterNames = (r: RouteLocationNormalized): Key[] => {
-        if (r) {
-            const name = r?.matched[0].children.map((item) => item.name);
-            if (name && name.length > 0) {
-                return name as Key[];
-            }
-            return [];
-        }
-        return [];
+        expandMore.value = false;
+        expand.value = false;
     };
     const closeShowNav = (showNav: boolean) => {
         isShowNav.value = showNav;
     };
-    onMounted(() => {
-        currentMenu.value = getCurrentRouterNames(route) as Key[];
-    });
-    router.beforeEach((to: RouteLocationNormalized) => {
-        currentMenu.value = getCurrentRouterNames(to) as Key[];
+    onClickOutside(headerRef, () => {
+        isShowNav.value = false;
+        expandMore.value = false;
+        expand.value = false;
     });
 </script>
 
