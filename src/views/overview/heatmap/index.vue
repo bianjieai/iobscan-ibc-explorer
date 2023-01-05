@@ -66,7 +66,6 @@
             margin-left: 16px;
             .flex(column,nowrap,center,center);
             width: 748px;
-            overflow-x: auto;
             height: 528px;
             padding: 12px;
             background: #f8fafd;
@@ -111,6 +110,7 @@
             &__left {
             }
             &__right {
+                overflow-x: auto;
                 &__loading {
                 }
                 &__failed {

@@ -46,7 +46,8 @@ export const useOverviewHeatmap = () => {
             padding: 0,
             extraCssText: 'z-index:1;',
             formatter: (params: any) => {
-                console.log(params);
+                // console.log('tooltip formatter', params);
+                if (!params.data.otherInfo) return '';
                 const otherInfo = params.data.otherInfo || {};
                 const title = `${otherInfo.prettyName} (${otherInfo.symbol})`;
                 return `<div
@@ -309,9 +310,9 @@ export const useOverviewHeatmap = () => {
             heatmapChartOption.series[0].data = [...temp];
             nextTick(() => {
                 heatmapChartSizeFn();
-                temp.forEach((item) => console.log(item.otherInfo.prettyName, item.value));
+                // temp.forEach((item) => console.log(item.otherInfo.prettyName, item.value));
+                // console.log(JSON.stringify(heatmapChartOption));
                 console.log(heatmapChartOption.series);
-                console.log(JSON.stringify(heatmapChartOption));
                 heatmapChart && heatmapChart.setOption(heatmapChartOption, true);
             });
         } else {
