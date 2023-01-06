@@ -1,4 +1,3 @@
-// todo shan 需切换为真实请求
 import request from '@/utils/axios';
 import { API_URL } from '@/constants/apiUrl';
 import type { IResponse } from '@/types/interface/index.interface';
@@ -7,7 +6,7 @@ import type {
     IResponseTransferVolumeItem,
     IResponseTransferVolumeTrend
 } from '@/types/interface/overview.interface';
-import requestMock from '@/utils/axiosMock';
+// import requestMock from '@/utils/axiosMock';
 
 export const getOverviewHeatmapAPI = async () => {
     return request<IResponse<IResponseHeatmap>>({
@@ -17,16 +16,14 @@ export const getOverviewHeatmapAPI = async () => {
 };
 
 export const getOverviewTransferVolumeAPI = async () => {
-    // todo dj requestMock => request
-    return requestMock<IResponse<IResponseTransferVolumeItem[]>>({
+    return request<IResponse<IResponseTransferVolumeItem[]>>({
         url: API_URL.ibcOverviewTransferVolume,
         method: 'get'
     });
 };
 
 export const getOverviewTransferVolumeTrendAPI = async (chain = '') => {
-    // todo dj requestMock => request
-    return requestMock<IResponse<IResponseTransferVolumeTrend>>({
+    return request<IResponse<IResponseTransferVolumeTrend>>({
         url: API_URL.ibcOverviewChainTransferVolumeTrend,
         params: { chain },
         method: 'get'
