@@ -3,6 +3,7 @@ import request from '@/utils/axios';
 import { API_URL } from '@/constants/apiUrl';
 import type { IResponse } from '@/types/interface/index.interface';
 import type {
+    IResponseDistribution,
     IResponseHeatmap,
     IResponseTransferVolumeItem,
     IResponseTransferVolumeTrend
@@ -29,6 +30,14 @@ export const getOverviewTransferVolumeTrendAPI = async (chain = '') => {
     return requestMock<IResponse<IResponseTransferVolumeTrend>>({
         url: API_URL.ibcOverviewChainTransferVolumeTrend,
         params: { chain },
+        method: 'get'
+    });
+};
+
+export const getOverviewDistributionAPI = async (base_denom: string, base_denom_chain: string) => {
+    return request<IResponse<IResponseDistribution>>({
+        url: API_URL.ibcOverviewTokenDistribution,
+        params: { base_denom, base_denom_chain },
         method: 'get'
     });
 };
