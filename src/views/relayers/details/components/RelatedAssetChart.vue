@@ -62,6 +62,9 @@
             width: 100%;
             flex: 1;
             .flex(row,nowrap,center,center);
+            .nodatas {
+                margin: 0;
+            }
             &__chart {
                 align-self: flex-start;
                 margin-top: 16px;
@@ -83,6 +86,8 @@
             &__title {
             }
             &__chart_wrap {
+                .nodatas {
+                }
                 &__chart {
                     width: 260px;
                     height: 166px;
@@ -101,6 +106,8 @@
             &__title {
             }
             &__chart_wrap {
+                .nodatas {
+                }
                 &__chart {
                 }
                 .two_legend {
