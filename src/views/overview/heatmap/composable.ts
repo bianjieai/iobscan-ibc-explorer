@@ -164,8 +164,9 @@ export const useOverviewHeatmap = () => {
                     show: true,
                     formatter: (params: any) => {
                         const otherInfo = params.data.otherInfo;
-                        const priceGrowthRate =
-                            otherInfo.priceTrend + otherInfo.formatPriceGrowthRate;
+                        const priceGrowthRate = `${
+                            otherInfo.formatPriceGrowthRate !== '0%' ? otherInfo.priceTrend : ''
+                        }${otherInfo.formatPriceGrowthRate}`;
                         return `${otherInfo.symbol}\n${priceGrowthRate}`;
                     },
                     color: '#fff',
