@@ -1,4 +1,4 @@
-import { DEFAULT_DISPLAY_TEXT } from '@/constants';
+import { DEFAULT_DISPLAY_TEXT, PRETTYNAME } from '@/constants';
 import type {
     IResponseDistribution,
     ISankeyDataLink,
@@ -15,43 +15,56 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
     const nodesMap = new Map();
     const linksMap = new Map();
     const format = (formatData: IResponseDistribution, lastHop?: string) => {
-        if (nodes.length) {
-            if (!nodesMap.has(`${formatData.chain} ${formatData.hops}`)) {
-                nodes.push({ name: `${formatData.chain} ${formatData.hops}` });
+        const judgeNodesorLinksPush = (length: number) => {
+            if (!nodesMap.has(`${formatData.chain} ${length ? formatData.hops : 'last'}`)) {
+                nodes.push({ name: `${formatData.chain} ${length ? formatData.hops : 'last'}` });
             }
-            nodes.forEach((node) => {
-                nodesMap.set(node.name, node);
-            });
-        } else {
-            nodes.push({ name: `${formatData.chain} ${formatData.hops}` });
-        }
-
-        if (lastHop) {
-            if (linksMap.has(`${lastHop} ${formatData.chain} ${formatData.hops}`)) {
-                const currentLinkInfo = linksMap.get(
-                    `${lastHop} ${formatData.chain} ${formatData.hops}`
-                );
-                if (currentLinkInfo.value !== '-1' && formatData.amount !== '-1') {
-                    currentLinkInfo.value = bigNumberAdd(currentLinkInfo.value, formatData.amount);
+            if (lastHop) {
+                if (
+                    linksMap.has(
+                        `${lastHop} ${formatData.chain} ${length ? formatData.hops : 'last'}`
+                    )
+                ) {
+                    const currentLinkInfo = linksMap.get(
+                        `${lastHop} ${formatData.chain} ${length ? formatData.hops : 'last'}`
+                    );
+                    if (currentLinkInfo.originValue !== '-1' && formatData.amount !== '-1') {
+                        currentLinkInfo.value = bigNumberAdd(
+                            currentLinkInfo.originValue,
+                            formatData.amount
+                        );
+                    }
+                } else {
+                    // value 为展示的值，originValue 为原始值
+                    links.push({
+                        source: lastHop,
+                        target: `${formatData.chain} ${length ? formatData.hops : 'last'}`,
+                        value: formatData.amount !== '-1' ? formatData.amount : '1',
+                        originValue: formatData.amount
+                    });
                 }
-            } else {
-                links.push({
-                    source: lastHop,
-                    target: `${formatData.chain} ${formatData.hops}`,
-                    value: formatData.amount
-                });
             }
-            links.forEach((link) => {
-                linksMap.set(`${link.source} ${link.target}`, link);
-            });
-        }
+        };
         if (formatData.children?.length) {
+            judgeNodesorLinksPush(formatData.children.length);
             formatData.children.forEach((item) => {
                 format(item, `${formatData.chain} ${formatData.hops}`);
             });
+        } else {
+            judgeNodesorLinksPush(formatData.children?.length);
         }
     };
-    format(sankeyData);
+    if (sankeyData.children?.length) {
+        format(sankeyData);
+    } else {
+        // todo shan 原生链没有下一跳的情况下，生成一个自己连自己的连接关系，添加个属性表明是 0 跳，根据这个属性更改对应颜色
+    }
+    [...new Set(nodes)].forEach((node) => {
+        nodesMap.set(node.name, node);
+    });
+    links.forEach((link) => {
+        linksMap.set(`${link.source} ${link.target}`, link);
+    });
     for (const node of nodesMap.values()) {
         const chain = node.name.split(' ')[0];
         const hops = node.name.split(' ')[1];
@@ -73,15 +86,24 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
         linksArr.push({
             source: `${sourceChainInfo?.pretty_name || sourceChain} ${sourceHops}`,
             target: `${targetChainInfo?.pretty_name || targetChain} ${targetHops}`,
-            value: link.value
+            value: link.value,
+            originValue: link.originValue
         });
     }
+    const cosmos = nodesArr.filter((item) => item.name.includes(PRETTYNAME.COSMOSHUB));
+    const irishub = nodesArr.filter((item) => item.name.includes(PRETTYNAME.IRISHUB));
+    const other = nodesArr
+        .filter(
+            (item) =>
+                !item.name.includes(PRETTYNAME.IRISHUB) && !item.name.includes(PRETTYNAME.COSMOSHUB)
+        )
+        .sort((a, b) => a.name.localeCompare(b.name));
     const linksValueArr = linksArr
         .filter((item) => item.value !== DEFAULT_DISPLAY_TEXT)
         .sort((a, b) => Number(bigNumberSubtract(b.value, a.value)));
     const linksNoValueArr = linksArr.filter((item) => item.value === DEFAULT_DISPLAY_TEXT);
     return {
-        nodes: [...nodesArr],
+        nodes: [...cosmos, ...irishub, ...other],
         links: [...linksValueArr, ...linksNoValueArr]
     };
 };

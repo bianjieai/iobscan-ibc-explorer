@@ -74,22 +74,23 @@
             margin-left: 8px;
         }
         &__chart {
-            .flex(row, nowrap, center, center);
+            .flex(row, nowrap, center);
             margin-top: 16px;
             padding: 24px;
             min-height: 600px;
             background: #fff;
             border-radius: var(--border-radius-normal);
             &__wrap {
+                width: 100%;
                 overflow-y: auto;
-                height: 552px;
             }
             &__dom {
-                top: -34px;
-                left: -5%;
-                width: 1152px;
+                width: 1300px;
                 height: 1000px;
             }
+        }
+        &__failed {
+            margin-top: -100px;
         }
     }
 
@@ -108,8 +109,6 @@
                     overflow-x: auto;
                 }
                 &__dom {
-                    width: 800px;
-                    min-height: 552px;
                 }
             }
         }

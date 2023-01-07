@@ -83,6 +83,7 @@ export interface ISankeyDataLink {
     source: string;
     target: string;
     value: string;
+    originValue: string;
 }
 
 export interface ISankeyData {

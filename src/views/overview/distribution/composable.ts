@@ -65,7 +65,6 @@ export const useDistributionSelect = () => {
             if (code === API_CODE.success && Object.keys(data).length) {
                 originDenom.value = data.denom;
                 distributionSankeyData.value = await formatSankeyData(data);
-                console.log(distributionSankeyData.value);
             } else {
                 console.log(message);
                 originDenom.value = DEFAULT_DISPLAY_TEXT;
@@ -124,6 +123,7 @@ export const useDistributionSelect = () => {
             }
         });
     });
+    // todo shan 分情况定义宽高
     watch(
         () => distributionSankeyData.value,
         (newData) => {
@@ -154,8 +154,8 @@ export const useDistributionSelect = () => {
                                         ">Amount:</span>
                                         <span>
                                             ${
-                                                params.value !== '-1'
-                                                    ? formatBigNumber(params.value)
+                                                params.data.originValue !== '-1'
+                                                    ? formatBigNumber(params.data.originValue)
                                                     : DEFAULT_DISPLAY_TEXT
                                             } ${originDenom.value}
                                         </span>
@@ -163,20 +163,24 @@ export const useDistributionSelect = () => {
                                 `;
                         }
                     },
-                    layoutIterations: 32,
                     series: [
                         {
                             type: 'sankey',
+                            layout: 'none',
                             data: newData.nodes,
                             links: newData.links,
+                            top: '1%',
+                            right: '8%',
+                            bottom: '2%',
+                            left: 0,
                             nodeWidth: 18,
                             nodeGap: 24,
+                            nodeAlign: 'justify',
                             orient: 'horizontal',
                             draggable: false,
                             layoutIterations: 0,
                             emphasis: { focus: 'adjacency' },
                             levels: levelsInfo,
-                            minAngle: 4,
                             lineStyle: {
                                 color: 'source',
                                 curveness: 0.5
