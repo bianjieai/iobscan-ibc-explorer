@@ -40,11 +40,14 @@ export const useMoreMenu = () => {
     const showSubMenu = ref<boolean>(false);
     const expandMore = ref<boolean>(false);
     const expand = ref<boolean>(false);
+    const currentMoreIndex = ref<number>();
     const changeShowSubMenu = () => {
         showSubMenu.value = true;
+        currentMoreIndex.value !== undefined ? changeExpand(true) : changeExpand(false);
     };
     const changeHiddenSubMenu = () => {
         showSubMenu.value = false;
+        currentMoreIndex.value !== undefined ? changeExpand(true) : changeExpand(false);
     };
     const changeExpandMore = () => {
         expandMore.value = !expandMore.value;
@@ -66,6 +69,9 @@ export const useMoreMenu = () => {
     const changeActiveMenu = (menuActive: boolean) => {
         activeMenu.value = menuActive;
     };
+    const changeMoreIndex = (moreIndex?: number) => {
+        currentMoreIndex.value = moreIndex;
+    };
     return {
         activeMenu,
         showSubMenu,
@@ -76,7 +82,9 @@ export const useMoreMenu = () => {
         changeShowSubMenu,
         changeHiddenSubMenu,
         clickSubMenu,
-        changeActiveMenu
+        changeActiveMenu,
+        currentMoreIndex,
+        changeMoreIndex
     };
 };
 

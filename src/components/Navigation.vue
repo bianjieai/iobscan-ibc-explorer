@@ -16,9 +16,10 @@
             >
                 <span>More</span>
                 <MoreMenu
-                    v-if="showSubMenu"
+                    v-show="showSubMenu"
                     class="menu__more__submenu"
                     :expand="expand"
+                    :current-more-index="currentMoreIndex"
                     @change-expand="changeExpandFn"
                     @click-sub-menu="clickSubMenuFn"
                 ></MoreMenu>
@@ -50,10 +51,12 @@
                     ></i>
                 </span>
                 <MoreMenu
-                    v-if="expandMore"
+                    v-show="expandMore"
                     class="menu__mobile__submenu"
                     :expand="expand"
+                    :current-more-index="currentMoreIndex"
                     @change-expand="changeExpandFn"
+                    @change-more-index="changeMoreIndexFn"
                     @click-sub-menu="clickSubMenuFn"
                     @close-show-nav="closeShowNav"
                 ></MoreMenu>
@@ -63,6 +66,8 @@
 </template>
 
 <script lang="ts" setup>
+    import { MORE_MENU } from '@/constants';
+
     interface IMenu {
         label: string;
         value: string;
@@ -75,18 +80,20 @@
         showSubMenu: boolean;
         expandMore: boolean;
         expand: boolean;
+        currentMoreIndex?: number;
     }
     const props = defineProps<IProps>();
     const emits = defineEmits<{
         (e: 'clickMenu', key: string): void;
         (e: 'closeShowNav', showNav: boolean): void;
-        (e: 'changeCurrentIndex', index: number | undefined): void;
+        (e: 'changeCurrentIndex', index?: number): void;
         (e: 'changeExpandMore', expandMore: boolean): void;
         (e: 'changeExpand', expand: boolean): void;
         (e: 'changeShowSubMenu'): void;
         (e: 'changeHiddenSubMenu'): void;
         (e: 'clickSubMenu', subMenu: string): void;
         (e: 'changeActiveMenu', menuActive: boolean): void;
+        (e: 'changeMoreIndex', moreIndex?: number): void;
     }>();
     const clickMenuItem = (key: string, index: number) => {
         emits('clickMenu', key);
@@ -110,19 +117,29 @@
     const clickSubMenuFn = (subMenu: string) => {
         emits('clickSubMenu', subMenu);
     };
+    const changeMoreIndexFn = (moreIndex?: number) => {
+        emits('changeMoreIndex', moreIndex);
+    };
     const route = useRoute();
     watch(
         route,
         (newRoute) => {
             if (newRoute.path.indexOf('overview') !== -1) {
                 emits('changeActiveMenu', true);
-                emits('changeCurrentIndex', undefined);
+                emits('changeCurrentIndex');
+                MORE_MENU.forEach((item) => {
+                    item.subMenus?.forEach((subMenu, subMenuIndex) => {
+                        if (subMenu.label === newRoute.name) {
+                            emits('changeMoreIndex', subMenuIndex);
+                        }
+                    });
+                });
             } else {
                 if (
                     newRoute.path.indexOf('home') !== -1 ||
                     newRoute.path.indexOf('address') !== -1
                 ) {
-                    emits('changeCurrentIndex', undefined);
+                    emits('changeCurrentIndex');
                 } else {
                     props.menus.forEach((item: IMenu, index: number) => {
                         if (newRoute.path.indexOf(item.label.toLowerCase()) !== -1) {
@@ -131,6 +148,8 @@
                     });
                 }
                 emits('changeActiveMenu', false);
+                emits('changeMoreIndex');
+                emits('changeExpand', false);
             }
         },
         { immediate: true }

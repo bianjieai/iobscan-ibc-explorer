@@ -5,7 +5,12 @@
                 <a v-if="item.link" class="submenu__item_link" :href="item.link" target="_blank">
                     <span>{{ item.label }}</span>
                 </a>
-                <span v-else class="submenu__item_link" @click="changeExpandFn">
+                <span
+                    v-else
+                    class="submenu__item_link"
+                    :class="{ submenu__item_link_active: currentMoreIndex !== undefined }"
+                    @click="changeExpandFn"
+                >
                     <span>{{ item.label }}</span>
                     <i
                         v-if="item.subMenus"
@@ -16,12 +21,13 @@
                     ></i>
                 </span>
             </div>
-            <div v-if="expand" class="submenu__item_submenu_wrap">
+            <div v-show="expand" class="submenu__item_submenu_wrap">
                 <div
-                    v-for="subMenu in item.subMenus"
+                    v-for="(subMenu, index) in item.subMenus"
                     :key="subMenu.value"
                     class="submenu__item_submenu"
-                    @click="clickSubMenuFn(subMenu.value)"
+                    :class="{ submenu__item_submenu_active: currentMoreIndex === index }"
+                    @click="clickSubMenuFn(subMenu.value, index)"
                 >
                     {{ subMenu.label }}
                 </div>
@@ -34,19 +40,22 @@
     import { MORE_MENU } from '@/constants';
     interface IMoreSubMenu {
         expand: boolean;
+        currentMoreIndex?: number;
     }
     const props = defineProps<IMoreSubMenu>();
     const emits = defineEmits<{
         (e: 'changeExpand', expand: boolean): void;
         (e: 'clickSubMenu', subMenu: string): void;
         (e: 'closeShowNav', showNav: boolean): void;
+        (e: 'changeMoreIndex', moreIndex?: number): void;
     }>();
     const changeExpandFn = () => {
         emits('changeExpand', !props.expand);
     };
-    const clickSubMenuFn = (subMenu: string) => {
+    const clickSubMenuFn = (subMenu: string, index: number) => {
         emits('clickSubMenu', subMenu);
         emits('closeShowNav', false);
+        emits('changeMoreIndex', index);
     };
 </script>
 
@@ -75,6 +84,9 @@
             width: 100%;
             color: rgba(0, 0, 0, 0.65);
         }
+        &__item_link_active {
+            color: var(--bj-primary-color);
+        }
         &__item_submenu_wrap {
             background: #eef0f6;
         }
@@ -87,6 +99,9 @@
             &:hover {
                 color: var(--bj-primary-color);
             }
+        }
+        &__item_submenu_active {
+            color: var(--bj-primary-color);
         }
     }
     @media screen and (max-width: 1150px) {
@@ -112,6 +127,9 @@
                 padding: 0;
                 color: rgba(255, 255, 255, 0.65);
             }
+            &__item_link_active {
+                color: #fff;
+            }
             &__item_submenu_wrap {
                 position: absolute;
                 top: 80px;
@@ -127,6 +145,9 @@
                     color: #fff;
                 }
             }
+            &__item_submenu_active {
+                color: #fff;
+            }
         }
     }
     @media screen and (max-width: 530px) {
@@ -138,10 +159,14 @@
             }
             &__item_link {
             }
+            &__item_link_active {
+            }
             &__item_submenu_wrap {
             }
             &__item_submenu {
                 padding: 12px 32px 10px 54px;
+            }
+            &__item_submenu_active {
             }
         }
     }
