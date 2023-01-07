@@ -247,7 +247,7 @@ export const useVolume = () => {
                                         height: 18px;
                                         line-height: 18px;
                                     "
-                                    >${formatBigNumber(dataIn)}</span
+                                    >${UNIT_SIGNS}${formatBigNumber(dataIn)}</span
                                 >
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center">
@@ -272,7 +272,7 @@ export const useVolume = () => {
                                         height: 18px;
                                         line-height: 18px;
                                     "
-                                    >${formatBigNumber(dataOut)}</span
+                                    >${UNIT_SIGNS}${formatBigNumber(dataOut)}</span
                                 >
                             </div>
                         </div>`;
@@ -282,7 +282,7 @@ export const useVolume = () => {
         grid: {
             top: 30,
             left: 0,
-            right: 22,
+            right: 40,
             bottom: 46,
             containLabel: true
         },
