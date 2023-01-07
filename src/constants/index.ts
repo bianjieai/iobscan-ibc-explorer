@@ -71,21 +71,20 @@ export const ROUTE_INFO = {
         title: 'IOBScan - IOB - Address Details',
         description: 'IBC Address Details Information'
     },
-    // todo dj 待和产品确认 title、description
     overviewHeatmap: {
         name: 'IBC Token Market Heatmap',
-        title: 'IOBScan - IOB - Token Market Heatmap',
-        description: 'IOBScan - IOB - Token Market Heatmap Information'
+        title: 'IOBScan - IOB - Token Heatmap',
+        description: 'IBC Token Market Heatmap'
     },
     overviewVolume: {
         name: 'IBC Transfer Volume',
         title: 'IOBScan - IOB - Transfer Volume',
-        description: 'IOBScan - IOB - Transfer Volume Information'
+        description: 'IBC Transfer Volume'
     },
     overviewDistribution: {
         name: 'IBC Token Distribution',
         title: 'IOBScan - IOB - Token Distribution',
-        description: 'IOBScan - IOB - Token Distribution Information'
+        description: 'IBC Token Distribution'
     }
 };
 export const MENUS = [

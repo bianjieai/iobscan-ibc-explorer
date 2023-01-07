@@ -48,7 +48,7 @@
             rgba(112, 136, 255, 0) 0%,
             rgba(61, 80, 255, 0.1) 100%
         );
-        &__icon_c {
+        .both_sides__icon_c {
             transform: translateX(4px) rotate(180deg);
             &:hover {
             }
@@ -63,7 +63,7 @@
             rgba(112, 136, 255, 0) 0%,
             rgba(61, 80, 255, 0.1) 100%
         );
-        &__icon_c {
+        .both_sides__icon_c {
             transform: translateX(-4px);
             &:hover {
             }

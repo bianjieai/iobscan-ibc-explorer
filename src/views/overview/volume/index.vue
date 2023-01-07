@@ -291,6 +291,7 @@
                     width: 100%;
                     height: 100%;
                     transform: translate(-50%, -50%);
+                    margin: 0;
                 }
                 &__chart {
                     min-width: 788px;

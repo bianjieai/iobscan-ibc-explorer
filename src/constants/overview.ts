@@ -8,43 +8,16 @@ export const GROWTH_RATE = {
         label: 'decrease'
     }
 };
-export const LEGEND_PRECENT = reactive([
-    {
-        label: '+10%',
-        bgColor: '#00C853',
-        status: true
-    },
-    {
-        label: '+9%',
-        bgColor: '#4BD284',
-        status: true
-    },
-    {
-        label: '+3%',
-        bgColor: '#80DDA7',
-        status: true
-    },
-    {
-        label: '0%',
-        bgColor: '#CAD1E4',
-        status: true
-    },
-    {
-        label: '-3%',
-        bgColor: '#FFA9A9',
-        status: true
-    },
-    {
-        label: '-9%',
-        bgColor: '#FF8181',
-        status: true
-    },
-    {
-        label: '-10%',
-        bgColor: '#FF5A5A',
-        status: true
-    }
-]);
+
+export const HEATMAP_COLOR = {
+    '+10%': '#00C853',
+    '+9%': '#4BD284',
+    '+3%': '#80DDA7',
+    '0%': '#CAD1E4',
+    '-3%': '#FFA9A9',
+    '-9%': '#FF8181',
+    '-10%': '#FF5A5A'
+};
 
 export enum VOLUME_COLOR {
     in = '#1890FF',

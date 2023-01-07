@@ -2,16 +2,20 @@
     <div class="token_info">
         <div class="token_info__top">
             <p class="token_info__text">{{
-                `The IBC token market is valued at $${heatmapTotalInfo.total_market_cap}, and on average a ${heatmapTotalInfo.market_cap_growth_rate}% ${heatmapTotalInfo.market_cap_trend_desc} over the last day.`
+                `The IBC token market is valued at $${heatmapTotalInfo.total_market_cap.result}, and on average a ${heatmapTotalInfo.market_cap_growth_rate}% ${heatmapTotalInfo.market_cap_trend_desc} over the last day.`
             }}</p>
             <p class="token_info__text">{{
-                `The total marketcap for stablecoins is $${heatmapTotalInfo.stablecoins_market_cap}.`
+                `The total marketcap for stablecoins is $${getDimensionDisplay(
+                    heatmapTotalInfo.stablecoins_market_cap
+                )}`
             }}</p>
             <p class="token_info__text">{{
-                `The total IBC transfer volume over the last 24 hours is $${heatmapTotalInfo.total_transfer_volume}.`
+                `The total IBC transfer volume over the last 24 hours is $${getDimensionDisplay(
+                    heatmapTotalInfo.total_transfer_volume
+                )}`
             }}</p>
             <p class="token_info__text">{{
-                `ATOM's price is currently $${heatmapTotalInfo.atom_price}.`
+                `ATOM's price is currently $${getDimensionDisplay(heatmapTotalInfo.atom_price)}`
             }}</p>
             <p class="token_info__text">{{
                 `ATOM Dominance is currently ${heatmapTotalInfo.atom_dominance}%.`
@@ -19,14 +23,14 @@
         </div>
         <div class="token_info__bottom">
             <span
-                v-for="(item, index) in LEGEND_PRECENT"
+                v-for="(item, index) in legendPrecent"
                 :key="item.label"
                 class="token_info__legend cursor"
                 :style="{
                     color: item.status ? '#fff' : 'rgba(0, 0, 0, 0.15)',
                     backgroundColor: item.status ? item.bgColor : '#EEF0F6'
                 }"
-                @click="changeCurrentLegend(index, item)"
+                @click="changeCurrentLegend(index)"
             >
                 {{ item.label }}
             </span>
@@ -35,26 +39,39 @@
 </template>
 
 <script setup lang="ts">
-    import { LEGEND_PRECENT } from '@/constants/overview';
+    import { HEATMAP_COLOR } from '@/constants/overview';
     import type {
-        ILegendInfo,
+        IHeatmapTotalInfoItem,
         IResponseHeatmapTotalInfoFormat
     } from '@/types/interface/overview.interface';
 
     interface IHeatmapInfo {
         heatmapTotalInfo: IResponseHeatmapTotalInfoFormat;
-        currentChooseLegend: number;
     }
     defineProps<IHeatmapInfo>();
     const emits = defineEmits<{
-        (e: 'changeCurrentChooseLegend', currentLegendInfo: ILegendInfo): void;
+        (e: 'changeChooseLegend', legendPrecent: string[]): void;
     }>();
-    const changeCurrentLegend = (currentLegend: number, legendInfo: any) => {
-        LEGEND_PRECENT[currentLegend].status = !LEGEND_PRECENT[currentLegend].status;
-        emits('changeCurrentChooseLegend', {
-            currentLegend: currentLegend,
-            currentLegendStatus: legendInfo.status
-        });
+
+    const legendPrecent = reactive(
+        Object.keys(HEATMAP_COLOR).map((key) => {
+            return {
+                label: key,
+                bgColor: HEATMAP_COLOR[key],
+                status: true
+            };
+        })
+    );
+    const changeCurrentLegend = (currentLegendIndex: number) => {
+        legendPrecent[currentLegendIndex].status = !legendPrecent[currentLegendIndex].status;
+        const filterData = legendPrecent.filter((item) => item.status);
+        emits(
+            'changeChooseLegend',
+            filterData.map((item) => item.label)
+        );
+    };
+    const getDimensionDisplay = (params: IHeatmapTotalInfoItem) => {
+        return `${params.result}${params.isDimension ? '.' : ''}`;
     };
 </script>
 

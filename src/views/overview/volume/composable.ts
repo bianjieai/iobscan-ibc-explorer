@@ -10,7 +10,8 @@ import { UNIT_SIGNS } from '@/constants/relayers';
 import { API_CODE } from '@/constants/apiCode';
 import { VOLUME_COLOR, VOLUME_ALL_CHAIN } from '@/constants/overview';
 import ChainHelper from '@/helper/chainHelper';
-import { formatBigNumber, formatDimension } from '@/helper/parseStringHelper';
+import { formatBigNumber } from '@/helper/parseStringHelper';
+import { formatDimension } from '@/helper/overviewHelper';
 import { useIbcChains } from '@/composables';
 import { getOverviewTransferVolumeAPI, getOverviewTransferVolumeTrendAPI } from '@/api/overview';
 import { bigNumberAdd } from '@/utils/calculate';
@@ -120,7 +121,7 @@ export const useVolume = () => {
     };
 
     const getTotalDisplay = (total: string | number) => {
-        const displayTotal = formatDimension(total);
+        const displayTotal = formatDimension(total) as string;
         const space = Number(displayTotal) == 0 || displayTotal == DEFAULT_DISPLAY_TEXT ? ' ' : '';
         return `${UNIT_SIGNS}${space}${displayTotal}`;
     };
@@ -185,7 +186,7 @@ export const useVolume = () => {
             backgroundColor: null,
             borderWidth: 0,
             padding: 0,
-            extraCssText: 'box-shadow: 0 0 0 transparent;z-index:1;',
+            extraCssText: 'z-index:1;',
             formatter: (params: any) => {
                 const date = params[0].name;
                 const dataOut = params[0]?.value || '0';
