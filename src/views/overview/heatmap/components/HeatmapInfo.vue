@@ -2,16 +2,20 @@
     <div class="token_info">
         <div class="token_info__top">
             <p class="token_info__text">{{
-                `The IBC token market is valued at $${heatmapTotalInfo.total_market_cap}, and on average a ${heatmapTotalInfo.market_cap_growth_rate}% ${heatmapTotalInfo.market_cap_trend_desc} over the last day.`
+                `The IBC token market is valued at $${heatmapTotalInfo.total_market_cap.result}, and on average a ${heatmapTotalInfo.market_cap_growth_rate}% ${heatmapTotalInfo.market_cap_trend_desc} over the last day.`
             }}</p>
             <p class="token_info__text">{{
-                `The total marketcap for stablecoins is $${heatmapTotalInfo.stablecoins_market_cap}.`
+                `The total marketcap for stablecoins is $${getDimensionDisplay(
+                    heatmapTotalInfo.stablecoins_market_cap
+                )}`
             }}</p>
             <p class="token_info__text">{{
-                `The total IBC transfer volume over the last 24 hours is $${heatmapTotalInfo.total_transfer_volume}.`
+                `The total IBC transfer volume over the last 24 hours is $${getDimensionDisplay(
+                    heatmapTotalInfo.total_transfer_volume
+                )}`
             }}</p>
             <p class="token_info__text">{{
-                `ATOM's price is currently $${heatmapTotalInfo.atom_price}.`
+                `ATOM's price is currently $${getDimensionDisplay(heatmapTotalInfo.atom_price)}`
             }}</p>
             <p class="token_info__text">{{
                 `ATOM Dominance is currently ${heatmapTotalInfo.atom_dominance}%.`
@@ -36,7 +40,10 @@
 
 <script setup lang="ts">
     import { HEATMAP_COLOR } from '@/constants/overview';
-    import type { IResponseHeatmapTotalInfoFormat } from '@/types/interface/overview.interface';
+    import type {
+        IHeatmapTotalInfoItem,
+        IResponseHeatmapTotalInfoFormat
+    } from '@/types/interface/overview.interface';
 
     interface IHeatmapInfo {
         heatmapTotalInfo: IResponseHeatmapTotalInfoFormat;
@@ -62,6 +69,9 @@
             'changeChooseLegend',
             filterData.map((item) => item.label)
         );
+    };
+    const getDimensionDisplay = (params: IHeatmapTotalInfoItem) => {
+        return `${params.result}${params.isDimension ? '.' : ''}`;
     };
 </script>
 

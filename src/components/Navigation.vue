@@ -158,7 +158,7 @@
                 position: absolute;
                 .flex(column, nowrap);
                 left: 32px;
-                padding: 16px 0;
+                padding: 4px 0;
                 text-align: left;
                 background: #fff;
                 box-shadow: 0px 2px 8px 0px #d9deec;
