@@ -11,3 +11,14 @@ export const formatString = (address: string) => {
         return address;
     }
 };
+
+// 截取小数位数
+export const interceptionString = (text: string, reservedDecimal: number) => {
+    if (text.includes('.') && text.length - (text.indexOf('.') + 1) > reservedDecimal) {
+        let length = text.indexOf('.') + reservedDecimal;
+        reservedDecimal != 0 ? (length += 1) : '';
+        return text.substring(0, length);
+    } else {
+        return text;
+    }
+};

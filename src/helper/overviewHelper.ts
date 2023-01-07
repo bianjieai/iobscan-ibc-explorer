@@ -1,8 +1,8 @@
+import { BigNumber } from 'bignumber.js';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { IHeatmapTotalInfoItem } from '@/types/interface/overview.interface';
 import { BILLION, DEFAULT_DISPLAY_TEXT, MILLION, THOUNDSAND, TRILLION } from '@/constants';
 import { bigNumberCompared, bigNumberDivide } from '@/utils/calculate';
-// import moveDecimal from 'move-decimal-point';
 
 /**
  * 此处四舍五入
@@ -15,7 +15,6 @@ export const formatDimension = (
     decimal = 2,
     isNeedDimension = false
 ): IHeatmapTotalInfoItem | string => {
-    // todo shan  量纲转换有问题  999999 => 1000k 应该是1M
     const getResult = (
         dimensionValue: string | number,
         isDimension: boolean
@@ -30,23 +29,40 @@ export const formatDimension = (
         }
     };
     if (dimensionValue === DEFAULT_DISPLAY_TEXT) return getResult(dimensionValue, false);
-    const num = dimensionValue;
     let isDimension = false;
-    let result = '0';
-    if (bigNumberCompared(num, TRILLION) !== '-1') {
+    const handleResult = (value: string, decimal: number) => {
+        let moveLength;
+        if (bigNumberCompared(value, TRILLION) !== '-1') {
+            moveLength = 12;
+        } else if (bigNumberCompared(value, BILLION) !== '-1') {
+            moveLength = 9;
+        } else if (bigNumberCompared(value, MILLION) !== '-1') {
+            moveLength = 6;
+        } else if (bigNumberCompared(value, THOUNDSAND) !== '-1') {
+            moveLength = 3;
+        } else {
+            moveLength = 0;
+        }
+        const temp = new BigNumber(value).shiftedBy(-moveLength).toFixed(decimal);
+        const result = new BigNumber(temp).shiftedBy(moveLength).toString();
+        return result;
+    };
+    const value = handleResult(String(dimensionValue), decimal);
+    let result;
+    if (bigNumberCompared(value, TRILLION) !== '-1') {
         isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(num, TRILLION), decimal)}T`;
-    } else if (bigNumberCompared(num, BILLION) !== '-1') {
+        result = `${formatBigNumber(bigNumberDivide(value, TRILLION), decimal)}T`;
+    } else if (bigNumberCompared(value, BILLION) !== '-1') {
         isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(num, BILLION), decimal)}B`;
-    } else if (bigNumberCompared(num, MILLION) !== '-1') {
+        result = `${formatBigNumber(bigNumberDivide(value, BILLION), decimal)}B`;
+    } else if (bigNumberCompared(value, MILLION) !== '-1') {
         isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(num, MILLION), decimal)}M`;
-    } else if (bigNumberCompared(num, THOUNDSAND) !== '-1') {
+        result = `${formatBigNumber(bigNumberDivide(value, MILLION), decimal)}M`;
+    } else if (bigNumberCompared(value, THOUNDSAND) !== '-1') {
         isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(num, THOUNDSAND), decimal)}K`;
+        result = `${formatBigNumber(bigNumberDivide(value, THOUNDSAND), decimal)}K`;
     } else {
-        result = formatBigNumber(num, decimal);
+        result = formatBigNumber(value, decimal);
     }
     return getResult(result, isDimension);
 };
