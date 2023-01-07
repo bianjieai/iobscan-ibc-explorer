@@ -17,7 +17,21 @@ export interface IResponseHeatmapTotalInfo {
     atom_price: number | string;
     atom_dominance: number | string;
 }
-export interface IResponseHeatmapTotalInfoFormat extends IResponseHeatmapTotalInfo {
+
+export interface IHeatmapTotalInfoItem {
+    result: string;
+    isDimension: boolean;
+}
+
+export interface IResponseHeatmapTotalInfoFormat {
+    stablecoins_market_cap: IHeatmapTotalInfoItem;
+    total_market_cap: IHeatmapTotalInfoItem;
+    total_denom_number: string | number;
+    market_cap_growth_rate: number | string;
+    market_cap_trend: string;
+    total_transfer_volume: IHeatmapTotalInfoItem;
+    atom_price: IHeatmapTotalInfoItem;
+    atom_dominance: number | string;
     market_cap_trend_desc: string;
 }
 export interface IResponseHeatmap {

@@ -7,6 +7,7 @@
                         <img :src="logoIcon" alt="logo" />
                     </div>
                 </div>
+                <!-- todo shan 导航栏高亮状态缺失，细节需和UI 沟通 -->
                 <navigation
                     ref="headerRef"
                     class="header_navigation"
