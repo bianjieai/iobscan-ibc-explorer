@@ -497,16 +497,12 @@ export const useVolume = () => {
                 const endValue = option.dataZoom[0].endValue;
                 const dataOut: string[] = option.series[0].data.slice(startValue, endValue + 1);
                 const dataIn: string[] = option.series[1].data.slice(startValue, endValue + 1);
-                dataZoomOutTotal.value = dataOut
-                    .reduce((total, current) => {
-                        return new BigNumber(total).plus(current).toNumber();
-                    }, 0)
-                    .toString();
-                dataZoomInTotal.value = dataIn
-                    .reduce((total, current) => {
-                        return new BigNumber(total).plus(current).toNumber();
-                    }, 0)
-                    .toString();
+                dataZoomOutTotal.value = dataOut.reduce((total, current) => {
+                    return new BigNumber(total).plus(current).toString();
+                }, '0');
+                dataZoomInTotal.value = dataIn.reduce((total, current) => {
+                    return new BigNumber(total).plus(current).toString();
+                }, '0');
                 const keyIndex = volumePieListData.value.findIndex(
                     (item) => item.chain === selectedKey.value
                 );
@@ -544,16 +540,18 @@ export const useVolume = () => {
                     );
                     const spliceVolumeInDatas = volumeInDatas.value.slice(-30);
                     const spliceVolumeOutDatas = volumeOutDatas.value.slice(-30);
-                    dataZoomInTotal.value = spliceVolumeInDatas
-                        .reduce((total, current) => {
-                            return new BigNumber(total).plus(current).toNumber();
-                        }, 0)
-                        .toString();
-                    dataZoomOutTotal.value = spliceVolumeOutDatas
-                        .reduce((total, current) => {
-                            return new BigNumber(total).plus(current).toNumber();
-                        }, 0)
-                        .toString();
+                    dataZoomInTotal.value = spliceVolumeInDatas.reduce((total, current) => {
+                        return new BigNumber(total).plus(current).toString();
+                    }, '0');
+                    dataZoomOutTotal.value = spliceVolumeOutDatas.reduce((total, current) => {
+                        return new BigNumber(total).plus(current).toString();
+                    }, '0');
+                    // const inTotal = volumeInDatas.value.reduce((total, current) => {
+                    //     return new BigNumber(total).plus(current).toString();
+                    // }, '0');
+                    // const outTotal = volumeOutDatas.value.reduce((total, current) => {
+                    //     return new BigNumber(total).plus(current).toString();
+                    // }, '0');
                 } else {
                     volumeNoDataType.value = NoDataType.noData;
                 }
