@@ -34,7 +34,7 @@ export const useVolume = () => {
     const wrapperRefDom = ref();
     const leftShow = ref(false);
     const rightShow = ref(false);
-    const cardWidth = 216;
+    const cardWidth = 224;
     const changeShow = () => {
         const wrapper = wrapperRefDom.value;
         if (wrapper) {
