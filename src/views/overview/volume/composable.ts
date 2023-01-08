@@ -473,7 +473,7 @@ export const useVolume = () => {
                     );
                 } else {
                     pieCharts[i].setOption(
-                        getPieOption(pieData.transfer_volume_in, pieData.transfer_volume_in)
+                        getPieOption(pieData.transfer_volume_in, pieData.transfer_volume_out)
                     );
                 }
             });
