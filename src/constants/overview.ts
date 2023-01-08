@@ -49,7 +49,7 @@ export const SANKEY_COLOR_LIST = [
 
 export const NOHOP_COLOR = [
     {
-        color: '#fff',
+        color: 'rgba(13, 71, 161, 1)',
         borderColor: 'rgba(13, 71, 161, 1)'
     },
     {

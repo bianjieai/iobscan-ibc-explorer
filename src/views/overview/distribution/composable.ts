@@ -110,7 +110,6 @@ export const useDistributionSelect = () => {
     };
     let distributionOption: any;
     const levelsInfo: any[] = [];
-    // todo shan 需要设计给一个标识是 hops 为 0 时左右两侧节点的颜色（流量为源节点的颜色透明度）,待修改
     watch(originAPIData, (newOriginData) => {
         if (!newOriginData?.children?.length) {
             NOHOP_COLOR.forEach((item, index) => {
