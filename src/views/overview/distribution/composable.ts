@@ -12,9 +12,9 @@ import {
 } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
 import type { IResponseDistribution, ISankeyData } from '@/types/interface/overview.interface';
-import { formatSankeyData } from '@/helper/sankeyDataHelper';
 import { NOHOP_COLOR, SANKEY_COLOR_LIST } from '@/constants/overview';
 import { formatBigNumber } from '@/helper/parseStringHelper';
+import { formatSankeyData } from '@/helper/sankeyDataHelper';
 
 export const useDistributionSelect = () => {
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
