@@ -103,4 +103,6 @@ export interface ISankeyDataLink {
 export interface ISankeyData {
     nodes: ISankeyDataNode[];
     links: ISankeyDataLink[];
+    maxHopRecord: number;
+    maxChildrenLength: number;
 }

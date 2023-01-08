@@ -14,7 +14,18 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
         links: ISankeyDataLink[] = [];
     const nodesMap = new Map();
     const linksMap = new Map();
+    let maxHopRecord = 1;
+    let maxChildrenLength = 1;
     const format = (formatData: IResponseDistribution, lastHop?: string) => {
+        if (formatData.children?.length) {
+            const deleteSameChain = [...new Set(formatData.children.map((item) => item.chain))];
+            if (deleteSameChain.length > maxChildrenLength) {
+                maxChildrenLength = deleteSameChain.length;
+            }
+        }
+        if (formatData.hops > maxHopRecord) {
+            maxHopRecord = formatData.hops;
+        }
         const judgeNodesorLinksPush = (length: number) => {
             if (!nodesMap.has(`${formatData.chain} ${length ? formatData.hops : 'last'}`)) {
                 nodes.push({ name: `${formatData.chain} ${length ? formatData.hops : 'last'}` });
@@ -28,7 +39,12 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
                     const currentLinkInfo = linksMap.get(
                         `${lastHop} ${formatData.chain} ${length ? formatData.hops : 'last'}`
                     );
-                    if (currentLinkInfo.originValue !== '-1' && formatData.amount !== '-1') {
+                    if (
+                        currentLinkInfo.originValue &&
+                        currentLinkInfo.originValue !== '-1' &&
+                        formatData.amount &&
+                        formatData.amount !== '-1'
+                    ) {
                         currentLinkInfo.value = bigNumberAdd(
                             currentLinkInfo.originValue,
                             formatData.amount
@@ -39,7 +55,10 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
                     links.push({
                         source: lastHop,
                         target: `${formatData.chain} ${length ? formatData.hops : 'last'}`,
-                        value: formatData.amount !== '-1' ? formatData.amount : '1',
+                        value:
+                            formatData.amount && formatData.amount !== '-1'
+                                ? formatData.amount
+                                : '1',
                         originValue: formatData.amount
                     });
                 }
@@ -57,7 +76,18 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
     if (sankeyData.children?.length) {
         format(sankeyData);
     } else {
-        // todo shan 原生链没有下一跳的情况下，生成一个自己连自己的连接关系，添加个属性表明是 0 跳，根据这个属性更改对应颜色
+        nodes.push({
+            name: `${sankeyData.chain} ${sankeyData.hops}`
+        });
+        nodes.push({
+            name: `${sankeyData.chain} origin`
+        });
+        links.push({
+            source: `${sankeyData.chain} ${sankeyData.hops}`,
+            target: `${sankeyData.chain} origin`,
+            value: sankeyData.amount && sankeyData.amount !== '-1' ? sankeyData.amount : '1',
+            originValue: sankeyData.amount
+        });
     }
     [...new Set(nodes)].forEach((node) => {
         nodesMap.set(node.name, node);
@@ -104,6 +134,8 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
     const linksNoValueArr = linksArr.filter((item) => item.value === DEFAULT_DISPLAY_TEXT);
     return {
         nodes: [...cosmos, ...irishub, ...other],
-        links: [...linksValueArr, ...linksNoValueArr]
+        links: [...linksValueArr, ...linksNoValueArr],
+        maxHopRecord,
+        maxChildrenLength
     };
 };

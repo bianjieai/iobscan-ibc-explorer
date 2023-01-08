@@ -126,11 +126,12 @@ export const MORE_MENU = [
             {
                 label: ROUTE_INFO.overviewVolume.name,
                 value: ROUTE_INFO.overviewVolume.name
-            },
-            {
-                label: ROUTE_INFO.overviewDistribution.name,
-                value: ROUTE_INFO.overviewDistribution.name
             }
+            // todo shan 先注释掉桑基图入口
+            // {
+            //     label: ROUTE_INFO.overviewDistribution.name,
+            //     value: ROUTE_INFO.overviewDistribution.name
+            // }
         ]
     }
 ];

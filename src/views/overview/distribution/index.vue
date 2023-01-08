@@ -77,16 +77,17 @@
             .flex(row, nowrap, center);
             margin-top: 16px;
             padding: 24px;
-            min-height: 600px;
+            min-height: 360px;
+            max-height: 1000px;
             background: #fff;
             border-radius: var(--border-radius-normal);
             &__wrap {
                 width: 100%;
+                background: #f8fafd;
                 overflow-y: auto;
             }
             &__dom {
-                width: 1300px;
-                height: 1000px;
+                min-width: 1152px;
             }
         }
         &__failed {

@@ -11,9 +11,9 @@ import {
     TOKEN_DEFAULT_ICON
 } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
-import type { ISankeyData } from '@/types/interface/overview.interface';
+import type { IResponseDistribution, ISankeyData } from '@/types/interface/overview.interface';
 import { formatSankeyData } from '@/helper/sankeyDataHelper';
-import { SANKEY_COLOR_LIST } from '@/constants/overview';
+import { NOHOP_COLOR, SANKEY_COLOR_LIST } from '@/constants/overview';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 
 export const useDistributionSelect = () => {
@@ -50,6 +50,7 @@ export const useDistributionSelect = () => {
     const distributionNoDataType = ref<NoDataType>();
     const distributionSankeyData = ref<ISankeyData>();
     const originDenom = ref<string>(DEFAULT_DISPLAY_TEXT);
+    const originAPIData = ref<IResponseDistribution>();
     const distributionDom = ref<HTMLElement>();
     let distributionChart: echarts.ECharts;
 
@@ -64,6 +65,7 @@ export const useDistributionSelect = () => {
             );
             if (code === API_CODE.success && Object.keys(data).length) {
                 originDenom.value = data.denom;
+                originAPIData.value = data;
                 distributionSankeyData.value = await formatSankeyData(data);
             } else {
                 console.log(message);
@@ -108,22 +110,61 @@ export const useDistributionSelect = () => {
     };
     let distributionOption: any;
     const levelsInfo: any[] = [];
-    SANKEY_COLOR_LIST.forEach((item, index) => {
-        levelsInfo.push({
-            depth: index,
-            itemStyle: {
-                color: item
-            },
-            lineStyle: {
-                color: 'source',
-                opacity: 0.15
-            },
-            tooltip: {
-                show: false
-            }
-        });
+    // todo shan 需要设计给一个标识是 hops 为 0 时左右两侧节点的颜色（流量为源节点的颜色透明度）
+    watch(originAPIData, (newOriginData) => {
+        if (!newOriginData?.children?.length) {
+            NOHOP_COLOR.forEach((item, index) => {
+                levelsInfo.push({
+                    depth: index,
+                    itemStyle: {
+                        color: item.color,
+                        borderWidth: 1,
+                        borderColor: item.borderColor
+                    },
+                    lineStyle: {
+                        color: 'source',
+                        opacity: 0.15
+                    },
+                    tooltip: {
+                        show: false
+                    }
+                });
+            });
+        } else {
+            SANKEY_COLOR_LIST.forEach((item, index) => {
+                levelsInfo.push({
+                    depth: index,
+                    itemStyle: {
+                        color: item,
+                        borderWidth: 1,
+                        borderColor: item
+                    },
+                    lineStyle: {
+                        color: 'source',
+                        opacity: 0.15
+                    },
+                    tooltip: {
+                        show: false
+                    }
+                });
+            });
+        }
     });
-    // todo shan 分情况定义宽高
+    const maxHopRecord = computed(() => {
+        return distributionSankeyData?.value?.maxHopRecord;
+    });
+    const maxChildrenLength = computed(() => {
+        return distributionSankeyData?.value?.maxChildrenLength;
+    });
+    const createChartWidthorHeight = () => {
+        if (distributionDom.value) {
+            distributionDom.value.style.width =
+                (Number(maxHopRecord.value) > 10
+                    ? 1152 + (Number(maxHopRecord.value) - 10) * 136
+                    : 1152) + 'px';
+            distributionDom.value.style.height = Number(maxChildrenLength.value) * 50 + 'px';
+        }
+    };
     watch(
         () => distributionSankeyData.value,
         (newData) => {
@@ -135,7 +176,42 @@ export const useDistributionSelect = () => {
                         backgroundColor: null,
                         borderWidth: 0,
                         padding: 0,
-                        extraCssText: 'z-index:1;',
+                        extraCssText: 'z-index: 1;',
+                        position: (
+                            point: any[],
+                            params: any,
+                            dom: HTMLElement,
+                            rect: any,
+                            size: any
+                        ) => {
+                            // 解决悬浮窗显示遮挡问题
+                            let x = 0,
+                                y = 0;
+                            // 当前鼠标位置
+                            const pointX = point[0],
+                                pointY = point[1];
+                            // 提示框大小
+                            const boxWidth = size.contentSize[0],
+                                boxHeight = size.contentSize[1];
+                            // boxWidth > pointX 说明鼠标左边放不下提示框
+                            if (boxWidth > pointX) {
+                                x = 5; // 自己定个x坐标值，以防出屏
+                                y -= 15; // 防止点被覆盖住
+                            } else {
+                                // 左边放的下
+                                x = pointX - boxWidth - 15;
+                            }
+                            // boxHeight > pointY 说明鼠标上边放不下提示框
+                            if (boxHeight + 20 > pointY) {
+                                y = pointY + 15;
+                            } else if (boxHeight > pointY) {
+                                y = 5;
+                            } else {
+                                // 上边放得下
+                                y += pointY - boxHeight;
+                            }
+                            return [x, y];
+                        },
                         formatter: (params: any) => {
                             return ` <div style="
                                         padding: 8px 16px;
@@ -154,6 +230,7 @@ export const useDistributionSelect = () => {
                                         ">Amount:</span>
                                         <span>
                                             ${
+                                                params.data.originValue &&
                                                 params.data.originValue !== '-1'
                                                     ? formatBigNumber(params.data.originValue)
                                                     : DEFAULT_DISPLAY_TEXT
@@ -163,14 +240,15 @@ export const useDistributionSelect = () => {
                                 `;
                         }
                     },
+                    width: distributionDom.value?.style.width,
+                    height: distributionDom.value?.style.height,
                     series: [
                         {
                             type: 'sankey',
-                            layout: 'none',
                             data: newData.nodes,
                             links: newData.links,
-                            top: '1%',
-                            right: '8%',
+                            top: 8,
+                            right: 136,
                             bottom: '2%',
                             left: 0,
                             nodeWidth: 18,
@@ -203,6 +281,7 @@ export const useDistributionSelect = () => {
                     ]
                 };
                 nextTick(() => {
+                    createChartWidthorHeight();
                     distributionChart = echarts.init(distributionDom.value as HTMLElement);
                     distributionOption && distributionChart.setOption(distributionOption, true);
                 });

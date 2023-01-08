@@ -46,3 +46,14 @@ export const SANKEY_COLOR_LIST = [
     'rgba(255, 241, 184, 1)',
     'rgba(190, 210, 255, 1)'
 ];
+
+export const NOHOP_COLOR = [
+    {
+        color: '#fff',
+        borderColor: 'rgba(13, 71, 161, 1)'
+    },
+    {
+        color: '#fff',
+        borderColor: 'rgba(13, 71, 161, 1)'
+    }
+];
