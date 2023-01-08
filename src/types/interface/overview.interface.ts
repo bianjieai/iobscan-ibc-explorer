@@ -77,3 +77,32 @@ export interface IResponseTransferVolumeTrend {
     volume_out: IVolumeItem[];
     chain: string;
 }
+
+export interface IResponseDistribution {
+    children: IResponseDistribution[];
+    amount: string;
+    denom: string;
+    chain: string;
+    hops: number;
+}
+
+export interface ISankeyDataNode {
+    name: string;
+    tooltip?: {
+        show?: boolean;
+    };
+}
+
+export interface ISankeyDataLink {
+    source: string;
+    target: string;
+    value: string;
+    originValue: string;
+}
+
+export interface ISankeyData {
+    nodes: ISankeyDataNode[];
+    links: ISankeyDataLink[];
+    maxHopRecord: number;
+    maxChildrenLength: number;
+}

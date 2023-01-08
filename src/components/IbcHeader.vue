@@ -1,15 +1,13 @@
 <template>
     <div class="header_container">
-        <div class="header_content">
+        <div ref="headerRef" class="header_content">
             <div class="header_content__left">
                 <div v-ga="'导航栏-Logo'" class="logo cursor" @click="onClickLogo">
                     <div class="logo__img" :class="{ stage_logo__img: isStage }">
                         <img :src="logoIcon" alt="logo" />
                     </div>
                 </div>
-                <!-- todo shan 导航栏高亮状态缺失，细节需和UI 沟通 -->
                 <navigation
-                    ref="headerRef"
                     class="header_navigation"
                     :menus="headerMenus"
                     :current-index="currentIndex"
@@ -18,6 +16,7 @@
                     :show-sub-menu="showSubMenu"
                     :expand-more="expandMore"
                     :expand="expand"
+                    :current-more-index="currentMoreIndex"
                     @change-expand-more="changeExpandMore"
                     @change-expand="changeExpand"
                     @change-show-sub-menu="changeShowSubMenu"
@@ -27,6 +26,7 @@
                     @close-show-nav="closeShowNav"
                     @change-current-index="changeCurrentIndex"
                     @change-active-menu="changeActiveMenu"
+                    @change-more-index="changeMoreIndex"
                 />
             </div>
             <div class="header_input_wrapper">
@@ -75,7 +75,7 @@
     const isStage = import.meta.env.MODE === 'stage';
     const headerMenus = reactive(MENUS);
     const currentIndex = ref<number>();
-    const isShowNav = ref(false);
+    const isShowNav = ref<boolean>(false);
     const router = useRouter();
     const headerRef = ref();
     const {
@@ -88,7 +88,9 @@
         changeShowSubMenu,
         changeHiddenSubMenu,
         clickSubMenu,
-        changeActiveMenu
+        changeActiveMenu,
+        currentMoreIndex,
+        changeMoreIndex
     } = useMoreMenu();
     const clickMenu = (val: string) => {
         (window as any).gtag('event', '导航栏-点击页面标签', {
@@ -99,7 +101,7 @@
             name: val
         });
     };
-    const changeCurrentIndex = (index: number | undefined) => {
+    const changeCurrentIndex = (index?: number) => {
         currentIndex.value = index;
     };
 
@@ -111,8 +113,13 @@
 
     const changeShowNav = () => {
         isShowNav.value = !isShowNav.value;
-        expandMore.value = false;
-        expand.value = false;
+        if (currentMoreIndex.value !== undefined) {
+            expandMore.value = true;
+            expand.value = true;
+        } else {
+            expandMore.value = false;
+            expand.value = false;
+        }
     };
     const closeShowNav = (showNav: boolean) => {
         isShowNav.value = showNav;

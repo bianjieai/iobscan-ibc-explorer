@@ -424,6 +424,12 @@ export const SYMBOL = {
     ATOM: 'ATOM',
     IRIS: 'IRIS'
 };
+export const BASE_DENOM = {
+    uatom: 'uatom'
+};
+export const BASE_DENOM_CHAIN = {
+    cosmoshub: 'cosmoshub'
+};
 
 export const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan. All Rights Reserved.`;
 export const ICON_LINK = [
