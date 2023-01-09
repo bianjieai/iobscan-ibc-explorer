@@ -279,13 +279,15 @@ export const useVolume = () => {
             },
             confine: true
         },
-        grid: {
-            top: 30,
-            left: 0,
-            right: 40,
-            bottom: 46,
-            containLabel: true
-        },
+        grid: [
+            {
+                top: 30,
+                left: 0,
+                right: 40,
+                bottom: 46,
+                containLabel: true
+            }
+        ],
         yAxis: {
             type: 'value',
             axisLabel: {
@@ -334,6 +336,9 @@ export const useVolume = () => {
                 minValueSpan: 1,
                 handleSize: 24,
                 handleIcon: `image://${moveIcon}`,
+                handleStyle: {
+                    opacity: 1
+                },
                 textStyle: {
                     color: '#000',
                     fontSize: 14,
@@ -344,15 +349,30 @@ export const useVolume = () => {
                 height: 32,
                 left: 90,
                 right: 90,
-                bottom: 0,
+                bottom: 8,
                 backgroundColor: '#F8FAFD',
                 borderColor: 'rgba(255,255,255,0)',
                 dataBackground: {
+                    // lineStyle: {
+                    //     color: 'rgba(255,255,255,0)'
+                    // },
+                    // areaStyle: {
+                    //     color: 'rgba(255,255,255,0)'
+                    // }
                     lineStyle: {
-                        color: 'rgba(255,255,255,0)'
+                        color: 'rgba(61, 80, 255, 0.2)'
                     },
                     areaStyle: {
-                        color: 'rgba(255,255,255,0)'
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {
+                                offset: 0,
+                                color: 'rgba(61,80,255,0)'
+                            },
+                            {
+                                offset: 1,
+                                color: 'rgba(61,80,255,0.5)'
+                            }
+                        ])
                     }
                 },
                 fillerColor: 'rgba(61,80,255,0.05)',
@@ -433,19 +453,22 @@ export const useVolume = () => {
     watch(
         () => widthClient.value,
         (newValue) => {
-            if (newValue > 689) {
-                if (lineOption.grid.bottom !== 46 || lineOption.dataZoom[0].show !== true) {
-                    lineOption.grid.bottom = 46;
-                    lineOption.dataZoom[0].show = true;
-                    lineChart && lineChart.setOption(lineOption);
+            const option: any = lineChart ? lineChart.getOption() : lineOption;
+            nextTick(() => {
+                if (newValue > 689) {
+                    if (option.grid[0].bottom !== 46 || lineOption.dataZoom[0].show !== true) {
+                        option.grid[0].bottom = 46;
+                        option.dataZoom[0].show = true;
+                        lineChart && lineChart.setOption(option);
+                    }
+                } else {
+                    if (option.grid[0].bottom !== 16 || lineOption.dataZoom[0].show !== false) {
+                        option.grid[0].bottom = 16;
+                        option.dataZoom[0].show = false;
+                        lineChart && lineChart.setOption(option);
+                    }
                 }
-            } else {
-                if (lineOption.grid.bottom !== 16 || lineOption.dataZoom[0].show !== false) {
-                    lineOption.grid.bottom = 16;
-                    lineOption.dataZoom[0].show = false;
-                    lineChart && lineChart.setOption(lineOption);
-                }
-            }
+            });
         },
         {
             immediate: true
