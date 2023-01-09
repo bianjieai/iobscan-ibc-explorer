@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { IHeatmapTotalInfoItem } from '@/types/interface/overview.interface';
-import { BILLION, DEFAULT_DISPLAY_TEXT, MILLION, THOUNDSAND, TRILLION } from '@/constants';
+import { BIG_UNIT, DEFAULT_DISPLAY_TEXT } from '@/constants';
 import { bigNumberCompared, bigNumberDivide } from '@/utils/calculate';
 
 /**
@@ -32,14 +32,29 @@ export const formatDimension = (
     let isDimension = false;
     const handleResult = (value: string, decimal: number) => {
         let moveLength;
-        if (bigNumberCompared(value, TRILLION) !== '-1') {
-            moveLength = 12;
-        } else if (bigNumberCompared(value, BILLION) !== '-1') {
-            moveLength = 9;
-        } else if (bigNumberCompared(value, MILLION) !== '-1') {
-            moveLength = 6;
-        } else if (bigNumberCompared(value, THOUNDSAND) !== '-1') {
-            moveLength = 3;
+        // todo dj 待优化
+        if (bigNumberCompared(value, BIG_UNIT.decillion.value) !== '-1') {
+            moveLength = BIG_UNIT.decillion.moveLength;
+        } else if (bigNumberCompared(value, BIG_UNIT.nonillion.value) !== '-1') {
+            moveLength = BIG_UNIT.nonillion.moveLength;
+        } else if (bigNumberCompared(value, BIG_UNIT.octillion.value) !== '-1') {
+            moveLength = BIG_UNIT.octillion.moveLength;
+        } else if (bigNumberCompared(value, BIG_UNIT.septillion.value) !== '-1') {
+            moveLength = BIG_UNIT.septillion.moveLength;
+        } else if (bigNumberCompared(value, BIG_UNIT.sextillion.value) !== '-1') {
+            moveLength = BIG_UNIT.sextillion.moveLength;
+        } else if (bigNumberCompared(value, BIG_UNIT.quintillion.value) !== '-1') {
+            moveLength = BIG_UNIT.quintillion.moveLength;
+        } else if (bigNumberCompared(value, BIG_UNIT.quadrillion.value) !== '-1') {
+            moveLength = BIG_UNIT.quadrillion.moveLength;
+        } else if (bigNumberCompared(value, BIG_UNIT.trullion.value) !== '-1') {
+            moveLength = BIG_UNIT.trullion.moveLength;
+        } else if (bigNumberCompared(value, BIG_UNIT.billion.value) !== '-1') {
+            moveLength = BIG_UNIT.billion.moveLength;
+        } else if (bigNumberCompared(value, BIG_UNIT.million.value) !== '-1') {
+            moveLength = BIG_UNIT.million.moveLength;
+        } else if (bigNumberCompared(value, BIG_UNIT.thoundsand.value) !== '-1') {
+            moveLength = BIG_UNIT.thoundsand.moveLength;
         } else {
             moveLength = 0;
         }
@@ -49,18 +64,62 @@ export const formatDimension = (
     };
     const value = handleResult(String(dimensionValue), decimal);
     let result;
-    if (bigNumberCompared(value, TRILLION) !== '-1') {
+    // todo dj 待优化
+    if (bigNumberCompared(value, BIG_UNIT.decillion.value) !== '-1') {
         isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(value, TRILLION), decimal)}T`;
-    } else if (bigNumberCompared(value, BILLION) !== '-1') {
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.decillion.value), decimal)}${
+            BIG_UNIT.decillion.unit
+        }`;
+    } else if (bigNumberCompared(value, BIG_UNIT.nonillion.value) !== '-1') {
         isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(value, BILLION), decimal)}B`;
-    } else if (bigNumberCompared(value, MILLION) !== '-1') {
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.nonillion.value), decimal)}${
+            BIG_UNIT.nonillion.unit
+        }`;
+    } else if (bigNumberCompared(value, BIG_UNIT.octillion.value) !== '-1') {
         isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(value, MILLION), decimal)}M`;
-    } else if (bigNumberCompared(value, THOUNDSAND) !== '-1') {
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.octillion.value), decimal)}${
+            BIG_UNIT.octillion.unit
+        }`;
+    } else if (bigNumberCompared(value, BIG_UNIT.septillion.value) !== '-1') {
         isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(value, THOUNDSAND), decimal)}K`;
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.septillion.value), decimal)}${
+            BIG_UNIT.septillion.unit
+        }`;
+    } else if (bigNumberCompared(value, BIG_UNIT.sextillion.value) !== '-1') {
+        isDimension = true;
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.sextillion.value), decimal)}${
+            BIG_UNIT.sextillion.unit
+        }`;
+    } else if (bigNumberCompared(value, BIG_UNIT.quintillion.value) !== '-1') {
+        isDimension = true;
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.quintillion.value), decimal)}${
+            BIG_UNIT.quintillion.unit
+        }`;
+    } else if (bigNumberCompared(value, BIG_UNIT.quadrillion.value) !== '-1') {
+        isDimension = true;
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.quadrillion.value), decimal)}${
+            BIG_UNIT.quadrillion.unit
+        }`;
+    } else if (bigNumberCompared(value, BIG_UNIT.trullion.value) !== '-1') {
+        isDimension = true;
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.trullion.value), decimal)}${
+            BIG_UNIT.trullion.unit
+        }`;
+    } else if (bigNumberCompared(value, BIG_UNIT.billion.value) !== '-1') {
+        isDimension = true;
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.billion.value), decimal)}${
+            BIG_UNIT.billion.unit
+        }`;
+    } else if (bigNumberCompared(value, BIG_UNIT.million.value) !== '-1') {
+        isDimension = true;
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.million.value), decimal)}${
+            BIG_UNIT.million.unit
+        }`;
+    } else if (bigNumberCompared(value, BIG_UNIT.thoundsand.value) !== '-1') {
+        isDimension = true;
+        result = `${formatBigNumber(bigNumberDivide(value, BIG_UNIT.thoundsand.value), decimal)}${
+            BIG_UNIT.thoundsand.unit
+        }`;
     } else {
         result = formatBigNumber(value, decimal);
     }

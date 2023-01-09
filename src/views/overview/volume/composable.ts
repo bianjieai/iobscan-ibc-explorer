@@ -334,6 +334,9 @@ export const useVolume = () => {
                 minValueSpan: 1,
                 handleSize: 24,
                 handleIcon: `image://${moveIcon}`,
+                handleStyle: {
+                    opacity: 1
+                },
                 textStyle: {
                     color: '#000',
                     fontSize: 14,
@@ -348,11 +351,26 @@ export const useVolume = () => {
                 backgroundColor: '#F8FAFD',
                 borderColor: 'rgba(255,255,255,0)',
                 dataBackground: {
+                    // lineStyle: {
+                    //     color: 'rgba(255,255,255,0)'
+                    // },
+                    // areaStyle: {
+                    //     color: 'rgba(255,255,255,0)'
+                    // }
                     lineStyle: {
-                        color: 'rgba(255,255,255,0)'
+                        color: 'rgba(61, 80, 255, 0.2)'
                     },
                     areaStyle: {
-                        color: 'rgba(255,255,255,0)'
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+                            {
+                                offset: 0,
+                                color: 'rgba(61,80,255,0)'
+                            },
+                            {
+                                offset: 1,
+                                color: 'rgba(61,80,255,0.5)'
+                            }
+                        ])
                     }
                 },
                 fillerColor: 'rgba(61,80,255,0.05)',
