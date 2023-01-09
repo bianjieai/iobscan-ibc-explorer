@@ -126,11 +126,12 @@ export const MORE_MENU = [
             {
                 label: ROUTE_INFO.overviewVolume.name,
                 value: ROUTE_INFO.overviewVolume.name
-            },
-            {
-                label: ROUTE_INFO.overviewDistribution.name,
-                value: ROUTE_INFO.overviewDistribution.name
             }
+            // todo shan 暂时注释桑基图入口
+            // {
+            //     label: ROUTE_INFO.overviewDistribution.name,
+            //     value: ROUTE_INFO.overviewDistribution.name
+            // }
         ]
     }
 ];
@@ -423,6 +424,12 @@ export const THOUNDSAND = 1000;
 export const SYMBOL = {
     ATOM: 'ATOM',
     IRIS: 'IRIS'
+};
+export const BASE_DENOM = {
+    uatom: 'uatom'
+};
+export const BASE_DENOM_CHAIN = {
+    cosmoshub: 'cosmoshub'
 };
 
 export const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan. All Rights Reserved.`;

@@ -10,7 +10,8 @@ import { UNIT_SIGNS } from '@/constants/relayers';
 import { API_CODE } from '@/constants/apiCode';
 import { VOLUME_COLOR, VOLUME_ALL_CHAIN } from '@/constants/overview';
 import ChainHelper from '@/helper/chainHelper';
-import { formatBigNumber, formatDimension } from '@/helper/parseStringHelper';
+import { formatBigNumber } from '@/helper/parseStringHelper';
+import { formatDimension } from '@/helper/overviewHelper';
 import { useIbcChains } from '@/composables';
 import { getOverviewTransferVolumeAPI, getOverviewTransferVolumeTrendAPI } from '@/api/overview';
 import { bigNumberAdd } from '@/utils/calculate';
@@ -33,7 +34,7 @@ export const useVolume = () => {
     const wrapperRefDom = ref();
     const leftShow = ref(false);
     const rightShow = ref(false);
-    const cardWidth = 216;
+    const cardWidth = 224;
     const changeShow = () => {
         const wrapper = wrapperRefDom.value;
         if (wrapper) {
@@ -120,7 +121,7 @@ export const useVolume = () => {
     };
 
     const getTotalDisplay = (total: string | number) => {
-        const displayTotal = formatDimension(total);
+        const displayTotal = formatDimension(total) as string;
         const space = Number(displayTotal) == 0 || displayTotal == DEFAULT_DISPLAY_TEXT ? ' ' : '';
         return `${UNIT_SIGNS}${space}${displayTotal}`;
     };
@@ -246,7 +247,7 @@ export const useVolume = () => {
                                         height: 18px;
                                         line-height: 18px;
                                     "
-                                    >${formatBigNumber(dataIn)}</span
+                                    >${UNIT_SIGNS}${formatBigNumber(dataIn)}</span
                                 >
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center">
@@ -271,7 +272,7 @@ export const useVolume = () => {
                                         height: 18px;
                                         line-height: 18px;
                                     "
-                                    >${formatBigNumber(dataOut)}</span
+                                    >${UNIT_SIGNS}${formatBigNumber(dataOut)}</span
                                 >
                             </div>
                         </div>`;
@@ -281,7 +282,7 @@ export const useVolume = () => {
         grid: {
             top: 30,
             left: 0,
-            right: 22,
+            right: 40,
             bottom: 46,
             containLabel: true
         },
@@ -472,7 +473,7 @@ export const useVolume = () => {
                     );
                 } else {
                     pieCharts[i].setOption(
-                        getPieOption(pieData.transfer_volume_in, pieData.transfer_volume_in)
+                        getPieOption(pieData.transfer_volume_in, pieData.transfer_volume_out)
                     );
                 }
             });
@@ -496,16 +497,12 @@ export const useVolume = () => {
                 const endValue = option.dataZoom[0].endValue;
                 const dataOut: string[] = option.series[0].data.slice(startValue, endValue + 1);
                 const dataIn: string[] = option.series[1].data.slice(startValue, endValue + 1);
-                dataZoomOutTotal.value = dataOut
-                    .reduce((total, current) => {
-                        return new BigNumber(total).plus(current).toNumber();
-                    }, 0)
-                    .toString();
-                dataZoomInTotal.value = dataIn
-                    .reduce((total, current) => {
-                        return new BigNumber(total).plus(current).toNumber();
-                    }, 0)
-                    .toString();
+                dataZoomOutTotal.value = dataOut.reduce((total, current) => {
+                    return new BigNumber(total).plus(current).toString();
+                }, '0');
+                dataZoomInTotal.value = dataIn.reduce((total, current) => {
+                    return new BigNumber(total).plus(current).toString();
+                }, '0');
                 const keyIndex = volumePieListData.value.findIndex(
                     (item) => item.chain === selectedKey.value
                 );
@@ -543,16 +540,18 @@ export const useVolume = () => {
                     );
                     const spliceVolumeInDatas = volumeInDatas.value.slice(-30);
                     const spliceVolumeOutDatas = volumeOutDatas.value.slice(-30);
-                    dataZoomInTotal.value = spliceVolumeInDatas
-                        .reduce((total, current) => {
-                            return new BigNumber(total).plus(current).toNumber();
-                        }, 0)
-                        .toString();
-                    dataZoomOutTotal.value = spliceVolumeOutDatas
-                        .reduce((total, current) => {
-                            return new BigNumber(total).plus(current).toNumber();
-                        }, 0)
-                        .toString();
+                    dataZoomInTotal.value = spliceVolumeInDatas.reduce((total, current) => {
+                        return new BigNumber(total).plus(current).toString();
+                    }, '0');
+                    dataZoomOutTotal.value = spliceVolumeOutDatas.reduce((total, current) => {
+                        return new BigNumber(total).plus(current).toString();
+                    }, '0');
+                    // const inTotal = volumeInDatas.value.reduce((total, current) => {
+                    //     return new BigNumber(total).plus(current).toString();
+                    // }, '0');
+                    // const outTotal = volumeOutDatas.value.reduce((total, current) => {
+                    //     return new BigNumber(total).plus(current).toString();
+                    // }, '0');
                 } else {
                     volumeNoDataType.value = NoDataType.noData;
                 }

@@ -17,7 +17,21 @@ export interface IResponseHeatmapTotalInfo {
     atom_price: number | string;
     atom_dominance: number | string;
 }
-export interface IResponseHeatmapTotalInfoFormat extends IResponseHeatmapTotalInfo {
+
+export interface IHeatmapTotalInfoItem {
+    result: string;
+    isDimension: boolean;
+}
+
+export interface IResponseHeatmapTotalInfoFormat {
+    stablecoins_market_cap: IHeatmapTotalInfoItem;
+    total_market_cap: IHeatmapTotalInfoItem;
+    total_denom_number: string | number;
+    market_cap_growth_rate: number | string;
+    market_cap_trend: string;
+    total_transfer_volume: IHeatmapTotalInfoItem;
+    atom_price: IHeatmapTotalInfoItem;
+    atom_dominance: number | string;
     market_cap_trend_desc: string;
 }
 export interface IResponseHeatmap {
@@ -62,4 +76,33 @@ export interface IResponseTransferVolumeTrend {
     volume_in: IVolumeItem[];
     volume_out: IVolumeItem[];
     chain: string;
+}
+
+export interface IResponseDistribution {
+    children: IResponseDistribution[];
+    amount: string;
+    denom: string;
+    chain: string;
+    hops: number;
+}
+
+export interface ISankeyDataNode {
+    name: string;
+    tooltip?: {
+        show?: boolean;
+    };
+}
+
+export interface ISankeyDataLink {
+    source: string;
+    target: string;
+    value: string;
+    originValue: string;
+}
+
+export interface ISankeyData {
+    nodes: ISankeyDataNode[];
+    links: ISankeyDataLink[];
+    maxHopRecord: number;
+    maxChildrenLength: number;
 }

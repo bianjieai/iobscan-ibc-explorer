@@ -25,9 +25,10 @@
                 />
                 <div
                     v-show="!(heatmapLoading || heatmapNoDataType)"
-                    ref="heatmapChartRefDom"
-                    class="heatmap__right__chart"
-                ></div>
+                    class="heatmap__right__chart_c"
+                >
+                    <div ref="heatmapChartRefDom" class="heatmap__right__chart_c__chart"></div>
+                </div>
             </div>
         </div>
     </PageContainer>
@@ -75,10 +76,14 @@
             }
             &__failed {
             }
-            &__chart {
+            &__chart_c {
                 width: 100%;
                 height: 100%;
-                min-width: 634px;
+                &__chart {
+                    width: 100%;
+                    height: 100%;
+                    min-width: 634px;
+                }
             }
         }
     }
@@ -97,7 +102,9 @@
                 }
                 &__failed {
                 }
-                &__chart {
+                &__chart_c {
+                    &__chart {
+                    }
                 }
             }
         }
@@ -115,7 +122,9 @@
                 }
                 &__failed {
                 }
-                &__chart {
+                &__chart_c {
+                    &__chart {
+                    }
                 }
             }
         }
@@ -132,7 +141,9 @@
                 }
                 &__failed {
                 }
-                &__chart {
+                &__chart_c {
+                    &__chart {
+                    }
                 }
             }
         }

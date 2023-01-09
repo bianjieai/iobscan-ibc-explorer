@@ -152,7 +152,7 @@
         }
         &__content {
             margin-top: 28px;
-            height: 591px;
+            min-height: 591px;
             padding: 29px 24px 24px;
             background-color: #fff;
             &__card_list_wrap {
