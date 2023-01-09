@@ -1,6 +1,6 @@
 <template>
     <div class="header_container">
-        <div class="header_content">
+        <div ref="headerRef" class="header_content">
             <div class="header_content__left">
                 <div v-ga="'导航栏-Logo'" class="logo cursor" @click="onClickLogo">
                     <div class="logo__img" :class="{ stage_logo__img: isStage }">
@@ -10,9 +10,23 @@
                 <navigation
                     class="header_navigation"
                     :menus="headerMenus"
-                    :current-menu="currentMenu"
+                    :current-index="currentIndex"
                     :is-show-nav="isShowNav"
+                    :active-menu="activeMenu"
+                    :show-sub-menu="showSubMenu"
+                    :expand-more="expandMore"
+                    :expand="expand"
+                    :current-more-index="currentMoreIndex"
+                    @change-expand-more="changeExpandMore"
+                    @change-expand="changeExpand"
+                    @change-show-sub-menu="changeShowSubMenu"
+                    @change-hidden-sub-menu="changeHiddenSubMenu"
+                    @click-sub-menu="clickSubMenu"
                     @click-menu="clickMenu"
+                    @close-show-nav="closeShowNav"
+                    @change-current-index="changeCurrentIndex"
+                    @change-active-menu="changeActiveMenu"
+                    @change-more-index="changeMoreIndex"
                 />
             </div>
             <div class="header_input_wrapper">
@@ -53,17 +67,31 @@
 </template>
 
 <script setup lang="ts">
+    import { onClickOutside } from '@vueuse/core';
+    import { useMoreMenu } from '@/composables';
     import { MENUS } from '@/constants';
-    import { RouteLocationNormalized } from 'vue-router';
-    type Key = string | number;
     const logoIcon = new URL(import.meta.env.VITE_LOGO_ICON, import.meta.url).href;
     const homeUrl = import.meta.env.VITE_HOME_URL;
     const isStage = import.meta.env.MODE === 'stage';
     const headerMenus = reactive(MENUS);
-    const currentMenu = ref<Key[]>([]);
-    const isShowNav = ref(false);
+    const currentIndex = ref<number>();
+    const isShowNav = ref<boolean>(false);
     const router = useRouter();
-    const route = useRoute();
+    const headerRef = ref();
+    const {
+        activeMenu,
+        showSubMenu,
+        expandMore,
+        expand,
+        changeExpandMore,
+        changeExpand,
+        changeShowSubMenu,
+        changeHiddenSubMenu,
+        clickSubMenu,
+        changeActiveMenu,
+        currentMoreIndex,
+        changeMoreIndex
+    } = useMoreMenu();
     const clickMenu = (val: string) => {
         (window as any).gtag('event', '导航栏-点击页面标签', {
             menuName: val
@@ -72,6 +100,9 @@
         router.push({
             name: val
         });
+    };
+    const changeCurrentIndex = (index?: number) => {
+        currentIndex.value = index;
     };
 
     const onClickLogo = () => {
@@ -82,38 +113,21 @@
 
     const changeShowNav = () => {
         isShowNav.value = !isShowNav.value;
-    };
-
-    const getCurrentRouterNames = (r: RouteLocationNormalized): Key[] => {
-        if (r) {
-            const name = r?.matched[0].children.map((item) => item.name);
-            if (name && name.length > 0) {
-                return name as Key[];
-            }
-            return [];
-        }
-        return [];
-    };
-    const htmlClickFn = (e: MouseEvent) => {
-        if (
-            (e.target as Element)?.className !== 'header_btn_img' &&
-            (e.target as Element)?.className !==
-                'ant-menu-overflow ant-menu ant-menu-root ant-menu-horizontal ant-menu-light header_menu header_navigation'
-        ) {
-            //不是该选择器的class
-            isShowNav.value = false;
+        if (currentMoreIndex.value !== undefined) {
+            expandMore.value = true;
+            expand.value = true;
+        } else {
+            expandMore.value = false;
+            expand.value = false;
         }
     };
-    onMounted(() => {
-        currentMenu.value = getCurrentRouterNames(route) as Key[];
-        document.addEventListener('click', htmlClickFn);
-    });
-    onBeforeUnmount(() => {
-        document.removeEventListener('click', htmlClickFn);
-    });
-
-    router.beforeEach((to: RouteLocationNormalized) => {
-        currentMenu.value = getCurrentRouterNames(to) as Key[];
+    const closeShowNav = (showNav: boolean) => {
+        isShowNav.value = showNav;
+    };
+    onClickOutside(headerRef, () => {
+        isShowNav.value = false;
+        expandMore.value = false;
+        expand.value = false;
     });
 </script>
 
@@ -153,7 +167,7 @@
             }
             .header_navigation {
                 margin-left: 37px;
-                z-index: 1;
+                z-index: 3;
             }
             .header_content {
             }
@@ -182,7 +196,7 @@
                 .header_input_focus {
                     position: relative;
                     justify-content: flex-end;
-                    z-index: 1;
+                    z-index: 4;
                 }
             }
         }
@@ -249,7 +263,7 @@
             }
         }
     }
-    @media screen and (max-width: 1090px) {
+    @media screen and (max-width: 1150px) {
         .header_container {
             .header_content {
                 position: relative;

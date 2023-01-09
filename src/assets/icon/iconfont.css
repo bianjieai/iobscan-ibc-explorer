@@ -1,8 +1,8 @@
 @font-face {
     font-family: 'iconfont'; /* Project id 2812235 */
-    src: url('iconfont.woff2?t=1670832704079') format('woff2'),
-        url('iconfont.woff?t=1670832704079') format('woff'),
-        url('iconfont.ttf?t=1670832704079') format('truetype');
+    src: url('iconfont.woff2?t=1672710133501') format('woff2'),
+        url('iconfont.woff?t=1672710133501') format('woff'),
+        url('iconfont.ttf?t=1672710133501') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,42 @@
     font-style: normal;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-assets:before {
+    content: '\e7af';
+}
+
+.icon-next1:before {
+    content: '\e624';
+}
+
+.icon-move1:before {
+    content: '\e7ae';
+}
+
+.icon-nexthover:before {
+    content: '\e79a';
+}
+
+.icon-next:before {
+    content: '\e79f';
+}
+
+.icon-movehover:before {
+    content: '\e7a2';
+}
+
+.icon-move:before {
+    content: '\e7a3';
+}
+
+.icon-nexthover-left-copy:before {
+    content: '\e7b2';
+}
+
+.icon-next-left-copy:before {
+    content: '\e7b3';
 }
 
 .icon-more:before {

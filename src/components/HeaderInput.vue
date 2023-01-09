@@ -74,7 +74,7 @@
 <style lang="less" scoped>
     .auto_complete,
     .auto_complete__mobile {
-        min-width: 302px;
+        min-width: 257px;
         border-radius: 20px;
         :deep(&__dropdown) {
             padding: 0;
@@ -147,7 +147,7 @@
     }
     .ant-input-affix-wrapper {
         padding-right: 0;
-        min-width: 302px;
+        min-width: 257px;
     }
     .active_input_style {
         border-color: rgba(61, 80, 255, 1) !important;
@@ -363,7 +363,7 @@
             }
         }
         .input_focus_style {
-            width: 302px;
+            width: 257px;
             .auto_complete__input {
             }
         }

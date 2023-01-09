@@ -38,3 +38,7 @@ export const bigNumberMultiply = (num1: string | number, num2: string | number):
 export const bigNumberDivide = (num1: string | number, num2: string | number): string => {
     return new BigNumber(num1).div(num2).toString();
 };
+
+export const bigNumberCompared = (num1: string | number, num2: string | number): string => {
+    return new BigNumber(num1).comparedTo(num2).toString();
+};

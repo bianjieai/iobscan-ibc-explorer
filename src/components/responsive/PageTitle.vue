@@ -8,7 +8,7 @@
                 <div class="background" :style="{ bottom: imgSrc ? '3px' : '-3px' }"></div>
             </div>
             <a-typography-text v-if="subtitle" class="number"
-                ><i class="iconfont icon-shujuliebiao"></i>{{ subtitle }}</a-typography-text
+                ><i class="iconfont" :class="titleIcon"></i>{{ subtitle }}</a-typography-text
             >
         </div>
     </div>

@@ -103,12 +103,16 @@
                 </a-popover>
             </template>
 
+            <template #operating_period="{ record, column }">
+                <div>{{ formatOperatingPeriod(record[column.key], record.status) }}</div>
+            </template>
+
             <template #last_updated="{ record, column }">
                 <div>{{ formatLastUpdated(record[column.key]) }}</div>
             </template>
 
-            <template #operating_period="{ record, column }">
-                <div>{{ formatOperatingPeriod(record[column.key], record.status) }}</div>
+            <template #pending_txs="{ record, column }">
+                <div>{{ formatBigNumber(record[column.key]) }}</div>
             </template>
 
             <template #ibc_transfer_txs="{ record, column }">
@@ -148,6 +152,7 @@
         useChannelsColumnJump
     } from '@/views/channels/composable';
     import { MODES } from '@/components/BjSelect/constants';
+    import { formatBigNumber } from '@/helper/parseStringHelper';
 
     const { loading } = useLoading();
     const { ibcChains } = useIbcChains();

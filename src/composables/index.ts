@@ -34,6 +34,60 @@ export const useTimeInterval = (intervalCallBack: Function, interval = AGE_TIMER
     return timer;
 };
 
+export const useMoreMenu = () => {
+    const router = useRouter();
+    const activeMenu = ref<boolean>(false);
+    const showSubMenu = ref<boolean>(false);
+    const expandMore = ref<boolean>(false);
+    const expand = ref<boolean>(false);
+    const currentMoreIndex = ref<number>();
+    const changeShowSubMenu = () => {
+        showSubMenu.value = true;
+        currentMoreIndex.value !== undefined ? changeExpand(true) : changeExpand(false);
+    };
+    const changeHiddenSubMenu = () => {
+        showSubMenu.value = false;
+        currentMoreIndex.value !== undefined ? changeExpand(true) : changeExpand(false);
+    };
+    const changeExpandMore = () => {
+        expandMore.value = !expandMore.value;
+    };
+    const changeExpand = (changeExpand: boolean) => {
+        expand.value = changeExpand;
+    };
+    const clickSubMenu = (routeName: string) => {
+        (window as any).gtag('event', '导航栏-点击页面标签', {
+            menuName: routeName
+        });
+        router.push({
+            name: routeName
+        });
+        changeHiddenSubMenu();
+        changeExpand(false);
+        expandMore.value = false;
+    };
+    const changeActiveMenu = (menuActive: boolean) => {
+        activeMenu.value = menuActive;
+    };
+    const changeMoreIndex = (moreIndex?: number) => {
+        currentMoreIndex.value = moreIndex;
+    };
+    return {
+        activeMenu,
+        showSubMenu,
+        expandMore,
+        expand,
+        changeExpandMore,
+        changeExpand,
+        changeShowSubMenu,
+        changeHiddenSubMenu,
+        clickSubMenu,
+        changeActiveMenu,
+        currentMoreIndex,
+        changeMoreIndex
+    };
+};
+
 export const useChangeTitleAndIcon = () => {
     const link: HTMLLinkElement =
         document.querySelector('link[rel *= "icon"]') || document.createElement('link');

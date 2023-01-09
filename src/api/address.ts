@@ -1,7 +1,7 @@
 import request, { executeCancel, setExecuteCancel } from '@/utils/axios';
 import requestMock from '@/utils/axiosMock';
 import { IResponse } from '@/types/interface/index.interface';
-import {
+import type {
     IRequestAddressTxs,
     IResponseAddressBaseInfo,
     IResponseAddressTxsData,

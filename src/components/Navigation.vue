@@ -1,145 +1,328 @@
 <template>
-    <a-menu
-        :class="isShowNav ? 'header_menu' : 'header_menu_hide header_menu'"
-        :selected-keys="currentMenu"
-        mode="horizontal"
-        @click="clickMenuItem"
-    >
-        <a-menu-item v-for="item of menus" :key="item.value" class="header_menu__item">
-            <img
-                v-show="isShowNav"
-                src="../assets/nav/tips_icon.png"
-                alt=""
-                class="header_menu__item__img"
+    <div class="menu">
+        <div class="menu__pc">
+            <NavMenu
+                :menus="menus"
+                :current-index="currentIndex"
+                :is-show-nav="isShowNav"
+                @click-menu-item="clickMenuItem"
+                @close-show-nav="closeShowNav"
             />
-            {{ item.label }}
-        </a-menu-item>
-    </a-menu>
+            <div
+                class="menu__more"
+                :class="{ menu__more_active: activeMenu }"
+                @mouseenter="changeShowSubMenuFn"
+                @mouseleave="changeHiddenSubMenuFn"
+            >
+                <span>More</span>
+                <MoreMenu
+                    v-show="showSubMenu"
+                    class="menu__more__submenu"
+                    :expand="expand"
+                    :current-more-index="currentMoreIndex"
+                    @change-expand="changeExpandFn"
+                    @click-sub-menu="clickSubMenuFn"
+                ></MoreMenu>
+            </div>
+        </div>
+        <div v-show="isShowNav" class="menu__mobile">
+            <NavMenu
+                :menus="menus"
+                :current-index="currentIndex"
+                :is-show-nav="isShowNav"
+                @click-menu-item="clickMenuItem"
+                @close-show-nav="closeShowNav"
+            />
+            <div
+                v-show="isShowNav"
+                class="menu__mobile__more cursor"
+                :class="{ menu__mobile__more_active: activeMenu }"
+            >
+                <span class="menu__mobile__text" @click="changeExpandMoreFn">
+                    <span class="menu__mobile__left">
+                        <img class="menu__mobile__img" src="../assets/nav/tips_icon.png" alt="" />
+                        <span>More</span>
+                    </span>
+                    <i
+                        class="menu__mobile__icon iconfont icon-zhankai-copy-icon"
+                        :style="{
+                            transform: expandMore ? 'rotate(180deg)' : 'rotate(0)'
+                        }"
+                    ></i>
+                </span>
+                <MoreMenu
+                    v-show="expandMore"
+                    class="menu__mobile__submenu"
+                    :expand="expand"
+                    :current-more-index="currentMoreIndex"
+                    @change-expand="changeExpandFn"
+                    @change-more-index="changeMoreIndexFn"
+                    @click-sub-menu="clickSubMenuFn"
+                    @close-show-nav="closeShowNav"
+                ></MoreMenu>
+            </div>
+        </div>
+    </div>
 </template>
 
 <script lang="ts" setup>
-    import { MenuClickEventHandler } from 'ant-design-vue/lib/menu/src/interface.js';
-    type Key = string | number;
+    import { MORE_MENU } from '@/constants';
+
     interface IMenu {
         label: string;
         value: string;
     }
     interface IProps {
         menus: IMenu[];
-        currentMenu: Key[];
+        currentIndex?: number;
         isShowNav: boolean;
+        activeMenu: boolean;
+        showSubMenu: boolean;
+        expandMore: boolean;
+        expand: boolean;
+        currentMoreIndex?: number;
     }
-    defineProps<IProps>();
+    const props = defineProps<IProps>();
     const emits = defineEmits<{
-        (e: 'clickMenu', key: string): MenuClickEventHandler;
+        (e: 'clickMenu', key: string): void;
+        (e: 'closeShowNav', showNav: boolean): void;
+        (e: 'changeCurrentIndex', index?: number): void;
+        (e: 'changeExpandMore', expandMore: boolean): void;
+        (e: 'changeExpand', expand: boolean): void;
+        (e: 'changeShowSubMenu'): void;
+        (e: 'changeHiddenSubMenu'): void;
+        (e: 'clickSubMenu', subMenu: string): void;
+        (e: 'changeActiveMenu', menuActive: boolean): void;
+        (e: 'changeMoreIndex', moreIndex?: number): void;
     }>();
-    const clickMenuItem = (e: { key: string }): MenuClickEventHandler => {
-        return emits('clickMenu', e.key);
+    const clickMenuItem = (key: string, index: number) => {
+        emits('clickMenu', key);
+        emits('changeCurrentIndex', index);
     };
+    const closeShowNav = (showNav: boolean) => {
+        emits('closeShowNav', showNav);
+    };
+    const changeShowSubMenuFn = () => {
+        emits('changeShowSubMenu');
+    };
+    const changeHiddenSubMenuFn = () => {
+        emits('changeHiddenSubMenu');
+    };
+    const changeExpandFn = () => {
+        emits('changeExpand', !props.expand);
+    };
+    const changeExpandMoreFn = () => {
+        emits('changeExpandMore', !props.expandMore);
+    };
+    const clickSubMenuFn = (subMenu: string) => {
+        emits('clickSubMenu', subMenu);
+    };
+    const changeMoreIndexFn = (moreIndex?: number) => {
+        emits('changeMoreIndex', moreIndex);
+    };
+    const route = useRoute();
+    watch(
+        route,
+        (newRoute) => {
+            if (newRoute.path.indexOf('overview') !== -1) {
+                emits('changeActiveMenu', true);
+                emits('changeCurrentIndex');
+                MORE_MENU.forEach((item) => {
+                    item.subMenus?.forEach((subMenu, subMenuIndex) => {
+                        if (subMenu.label === newRoute.name) {
+                            emits('changeMoreIndex', subMenuIndex);
+                        }
+                    });
+                });
+            } else {
+                if (
+                    newRoute.path.indexOf('home') !== -1 ||
+                    newRoute.path.indexOf('address') !== -1
+                ) {
+                    emits('changeCurrentIndex');
+                } else {
+                    props.menus.forEach((item: IMenu, index: number) => {
+                        if (newRoute.path.indexOf(item.label.toLowerCase()) !== -1) {
+                            emits('changeCurrentIndex', index);
+                        }
+                    });
+                }
+                emits('changeActiveMenu', false);
+                emits('changeMoreIndex');
+                emits('changeExpand', false);
+            }
+        },
+        { immediate: true }
+    );
 </script>
 
 <style lang="less">
-    .header_menu {
-        flex: 1;
-        .flex(row, nowrap, center, center);
-        height: var(--bj-nav-height);
-        line-height: var(--bj-nav-height);
-        background-color: transparent;
-        border: 0;
-        &__item {
+    .menu {
+        &__pc {
+            .flex(row, nowrap, center, center);
+        }
+        &__more {
+            position: relative;
             width: 110px;
-            padding: 0 !important;
-            text-align: center;
-            &__img {
-                display: none;
-            }
-        }
-        .ant-menu-item {
-            line-height: var(--bj-nav-height);
-            transition: border-color 0.3s linear;
-        }
-        .ant-menu-title-content {
             font-size: var(--bj-font-size-sub-title);
             color: rgba(255, 255, 255, 0.65);
-            font-weight: var(--bj-font-weight-normal);
-        }
-        .ant-menu-item-active {
-            background-image: url('../assets/nav/innovation_bar_bg.png');
-            background-repeat: no-repeat;
-            background-size: contain;
-            background-position: 50% 90%;
-            .ant-menu-title-content {
-                color: #ffffff !important;
+            &:hover {
+                color: #fff;
+                background-image: url('../assets/nav/innovation_bar_bg.png');
+                background-repeat: no-repeat;
+                background-size: contain;
+                background-position: 50% 90%;
             }
-            &::after {
-                display: none;
+            &__submenu {
+                position: absolute;
+                .flex(column, nowrap);
+                left: 32px;
+                padding: 4px 0;
+                text-align: left;
+                background: #fff;
+                box-shadow: 0px 2px 8px 0px #d9deec;
+                border-radius: 4px;
+                border: 1px solid #d9dfee;
             }
         }
-        .ant-menu-item-selected {
+        &__more_active {
             font-family: GolosUI_Medium;
+            color: #fff;
             background-image: url('../assets/nav/selected.png');
             background-repeat: no-repeat;
             background-size: contain;
             background-position: 50% 90%;
-            .ant-menu-title-content {
-                color: #ffffff !important;
+            &:hover {
+                background-image: url('../assets/nav/selected.png');
             }
-            &::after {
-                display: none;
+        }
+        &__mobile {
+            display: none;
+            &__more {
+            }
+            &__more_active {
+            }
+            &__text {
+            }
+            &__left {
+            }
+            &__img {
+            }
+            &__icon {
+            }
+            &__submenu {
             }
         }
     }
 
     @media screen and (max-width: 1200px) {
-        .header_menu {
-            &__item {
-                width: 90px;
+        .menu {
+            &__pc {
             }
-        }
-    }
-    @media screen and (max-width: 1090px) {
-        .header_menu_hide {
-            visibility: hidden;
-        }
-        .header_menu {
-            position: absolute;
-            top: 80px;
-            background-color: #0e1232;
-            width: 100%;
-            height: 245px;
-            border-top: 4px solid #3d50ff;
-            flex-direction: column;
-            align-items: baseline;
-            justify-content: space-around;
-            padding: 20px 0 0 2px;
-            &__item {
-                margin-left: 32px;
-                width: 40px;
-                height: 15px;
-                line-height: 15px !important;
-                text-align: left;
-                margin-bottom: 24px !important;
+            &__more {
+                width: 90px;
+                &__submenu {
+                }
+            }
+            &__more_active {
+            }
+            &__mobile {
+                &__more {
+                }
+                &__more_active {
+                }
+                &__text {
+                }
+                &__left {
+                }
                 &__img {
-                    display: inline-block;
-                    visibility: hidden;
-                    height: 8px;
+                }
+                &__icon {
+                }
+                &__submenu {
                 }
             }
         }
-        .ant-menu-item-selected {
-            background-image: none !important;
-            .header_menu__item__img {
-                visibility: visible;
+    }
+    @media screen and (max-width: 1150px) {
+        .menu {
+            position: absolute;
+            top: 80px;
+            width: 100%;
+            &__pc {
+                display: none;
+            }
+            &__more {
+                width: 100%;
+                &__submenu {
+                }
+            }
+            &__more_active {
+            }
+            &__mobile {
+                display: block;
+                &__more {
+                }
+                &__more_active {
+                    .menu__mobile__text {
+                        color: #fff;
+                    }
+                    .menu__mobile__img {
+                        visibility: visible;
+                    }
+                }
+                &__text {
+                    .flex(row, nowrap, space-between, center);
+                    padding: 10px 32px;
+                    line-height: 16px;
+                    color: rgba(255, 255, 255, 0.65);
+                    background-color: #000;
+                    &:hover {
+                        color: #fff;
+                    }
+                }
+                &__left {
+                    font-size: var(--bj-font-size-sub-title);
+                }
+                &__img {
+                    margin-right: 4px;
+                    width: 8px;
+                    height: 8px;
+                    visibility: hidden;
+                }
+                &__icon {
+                }
+                &__submenu {
+                }
             }
         }
-        .ant-menu-item-active {
-            background-image: none !important;
-        }
     }
-    @media screen and (max-width: 768px) {
-        .header_menu {
-            &__item {
-                margin-left: 16px;
+    @media screen and (max-width: 530px) {
+        .menu {
+            &__pc {
+            }
+            &__more {
+                &__submenu {
+                }
+            }
+            &__more_active {
+            }
+            &__mobile {
+                &__more {
+                }
+                &__more_active {
+                }
+                &__text {
+                    padding: 10px 16px;
+                }
+                &__left {
+                }
+                &__img {
+                }
+                &__icon {
+                }
+                &__submenu {
+                }
             }
         }
     }

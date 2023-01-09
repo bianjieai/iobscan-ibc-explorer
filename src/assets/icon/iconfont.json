@@ -6,6 +6,69 @@
     "description": "",
     "glyphs": [
         {
+            "icon_id": "33594636",
+            "name": "assets",
+            "font_class": "assets",
+            "unicode": "e7af",
+            "unicode_decimal": 59311
+        },
+        {
+            "icon_id": "33590454",
+            "name": "next1",
+            "font_class": "next1",
+            "unicode": "e624",
+            "unicode_decimal": 58916
+        },
+        {
+            "icon_id": "33589882",
+            "name": "move",
+            "font_class": "move1",
+            "unicode": "e7ae",
+            "unicode_decimal": 59310
+        },
+        {
+            "icon_id": "33587014",
+            "name": "nexthover",
+            "font_class": "nexthover",
+            "unicode": "e79a",
+            "unicode_decimal": 59290
+        },
+        {
+            "icon_id": "33587015",
+            "name": "next",
+            "font_class": "next",
+            "unicode": "e79f",
+            "unicode_decimal": 59295
+        },
+        {
+            "icon_id": "33587024",
+            "name": "movehover",
+            "font_class": "movehover",
+            "unicode": "e7a2",
+            "unicode_decimal": 59298
+        },
+        {
+            "icon_id": "33587027",
+            "name": "move",
+            "font_class": "move",
+            "unicode": "e7a3",
+            "unicode_decimal": 59299
+        },
+        {
+            "icon_id": "33590666",
+            "name": "nexthover-copy",
+            "font_class": "nexthover-left-copy",
+            "unicode": "e7b2",
+            "unicode_decimal": 59314
+        },
+        {
+            "icon_id": "33590668",
+            "name": "next-copy",
+            "font_class": "next-left-copy",
+            "unicode": "e7b3",
+            "unicode_decimal": 59315
+        },
+        {
             "icon_id": "33352432",
             "name": "more",
             "font_class": "more",

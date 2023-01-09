@@ -444,9 +444,17 @@
         }
     }
     .disabled_border {
-        cursor: url('../../assets/forbidden.png'), not-allowed;
+        background: #eef0f6;
+        border: 1px solid var(--bj-border-color);
+        cursor: not-allowed;
         &:hover {
             border-color: var(--bj-border-color);
+        }
+        & > div {
+            opacity: 0.5;
+        }
+        :deep(.selected_info_title) {
+            color: rgba(0, 0, 0, 0.5);
         }
     }
 

@@ -69,7 +69,22 @@ export const ROUTE_INFO = {
     addressDetails: {
         name: 'Address Details',
         title: 'IOBScan - IOB - Address Details',
-        description: 'IBC Transfer Address Details'
+        description: 'IBC Address Details Information'
+    },
+    overviewHeatmap: {
+        name: 'IBC Token Market Heatmap',
+        title: 'IOBScan - IOB - Token Heatmap',
+        description: 'IBC Token Market Heatmap'
+    },
+    overviewVolume: {
+        name: 'IBC Transfer Volume',
+        title: 'IOBScan - IOB - Transfer Volume',
+        description: 'IBC Transfer Volume'
+    },
+    overviewDistribution: {
+        name: 'IBC Token Distribution',
+        title: 'IOBScan - IOB - Token Distribution',
+        description: 'IBC Token Distribution'
     }
 };
 export const MENUS = [
@@ -92,6 +107,32 @@ export const MENUS = [
     {
         label: 'Relayers',
         value: 'Relayers'
+    }
+];
+export const MORE_MENU = [
+    {
+        label: 'IOBScan open APIs docs',
+        value: 'IOBScan open APIs docs',
+        link: 'https://docs.apis.iobscan.io/'
+    },
+    {
+        label: 'Overview Charts & Stats',
+        value: 'Overview Charts & Stats',
+        subMenus: [
+            {
+                label: ROUTE_INFO.overviewHeatmap.name,
+                value: ROUTE_INFO.overviewHeatmap.name
+            },
+            {
+                label: ROUTE_INFO.overviewVolume.name,
+                value: ROUTE_INFO.overviewVolume.name
+            }
+            // todo shan 暂时注释桑基图入口
+            // {
+            //     label: ROUTE_INFO.overviewDistribution.name,
+            //     value: ROUTE_INFO.overviewDistribution.name
+            // }
+        ]
     }
 ];
 
@@ -368,6 +409,7 @@ export const DEFAULT_TITLE = {
 
 export const UNKNOWN_SYMBOL = 'unknown';
 
+// todo dj 后续可能会抽离成环境变量
 export const PRETTYNAME = {
     COSMOSHUB: 'Cosmos Hub',
     IRISHUB: 'IRISnet'
@@ -376,9 +418,76 @@ export const PRETTYNAME = {
 export const UNKNOWN = 'Unknown';
 export const THOUSAND_DECIMAL = 0.0001;
 
+export const BIG_UNIT = {
+    decillion: {
+        value: 1000000000000000000000000000000000,
+        moveLength: 33,
+        unit: 'd'
+    },
+    nonillion: {
+        value: 1000000000000000000000000000000,
+        moveLength: 30,
+        unit: 'N'
+    },
+    octillion: {
+        value: 1000000000000000000000000000,
+        moveLength: 27,
+        unit: 'o'
+    },
+    septillion: {
+        value: 1000000000000000000000000,
+        moveLength: 24,
+        unit: 'S'
+    },
+    sextillion: {
+        value: 1000000000000000000000,
+        moveLength: 21,
+        unit: 's'
+    },
+    quintillion: {
+        value: 1000000000000000000,
+        moveLength: 18,
+        unit: 'Q'
+    },
+    quadrillion: {
+        value: 1000000000000000,
+        moveLength: 15,
+        unit: 'q'
+    },
+    trullion: {
+        value: 1000000000000,
+        moveLength: 12,
+        unit: 'T'
+    },
+    billion: {
+        value: 1000000000,
+        moveLength: 9,
+        unit: 'B'
+    },
+    million: {
+        value: 1000000,
+        moveLength: 6,
+        unit: 'M'
+    },
+    thoundsand: {
+        value: 1000,
+        moveLength: 3,
+        unit: 'K'
+    }
+};
+
+// todo dj 后续可能会抽离成环境变量
 export const SYMBOL = {
     ATOM: 'ATOM',
     IRIS: 'IRIS'
+};
+// todo dj 后续可能会抽离成环境变量
+export const BASE_DENOM = {
+    uatom: 'uatom'
+};
+// todo dj 后续可能会抽离成环境变量
+export const BASE_DENOM_CHAIN = {
+    cosmoshub: 'cosmoshub'
 };
 
 export const COPYRIGHT = `Copyright © ${new Date().getFullYear()} IOBScan. All Rights Reserved.`;
@@ -423,6 +532,7 @@ export const NEED_CUSTOM_COLUMN = {
         'chain_b',
         'operating_period',
         'last_updated',
+        'pending_txs',
         'ibc_transfer_txs'
     ],
     relayers: [
