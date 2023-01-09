@@ -191,7 +191,7 @@
                         padding: 8px 0;
                         &__wrap {
                             .flex(row,nowrap);
-                            padding: 16px;
+                            padding: 15px;
                             transition: border, border-radius, box-shadow, background-color 0.5s;
                             &__chart {
                                 opacity: 0.5;
