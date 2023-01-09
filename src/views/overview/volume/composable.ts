@@ -393,7 +393,7 @@ export const useVolume = () => {
                         ])
                     }
                 },
-                startValue: volumeTrendDates.value[volumeTrendDates.value.length - 30],
+                startValue: volumeTrendDates.value[0],
                 endValue: volumeTrendDates.value.at(-1)
             }
         ],
@@ -500,15 +500,13 @@ export const useVolume = () => {
                     );
                 }
             });
-            goCardScroll(chain);
+            console.log(chain);
+            // goCardScroll(chain);
 
             // line
             lineChart = lineChart || echarts.init(lineRefDom.value);
             lineChartSizeFn();
-            lineOption.dataZoom[0].startValue =
-                volumeTrendDates.value.length >= 30
-                    ? volumeTrendDates.value[volumeTrendDates.value.length - 30]
-                    : volumeTrendDates.value[0] || '';
+            lineOption.dataZoom[0].startValue = volumeTrendDates.value?.[0] || '';
             lineOption.dataZoom[0].endValue = volumeTrendDates.value?.at(-1) || '';
             lineOption.xAxis.data = volumeTrendDates.value;
             lineOption.series[0].data = volumeOutDatas.value;
@@ -561,20 +559,12 @@ export const useVolume = () => {
                     volumeOutDatas.value = volumeTrendApiData.data.volume_out.map(
                         (item) => item.value
                     );
-                    const spliceVolumeInDatas = volumeInDatas.value.slice(-30);
-                    const spliceVolumeOutDatas = volumeOutDatas.value.slice(-30);
-                    dataZoomInTotal.value = spliceVolumeInDatas.reduce((total, current) => {
+                    dataZoomInTotal.value = volumeInDatas.value.reduce((total, current) => {
                         return new BigNumber(total).plus(current).toString();
                     }, '0');
-                    dataZoomOutTotal.value = spliceVolumeOutDatas.reduce((total, current) => {
+                    dataZoomOutTotal.value = volumeOutDatas.value.reduce((total, current) => {
                         return new BigNumber(total).plus(current).toString();
                     }, '0');
-                    // const inTotal = volumeInDatas.value.reduce((total, current) => {
-                    //     return new BigNumber(total).plus(current).toString();
-                    // }, '0');
-                    // const outTotal = volumeOutDatas.value.reduce((total, current) => {
-                    //     return new BigNumber(total).plus(current).toString();
-                    // }, '0');
                 } else {
                     volumeNoDataType.value = NoDataType.noData;
                 }
@@ -582,23 +572,23 @@ export const useVolume = () => {
                     const sortData = volumeApiData.data.sort((a, b) =>
                         BigNumber(b.transfer_volume_total).comparedTo(a.transfer_volume_total)
                     );
-                    const handleData: ITransferVolumeItem[] = [];
+                    const handledData: ITransferVolumeItem[] = [];
                     for (let i = 0; i < sortData.length; i++) {
                         const item = sortData[i];
                         if (item.chain === 'all_chain') {
-                            handleData.push({
+                            handledData.push({
                                 pretty_name: 'All IBC Chains',
                                 ...item
                             });
                         } else {
                             const chainInfo = await ChainHelper.getChainInfoByKey(item.chain);
-                            handleData.push({
+                            handledData.push({
                                 pretty_name: chainInfo?.pretty_name || DEFAULT_DISPLAY_TEXT,
                                 ...item
                             });
                         }
                     }
-                    volumePieListData.value = handleData;
+                    volumePieListData.value = handledData;
                 } else {
                     if (volumeNoDataType.value !== NoDataType.noData) {
                         volumeNoDataType.value = NoDataType.loadFailed;
