@@ -456,15 +456,17 @@ export const useVolume = () => {
             const option: any = lineChart ? lineChart.getOption() : lineOption;
             nextTick(() => {
                 if (newValue > 689) {
-                    option.grid[0].bottom = 46;
-                    option.dataZoom[0].bottom = 0;
-                    option.dataZoom[0].show = true;
-                    lineChart && lineChart.setOption(option);
+                    if (option.grid[0].bottom !== 46 || lineOption.dataZoom[0].show !== true) {
+                        option.grid[0].bottom = 46;
+                        option.dataZoom[0].show = true;
+                        lineChart && lineChart.setOption(option);
+                    }
                 } else {
-                    option.grid[0].bottom = 16;
-                    option.dataZoom[0].bottom = 0;
-                    option.dataZoom[0].show = false;
-                    lineChart && lineChart.setOption(option);
+                    if (option.grid[0].bottom !== 16 || lineOption.dataZoom[0].show !== false) {
+                        option.grid[0].bottom = 16;
+                        option.dataZoom[0].show = false;
+                        lineChart && lineChart.setOption(option);
+                    }
                 }
             });
         },
