@@ -153,7 +153,7 @@
         &__content {
             margin-top: 28px;
             min-height: 591px;
-            padding: 29px 24px 24px;
+            padding: 29px 24px 16px 24px;
             background-color: #fff;
             &__card_list_wrap {
                 position: relative;
@@ -273,6 +273,7 @@
             &__data {
                 position: relative;
                 height: 366px;
+                padding-bottom: 8px;
                 overflow-x: auto;
                 &__loading {
                     position: absolute;
