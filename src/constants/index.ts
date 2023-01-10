@@ -409,7 +409,7 @@ export const DEFAULT_TITLE = {
 
 export const UNKNOWN_SYMBOL = 'unknown';
 
-// todo dj 后续可能会抽离成环境变量
+// todo dj environment variable
 export const PRETTYNAME = {
     COSMOSHUB: 'Cosmos Hub',
     IRISHUB: 'IRISnet'
@@ -418,6 +418,7 @@ export const PRETTYNAME = {
 export const UNKNOWN = 'Unknown';
 export const THOUSAND_DECIMAL = 0.0001;
 
+// key order from big to small
 export const BIG_UNIT = {
     decillion: {
         value: 1000000000000000000000000000000000,
@@ -476,16 +477,16 @@ export const BIG_UNIT = {
     }
 };
 
-// todo dj 后续可能会抽离成环境变量
+// todo dj environment variable
 export const SYMBOL = {
     ATOM: 'ATOM',
     IRIS: 'IRIS'
 };
-// todo dj 后续可能会抽离成环境变量
+// todo dj environment variable
 export const BASE_DENOM = {
     uatom: 'uatom'
 };
-// todo dj 后续可能会抽离成环境变量
+// todo dj environment variable
 export const BASE_DENOM_CHAIN = {
     cosmoshub: 'cosmoshub'
 };
