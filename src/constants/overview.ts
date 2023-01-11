@@ -57,3 +57,5 @@ export const NOHOP_COLOR = [
         borderColor: 'rgba(13, 71, 161, 1)'
     }
 ];
+
+export const UNKNOWN_NODE_COLOR = 'rgba(194, 204, 232, 1)';
