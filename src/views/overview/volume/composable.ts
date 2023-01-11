@@ -349,7 +349,7 @@ export const useVolume = () => {
                 height: 32,
                 left: 90,
                 right: 90,
-                bottom: 8,
+                bottom: 0,
                 backgroundColor: '#F8FAFD',
                 borderColor: 'rgba(255,255,255,0)',
                 dataBackground: {
@@ -462,8 +462,8 @@ export const useVolume = () => {
                         lineChart && lineChart.setOption(option);
                     }
                 } else {
-                    if (option.grid[0].bottom !== 16 || lineOption.dataZoom[0].show !== false) {
-                        option.grid[0].bottom = 16;
+                    if (option.grid[0].bottom !== 4 || lineOption.dataZoom[0].show !== false) {
+                        option.grid[0].bottom = 4;
                         option.dataZoom[0].show = false;
                         lineChart && lineChart.setOption(option);
                     }

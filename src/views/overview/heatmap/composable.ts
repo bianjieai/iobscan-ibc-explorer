@@ -22,6 +22,7 @@ export const useOverviewHeatmap = () => {
     const heatmapChartRefDom = ref();
     let heatmapChart: echarts.ECharts;
     const minWidth = 28;
+    const minHeight = 24;
     const minFontSize = 8;
     const heartmapData = ref<IHeartmapDataItem[]>([]);
     const rangeData = ref(Object.keys(HEATMAP_COLOR));
@@ -147,7 +148,7 @@ export const useOverviewHeatmap = () => {
                     borderColor: '#fff'
                 },
                 labelLayout: function (params: any) {
-                    if (params.rect.width < minWidth || params.rect.height < minWidth) {
+                    if (params.rect.width < minWidth || params.rect.height < minHeight) {
                         return {
                             fontSize: 0
                         };
