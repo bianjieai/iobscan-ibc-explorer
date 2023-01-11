@@ -56,14 +56,11 @@ export const getTextWidth = (text: string, font = '14px GolosUI_Medium'): number
 
 // 以最后一个空格分割取左边值
 export const getLeftValueByLastSpace = (name: string) => {
-    const formatNameArr = name.split(' ');
-    const formatName = formatNameArr
-        .filter((item: string, index: number) => {
-            if (index >= 1) {
-                return index !== formatNameArr.length - 1;
-            }
-            return item;
-        })
-        .join(' ');
+    const space = ' ';
+    const formatNameArr = name.split(space);
+    if (formatNameArr.length > 1) {
+        formatNameArr.pop();
+    }
+    const formatName = formatNameArr.join(space);
     return formatName;
 };

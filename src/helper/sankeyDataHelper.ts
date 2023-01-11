@@ -19,20 +19,10 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
     let maxChildrenLength = 1;
     const lastLevelNodesArr: string[] = [];
     const formatAmount = (originValue: string, nextAmount: string) => {
-        let addAmount;
-        if (originValue === '' || originValue === '-1') {
-            addAmount = nextAmount;
-        } else {
-            if (nextAmount === '' || nextAmount === '-1') {
-                addAmount = originValue;
-            } else {
-                addAmount = bigNumberAdd(originValue, nextAmount);
-            }
-        }
+        const addAmount = bigNumberAdd(originValue || '0', nextAmount || '0');
         return addAmount;
     };
     const format = (formatData: IResponseDistribution, lastHop?: string) => {
-        !length && lastLevelNodesArr.push(`${formatData.chain} last`);
         if (formatData.children?.length) {
             const deleteSameChain = [...new Set(formatData.children.map((item) => item.chain))];
             maxChildrenLength = Math.max(deleteSameChain.length, maxChildrenLength);
@@ -40,18 +30,16 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
         if (formatData.hops > maxHopRecord) {
             maxHopRecord = formatData.hops;
         }
-        const judgeNodesorLinksPush = (length: number) => {
-            const node = {
-                name: `${formatData.chain ? formatData.chain : UNKNOWN} ${
-                    length ? formatData.hops : 'last'
-                }`
-            };
+        const judgeNodesorLinksPush = (hasChildren: boolean) => {
+            const linkTarget = `${formatData.chain ? formatData.chain : UNKNOWN} ${
+                hasChildren ? formatData.hops : 'last'
+            }`;
+            const node = { name: linkTarget };
             nodes.push(node);
-            if (formatData.amount) {
-                nodes.push({ name: `${formatData.chain} last` });
-            }
-            if (formatData.amount && Number(formatData.amount) > 0) {
-                if (length) {
+            if (hasChildren) {
+                if (Number(formatData.amount) > 0) {
+                    lastLevelNodesArr.push(`${formatData.chain} last`);
+                    nodes.push({ name: `${formatData.chain} last` });
                     const link = {
                         source: `${formatData.chain} ${formatData.hops}`,
                         target: `${formatData.chain} last`,
@@ -63,46 +51,32 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
                         link
                     );
                 }
+            } else {
+                lastLevelNodesArr.push(`${formatData.chain} last`);
             }
             if (lastHop) {
-                if (
-                    linksMap.has(
-                        `${lastHop} ${formatData.chain ? formatData.chain : UNKNOWN} ${
-                            length ? formatData.hops : 'last'
-                        }`
-                    )
-                ) {
-                    const currentLinkInfo = linksMap.get(
-                        `${lastHop} ${formatData.chain ? formatData.chain : UNKNOWN} ${
-                            length ? formatData.hops : 'last'
-                        }`
-                    );
+                const linkMapKey = `${lastHop} ${linkTarget}`;
+                if (linksMap.has(linkMapKey)) {
+                    const currentLinkInfo = linksMap.get(linkMapKey);
                     currentLinkInfo.value = formatAmount(currentLinkInfo.value, formatData.supply);
                 } else {
                     const link = {
                         source: lastHop,
-                        target: `${formatData.chain ? formatData.chain : UNKNOWN} ${
-                            length ? formatData.hops : 'last'
-                        }`,
+                        target: linkTarget,
                         value: formatData.supply
                     };
                     links.push(link);
-                    linksMap.set(
-                        `${lastHop} ${formatData.chain ? formatData.chain : UNKNOWN} ${
-                            length ? formatData.hops : 'last'
-                        }`,
-                        link
-                    );
+                    linksMap.set(linkMapKey, link);
                 }
             }
         };
         if (formatData.children?.length) {
-            judgeNodesorLinksPush(formatData.children.length);
+            judgeNodesorLinksPush(true);
             formatData.children.forEach((item) => {
                 format(item, `${formatData.chain ? formatData.chain : UNKNOWN} ${formatData.hops}`);
             });
         } else {
-            judgeNodesorLinksPush(formatData.children?.length);
+            judgeNodesorLinksPush(false);
         }
     };
     if (sankeyData.children?.length) {
@@ -134,8 +108,8 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
                 borderColor: UNKNOWN_NODE_COLOR
             };
         }
+        nodesMap.set(node.name, node);
     });
-    dedupNodes.forEach((node) => nodesMap.set(node.name, node));
     for (const node of nodesMap.values()) {
         const chain = node.name.split(' ')[0];
         const hops = node.name.split(' ')[1];
@@ -161,6 +135,7 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
             value: link.value
         });
     }
+    // todo shan pretty_name 排序逻辑抽离
     const cosmos = nodesArr.filter((item) => item.name.includes(PRETTYNAME.COSMOSHUB));
     const irishub = nodesArr.filter((item) => item.name.includes(PRETTYNAME.IRISHUB));
     const other = nodesArr
