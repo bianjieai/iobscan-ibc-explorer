@@ -408,6 +408,7 @@ export const DEFAULT_TITLE = {
 
 export const UNKNOWN_SYMBOL = 'unknown';
 
+// todo dj environment variable
 export const PRETTYNAME = {
     COSMOSHUB: 'Cosmos Hub',
     IRISHUB: 'IRISnet'
@@ -415,18 +416,76 @@ export const PRETTYNAME = {
 
 export const UNKNOWN = 'Unknown';
 export const THOUSAND_DECIMAL = 0.0001;
-export const TRILLION = 1000000000000;
-export const BILLION = 1000000000;
-export const MILLION = 1000000;
-export const THOUNDSAND = 1000;
 
+// key order from big to small
+export const BIG_UNIT = {
+    decillion: {
+        value: 1000000000000000000000000000000000,
+        moveLength: 33,
+        unit: 'd'
+    },
+    nonillion: {
+        value: 1000000000000000000000000000000,
+        moveLength: 30,
+        unit: 'N'
+    },
+    octillion: {
+        value: 1000000000000000000000000000,
+        moveLength: 27,
+        unit: 'o'
+    },
+    septillion: {
+        value: 1000000000000000000000000,
+        moveLength: 24,
+        unit: 'S'
+    },
+    sextillion: {
+        value: 1000000000000000000000,
+        moveLength: 21,
+        unit: 's'
+    },
+    quintillion: {
+        value: 1000000000000000000,
+        moveLength: 18,
+        unit: 'Q'
+    },
+    quadrillion: {
+        value: 1000000000000000,
+        moveLength: 15,
+        unit: 'q'
+    },
+    trullion: {
+        value: 1000000000000,
+        moveLength: 12,
+        unit: 'T'
+    },
+    billion: {
+        value: 1000000000,
+        moveLength: 9,
+        unit: 'B'
+    },
+    million: {
+        value: 1000000,
+        moveLength: 6,
+        unit: 'M'
+    },
+    thoundsand: {
+        value: 1000,
+        moveLength: 3,
+        unit: 'K'
+    }
+};
+
+// todo dj environment variable
 export const SYMBOL = {
     ATOM: 'ATOM',
     IRIS: 'IRIS'
 };
+// todo dj environment variable
 export const BASE_DENOM = {
     uatom: 'uatom'
 };
+// todo dj environment variable
 export const BASE_DENOM_CHAIN = {
     cosmoshub: 'cosmoshub'
 };

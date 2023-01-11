@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { IHeatmapTotalInfoItem } from '@/types/interface/overview.interface';
-import { BILLION, DEFAULT_DISPLAY_TEXT, MILLION, THOUNDSAND, TRILLION } from '@/constants';
+import { BIG_UNIT, DEFAULT_DISPLAY_TEXT } from '@/constants';
 import { bigNumberCompared, bigNumberDivide } from '@/utils/calculate';
 
 /**
@@ -15,7 +15,7 @@ export const formatDimension = (
     decimal = 2,
     isNeedDimension = false
 ): IHeatmapTotalInfoItem | string => {
-    const getResult = (
+    const getReturnData = (
         dimensionValue: string | number,
         isDimension: boolean
     ): IHeatmapTotalInfoItem | string => {
@@ -28,41 +28,36 @@ export const formatDimension = (
             return String(dimensionValue);
         }
     };
-    if (dimensionValue === DEFAULT_DISPLAY_TEXT) return getResult(dimensionValue, false);
-    let isDimension = false;
-    const handleResult = (value: string, decimal: number) => {
-        let moveLength;
-        if (bigNumberCompared(value, TRILLION) !== '-1') {
-            moveLength = 12;
-        } else if (bigNumberCompared(value, BILLION) !== '-1') {
-            moveLength = 9;
-        } else if (bigNumberCompared(value, MILLION) !== '-1') {
-            moveLength = 6;
-        } else if (bigNumberCompared(value, THOUNDSAND) !== '-1') {
-            moveLength = 3;
-        } else {
-            moveLength = 0;
+    if (dimensionValue === DEFAULT_DISPLAY_TEXT) return getReturnData(dimensionValue, false);
+    const bigUnitKeys = Object.keys(BIG_UNIT);
+    const handleRoundItOffDecimal = (value: string, decimal: number) => {
+        let moveLength = 0;
+        for (let i = 0; i < bigUnitKeys.length; i++) {
+            const key = bigUnitKeys[i];
+            const item = BIG_UNIT[key];
+            if (bigNumberCompared(value, item.value) !== '-1') {
+                moveLength = item.moveLength;
+                break;
+            }
         }
         const temp = new BigNumber(value).shiftedBy(-moveLength).toFixed(decimal);
         const result = new BigNumber(temp).shiftedBy(moveLength).toString();
         return result;
     };
-    const value = handleResult(String(dimensionValue), decimal);
+    const value = handleRoundItOffDecimal(String(dimensionValue), decimal);
+    let isDimension = false;
     let result;
-    if (bigNumberCompared(value, TRILLION) !== '-1') {
-        isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(value, TRILLION), decimal)}T`;
-    } else if (bigNumberCompared(value, BILLION) !== '-1') {
-        isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(value, BILLION), decimal)}B`;
-    } else if (bigNumberCompared(value, MILLION) !== '-1') {
-        isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(value, MILLION), decimal)}M`;
-    } else if (bigNumberCompared(value, THOUNDSAND) !== '-1') {
-        isDimension = true;
-        result = `${formatBigNumber(bigNumberDivide(value, THOUNDSAND), decimal)}K`;
-    } else {
+    for (let i = 0; i < bigUnitKeys.length; i++) {
+        const key = bigUnitKeys[i];
+        const item = BIG_UNIT[key];
+        if (bigNumberCompared(value, item.value) !== '-1') {
+            result = `${formatBigNumber(bigNumberDivide(value, item.value), decimal)}${item.unit}`;
+            isDimension = true;
+            break;
+        }
+    }
+    if (result === undefined) {
         result = formatBigNumber(value, decimal);
     }
-    return getResult(result, isDimension);
+    return getReturnData(result, isDimension);
 };

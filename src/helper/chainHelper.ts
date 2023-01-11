@@ -9,7 +9,7 @@ import { getRestString } from '@/helper/parseStringHelper';
 import { TData, TDenom, IDataItem } from '@/components/BjSelect/interface';
 import { useIbcStatisticsChains } from '@/store/index';
 
-// todo dj 改造 export default => export
+// todo dj optimization export default => export
 export default class ChainHelper {
     // pretty_name sort
     // Todo shan 该方法中 ibcChains 可能存在没有值的情况，需要做处理
