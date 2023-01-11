@@ -1,4 +1,5 @@
-import { DEFAULT_DISPLAY_TEXT, PRETTYNAME } from '@/constants';
+import { DEFAULT_DISPLAY_TEXT, PRETTYNAME, UNKNOWN } from '@/constants';
+import { UNKNOWN_NODE_COLOR } from '@/constants/overview';
 import type {
     IResponseDistribution,
     ISankeyDataLink,
@@ -16,58 +17,89 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
     const linksMap = new Map();
     let maxHopRecord = 1;
     let maxChildrenLength = 1;
+    const lastLevelNodesArr: string[] = [];
+    const formatAmount = (originValue: string, nextAmount: string) => {
+        let addAmount;
+        if (originValue === '' || originValue === '-1') {
+            addAmount = nextAmount;
+        } else {
+            if (nextAmount === '' || nextAmount === '-1') {
+                addAmount = originValue;
+            } else {
+                addAmount = bigNumberAdd(originValue, nextAmount);
+            }
+        }
+        return addAmount;
+    };
     const format = (formatData: IResponseDistribution, lastHop?: string) => {
+        !length && lastLevelNodesArr.push(`${formatData.chain} last`);
         if (formatData.children?.length) {
             const deleteSameChain = [...new Set(formatData.children.map((item) => item.chain))];
-            if (deleteSameChain.length > maxChildrenLength) {
-                maxChildrenLength = deleteSameChain.length;
-            }
+            maxChildrenLength = Math.max(deleteSameChain.length, maxChildrenLength);
         }
         if (formatData.hops > maxHopRecord) {
             maxHopRecord = formatData.hops;
         }
         const judgeNodesorLinksPush = (length: number) => {
-            if (!nodesMap.has(`${formatData.chain} ${length ? formatData.hops : 'last'}`)) {
-                nodes.push({ name: `${formatData.chain} ${length ? formatData.hops : 'last'}` });
+            const node = {
+                name: `${formatData.chain ? formatData.chain : UNKNOWN} ${
+                    length ? formatData.hops : 'last'
+                }`
+            };
+            nodes.push(node);
+            if (formatData.amount) {
+                nodes.push({ name: `${formatData.chain} last` });
+            }
+            if (formatData.amount && Number(formatData.amount) > 0) {
+                if (length) {
+                    const link = {
+                        source: `${formatData.chain} ${formatData.hops}`,
+                        target: `${formatData.chain} last`,
+                        value: formatData.amount
+                    };
+                    links.push(link);
+                    linksMap.set(
+                        `${formatData.chain} ${formatData.hops} ${formatData.chain} last`,
+                        link
+                    );
+                }
             }
             if (lastHop) {
                 if (
                     linksMap.has(
-                        `${lastHop} ${formatData.chain} ${length ? formatData.hops : 'last'}`
+                        `${lastHop} ${formatData.chain ? formatData.chain : UNKNOWN} ${
+                            length ? formatData.hops : 'last'
+                        }`
                     )
                 ) {
                     const currentLinkInfo = linksMap.get(
-                        `${lastHop} ${formatData.chain} ${length ? formatData.hops : 'last'}`
+                        `${lastHop} ${formatData.chain ? formatData.chain : UNKNOWN} ${
+                            length ? formatData.hops : 'last'
+                        }`
                     );
-                    if (
-                        currentLinkInfo.originValue &&
-                        currentLinkInfo.originValue !== '-1' &&
-                        formatData.amount &&
-                        formatData.amount !== '-1'
-                    ) {
-                        currentLinkInfo.value = bigNumberAdd(
-                            currentLinkInfo.originValue,
-                            formatData.amount
-                        );
-                    }
+                    currentLinkInfo.value = formatAmount(currentLinkInfo.value, formatData.supply);
                 } else {
-                    // value 为展示的值，originValue 为原始值
-                    links.push({
+                    const link = {
                         source: lastHop,
-                        target: `${formatData.chain} ${length ? formatData.hops : 'last'}`,
-                        value:
-                            formatData.amount && formatData.amount !== '-1'
-                                ? formatData.amount
-                                : '1',
-                        originValue: formatData.amount
-                    });
+                        target: `${formatData.chain ? formatData.chain : UNKNOWN} ${
+                            length ? formatData.hops : 'last'
+                        }`,
+                        value: formatData.supply
+                    };
+                    links.push(link);
+                    linksMap.set(
+                        `${lastHop} ${formatData.chain ? formatData.chain : UNKNOWN} ${
+                            length ? formatData.hops : 'last'
+                        }`,
+                        link
+                    );
                 }
             }
         };
         if (formatData.children?.length) {
             judgeNodesorLinksPush(formatData.children.length);
             formatData.children.forEach((item) => {
-                format(item, `${formatData.chain} ${formatData.hops}`);
+                format(item, `${formatData.chain ? formatData.chain : UNKNOWN} ${formatData.hops}`);
             });
         } else {
             judgeNodesorLinksPush(formatData.children?.length);
@@ -80,27 +112,37 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
             name: `${sankeyData.chain} ${sankeyData.hops}`
         });
         nodes.push({
-            name: `${sankeyData.chain} origin`
+            name: `${sankeyData.chain} last`
         });
         links.push({
             source: `${sankeyData.chain} ${sankeyData.hops}`,
-            target: `${sankeyData.chain} origin`,
-            value: sankeyData.amount && sankeyData.amount !== '-1' ? sankeyData.amount : '1',
-            originValue: sankeyData.amount
+            target: `${sankeyData.chain} last`,
+            value: sankeyData.amount
+        });
+        links.forEach((link) => {
+            linksMap.set(`${link.source} ${link.target}`, link);
         });
     }
-    [...new Set(nodes)].forEach((node) => {
-        nodesMap.set(node.name, node);
+    const dedupNodes = [...new Set(nodes.map((node) => JSON.stringify(node)))].map((node) =>
+        JSON.parse(node)
+    );
+    dedupNodes.forEach((node) => {
+        if (node.name.includes(UNKNOWN)) {
+            node.itemStyle = {
+                color: UNKNOWN_NODE_COLOR,
+                borderWidth: 1,
+                borderColor: UNKNOWN_NODE_COLOR
+            };
+        }
     });
-    links.forEach((link) => {
-        linksMap.set(`${link.source} ${link.target}`, link);
-    });
+    dedupNodes.forEach((node) => nodesMap.set(node.name, node));
     for (const node of nodesMap.values()) {
         const chain = node.name.split(' ')[0];
         const hops = node.name.split(' ')[1];
         const chainInfo = await ChainHelper.getChainInfoByKey(chain);
         nodesArr.push({
             name: `${chainInfo?.pretty_name || chain} ${hops}`,
+            itemStyle: node.itemStyle,
             tooltip: {
                 show: false
             }
@@ -116,8 +158,7 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
         linksArr.push({
             source: `${sourceChainInfo?.pretty_name || sourceChain} ${sourceHops}`,
             target: `${targetChainInfo?.pretty_name || targetChain} ${targetHops}`,
-            value: link.value,
-            originValue: link.originValue
+            value: link.value
         });
     }
     const cosmos = nodesArr.filter((item) => item.name.includes(PRETTYNAME.COSMOSHUB));
@@ -132,10 +173,11 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
         .filter((item) => item.value !== DEFAULT_DISPLAY_TEXT)
         .sort((a, b) => Number(bigNumberSubtract(b.value, a.value)));
     const linksNoValueArr = linksArr.filter((item) => item.value === DEFAULT_DISPLAY_TEXT);
+    const maxNodeHeight = Math.max(maxChildrenLength, [...new Set(lastLevelNodesArr)].length);
     return {
         nodes: [...cosmos, ...irishub, ...other],
         links: [...linksValueArr, ...linksNoValueArr],
         maxHopRecord,
-        maxChildrenLength
+        maxNodeHeight
     };
 };

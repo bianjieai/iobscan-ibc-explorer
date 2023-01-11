@@ -53,3 +53,17 @@ export const getTextWidth = (text: string, font = '14px GolosUI_Medium'): number
     context && context.clearRect(0, 0, canvas.width, canvas.height);
     return textWidth || 0;
 };
+
+// 以最后一个空格分割取左边值
+export const getLeftValueByLastSpace = (name: string) => {
+    const formatNameArr = name.split(' ');
+    const formatName = formatNameArr
+        .filter((item: string, index: number) => {
+            if (index >= 1) {
+                return index !== formatNameArr.length - 1;
+            }
+            return item;
+        })
+        .join(' ');
+    return formatName;
+};

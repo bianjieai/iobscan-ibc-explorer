@@ -145,14 +145,13 @@ const routes: Array<RouteRecordRaw> = [
                 name: ROUTE_INFO.overviewVolume.name,
                 component: () => import('../views/overview/volume/index.vue'),
                 meta: {}
+            },
+            {
+                path: 'distribution',
+                name: ROUTE_INFO.overviewDistribution.name,
+                component: () => import('../views/overview/distribution/index.vue'),
+                meta: {}
             }
-            // todo shan 暂时注释桑基图路由
-            // {
-            //     path: 'distribution',
-            //     name: ROUTE_INFO.overviewDistribution.name,
-            //     component: () => import('../views/overview/distribution/index.vue'),
-            //     meta: {}
-            // }
         ]
     },
     {
