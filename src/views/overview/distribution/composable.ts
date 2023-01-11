@@ -63,7 +63,7 @@ export const useDistributionSelect = () => {
                 baseDenom.value,
                 baseDenomChain.value
             );
-            if (code === API_CODE.success && Object.keys(data).length) {
+            if (code === API_CODE.success) {
                 originDenom.value = data.denom;
                 originAPIData.value = data;
                 distributionSankeyData.value = await formatSankeyData(data);
