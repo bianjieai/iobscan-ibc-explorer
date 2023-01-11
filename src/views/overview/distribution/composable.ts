@@ -245,7 +245,7 @@ export const useDistributionSelect = () => {
                             links: newData.links,
                             top: 8,
                             right: 112,
-                            bottom: '2%',
+                            bottom: '12%',
                             left: 0,
                             nodeWidth: 18,
                             nodeGap: 24,
