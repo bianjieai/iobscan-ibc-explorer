@@ -393,8 +393,8 @@ export const useVolume = () => {
                         ])
                     }
                 },
-                startValue: volumeTrendDates.value[0],
-                endValue: volumeTrendDates.value.at(-1)
+                startValue: volumeTrendDates.value[0] || '',
+                endValue: volumeTrendDates.value[volumeTrendDates.value.length - 1] || ''
             }
         ],
         series: [
@@ -506,8 +506,9 @@ export const useVolume = () => {
             // line
             lineChart = lineChart || echarts.init(lineRefDom.value);
             lineChartSizeFn();
-            lineOption.dataZoom[0].startValue = volumeTrendDates.value?.[0] || '';
-            lineOption.dataZoom[0].endValue = volumeTrendDates.value?.at(-1) || '';
+            lineOption.dataZoom[0].startValue = volumeTrendDates.value[0] || '';
+            lineOption.dataZoom[0].endValue =
+                volumeTrendDates.value[volumeTrendDates.value.length - 1] || '';
             lineOption.xAxis.data = volumeTrendDates.value;
             lineOption.series[0].data = volumeOutDatas.value;
             lineOption.series[1].data = volumeInDatas.value;

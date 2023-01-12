@@ -2,6 +2,7 @@ import { IHeatmapTotalInfoItem } from '@/types/interface/overview.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { bigNumberCompared } from '@/utils/calculate';
 import { firstLetterCapitalize } from '@/utils/stringTools';
+import { getIsSafari } from '@/utils/systemTools';
 import * as echarts from 'echarts';
 import moveDecimal from 'move-decimal-point';
 import { getOverviewHeatmapAPI } from '@/api/overview';
@@ -23,8 +24,9 @@ export const useOverviewHeatmap = () => {
     const heatmapChartRefDom = ref();
     let heatmapChart: echarts.ECharts;
     const minWidth = 28;
-    const minFontSize = 8;
-    const minHeight = minFontSize * 2 + 2;
+    const lableMinFontSize = 8;
+    const minHeight = lableMinFontSize * 2 + 2;
+    const lableFontWeight = getIsSafari() ? 550 : 600;
     const heartmapData = ref<IHeartmapDataItem[]>([]);
     const rangeData = ref(Object.keys(HEATMAP_COLOR));
 
@@ -182,8 +184,8 @@ export const useOverviewHeatmap = () => {
                         };
                     }
                     const fontSize = Math.max(
-                        Math.sqrt(params.rect.width * params.rect.height) / 10,
-                        minFontSize
+                        Math.sqrt(params.rect.width * params.rect.height) / 8,
+                        lableMinFontSize
                     );
                     return {
                         fontSize: fontSize
@@ -200,7 +202,7 @@ export const useOverviewHeatmap = () => {
                     },
                     color: '#fff',
                     padding: 0,
-                    fontWeight: 600,
+                    fontWeight: lableFontWeight,
                     fontFamily: 'GolosUIWebRegular'
                 },
                 visibleMin: 20,
