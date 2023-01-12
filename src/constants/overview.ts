@@ -58,4 +58,4 @@ export const NOHOP_COLOR = [
     }
 ];
 
-export const UNKNOWN_NODE_COLOR = 'rgba(194, 204, 232, 1)';
+export const UNKNOWN_NODE_COLOR = 'rgba(176, 182, 200, 1)';
