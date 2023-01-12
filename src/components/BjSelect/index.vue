@@ -446,7 +446,7 @@
     .disabled_border {
         background: #eef0f6;
         border: 1px solid var(--bj-border-color);
-        cursor: not-allowed;
+        cursor: url(../../assets/forbidden.png), not-allowed;
         &:hover {
             border-color: var(--bj-border-color);
         }
