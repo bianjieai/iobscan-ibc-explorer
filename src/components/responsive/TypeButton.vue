@@ -1,9 +1,6 @@
 <template>
     <div class="type_button" :class="{ type_button_disabled: isDisabled }" @click="reset">
-        <i
-            class="iconfont"
-            :class="{ 'icon-reset1': type === 'reset', 'icon-icon_search': type === 'search' }"
-        ></i>
+        <i class="iconfont" :class="resetorSearchIcon"></i>
     </div>
 </template>
 
@@ -11,7 +8,7 @@
     import { TypeButtonProp } from '@/constants';
     import { debounce } from 'lodash-es';
     interface IProps {
-        type?: 'reset' | 'search';
+        type?: TypeButtonProp.reset | TypeButtonProp.search;
         isDisabled?: boolean;
     }
     const props = withDefaults(defineProps<IProps>(), {
@@ -21,6 +18,15 @@
     const emits = defineEmits<{
         (e: 'onReset'): void;
     }>();
+    const resetorSearchIcon = computed(() => {
+        if (props.type === TypeButtonProp.reset) {
+            return 'icon-reset1';
+        } else if (props.type === TypeButtonProp.search) {
+            return 'icon-icon_search';
+        } else {
+            return '';
+        }
+    });
     const reset = debounce(() => {
         if (props.isDisabled) return;
         emits('onReset');
