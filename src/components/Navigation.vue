@@ -66,7 +66,7 @@
 </template>
 
 <script lang="ts" setup>
-    import { MORE_MENU } from '@/constants';
+    import { MORE_MENU, NAV_ITEM_WIDTH_PC, NAV_ITEM_WIDTH_1200 } from '@/constants';
 
     interface IMenu {
         label: string;
@@ -163,7 +163,7 @@
         }
         &__more {
             position: relative;
-            width: 105px;
+            width: v-bind(NAV_ITEM_WIDTH_PC);
             font-size: var(--bj-font-size-sub-title);
             color: rgba(255, 255, 255, 0.65);
             &:hover {
@@ -220,7 +220,7 @@
             &__pc {
             }
             &__more {
-                width: 90px;
+                width: v-bind(NAV_ITEM_WIDTH_1200);
                 &__submenu {
                 }
             }
