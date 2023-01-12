@@ -22,3 +22,9 @@ export const interceptionString = (text: string, reservedDecimal: number) => {
         return text;
     }
 };
+
+// 首字母大写
+export const firstLetterCapitalize = (str: string) => {
+    const newStr = str.slice(0, 1).toUpperCase() + str.slice(1).toLowerCase();
+    return newStr;
+};
