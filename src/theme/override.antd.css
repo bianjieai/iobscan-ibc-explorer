@@ -140,7 +140,7 @@
 
 .ant-tooltip .ant-tooltip-inner {
     color: var(--bj-font-color-65);
-    background: #fff !important;
+    background: #fff;
     box-shadow: 0px 2px 8px 0px #d9deec;
     border: 1px solid #d9dfee;
 }
