@@ -30,29 +30,25 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
         if (formatData.hops > maxHopRecord) {
             maxHopRecord = formatData.hops;
         }
+        const linkChain = formatData.chain ? formatData.chain : UNKNOWN;
         const judgeNodesorLinksPush = (hasChildren: boolean) => {
-            const linkTarget = `${formatData.chain ? formatData.chain : UNKNOWN} ${
-                hasChildren ? formatData.hops : 'last'
-            }`;
+            const linkTarget = `${linkChain} ${hasChildren ? formatData.hops : 'last'}`;
             const node = { name: linkTarget };
             nodes.push(node);
             if (hasChildren) {
                 if (Number(formatData.amount) > 0) {
-                    lastLevelNodesArr.push(`${formatData.chain} last`);
-                    nodes.push({ name: `${formatData.chain} last` });
+                    lastLevelNodesArr.push(`${linkChain} last`);
+                    nodes.push({ name: `${linkChain} last` });
                     const link = {
-                        source: `${formatData.chain} ${formatData.hops}`,
-                        target: `${formatData.chain} last`,
+                        source: `${linkChain} ${formatData.hops}`,
+                        target: `${linkChain} last`,
                         value: formatData.amount
                     };
                     links.push(link);
-                    linksMap.set(
-                        `${formatData.chain} ${formatData.hops} ${formatData.chain} last`,
-                        link
-                    );
+                    linksMap.set(`${linkChain} ${formatData.hops} ${linkChain} last`, link);
                 }
             } else {
-                lastLevelNodesArr.push(`${formatData.chain} last`);
+                lastLevelNodesArr.push(`${linkChain} last`);
             }
             if (lastHop) {
                 const linkMapKey = `${lastHop} ${linkTarget}`;
@@ -73,7 +69,7 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
         if (formatData.children?.length) {
             judgeNodesorLinksPush(true);
             formatData.children.forEach((item) => {
-                format(item, `${formatData.chain ? formatData.chain : UNKNOWN} ${formatData.hops}`);
+                format(item, `${linkChain} ${formatData.hops}`);
             });
         } else {
             judgeNodesorLinksPush(false);
@@ -106,6 +102,10 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
                 color: UNKNOWN_NODE_COLOR,
                 borderWidth: 1,
                 borderColor: UNKNOWN_NODE_COLOR
+            };
+            node.lineStyle = {
+                color: 'source',
+                opacity: 0.4
             };
         }
         nodesMap.set(node.name, node);

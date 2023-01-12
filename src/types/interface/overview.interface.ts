@@ -94,6 +94,10 @@ export interface ISankeyDataNode {
         borderWidth: number;
         borderColor: string;
     };
+    lineStyle?: {
+        color: string;
+        opacity: number;
+    };
     tooltip?: {
         show?: boolean;
     };
