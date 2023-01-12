@@ -81,6 +81,7 @@ export interface IResponseTransferVolumeTrend {
 export interface IResponseDistribution {
     children: IResponseDistribution[];
     amount: string;
+    supply: string;
     denom: string;
     chain: string;
     hops: number;
@@ -88,6 +89,11 @@ export interface IResponseDistribution {
 
 export interface ISankeyDataNode {
     name: string;
+    itemStyle?: {
+        color: string;
+        borderWidth: number;
+        borderColor: string;
+    };
     tooltip?: {
         show?: boolean;
     };
@@ -97,12 +103,11 @@ export interface ISankeyDataLink {
     source: string;
     target: string;
     value: string;
-    originValue: string;
 }
 
 export interface ISankeyData {
     nodes: ISankeyDataNode[];
     links: ISankeyDataLink[];
     maxHopRecord: number;
-    maxChildrenLength: number;
+    maxNodeHeight: number;
 }

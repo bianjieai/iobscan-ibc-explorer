@@ -15,6 +15,7 @@ import type { IResponseDistribution, ISankeyData } from '@/types/interface/overv
 import { NOHOP_COLOR, SANKEY_COLOR_LIST } from '@/constants/overview';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { formatSankeyData } from '@/helper/sankeyDataHelper';
+import { getLeftValueByLastSpace } from '@/utils/urlTools';
 
 export const useDistributionSelect = () => {
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
@@ -54,7 +55,6 @@ export const useDistributionSelect = () => {
     const distributionDom = ref<HTMLElement>();
     let distributionChart: echarts.ECharts;
 
-    // 获取 列表信息
     const getOverviewDistribution = async () => {
         distributionLoading.value = true;
         distributionNoDataType.value = undefined;
@@ -63,7 +63,7 @@ export const useDistributionSelect = () => {
                 baseDenom.value,
                 baseDenomChain.value
             );
-            if (code === API_CODE.success && Object.keys(data).length) {
+            if (code === API_CODE.success) {
                 originDenom.value = data.denom;
                 originAPIData.value = data;
                 distributionSankeyData.value = await formatSankeyData(data);
@@ -152,16 +152,16 @@ export const useDistributionSelect = () => {
     const maxHopRecord = computed(() => {
         return distributionSankeyData?.value?.maxHopRecord;
     });
-    const maxChildrenLength = computed(() => {
-        return distributionSankeyData?.value?.maxChildrenLength;
+    const maxNodeHeight = computed(() => {
+        return distributionSankeyData?.value?.maxNodeHeight;
     });
     const createChartWidthorHeight = () => {
         if (distributionDom.value) {
             distributionDom.value.style.width =
-                (Number(maxHopRecord.value) > 10
-                    ? 1152 + (Number(maxHopRecord.value) - 10) * 136
+                (Number(maxHopRecord.value) > 8
+                    ? 1152 + (Number(maxHopRecord.value) - 8) * 136
                     : 1152) + 'px';
-            distributionDom.value.style.height = Number(maxChildrenLength.value) * 50 + 'px';
+            distributionDom.value.style.height = Number(maxNodeHeight.value) * 50 + 'px';
         }
     };
     watch(
@@ -228,12 +228,9 @@ export const useDistributionSelect = () => {
                                             line-height: 18px;
                                         ">Amount:</span>
                                         <span>
-                                            ${
-                                                params.data.originValue &&
-                                                params.data.originValue !== '-1'
-                                                    ? formatBigNumber(params.data.originValue)
-                                                    : DEFAULT_DISPLAY_TEXT
-                                            } ${originDenom.value}
+                                            ${formatBigNumber(params.data.value)} ${
+                                originDenom.value
+                            }
                                         </span>
                                     </div>
                                 `;
@@ -247,8 +244,8 @@ export const useDistributionSelect = () => {
                             data: newData.nodes,
                             links: newData.links,
                             top: 8,
-                            right: 136,
-                            bottom: '2%',
+                            right: 112,
+                            bottom: '12%',
                             left: 0,
                             nodeWidth: 18,
                             nodeGap: 24,
@@ -264,15 +261,7 @@ export const useDistributionSelect = () => {
                             },
                             label: {
                                 formatter: (params: any) => {
-                                    const formatNameArr = params.name.split(' ');
-                                    const name = formatNameArr
-                                        .filter((item: string, index: number) => {
-                                            if (index >= 1) {
-                                                return index !== formatNameArr.length - 1;
-                                            }
-                                            return item;
-                                        })
-                                        .join(' ');
+                                    const name = getLeftValueByLastSpace(params.name);
                                     return name;
                                 }
                             }
