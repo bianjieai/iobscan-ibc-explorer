@@ -1,6 +1,9 @@
 <template>
     <div class="type_button" :class="{ type_button_disabled: isDisabled }" @click="reset">
-        <i class="iconfont icon-reset1"></i>
+        <i
+            class="iconfont"
+            :class="{ 'icon-reset1': type === 'reset', 'icon-icon_search': type === 'search' }"
+        ></i>
     </div>
 </template>
 
