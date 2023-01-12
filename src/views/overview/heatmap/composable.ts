@@ -1,6 +1,8 @@
-import { IHeatmapTotalInfoItem } from './../../../types/interface/overview.interface';
+import { IHeatmapTotalInfoItem } from '@/types/interface/overview.interface';
 import { getBaseDenomByKey } from '@/helper/baseDenomHelper';
 import { bigNumberCompared } from '@/utils/calculate';
+import { firstLetterCapitalize } from '@/utils/stringTools';
+import { getIsSafari } from '@/utils/systemTools';
 import * as echarts from 'echarts';
 import moveDecimal from 'move-decimal-point';
 import { getOverviewHeatmapAPI } from '@/api/overview';
@@ -22,7 +24,9 @@ export const useOverviewHeatmap = () => {
     const heatmapChartRefDom = ref();
     let heatmapChart: echarts.ECharts;
     const minWidth = 28;
-    const minFontSize = 8;
+    const lableMinFontSize = 8;
+    const minHeight = lableMinFontSize * 2 + 2;
+    const lableFontWeight = getIsSafari() ? 550 : 600;
     const heartmapData = ref<IHeartmapDataItem[]>([]);
     const rangeData = ref(Object.keys(HEATMAP_COLOR));
 
@@ -37,6 +41,10 @@ export const useOverviewHeatmap = () => {
                 if (!params.data.otherInfo) return '';
                 const otherInfo = params.data.otherInfo || {};
                 const title = `${otherInfo.prettyName} (${otherInfo.symbol})`;
+                const marketCapTrend = firstLetterCapitalize(
+                    formatMarketCapTrend(otherInfo.priceTrend)
+                );
+                const marketCapTrendDisplay = `${otherInfo.priceTrend}${otherInfo.formatPriceGrowthRate}`;
                 return `<div
                             style="
                                 padding: 12px;
@@ -128,6 +136,29 @@ export const useOverviewHeatmap = () => {
                                     >$${otherInfo.formatMarketCap}</span
                                 >
                             </div>
+                            <div style="height: 18px">
+                                <span
+                                    style="
+                                        margin-right: 8px;
+                                        font-size: 14px;
+                                        font-family: 'GolosUI_Medium';
+                                        font-weight: 500;
+                                        color: #000000;
+                                        line-height: 18px;
+                                    "
+                                    >${marketCapTrend}:</span
+                                >
+                                <span
+                                    style="
+                                        font-size: 14px;
+                                        font-family: 'GolosUIWebRegular';
+                                        font-weight: 400;
+                                        color: #000000;
+                                        line-height: 18px;
+                                    "
+                                    >${marketCapTrendDisplay}</span
+                                >
+                            </div>
                         </div>`;
             },
             confine: true
@@ -147,14 +178,14 @@ export const useOverviewHeatmap = () => {
                     borderColor: '#fff'
                 },
                 labelLayout: function (params: any) {
-                    if (params.rect.width < minWidth || params.rect.height < minWidth) {
+                    if (params.rect.width < minWidth || params.rect.height < minHeight) {
                         return {
-                            fontSize: 0
+                            fontSize: 0.1
                         };
                     }
                     const fontSize = Math.max(
-                        Math.sqrt(params.rect.width * params.rect.height) / 10,
-                        minFontSize
+                        Math.sqrt(params.rect.width * params.rect.height) / 8,
+                        lableMinFontSize
                     );
                     return {
                         fontSize: fontSize
@@ -170,7 +201,8 @@ export const useOverviewHeatmap = () => {
                         return `${otherInfo.symbol}\n${priceGrowthRate}`;
                     },
                     color: '#fff',
-                    fontWeight: 600,
+                    padding: 0,
+                    fontWeight: lableFontWeight,
                     fontFamily: 'GolosUIWebRegular'
                 },
                 visibleMin: 20,

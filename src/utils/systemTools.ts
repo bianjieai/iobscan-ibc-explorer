@@ -21,3 +21,7 @@ export const userSystem = (): string => {
 export const getIsAndroid = (): boolean => {
     return userSystem() === 'android';
 };
+
+export const getIsSafari = (): boolean => {
+    return /Safari/.test(window.navigator.userAgent) && !/Chrome/.test(window.navigator.userAgent);
+};

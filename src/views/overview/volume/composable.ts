@@ -349,7 +349,7 @@ export const useVolume = () => {
                 height: 32,
                 left: 90,
                 right: 90,
-                bottom: 8,
+                bottom: 0,
                 backgroundColor: '#F8FAFD',
                 borderColor: 'rgba(255,255,255,0)',
                 dataBackground: {
@@ -393,8 +393,8 @@ export const useVolume = () => {
                         ])
                     }
                 },
-                startValue: volumeTrendDates.value[0],
-                endValue: volumeTrendDates.value.at(-1)
+                startValue: volumeTrendDates.value[0] || '',
+                endValue: volumeTrendDates.value[volumeTrendDates.value.length - 1] || ''
             }
         ],
         series: [
@@ -462,8 +462,8 @@ export const useVolume = () => {
                         lineChart && lineChart.setOption(option);
                     }
                 } else {
-                    if (option.grid[0].bottom !== 16 || lineOption.dataZoom[0].show !== false) {
-                        option.grid[0].bottom = 16;
+                    if (option.grid[0].bottom !== 4 || lineOption.dataZoom[0].show !== false) {
+                        option.grid[0].bottom = 4;
                         option.dataZoom[0].show = false;
                         lineChart && lineChart.setOption(option);
                     }
@@ -506,8 +506,9 @@ export const useVolume = () => {
             // line
             lineChart = lineChart || echarts.init(lineRefDom.value);
             lineChartSizeFn();
-            lineOption.dataZoom[0].startValue = volumeTrendDates.value?.[0] || '';
-            lineOption.dataZoom[0].endValue = volumeTrendDates.value?.at(-1) || '';
+            lineOption.dataZoom[0].startValue = volumeTrendDates.value[0] || '';
+            lineOption.dataZoom[0].endValue =
+                volumeTrendDates.value[volumeTrendDates.value.length - 1] || '';
             lineOption.xAxis.data = volumeTrendDates.value;
             lineOption.series[0].data = volumeOutDatas.value;
             lineOption.series[1].data = volumeInDatas.value;
