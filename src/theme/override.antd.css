@@ -137,13 +137,14 @@
         max-width: 250px !important;
     }
 }
-.ant-tooltip-inner {
+
+.ant-tooltip .ant-tooltip-inner {
     color: var(--bj-font-color-65);
     background: #fff !important;
     box-shadow: 0px 2px 8px 0px #d9deec;
     border: 1px solid #d9dfee;
 }
-.ant-tooltip-inner-content {
+.ant-tooltip .ant-tooltip-inner-content {
     padding: 8px 12px;
 }
 .ant-tooltip-arrow {
@@ -151,8 +152,8 @@
     height: 15px !important;
     width: 18px !important;
 }
-.ant-tooltip-arrow-content {
-    background: #3d50ff !important;
+.ant-tooltip .ant-tooltip-arrow-content {
+    background: #3d50ff;
 }
 
 .ant-pagination {
