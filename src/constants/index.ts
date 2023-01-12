@@ -695,5 +695,7 @@ export const COLUMN_TOKEN_INFO_TYPE = {
     fee: 'Fee'
 };
 
-export const NAV_ITEM_WIDTH_PC = '105px';
-export const NAV_ITEM_WIDTH_1200 = '90px';
+export const NAV_ITEM_WIDTH = {
+    pc: '105px',
+    pc_1200: '90px'
+};
