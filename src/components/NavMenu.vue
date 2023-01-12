@@ -20,6 +20,7 @@
 </template>
 
 <script setup lang="ts">
+    import { NAV_ITEM_WIDTH } from '@/constants';
     interface IMenu {
         label: string;
         value: string;
@@ -47,7 +48,7 @@
         line-height: var(--bj-nav-height);
         list-style: none;
         &__item {
-            width: 105px;
+            width: v-bind('NAV_ITEM_WIDTH.pc');
             font-size: var(--bj-font-size-sub-title);
             &:hover {
                 color: #fff;
@@ -77,7 +78,7 @@
     @media screen and (max-width: 1200px) {
         .header_menu {
             &__item {
-                width: 90px;
+                width: v-bind('NAV_ITEM_WIDTH.pc_1200');
                 &__img {
                 }
                 &__img_active {
