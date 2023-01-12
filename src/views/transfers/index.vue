@@ -400,10 +400,8 @@
                 & .tip {
                     margin-left: 7px;
                 }
-                & button {
-                    margin-left: 16px;
-                    width: 32px;
-                    height: 32px;
+                :deep(.type_button) {
+                    margin-left: 8px;
                 }
             }
             &__bottom {
