@@ -163,7 +163,7 @@
         }
         &__more {
             position: relative;
-            width: 110px;
+            width: 105px;
             font-size: var(--bj-font-size-sub-title);
             color: rgba(255, 255, 255, 0.65);
             &:hover {
