@@ -23,8 +23,8 @@ export const useOverviewHeatmap = () => {
     const heatmapChartRefDom = ref();
     let heatmapChart: echarts.ECharts;
     const minWidth = 28;
-    const minHeight = 24;
     const minFontSize = 8;
+    const minHeight = minFontSize * 2 + 2;
     const heartmapData = ref<IHeartmapDataItem[]>([]);
     const rangeData = ref(Object.keys(HEATMAP_COLOR));
 
@@ -199,6 +199,7 @@ export const useOverviewHeatmap = () => {
                         return `${otherInfo.symbol}\n${priceGrowthRate}`;
                     },
                     color: '#fff',
+                    padding: 0,
                     fontWeight: 600,
                     fontFamily: 'GolosUIWebRegular'
                 },
