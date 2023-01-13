@@ -47,10 +47,6 @@ export const useDistributionSelect = () => {
         return matchToken[0];
     });
 
-    const inputFlag = ref(false);
-    const changeInputFlag = (flag: boolean) => {
-        inputFlag.value = flag;
-    };
     const searchToken = ref<string>(`${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`);
     const baseDenom = ref<string>(BASE_DENOM.uatom);
     const baseDenomChain = ref<string>(BASE_DENOM_CHAIN.cosmoshub);
@@ -98,16 +94,10 @@ export const useDistributionSelect = () => {
     const onSelectedToken = (token: IDataItem) => {
         const id = token?.id;
         if (id) {
-            if (token?.inputFlag) {
-                inputFlag.value = true;
-            } else {
-                inputFlag.value = false;
-            }
             searchToken.value = id as string;
             baseDenom.value = token.metaData.denom;
             baseDenomChain.value = token.metaData.chain;
         } else {
-            inputFlag.value = false;
             searchToken.value = `${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`;
             baseDenom.value = BASE_DENOM.uatom;
             baseDenomChain.value = BASE_DENOM_CHAIN.cosmoshub;
@@ -303,8 +293,6 @@ export const useDistributionSelect = () => {
         distributionTokenDropdown,
         distributionTokenData,
         defaultToken,
-        inputFlag,
-        changeInputFlag,
         searchToken,
         getPopupContainer,
         distributionDisable,
