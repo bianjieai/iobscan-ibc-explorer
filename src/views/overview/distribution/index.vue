@@ -32,7 +32,10 @@
                     :type="distributionNoDataType"
                     class="distribution__failed"
                 />
-                <div v-else class="distribution__chart__wrap">
+                <div
+                    v-show="!distributionLoading && !distributionNoDataType"
+                    class="distribution__chart__wrap"
+                >
                     <div ref="distributionDom" class="distribution__chart__dom"></div>
                 </div>
             </div>
