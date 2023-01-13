@@ -58,7 +58,8 @@ export const useDistributionSelect = () => {
     const originAPIData = ref<IResponseDistribution>();
     const distributionDom = ref<HTMLElement>();
     let distributionChart: echarts.ECharts;
-    let timer: number;
+    // todo shan 优化桑基图渲染
+    // let timer: number;
 
     const getOverviewDistribution = async () => {
         distributionLoading.value = true;
@@ -72,22 +73,22 @@ export const useDistributionSelect = () => {
                 originDenom.value = data.denom;
                 originAPIData.value = data;
                 distributionSankeyData.value = await formatSankeyData(data);
-                timer && clearTimeout(timer);
-                timer = setTimeout(() => {
-                    distributionLoading.value = false;
-                }, 800);
+                // timer && clearTimeout(timer);
+                // timer = setTimeout(() => {
+                //     distributionLoading.value = false;
+                // }, 800);
             } else {
                 console.log(message);
                 originDenom.value = DEFAULT_DISPLAY_TEXT;
                 distributionNoDataType.value = NoDataType.noData;
                 distributionSankeyData.value = undefined;
-                distributionLoading.value = false;
             }
         } catch (error) {
             console.log(error);
             originDenom.value = DEFAULT_DISPLAY_TEXT;
             distributionNoDataType.value = NoDataType.loadFailed;
             distributionSankeyData.value = undefined;
+        } finally {
             distributionLoading.value = false;
         }
     };
