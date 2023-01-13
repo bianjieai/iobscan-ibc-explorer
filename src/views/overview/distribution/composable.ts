@@ -7,7 +7,6 @@ import {
     BASE_DENOM_CHAIN,
     DEFAULT_DISPLAY_TEXT,
     NoDataType,
-    SYMBOL,
     TOKEN_DEFAULT_ICON
 } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
@@ -39,11 +38,16 @@ export const useDistributionSelect = () => {
             }
         ];
     });
-    const inputFlag = ref(false);
-    const changeInputFlag = (flag: boolean) => {
-        inputFlag.value = flag;
-    };
-    const searchToken = ref<string>(SYMBOL.ATOM);
+    const defaultToken = computed(() => {
+        const matchToken = distributionTokenData.value[0].children.filter(
+            (item) =>
+                item.metaData.denom === BASE_DENOM.uatom &&
+                item.metaData.chain === BASE_DENOM_CHAIN.cosmoshub
+        );
+        return matchToken[0];
+    });
+
+    const searchToken = ref<string>(`${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`);
     const baseDenom = ref<string>(BASE_DENOM.uatom);
     const baseDenomChain = ref<string>(BASE_DENOM_CHAIN.cosmoshub);
     const getPopupContainer = (): HTMLElement => document.querySelector('.distribution__select')!;
@@ -54,6 +58,7 @@ export const useDistributionSelect = () => {
     const originAPIData = ref<IResponseDistribution>();
     const distributionDom = ref<HTMLElement>();
     let distributionChart: echarts.ECharts;
+    let timer: number;
 
     const getOverviewDistribution = async () => {
         distributionLoading.value = true;
@@ -67,35 +72,33 @@ export const useDistributionSelect = () => {
                 originDenom.value = data.denom;
                 originAPIData.value = data;
                 distributionSankeyData.value = await formatSankeyData(data);
+                timer && clearTimeout(timer);
+                timer = setTimeout(() => {
+                    distributionLoading.value = false;
+                }, 800);
             } else {
                 console.log(message);
                 originDenom.value = DEFAULT_DISPLAY_TEXT;
                 distributionNoDataType.value = NoDataType.noData;
                 distributionSankeyData.value = undefined;
+                distributionLoading.value = false;
             }
         } catch (error) {
             console.log(error);
             originDenom.value = DEFAULT_DISPLAY_TEXT;
             distributionNoDataType.value = NoDataType.loadFailed;
             distributionSankeyData.value = undefined;
-        } finally {
             distributionLoading.value = false;
         }
     };
     const onSelectedToken = (token: IDataItem) => {
         const id = token?.id;
         if (id) {
-            if (token?.inputFlag) {
-                inputFlag.value = true;
-            } else {
-                inputFlag.value = false;
-            }
             searchToken.value = id as string;
             baseDenom.value = token.metaData.denom;
             baseDenomChain.value = token.metaData.chain;
         } else {
-            inputFlag.value = false;
-            searchToken.value = SYMBOL.ATOM;
+            searchToken.value = `${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`;
             baseDenom.value = BASE_DENOM.uatom;
             baseDenomChain.value = BASE_DENOM_CHAIN.cosmoshub;
         }
@@ -104,7 +107,7 @@ export const useDistributionSelect = () => {
     const onClickReset = () => {
         baseDenom.value = BASE_DENOM.uatom;
         baseDenomChain.value = BASE_DENOM_CHAIN.cosmoshub;
-        searchToken.value = SYMBOL.ATOM;
+        searchToken.value = `${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`;
         originDenom.value = DEFAULT_DISPLAY_TEXT;
         getOverviewDistribution();
     };
@@ -289,8 +292,7 @@ export const useDistributionSelect = () => {
     return {
         distributionTokenDropdown,
         distributionTokenData,
-        inputFlag,
-        changeInputFlag,
+        defaultToken,
         searchToken,
         getPopupContainer,
         distributionDisable,

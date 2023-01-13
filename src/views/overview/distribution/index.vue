@@ -9,12 +9,11 @@
                     :data="distributionTokenData"
                     :value="searchToken"
                     :hide-icon="true"
-                    :input-flag="inputFlag"
-                    :change-input-flag="changeInputFlag"
                     :placeholder="SYMBOL.ATOM"
                     :dropdown-props="{
                         getPopupContainer: getPopupContainer
                     }"
+                    :default-value="defaultToken"
                     :is-disabled="distributionDisable"
                     @on-change="onSelectedToken"
                 />
@@ -31,7 +30,10 @@
                     :type="distributionNoDataType"
                     class="distribution__failed"
                 />
-                <div v-else class="distribution__chart__wrap">
+                <div
+                    v-show="!distributionLoading && !distributionNoDataType"
+                    class="distribution__chart__wrap"
+                >
                     <div ref="distributionDom" class="distribution__chart__dom"></div>
                 </div>
             </div>
@@ -46,8 +48,7 @@
     const {
         distributionTokenDropdown,
         distributionTokenData,
-        inputFlag,
-        changeInputFlag,
+        defaultToken,
         searchToken,
         getPopupContainer,
         distributionDisable,
