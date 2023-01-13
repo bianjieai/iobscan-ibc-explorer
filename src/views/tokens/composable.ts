@@ -125,7 +125,11 @@ export const useTokensSelected = (
     if (baseDenomQuery && rmIbcPrefix(baseDenomQuery as string).length) {
         rmIbcPrefixBaseDenomQuery = rmIbcPrefix(baseDenomQuery as string);
     }
-    const searchTokenKey = ref((rmIbcPrefixBaseDenomQuery || '') + (baseDenomChainQuery || ''));
+    const searchTokenKey = ref<string | undefined>(
+        rmIbcPrefixBaseDenomQuery
+            ? rmIbcPrefixBaseDenomQuery || '' + baseDenomChainQuery || ''
+            : undefined
+    );
     const searchChain = ref<string | undefined>(chainIdQuery);
     const searchStatus = ref<TTokenType>(statusQuery);
     const tokenData = computed(() => {
