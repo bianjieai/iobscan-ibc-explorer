@@ -186,7 +186,6 @@
             }
         }
         &__more_active {
-            font-family: GolosUI_Medium;
             color: #fff;
             background-image: url('../assets/nav/selected.png');
             background-repeat: no-repeat;

@@ -15,6 +15,7 @@
                     :dropdown-props="{
                         getPopupContainer: getPopupContainer
                     }"
+                    :default-value="defaultToken"
                     :is-disabled="distributionDisable"
                     @on-change="onSelectedToken"
                 />
@@ -46,6 +47,7 @@
     const {
         distributionTokenDropdown,
         distributionTokenData,
+        defaultToken,
         inputFlag,
         changeInputFlag,
         searchToken,

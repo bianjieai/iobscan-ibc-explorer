@@ -7,7 +7,6 @@ import {
     BASE_DENOM_CHAIN,
     DEFAULT_DISPLAY_TEXT,
     NoDataType,
-    SYMBOL,
     TOKEN_DEFAULT_ICON
 } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
@@ -39,11 +38,20 @@ export const useDistributionSelect = () => {
             }
         ];
     });
+    const defaultToken = computed(() => {
+        const matchToken = distributionTokenData.value[0].children.filter(
+            (item) =>
+                item.metaData.denom === BASE_DENOM.uatom &&
+                item.metaData.chain === BASE_DENOM_CHAIN.cosmoshub
+        );
+        return matchToken[0];
+    });
+
     const inputFlag = ref(false);
     const changeInputFlag = (flag: boolean) => {
         inputFlag.value = flag;
     };
-    const searchToken = ref<string>(SYMBOL.ATOM);
+    const searchToken = ref<string>(`${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`);
     const baseDenom = ref<string>(BASE_DENOM.uatom);
     const baseDenomChain = ref<string>(BASE_DENOM_CHAIN.cosmoshub);
     const getPopupContainer = (): HTMLElement => document.querySelector('.distribution__select')!;
@@ -95,7 +103,7 @@ export const useDistributionSelect = () => {
             baseDenomChain.value = token.metaData.chain;
         } else {
             inputFlag.value = false;
-            searchToken.value = SYMBOL.ATOM;
+            searchToken.value = `${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`;
             baseDenom.value = BASE_DENOM.uatom;
             baseDenomChain.value = BASE_DENOM_CHAIN.cosmoshub;
         }
@@ -104,7 +112,7 @@ export const useDistributionSelect = () => {
     const onClickReset = () => {
         baseDenom.value = BASE_DENOM.uatom;
         baseDenomChain.value = BASE_DENOM_CHAIN.cosmoshub;
-        searchToken.value = SYMBOL.ATOM;
+        searchToken.value = `${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`;
         originDenom.value = DEFAULT_DISPLAY_TEXT;
         getOverviewDistribution();
     };
@@ -289,6 +297,7 @@ export const useDistributionSelect = () => {
     return {
         distributionTokenDropdown,
         distributionTokenData,
+        defaultToken,
         inputFlag,
         changeInputFlag,
         searchToken,
