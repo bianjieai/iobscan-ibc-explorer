@@ -59,3 +59,8 @@ export const NOHOP_COLOR = [
 ];
 
 export const UNKNOWN_NODE_COLOR = 'rgba(176, 182, 200, 1)';
+
+export const SANKEY_ZERO_JUMP_LINE_OPACITY = {
+    line: 0.05,
+    emphasis: 0.1
+};

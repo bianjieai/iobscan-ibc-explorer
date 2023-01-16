@@ -107,6 +107,17 @@ export interface ISankeyDataLink {
     source: string;
     target: string;
     value: string;
+    isZeroJumpLine?: boolean;
+    lineStyle?: {
+        color?: string;
+        opacity: number;
+    };
+    emphasis?: {
+        lineStyle?: {
+            color?: string;
+            opacity?: number;
+        };
+    };
 }
 
 export interface ISankeyData {
