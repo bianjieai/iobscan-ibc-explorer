@@ -224,8 +224,7 @@ export const useDistributionSelect = () => {
                                 key = 'Chain';
                                 value = getLeftValueByLastSpace(params.data.name);
                             } else {
-                                // todo dj 0跳的特殊处理  params.data.isZeroJumpLine
-                                key = 'Amount';
+                                key = params.data.isZeroJumpLine ? 'In-Chain Supply' : 'Amount';
                                 value = `${formatBigNumber(params.data.value)} ${
                                     originDenom.value
                                 }`;
