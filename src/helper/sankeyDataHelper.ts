@@ -1,5 +1,5 @@
 import { DEFAULT_DISPLAY_TEXT, PRETTYNAME, UNKNOWN } from '@/constants';
-import { UNKNOWN_NODE_COLOR } from '@/constants/overview';
+import { UNKNOWN_NODE_COLOR, SANKEY_ZERO_JUMP_LINE_OPACITY } from '@/constants/overview';
 import type {
     IResponseDistribution,
     ISankeyDataLink,
@@ -31,6 +31,7 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
             maxHopRecord = formatData.hops;
         }
         const linkChain = formatData.chain ? formatData.chain : UNKNOWN;
+
         const judgeNodesorLinksPush = (hasChildren: boolean) => {
             const linkTarget = `${linkChain} ${hasChildren ? formatData.hops : 'last'}`;
             const node = { name: linkTarget };
@@ -39,10 +40,32 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
                 if (Number(formatData.amount) > 0) {
                     lastLevelNodesArr.push(`${linkChain} last`);
                     nodes.push({ name: `${linkChain} last` });
+                    let zeroLineStyle;
+                    let zeroLineEmphasisStyle;
+                    let source;
+                    let isZeroJumpLine;
+                    if (!lastHop) {
+                        zeroLineStyle = {
+                            opacity: SANKEY_ZERO_JUMP_LINE_OPACITY.line
+                        };
+                        zeroLineEmphasisStyle = {
+                            lineStyle: {
+                                opacity: SANKEY_ZERO_JUMP_LINE_OPACITY.emphasis
+                            }
+                        };
+                        source = `${linkChain} ${formatData.hops}`;
+                        isZeroJumpLine = true;
+                    } else {
+                        source = lastHop;
+                        isZeroJumpLine = false;
+                    }
                     const link = {
-                        source: `${linkChain} ${formatData.hops}`,
+                        source: source,
                         target: `${linkChain} last`,
-                        value: formatData.amount
+                        value: formatData.amount,
+                        lineStyle: zeroLineStyle,
+                        emphasis: zeroLineEmphasisStyle,
+                        isZeroJumpLine
                     };
                     links.push(link);
                     linksMap.set(`${linkChain} ${formatData.hops} ${linkChain} last`, link);
@@ -87,7 +110,16 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
         links.push({
             source: `${sankeyData.chain} ${sankeyData.hops}`,
             target: `${sankeyData.chain} last`,
-            value: sankeyData.amount
+            value: sankeyData.amount,
+            isZeroJumpLine: true,
+            lineStyle: {
+                opacity: SANKEY_ZERO_JUMP_LINE_OPACITY.line
+            },
+            emphasis: {
+                lineStyle: {
+                    opacity: SANKEY_ZERO_JUMP_LINE_OPACITY.emphasis
+                }
+            }
         });
         links.forEach((link) => {
             linksMap.set(`${link.source} ${link.target}`, link);
@@ -116,10 +148,7 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
         const chainInfo = await ChainHelper.getChainInfoByKey(chain);
         nodesArr.push({
             name: `${chainInfo?.pretty_name || chain} ${hops}`,
-            itemStyle: node.itemStyle,
-            tooltip: {
-                show: false
-            }
+            itemStyle: node.itemStyle
         });
     }
     for (const link of linksMap.values()) {
@@ -132,7 +161,10 @@ export const formatSankeyData = async (sankeyData: IResponseDistribution) => {
         linksArr.push({
             source: `${sourceChainInfo?.pretty_name || sourceChain} ${sourceHops}`,
             target: `${targetChainInfo?.pretty_name || targetChain} ${targetHops}`,
-            value: link.value
+            value: link.value,
+            lineStyle: link.lineStyle,
+            emphasis: link.emphasis,
+            isZeroJumpLine: link.isZeroJumpLine
         });
     }
     // todo shan pretty_name 排序逻辑抽离

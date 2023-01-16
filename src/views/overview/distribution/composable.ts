@@ -15,8 +15,10 @@ import { NOHOP_COLOR, SANKEY_COLOR_LIST } from '@/constants/overview';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { formatSankeyData } from '@/helper/sankeyDataHelper';
 import { getLeftValueByLastSpace } from '@/utils/urlTools';
+import { getIos } from '@/utils/systemTools';
 
 export const useDistributionSelect = () => {
+    const isIos = getIos();
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const distributionDisable = computed(() => {
         if (!ibcBaseDenomsSorted.value.length) {
@@ -216,6 +218,18 @@ export const useDistributionSelect = () => {
                             return [x, y];
                         },
                         formatter: (params: any) => {
+                            let key;
+                            let value;
+                            if (params.dataType === 'node') {
+                                key = 'Chain';
+                                value = getLeftValueByLastSpace(params.data.name);
+                            } else {
+                                // todo dj 0跳的特殊处理  params.data.isZeroJumpLine
+                                key = 'Amount';
+                                value = `${formatBigNumber(params.data.value)} ${
+                                    originDenom.value
+                                }`;
+                            }
                             return ` <div style="
                                         padding: 8px 16px;
                                         background: #ffffff;
@@ -230,12 +244,8 @@ export const useDistributionSelect = () => {
                                             font-weight: 500;
                                             color: #000;
                                             line-height: 18px;
-                                        ">Amount:</span>
-                                        <span>
-                                            ${formatBigNumber(params.data.value)} ${
-                                originDenom.value
-                            }
-                                        </span>
+                                        ">${key}:</span>
+                                        <span>${value}</span>
                                     </div>
                                 `;
                         }
@@ -264,6 +274,10 @@ export const useDistributionSelect = () => {
                                 curveness: 0.5
                             },
                             label: {
+                                fontFamily: 'GolosUIWebRegular',
+                                fontWeight: 300,
+                                fontSize: 14,
+                                color: 'rgba(0, 0, 0, 0.74)',
                                 formatter: (params: any) => {
                                     const name = getLeftValueByLastSpace(params.name);
                                     return name;
@@ -274,7 +288,11 @@ export const useDistributionSelect = () => {
                 };
                 nextTick(() => {
                     createChartWidthorHeight();
-                    distributionChart = echarts.init(distributionDom.value as HTMLElement);
+                    distributionChart = echarts.init(
+                        distributionDom.value as HTMLElement,
+                        {},
+                        { renderer: isIos ? 'svg' : 'canvas' }
+                    );
                     distributionOption && distributionChart.setOption(distributionOption, true);
                 });
             }
