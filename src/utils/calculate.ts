@@ -39,6 +39,10 @@ export const bigNumberDivide = (num1: string | number, num2: string | number): s
     return new BigNumber(num1).div(num2).toString();
 };
 
+export const bigNumberSqrt = (num: string | number): string => {
+    return new BigNumber(num).sqrt().toString();
+};
+
 export const bigNumberCompared = (num1: string | number, num2: string | number): string => {
     return new BigNumber(num1).comparedTo(num2).toString();
 };
