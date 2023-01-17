@@ -7,7 +7,6 @@ import {
     BASE_DENOM_CHAIN,
     DEFAULT_DISPLAY_TEXT,
     NoDataType,
-    SYMBOL,
     TOKEN_DEFAULT_ICON
 } from '@/constants';
 import { API_CODE } from '@/constants/apiCode';
@@ -15,8 +14,11 @@ import type { IResponseDistribution, ISankeyData } from '@/types/interface/overv
 import { NOHOP_COLOR, SANKEY_COLOR_LIST } from '@/constants/overview';
 import { formatBigNumber } from '@/helper/parseStringHelper';
 import { formatSankeyData } from '@/helper/sankeyDataHelper';
+import { getLeftValueByLastSpace } from '@/utils/urlTools';
+import { getIos } from '@/utils/systemTools';
 
 export const useDistributionSelect = () => {
+    const isIos = getIos();
     const { ibcBaseDenomsSorted } = useGetIbcDenoms();
     const distributionDisable = computed(() => {
         if (!ibcBaseDenomsSorted.value.length) {
@@ -38,11 +40,16 @@ export const useDistributionSelect = () => {
             }
         ];
     });
-    const inputFlag = ref(false);
-    const changeInputFlag = (flag: boolean) => {
-        inputFlag.value = flag;
-    };
-    const searchToken = ref<string>(SYMBOL.ATOM);
+    const defaultToken = computed(() => {
+        const matchToken = distributionTokenData.value[0].children.filter(
+            (item) =>
+                item.metaData.denom === BASE_DENOM.uatom &&
+                item.metaData.chain === BASE_DENOM_CHAIN.cosmoshub
+        );
+        return matchToken[0];
+    });
+
+    const searchToken = ref<string>(`${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`);
     const baseDenom = ref<string>(BASE_DENOM.uatom);
     const baseDenomChain = ref<string>(BASE_DENOM_CHAIN.cosmoshub);
     const getPopupContainer = (): HTMLElement => document.querySelector('.distribution__select')!;
@@ -54,7 +61,6 @@ export const useDistributionSelect = () => {
     const distributionDom = ref<HTMLElement>();
     let distributionChart: echarts.ECharts;
 
-    // 获取 列表信息
     const getOverviewDistribution = async () => {
         distributionLoading.value = true;
         distributionNoDataType.value = undefined;
@@ -63,7 +69,7 @@ export const useDistributionSelect = () => {
                 baseDenom.value,
                 baseDenomChain.value
             );
-            if (code === API_CODE.success && Object.keys(data).length) {
+            if (code === API_CODE.success) {
                 originDenom.value = data.denom;
                 originAPIData.value = data;
                 distributionSankeyData.value = await formatSankeyData(data);
@@ -85,17 +91,11 @@ export const useDistributionSelect = () => {
     const onSelectedToken = (token: IDataItem) => {
         const id = token?.id;
         if (id) {
-            if (token?.inputFlag) {
-                inputFlag.value = true;
-            } else {
-                inputFlag.value = false;
-            }
             searchToken.value = id as string;
             baseDenom.value = token.metaData.denom;
             baseDenomChain.value = token.metaData.chain;
         } else {
-            inputFlag.value = false;
-            searchToken.value = SYMBOL.ATOM;
+            searchToken.value = `${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`;
             baseDenom.value = BASE_DENOM.uatom;
             baseDenomChain.value = BASE_DENOM_CHAIN.cosmoshub;
         }
@@ -104,7 +104,7 @@ export const useDistributionSelect = () => {
     const onClickReset = () => {
         baseDenom.value = BASE_DENOM.uatom;
         baseDenomChain.value = BASE_DENOM_CHAIN.cosmoshub;
-        searchToken.value = SYMBOL.ATOM;
+        searchToken.value = `${BASE_DENOM.uatom}${BASE_DENOM_CHAIN.cosmoshub}`;
         originDenom.value = DEFAULT_DISPLAY_TEXT;
         getOverviewDistribution();
     };
@@ -152,16 +152,16 @@ export const useDistributionSelect = () => {
     const maxHopRecord = computed(() => {
         return distributionSankeyData?.value?.maxHopRecord;
     });
-    const maxChildrenLength = computed(() => {
-        return distributionSankeyData?.value?.maxChildrenLength;
+    const maxNodeHeight = computed(() => {
+        return distributionSankeyData?.value?.maxNodeHeight;
     });
     const createChartWidthorHeight = () => {
         if (distributionDom.value) {
             distributionDom.value.style.width =
-                (Number(maxHopRecord.value) > 10
-                    ? 1152 + (Number(maxHopRecord.value) - 10) * 136
+                (Number(maxHopRecord.value) > 8
+                    ? 1152 + (Number(maxHopRecord.value) - 8) * 136
                     : 1152) + 'px';
-            distributionDom.value.style.height = Number(maxChildrenLength.value) * 50 + 'px';
+            distributionDom.value.style.height = Number(maxNodeHeight.value) * 50 + 'px';
         }
     };
     watch(
@@ -212,6 +212,17 @@ export const useDistributionSelect = () => {
                             return [x, y];
                         },
                         formatter: (params: any) => {
+                            let key;
+                            let value;
+                            if (params.dataType === 'node') {
+                                key = 'Chain';
+                                value = getLeftValueByLastSpace(params.data.name);
+                            } else {
+                                key = params.data.isZeroJumpLine ? 'In-Chain Supply' : 'Amount';
+                                value = `${formatBigNumber(params.data.value)} ${
+                                    originDenom.value
+                                }`;
+                            }
                             return ` <div style="
                                         padding: 8px 16px;
                                         background: #ffffff;
@@ -226,15 +237,8 @@ export const useDistributionSelect = () => {
                                             font-weight: 500;
                                             color: #000;
                                             line-height: 18px;
-                                        ">Amount:</span>
-                                        <span>
-                                            ${
-                                                params.data.originValue &&
-                                                params.data.originValue !== '-1'
-                                                    ? formatBigNumber(params.data.originValue)
-                                                    : DEFAULT_DISPLAY_TEXT
-                                            } ${originDenom.value}
-                                        </span>
+                                        ">${key}:</span>
+                                        <span>${value}</span>
                                     </div>
                                 `;
                         }
@@ -247,8 +251,8 @@ export const useDistributionSelect = () => {
                             data: newData.nodes,
                             links: newData.links,
                             top: 8,
-                            right: 136,
-                            bottom: '2%',
+                            right: 112,
+                            bottom: '12%',
                             left: 0,
                             nodeWidth: 18,
                             nodeGap: 24,
@@ -263,16 +267,12 @@ export const useDistributionSelect = () => {
                                 curveness: 0.5
                             },
                             label: {
+                                fontFamily: 'GolosUIWebRegular',
+                                fontWeight: 300,
+                                fontSize: 14,
+                                color: 'rgba(0, 0, 0, 0.74)',
                                 formatter: (params: any) => {
-                                    const formatNameArr = params.name.split(' ');
-                                    const name = formatNameArr
-                                        .filter((item: string, index: number) => {
-                                            if (index >= 1) {
-                                                return index !== formatNameArr.length - 1;
-                                            }
-                                            return item;
-                                        })
-                                        .join(' ');
+                                    const name = getLeftValueByLastSpace(params.name);
                                     return name;
                                 }
                             }
@@ -281,7 +281,11 @@ export const useDistributionSelect = () => {
                 };
                 nextTick(() => {
                     createChartWidthorHeight();
-                    distributionChart = echarts.init(distributionDom.value as HTMLElement);
+                    distributionChart = echarts.init(
+                        distributionDom.value as HTMLElement,
+                        {},
+                        { renderer: isIos ? 'svg' : 'canvas' }
+                    );
                     distributionOption && distributionChart.setOption(distributionOption, true);
                 });
             }
@@ -300,8 +304,7 @@ export const useDistributionSelect = () => {
     return {
         distributionTokenDropdown,
         distributionTokenData,
-        inputFlag,
-        changeInputFlag,
+        defaultToken,
         searchToken,
         getPopupContainer,
         distributionDisable,

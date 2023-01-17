@@ -202,7 +202,7 @@
 
     // 是否选中
     const isSelected = (val: TDenom) =>
-        selectItems.value.some((v) => v.id === val && !props.changeInputFlag);
+        selectItems.value.some((v) => v.id === val && !props.inputFlag);
 
     // 获取badges
     const getBadgeStr = (val: TDenom) => {
@@ -446,7 +446,7 @@
     .disabled_border {
         background: #eef0f6;
         border: 1px solid var(--bj-border-color);
-        cursor: not-allowed;
+        cursor: url(../../assets/forbidden.png), not-allowed;
         &:hover {
             border-color: var(--bj-border-color);
         }

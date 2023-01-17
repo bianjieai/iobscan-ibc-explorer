@@ -126,12 +126,11 @@ export const MORE_MENU = [
             {
                 label: ROUTE_INFO.overviewVolume.name,
                 value: ROUTE_INFO.overviewVolume.name
+            },
+            {
+                label: ROUTE_INFO.overviewDistribution.name,
+                value: ROUTE_INFO.overviewDistribution.name
             }
-            // todo shan 暂时注释桑基图入口
-            // {
-            //     label: ROUTE_INFO.overviewDistribution.name,
-            //     value: ROUTE_INFO.overviewDistribution.name
-            // }
         ]
     }
 ];
@@ -694,4 +693,9 @@ export const COLUMN_TOKEN_INFO_TYPE = {
     token: 'Token',
     amount: 'Amount',
     fee: 'Fee'
+};
+
+export const NAV_ITEM_WIDTH = {
+    pc: '105px',
+    pc_1200: '90px'
 };

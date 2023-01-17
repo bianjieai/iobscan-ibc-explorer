@@ -25,3 +25,7 @@ export const getIsAndroid = (): boolean => {
 export const getIsSafari = (): boolean => {
     return /Safari/.test(window.navigator.userAgent) && !/Chrome/.test(window.navigator.userAgent);
 };
+
+export const getIos = () => {
+    return userSystem() === 'ios';
+};

@@ -250,7 +250,9 @@ export const useRouteParams = () => {
     if (startTimestamp && endTimestamp) {
         dateRange.value = [dayjsUtc(startTimestamp * 1000), dayjsUtc(endTimestamp * 1000)];
     }
-    searchToken.value = (paramsBaseDenom || '') + (paramsBaseDenomChain || '');
+    searchToken.value = paramsBaseDenom
+        ? paramsBaseDenom || '' + paramsBaseDenomChain || ''
+        : undefined;
     if (paramsDenom && rmIbcPrefix(paramsDenom as string).length) {
         searchToken.value = rmIbcPrefix(paramsDenom as string);
         inputFlag.value = true;

@@ -9,12 +9,11 @@
                     :data="distributionTokenData"
                     :value="searchToken"
                     :hide-icon="true"
-                    :input-flag="inputFlag"
-                    :change-input-flag="changeInputFlag"
                     :placeholder="SYMBOL.ATOM"
                     :dropdown-props="{
                         getPopupContainer: getPopupContainer
                     }"
+                    :default-value="defaultToken"
                     :is-disabled="distributionDisable"
                     @on-change="onSelectedToken"
                 />
@@ -46,8 +45,7 @@
     const {
         distributionTokenDropdown,
         distributionTokenData,
-        inputFlag,
-        changeInputFlag,
+        defaultToken,
         searchToken,
         getPopupContainer,
         distributionDisable,
