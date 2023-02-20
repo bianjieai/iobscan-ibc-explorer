@@ -26,5 +26,6 @@ dist-ssr
 
 !.prettierrc.js
 !.eslintrc.js
+!.commitlintrc.js
 
 globalComponents.d.ts
