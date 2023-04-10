@@ -1,6 +1,6 @@
 export const injectGtag = () => {
     const url = 'https://www.googletagmanager.com/gtag/js?id=';
-    const GID = import.meta.env.VITE_GID || 'G-V6WLNTGZ9R';
+    const GID = import.meta.env.VITE_GID || 'G-BJ0DX77HZB';
     const src = url + GID;
     // 设置gtag运行环境
     const gtagScript: HTMLScriptElement = document.createElement('script');
