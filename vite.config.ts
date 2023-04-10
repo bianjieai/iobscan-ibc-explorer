@@ -5,6 +5,7 @@ import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
 import AutoImport from 'unplugin-auto-import/vite';
 import vueJsx from '@vitejs/plugin-vue-jsx';
 import viteCompression from 'vite-plugin-compression';
+import { visualizer } from 'rollup-plugin-visualizer';
 import * as path from 'path';
 
 // https://vitejs.dev/config/
@@ -50,7 +51,8 @@ export default ({ mode }: { mode: string }) => {
                 ext: '.gz',
                 verbose: true,
                 deleteOriginFile: false
-            })
+            }),
+            visualizer()
         ],
         server: {
             fs: {

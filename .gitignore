@@ -29,3 +29,5 @@ dist-ssr
 !.commitlintrc.js
 
 globalComponents.d.ts
+
+stats.html
