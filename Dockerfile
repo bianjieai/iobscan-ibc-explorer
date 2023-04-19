@@ -1,4 +1,4 @@
-FROM node:16.0.0-alpine3.13 AS builder
+FROM node:16.13.0-alpine3.14 AS builder
 WORKDIR /app
 COPY . .
 ARG ENVIRONMENT=null
@@ -9,6 +9,7 @@ npm install -g pnpm@6.10.3 && pnpm config set registry https://registry.npm.taob
 FROM nginx:1.19-alpine
 RUN echo -e 'server {\n\
   root /usr/share/nginx/html;\n\
+  gzip_static on;\n\
   location / {\n\
     if ($request_filename ~* index.html|.*\.ico$)\n\
     {\n\
